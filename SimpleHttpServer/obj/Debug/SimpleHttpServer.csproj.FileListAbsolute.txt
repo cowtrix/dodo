@@ -1,0 +1,24 @@
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\obj\Debug\SimpleHttpServer.csproj.CoreCompileInputs.cache
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\bin\Debug\Resources\Pages\404.html
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\bin\Debug\Resources\Pages\500.html
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\bin\Debug\SimpleHttpServer.dll.config
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\bin\Debug\SimpleHttpServer.dll
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\bin\Debug\SimpleHttpServer.pdb
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\bin\Debug\log4net.dll
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\bin\Debug\log4net.xml
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\obj\Debug\SimpleHttpServer.csproj.CopyComplete
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\obj\Debug\SimpleHttpServer.dll
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\obj\Debug\SimpleHttpServer.pdb
+C:\Users\Sean\Documents\Projects\rebellion\dodo\SimpleHttpServer-master\SimpleHttpServer\obj\Debug\SimpleHttpServer.csprojAssemblyReference.cache
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\bin\Debug\Resources\Pages\404.html
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\bin\Debug\Resources\Pages\500.html
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\bin\Debug\SimpleHttpServer.dll.config
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\bin\Debug\SimpleHttpServer.dll
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\bin\Debug\SimpleHttpServer.pdb
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\bin\Debug\log4net.dll
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\bin\Debug\log4net.xml
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\obj\Debug\SimpleHttpServer.csprojAssemblyReference.cache
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\obj\Debug\SimpleHttpServer.csproj.CoreCompileInputs.cache
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\obj\Debug\SimpleHttpServer.csproj.CopyComplete
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\obj\Debug\SimpleHttpServer.dll
+C:\Users\Sean\Documents\Projects\rebellion\dodo\XR Dodo\SimpleHttpServer\obj\Debug\SimpleHttpServer.pdb

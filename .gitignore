@@ -1,0 +1,4 @@
+*.suo
+/.vs/
+/Dodo/bin/
+/Dodo/obj/
