@@ -2,3 +2,10 @@
 /.vs/
 /Dodo/bin/
 /Dodo/obj/
+/OctoberANFormAnalyzer/obj/
+/OctoberANFormAnalyzer/bin/
+/packages/
+/SpreadsheetTools/obj/
+/SpreadsheetTools/bin/
+/SimpleHttpServer/bin/
+/SimpleHttpServer/obj/

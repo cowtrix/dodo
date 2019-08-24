@@ -144,9 +144,9 @@ namespace SimpleHttpServer
             // extract the path if there is one
             var match = Regex.Match(request.Url,route.UrlRegex);
             if (match.Groups.Count > 1) {
-                request.SetPath(match.Groups[1].Value);
+                request.Path = (match.Groups[1].Value);
             } else {
-                request.SetPath(request.Url);
+                request.Path = (request.Url);
             }
 
             // trigger the route handler...
