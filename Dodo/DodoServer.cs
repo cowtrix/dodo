@@ -14,11 +14,19 @@ using System.IO;
 
 namespace XR.Dodo
 {
-	class Program
+	public static class DodoServer
 	{
 		public static string SECRET = "xyff39jd1i37";
+		public static int Port = 8080;
+
+		public static SiteSpreadsheetManager SiteManager = new SiteSpreadsheetManager("sites.config");
 
 		static void Main(string[] args)
+		{
+			Initialise(args);
+		}
+
+		public static void Initialise(params string[] args)
 		{
 			SECRET = File.ReadAllText(@"..\..\..\.secret");
 			log4net.Config.XmlConfigurator.Configure();
@@ -29,15 +37,15 @@ namespace XR.Dodo
 					Name = "SMS Receiver",
 					Method = "POST",
 					UrlRegex = @"(?:^/)*",
-					Callable = (HttpRequest request) => 
+					Callable = (HttpRequest request) =>
 					{
 						return SMSServer.Read(request);
 					}
 				}
 			};
 
-			HttpServer httpServer = new HttpServer(8080, route_config);
-			
+			HttpServer httpServer = new HttpServer(Port, route_config);
+
 			Thread thread = new Thread(new ThreadStart(httpServer.Listen));
 			thread.Start();
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace XR.Dodo
 {
+
 	public class UserSession
 	{
 		public string Number;

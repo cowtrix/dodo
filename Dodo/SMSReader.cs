@@ -37,7 +37,7 @@ namespace XR.Dodo
 
 		static bool IsValid(HttpRequest request)
 		{
-			if (!request.QueryParams.TryGetValue("secret", out var secret) || secret != Program.SECRET)
+			if (!request.QueryParams.TryGetValue("secret", out var secret) || secret != DodoServer.SECRET)
 			{
 				return false;
 			}
