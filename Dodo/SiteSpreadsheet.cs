@@ -5,8 +5,24 @@ using System.Linq;
 
 namespace XR.Dodo
 {
+	public class SpreadsheetException : Exception
+	{
+		public readonly int Row;
+		public readonly int Column;
+		public SpreadsheetException(int row, int column, string message) : base($"Col: {column} | {message}")
+		{
+			Row = row;
+			Column = column;
+		}
+	}
+
 	public class SiteSpreadsheet
 	{
+		public class SpreadsheetStatus
+		{
+			public List<SpreadsheetError> Errors = new List<SpreadsheetError>();
+		}
+		public SpreadsheetStatus Status { get; private set; }
 		public enum EWorkingGroup
 		{
 			ActionSupport,
@@ -16,23 +32,30 @@ namespace XR.Dodo
 			MovementSupport,
 		}
 
-		public struct Coordinator
+		public class Coordinator : User
 		{
-			public string Name;
-			public string Number;
 			public string Email;
 			public string Role;
 			public EWorkingGroup WorkingGroup;
 
 			public override string ToString()
 			{
-				return $"{Name}: {Number}";
+				return $"{Name}: {PhoneNumber}";
 			}
 		}
 
 		public readonly int SiteCode;
 		public readonly string SiteName;
 		public List<Coordinator> Coordinators = new List<Coordinator>();
+		private readonly string m_spreadSheetID;
+
+		public string URL
+		{
+			get
+			{
+				return @"https://docs.google.com/spreadsheets/d/" + m_spreadSheetID;
+			}
+		}
 
 		private static EWorkingGroup StringToWorkingGroup(string str)
 		{
@@ -52,10 +75,12 @@ namespace XR.Dodo
 
 		public SiteSpreadsheet(int siteCode, string siteName, string spreadSheetID)
 		{
+			m_spreadSheetID = spreadSheetID;
+			Status = new SpreadsheetStatus();
 			Console.WriteLine("Loading spreadsheet for site " + siteName);
 			SiteCode = siteCode;
 			SiteName = siteName;
-			var spreadSheet = GSheets.GetSheetRange(spreadSheetID, "A:ZZ");
+			var spreadSheet = GSheets.GetSheetRange(m_spreadSheetID, "A:ZZZ");
 			for(var rowIndex = 0; rowIndex < spreadSheet.Values.Count; ++rowIndex)
 			{
 				try
@@ -88,15 +113,14 @@ namespace XR.Dodo
 						
 						if(!PhoneExtensions.ValidateNumber(ref number))
 						{
-							Console.WriteLine($"Unable to parse phone number for {name}: {number} @ row {rowIndex}");
-							continue;
+							throw new SpreadsheetException(rowIndex, column, $"Value wasn't a valid UK Mobile number: " + number);
 						}
 
 						Coordinators.Add(new Coordinator()
 						{
 							Name = name,
 							Email = email,
-							Number = number,
+							PhoneNumber = number,
 							Role = role,
 							WorkingGroup = workingGroupEnum,
 						});
@@ -104,7 +128,17 @@ namespace XR.Dodo
 				}
 				catch(Exception e)
 				{
-					Console.WriteLine($"Failed to parse row {rowIndex}");
+					try
+					{
+						Status.Errors.Add(new SpreadsheetError()
+						{
+							Row = $"{rowIndex}",
+							Message = e.Message,
+							Value = spreadSheet.Values[rowIndex].Cast<string>().Aggregate("", (current, next) =>
+								current + (!string.IsNullOrEmpty(current) ? "," : "") + next)
+						}); ;
+					}
+					catch { }
 					Console.WriteLine($"{e.Message}\n{e.StackTrace}");
 				}
 			}

@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace XR.Dodo
 {
-
 	public class UserSession
 	{
-		public string Number;
+		public User User;
 		public List<Message> Messages = new List<Message>();
-		public List<MessageResponse> Responses = new List<MessageResponse>();
-
-		public UserSession(string fromNumber)
+		public List<Message> Responses = new List<Message>();
+		public UserSession(User user)
 		{
-			Number = fromNumber;
+			User = user;
 		}
 	}
 }

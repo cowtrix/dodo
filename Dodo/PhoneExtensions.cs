@@ -1,5 +1,7 @@
 ﻿// Copyright (C) 2016 by Barend Erasmus, David Jeske and donated to the public domain
 
+using System.Text.RegularExpressions;
+
 namespace XR.Dodo
 {
 	public static class PhoneExtensions
@@ -11,9 +13,13 @@ namespace XR.Dodo
 			{
 				return true;
 			}
-			if(number.StartsWith("44") && number.Length != 12)
+			if(number.StartsWith("44"))
 			{
-				return false;
+				if (number.Length != 12)
+				{
+					return false;
+				}
+				number = "+" + number;
 			}
 			if(!number.StartsWith("44"))
 			{
@@ -23,7 +29,7 @@ namespace XR.Dodo
 					{
 						return false;
 					}
-					number = "44" + number.Substring(1);
+					number = "+44" + number.Substring(1);
 				}
 				else if (number.StartsWith("7"))
 				{
@@ -31,10 +37,11 @@ namespace XR.Dodo
 					{
 						return false;
 					}
-					number = "44" + number;
+					number = "+44" + number;
 				}
 			}
-			return true;
+			return Regex.IsMatch(number,
+				@"^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$");
 		}
 	}
 }

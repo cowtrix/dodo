@@ -10,6 +10,12 @@ using System.Threading;
 
 namespace XR.Dodo
 {
+	public struct SpreadsheetError
+	{
+		public string Row;
+		public string Value;
+		public string Message;
+	}
 	public static class GSheets
 	{
 		static string[] Scopes = { SheetsService.Scope.Spreadsheets };
@@ -65,6 +71,40 @@ namespace XR.Dodo
 			{
 				Console.WriteLine("No data found.");
 			}*/
+		}
+
+		public static void ClearSheet(string spreadSheetID, string range)
+		{
+			var requestBody = new ClearValuesRequest();
+			var request = m_service.Spreadsheets.Values.Clear(requestBody, spreadSheetID, range);
+			var response = request.Execute();
+		}
+
+		public static void WriteSheet<T>(string spreadsheetID, List<List<T>> data, string range)
+		{
+			var obj = new List<IList<object>>();
+			foreach(var entry in data)
+			{
+				var objList = new List<object>();
+				foreach(var val in entry)
+				{
+					objList.Add(val);
+				}
+				obj.Add(objList);
+			}
+			WriteSheetData(spreadsheetID, obj, range);
+		}
+
+		public static void WriteSheetData(string spreadsheetID, IList<IList<object>> data, string range)
+		{
+			m_service.Spreadsheets.Values.BatchClear(new BatchClearValuesRequest(), spreadsheetID);
+			var values = new ValueRange
+			{
+				Values = data
+			};
+			var request = m_service.Spreadsheets.Values.Update(values, spreadsheetID, range);
+			request.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.USERENTERED;
+			request.Execute();
 		}
 
 		public static ValueRange GetSheetRange(string spreadsheetID, string range)

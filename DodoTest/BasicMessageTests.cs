@@ -18,9 +18,18 @@ namespace DodoTest
 		}
 
 		[TestMethod]
+		public void ValidatePhoneNumbers()
+		{
+			var invalidNumber = "Joe Blocks";
+			Assert.IsTrue(!PhoneExtensions.ValidateNumber(ref invalidNumber));
+		}
+
+		[TestMethod]
 		public async Task NewVolunteerWorkflow()
 		{
-			var response = await m_simulator.SendSMS("REGISTER");
+			var rnd = new Random();
+			var ph = $"44{rnd.Next(100_000_000, 999_999_999)}";
+			var response = await m_simulator.SendSMS(ph, "REGISTER");
 			var responseParse = JObject.Parse(response);
 			var messages = responseParse.SelectTokens("payload.messages").ToList();
 			foreach(var message in messages)

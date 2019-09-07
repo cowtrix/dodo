@@ -11,22 +11,24 @@ namespace DodoTest
 	{
 		protected HttpClient m_client = new HttpClient();
 		protected readonly string m_address;
-		protected string m_number = "44712345678";
+
+		protected string m_secret;
 
 		public SymSyncSimulator(string target)
 		{
 			m_address = target;
+			m_secret = "#!vbBq*3w7Q6$Uv4";
 		}
 
-		public async Task<string> SendSMS(string message)
+		public async Task<string> SendSMS(string from, string message)
 		{
 			var msg = new Dictionary<string, string>()
 			{
-				{ "from", m_number },
+				{ "from", from },
 				{ "message", message },
 				{ "message_id", "1" },
 				{ "sent_to", "011595154631" },
-				{ "secret", DodoServer.SECRET },
+				{ "secret", m_secret },
 				{ "device_id", "1" },
 				{ "sent_timestamp", DateTime.UtcNow.ToFileTimeUtc().ToString() },
 			};
