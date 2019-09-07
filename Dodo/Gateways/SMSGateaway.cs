@@ -24,8 +24,8 @@ namespace XR.Dodo
 			Message = message;
 		}
 		private readonly Message Message;
-		public string UUID { get { return Message.UUID; } }
-		public string Number { get { return Message.Owner.PhoneNumber; } }
+		public string UUID { get { return Message.MessageID; } }
+		public string Number { get { return Message.GetSession()?.User.PhoneNumber; } }
 		public object Value { get { return Message.Content; } }
 	}
 
@@ -128,7 +128,7 @@ namespace XR.Dodo
 				var smsResponses = new List<SMSMessageResponse>();
 				foreach(var response in responses)
 				{
-					var smsResponse = new SMSMessageResponse(response.Owner.PhoneNumber, response);
+					var smsResponse = new SMSMessageResponse(response.GetSession()?.User.PhoneNumber, response);
 					smsResponses.Add(smsResponse);
 				}
 				return Reply(smsResponses);

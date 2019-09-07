@@ -66,6 +66,7 @@ namespace XR.Dodo
 
 		private static IEnumerable<Message> ProcessMessage(Message message, UserSession session)
 		{
+			session.Messages.Add(message);
 			if(SiteManager.IsCoordinator(session.User))
 			{
 				return CoordinatorWorkflow.ProcessMessage(message, session);

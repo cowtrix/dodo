@@ -3,24 +3,61 @@ using Newtonsoft.Json;
 using System.IO;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace XR.Dodo
 {
 	public class SessionManager
 	{
-		JsonSerializer m_serializer = new JsonSerializer();
+		readonly string m_dataPath;
+		private Dictionary<User, UserSession> _sessions;
 
 		public SessionManager(string dataPath)
 		{
-			if(!File.Exists(dataPath))
+			_sessions = new Dictionary<User, UserSession>();
+			m_dataPath = dataPath;
+			LoadSessions();
+			var updateTask = new Task(() =>
 			{
-				File.Create(dataPath).Close();
-			}
-			using (var jsonReader = new JsonTextReader(File.OpenText(dataPath)))
+				while(true)
+				{
+					Thread.Sleep(10 * 10000);
+					SaveSessions();
+				}
+			});
+			updateTask.Start();
+			SaveSessions();
+		}
+
+		void LoadSessions()
+		{
+			if (!File.Exists(m_dataPath))
 			{
-				_sessions = m_serializer.Deserialize<Dictionary<User, UserSession>>(jsonReader) ??
-					new Dictionary<User, UserSession>();
+				File.Create(m_dataPath).Close();
 			}
+			var sessions = JsonConvert.DeserializeObject<List<UserSession>>(File.ReadAllText(m_dataPath)) ??
+					new List<UserSession>();
+			_sessions.Clear();
+			foreach (var session in sessions)
+			{
+				_sessions.Add(session.User, session);
+			}
+		}
+
+		public UserSession GetSessionFromUUID(string ownerUID)
+		{
+			return _sessions.FirstOrDefault(x => x.Key.UUID == ownerUID).Value;
+		}
+
+		void SaveSessions()
+		{
+			if (!File.Exists(m_dataPath))
+			{
+				File.Create(m_dataPath).Close();
+			}
+			File.WriteAllText(m_dataPath, JsonConvert.SerializeObject(_sessions.Values.ToList(), Formatting.Indented));
+			Console.WriteLine($"Saved user session data to {m_dataPath}");
 		}
 
 		public UserSession GetOrCreateSession(User user)
@@ -32,8 +69,6 @@ namespace XR.Dodo
 			}
 			return session;
 		}
-
-		private Dictionary<User, UserSession> _sessions;
 
 		public UserSession GetOrCreateSessionFromNumber(string fromNumber)
 		{

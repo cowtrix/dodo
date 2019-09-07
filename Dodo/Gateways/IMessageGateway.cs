@@ -1,23 +1,30 @@
-﻿using SimpleHttpServer.Models;
+﻿using Newtonsoft.Json;
+using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace XR.Dodo
 {
 	
 	public readonly struct Message
 	{
-		public readonly User Owner;
+		public readonly string OwnerID;
 		public readonly string Content;
 		public readonly DateTime TimeStamp;
-		public readonly string UUID;
+		public readonly string MessageID;
+
+		public UserSession GetSession()
+		{
+			return DodoServer.SessionManager.GetSessionFromUUID(OwnerID);
+		}
 
 		public Message(User owner, string content)
 		{
-			Owner = owner;
+			OwnerID = owner.UUID;
 			Content = content;
 			TimeStamp = DateTime.Now;
-			UUID = Guid.NewGuid().ToString();
+			MessageID = Guid.NewGuid().ToString();
 		}
 	}
 
@@ -26,6 +33,12 @@ namespace XR.Dodo
 		public string Name;
 		public string PhoneNumber;
 		public int TelegramUser;
+		public string UUID;
+
+		public User()
+		{
+			UUID = Guid.NewGuid().ToString();
+		}
 	}
 
 	public interface IMessageGateway
