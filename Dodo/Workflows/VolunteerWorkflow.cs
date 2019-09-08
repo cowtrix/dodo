@@ -4,13 +4,23 @@ namespace XR.Dodo
 {
 	public class VolunteerWorkflow : Workflow
 	{
-
-		protected override IEnumerable<Message> ProcessMessageInternal(Message message, UserSession session)
+		public enum EVolunteerState
 		{
-			return new[]
+			New,
+			Inducted,
+		}
+		public EVolunteerState State;
+		protected override ServerMessage ProcessMessageInternal(UserMessage message, UserSession session)
+		{
+			if(State == EVolunteerState.New)
 			{
-				new Message(DodoServer.Server, "Thank you for registering!"),
-			};
+				if(message.Content.ToLowerInvariant() == "inducted")
+				{
+					State = EVolunteerState.Inducted;
+				}
+			}
+			DodoServer.TelegramGateway.SendMessage(session.GetUser(), new ServerMessage("Kapow!"));
+			return new ServerMessage("Sorry, I didn't understand that.");
 		}
 	}
 }

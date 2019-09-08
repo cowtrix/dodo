@@ -5,6 +5,29 @@ using System.Linq;
 
 namespace XR.Dodo
 {
+	public enum EParentGroup
+	{
+		ActionSupport,
+		ArresteeSupport,
+		WorldBuildingProd,
+		MediaAndMessaging,
+		MovementSupport,
+	}
+
+	public readonly struct WorkingGroup
+	{
+		public readonly string Name;
+		public readonly string Mandate;
+		public readonly EParentGroup ParentGroup;
+
+		public WorkingGroup(string workingGroup, EParentGroup parentGroup, string mandate) : this()
+		{
+			Name = workingGroup;
+			ParentGroup = parentGroup;
+			Mandate = mandate;
+		}
+	}
+
 	public class SpreadsheetException : Exception
 	{
 		public readonly int Row;
@@ -23,30 +46,9 @@ namespace XR.Dodo
 			public List<SpreadsheetError> Errors = new List<SpreadsheetError>();
 		}
 		public SpreadsheetStatus Status { get; private set; }
-		public enum EWorkingGroup
-		{
-			ActionSupport,
-			ArresteeSupport,
-			WorldBuildingProd,
-			MediaAndMessaging,
-			MovementSupport,
-		}
-
-		public class Coordinator : User
-		{
-			public string Email;
-			public string Role;
-			public EWorkingGroup WorkingGroup;
-
-			public override string ToString()
-			{
-				return $"{Name}: {PhoneNumber}";
-			}
-		}
-
 		public readonly int SiteCode;
 		public readonly string SiteName;
-		public List<Coordinator> Coordinators = new List<Coordinator>();
+		public List<WorkingGroup> WorkingGroups = new List<WorkingGroup>();
 		private readonly string m_spreadSheetID;
 
 		public string URL
@@ -57,19 +59,19 @@ namespace XR.Dodo
 			}
 		}
 
-		private static EWorkingGroup StringToWorkingGroup(string str)
+		private static EParentGroup StringToParentGroup(string str)
 		{
 			str = str.ToUpperInvariant();
 			if (str.Contains("ACTION SUPPORT"))
-				return EWorkingGroup.ActionSupport;
+				return EParentGroup.ActionSupport;
 			if (str.Contains("ARRESTEE SUPPORT"))
-				return EWorkingGroup.ArresteeSupport;
+				return EParentGroup.ArresteeSupport;
 			if (str.Contains("WORLD BUILDING AND PRODUCTION"))
-				return EWorkingGroup.WorldBuildingProd;
+				return EParentGroup.WorldBuildingProd;
 			if (str.Contains("MEDIA AND MESSAGING"))
-				return EWorkingGroup.MediaAndMessaging;
+				return EParentGroup.MediaAndMessaging;
 			if (str.Contains("MOVEMENT SUPPORT"))
-				return EWorkingGroup.MovementSupport;
+				return EParentGroup.MovementSupport;
 			throw new Exception($"Couldn't cast {str}");
 		}
 
@@ -92,14 +94,14 @@ namespace XR.Dodo
 					{
 						continue;
 					}
-					string workingGroup = null;
-					var workingGroupEnum = EWorkingGroup.ActionSupport;
+					string parentGroupStr = null;
+					var parentGroup = EParentGroup.ActionSupport;
 					for (var column = 1; column < row.Count; ++column)
 					{
-						workingGroup = spreadSheet.Values.ElementAt(2).ElementAtOrDefault(column) as string ?? workingGroup;
+						parentGroupStr = spreadSheet.Values.ElementAt(2).ElementAtOrDefault(column) as string ?? parentGroupStr;
 						try
 						{
-							workingGroupEnum = StringToWorkingGroup(workingGroup);
+							parentGroup = StringToParentGroup(parentGroupStr);
 						}
 						catch { }
 						var name = rowString.ElementAt(column) as string;
@@ -109,21 +111,40 @@ namespace XR.Dodo
 						}
 						var email = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Email").ElementAtOrDefault(column) as string ?? "";
 						var number = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Number").ElementAtOrDefault(column) as string ?? "";
-						var role = spreadSheet.Values.ElementAt(4).ElementAtOrDefault(column) as string ?? "";
-						
-						if(!PhoneExtensions.ValidateNumber(ref number))
+						var workingGroupName = spreadSheet.Values
+							.First(x =>
+							{
+								var str = (x.FirstOrDefault() as string ?? "").ToLowerInvariant();
+								return str.Contains("working group");
+							})
+							.ElementAtOrDefault(column) as string ?? "";
+						var mandate = spreadSheet.Values
+							.First(x =>
+							{
+								var str = (x.FirstOrDefault() as string ?? "").ToLowerInvariant();
+								return str.Contains("mandate");
+							})
+							.ElementAtOrDefault(column) as string ?? "";
+
+						if (!PhoneExtensions.ValidateNumber(ref number))
 						{
 							throw new SpreadsheetException(rowIndex, column, $"Value wasn't a valid UK Mobile number: " + number);
 						}
 
-						Coordinators.Add(new Coordinator()
+						var workingGroup = new WorkingGroup(workingGroupName, parentGroup, mandate);
+						if(!WorkingGroups.Contains(workingGroup))
+						{
+							WorkingGroups.Add(workingGroup);
+						}
+						var coordinator = new Coordinator()
 						{
 							Name = name,
 							Email = email,
 							PhoneNumber = number,
-							Role = role,
-							WorkingGroup = workingGroupEnum,
-						});
+							WorkingGroup = workingGroup,
+							SiteCode = siteCode,
+						};
+						DodoServer.SessionManager.AddUser(coordinator);
 					}
 				}
 				catch(Exception e)

@@ -9,7 +9,9 @@ namespace XR.Dodo
 	{
 		const string StatusRange = "A1:ZZZ";
 		private static string m_statusID;
+
 		Dictionary<int, SiteSpreadsheet> Sites = new Dictionary<int, SiteSpreadsheet>();
+
 		public SiteSpreadsheetManager(string configPath)
 		{
 			LoadFromGSheets(configPath);
@@ -99,19 +101,9 @@ namespace XR.Dodo
 			Console.WriteLine("Finished loading");
 		}
 
-		public bool IsCoordinator(User user)
+		public List<SiteSpreadsheet> GetSites()
 		{
-			return Sites.Any(x => x.Value.Coordinators.Any(y => y.PhoneNumber == user.PhoneNumber));
-		}
-
-		public bool IsCoordinator(string phoneNumber)
-		{
-			return Sites.Any(x => x.Value.Coordinators.Any(y => y.PhoneNumber == phoneNumber));
-		}
-
-		public bool IsCoordinator(int telegramID)
-		{
-			return Sites.Any(x => x.Value.Coordinators.Any(y => y.TelegramUser == telegramID));
+			return Sites.Values.ToList();
 		}
 	}
 }

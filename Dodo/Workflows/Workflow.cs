@@ -7,11 +7,14 @@ namespace XR.Dodo
 {
 	public abstract class Workflow
 	{
-		public IEnumerable<Message> ProcessMessage(Message message, UserSession session)
+		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
-			return ProcessMessageInternal(message, session);
+			session.Inbox.Add(message);
+			var response = ProcessMessageInternal(message, session);
+			session.Outbox.Add(response);
+			return response;
 		}
 
-		protected abstract IEnumerable<Message> ProcessMessageInternal(Message message, UserSession session);
+		protected abstract ServerMessage ProcessMessageInternal(UserMessage message, UserSession session);
 	}
 }

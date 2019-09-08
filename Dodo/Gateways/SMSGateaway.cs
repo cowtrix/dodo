@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace XR.Dodo
 {
@@ -19,26 +20,42 @@ namespace XR.Dodo
 
 	public readonly struct SMSMessageResponse
 	{
-		public SMSMessageResponse(string number, Message message)
+		public SMSMessageResponse(string targetNumber, ServerMessage message)
 		{
 			Message = message;
+			TargetNumber = targetNumber;
 		}
-		private readonly Message Message;
+		private readonly ServerMessage Message;
+		public readonly string TargetNumber;
 		public string UUID { get { return Message.MessageID; } }
-		public string Number { get { return Message.GetSession()?.User.PhoneNumber; } }
 		public object Value { get { return Message.Content; } }
 	}
 
 	public class SMSGateaway : IMessageGateway
 	{
+		public readonly int Port;
 		public string SMSSecret = "";
 
-		public SMSGateaway(string secret)
+		public SMSGateaway(string secret, int port)
 		{
 			SMSSecret = secret;
+			Port = port;
+			var route_config = new List<Route>() {
+				new Route()
+				{
+					Name = "SMS Receiver",
+					Method = "POST",
+					UrlRegex = @"(?:^/)*",
+					Callable = (HttpRequest request) =>
+					{
+						return Read(request);
+					}
+				}
+			};
+			var httpServer = new HttpServer(Port, route_config);
+			var thread = new Thread(new ThreadStart(httpServer.Listen));
+			thread.Start();
 		}
-
-		public Func<Message, UserSession, IEnumerable<Message>> ProcessMessage { get; set; }
 
 		bool IsValid(HttpRequest request)
 		{
@@ -71,7 +88,7 @@ namespace XR.Dodo
 			foreach(var response in responses)
 			{
 				sb.AppendLine("            {");
-				sb.AppendLine($"                \"to\": \"{response.Number}\",");
+				sb.AppendLine($"                \"to\": \"{response.TargetNumber}\",");
 				sb.AppendLine($"                \"message\": \"{response.Value}\",");
 				sb.AppendLine($"                \"uuid\": \"{response.UUID}\"");
 				sb.AppendLine("            }");
@@ -109,8 +126,9 @@ namespace XR.Dodo
 				}
 				// The SMS received is valid and so we can process it
 				var fromNumber = request.QueryParams["from"];
-				var session = DodoServer.SessionManager.GetOrCreateSessionFromNumber(fromNumber);
-				if(session == null)
+				var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(fromNumber);
+				var session = DodoServer.SessionManager.GetOrCreateSession(user);
+				if (session == null)
 				{
 					return Failure("ERROR 0x34492"); // Number wasn't valid
 				}
@@ -123,15 +141,10 @@ namespace XR.Dodo
 					MessageString = request.QueryParams["message"],
 					TimeReceived = DateTime.FromFileTimeUtc(long.Parse(request.QueryParams["sent_timestamp"])),
 				};
-				var message = new Message(session.User, smsmMessage.MessageString);
-				var responses = ProcessMessage(message, session);
-				var smsResponses = new List<SMSMessageResponse>();
-				foreach(var response in responses)
-				{
-					var smsResponse = new SMSMessageResponse(response.GetSession()?.User.PhoneNumber, response);
-					smsResponses.Add(smsResponse);
-				}
-				return Reply(smsResponses);
+				var message = new UserMessage(user, smsmMessage.MessageString);
+				var response = session.ProcessMessage(message, session);
+				var smsResponse = new SMSMessageResponse(user.PhoneNumber, response);
+				return Reply(smsResponse);
 			}
 			catch(Exception e)
 			{

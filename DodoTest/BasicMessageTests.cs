@@ -13,8 +13,8 @@ namespace DodoTest
 		[TestMethod]
 		public async Task CheckCoordinator()
 		{
-			Assert.IsFalse(DodoServer.SiteManager.IsCoordinator("04472782157"));
-			Assert.IsTrue(DodoServer.SiteManager.IsCoordinator("07960078593"));
+			//Assert.IsFalse(DodoServer.SessionManager.IsCoordinator("04472782157"));
+			//Assert.IsTrue(DodoServer.SessionManager.IsCoordinator("07960078593"));
 		}
 
 		[TestMethod]

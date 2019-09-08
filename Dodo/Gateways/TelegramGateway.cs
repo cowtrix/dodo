@@ -25,23 +25,24 @@ namespace XR.Dodo
 			setup.Start();
 		}
 
-		public Func<Message, UserSession, IEnumerable<Message>> ProcessMessage { get; set; }
+		public async void SendMessage(User target, ServerMessage message)
+		{
+			await m_botClient.SendTextMessageAsync(target.TelegramUser, message.Content);
+		}
 
 		async void Bot_OnMessage(object sender, MessageEventArgs e)
 		{
 			if (e.Message.Text != null)
 			{
-				var session = DodoServer.SessionManager.GetOrCreateSessionFromTelegramName(e.Message.From.Id);
-				var customMessage = new Message(session.User, e.Message.Text);
+				var user = DodoServer.SessionManager.GetOrCreateUserFromTelegramNumber(e.Message.From.Id);
+				var session = DodoServer.SessionManager.GetOrCreateSession(user);
+				var customMessage = new UserMessage(user, e.Message.Text);
 				Console.WriteLine($"Received a text message in chat {e.Message.Chat.Id}.");
-				var responses = ProcessMessage(customMessage, session);
-				foreach(var response in responses)
-				{
-					await m_botClient.SendTextMessageAsync(
-					  chatId: e.Message.Chat,
-					  text: response.Content
-					);
-				}
+				var response = session.ProcessMessage(customMessage, session);
+				await m_botClient.SendTextMessageAsync(
+					chatId: e.Message.Chat,
+					text: response.Content
+				);
 			}
 		}
 	}

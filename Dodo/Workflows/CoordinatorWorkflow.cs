@@ -1,12 +1,14 @@
-﻿// Copyright (C) 2016 by Barend Erasmus, David Jeske and donated to the public domain
-
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace XR.Dodo
 {
 	public class CoordinatorWorkflow : Workflow
 	{
-		protected override IEnumerable<Message> ProcessMessageInternal(Message message, UserSession session)
+		protected override ServerMessage ProcessMessageInternal(UserMessage message, UserSession session)
 		{
 			throw new System.NotImplementedException();
 		}

@@ -88,9 +88,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Users\Coordinator.cs" />
+    <Compile Include="Gateways\Message.cs" />
+    <Compile Include="Users\User.cs" />
+    <Compile Include="Sessions\CoordinatorSession.cs" />
+    <Compile Include="Users\Volunteer.cs" />
+    <Compile Include="Sessions\VolunteerSession.cs" />
+    <Compile Include="CoordinatorNeedsManager.cs" />
     <Compile Include="Workflows\CoordinatorWorkflow.cs" />
     <Compile Include="PhoneExtensions.cs" />
-    <Compile Include="SessionManager.cs" />
+    <Compile Include="Sessions\SessionManager.cs" />
     <Compile Include="SiteSpreadsheet.cs" />
     <Compile Include="DodoServer.cs" />
     <Compile Include="GSheets.cs" />
@@ -99,7 +106,7 @@
     <Compile Include="Gateways\IMessageGateway.cs" />
     <Compile Include="Gateways\SMSGateaway.cs" />
     <Compile Include="Gateways\TelegramGateway.cs" />
-    <Compile Include="UserSession.cs" />
+    <Compile Include="Sessions\UserSession.cs" />
     <Compile Include="Workflows\VolunteerWorkflow.cs" />
     <Compile Include="Workflows\Workflow.cs" />
   </ItemGroup>
