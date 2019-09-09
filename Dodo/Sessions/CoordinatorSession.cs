@@ -4,11 +4,11 @@ namespace XR.Dodo
 {
 	public class CoordinatorSession : UserSession
 	{
-		public CoordinatorSession(Coordinator user) : base(user)
+		public CoordinatorSession(string user) : base(user)
 		{
 			m_workflow = new CoordinatorWorkflow();
 		}
 		private CoordinatorWorkflow m_workflow;
-		protected override Workflow Workflow { get { return m_workflow; } }
+		public override Workflow Workflow { get { return m_workflow; } }
 	}
 }

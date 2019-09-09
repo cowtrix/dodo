@@ -152,5 +152,10 @@ namespace XR.Dodo
 				return Failure("ERROR 0x34502"); // Incorrect formatting
 			}
 		}
+
+		public void SendMessage(ServerMessage message, UserSession session)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

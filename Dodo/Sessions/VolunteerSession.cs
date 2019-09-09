@@ -5,11 +5,10 @@ namespace XR.Dodo
 	public class VolunteerSession : UserSession
 	{
 		private VolunteerWorkflow m_workflow;
-		public VolunteerSession(Volunteer user) : base(user)
+		public VolunteerSession(string user) : base(user)
 		{
 			m_workflow = new VolunteerWorkflow();
 		}
-
-		protected override Workflow Workflow { get { return m_workflow; } }
+		public override Workflow Workflow { get { return m_workflow; } }
 	}
 }

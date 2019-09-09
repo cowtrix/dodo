@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2016 by Barend Erasmus, David Jeske and donated to the public domain
+﻿
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,9 @@ namespace XR.Dodo
 		public static string SMSGatewaySecret { get { return m_secrets[0]; } }
 		public static string TelegramGatewaySecret { get { return m_secrets[1]; } }
 		public static string CoordinatorDataID { get { return m_secrets[2]; } }
+		public static string TwilioSID { get { return m_secrets[3]; } }
+		public static string TwilioAuthToken { get { return m_secrets[4]; } }
+		public static string TwilioNumber { get { return m_secrets[5]; } }
 
 		private static List<string> m_secrets;
 		
@@ -27,6 +30,7 @@ namespace XR.Dodo
 		public static CoordinatorNeedsManager CoordinatorNeedsManager;
 		public static SMSGateaway SMSGateway;
 		public static TelegramGateway TelegramGateway;
+		public static TwilioGateway TwilioGateway;
 
 		static void Main(string[] args)
 		{
@@ -46,6 +50,7 @@ namespace XR.Dodo
 			// Set up gateways
 			SMSGateway = new SMSGateaway(SMSGatewaySecret, 8080);
 			TelegramGateway = new TelegramGateway(TelegramGatewaySecret);
+			TwilioGateway = new TwilioGateway(TwilioSID, TwilioAuthToken, TwilioNumber);
 		}
 	}
 }

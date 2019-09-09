@@ -10,9 +10,9 @@ namespace XR.Dodo
 		public List<UserMessage> Inbox = new List<UserMessage>();
 		public List<ServerMessage> Outbox = new List<ServerMessage>();
 
-		public UserSession(User user)
+		public UserSession(string uuid)
 		{
-			UserID = user.UUID;
+			UserID = uuid;
 		}
 
 		public User GetUser()
@@ -20,7 +20,7 @@ namespace XR.Dodo
 			return DodoServer.SessionManager.GetUserFromUserID(UserID);
 		}
 
-		protected abstract Workflow Workflow { get; }
+		public abstract Workflow Workflow { get; }
 
 		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{

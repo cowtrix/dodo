@@ -14,12 +14,11 @@ namespace XR.Dodo
 		{
 			if(State == EVolunteerState.New)
 			{
-				if(message.Content.ToLowerInvariant() == "inducted")
+				if(message.Content.ToUpperInvariant() == "INDUCTED")
 				{
 					State = EVolunteerState.Inducted;
 				}
 			}
-			DodoServer.TelegramGateway.SendMessage(session.GetUser(), new ServerMessage("Kapow!"));
 			return new ServerMessage("Sorry, I didn't understand that.");
 		}
 	}

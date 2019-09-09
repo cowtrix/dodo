@@ -94,11 +94,11 @@ namespace XR.Dodo
 			{
 				if(user is Volunteer)
 				{
-					session = new VolunteerSession(user as Volunteer);
+					session = new VolunteerSession(user.UUID);
 				}
 				else if(user is Coordinator)
 				{
-					session = new CoordinatorSession(user as Coordinator);
+					session = new CoordinatorSession(user.UUID);
 				}
 				else
 				{

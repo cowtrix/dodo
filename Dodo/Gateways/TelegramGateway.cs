@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -25,9 +24,15 @@ namespace XR.Dodo
 			setup.Start();
 		}
 
-		public async void SendMessage(User target, ServerMessage message)
+		public void SendMessage(ServerMessage message, UserSession session)
 		{
-			await m_botClient.SendTextMessageAsync(target.TelegramUser, message.Content);
+			var send = SendMessageAsync(message, session);
+			send.Start();
+		}
+
+		async Task SendMessageAsync(ServerMessage message, UserSession session)
+		{
+			await m_botClient.SendTextMessageAsync(session.GetUser().TelegramUser, message.Content);
 		}
 
 		async void Bot_OnMessage(object sender, MessageEventArgs e)
@@ -38,11 +43,12 @@ namespace XR.Dodo
 				var session = DodoServer.SessionManager.GetOrCreateSession(user);
 				var customMessage = new UserMessage(user, e.Message.Text);
 				Console.WriteLine($"Received a text message in chat {e.Message.Chat.Id}.");
-				var response = session.ProcessMessage(customMessage, session);
-				await m_botClient.SendTextMessageAsync(
-					chatId: e.Message.Chat,
-					text: response.Content
-				);
+				if (user.TelegramUser != 0 && !user.Verified && !session.Workflow.Verification.Skip)
+				{
+					await SendMessageAsync(await session.Workflow.Verification.Verify(customMessage, session), session);
+					return;
+				}
+				await SendMessageAsync(session.ProcessMessage(customMessage, session), session);
 			}
 		}
 	}

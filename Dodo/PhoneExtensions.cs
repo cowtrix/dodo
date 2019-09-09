@@ -1,6 +1,4 @@
-﻿// Copyright (C) 2016 by Barend Erasmus, David Jeske and donated to the public domain
-
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace XR.Dodo
 {
