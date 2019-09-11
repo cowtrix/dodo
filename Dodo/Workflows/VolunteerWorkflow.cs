@@ -10,7 +10,7 @@ namespace XR.Dodo
 			Inducted,
 		}
 		public EVolunteerState State;
-		protected override ServerMessage ProcessMessageInternal(UserMessage message, UserSession session)
+		protected override ServerMessage ProcessMessageForRole(UserMessage message, UserSession session)
 		{
 			if(State == EVolunteerState.New)
 			{
@@ -20,6 +20,11 @@ namespace XR.Dodo
 				}
 			}
 			return new ServerMessage("Sorry, I didn't understand that.");
+		}
+
+		protected override ServerMessage GetHelp()
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

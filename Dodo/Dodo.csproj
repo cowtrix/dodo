@@ -81,6 +81,7 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -103,15 +104,14 @@
   <ItemGroup>
     <Compile Include="Gateways\TwilioGateway.cs" />
     <Compile Include="Gateways\Verification.cs" />
-    <Compile Include="Users\Coordinator.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="Sessions\CoordinatorSession.cs" />
-    <Compile Include="Users\Volunteer.cs" />
     <Compile Include="Sessions\VolunteerSession.cs" />
     <Compile Include="CoordinatorNeedsManager.cs" />
+    <Compile Include="Workflows\CoordinatorNeedsTask.cs" />
     <Compile Include="Workflows\CoordinatorWorkflow.cs" />
-    <Compile Include="PhoneExtensions.cs" />
+    <Compile Include="ValidationExtensions.cs" />
     <Compile Include="Sessions\SessionManager.cs" />
     <Compile Include="SiteSpreadsheet.cs" />
     <Compile Include="DodoServer.cs" />
@@ -124,6 +124,7 @@
     <Compile Include="Sessions\UserSession.cs" />
     <Compile Include="Workflows\VolunteerWorkflow.cs" />
     <Compile Include="Workflows\Workflow.cs" />
+    <Compile Include="Workflows\WorkflowTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".secret">

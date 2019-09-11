@@ -41,13 +41,8 @@ namespace XR.Dodo
 			{
 				var user = DodoServer.SessionManager.GetOrCreateUserFromTelegramNumber(e.Message.From.Id);
 				var session = DodoServer.SessionManager.GetOrCreateSession(user);
-				var customMessage = new UserMessage(user, e.Message.Text);
+				var customMessage = new UserMessage(user, e.Message.Text, EGatewayType.Telegram);
 				Console.WriteLine($"Received a text message in chat {e.Message.Chat.Id}.");
-				if (user.TelegramUser != 0 && !user.Verified && !session.Workflow.Verification.Skip)
-				{
-					await SendMessageAsync(await session.Workflow.Verification.Verify(customMessage, session), session);
-					return;
-				}
 				await SendMessageAsync(session.ProcessMessage(customMessage, session), session);
 			}
 		}

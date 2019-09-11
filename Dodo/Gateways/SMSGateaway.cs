@@ -141,7 +141,7 @@ namespace XR.Dodo
 					MessageString = request.QueryParams["message"],
 					TimeReceived = DateTime.FromFileTimeUtc(long.Parse(request.QueryParams["sent_timestamp"])),
 				};
-				var message = new UserMessage(user, smsmMessage.MessageString);
+				var message = new UserMessage(user, smsmMessage.MessageString, EGatewayType.SMS);
 				var response = session.ProcessMessage(message, session);
 				var smsResponse = new SMSMessageResponse(user.PhoneNumber, response);
 				return Reply(smsResponse);

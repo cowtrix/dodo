@@ -21,7 +21,7 @@ namespace DodoTest
 		public void ValidatePhoneNumbers()
 		{
 			var invalidNumber = "Joe Blocks";
-			Assert.IsTrue(!PhoneExtensions.ValidateNumber(ref invalidNumber));
+			Assert.IsTrue(!ValidationExtensions.ValidateNumber(ref invalidNumber));
 		}
 
 		[TestMethod]

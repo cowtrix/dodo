@@ -1,14 +1,5 @@
-﻿
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Configuration;
-using SimpleHttpServer;
-using SimpleHttpServer.Models;
-using SimpleHttpServer.RouteHandlers;
 using System.IO;
 
 namespace XR.Dodo
@@ -21,6 +12,7 @@ namespace XR.Dodo
 		public static string TwilioSID { get { return m_secrets[3]; } }
 		public static string TwilioAuthToken { get { return m_secrets[4]; } }
 		public static string TwilioNumber { get { return m_secrets[5]; } }
+		public static string SessionPassword { get { return m_secrets[6]; } }
 
 		private static List<string> m_secrets;
 		
@@ -46,11 +38,19 @@ namespace XR.Dodo
 			SessionManager = new SessionManager("sessions.json");
 			SiteManager = new SiteSpreadsheetManager("sites.config");
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(CoordinatorDataID);
+
+			SessionManager.GetOrCreateUserFromTelegramNumber(834876848).CoordinatorRoles.Add(
+				new WorkingGroup("Admin", EParentGroup.MovementSupport, "", 0));
 			
 			// Set up gateways
 			SMSGateway = new SMSGateaway(SMSGatewaySecret, 8080);
 			TelegramGateway = new TelegramGateway(TelegramGatewaySecret);
 			TwilioGateway = new TwilioGateway(TwilioSID, TwilioAuthToken, TwilioNumber);
+		}
+
+		public static void SendSMS(ServerMessage message, string phoneNumber)
+		{
+			TwilioGateway.SendMessage(message, phoneNumber);
 		}
 	}
 }

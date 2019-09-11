@@ -79,6 +79,11 @@ namespace XR.Dodo
 			GSheets.WriteSheet(m_statusID, errorReport, StatusRange);
 		}
 
+		public bool IsValidSiteCode(int siteCode)
+		{
+			return Sites.ContainsKey(siteCode);
+		}
+
 		void LoadFromGSheets(string configPath)
 		{
 			var configs = File.ReadAllLines(configPath);

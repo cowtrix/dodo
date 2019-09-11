@@ -14,7 +14,7 @@ namespace XR.Dodo
 		readonly string m_dataPath;
 		public class SessionManagerData
 		{
-			public ConcurrentBag<User> Users = new ConcurrentBag<User>();
+			public ConcurrentDictionary<string, User> Users = new ConcurrentDictionary<string, User>();
 			public ConcurrentDictionary<string, UserSession> Sessions = new ConcurrentDictionary<string, UserSession>();
 		}
 
@@ -43,6 +43,7 @@ namespace XR.Dodo
 			}
 			try
 			{
+				//var decrypted = EncryptStringSample.StringCipher.Decrypt(File.ReadAllText(m_dataPath), DodoServer.SessionPassword);
 				_data = JsonConvert.DeserializeObject<SessionManagerData>(File.ReadAllText(m_dataPath), new JsonSerializerSettings
 				{
 					TypeNameHandling = TypeNameHandling.Auto
@@ -92,17 +93,13 @@ namespace XR.Dodo
 		{
 			if (!_data.Sessions.TryGetValue(user.UUID, out var session))
 			{
-				if(user is Volunteer)
-				{
-					session = new VolunteerSession(user.UUID);
-				}
-				else if(user is Coordinator)
+				if(user.IsCoordinator)
 				{
 					session = new CoordinatorSession(user.UUID);
 				}
 				else
 				{
-					return null;
+					session = new VolunteerSession(user.UUID);
 				}
 				if(!_data.Sessions.TryAdd(user.UUID, session))
 				{
@@ -119,31 +116,32 @@ namespace XR.Dodo
 
 		public User GetUserFromUserID(string ownerUID)
 		{
-			return _data.Users.FirstOrDefault(x => x.UUID == ownerUID);
+			_data.Users.TryGetValue(ownerUID, out var result);
+			return result;
 		}
 
 		public User GetOrCreateUserFromPhoneNumber(string fromNumber)  
 		{
-			if(!PhoneExtensions.ValidateNumber(ref fromNumber))
+			if(!ValidationExtensions.ValidateNumber(ref fromNumber))
 			{
 				return null;
 			}
-			var user = _data.Users.FirstOrDefault(x => x.PhoneNumber == fromNumber);
+			var user = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
 			if(user == null)
 			{
-				user = new Volunteer() { PhoneNumber = fromNumber };
-				_data.Users.Add(user);
+				user = new User() { PhoneNumber = fromNumber };
+				_data.Users.TryAdd(user.UUID, user);
 			}
 			return user;
 		}
 
 		public User GetOrCreateUserFromTelegramNumber(int telegramId)
 		{
-			var user = _data.Users.FirstOrDefault(x => x.TelegramUser == telegramId);
+			var user = _data.Users.FirstOrDefault(x => x.Value.TelegramUser == telegramId).Value;
 			if (user == null)
 			{
-				user = new Volunteer() { TelegramUser = telegramId };
-				_data.Users.Add(user);
+				user = new User() { TelegramUser = telegramId };
+				_data.Users.TryAdd(user.UUID, user);
 			}
 			return user;
 		}
@@ -151,11 +149,6 @@ namespace XR.Dodo
 		public List<UserSession> GetCurrentSessions()
 		{
 			return _data.Sessions.Values.ToList();
-		}
-
-		public void AddUser(Coordinator coordinator)
-		{
-			_data.Users.Add(coordinator);
 		}
 	}
 }

@@ -8,9 +8,20 @@ namespace XR.Dodo
 {
 	public class CoordinatorWorkflow : Workflow
 	{
-		protected override ServerMessage ProcessMessageInternal(UserMessage message, UserSession session)
+		protected override ServerMessage GetHelp()
 		{
-			throw new System.NotImplementedException();
+			return new ServerMessage("TODO");
+		}
+
+		protected override ServerMessage ProcessMessageForRole(UserMessage message, UserSession session)
+		{
+			var toUpper = message.Content.ToUpperInvariant();
+			if(toUpper.StartsWith("NEED"))
+			{
+				CurrentTask = new CoordinatorNeedsTask(this);
+				return CurrentTask.ProcessMessage(message, session);
+			}
+			return GetHelp();
 		}
 	}
 }
