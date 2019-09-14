@@ -1,7 +1,9 @@
-﻿using SimpleHttpServer;
+﻿using Newtonsoft.Json;
+using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,19 +27,39 @@ namespace XR.Dodo
 			Message = message;
 			TargetNumber = targetNumber;
 		}
-		private readonly ServerMessage Message;
+		public readonly ServerMessage Message;
 		public readonly string TargetNumber;
 		public string UUID { get { return Message.MessageID; } }
-		public object Value { get { return Message.Content; } }
 	}
-
+	
 	public class SMSGateaway : IMessageGateway
 	{
+		public struct Phone
+		{
+			public string Name;
+			public string Number;
+			public int OutboxCount;
+			public DateTime LastMessage;
+		}
+
+		public List<Phone> Phones = new List<Phone>();
+
 		public readonly int Port;
 		public string SMSSecret = "";
+		const string m_filePath = "smsNumbers.json";
 
 		public SMSGateaway(string secret, int port)
 		{
+			if (File.Exists(m_filePath))
+			{
+				Phones = JsonConvert.DeserializeObject<List<Phone>>(File.ReadAllText(m_filePath))
+					?? Phones;
+			}
+			Phones.Add(new Phone()
+			{
+				Name = "My phone",
+				Number = "+447856465191"
+			});
 			SMSSecret = secret;
 			Port = port;
 			var route_config = new List<Route>() {
@@ -55,6 +77,11 @@ namespace XR.Dodo
 			var httpServer = new HttpServer(Port, route_config);
 			var thread = new Thread(new ThreadStart(httpServer.Listen));
 			thread.Start();
+		}
+
+		public string GetNumber()
+		{
+			return Phones.Random().Number;
 		}
 
 		bool IsValid(HttpRequest request)
@@ -83,13 +110,18 @@ namespace XR.Dodo
 
 		HttpResponse Reply(IEnumerable<SMSMessageResponse> responses)
 		{
+			responses = responses.Where(x => !string.IsNullOrEmpty(x.Message.Content));
+			if(responses.Count() == 0)
+			{
+				return Success();
+			}
 			var sb = new StringBuilder();
 			sb.Append("{\r\n    \"payload\": {\r\n        \"success\": \"true\",\r\n        \"task\": \"send\",\r\n        \"messages\": [\r\n");
 			foreach(var response in responses)
 			{
 				sb.AppendLine("            {");
 				sb.AppendLine($"                \"to\": \"{response.TargetNumber}\",");
-				sb.AppendLine($"                \"message\": \"{response.Value}\",");
+				sb.AppendLine($"                \"message\": \"{response.Message.Content}\",");
 				sb.AppendLine($"                \"uuid\": \"{response.UUID}\"");
 				sb.AppendLine("            }");
 				if(response.UUID != responses.Last().UUID)
@@ -124,24 +156,32 @@ namespace XR.Dodo
 				{
 					return HttpBuilder.NotFound();
 				}
+				var receiverNumber = request.QueryParams["sent_to"];
+				if (!ValidationExtensions.ValidateNumber(ref receiverNumber))
+				{
+					return Failure("Invalid receiver number: " + request.QueryParams["sent_to"]);
+				}
 				// The SMS received is valid and so we can process it
 				var fromNumber = request.QueryParams["from"];
-				var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(fromNumber);
-				var session = DodoServer.SessionManager.GetOrCreateSession(user);
-				if (session == null)
-				{
-					return Failure("ERROR 0x34492"); // Number wasn't valid
-				}
 				var smsmMessage = new SMSMessage()
 				{
 					From = fromNumber,
 					MessageID = request.QueryParams["message_id"],
 					DeviceID = request.QueryParams["device_id"],
-					ReceiverNumber = request.QueryParams["sent_to"],
+					ReceiverNumber = receiverNumber,
 					MessageString = request.QueryParams["message"],
 					TimeReceived = DateTime.FromFileTimeUtc(long.Parse(request.QueryParams["sent_timestamp"])),
 				};
-				var message = new UserMessage(user, smsmMessage.MessageString, EGatewayType.SMS);
+
+				var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(fromNumber, smsmMessage.MessageString);
+				var message = new UserMessage(user, smsmMessage.MessageString, EGatewayType.SMS,
+					smsmMessage.From);
+				
+				var session = DodoServer.SessionManager.GetOrCreateSession(user);
+				if (session == null)
+				{
+					return Failure("ERROR 0x34492"); // Number wasn't valid
+				}
 				var response = session.ProcessMessage(message, session);
 				var smsResponse = new SMSMessageResponse(user.PhoneNumber, response);
 				return Reply(smsResponse);

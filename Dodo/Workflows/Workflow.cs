@@ -11,12 +11,7 @@ namespace XR.Dodo
 		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
 			session.Inbox.Add(message);
-			var user = session.GetUser();
-			switch (message.Content)
-			{
-				case "HELP":
-					return GetHelp();
-			}
+			var user = session.GetUser();			
 			if(CurrentTask != null)
 			{
 				if(DateTime.Now - CurrentTask.TimeCreated > m_timeout)
@@ -27,6 +22,14 @@ namespace XR.Dodo
 				{
 					return CurrentTask.ProcessMessage(message, session);
 				}
+			}
+			switch (message.Content.ToUpperInvariant())
+			{
+				case "HELP":
+					return GetHelp();
+				case "VERIFY":
+					CurrentTask = new Verification(this);
+					return CurrentTask.ProcessMessage(message, session);
 			}
 			var response = ProcessMessageForRole(message, session);
 			session.Outbox.Add(response);

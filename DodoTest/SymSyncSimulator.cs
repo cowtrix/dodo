@@ -22,12 +22,16 @@ namespace DodoTest
 
 		public async Task<string> SendSMS(string from, string message)
 		{
+			if(!ValidationExtensions.ValidateNumber(ref from))
+			{
+				return null;
+			}
 			var msg = new Dictionary<string, string>()
 			{
 				{ "from", from },
 				{ "message", message },
 				{ "message_id", "1" },
-				{ "sent_to", "011595154631" },
+				{ "sent_to", "+44784651921" },
 				{ "secret", m_secret },
 				{ "device_id", "1" },
 				{ "sent_timestamp", DateTime.UtcNow.ToFileTimeUtc().ToString() },

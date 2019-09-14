@@ -38,7 +38,7 @@ namespace XR.Dodo
 				int tries = 0;
 				do
 				{
-					code = Utility.RandomString(2, Name + tries.ToString()).ToUpperInvariant();
+					code = Utility.RandomString(3, Name + tries.ToString()).ToUpperInvariant();
 					tries++;
 				} while (m_shortCodes.ContainsValue(code));
 				m_shortCodes[this] = code;
@@ -165,6 +165,8 @@ namespace XR.Dodo
 						{
 							WorkingGroups.Add(workingGroup);
 						}
+						// ADD BACK IN
+						continue;
 						var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);
 						user.Name = name;
 						user.PhoneNumber = number;

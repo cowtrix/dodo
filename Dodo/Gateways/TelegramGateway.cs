@@ -37,14 +37,27 @@ namespace XR.Dodo
 
 		async void Bot_OnMessage(object sender, MessageEventArgs e)
 		{
-			if (e.Message.Text != null)
+			var message = e.Message.Text;
+			var userID = e.Message.From.Id;
+			await SendMessageAsync(GetMessage(message, userID, out var session), session);
+		}
+
+		ServerMessage GetMessage(string message, int userID, out UserSession session)
+		{
+			session = null;
+			if (!string.IsNullOrEmpty(message))
 			{
-				var user = DodoServer.SessionManager.GetOrCreateUserFromTelegramNumber(e.Message.From.Id);
-				var session = DodoServer.SessionManager.GetOrCreateSession(user);
-				var customMessage = new UserMessage(user, e.Message.Text, EGatewayType.Telegram);
-				Console.WriteLine($"Received a text message in chat {e.Message.Chat.Id}.");
-				await SendMessageAsync(session.ProcessMessage(customMessage, session), session);
+				var user = DodoServer.SessionManager.GetOrCreateUserFromTelegramNumber(userID);
+				 session = DodoServer.SessionManager.GetOrCreateSession(user);
+				var customMessage = new UserMessage(user, message, EGatewayType.Telegram, userID.ToString());
+				return session.ProcessMessage(customMessage, session);
 			}
+			return default(ServerMessage);
+		}
+
+		public async Task<ServerMessage> FakeMessage(string message, int userID)
+		{
+			return GetMessage(message, userID, out var _);
 		}
 	}
 }

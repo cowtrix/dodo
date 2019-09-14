@@ -141,11 +141,17 @@ namespace XR.Dodo
 
 		private string GetWorkingGroupRequestString(List<WorkingGroup> wgs)
 		{
-			var sb = new StringBuilder("Please select the role from the list:\n");
+			var sb = new StringBuilder("Please select the Working Group from the list:\n");
+			var parentGroup = wgs.First().ParentGroup;
 			for (var i = 0; i < wgs.Count; i++)
 			{
 				var wg = (WorkingGroup)wgs[i];
-				sb.AppendLine($"{wg.ShortCode} - {wg.Name}: {wg.ParentGroup}");
+				if(i == 0 || wg.ParentGroup != parentGroup)
+				{
+					parentGroup = wg.ParentGroup;
+					sb.AppendLine($"{parentGroup}:");
+				}
+				sb.AppendLine($"        {wg.ShortCode} - {wg.Name}");
 			}
 			return sb.ToString();
 		}

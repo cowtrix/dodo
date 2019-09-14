@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dodo\Dodo.csproj">
-      <Project>{61ccc111-4c28-4768-90d3-9a5d27a480cf}</Project>
+      <Project>{61CCC111-4C28-4768-90D3-9A5D27A480CF}</Project>
       <Name>Dodo</Name>
     </ProjectReference>
     <ProjectReference Include="..\SimpleHttpServer\SimpleHttpServer.csproj">

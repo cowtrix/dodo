@@ -14,6 +14,7 @@ namespace XR.Dodo
 		public readonly string Content;
 		public readonly DateTime TimeStamp;
 		public readonly string MessageID;
+		public readonly string Source;
 		public readonly EGatewayType GatewayType;
 
 		public UserSession GetSession()
@@ -21,13 +22,14 @@ namespace XR.Dodo
 			return DodoServer.SessionManager.GetSessionFromUserID(OwnerID);
 		}
 
-		public UserMessage(User owner, string content, EGatewayType gatewayType)
+		public UserMessage(User owner, string content, EGatewayType gatewayType, string source)
 		{
 			OwnerID = owner.UUID;
 			Content = content;
 			TimeStamp = DateTime.Now;
 			MessageID = Guid.NewGuid().ToString();
 			GatewayType = gatewayType;
+			Source = source;
 		}
 	}
 

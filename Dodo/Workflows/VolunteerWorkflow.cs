@@ -19,12 +19,12 @@ namespace XR.Dodo
 					State = EVolunteerState.Inducted;
 				}
 			}
-			return new ServerMessage("Sorry, I didn't understand that.");
+			return GetHelp();
 		}
 
 		protected override ServerMessage GetHelp()
 		{
-			throw new System.NotImplementedException();
+			return new ServerMessage("Sorry, I didn't understand that.");
 		}
 	}
 }

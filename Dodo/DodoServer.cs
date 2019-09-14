@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System;
 
 namespace XR.Dodo
 {
@@ -24,6 +25,11 @@ namespace XR.Dodo
 		public static TelegramGateway TelegramGateway;
 		public static TwilioGateway TwilioGateway;
 
+		public static string GetSMSNumber()
+		{
+			return SMSGateway.GetNumber();
+		}
+
 		static void Main(string[] args)
 		{
 			Initialise(args);
@@ -36,7 +42,7 @@ namespace XR.Dodo
 
 			// Set up managers
 			SessionManager = new SessionManager("sessions.json");
-			SiteManager = new SiteSpreadsheetManager("sites.config");
+			//SiteManager = new SiteSpreadsheetManager("sites.config");
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(CoordinatorDataID);
 
 			SessionManager.GetOrCreateUserFromTelegramNumber(834876848).CoordinatorRoles.Add(

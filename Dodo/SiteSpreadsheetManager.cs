@@ -20,6 +20,7 @@ namespace XR.Dodo
 
 		void UpdateErrorReport()
 		{
+			return;
 			var errorReport = new List<List<string>>();
 			errorReport.Add(new List<string>()
 			{

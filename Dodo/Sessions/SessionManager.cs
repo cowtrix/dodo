@@ -120,11 +120,22 @@ namespace XR.Dodo
 			return result;
 		}
 
-		public User GetOrCreateUserFromPhoneNumber(string fromNumber)  
+		public User GetOrCreateUserFromPhoneNumber(string fromNumber, string messageString = null)  
 		{
 			if(!ValidationExtensions.ValidateNumber(ref fromNumber))
 			{
 				return null;
+			}
+			if (!string.IsNullOrEmpty(messageString))
+			{
+				// Reroute SMS validation
+				var verificationMatch = _data.Sessions
+					.FirstOrDefault(x => (x.Value.Workflow.CurrentTask as Verification)?
+					.CodeString == messageString);
+				if (verificationMatch.Value != null)
+				{
+					return verificationMatch.Value.GetUser();
+				}
 			}
 			var user = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
 			if(user == null)

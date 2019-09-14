@@ -8,6 +8,20 @@ namespace XR.Dodo
 {
 	public static class Utility
 	{
+		public static T Random<T>(this IEnumerable<T> enumerable)
+		{
+			if (enumerable == null)
+			{
+				throw new ArgumentNullException(nameof(enumerable));
+			}
+
+			// note: creating a Random instance each call may not be correct for you,
+			// consider a thread-safe static instance
+			var r = new Random();
+			var list = enumerable as IList<T> ?? enumerable.ToList();
+			return list.Count == 0 ? default(T) : list[r.Next(0, list.Count)];
+		}
+
 		public static IEnumerable<T> ConcatenateCollection<T>(this IEnumerable<IEnumerable<T>> sequences)
 		{
 			return sequences.SelectMany(x => x);
@@ -53,31 +67,20 @@ namespace XR.Dodo
 			{
 				return true;
 			}
-			if(number.StartsWith("44"))
-			{
-				if (number.Length != 12)
-				{
-					return false;
-				}
-				number = "+" + number;
-			}
-			if(!number.StartsWith("44"))
+			
+			if(!number.StartsWith("+44"))
 			{
 				if(number.StartsWith("07"))
 				{
-					if(number.Length != 11)
-					{
-						return false;
-					}
 					number = "+44" + number.Substring(1);
 				}
 				else if (number.StartsWith("7"))
 				{
-					if (number.Length != 10)
-					{
-						return false;
-					}
 					number = "+44" + number;
+				}
+				else if (number.StartsWith("44"))
+				{
+					number = "+" + number;
 				}
 			}
 			return Regex.IsMatch(number,
