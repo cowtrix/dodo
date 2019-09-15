@@ -40,9 +40,14 @@ namespace XR.Dodo
 			m_secrets = File.ReadLines(@".secret").Select(x => x.Split('\t').FirstOrDefault()).ToList();
 			log4net.Config.XmlConfigurator.Configure();
 
+			if (!Directory.Exists("Backups"))
+			{
+				Directory.CreateDirectory("Backups");
+			}
+
 			// Set up managers
 			SessionManager = new SessionManager("sessions.json");
-			//SiteManager = new SiteSpreadsheetManager("sites.config");
+			SiteManager = new SiteSpreadsheetManager("sites.config");
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(CoordinatorDataID);
 
 			SessionManager.GetOrCreateUserFromTelegramNumber(834876848).CoordinatorRoles.Add(

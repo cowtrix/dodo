@@ -12,7 +12,8 @@ namespace XR.Dodo
 {
 	public struct SpreadsheetError
 	{
-		public string Row;
+		public int Row;
+		public int Column;
 		public string Value;
 		public string Message;
 	}
@@ -38,7 +39,7 @@ namespace XR.Dodo
 					"user",
 					CancellationToken.None,
 					new FileDataStore(credPath, true)).Result;
-				Console.WriteLine("Credential file saved to: " + credPath);
+				Logger.Debug("Credential file saved to: " + credPath);
 			}
 
 			// Create Google Sheets API service.
@@ -60,16 +61,16 @@ namespace XR.Dodo
 			IList<IList<Object>> values = response.Values;
 			if (values != null && values.Count > 0)
 			{
-				Console.WriteLine("Name, Major");
+				Logger.Debug("Name, Major");
 				foreach (var row in values)
 				{
 					// Print columns A and E, which correspond to indices 0 and 4.
-					Console.WriteLine("{0}, {1}", row[0], row[4]);
+					Logger.Debug("{0}, {1}", row[0], row[4]);
 				}
 			}
 			else
 			{
-				Console.WriteLine("No data found.");
+				Logger.Debug("No data found.");
 			}*/
 		}
 

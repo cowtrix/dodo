@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace XR.Dodo
 {
@@ -9,18 +11,55 @@ namespace XR.Dodo
 	{
 		const string StatusRange = "A1:ZZZ";
 		private static string m_statusID;
-
+		private string backupPath = "Backups\\SiteBackup.json";
 		Dictionary<int, SiteSpreadsheet> Sites = new Dictionary<int, SiteSpreadsheet>();
 
 		public SiteSpreadsheetManager(string configPath)
 		{
-			LoadFromGSheets(configPath);
+			try
+			{
+				LoadFromGSheets(configPath);
+			}
+			catch(Exception e)
+			{
+				Logger.Debug(e.Message);
+				LoadFromBackUp(backupPath);
+			}
+			var backupTask = new Task(() =>
+			{
+				while(true)
+				{
+					try
+					{
+						SaveToBackup(backupPath);
+					}
+					catch(Exception e)
+					{
+						Logger.Exception(e);
+					}
+					System.Threading.Thread.Sleep(5 * 60 * 1000);
+				}
+			});
+			backupTask.Start();
 			UpdateErrorReport();
+		}
+
+		private void SaveToBackup(string path)
+		{
+			File.WriteAllText(path, JsonConvert.SerializeObject(Sites));
+		}
+
+		private void LoadFromBackUp(string path)
+		{
+			if(!File.Exists(path))
+			{
+				Sites = Sites ?? new Dictionary<int, SiteSpreadsheet>();
+			}
+			Sites = JsonConvert.DeserializeObject<Dictionary<int, SiteSpreadsheet>>(File.ReadAllText(path));
 		}
 
 		void UpdateErrorReport()
 		{
-			return;
 			var errorReport = new List<List<string>>();
 			errorReport.Add(new List<string>()
 			{
@@ -33,7 +72,8 @@ namespace XR.Dodo
 				"Site Name",
 				"Spreadsheet URL",
 				"Error Count",
-				"Error Row",
+				"Row",
+				"Column",
 				"Error Message",
 				"Row Value",
 			});
@@ -55,12 +95,12 @@ namespace XR.Dodo
 						{
 							rowList.AddRange(new[]
 							{
-								"", "", "", ""
+								"", "", "", "",
 							});
 						}
 						rowList.AddRange(new[]
 						{
-							error.Row, error.Message, error.Value
+							error.Row.ToString(), error.Column.ToString(), error.Message, error.Value
 						});
 						errorReport.Add(rowList.ToList());
 						rowList.Clear();
@@ -80,6 +120,11 @@ namespace XR.Dodo
 			GSheets.WriteSheet(m_statusID, errorReport, StatusRange);
 		}
 
+		public bool IsValidWorkingGroup(WorkingGroup workingGroup)
+		{
+			return Sites.Any(x => x.Value.WorkingGroups.Contains(workingGroup));
+		}
+
 		public bool IsValidSiteCode(int siteCode)
 		{
 			return Sites.ContainsKey(siteCode);
@@ -94,17 +139,17 @@ namespace XR.Dodo
 				var cols = config.Split('\t');
 				if (cols.Length != 3)
 				{
-					Console.WriteLine($"Failed to read config at line: {config}");
+					Logger.Debug($"Failed to read config at line: {config}");
 					continue;
 				}
 				if (!int.TryParse(cols[0], out var sitecode))
 				{
-					Console.WriteLine($"Failed to parse sitecode at line: {config}");
+					Logger.Debug($"Failed to parse sitecode at line: {config}");
 					continue;
 				}
 				Sites.Add(sitecode, new SiteSpreadsheet(sitecode, cols[1], cols[2]));
 			}
-			Console.WriteLine("Finished loading");
+			Logger.Debug("Finished loading");
 		}
 
 		public List<SiteSpreadsheet> GetSites()

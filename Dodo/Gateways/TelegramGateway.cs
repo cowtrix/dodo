@@ -17,7 +17,7 @@ namespace XR.Dodo
 			var setup = new Task(() =>
 			{
 				var me = m_botClient.GetMeAsync().Result;
-				Console.WriteLine($"Started Telegram bot with ID: {me.Id} and Name: {me.FirstName}.");
+				Logger.Debug($"Started Telegram bot with ID: {me.Id} and Name: {me.FirstName}.");
 				m_botClient.OnMessage += Bot_OnMessage;
 				m_botClient.StartReceiving();
 			});
@@ -37,9 +37,16 @@ namespace XR.Dodo
 
 		async void Bot_OnMessage(object sender, MessageEventArgs e)
 		{
-			var message = e.Message.Text;
-			var userID = e.Message.From.Id;
-			await SendMessageAsync(GetMessage(message, userID, out var session), session);
+			try
+			{
+				var message = e.Message.Text;
+				var userID = e.Message.From.Id;
+				await SendMessageAsync(GetMessage(message, userID, out var session), session);
+			}
+			catch (Exception exception)
+			{
+				Logger.Exception(exception);
+			}
 		}
 
 		ServerMessage GetMessage(string message, int userID, out UserSession session)

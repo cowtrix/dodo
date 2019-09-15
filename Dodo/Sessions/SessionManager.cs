@@ -51,7 +51,7 @@ namespace XR.Dodo
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine($"Failed to deserialize sessions: {e.Message}\n{e.StackTrace}");
+				Logger.Debug($"Failed to deserialize sessions: {e.Message}\n{e.StackTrace}");
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace XR.Dodo
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
-			Console.WriteLine($"Saved user session data to {m_dataPath}");
+			Logger.Debug($"Saved user session data to {m_dataPath}");
 		}
 
 		public User MergeUsers(User first, User second)
@@ -91,9 +91,18 @@ namespace XR.Dodo
 
 		public UserSession GetOrCreateSession(User user)
 		{
+			if(!_data.Users.TryGetValue(user.UUID, out var existingUser))
+			{
+				Logger.Debug("Added missing user when getting session");
+				_data.Users.TryAdd(user.UUID, user);
+			}
+			else if(!ReferenceEquals(user, existingUser))
+			{
+				throw new Exception($"Duplicate GUID found - a user object probably got copied somewhere.");
+			}
 			if (!_data.Sessions.TryGetValue(user.UUID, out var session))
 			{
-				if(user.IsCoordinator)
+				if(user.AccessLevel > EUserAccessLevel.Volunteer)
 				{
 					session = new CoordinatorSession(user.UUID);
 				}

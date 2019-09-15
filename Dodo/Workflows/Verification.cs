@@ -16,6 +16,10 @@ namespace XR.Dodo
 
 		public override ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
+			if(session.GetUser().IsVerified())
+			{
+				return new ServerMessage("It looks like you're already verified.");
+			}
 			var cmd = message.Content.ToUpperInvariant();
 			if (!SentPromptString)
 			{

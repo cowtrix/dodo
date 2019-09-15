@@ -70,7 +70,15 @@ namespace XR.Dodo
 					UrlRegex = @"(?:^/)*",
 					Callable = (HttpRequest request) =>
 					{
-						return Read(request);
+						try
+						{
+							return Read(request);
+						}
+						catch(Exception e)
+						{
+							Logger.Exception(e);
+						}
+						return Failure("An error occurred");
 					}
 				}
 			};
@@ -188,7 +196,7 @@ namespace XR.Dodo
 			}
 			catch(Exception e)
 			{
-				Console.WriteLine($"Exception in SMServer.Read: {request?.Content}\n{e.Message}\n{e.StackTrace}");
+				Logger.Exception(e, $"Exception in SMServer.Read: {request?.Content}");
 				return Failure("ERROR 0x34502"); // Incorrect formatting
 			}
 		}

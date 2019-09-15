@@ -58,5 +58,28 @@ namespace DodoTest
 			Assert.IsTrue(user.PhoneNumber == ph);
 			Assert.IsTrue(user.IsVerified());
 		}
+
+		[TestMethod]
+		public async Task CheckCoordinatorNeedsWorkflow()
+		{
+			var ph = "441315103992";
+			var telegramID = 997875;
+			var user = new User()
+			{
+				Name = "Test",
+				PhoneNumber = ph,
+				TelegramUser = telegramID,
+				CoordinatorRoles = new System.Collections.Generic.HashSet<WorkingGroup>()
+				{
+					new WorkingGroup("Disability Coord", EParentGroup.ActionSupport, "", 4),
+				}
+			};
+			var session = DodoServer.SessionManager.GetOrCreateSession(user);
+
+			var msg = await DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
+			Assert.IsTrue(msg.Content.Contains("Disability Coord"));
+		}
+
+
 	}
 }

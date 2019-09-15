@@ -17,13 +17,13 @@ namespace XR.Dodo
 
 	public readonly struct WorkingGroup
 	{
-		private static Dictionary<WorkingGroup, string> m_shortCodes = new Dictionary<WorkingGroup, string>();
+		private static Dictionary<string, string> m_shortCodes = new Dictionary<string, string>();
 		public readonly string Name;
 		public readonly string Mandate;
 		public readonly EParentGroup ParentGroup;
 		public readonly int SiteCode;
 		[JsonIgnore]
-		public string ShortCode { get { return m_shortCodes[this]; } }
+		public string ShortCode { get { return m_shortCodes[Name]; } }
 
 		public WorkingGroup(string workingGroup, EParentGroup parentGroup, string mandate, int sitecode)
 		{
@@ -32,16 +32,16 @@ namespace XR.Dodo
 			Mandate = mandate;
 			SiteCode = sitecode;
 
-			if(!m_shortCodes.ContainsKey(this))
+			if(!m_shortCodes.ContainsKey(Name))
 			{
 				var code = "";
 				int tries = 0;
 				do
 				{
-					code = Utility.RandomString(3, Name + tries.ToString()).ToUpperInvariant();
+					code = Name.Substring(tries, 2);
 					tries++;
 				} while (m_shortCodes.ContainsValue(code));
-				m_shortCodes[this] = code;
+				m_shortCodes[Name] = code;
 			}
 		}
 	}
@@ -97,24 +97,25 @@ namespace XR.Dodo
 		{
 			m_spreadSheetID = spreadSheetID;
 			Status = new SpreadsheetStatus();
-			Console.WriteLine("Loading spreadsheet for site " + siteName);
+			Logger.Debug("Loading spreadsheet for site " + siteName);
 			SiteCode = siteCode;
 			SiteName = siteName;
 			var spreadSheet = GSheets.GetSheetRange(m_spreadSheetID, "A:ZZZ");
 			for(var rowIndex = 0; rowIndex < spreadSheet.Values.Count; ++rowIndex)
 			{
-				try
+				var row = spreadSheet.Values[rowIndex];
+				var rowString = row.Cast<string>();
+				var firstCell = rowString.FirstOrDefault();
+				if (firstCell == null || !(firstCell.Contains("Point Person") || firstCell.Contains("Role Holder")))
 				{
-					var row = spreadSheet.Values[rowIndex];
-					var rowString = row.Cast<string>();
-					var firstCell = rowString.FirstOrDefault();
-					if (firstCell == null || !(firstCell.Contains("Point Person") || firstCell.Contains("Role Holder")))
-					{
-						continue;
-					}
-					string parentGroupStr = null;
-					var parentGroup = EParentGroup.ActionSupport;
-					for (var column = 1; column < row.Count; ++column)
+					continue;
+				}
+				string parentGroupStr = null;
+				var parentGroup = EParentGroup.ActionSupport;
+				
+				for (var column = 1; column < row.Count; ++column)
+				{
+					try
 					{
 						parentGroupStr = spreadSheet.Values.ElementAt(2).ElementAtOrDefault(column) as string ?? parentGroupStr;
 						try
@@ -127,9 +128,11 @@ namespace XR.Dodo
 						{
 							continue;
 						}
-						var email = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Email").ElementAtOrDefault(column) as string ?? "";
+						var nextEmailRowIndex = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Email");
+						var email = nextEmailRowIndex.ElementAtOrDefault(column) as string ?? "";
 						email = email.Trim();
-						var number = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Number").ElementAtOrDefault(column) as string ?? "";
+						var nextNumberRowIndex = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Number");
+						var number = nextNumberRowIndex.ElementAtOrDefault(column) as string ?? "";
 						var workingGroupName = spreadSheet.Values
 							.First(x =>
 							{
@@ -147,13 +150,16 @@ namespace XR.Dodo
 
 						if (!ValidationExtensions.ValidateNumber(ref number))
 						{
-							throw new SpreadsheetException(rowIndex, column, $"Value wasn't a valid UK Mobile number: " + number);
+							var phoneIndex = spreadSheet.Values.IndexOf(nextNumberRowIndex);
+							throw new SpreadsheetException(phoneIndex, column, $"Value wasn't a valid UK Mobile number: " + number);
 						}
 						if(!string.IsNullOrEmpty(email) && !ValidationExtensions.EmailIsValid(email))
 						{
+							var emailIndex = spreadSheet.Values.IndexOf(nextEmailRowIndex);
 							Status.Errors.Add(new SpreadsheetError()
 							{
-								Row = $"{rowIndex}",
+								Row = rowIndex,
+								Column = emailIndex,
 								Message = $"Value wasn't a valid email address: {email}",
 								Value = spreadSheet.Values[rowIndex].Cast<string>().Aggregate("", (current, next) =>
 									current + (!string.IsNullOrEmpty(current) ? "," : "") + next)
@@ -165,30 +171,30 @@ namespace XR.Dodo
 						{
 							WorkingGroups.Add(workingGroup);
 						}
-						// ADD BACK IN
-						continue;
 						var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);
 						user.Name = name;
 						user.PhoneNumber = number;
 						user.Email = email;
 						user.CoordinatorRoles.Add(workingGroup);
 ;					}
-				}
-				catch(Exception e)
-				{
-					try
+					catch (Exception e)
 					{
-						Status.Errors.Add(new SpreadsheetError()
+						try
 						{
-							Row = $"{rowIndex}",
-							Message = e.Message,
-							Value = spreadSheet.Values[rowIndex].Cast<string>().Aggregate("", (current, next) =>
-								current + (!string.IsNullOrEmpty(current) ? "," : "") + next)
-						});
+							Status.Errors.Add(new SpreadsheetError()
+							{
+								Row = rowIndex,
+								Column = column,
+								Message = e.Message,
+								Value = spreadSheet.Values[rowIndex].Cast<string>().Aggregate("", (current, next) =>
+									current + (!string.IsNullOrEmpty(current) ? "," : "") + next)
+							});
+						}
+						catch { }
+						Logger.Debug($"{e.Message}\n{e.StackTrace}");
 					}
-					catch { }
-					Console.WriteLine($"{e.Message}\n{e.StackTrace}");
-				}
+			}
+				
 			}
 		}
 	}

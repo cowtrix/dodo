@@ -1,9 +1,18 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace XR.Dodo
 {
+	public enum EUserAccessLevel
+	{
+		Volunteer,
+		Coordinator,
+		RotaCoordinator,
+		RSO,
+	}
+
 	public class User
 	{
 		public string Name;
@@ -22,7 +31,27 @@ namespace XR.Dodo
 		}
 
 		[JsonIgnore]
-		public bool IsCoordinator { get { return CoordinatorRoles.Count > 0; } }
+		public EUserAccessLevel AccessLevel
+		{
+			get
+			{
+				if(CoordinatorRoles.Count > 0)
+				{
+					if(CoordinatorRoles.Any(x => x.SiteCode == 0))
+					{
+						return EUserAccessLevel.RSO;
+					}
+					if(CoordinatorRoles.Any(x => x.ParentGroup == EParentGroup.MovementSupport && 
+						x.Name.ToUpperInvariant().Contains("ROTA")))
+					{
+						return EUserAccessLevel.RotaCoordinator;
+					}
+					return EUserAccessLevel.Coordinator;
+				}
+				return EUserAccessLevel.Volunteer;
+			}
+		}
+		
 		public User()
 		{
 			UUID = Guid.NewGuid().ToString();

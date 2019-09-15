@@ -8,12 +8,20 @@ namespace XR.Dodo
 {
 	public class CoordinatorNeedsManager
 	{
-		public struct Need
+		public class Need
 		{
 			public WorkingGroup WorkingGroup;
 			public int SiteCode;
 			public int Amount;
 			public DateTime TimeOfRequest;
+
+			public Need()
+			{
+				SiteCode = -1;
+				WorkingGroup = default(WorkingGroup);
+				Amount = -1;
+				TimeOfRequest = default(DateTime);
+			}
 		}
 		private Dictionary<WorkingGroup, Need> m_data = new Dictionary<WorkingGroup, Need>();
 		private readonly string m_dataOutputSpreadsheetID;
@@ -42,7 +50,7 @@ namespace XR.Dodo
 
 		public bool AddNeedRequest(User user, Need need)
 		{
-			if(!user.IsCoordinator)
+			if(user.AccessLevel <= EUserAccessLevel.Volunteer)
 			{
 				return false;
 			}
@@ -76,12 +84,13 @@ namespace XR.Dodo
 				spreadsheet.Add(new List<string>()
 				{
 					site.SiteName, site.SiteCode.ToString(), need.Key.ParentGroup.ToString(), need.Key.Name,
-					need.Value.Amount.ToString(), need.Key.ShortCode, need.Value.TimeOfRequest.ToString()
+					(need.Value.Amount == int.MaxValue  ? "Many" : need.Value.Amount.ToString()), need.Key.ShortCode,
+					need.Value.TimeOfRequest.ToString()
 				});
 			}
 			GSheets.ClearSheet(m_dataOutputSpreadsheetID, "A1:ZZZ");
 			GSheets.WriteSheet(m_dataOutputSpreadsheetID, spreadsheet, "A1:ZZZ");
-			Console.WriteLine($"Updated needs sheet");
+			Logger.Debug($"Updated needs sheet");
 		}
 	}
 }

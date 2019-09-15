@@ -103,8 +103,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Gateways\TwilioGateway.cs" />
-    <Compile Include="Gateways\Verification.cs" />
+    <Compile Include="Workflows\Verification.cs" />
     <Compile Include="Gateways\Message.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="Sessions\CoordinatorSession.cs" />
     <Compile Include="Sessions\VolunteerSession.cs" />
