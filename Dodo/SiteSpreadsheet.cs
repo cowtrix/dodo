@@ -1,4 +1,6 @@
-﻿using Google.Apis.Sheets.v4;
+﻿using Google;
+using Google.Apis.Sheets.v4;
+using Google.Apis.Sheets.v4.Data;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,7 @@ namespace XR.Dodo
 
 		public WorkingGroup(string workingGroup, EParentGroup parentGroup, string mandate, int sitecode)
 		{
-			Name = workingGroup;
+			Name = workingGroup.Trim();
 			ParentGroup = parentGroup;
 			Mandate = mandate;
 			SiteCode = sitecode;
@@ -38,7 +40,7 @@ namespace XR.Dodo
 				int tries = 0;
 				do
 				{
-					code = Name.Substring(tries, 2);
+					code = Name.Substring(tries, 2).ToUpperInvariant();
 					tries++;
 				} while (m_shortCodes.ContainsValue(code));
 				m_shortCodes[Name] = code;
@@ -50,10 +52,12 @@ namespace XR.Dodo
 	{
 		public readonly int Row;
 		public readonly int Column;
-		public SpreadsheetException(int row, int column, string message) : base($"Col: {column} | {message}")
+		public readonly string Value;
+		public SpreadsheetException(int row, int column, string message, string value) : base(message)
 		{
 			Row = row;
 			Column = column;
+			Value = value;
 		}
 	}
 
@@ -100,7 +104,21 @@ namespace XR.Dodo
 			Logger.Debug("Loading spreadsheet for site " + siteName);
 			SiteCode = siteCode;
 			SiteName = siteName;
-			var spreadSheet = GSheets.GetSheetRange(m_spreadSheetID, "A:ZZZ");
+			ValueRange spreadSheet = null;
+			try
+			{
+				spreadSheet = GSheets.GetSheetRange(m_spreadSheetID, "A:ZZZ");
+			}
+			catch(GoogleApiException e)
+			{
+				Logger.Exception(e, $"Failed to load site spreadsheet for {SiteName}");
+				Status.Errors.Add(new SpreadsheetError()
+				{
+					Message = "ERROR: Could not load spreadsheet",
+					Value = e.Message,
+				});
+				return;
+			}
 			for(var rowIndex = 0; rowIndex < spreadSheet.Values.Count; ++rowIndex)
 			{
 				var row = spreadSheet.Values[rowIndex];
@@ -151,7 +169,8 @@ namespace XR.Dodo
 						if (!ValidationExtensions.ValidateNumber(ref number))
 						{
 							var phoneIndex = spreadSheet.Values.IndexOf(nextNumberRowIndex);
-							throw new SpreadsheetException(phoneIndex, column, $"Value wasn't a valid UK Mobile number: " + number);
+							throw new SpreadsheetException(phoneIndex, column, 
+								"Value wasn't a valid UK Mobile number", number);
 						}
 						if(!string.IsNullOrEmpty(email) && !ValidationExtensions.EmailIsValid(email))
 						{
@@ -160,9 +179,8 @@ namespace XR.Dodo
 							{
 								Row = rowIndex,
 								Column = emailIndex,
-								Message = $"Value wasn't a valid email address: {email}",
-								Value = spreadSheet.Values[rowIndex].Cast<string>().Aggregate("", (current, next) =>
-									current + (!string.IsNullOrEmpty(current) ? "," : "") + next)
+								Message = $"Value wasn't a valid email address",
+								Value = email,
 							});
 							email = null;
 						}
@@ -181,13 +199,23 @@ namespace XR.Dodo
 					{
 						try
 						{
+							int r = rowIndex;
+							int col = column;
+							var val = spreadSheet.Values[rowIndex].Cast<string>().Aggregate("", (current, next) =>
+									current + (!string.IsNullOrEmpty(current) ? "," : "") + next);
+							if (e is SpreadsheetException)
+							{
+								var se = e as SpreadsheetException;
+								r = se.Row;
+								col = se.Column;
+								val = se.Value;
+							}
 							Status.Errors.Add(new SpreadsheetError()
 							{
-								Row = rowIndex,
-								Column = column,
+								Row = r,
+								Column = col,
 								Message = e.Message,
-								Value = spreadSheet.Values[rowIndex].Cast<string>().Aggregate("", (current, next) =>
-									current + (!string.IsNullOrEmpty(current) ? "," : "") + next)
+								Value = val,
 							});
 						}
 						catch { }

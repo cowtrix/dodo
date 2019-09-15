@@ -84,7 +84,7 @@ namespace XR.Dodo
 				spreadsheet.Add(new List<string>()
 				{
 					site.SiteName, site.SiteCode.ToString(), need.Key.ParentGroup.ToString(), need.Key.Name,
-					(need.Value.Amount == int.MaxValue  ? "Many" : need.Value.Amount.ToString()), need.Key.ShortCode,
+					(need.Value.Amount == int.MaxValue  ? "Many" : need.Value.Amount.ToString()), need.Key.ShortCode + site.SiteCode.ToString(),
 					need.Value.TimeOfRequest.ToString()
 				});
 			}

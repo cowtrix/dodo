@@ -14,8 +14,8 @@ namespace XR.Dodo
 			{
 				Logger.Debug(message);
 			}
-			Logger.Debug(exception.Message, ConsoleColor.Red);
-			Logger.Debug(exception.StackTrace, ConsoleColor.Red);
+			Error(exception.Message);
+			Error(exception.StackTrace);
 		}
 
 		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
@@ -23,6 +23,11 @@ namespace XR.Dodo
 			Console.ForegroundColor = foreground;
 			Console.BackgroundColor = background;
 			Console.WriteLine(message);
+		}
+
+		public static void Error(string message)
+		{
+			Debug(message, ConsoleColor.Red);
 		}
 	}
 }

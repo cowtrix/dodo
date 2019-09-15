@@ -51,7 +51,7 @@ namespace XR.Dodo
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(CoordinatorDataID);
 
 			SessionManager.GetOrCreateUserFromTelegramNumber(834876848).CoordinatorRoles.Add(
-				new WorkingGroup("Admin", EParentGroup.MovementSupport, "", 0));
+				SiteManager.GetSites().ElementAt(2).WorkingGroups.First());
 			
 			// Set up gateways
 			SMSGateway = new SMSGateaway(SMSGatewaySecret, 8080);

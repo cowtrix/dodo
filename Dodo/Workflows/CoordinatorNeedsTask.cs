@@ -6,7 +6,7 @@ namespace XR.Dodo
 {
 	public class CoordinatorNeedsTask : WorkflowTask
 	{
-		public CoordinatorNeedsManager.Need Need;
+		public CoordinatorNeedsManager.Need Need = new CoordinatorNeedsManager.Need();
 		public CoordinatorNeedsTask(Workflow workflow) : base(workflow)
 		{
 		}
@@ -55,20 +55,36 @@ namespace XR.Dodo
 			}
 			if(!DodoServer.SiteManager.IsValidSiteCode(Need.SiteCode))
 			{
-				return new ServerMessage(GetSiteNumberRequestString(approvedSites));
-			}
-
-			var roles = ApprovedWorkingGroups(user);
-			
-			if(!DodoServer.SiteManager.IsValidWorkingGroup(Need.WorkingGroup))
-			{
-				if (roles.Count == 1)
+				if(int.TryParse(cmd, out var siteCode))
 				{
-					Need.WorkingGroup = roles[0];
+					Need.SiteCode = siteCode;
 				}
 				else
 				{
-					return new ServerMessage(GetWorkingGroupRequestString(roles));
+					return new ServerMessage(GetSiteNumberRequestString(approvedSites));
+				}
+			}
+
+			var roles = ApprovedWorkingGroups(user);			
+			if(!DodoServer.SiteManager.IsValidWorkingGroup(Need.WorkingGroup))
+			{
+				if(roles.Any(x => x.ShortCode == cmd))
+				{
+					Need.WorkingGroup = roles.First(x => x.ShortCode == cmd);
+					return new ServerMessage("Nice! Now tell me, how many volunteers do you need?" +
+						" Reply with a number, or if you just need as many people as possible, reply 'MANY'");
+				}
+				else
+				{
+					if (roles.Count == 1)
+					{
+						Need.WorkingGroup = roles[0];
+					}
+					else
+					{
+						return new ServerMessage(GetWorkingGroupRequestString(
+							roles.Where(x => x.SiteCode == Need.SiteCode).ToList()));
+					}
 				}
 			}
 
@@ -77,11 +93,16 @@ namespace XR.Dodo
 			{
 				Need.Amount = int.MaxValue;
 			}
+			else if(cmd == "NEED")
+			{
+				return new ServerMessage($"You're requesting volunteers for {Need.WorkingGroup.Name} at site {Need.SiteCode}. " +
+					"Tell me how many volunteers you need, or if you just need as many people as possible, reply 'MANY'.");
+			}
 			else if (!int.TryParse(cmd, out count))
 			{
 				return new ServerMessage("Sorry, I didn't understand that number." +
-				" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
-				" If you'd like to cancel, reply 'CANCEL'.");
+					" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
+					" If you'd like to cancel, reply 'CANCEL'.");
 			}
 			else
 			{
@@ -89,6 +110,9 @@ namespace XR.Dodo
 			}
 			DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, Need);
 			ExitTask();
+			return new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
+				$" In future, you could make this request in one go by saying NEED " +
+				$"{Need.WorkingGroup.ShortCode}{Need.WorkingGroup.SiteCode} {(Need.Amount == int.MaxValue ? "MANY" : Need.Amount.ToString())}");
 		/*
 		if (toUpper.Length >= 4 && toUpper.FirstOrDefault() == "NEED")
 		{
@@ -157,8 +181,7 @@ namespace XR.Dodo
 		if (State == EState.GettingNumbers)
 		{
 
-		return new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help."+ 
-			$" In future, you could make this request in one go by saying NEED {Need.WorkingGroup.SiteCode} {Need.WorkingGroup.ShortCode} {(Need.Amount == -1 ? "MANY" : Need.Amount.ToString())}");*/
+		*/
 	}
 
 		private string GetSiteNumberRequestString(List<SiteSpreadsheet> sites)

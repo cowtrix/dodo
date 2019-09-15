@@ -22,7 +22,7 @@ namespace XR.Dodo
 			}
 			catch(Exception e)
 			{
-				Logger.Debug(e.Message);
+				Logger.Exception(e);
 				LoadFromBackUp(backupPath);
 			}
 			var backupTask = new Task(() =>
@@ -54,6 +54,7 @@ namespace XR.Dodo
 			if(!File.Exists(path))
 			{
 				Sites = Sites ?? new Dictionary<int, SiteSpreadsheet>();
+				return;
 			}
 			Sites = JsonConvert.DeserializeObject<Dictionary<int, SiteSpreadsheet>>(File.ReadAllText(path));
 		}
@@ -100,7 +101,7 @@ namespace XR.Dodo
 						}
 						rowList.AddRange(new[]
 						{
-							error.Row.ToString(), error.Column.ToString(), error.Message, error.Value
+							(error.Row + 1).ToString(), (error.Column + 1).ToString(), error.Message, error.Value
 						});
 						errorReport.Add(rowList.ToList());
 						rowList.Clear();
@@ -137,17 +138,25 @@ namespace XR.Dodo
 			foreach (var config in configs.Skip(1))
 			{
 				var cols = config.Split('\t');
-				if (cols.Length != 3)
+				try
 				{
-					Logger.Debug($"Failed to read config at line: {config}");
-					continue;
+					if (cols.Length != 3)
+					{
+						Logger.Error($"Failed to read config at line: {config}");
+						continue;
+					}
+					if (!int.TryParse(cols[0], out var sitecode))
+					{
+						Logger.Error($"Failed to parse sitecode at line: {config}");
+						continue;
+					}
+					Sites.Add(sitecode, new SiteSpreadsheet(sitecode, cols[1], cols[2]));
 				}
-				if (!int.TryParse(cols[0], out var sitecode))
+				catch
 				{
-					Logger.Debug($"Failed to parse sitecode at line: {config}");
-					continue;
+					Logger.Error($"Could not load spreadsheet {cols[2]} ({cols[1]})");
+					throw;
 				}
-				Sites.Add(sitecode, new SiteSpreadsheet(sitecode, cols[1], cols[2]));
 			}
 			Logger.Debug("Finished loading");
 		}
