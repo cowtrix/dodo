@@ -5,6 +5,7 @@ using System;
 
 namespace XR.Dodo
 {
+
 	public static class DodoServer
 	{
 		public static string SMSGatewaySecret { get { return m_secrets[0]; } }
@@ -22,6 +23,7 @@ namespace XR.Dodo
 		public static SMSGateaway SMSGateway;
 		public static TelegramGateway TelegramGateway;
 		public static TwilioGateway TwilioGateway;
+		public static bool Dummy { get; private set; }
 
 		public static string GetSMSNumber()
 		{
@@ -35,6 +37,7 @@ namespace XR.Dodo
 
 		public static void Initialise(params string[] args)
 		{
+			Dummy = args.Any(x => x == "-d");
 			m_secrets = File.ReadLines(@".secret").Select(x => x.Split('\t').FirstOrDefault()).ToList();
 
 			if (!Directory.Exists("Backups"))

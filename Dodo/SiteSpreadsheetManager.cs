@@ -122,8 +122,12 @@ namespace XR.Dodo
 					rowList.Clear();
 				}
 			}
-			GSheets.ClearSheet(m_statusID, StatusRange);
-			GSheets.WriteSheet(m_statusID, errorReport, StatusRange);
+			Logger.Debug("Updated Spreadsheet Health Report");
+			if (!DodoServer.Dummy)
+			{
+				GSheets.ClearSheet(m_statusID, StatusRange);
+				GSheets.WriteSheet(m_statusID, errorReport, StatusRange);
+			}
 		}
 
 		public bool IsValidWorkingGroup(WorkingGroup workingGroup)

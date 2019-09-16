@@ -13,3 +13,6 @@
 /DodoTest/bin/
 /SimpleHttpServer/bin/
 /Dodo/.secret
+/bin/
+/DodoCmd/obj/
+/DodoCmd/bin/

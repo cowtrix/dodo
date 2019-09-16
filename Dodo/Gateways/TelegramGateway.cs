@@ -13,6 +13,10 @@ namespace XR.Dodo
 		public TelegramGateway(string secret)
 		{
 			m_secret = secret;
+			if(DodoServer.Dummy)
+			{
+				return;
+			}
 			m_botClient = new TelegramBotClient(m_secret);
 			var setup = new Task(() =>
 			{

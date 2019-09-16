@@ -87,8 +87,11 @@ namespace XR.Dodo
 					need.Value.TimeOfRequest.ToString()
 				});
 			}
-			GSheets.ClearSheet(m_dataOutputSpreadsheetID, "A1:ZZZ");
-			GSheets.WriteSheet(m_dataOutputSpreadsheetID, spreadsheet, "A1:ZZZ");
+			if(!DodoServer.Dummy)
+			{
+				GSheets.ClearSheet(m_dataOutputSpreadsheetID, "A1:ZZZ");
+				GSheets.WriteSheet(m_dataOutputSpreadsheetID, spreadsheet, "A1:ZZZ");
+			}
 			Logger.Debug($"Updated needs sheet");
 		}
 	}

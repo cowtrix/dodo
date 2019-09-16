@@ -11,7 +11,7 @@ namespace DodoTest
 
 		public TestBase()
 		{
-			DodoServer.Initialise();
+			DodoServer.Initialise("-d");
 		}
 
 		/// <summary>
