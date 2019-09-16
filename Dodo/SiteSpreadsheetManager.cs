@@ -49,6 +49,12 @@ namespace XR.Dodo
 			return Sites.Single(x => x.Key == siteCode).Value;
 		}
 
+		public WorkingGroup GetWorkingGroup(string code)
+		{
+			return Sites.First(x => x.Value.WorkingGroups.Any(y => y.ShortCode == code))
+				.Value.WorkingGroups.Single(x => x.ShortCode == code);
+		}
+
 		private void SaveToBackup(string path)
 		{
 			File.WriteAllText(path, JsonConvert.SerializeObject(Sites));
@@ -133,6 +139,11 @@ namespace XR.Dodo
 		public bool IsValidWorkingGroup(WorkingGroup workingGroup)
 		{
 			return Sites.Any(x => x.Value.WorkingGroups.Contains(workingGroup));
+		}
+
+		public bool IsValidWorkingGroup(string shortCode)
+		{
+			return Sites.Any(x => x.Value.WorkingGroups.Any(y => y.ShortCode == shortCode));
 		}
 
 		public bool IsValidSiteCode(int siteCode)

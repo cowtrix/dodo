@@ -16,9 +16,14 @@ namespace XR.Dodo
 		protected override ServerMessage ProcessMessageForRole(UserMessage message, UserSession session)
 		{
 			var toUpper = message.Content.ToUpperInvariant();
-			if(toUpper.StartsWith("NEED"))
+			if(toUpper.StartsWith(CoordinatorNeedsTask.CommandKey))
 			{
 				CurrentTask = new CoordinatorNeedsTask(this);
+				return CurrentTask.ProcessMessage(message, session);
+			}
+			if (toUpper.StartsWith(CoordinatorWhoIsTask.CommandKey))
+			{
+				CurrentTask = new CoordinatorWhoIsTask(this);
 				return CurrentTask.ProcessMessage(message, session);
 			}
 			return GetHelp();

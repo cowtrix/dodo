@@ -59,6 +59,11 @@ namespace XR.Dodo
 			}
 		}
 
+		public List<User> GetUsers()
+		{
+			return _data.Users.Values.ToList();
+		}
+
 		void SaveSessions()
 		{
 			if (DodoServer.Dummy)

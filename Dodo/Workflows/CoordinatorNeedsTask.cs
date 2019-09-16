@@ -8,6 +8,9 @@ namespace XR.Dodo
 	public class CoordinatorNeedsTask : WorkflowTask
 	{
 		public CoordinatorNeedsManager.Need Need = new CoordinatorNeedsManager.Need();
+
+		public static string CommandKey { get { return "NEED"; } }
+
 		public CoordinatorNeedsTask(Workflow workflow) : base(workflow)
 		{
 		}
@@ -46,7 +49,7 @@ namespace XR.Dodo
 				if (cmd == "CANCEL")
 				{
 					ExitTask();
-					return new ServerMessage("Okay, I've cancelled this request.");
+					return new ServerMessage("Okay, I've canceled this request.");
 				}
 
 				var user = session.GetUser();

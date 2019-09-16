@@ -17,7 +17,7 @@ namespace DodoTest
 		public SymSyncSimulator(string target)
 		{
 			m_address = target;
-			m_secret = "#!vbBq*3w7Q6$Uv4";
+			m_secret = DodoServer.SMSGatewaySecret;
 		}
 
 		public async Task<string> SendSMS(string from, string message)

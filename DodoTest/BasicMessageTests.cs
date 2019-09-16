@@ -18,7 +18,6 @@ namespace DodoTest
 			var code = response.Content.Substring(
 				"Please take a moment to verify your phone number. You can do this by texting ".Length, 5);
 
-			var rnd = new Random();
 			var ph = "441315103992";
 			ValidationExtensions.ValidateNumber(ref ph);
 			var smsResponse = await m_simulator.SendSMS(ph, code);
@@ -62,6 +61,8 @@ namespace DodoTest
 		{
 			var ph = "441315103992";
 			var telegramID = 997875;
+			var wg = new WorkingGroup("Test", EParentGroup.MovementSupport, "Test role", 3);
+			DodoServer.SiteManager.GetSite(3).WorkingGroups.Add(wg);
 			var user = new User()
 			{
 				Name = "Test",
@@ -69,13 +70,12 @@ namespace DodoTest
 				TelegramUser = telegramID,
 				CoordinatorRoles = new System.Collections.Generic.HashSet<WorkingGroup>()
 				{
-					new WorkingGroup("Disability Coord", EParentGroup.ActionSupport, "", 4),
+					wg
 				}
 			};
 			var session = DodoServer.SessionManager.GetOrCreateSession(user);
 
-			var msg = await DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
-			Assert.IsTrue(msg.Content.Contains("Disability Coord"));
+			var msg = await DodoServer.TelegramGateway.FakeMessage("WHOIS TE", user.TelegramUser);
 		}
 	}
 }

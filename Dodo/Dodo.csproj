@@ -107,6 +107,7 @@
     <Compile Include="CmdReader.cs" />
     <Compile Include="Gateways\TwilioGateway.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="Workflows\CoordinatorWhoIsTask.cs" />
     <Compile Include="Workflows\Verification.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Logger.cs" />

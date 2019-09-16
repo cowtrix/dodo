@@ -7,11 +7,12 @@ namespace DodoTest
 	public abstract class TestBase
 	{
 		private TestContext testContextInstance;
-		protected SymSyncSimulator m_simulator = new SymSyncSimulator("http://localhost:8080");
+		protected SymSyncSimulator m_simulator;
 
 		public TestBase()
 		{
 			DodoServer.Initialise("-d");
+			m_simulator = new SymSyncSimulator("http://localhost:8080");
 		}
 
 		/// <summary>

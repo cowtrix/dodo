@@ -24,8 +24,12 @@ namespace XR.Dodo
 		public readonly string Mandate;
 		public readonly EParentGroup ParentGroup;
 		public readonly int SiteCode;
+
 		[JsonIgnore]
 		public string ShortCode { get { return m_shortCodes[Name]; } }
+
+		[JsonIgnore]
+		public SiteSpreadsheet Site { get { return DodoServer.SiteManager.GetSite(SiteCode); } }
 
 		public WorkingGroup(string workingGroup, EParentGroup parentGroup, string mandate, int sitecode)
 		{
