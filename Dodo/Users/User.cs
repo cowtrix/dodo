@@ -41,7 +41,7 @@ namespace XR.Dodo
 					{
 						return EUserAccessLevel.RSO;
 					}
-					if(CoordinatorRoles.Any(x => x.ParentGroup == EParentGroup.MovementSupport && 
+					if(CoordinatorRoles.Any(x => x.ParentGroup == EParentGroup.MovementSupport &&
 						x.Name.ToUpperInvariant().Contains("ROTA")))
 					{
 						return EUserAccessLevel.RotaCoordinator;
@@ -51,7 +51,7 @@ namespace XR.Dodo
 				return EUserAccessLevel.Volunteer;
 			}
 		}
-		
+
 		public User()
 		{
 			UUID = Guid.NewGuid().ToString();

@@ -104,7 +104,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CmdReader.cs" />
     <Compile Include="Gateways\TwilioGateway.cs" />
+    <Compile Include="Utility.cs" />
     <Compile Include="Workflows\Verification.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Logger.cs" />
@@ -144,6 +146,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DodoCmd\DodoCmd.csproj">
+      <Project>{00a2a932-ebab-44e2-930f-5d659476a46d}</Project>
+      <Name>DodoCmd</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SimpleHttpServer\SimpleHttpServer.csproj">
       <Project>{9E139539-C272-488A-BFCF-CADDF458DF9D}</Project>
       <Name>SimpleHttpServer</Name>

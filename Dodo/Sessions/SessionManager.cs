@@ -37,6 +37,10 @@ namespace XR.Dodo
 
 		void LoadSessions()
 		{
+			if(DodoServer.Dummy)
+			{
+				return;
+			}
 			if (!File.Exists(m_dataPath))
 			{
 				File.Create(m_dataPath).Close();
@@ -57,6 +61,10 @@ namespace XR.Dodo
 
 		void SaveSessions()
 		{
+			if (DodoServer.Dummy)
+			{
+				return;
+			}
 			if (!File.Exists(m_dataPath))
 			{
 				File.Create(m_dataPath).Close();
@@ -93,8 +101,15 @@ namespace XR.Dodo
 		{
 			if(!_data.Users.TryGetValue(user.UUID, out var existingUser))
 			{
-				Logger.Debug("Added missing user when getting session");
-				_data.Users.TryAdd(user.UUID, user);
+				if(DodoServer.Dummy)
+				{
+					Logger.Debug("Added missing user when getting session");
+					_data.Users.TryAdd(user.UUID, user);
+				}
+				else
+				{
+					throw new Exception("Not allowed out of testing mode");
+				}
 			}
 			else if(!ReferenceEquals(user, existingUser))
 			{
@@ -125,7 +140,10 @@ namespace XR.Dodo
 
 		public User GetUserFromUserID(string ownerUID)
 		{
-			_data.Users.TryGetValue(ownerUID, out var result);
+			if(!_data.Users.TryGetValue(ownerUID, out var result))
+			{
+				throw new Exception("Could not find user with id " + ownerUID);
+			}
 			return result;
 		}
 

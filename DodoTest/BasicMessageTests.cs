@@ -34,6 +34,34 @@ namespace DodoTest
 		{
 			var ph = "441315103992";
 			var telegramID = 997875;
+			var wg = new WorkingGroup("Test", EParentGroup.MovementSupport, "Test role", 3);
+			DodoServer.SiteManager.GetSite(3).WorkingGroups.Add(wg);
+			var user = new User()
+			{
+				Name = "Test",
+				PhoneNumber = ph,
+				TelegramUser = telegramID,
+				CoordinatorRoles = new System.Collections.Generic.HashSet<WorkingGroup>()
+				{
+					wg
+				}
+			};
+			var session = DodoServer.SessionManager.GetOrCreateSession(user);
+			var msg = await DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
+			msg = await DodoServer.TelegramGateway.FakeMessage("7/10 08:00", user.TelegramUser);
+			msg = await DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser);
+
+			var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
+			Assert.IsTrue(need.WorkingGroup.Name == wg.Name);
+			Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 7, 8, 0, 0));
+			Assert.IsTrue(need.Amount == 3);
+		}
+
+		[TestMethod]
+		public async Task CheckCoordinatorWhoIs()
+		{
+			var ph = "441315103992";
+			var telegramID = 997875;
 			var user = new User()
 			{
 				Name = "Test",
@@ -49,7 +77,5 @@ namespace DodoTest
 			var msg = await DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
 			Assert.IsTrue(msg.Content.Contains("Disability Coord"));
 		}
-
-
 	}
 }

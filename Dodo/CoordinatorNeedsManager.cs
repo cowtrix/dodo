@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,6 +14,7 @@ namespace XR.Dodo
 			public WorkingGroup WorkingGroup;
 			public int SiteCode;
 			public int Amount;
+			public DateTime TimeNeeded;
 			public DateTime TimeOfRequest;
 
 			public Need()
@@ -23,7 +25,7 @@ namespace XR.Dodo
 				TimeOfRequest = default(DateTime);
 			}
 		}
-		private Dictionary<WorkingGroup, Need> m_data = new Dictionary<WorkingGroup, Need>();
+		private ConcurrentDictionary<WorkingGroup, Need> m_data = new ConcurrentDictionary<WorkingGroup, Need>();
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
 		public CoordinatorNeedsManager(string dataOutputID)
@@ -47,6 +49,11 @@ namespace XR.Dodo
 			//var data = GSheets.GetSheet(m_dataOutputSpreadsheetID);
 		}
 
+		public List<Need> GetCurrentNeeds()
+		{
+			return m_data.Values.ToList();
+		}
+
 		public bool AddNeedRequest(User user, Need need)
 		{
 			if(user.AccessLevel <= EUserAccessLevel.Volunteer)
@@ -60,7 +67,7 @@ namespace XR.Dodo
 			if(need.Amount == 0)
 			{
 				m_dirty = true;
-				return m_data.Remove(need.WorkingGroup);
+				return m_data.TryRemove(need.WorkingGroup, out _);
 			}
 			need.TimeOfRequest = DateTime.Now;
 			m_data[need.WorkingGroup] = need;
@@ -74,7 +81,7 @@ namespace XR.Dodo
 			var spreadsheet = new List<List<string>>();
 			spreadsheet.Add(new List<string>()
 			{
-				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Contact Code", "Time Updated"
+				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Contact Code", "Time Needed", "Time Updated"
 			});
 			var sites = DodoServer.SiteManager.GetSites();
 			foreach (var need in m_data)
@@ -84,7 +91,7 @@ namespace XR.Dodo
 				{
 					site.SiteName, site.SiteCode.ToString(), need.Key.ParentGroup.ToString(), need.Key.Name,
 					(need.Value.Amount == int.MaxValue  ? "Many" : need.Value.Amount.ToString()), need.Key.ShortCode + site.SiteCode.ToString(),
-					need.Value.TimeOfRequest.ToString()
+					need.Value.TimeNeeded.ToString(), need.Value.TimeOfRequest.ToString()
 				});
 			}
 			if(!DodoServer.Dummy)

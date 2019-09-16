@@ -1,40 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace XR.Dodo
 {
-	public static class Utility
-	{
-		public static T Random<T>(this IEnumerable<T> enumerable)
-		{
-			if (enumerable == null)
-			{
-				throw new ArgumentNullException(nameof(enumerable));
-			}
-
-			// note: creating a Random instance each call may not be correct for you,
-			// consider a thread-safe static instance
-			var r = new Random();
-			var list = enumerable as IList<T> ?? enumerable.ToList();
-			return list.Count == 0 ? default(T) : list[r.Next(0, list.Count)];
-		}
-
-		public static IEnumerable<T> ConcatenateCollection<T>(this IEnumerable<IEnumerable<T>> sequences)
-		{
-			return sequences.SelectMany(x => x);
-		}
-
-		public static string RandomString(int length, string seed)
-		{
-			var random = new Random(seed.GetHashCode());
-			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-			return new string(Enumerable.Repeat(chars, length)
-			  .Select(s => s[random.Next(s.Length)]).ToArray());
-		}
-	}
 
 	public static class ValidationExtensions
 	{

@@ -5,7 +5,6 @@ using System;
 
 namespace XR.Dodo
 {
-
 	public static class DodoServer
 	{
 		public static string SMSGatewaySecret { get { return m_secrets[0]; } }
@@ -23,6 +22,7 @@ namespace XR.Dodo
 		public static SMSGateaway SMSGateway;
 		public static TelegramGateway TelegramGateway;
 		public static TwilioGateway TwilioGateway;
+		private static CmdReader cmdReader = new CmdReader();
 		public static bool Dummy { get; private set; }
 
 		public static string GetSMSNumber()
