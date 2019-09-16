@@ -12,7 +12,7 @@ namespace XR.Dodo
 		{
 			if(!string.IsNullOrEmpty(message))
 			{
-				Logger.Debug(message);
+				Error(message);
 			}
 			Error(exception.Message);
 			Error(exception.StackTrace);

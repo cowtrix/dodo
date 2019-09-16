@@ -31,7 +31,7 @@ namespace XR.Dodo
 		public readonly string TargetNumber;
 		public string UUID { get { return Message.MessageID; } }
 	}
-	
+
 	public class SMSGateaway : IMessageGateway
 	{
 		public struct Phone

@@ -13,10 +13,8 @@ namespace XR.Dodo
 		public static string TwilioSID { get { return m_secrets[3]; } }
 		public static string TwilioAuthToken { get { return m_secrets[4]; } }
 		public static string TwilioNumber { get { return m_secrets[5]; } }
-		public static string SessionPassword { get { return m_secrets[6]; } }
 
 		private static List<string> m_secrets;
-		
 
 		public static SessionManager SessionManager;
 		public static SiteSpreadsheetManager SiteManager;
@@ -38,7 +36,6 @@ namespace XR.Dodo
 		public static void Initialise(params string[] args)
 		{
 			m_secrets = File.ReadLines(@".secret").Select(x => x.Split('\t').FirstOrDefault()).ToList();
-			log4net.Config.XmlConfigurator.Configure();
 
 			if (!Directory.Exists("Backups"))
 			{
@@ -52,7 +49,7 @@ namespace XR.Dodo
 
 			SessionManager.GetOrCreateUserFromTelegramNumber(834876848).CoordinatorRoles.Add(
 				SiteManager.GetSites().ElementAt(2).WorkingGroups.First());
-			
+
 			// Set up gateways
 			SMSGateway = new SMSGateaway(SMSGatewaySecret, 8080);
 			TelegramGateway = new TelegramGateway(TelegramGatewaySecret);

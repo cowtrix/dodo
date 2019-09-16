@@ -35,7 +35,6 @@ namespace XR.Dodo
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 	}
-	
 
 	public static class ValidationExtensions
 	{
@@ -67,7 +66,7 @@ namespace XR.Dodo
 			{
 				return true;
 			}
-			
+
 			if(!number.StartsWith("+44"))
 			{
 				if(number.StartsWith("07"))

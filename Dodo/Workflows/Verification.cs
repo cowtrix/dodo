@@ -26,8 +26,8 @@ namespace XR.Dodo
 				SentPromptString = true;
 				CodeString = new Random().Next(10000, 99999).ToString();
 				GenerationDate = DateTime.Now;
-				return new ServerMessage("Please take a moment to verify your phone number. " + 
-					$"You can do this by texting {CodeString} to {DodoServer.GetSMSNumber()}." + 
+				return new ServerMessage("Please take a moment to verify your phone number. " +
+					$"You can do this by texting {CodeString} to {DodoServer.GetSMSNumber()}." +
 					"This code will expire in 5 minutes.");
 			}
 			if(message.GatewayType != EGatewayType.SMS)
@@ -78,7 +78,7 @@ namespace XR.Dodo
 				session.GetUser().PhoneNumber = CandidateNumber;
 				return default;
 			}
-			return new ServerMessage("Sorry, that was the wrong code. You can try again, or if you'd like to skip verification for now, reply SKIP.");			
+			return new ServerMessage("Sorry, that was the wrong code. You can try again, or if you'd like to skip verification for now, reply SKIP.");
 		}*/
 	}
 }

@@ -44,8 +44,7 @@ namespace XR.Dodo
 
 		void ReadFromGSheets()
 		{
-			var data = GSheets.GetSheet(m_dataOutputSpreadsheetID);
-
+			//var data = GSheets.GetSheet(m_dataOutputSpreadsheetID);
 		}
 
 		public bool AddNeedRequest(User user, Need need)

@@ -23,7 +23,7 @@ namespace XR.Dodo
 			catch(Exception e)
 			{
 				Logger.Exception(e);
-				LoadFromBackUp(backupPath);
+				//LoadFromBackUp(backupPath);
 			}
 			var backupTask = new Task(() =>
 			{
@@ -42,6 +42,11 @@ namespace XR.Dodo
 			});
 			backupTask.Start();
 			UpdateErrorReport();
+		}
+
+		public SiteSpreadsheet GetSite(int siteCode)
+		{
+			return Sites.Single(x => x.Key == siteCode).Value;
 		}
 
 		private void SaveToBackup(string path)
@@ -105,7 +110,7 @@ namespace XR.Dodo
 						});
 						errorReport.Add(rowList.ToList());
 						rowList.Clear();
-					}					
+					}
 				}
 				else
 				{

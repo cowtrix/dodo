@@ -129,8 +129,12 @@ namespace XR.Dodo
 			return result;
 		}
 
-		public User GetOrCreateUserFromPhoneNumber(string fromNumber, string messageString = null)  
+		public User GetOrCreateUserFromPhoneNumber(string fromNumber, string messageString = null)
 		{
+			if(string.IsNullOrEmpty(fromNumber))
+			{
+				return null;
+			}
 			if(!ValidationExtensions.ValidateNumber(ref fromNumber))
 			{
 				return null;
