@@ -23,7 +23,7 @@ namespace XR.Dodo
 		public string Email;
 
 		[NonSerialized]
-		public HashSet<WorkingGroup> CoordinatorRoles = new HashSet<WorkingGroup>();
+		public HashSet<Role> CoordinatorRoles = new HashSet<Role>();
 
 		public bool IsVerified()
 		{
@@ -41,7 +41,7 @@ namespace XR.Dodo
 					{
 						return EUserAccessLevel.RSO;
 					}
-					if(CoordinatorRoles.Any(x => x.ParentGroup == EParentGroup.MovementSupport &&
+					if(CoordinatorRoles.Any(x => x.WorkingGroup.ParentGroup == EParentGroup.MovementSupport &&
 						x.Name.ToUpperInvariant().Contains("ROTA")))
 					{
 						return EUserAccessLevel.RotaCoordinator;

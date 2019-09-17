@@ -1,57 +1,12 @@
 ﻿using Google;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace XR.Dodo
 {
-	public enum EParentGroup
-	{
-		ActionSupport,
-		ArresteeSupport,
-		WorldBuildingProd,
-		MediaAndMessaging,
-		MovementSupport,
-	}
-
-	public readonly struct WorkingGroup
-	{
-		private static Dictionary<string, string> m_shortCodes = new Dictionary<string, string>();
-		public readonly string Name;
-		public readonly string Mandate;
-		public readonly EParentGroup ParentGroup;
-		public readonly int SiteCode;
-
-		[JsonIgnore]
-		public string ShortCode { get { return m_shortCodes[Name]; } }
-
-		[JsonIgnore]
-		public SiteSpreadsheet Site { get { return DodoServer.SiteManager.GetSite(SiteCode); } }
-
-		public WorkingGroup(string workingGroup, EParentGroup parentGroup, string mandate, int sitecode)
-		{
-			Name = workingGroup.Trim();
-			ParentGroup = parentGroup;
-			Mandate = mandate;
-			SiteCode = sitecode;
-
-			if(!m_shortCodes.ContainsKey(Name))
-			{
-				var code = "";
-				int tries = 0;
-				do
-				{
-					code = Name.Substring(tries, 2).ToUpperInvariant();
-					tries++;
-				} while (m_shortCodes.ContainsValue(code));
-				m_shortCodes[Name] = code;
-			}
-		}
-	}
-
 	public class SpreadsheetException : Exception
 	{
 		public readonly int Row;
@@ -74,7 +29,6 @@ namespace XR.Dodo
 		public SpreadsheetStatus Status { get; private set; }
 		public readonly int SiteCode;
 		public readonly string SiteName;
-		public List<WorkingGroup> WorkingGroups = new List<WorkingGroup>();
 		private readonly string m_spreadSheetID;
 
 		public string URL
@@ -85,23 +39,7 @@ namespace XR.Dodo
 			}
 		}
 
-		private static EParentGroup StringToParentGroup(string str)
-		{
-			str = str.ToUpperInvariant();
-			if (str.Contains("ACTION SUPPORT"))
-				return EParentGroup.ActionSupport;
-			if (str.Contains("ARRESTEE SUPPORT"))
-				return EParentGroup.ArresteeSupport;
-			if (str.Contains("WORLD BUILDING AND PRODUCTION"))
-				return EParentGroup.WorldBuildingProd;
-			if (str.Contains("MEDIA AND MESSAGING"))
-				return EParentGroup.MediaAndMessaging;
-			if (str.Contains("MOVEMENT SUPPORT"))
-				return EParentGroup.MovementSupport;
-			throw new Exception($"Couldn't cast {str}");
-		}
-
-		public SiteSpreadsheet(int siteCode, string siteName, string spreadSheetID)
+		public SiteSpreadsheet(int siteCode, string siteName, string spreadSheetID, SiteSpreadsheetManager manager)
 		{
 			m_spreadSheetID = spreadSheetID;
 			Status = new SpreadsheetStatus();
@@ -113,6 +51,7 @@ namespace XR.Dodo
 				ValueRange spreadSheet = null;
 				spreadSheet = GSheets.GetSheetRange(m_spreadSheetID, "A:ZZZ");
 				var parentGroupRow = spreadSheet.Values.First(x => x.Any() && (x.First() as string).ToUpperInvariant().Contains("PARENT GROUP"));
+				var workingGroupRow = spreadSheet.Values.First(x => x.Any() && (x.First() as string).ToUpperInvariant().Contains("WORKING GROUP"));
 				for (var rowIndex = 0; rowIndex < spreadSheet.Values.Count; ++rowIndex)
 				{
 					var row = spreadSheet.Values[rowIndex];
@@ -129,15 +68,6 @@ namespace XR.Dodo
 					{
 						try
 						{
-							parentGroupStr = parentGroupRow.ElementAtOrDefault(column) as string ?? parentGroupStr;
-							try
-							{
-								parentGroup = StringToParentGroup(parentGroupStr);
-							}
-							catch
-							{
-								continue;
-							}
 							var name = (rowString.ElementAt(column) as string).Trim();
 							if (string.IsNullOrEmpty(name))
 							{
@@ -148,7 +78,8 @@ namespace XR.Dodo
 							email = email.Trim();
 							var nextNumberRowIndex = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Number");
 							var number = nextNumberRowIndex.ElementAtOrDefault(column) as string ?? "";
-							var workingGroupName = spreadSheet.Values
+							var workingGroupName = workingGroupRow.ElementAtOrDefault(column) as string ?? "";
+							var roleName = spreadSheet.Values
 								.First(x =>
 								{
 									var str = (x.FirstOrDefault() as string ?? "").ToLowerInvariant();
@@ -177,23 +108,23 @@ namespace XR.Dodo
 								var emailIndex = spreadSheet.Values.IndexOf(nextEmailRowIndex);
 								Status.Errors.Add(new SpreadsheetError()
 								{
-									Row = rowIndex,
-									Column = emailIndex,
+									Row = emailIndex,
+									Column = column,
 									Message = $"Value wasn't a valid email address",
 									Value = email,
 								});
 								email = null;
 							}
-							var workingGroup = new WorkingGroup(workingGroupName, parentGroup, mandate, siteCode);
-							if (!WorkingGroups.Contains(workingGroup))
+							if(!manager.GetWorkingGroupFromName(workingGroupName, out WorkingGroup wg))
 							{
-								WorkingGroups.Add(workingGroup);
+								wg = manager.GenerateWorkingGroup(workingGroupName, parentGroup, mandate);
 							}
+							var role = new Role(wg, roleName, siteCode);
 							var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);
 							user.Name = name;
 							user.PhoneNumber = number;
 							user.Email = email;
-							user.CoordinatorRoles.Add(workingGroup);
+							user.CoordinatorRoles.Add(role);
 						}
 						catch (Exception e)
 						{
@@ -229,7 +160,7 @@ namespace XR.Dodo
 				Logger.Exception(e, $"Failed to load site spreadsheet for {SiteName}");
 				Status.Errors.Add(new SpreadsheetError()
 				{
-					Message = "ERROR: Could not load spreadsheet",
+					Message = "CRITICAL ERROR: Could not load spreadsheet",
 					Value = e.Message,
 				});
 				return;

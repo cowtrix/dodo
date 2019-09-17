@@ -26,6 +26,11 @@ namespace XR.Dodo
 				CurrentTask = new CoordinatorWhoIsTask(this);
 				return CurrentTask.ProcessMessage(message, session);
 			}
+			if (toUpper.StartsWith(CoordinatorRemoveNeedTask.CommandKey))
+			{
+				CurrentTask = new CoordinatorRemoveNeedTask(this);
+				return CurrentTask.ProcessMessage(message, session);
+			}
 			return GetHelp();
 		}
 	}

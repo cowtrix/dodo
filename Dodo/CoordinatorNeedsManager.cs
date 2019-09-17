@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,13 +27,17 @@ namespace XR.Dodo
 				TimeOfRequest = default(DateTime);
 			}
 		}
-		private ConcurrentDictionary<WorkingGroup, Need> m_data = new ConcurrentDictionary<WorkingGroup, Need>();
+
+		private List<Need> m_data;
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
+		private string m_backupPath;
+
 		public CoordinatorNeedsManager(string dataOutputID)
 		{
 			m_dataOutputSpreadsheetID = dataOutputID;
-			ReadFromGSheets();
+			m_backupPath = Path.Combine("Backups", "needs.json");
+			LoadFromBackup();
 			var updateTask = new Task(() =>
 			{
 				while (true)
@@ -42,16 +48,34 @@ namespace XR.Dodo
 				}
 			});
 			updateTask.Start();
+
+			var saveTask = new Task(() =>
+			{
+				while (true)
+				{
+					Thread.Sleep(60 * 1000);
+					File.WriteAllText(m_backupPath, JsonConvert.SerializeObject(m_data, Formatting.Indented, new JsonSerializerSettings
+					{
+						TypeNameHandling = TypeNameHandling.Auto
+					}));
+				}
+			});
+			saveTask.Start();
 		}
 
-		void ReadFromGSheets()
+		private void LoadFromBackup()
 		{
-			//var data = GSheets.GetSheet(m_dataOutputSpreadsheetID);
+			if(!File.Exists(m_backupPath))
+			{
+				m_data = new List<Need>();
+				return;
+			}
+			m_data = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(m_backupPath));
 		}
 
 		public List<Need> GetCurrentNeeds()
 		{
-			return m_data.Values.ToList();
+			return m_data.ToList();
 		}
 
 		public bool AddNeedRequest(User user, Need need)
@@ -66,13 +90,17 @@ namespace XR.Dodo
 			}
 			if(need.Amount == 0)
 			{
-				m_dirty = true;
-				return m_data.TryRemove(need.WorkingGroup, out _);
+				return RemoveNeed(need);
 			}
 			need.TimeOfRequest = DateTime.Now;
-			m_data[need.WorkingGroup] = need;
+			m_data.Add(need);
 			m_dirty = true;
 			return true;
+		}
+
+		public bool RemoveNeed(Need need)
+		{
+			return m_data.Remove(need);
 		}
 
 		void UpdateNeedsOnGSheet()
@@ -86,12 +114,12 @@ namespace XR.Dodo
 			var sites = DodoServer.SiteManager.GetSites();
 			foreach (var need in m_data)
 			{
-				var site = sites.First(x => x.SiteCode == need.Key.SiteCode);
+				var site = sites.First(x => x.SiteCode == need.SiteCode);
 				spreadsheet.Add(new List<string>()
 				{
-					site.SiteName, site.SiteCode.ToString(), need.Key.ParentGroup.ToString(), need.Key.Name,
-					(need.Value.Amount == int.MaxValue  ? "Many" : need.Value.Amount.ToString()), need.Key.ShortCode + site.SiteCode.ToString(),
-					need.Value.TimeNeeded.ToString(), need.Value.TimeOfRequest.ToString()
+					site.SiteName, site.SiteCode.ToString(), need.WorkingGroup.ParentGroup.ToString(), need.WorkingGroup.Name,
+					(need.Amount == int.MaxValue  ? "Many" : need.Amount.ToString()), need.WorkingGroup.ShortCode + site.SiteCode.ToString(),
+					need.TimeNeeded.ToString(), need.TimeOfRequest.ToString()
 				});
 			}
 			if(!DodoServer.Dummy)

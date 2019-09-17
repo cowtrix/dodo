@@ -15,43 +15,18 @@ namespace XR.Dodo
 		{
 		}
 
-		List<SiteSpreadsheet> ApprovedSites(User user)
-		{
-			var allSites = DodoServer.SiteManager.GetSites();
-			if(user.AccessLevel == EUserAccessLevel.RSO)
-			{
-				return allSites;
-			}
-			return allSites.Where(x => user.CoordinatorRoles.Any(y => y.SiteCode == x.SiteCode)).ToList();
-		}
-
-		List<WorkingGroup> ApprovedWorkingGroups(User user)
-		{
-			if (user.AccessLevel == EUserAccessLevel.Coordinator)
-			{
-				return user.CoordinatorRoles.ToList();
-			}
-			if(user.AccessLevel == EUserAccessLevel.RotaCoordinator)
-			{
-				return DodoServer.SiteManager.GetSites().Single(x => x.SiteCode == user.SiteCode)
-					.WorkingGroups.ToList();
-			}
-			return DodoServer.SiteManager.GetSites().Select(x => x.WorkingGroups)
-				.ConcatenateCollection().ToList();
-		}
-
 		public override ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
 			var toUpper = message.Content.ToUpperInvariant()
 				.Split(new[] { " " }, System.StringSplitOptions.RemoveEmptyEntries);
-			foreach(var cmd in toUpper)
+			for (int i = 0; i < toUpper.Length; i++)
 			{
+				string cmd = (string)toUpper[i];
 				if (cmd == "CANCEL")
 				{
 					ExitTask();
 					return new ServerMessage("Okay, I've canceled this request.");
 				}
-
 				var user = session.GetUser();
 				var approvedSites = ApprovedSites(user);
 				if (approvedSites.Count == 1)
@@ -70,36 +45,41 @@ namespace XR.Dodo
 					}
 				}
 
-				var roles = ApprovedWorkingGroups(user);
+				var workingGroups = ApprovedWorkingGroups(user);
 				if (!DodoServer.SiteManager.IsValidWorkingGroup(Need.WorkingGroup))
 				{
-					if (roles.Any(x => x.ShortCode == cmd))
+					if (workingGroups.Any(x => x.ShortCode == cmd))
 					{
-						Need.WorkingGroup = roles.First(x => x.ShortCode == cmd);
+						Need.WorkingGroup = workingGroups.First(x => x.ShortCode == cmd);
 						return new ServerMessage("Nice! Now tell me, how many volunteers do you need?" +
 							" Reply with a number, or if you just need as many people as possible, reply 'MANY'");
 					}
 					else
 					{
-						if (roles.Count == 1)
+						if (workingGroups.Count == 1)
 						{
-							Need.WorkingGroup = roles[0];
+							Need.WorkingGroup = workingGroups[0];
 						}
 						else
 						{
-							return new ServerMessage(GetWorkingGroupRequestString(
-								roles.Where(x => x.SiteCode == Need.SiteCode).ToList()));
+							return new ServerMessage(GetWorkingGroupRequestString(workingGroups));
 						}
 					}
 				}
 
-				if (Need.TimeNeeded == default(DateTime))
+				if (Need.TimeNeeded == default)
 				{
-					if (cmd == "NOW")
+					var timeCommand = toUpper.Skip(i).Aggregate("", (f, s) => f + " " + s);
+					if (timeCommand.StartsWith("NOW"))
 					{
 						Need.TimeNeeded = DateTime.Now;
+						if (i >= toUpper.Length - 1)
+						{
+							return GetNumberRequest();
+						}
+						continue;
 					}
-					else if (Utility.TryParseDateTime(message.Content, out var date))
+					else if (Utility.TryParseDateTime(timeCommand, out var date))
 					{
 						if(date < DateTime.Now)
 						{
@@ -109,7 +89,12 @@ namespace XR.Dodo
 					}
 					else
 					{
-						return new ServerMessage($"Tell me when you need these volunteers. You can specify a date and a 24-hour time. For instance, reply '7/10 16:00' to ask for volunteers on the 7th of October at 4pm. If you need volunteers now, reply NOW");
+						if(i >= toUpper.Length - 1)
+						{
+							return new ServerMessage($"Tell me when you need these volunteers. You can specify a date and a 24-hour time. For instance, reply '7/10 16:00'" +
+							" to ask for volunteers on the 7th of October at 4pm. If you need volunteers now, reply NOW");
+						}
+						continue;
 					}
 				}
 
@@ -120,26 +105,55 @@ namespace XR.Dodo
 				}
 				else if (cmd == "NEED")
 				{
-					return new ServerMessage($"You're requesting volunteers for {Need.WorkingGroup.Name} at site {Need.SiteCode}. " +
-						"Tell me how many volunteers you need, or if you just need as many people as possible, reply 'MANY'.");
+					return GetNumberRequest();
 				}
 				else if (!int.TryParse(cmd, out count))
 				{
-					return new ServerMessage("Sorry, I didn't understand that number." +
+					if (i >= toUpper.Length - 1)
+					{
+						return new ServerMessage("Sorry, I didn't understand that number." +
 						" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
 						" If you'd like to cancel, reply 'CANCEL'.");
+					}
+					continue;
 				}
 				else
 				{
 					Need.Amount = count;
 				}
+
 				DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, Need);
 				ExitTask();
 				return new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
 					$" In future, you could make this request in one go by saying NEED " +
-					$"{Need.WorkingGroup.ShortCode}{Need.WorkingGroup.SiteCode} {(Need.Amount == int.MaxValue ? "MANY" : Need.Amount.ToString())} {Utility.ToDateTimeCode(Need.TimeNeeded)}");
+					$"{Need.WorkingGroup.ShortCode}{Need.SiteCode} {(Need.Amount == int.MaxValue ? "MANY" : Need.Amount.ToString())} {Utility.ToDateTimeCode(Need.TimeNeeded)}");
 			}
 			return default;
+		}
+
+		private ServerMessage GetNumberRequest()
+		{
+			return new ServerMessage($"You're requesting volunteers for {Need.WorkingGroup.Name} at site {Need.SiteCode}. " +
+						"Tell me how many volunteers you need, or if you just need as many people as possible, reply 'MANY'.");
+		}
+
+		private List<SiteSpreadsheet> ApprovedSites(User user)
+		{
+			var allSites = DodoServer.SiteManager.GetSites();
+			if (user.AccessLevel == EUserAccessLevel.RSO)
+			{
+				return allSites;
+			}
+			return allSites.Where(x => user.CoordinatorRoles.Any(y => y.SiteCode == x.SiteCode)).ToList();
+		}
+
+		private List<WorkingGroup> ApprovedWorkingGroups(User user)
+		{
+			if (user.AccessLevel == EUserAccessLevel.Coordinator)
+			{
+				return user.CoordinatorRoles.Select(x => x.WorkingGroup).ToList();
+			}
+			return DodoServer.SiteManager.WorkingGroups.Values.ToList();
 		}
 
 		private string GetSiteNumberRequestString(List<SiteSpreadsheet> sites)

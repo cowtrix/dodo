@@ -24,5 +24,36 @@ namespace DodoTest
 			get { return testContextInstance; }
 			set { testContextInstance = value; }
 		}
+
+		public User GetTestUser(EUserAccessLevel accessLevel)
+		{
+			var ph = "441315103992";
+			var telegramID = 997875;
+			var user = new User()
+			{
+				Name = "Test",
+				PhoneNumber = ph,
+				TelegramUser = telegramID,
+			};
+			if (accessLevel == EUserAccessLevel.Coordinator)
+			{
+				var wg = DodoServer.SiteManager.GenerateWorkingGroup("Test", EParentGroup.MovementSupport, "Test working group");
+				DodoServer.SiteManager.WorkingGroups.Add(wg.ShortCode, wg);
+				user.CoordinatorRoles.Add(new Role(wg, "Test role", 3));
+			}
+			else if (accessLevel == EUserAccessLevel.RotaCoordinator)
+			{
+				var wg = DodoServer.SiteManager.GenerateWorkingGroup("Test Rota", EParentGroup.MovementSupport, "Test rota working group");
+				DodoServer.SiteManager.WorkingGroups.Add(wg.ShortCode, wg);
+				user.CoordinatorRoles.Add(new Role(wg, "Test role", 0));
+			}
+			else if (accessLevel == EUserAccessLevel.RSO)
+			{
+				var wg = DodoServer.SiteManager.GenerateWorkingGroup("Test RSO", EParentGroup.MovementSupport, "Test RSO working group");
+				DodoServer.SiteManager.WorkingGroups.Add(wg.ShortCode, wg);
+				user.CoordinatorRoles.Add(new Role(wg, "Test role", 0));
+			}
+			return user;
+		}
 	}
 }

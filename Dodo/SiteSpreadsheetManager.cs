@@ -10,9 +10,10 @@ namespace XR.Dodo
 	public class SiteSpreadsheetManager
 	{
 		const string StatusRange = "A1:ZZZ";
-		private static string m_statusID;
-		private string backupPath = "Backups\\SiteBackup.json";
+		private string m_statusID;
+		private string m_wgData;
 		Dictionary<int, SiteSpreadsheet> Sites = new Dictionary<int, SiteSpreadsheet>();
+		public Dictionary<string, WorkingGroup> WorkingGroups = new Dictionary<string, WorkingGroup>();
 
 		public SiteSpreadsheetManager(string configPath)
 		{
@@ -23,24 +24,7 @@ namespace XR.Dodo
 			catch(Exception e)
 			{
 				Logger.Exception(e);
-				//LoadFromBackUp(backupPath);
 			}
-			var backupTask = new Task(() =>
-			{
-				while(true)
-				{
-					try
-					{
-						SaveToBackup(backupPath);
-					}
-					catch(Exception e)
-					{
-						Logger.Exception(e);
-					}
-					System.Threading.Thread.Sleep(5 * 60 * 1000);
-				}
-			});
-			backupTask.Start();
 			UpdateErrorReport();
 		}
 
@@ -51,13 +35,11 @@ namespace XR.Dodo
 
 		public WorkingGroup GetWorkingGroup(string code)
 		{
-			return Sites.First(x => x.Value.WorkingGroups.Any(y => y.ShortCode == code))
-				.Value.WorkingGroups.Single(x => x.ShortCode == code);
-		}
-
-		private void SaveToBackup(string path)
-		{
-			File.WriteAllText(path, JsonConvert.SerializeObject(Sites));
+			if(!IsValidWorkingGroup(code))
+			{
+				throw new Exception("Invalid working group shortcode: " + code);
+			}
+			return WorkingGroups[code];
 		}
 
 		private void LoadFromBackUp(string path)
@@ -83,6 +65,7 @@ namespace XR.Dodo
 				"Site Code",
 				"Site Name",
 				"Spreadsheet URL",
+				"Coordinators Found",
 				"Error Count",
 				"Row",
 				"Column",
@@ -91,11 +74,24 @@ namespace XR.Dodo
 			});
 			foreach (var site in Sites)
 			{
+				var siteCoords = DodoServer.SessionManager.GetUsers().Where(x => x.CoordinatorRoles.Any(y => y.SiteCode == site.Key));
+				/*var missingCoords = WorkingGroups.Where(x => !siteCoords.Any(y => y.CoordinatorRoles.Any(z => z.WorkingGroup.ShortCode == x.Value.ShortCode)));
+				foreach(var missing in missingCoords)
+				{
+					site.Value.Status.Errors.Add(new SpreadsheetError()
+					{
+						Column = 0,
+						Row = 0,
+						Message = $"No coordinators for {missing.Value.Name} found",
+					});
+				}*/
+
 				var errorCount = site.Value.Status.Errors.Count();
 				var rowList = new List<string>(){
 					site.Key.ToString(),
 					site.Value.SiteName,
 					site.Value.URL,
+					siteCoords.Count().ToString(),
 					errorCount.ToString()
 				};
 				if (errorCount > 0)
@@ -107,7 +103,7 @@ namespace XR.Dodo
 						{
 							rowList.AddRange(new[]
 							{
-								"", "", "", "",
+								"", "", "", "", "",
 							});
 						}
 						rowList.AddRange(new[]
@@ -127,6 +123,10 @@ namespace XR.Dodo
 					errorReport.Add(rowList.ToList());
 					rowList.Clear();
 				}
+				rowList.AddRange(new[]
+				{
+					"",
+				});
 			}
 			Logger.Debug("Updated Spreadsheet Health Report");
 			if (!DodoServer.Dummy)
@@ -138,12 +138,12 @@ namespace XR.Dodo
 
 		public bool IsValidWorkingGroup(WorkingGroup workingGroup)
 		{
-			return Sites.Any(x => x.Value.WorkingGroups.Contains(workingGroup));
+			return WorkingGroups.ContainsValue(workingGroup);
 		}
 
 		public bool IsValidWorkingGroup(string shortCode)
 		{
-			return Sites.Any(x => x.Value.WorkingGroups.Any(y => y.ShortCode == shortCode));
+			return WorkingGroups.ContainsKey(shortCode);
 		}
 
 		public bool IsValidSiteCode(int siteCode)
@@ -151,11 +151,60 @@ namespace XR.Dodo
 			return Sites.ContainsKey(siteCode);
 		}
 
+		public static bool TryStringToParentGroup(string str, out EParentGroup group)
+		{
+			group = default;
+			if (string.IsNullOrEmpty(str))
+			{
+				return false;
+			}
+			str = str.ToUpperInvariant();
+			if (str.Contains("ACTION SUPPORT"))
+			{
+				group = EParentGroup.ActionSupport;
+				return true;
+			}
+			if (str.Contains("ARRESTEE SUPPORT"))
+			{
+				group = EParentGroup.ArresteeSupport;
+				return true;
+			}
+			if (str.Contains("WORLD BUILDING AND PRODUCTION"))
+			{
+				group = EParentGroup.WorldBuildingProd;
+				return true;
+			}
+			if (str.Contains("MEDIA AND MESSAGING"))
+			{
+				group = EParentGroup.MediaAndMessaging;
+				return true;
+			}
+			if (str.Contains("MOVEMENT SUPPORT"))
+			{
+				group = EParentGroup.MovementSupport;
+				return true;
+			}
+			if (str.Contains("RSO"))
+			{
+				group = EParentGroup.RSO;
+				return true;
+			}
+			return false;
+		}
+
+		public bool GetWorkingGroupFromName(string workingGroupName, out WorkingGroup wg)
+		{
+			wg = WorkingGroups.Values.FirstOrDefault(x => x.Name.Contains(workingGroupName) || workingGroupName.Contains(x.Name));
+			return !string.IsNullOrEmpty(wg.ShortCode);
+		}
+
 		void LoadFromGSheets(string configPath)
 		{
 			var configs = File.ReadAllLines(configPath);
 			m_statusID = configs.First();
-			foreach (var config in configs.Skip(1))
+			m_wgData = configs.ElementAt(1);
+			LoadWorkingGroups();
+			foreach (var config in configs.Skip(2))
 			{
 				var cols = config.Split('\t');
 				try
@@ -170,7 +219,7 @@ namespace XR.Dodo
 						Logger.Error($"Failed to parse sitecode at line: {config}");
 						continue;
 					}
-					Sites.Add(sitecode, new SiteSpreadsheet(sitecode, cols[1], cols[2]));
+					Sites.Add(sitecode, new SiteSpreadsheet(sitecode, cols[1], cols[2], this));
 				}
 				catch
 				{
@@ -179,6 +228,58 @@ namespace XR.Dodo
 				}
 			}
 			Logger.Debug("Finished loading");
+		}
+
+		private void LoadWorkingGroups()
+		{
+			var wgData = GSheets.GetSheetRange(m_wgData, "A:D");
+			var parentGroup = EParentGroup.ActionSupport;
+			foreach(var row in wgData.Values.Skip(3))
+			{
+				try
+				{
+					var rowStrings = row.Cast<string>();
+					if (TryStringToParentGroup(rowStrings.ElementAtOrDefault(0), out var newGroup))
+					{
+						parentGroup = newGroup;
+					}
+					var wgName = rowStrings.ElementAtOrDefault(2);
+					var mandate = rowStrings.ElementAtOrDefault(3);
+					var wg = GenerateWorkingGroup(wgName, parentGroup, mandate);
+					WorkingGroups.Add(wg.ShortCode, wg);
+				}
+				catch(Exception e)
+				{
+					Logger.Exception(e, $"Failed to parse coordinator row at {wgData.Values.IndexOf(row)}");
+				}
+			}
+			Logger.Debug($"Loaded {WorkingGroups.Count} working groups.");
+		}
+
+		public WorkingGroup GenerateWorkingGroup(string name, EParentGroup parentGroup, string mandate)
+		{
+			var shortCode = GenerateShortCode(name);
+			return new WorkingGroup(name, parentGroup, mandate, shortCode);
+		}
+
+		private string GenerateShortCode(string name)
+		{
+			var shortcode = name.Where(x => char.IsUpper(x)).Aggregate("", (current, next) => current + next);
+			if(shortcode.Length >= 2)
+			{
+				shortcode = shortcode.Substring(0, 2);
+				if(!WorkingGroups.ContainsKey(shortcode))
+				{
+					return shortcode;
+				}
+			}
+			int tries = 0;
+			while (shortcode.Length < 2 || WorkingGroups.ContainsKey(shortcode))
+			{
+				shortcode = name.Substring(tries, 2).ToUpperInvariant();
+				tries++;
+			}
+			return shortcode;
 		}
 
 		public List<SiteSpreadsheet> GetSites()
