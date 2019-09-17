@@ -66,6 +66,7 @@
     <Compile Include="CoordinatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RotaCoordinatorTests.cs" />
+    <Compile Include="RSOCoordinatorTests.cs" />
     <Compile Include="SymSyncSimulator.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="UserTests.cs" />

@@ -39,6 +39,18 @@ namespace XR.Dodo
 					if (int.TryParse(cmd, out var siteCode))
 					{
 						Need.SiteCode = siteCode;
+						if (i >= toUpper.Length - 1)
+						{
+							cmd = "XXXX";
+						}
+						else
+						{
+							continue;
+						}
+					}
+					else if (i < toUpper.Length)
+					{
+						continue;
 					}
 					else
 					{
@@ -47,50 +59,53 @@ namespace XR.Dodo
 				}
 
 				var workingGroups = ApprovedWorkingGroups(user);
-				if(workingGroups.Count > 15)
+				if (!DodoServer.SiteManager.IsValidWorkingGroup(Need.WorkingGroup) && !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
 				{
-					// Filter by parent group
-					if(ParentGroupFilter == null)
+					if (workingGroups.Count > 15)
 					{
-						var list = Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>().ToList();
-						if (!SiteSpreadsheetManager.TryStringToParentGroup(cmd, out var parentGroup))
+						// Filter by parent group
+						if (ParentGroupFilter == null)
 						{
-							if(int.TryParse(cmd, out var number) && number >= 0 && number < list.Count)
+							var list = Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>().ToList();
+							if (!SiteSpreadsheetManager.TryStringToParentGroup(cmd, out var parentGroup))
 							{
-								ParentGroupFilter = list.ElementAt(number);
+								if (int.TryParse(cmd, out var number) && number >= 0 && number < list.Count)
+								{
+									ParentGroupFilter = list.ElementAt(number);
+									if (i >= toUpper.Length - 1)
+									{
+										return new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
+											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
+									}
+									continue;
+								}
 								if (i >= toUpper.Length - 1)
 								{
-									return new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
-										+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
+									var sb = new StringBuilder("Please tell me which Parent Group the working group belongs to:\n");
+									for (int j = 0; j < list.Count; j++)
+									{
+										if (list[j] == EParentGroup.RSO)
+										{
+											continue;
+										}
+										sb.AppendLine($"{j} - {list[j]}");
+									}
+									return new ServerMessage(sb.ToString());
 								}
 								continue;
 							}
+							ParentGroupFilter = parentGroup;
 							if (i >= toUpper.Length - 1)
 							{
-								var sb = new StringBuilder("Please tell me which Parent Group the working group belongs to:\n");
-								for (int j = 0; j < list.Count; j++)
-								{
-									if (list[j] == EParentGroup.RSO)
-									{
-										continue;
-									}
-									sb.AppendLine($"{j} - {list[j]}");
-								}
-								return new ServerMessage(sb.ToString());
+								return new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
+											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
 							}
 							continue;
 						}
-						ParentGroupFilter = parentGroup;
-						if (i >= toUpper.Length - 1)
+						else
 						{
-							return new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
-										+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
+							workingGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value).ToList();
 						}
-						continue;
-					}
-					else
-					{
-						workingGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value).ToList();
 					}
 				}
 
@@ -101,7 +116,7 @@ namespace XR.Dodo
 						Need.WorkingGroup = workingGroups.First(x => x.ShortCode == cmd);
 						if (i >= toUpper.Length - 1)
 						{
-							return new ServerMessage(GetNumberRequest());
+							return new ServerMessage(GetTimeRequestString());
 						}
 						continue;
 					}
@@ -137,7 +152,7 @@ namespace XR.Dodo
 							return new ServerMessage($"Sorry, you can only request volunteers for the future.");
 						}
 						Need.TimeNeeded = date;
-						if (i >= toUpper.Length - 1)
+						if (i >= toUpper.Length - 2)
 						{
 							return new ServerMessage("Now, tell me how many volunteers you need." +
 							" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
@@ -150,8 +165,7 @@ namespace XR.Dodo
 					{
 						if(i >= toUpper.Length - 1)
 						{
-							return new ServerMessage($"Tell me when you need these volunteers. You can specify a date and a 24-hour time. For instance, reply '7/10 16:00'" +
-								" to ask for volunteers on the 7th of October at 4pm. If you need volunteers now, reply NOW");
+							return new ServerMessage(GetTimeRequestString());
 						}
 						continue;
 					}
@@ -189,6 +203,12 @@ namespace XR.Dodo
 					$"{Need.SiteCode} {Need.WorkingGroup.ShortCode} {Utility.ToDateTimeCode(Need.TimeNeeded)} {(Need.Amount == int.MaxValue ? "MANY" : Need.Amount.ToString())}");
 			}
 			return default;
+		}
+
+		private string GetTimeRequestString()
+		{
+			return "Tell me when you need these volunteers. You can specify a date and a 24-hour time. For instance, reply '7/10 16:00'" +
+								" to ask for volunteers on the 7th of October at 4pm. If you need volunteers now, reply NOW";
 		}
 
 		private string GetNumberRequest()
