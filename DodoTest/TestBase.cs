@@ -45,7 +45,7 @@ namespace DodoTest
 			{
 				var wg = DodoServer.SiteManager.GenerateWorkingGroup("Test Rota", EParentGroup.MovementSupport, "Test rota working group");
 				DodoServer.SiteManager.WorkingGroups.Add(wg.ShortCode, wg);
-				user.CoordinatorRoles.Add(new Role(wg, "Test role", 0));
+				user.CoordinatorRoles.Add(new Role(wg, "Test role", 1));
 			}
 			else if (accessLevel == EUserAccessLevel.RSO)
 			{

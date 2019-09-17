@@ -42,7 +42,7 @@ namespace XR.Dodo
 						return EUserAccessLevel.RSO;
 					}
 					if(CoordinatorRoles.Any(x => x.WorkingGroup.ParentGroup == EParentGroup.MovementSupport &&
-						x.Name.ToUpperInvariant().Contains("ROTA")))
+						x.WorkingGroup.Name.ToUpperInvariant().Contains("ROTA")))
 					{
 						return EUserAccessLevel.RotaCoordinator;
 					}

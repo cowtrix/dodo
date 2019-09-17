@@ -11,7 +11,7 @@ namespace XR.Dodo
 		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
 			session.Inbox.Add(message);
-			var user = session.GetUser();			
+			var user = session.GetUser();
 			if(CurrentTask != null)
 			{
 				if(DateTime.Now - CurrentTask.TimeCreated > m_timeout)
