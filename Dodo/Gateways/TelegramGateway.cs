@@ -13,7 +13,7 @@ namespace XR.Dodo
 		public TelegramGateway(string secret)
 		{
 			m_secret = secret;
-			if(DodoServer.Dummy)
+			//if(DodoServer.Dummy)
 			{
 				return;
 			}

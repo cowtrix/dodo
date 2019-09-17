@@ -47,7 +47,6 @@ namespace XR.Dodo
 						UpdateNeedsOnGSheet();
 				}
 			});
-			updateTask.Start();
 
 			var saveTask = new Task(() =>
 			{
@@ -60,7 +59,11 @@ namespace XR.Dodo
 					}));
 				}
 			});
-			saveTask.Start();
+			if(!DodoServer.Dummy)
+			{
+				updateTask.Start();
+				saveTask.Start();
+			}
 		}
 
 		private void LoadFromBackup()
@@ -71,6 +74,11 @@ namespace XR.Dodo
 				return;
 			}
 			m_data = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(m_backupPath));
+		}
+
+		public void ClearAll()
+		{
+			m_data.Clear();
 		}
 
 		public List<Need> GetCurrentNeeds()

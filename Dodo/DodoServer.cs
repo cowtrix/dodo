@@ -46,7 +46,7 @@ namespace XR.Dodo
 			}
 
 			// Set up managers
-			SessionManager = new SessionManager("sessions.json");
+			SessionManager = new SessionManager("Backups\\sessions.json");
 			SiteManager = new SiteSpreadsheetManager("sites.config");
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(CoordinatorDataID);
 

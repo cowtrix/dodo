@@ -28,7 +28,7 @@ namespace XR.Dodo
 			{
 				while(true)
 				{
-					Thread.Sleep(10 * 1000);
+					Thread.Sleep(60 * 1000);
 					SaveSessions();
 				}
 			});
@@ -47,7 +47,6 @@ namespace XR.Dodo
 			}
 			try
 			{
-				//var decrypted = EncryptStringSample.StringCipher.Decrypt(File.ReadAllText(m_dataPath), DodoServer.SessionPassword);
 				_data = JsonConvert.DeserializeObject<SessionManagerData>(File.ReadAllText(m_dataPath), new JsonSerializerSettings
 				{
 					TypeNameHandling = TypeNameHandling.Auto
