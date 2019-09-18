@@ -44,19 +44,16 @@ namespace DodoTest
 			if (accessLevel == EUserAccessLevel.Coordinator)
 			{
 				var wg = DodoServer.SiteManager.GenerateWorkingGroup("Test", EParentGroup.MovementSupport, "Test working group");
-				DodoServer.SiteManager.Data.WorkingGroups.Add(wg.ShortCode, wg);
 				user.CoordinatorRoles.Add(new Role(wg, "Test role", 3));
 			}
 			else if (accessLevel == EUserAccessLevel.RotaCoordinator)
 			{
 				var wg = DodoServer.SiteManager.GenerateWorkingGroup("Test Rota", EParentGroup.MovementSupport, "Test rota working group");
-				DodoServer.SiteManager.Data.WorkingGroups.Add(wg.ShortCode, wg);
 				user.CoordinatorRoles.Add(new Role(wg, "Test role", 1));
 			}
 			else if (accessLevel == EUserAccessLevel.RSO)
 			{
 				var wg = DodoServer.SiteManager.GenerateWorkingGroup("Test RSO", EParentGroup.MovementSupport, "Test RSO working group");
-				DodoServer.SiteManager.Data.WorkingGroups.Add(wg.ShortCode, wg);
 				user.CoordinatorRoles.Add(new Role(wg, "Test role", 0));
 			}
 			return user;

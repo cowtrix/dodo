@@ -52,7 +52,10 @@ namespace XR.Dodo
 		{
 			if (File.Exists(m_filePath))
 			{
-				Phones = JsonConvert.DeserializeObject<List<Phone>>(File.ReadAllText(m_filePath))
+				Phones = JsonConvert.DeserializeObject<List<Phone>>(File.ReadAllText(m_filePath), new JsonSerializerSettings
+				{
+					TypeNameHandling = TypeNameHandling.Auto
+				})
 					?? Phones;
 			}
 			Phones.Add(new Phone()
@@ -184,7 +187,7 @@ namespace XR.Dodo
 				var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(fromNumber, smsmMessage.MessageString);
 				var message = new UserMessage(user, smsmMessage.MessageString, EGatewayType.SMS,
 					smsmMessage.From);
-				
+
 				var session = DodoServer.SessionManager.GetOrCreateSession(user);
 				if (session == null)
 				{

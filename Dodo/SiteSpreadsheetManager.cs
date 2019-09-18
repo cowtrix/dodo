@@ -19,7 +19,7 @@ namespace XR.Dodo
 			public Dictionary<int, SiteSpreadsheet> Sites = new Dictionary<int, SiteSpreadsheet>();
 			public Dictionary<string, WorkingGroup> WorkingGroups = new Dictionary<string, WorkingGroup>();
 		}
-		public SiteData Data = new SiteData();
+		public SiteData Data;
 
 		public SiteSpreadsheetManager(string configPath)
 		{
@@ -42,7 +42,10 @@ namespace XR.Dodo
 					try
 					{
 						Logger.Debug($"Saved site data to {m_backupPath}");
-						File.WriteAllText(m_backupPath, JsonConvert.SerializeObject(Data.Sites));
+						File.WriteAllText(m_backupPath, JsonConvert.SerializeObject(Data, Formatting.Indented, new JsonSerializerSettings
+						{
+							TypeNameHandling = TypeNameHandling.Auto
+						}));
 					}
 					catch (Exception e)
 					{
@@ -50,7 +53,10 @@ namespace XR.Dodo
 					}
 				}
 			});
-			saveTask.Start();
+			if(!DodoServer.Dummy)
+			{
+				saveTask.Start();
+			}
 		}
 
 		public SiteSpreadsheet GetSite(int siteCode)
@@ -74,7 +80,10 @@ namespace XR.Dodo
 				Data = Data ?? new SiteData();
 				return;
 			}
-			Data = JsonConvert.DeserializeObject<SiteData>(File.ReadAllText(m_backupPath));
+			Data = JsonConvert.DeserializeObject<SiteData>(File.ReadAllText(m_backupPath), new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			});
 		}
 
 		void UpdateErrorReport()
@@ -163,7 +172,11 @@ namespace XR.Dodo
 
 		public bool IsValidWorkingGroup(WorkingGroup workingGroup)
 		{
-			return Data.WorkingGroups.ContainsValue(workingGroup);
+			if(string.IsNullOrEmpty(workingGroup.ShortCode))
+			{
+				return false;
+			}
+			return Data.WorkingGroups.ContainsKey(workingGroup.ShortCode);
 		}
 
 		public bool IsValidWorkingGroup(string shortCode)
@@ -228,12 +241,14 @@ namespace XR.Dodo
 			var configs = File.ReadAllLines(configPath);
 			m_statusID = configs.First();
 			m_wgData = configs.ElementAt(1);
-			LoadWorkingGroups();
 			if(DodoServer.Dummy)
 			{
 				LoadFromBackUp();
 				return;
 			}
+
+			Data = new SiteData();
+			LoadWorkingGroups();
 			foreach (var config in configs.Skip(2))
 			{
 				var cols = config.Split('\t');
@@ -276,7 +291,6 @@ namespace XR.Dodo
 					var wgName = rowStrings.ElementAtOrDefault(2);
 					var mandate = rowStrings.ElementAtOrDefault(3);
 					var wg = GenerateWorkingGroup(wgName, parentGroup, mandate);
-					Data.WorkingGroups.Add(wg.ShortCode, wg);
 				}
 				catch(Exception e)
 				{
@@ -288,8 +302,14 @@ namespace XR.Dodo
 
 		public WorkingGroup GenerateWorkingGroup(string name, EParentGroup parentGroup, string mandate)
 		{
+			if(Data.WorkingGroups.Any(x => x.Value.Name == name && x.Value.ParentGroup == parentGroup))
+			{
+				return Data.WorkingGroups.First(x => x.Value.Name == name && x.Value.ParentGroup == parentGroup).Value;
+			}
 			var shortCode = GenerateShortCode(name);
-			return new WorkingGroup(name, parentGroup, mandate, shortCode);
+			var wg = new WorkingGroup(name, parentGroup, mandate, shortCode);
+			Data.WorkingGroups.Add(wg.ShortCode, wg);
+			return wg;
 		}
 
 		private string GenerateShortCode(string name)
@@ -303,10 +323,10 @@ namespace XR.Dodo
 					return shortcode;
 				}
 			}
-			int tries = 0;
+			int tries = 1;
 			while (shortcode.Length < 2 || Data.WorkingGroups.ContainsKey(shortcode))
 			{
-				shortcode = name.Substring(tries, 2).ToUpperInvariant();
+				shortcode = (name.Substring(0, 1) + name.Substring(tries, 1)).ToString().ToUpperInvariant();
 				tries++;
 			}
 			return shortcode;

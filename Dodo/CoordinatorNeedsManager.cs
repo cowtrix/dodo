@@ -73,7 +73,10 @@ namespace XR.Dodo
 				m_data = new List<Need>();
 				return;
 			}
-			m_data = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(m_backupPath));
+			m_data = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(m_backupPath), new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			});
 		}
 
 		public void ClearAll()

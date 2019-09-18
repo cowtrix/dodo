@@ -30,6 +30,11 @@ namespace XR.Dodo
 				}
 				var user = session.GetUser();
 				var approvedSites = ApprovedSites(user);
+				if(approvedSites.Count == 0)
+				{
+					ExitTask();
+					return new ServerMessage("Sorry, it doesn't look like you're registered as a coordinator at any sites.");
+				}
 				if (approvedSites.Count == 1)
 				{
 					Need.SiteCode = approvedSites[0].SiteCode;
@@ -61,48 +66,55 @@ namespace XR.Dodo
 				var workingGroups = ApprovedWorkingGroups(user);
 				if (!DodoServer.SiteManager.IsValidWorkingGroup(Need.WorkingGroup) && !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
 				{
-					// Filter by parent group
-					if (ParentGroupFilter == null)
+					if(workingGroups.Count == 1 && user.AccessLevel != EUserAccessLevel.RotaCoordinator)
 					{
-						var list = Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>().ToList();
-						if (!SiteSpreadsheetManager.TryStringToParentGroup(cmd, out var parentGroup))
-						{
-							if (int.TryParse(cmd, out var number) && number >= 0 && number < list.Count)
-							{
-								ParentGroupFilter = list.ElementAt(number);
-								if (i >= toUpper.Length - 1)
-								{
-									return new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
-										+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
-								}
-								continue;
-							}
-							if (i >= toUpper.Length - 1)
-							{
-								var sb = new StringBuilder("Please tell me which Parent Group the working group belongs to:\n");
-								for (int j = 0; j < list.Count; j++)
-								{
-									if (list[j] == EParentGroup.RSO)
-									{
-										continue;
-									}
-									sb.AppendLine($"{j} - {list[j]}");
-								}
-								return new ServerMessage(sb.ToString());
-							}
-							continue;
-						}
-						ParentGroupFilter = parentGroup;
-						if (i >= toUpper.Length - 1)
-						{
-							return new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
-										+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
-						}
-						continue;
+						Need.WorkingGroup = workingGroups[0];
 					}
 					else
 					{
-						workingGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value).ToList();
+						// Filter by parent group
+						if (ParentGroupFilter == null)
+						{
+							var list = Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>().ToList();
+							if (!SiteSpreadsheetManager.TryStringToParentGroup(cmd, out var parentGroup))
+							{
+								if (int.TryParse(cmd, out var number) && number >= 0 && number < list.Count)
+								{
+									ParentGroupFilter = list.ElementAt(number);
+									if (i >= toUpper.Length - 1)
+									{
+										return new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
+											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
+									}
+									continue;
+								}
+								if (i >= toUpper.Length - 1)
+								{
+									var sb = new StringBuilder("Please tell me which Parent Group the working group belongs to:\n");
+									for (int j = 0; j < list.Count; j++)
+									{
+										if (list[j] == EParentGroup.RSO)
+										{
+											continue;
+										}
+										sb.AppendLine($"{j} - {list[j]}");
+									}
+									return new ServerMessage(sb.ToString());
+								}
+								continue;
+							}
+							ParentGroupFilter = parentGroup;
+							if (i >= toUpper.Length - 1)
+							{
+								return new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
+											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
+							}
+							continue;
+						}
+						else
+						{
+							workingGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value).ToList();
+						}
 					}
 				}
 
@@ -229,14 +241,8 @@ namespace XR.Dodo
 			{
 				return user.CoordinatorRoles.Select(x => x.WorkingGroup).ToList();
 			}
-			if (user.AccessLevel == EUserAccessLevel.RotaCoordinator)
-			{
-				var sitecodes = user.CoordinatorRoles.Where(x => x.WorkingGroup
-					.Name.ToUpperInvariant().Contains("ROTA")).Select(x => x.SiteCode);
-				return DodoServer.SessionManager.GetUsers().Select(x => x.CoordinatorRoles.Where(y => sitecodes.Contains(y.SiteCode))).
-					ConcatenateCollection().Select(y => y.WorkingGroup).ToList();
-			}
-			return DodoServer.SiteManager.Data.WorkingGroups.Values.ToList();
+			return DodoServer.SiteManager.Data.WorkingGroups.Values
+				.Where(x => x.ParentGroup != EParentGroup.RSO).ToList();
 		}
 
 		private string GetSiteNumberRequestString(IEnumerable<SiteSpreadsheet> sites)

@@ -1,6 +1,7 @@
 ﻿using Google;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,30 +27,41 @@ namespace XR.Dodo
 		{
 			public List<SpreadsheetError> Errors = new List<SpreadsheetError>();
 		}
+		[JsonIgnore]
 		public SpreadsheetStatus Status { get; private set; }
 		public readonly int SiteCode;
 		public readonly string SiteName;
-		private readonly string m_spreadSheetID;
+		public readonly string SpreadSheetID;
+		public HashSet<string> WorkingGroups = new HashSet<string>();
 
 		public string URL
 		{
 			get
 			{
-				return @"https://docs.google.com/spreadsheets/d/" + m_spreadSheetID;
+				return @"https://docs.google.com/spreadsheets/d/" + SpreadSheetID;
 			}
 		}
 
 		public SiteSpreadsheet(int siteCode, string siteName, string spreadSheetID, SiteSpreadsheetManager manager)
 		{
-			m_spreadSheetID = spreadSheetID;
-			Status = new SpreadsheetStatus();
-			Logger.Debug("Loading spreadsheet for site " + siteName);
+			SpreadSheetID = spreadSheetID;
 			SiteCode = siteCode;
 			SiteName = siteName;
+			Status = new SpreadsheetStatus();
+			Logger.Debug("Loading spreadsheet for site " + siteName);
+			if(DodoServer.Dummy)
+			{
+				return;
+			}
+			LoadFromGSheets(manager);
+		}
+
+		private void LoadFromGSheets(SiteSpreadsheetManager manager)
+		{
 			try
 			{
 				ValueRange spreadSheet = null;
-				spreadSheet = GSheets.GetSheetRange(m_spreadSheetID, "A:ZZZ");
+				spreadSheet = GSheets.GetSheetRange(SpreadSheetID, "A:ZZZ");
 				var parentGroupRow = spreadSheet.Values.First(x => x.Any() && (x.First() as string).ToUpperInvariant().Contains("PARENT GROUP"));
 				var workingGroupRow = spreadSheet.Values.First(x => x.Any() && (x.First() as string).ToUpperInvariant().Contains("WORKING GROUP"));
 				for (var rowIndex = 0; rowIndex < spreadSheet.Values.Count; ++rowIndex)
@@ -93,7 +105,7 @@ namespace XR.Dodo
 									return str.Contains("mandate");
 								})
 								.ElementAtOrDefault(column) as string ?? "";
-							if(string.IsNullOrEmpty(number))
+							if (string.IsNullOrEmpty(number))
 							{
 								continue;
 							}
@@ -115,16 +127,18 @@ namespace XR.Dodo
 								});
 								email = null;
 							}
-							if(!manager.GetWorkingGroupFromName(workingGroupName, out WorkingGroup wg))
+
+							if (!manager.GetWorkingGroupFromName(workingGroupName, out WorkingGroup wg))
 							{
 								wg = manager.GenerateWorkingGroup(workingGroupName, parentGroup, mandate);
 							}
-							var role = new Role(wg, roleName, siteCode);
+							var role = new Role(wg, roleName, SiteCode);
 							var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);
 							user.Name = name;
 							user.PhoneNumber = number;
 							user.Email = email;
 							user.CoordinatorRoles.Add(role);
+							WorkingGroups.Add(wg.ShortCode);
 						}
 						catch (Exception e)
 						{
@@ -155,7 +169,7 @@ namespace XR.Dodo
 					}
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				Logger.Exception(e, $"Failed to load site spreadsheet for {SiteName}");
 				Status.Errors.Add(new SpreadsheetError()

@@ -13,12 +13,12 @@ namespace XR.Dodo
 		RSO,
 	}
 
-	public readonly struct WorkingGroup
+	public struct WorkingGroup
 	{
-		public readonly string Name;
-		public readonly string Mandate;
-		public readonly EParentGroup ParentGroup;
-		public readonly string ShortCode;
+		public string Name;
+		public string Mandate;
+		public EParentGroup ParentGroup;
+		public string ShortCode;
 
 		public WorkingGroup(string workingGroup, EParentGroup parentGroup, string mandate, string shortcode)
 		{
