@@ -25,9 +25,13 @@ namespace XR.Dodo
 		private static CmdReader cmdReader = new CmdReader();
 		public static bool Dummy { get; private set; }
 
+		/// <summary>
+		/// This must return a number that will receive SMS messages from us
+		/// </summary>
+		/// <returns></returns>
 		public static string GetSMSNumber()
 		{
-			return SMSGateway.GetNumber();
+			return TwilioNumber;
 		}
 
 		static void Main(string[] args)
@@ -49,9 +53,6 @@ namespace XR.Dodo
 			SessionManager = new SessionManager("Backups\\sessions.json");
 			SiteManager = new SiteSpreadsheetManager("sites.config");
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(CoordinatorDataID);
-
-			/*SessionManager.GetOrCreateUserFromTelegramNumber(834876848).CoordinatorRoles.Add(
-				SiteManager.GetSites().ElementAt(2).WorkingGroups.First());*/
 
 			// Set up gateways
 			SMSGateway = new SMSGateaway(SMSGatewaySecret, 8080);

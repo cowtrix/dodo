@@ -33,7 +33,7 @@ namespace XR.Dodo
 			throw new Exception("Bad user: " + user.UUID);
 		}
 
-		public override ServerMessage ProcessMessage(UserMessage message, UserSession session)
+		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
 		{
 			var toUpper = message.Content.ToUpperInvariant()
 				.Split(new[] { " " }, System.StringSplitOptions.RemoveEmptyEntries);
@@ -43,7 +43,8 @@ namespace XR.Dodo
 				if (cmd == "CANCEL")
 				{
 					ExitTask();
-					return new ServerMessage("Okay, I've canceled this request.");
+					response = new ServerMessage("Okay, I've canceled this request.");
+					return true;
 				}
 
 				var user = session.GetUser();
@@ -53,18 +54,22 @@ namespace XR.Dodo
 					if (int.TryParse(cmd, out var pick) && pick >= 0 && pick < needs.Count)
 					{
 						Need = needs[pick];
-						return Finalize();
+						response = Finalize();
+						return true;
 					}
 					if(needs.Count == 1)
 					{
 						Need = needs.First();
-						return Finalize();
+						response = Finalize();
+						return true;
 					}
-					return GetNeedsMenu(needs);
+					response = GetNeedsMenu(needs);
+					return true;
 				}
 
 			}
-			return default;
+			response = default;
+			return false;
 		}
 
 		private ServerMessage Finalize()

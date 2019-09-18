@@ -73,7 +73,6 @@ namespace XR.Dodo
 					{
 						continue;
 					}
-					string parentGroupStr = null;
 					var parentGroup = EParentGroup.ActionSupport;
 
 					for (var column = 1; column < row.Count; ++column)

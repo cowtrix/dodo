@@ -9,16 +9,16 @@ using DodoTest;
 public class RSOCoordinatorTests : TestBase
 {
 	[TestMethod]
-	public async Task AddNeed()
+	public async Task AddNeed_Case1()
 	{
 		var user = GetTestUser(EUserAccessLevel.RSO);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
 		var msg = await DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
-		msg = await DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser);
-		msg = await DodoServer.TelegramGateway.FakeMessage("0", user.TelegramUser);
-		msg = await DodoServer.TelegramGateway.FakeMessage("AD", user.TelegramUser);
-		msg = await DodoServer.TelegramGateway.FakeMessage("02/10 08:00", user.TelegramUser);
-		msg = await DodoServer.TelegramGateway.FakeMessage("6", user.TelegramUser);
+		msg = await DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser);	// Site
+		msg = await DodoServer.TelegramGateway.FakeMessage("0", user.TelegramUser);	// Parent group
+		msg = await DodoServer.TelegramGateway.FakeMessage("AD", user.TelegramUser);	// Working group
+		msg = await DodoServer.TelegramGateway.FakeMessage("02/10 08:00", user.TelegramUser);	// Time
+		msg = await DodoServer.TelegramGateway.FakeMessage("6", user.TelegramUser);	// Amount
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
 		Assert.IsTrue(need.WorkingGroup.ShortCode == "AD");
@@ -28,7 +28,35 @@ public class RSOCoordinatorTests : TestBase
 	}
 
 	[TestMethod]
-	public async Task AddNeed_Shortcode()
+	public async Task AddNeed_Case2()
+	{
+		var user = GetTestUser(EUserAccessLevel.RSO);
+		var session = DodoServer.SessionManager.GetOrCreateSession(user);
+		var msg = await DodoServer.TelegramGateway.FakeMessage("need", user.TelegramUser);
+		msg = await DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser); // Site
+		msg = await DodoServer.TelegramGateway.FakeMessage("sd", user.TelegramUser);    // Working group
+		msg = await DodoServer.TelegramGateway.FakeMessage("20/10 22:00", user.TelegramUser);   // Time
+		msg = await DodoServer.TelegramGateway.FakeMessage("Many", user.TelegramUser); // Amount
+
+		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
+		Assert.IsTrue(need.WorkingGroup.ShortCode == "SD");
+		Assert.IsTrue(need.SiteCode == 3);
+		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 20, 22, 0, 0));
+		Assert.IsTrue(need.Amount == int.MaxValue);
+	}
+
+	[TestMethod]
+	public async Task AddNeed_FailCase1()
+	{
+		var user = GetTestUser(EUserAccessLevel.RSO);
+		var session = DodoServer.SessionManager.GetOrCreateSession(user);
+		var msg = await DodoServer.TelegramGateway.FakeMessage("need", user.TelegramUser);
+		msg = await DodoServer.TelegramGateway.FakeMessage("people", user.TelegramUser);
+
+	}
+
+	[TestMethod]
+	public async Task AddNeed_Shortcode1()
 	{
 		var user = GetTestUser(EUserAccessLevel.RSO);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);

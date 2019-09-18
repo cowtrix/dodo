@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,14 +23,17 @@ namespace DodoCmd
 					{
 						if (File.Exists(OutputPath))
 						{
-							var output = File.ReadAllText(OutputPath);
+							using (var stream = GetReadStream(OutputPath, 5 * 1000))
+							{
+								using (var reader = new StreamReader(stream))
+									Console.WriteLine(reader.ReadToEnd());
+							}
 							File.Delete(OutputPath);
-							Console.WriteLine(output);
 						}
 					}
 					catch (Exception e)
 					{
-						Console.WriteLine(e);
+						Console.WriteLine("CMD:" + e);
 					}
 					Thread.Sleep(500);
 				}
@@ -38,8 +42,50 @@ namespace DodoCmd
 			while(true)
 			{
 				var cmd = Console.ReadLine();
-				File.AppendAllText(InputPath, cmd + "\n");
+				using (var stream = GetWriteStream(InputPath, 5 * 1000))
+				{
+					using (var writer = new StreamWriter(stream))
+						writer.WriteLine(cmd);
+				}
 			}
+		}
+
+		public static FileStream GetWriteStream(string path, int timeoutMs)
+		{
+			var time = Stopwatch.StartNew();
+			while (time.ElapsedMilliseconds < timeoutMs)
+			{
+				try
+				{
+					return new FileStream(path, FileMode.Create, FileAccess.Write);
+				}
+				catch (IOException e)
+				{
+					// access error
+					if (e.HResult != -2147024864)
+						throw;
+				}
+			}
+			throw new TimeoutException($"Failed to get a write handle to {path} within {timeoutMs}ms.");
+		}
+
+		public static FileStream GetReadStream(string path, int timeoutMs)
+		{
+			var time = Stopwatch.StartNew();
+			while (time.ElapsedMilliseconds < timeoutMs)
+			{
+				try
+				{
+					return new FileStream(path, FileMode.Open, FileAccess.Read);
+				}
+				catch (IOException e)
+				{
+					// access error
+					if (e.HResult != -2147024864)
+						throw;
+				}
+			}
+			throw new TimeoutException($"Failed to get a write handle to {path} within {timeoutMs}ms.");
 		}
 	}
 }

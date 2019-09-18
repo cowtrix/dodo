@@ -44,5 +44,23 @@ namespace XR.Dodo
 			Name = name;
 			SiteCode = siteCode;
 		}
+
+		public override bool Equals(object obj)
+		{
+			var role = obj as Role;
+			return role != null &&
+				   SiteCode == role.SiteCode &&
+				   Name == role.Name &&
+				   WorkingGroup.ShortCode ==  role.WorkingGroup.ShortCode;
+		}
+
+		public override int GetHashCode()
+		{
+			var hashCode = -489653820;
+			hashCode = hashCode * -1521134295 + SiteCode.GetHashCode();
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(WorkingGroup.ShortCode);
+			return hashCode;
+		}
 	}
 }

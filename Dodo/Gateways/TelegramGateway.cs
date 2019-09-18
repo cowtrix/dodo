@@ -10,32 +10,59 @@ namespace XR.Dodo
 	{
 		readonly string m_secret;
 		TelegramBotClient m_botClient;
+
+		public EGatewayType Type { get { return EGatewayType.Telegram; } }
+
+		public string UserName { get; private set; }
+
 		public TelegramGateway(string secret)
 		{
 			m_secret = secret;
-			//if(DodoServer.Dummy)
+			if (DodoServer.Dummy)
 			{
 				return;
 			}
-			m_botClient = new TelegramBotClient(m_secret);
 			var setup = new Task(() =>
 			{
-				var me = m_botClient.GetMeAsync().Result;
-				Logger.Debug($"Started Telegram bot with ID: {me.Id} and Name: {me.FirstName}.");
-				m_botClient.OnMessage += Bot_OnMessage;
-				m_botClient.StartReceiving();
+				try
+				{
+					m_botClient = new TelegramBotClient(m_secret);
+					var me = m_botClient.GetMeAsync().Result;
+					UserName = me.Username;
+					Logger.Debug($"Started Telegram bot with ID: {me.Id}, User {me.Username} and Name: {me.FirstName}.");
+					m_botClient.OnMessage += Bot_OnMessage;
+					m_botClient.StartReceiving();
+				}
+				catch (Exception e)
+				{
+					Logger.Exception(e, "Failed to start Telegram Bot");
+				}
 			});
 			setup.Start();
 		}
 
 		public void SendMessage(ServerMessage message, UserSession session)
 		{
-			var send = SendMessageAsync(message, session);
-			send.Start();
+			var t = new Task(async () =>
+			{
+				try
+				{
+					await SendMessageAsync(message, session);
+				}
+				catch(Exception e)
+				{
+					Logger.Exception(e, $"Failed to send telegram message to {session.UserID}: " + message.Content);
+				}
+			});
+			t.Start();
 		}
 
 		async Task SendMessageAsync(ServerMessage message, UserSession session)
 		{
+			if(message.Content.Length > 160)
+			{
+				Logger.Warning("Message length > sms limit");
+			}
 			await m_botClient.SendTextMessageAsync(session.GetUser().TelegramUser, message.Content);
 		}
 
@@ -60,7 +87,7 @@ namespace XR.Dodo
 			{
 				var user = DodoServer.SessionManager.GetOrCreateUserFromTelegramNumber(userID);
 				 session = DodoServer.SessionManager.GetOrCreateSession(user);
-				var customMessage = new UserMessage(user, message, EGatewayType.Telegram, userID.ToString());
+				var customMessage = new UserMessage(user, message, this, userID.ToString());
 				return session.ProcessMessage(customMessage, session);
 			}
 			return default(ServerMessage);

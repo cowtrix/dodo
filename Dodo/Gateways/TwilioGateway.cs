@@ -21,6 +21,9 @@ namespace XR.Dodo
 												| SecurityProtocolType.Ssl3;
 			m_originNumber = originNumber;
 		}
+
+		public EGatewayType Type { get { return EGatewayType.Twilio; } }
+
 		public void SendMessage(ServerMessage message, UserSession session)
 		{
 			var msgResource = MessageResource.Create(

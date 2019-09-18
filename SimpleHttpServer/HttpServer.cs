@@ -21,7 +21,7 @@ namespace SimpleHttpServer
 		public int Port { get; private set; }
 		private TcpListener Listener;
 		private HttpProcessor Processor;
-		private bool IsActive = true;
+		public bool IsActive = true;
 
 		#endregion
 

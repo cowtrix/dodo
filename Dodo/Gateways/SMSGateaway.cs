@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace XR.Dodo
 {
@@ -43,10 +44,13 @@ namespace XR.Dodo
 		}
 
 		public List<Phone> Phones = new List<Phone>();
-
 		public readonly int Port;
 		public string SMSSecret = "";
-		const string m_filePath = "smsNumbers.json";
+		const string m_filePath = "Backups\\smsNumbers.json";
+		private static HttpServer m_server;
+		private Thread m_serverThread;
+
+		public EGatewayType Type { get { return EGatewayType.SMS; } }
 
 		public SMSGateaway(string secret, int port)
 		{
@@ -55,14 +59,12 @@ namespace XR.Dodo
 				Phones = JsonConvert.DeserializeObject<List<Phone>>(File.ReadAllText(m_filePath), new JsonSerializerSettings
 				{
 					TypeNameHandling = TypeNameHandling.Auto
-				})
-					?? Phones;
+				}) ?? Phones;
 			}
-			Phones.Add(new Phone()
+			if (m_server != null)
 			{
-				Name = "My phone",
-				Number = "+447856465191"
-			});
+				return;
+			}
 			SMSSecret = secret;
 			Port = port;
 			var route_config = new List<Route>() {
@@ -85,9 +87,9 @@ namespace XR.Dodo
 					}
 				}
 			};
-			var httpServer = new HttpServer(Port, route_config);
-			var thread = new Thread(new ThreadStart(httpServer.Listen));
-			thread.Start();
+			m_server = new HttpServer(Port, route_config);
+			m_serverThread = new Thread(new ThreadStart(m_server.Listen));
+			m_serverThread.Start();
 		}
 
 		public string GetNumber()
@@ -102,6 +104,11 @@ namespace XR.Dodo
 				return false;
 			}
 			return true;
+		}
+
+		public void Shutdown()
+		{
+			m_server.IsActive = false;
 		}
 
 		HttpResponse Success ()
@@ -185,8 +192,7 @@ namespace XR.Dodo
 				};
 
 				var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(fromNumber, smsmMessage.MessageString);
-				var message = new UserMessage(user, smsmMessage.MessageString, EGatewayType.SMS,
-					smsmMessage.From);
+				var message = new UserMessage(user, smsmMessage.MessageString, this, smsmMessage.From);
 
 				var session = DodoServer.SessionManager.GetOrCreateSession(user);
 				if (session == null)
@@ -202,6 +208,14 @@ namespace XR.Dodo
 				Logger.Exception(e, $"Exception in SMServer.Read: {request?.Content}");
 				return Failure("ERROR 0x34502"); // Incorrect formatting
 			}
+		}
+
+		public ServerMessage FakeMessage(string msg, string phone)
+		{
+			var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(phone, msg);
+			var message = new UserMessage(user, msg, this, phone);
+			var session = DodoServer.SessionManager.GetOrCreateSession(user);
+			return session.ProcessMessage(message, session);
 		}
 
 		public void SendMessage(ServerMessage message, UserSession session)

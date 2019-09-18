@@ -25,7 +25,7 @@ namespace DodoTest
 			set { testContextInstance = value; }
 		}
 
-		[TestInitialize]
+		[TestCleanup]
 		public void Clean()
 		{
 			DodoServer.CoordinatorNeedsManager.ClearAll();
@@ -56,6 +56,8 @@ namespace DodoTest
 				var wg = DodoServer.SiteManager.GenerateWorkingGroup("Test RSO", EParentGroup.MovementSupport, "Test RSO working group");
 				user.CoordinatorRoles.Add(new Role(wg, "Test role", 0));
 			}
+			var session = DodoServer.SessionManager.GetOrCreateSession(user);
+			session.Workflow.CurrentTask.ExitTask();	// Just to skip intro
 			return user;
 		}
 	}

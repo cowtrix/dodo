@@ -22,7 +22,10 @@ namespace XR.Dodo
 		public string UUID;
 		public string Email;
 
-		[NonSerialized]
+		public bool GDPR;
+		public DateTime StartDate;
+		public DateTime EndDate;
+
 		public HashSet<Role> CoordinatorRoles = new HashSet<Role>();
 
 		public bool IsVerified()

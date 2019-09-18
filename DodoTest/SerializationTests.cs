@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 public class SerializationTests : TestBase
 {
 	[TestMethod]
-	public async Task CheckSiteSerialization()
+	public void CheckSiteSerialization()
 	{
 		var data = new SiteSpreadsheetManager.SiteData();
 		data.Sites.Add(3, new SiteSpreadsheet(3, "Test", "", null));

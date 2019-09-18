@@ -80,7 +80,7 @@ namespace XR.Dodo
 			Logger.Debug($"Saved user session data to {m_dataPath}");
 		}
 
-		public User MergeUsers(User first, User second)
+		/*public User MergeUsers(User first, User second)
 		{
 			if((!string.IsNullOrEmpty(first.PhoneNumber) || !string.IsNullOrEmpty(second.PhoneNumber))
 				&& first.PhoneNumber != second.PhoneNumber)
@@ -94,12 +94,18 @@ namespace XR.Dodo
 			}
 			if (first.Name != second.Name)
 			{
-				first.Name += "/" + second.Name;
+				if(first.AccessLevel < second.AccessLevel)
+				{
+					first.Name = second.Name;
+				}
+				else if(first.AccessLevel == second.AccessLevel)
+					first.Name += "/" + second.Name;
 			}
 			first.PhoneNumber = !string.IsNullOrEmpty(first.PhoneNumber) ? first.PhoneNumber : second.PhoneNumber;
+			first.Email = !string.IsNullOrEmpty(first.Email) ? first.PhoneNumber : second.Email;
 			first.TelegramUser = first.TelegramUser != 0 ? first.TelegramUser : second.TelegramUser;
 			return first;
-		}
+		}*/
 
 		public UserSession GetOrCreateSession(User user)
 		{
@@ -166,7 +172,7 @@ namespace XR.Dodo
 				// Reroute SMS validation
 				var verificationMatch = _data.Sessions
 					.FirstOrDefault(x => (x.Value.Workflow.CurrentTask as Verification)?
-					.CodeString == messageString);
+					.CodeString == messageString.Trim());
 				if (verificationMatch.Value != null)
 				{
 					return verificationMatch.Value.GetUser();

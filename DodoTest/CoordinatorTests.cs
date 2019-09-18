@@ -10,7 +10,7 @@ using DodoTest;
 public class CoordinatorTests : TestBase
 {
 	[TestMethod]
-	public async Task AddNeed()
+	public async Task AddNeed_Case1()
 	{
 		var user = GetTestUser(EUserAccessLevel.Coordinator);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
@@ -26,7 +26,7 @@ public class CoordinatorTests : TestBase
 	}
 
 	[TestMethod]
-	public async Task AddNeed_Shortcode()
+	public async Task AddNeed_Shortcode1()
 	{
 		var user = GetTestUser(EUserAccessLevel.Coordinator);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);

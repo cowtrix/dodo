@@ -8,30 +8,17 @@ namespace XR.Dodo
 {
 	public class CoordinatorWorkflow : Workflow
 	{
-		protected override ServerMessage GetHelp()
+		public CoordinatorWorkflow()
 		{
-			return new ServerMessage("TODO");
+			AddTask<CoordinatorWhoIsTask>();
+			AddTask<CoordinatorNeedsTask>();
+			AddTask<CoordinatorRemoveNeedTask>();
 		}
 
-		protected override ServerMessage ProcessMessageForRole(UserMessage message, UserSession session)
+		protected override bool ProcessMessageForRole(UserMessage message, UserSession session, out ServerMessage response)
 		{
-			var toUpper = message.Content.ToUpperInvariant();
-			if(toUpper.StartsWith(CoordinatorNeedsTask.CommandKey))
-			{
-				CurrentTask = new CoordinatorNeedsTask(this);
-				return CurrentTask.ProcessMessage(message, session);
-			}
-			if (toUpper.StartsWith(CoordinatorWhoIsTask.CommandKey))
-			{
-				CurrentTask = new CoordinatorWhoIsTask(this);
-				return CurrentTask.ProcessMessage(message, session);
-			}
-			if (toUpper.StartsWith(CoordinatorRemoveNeedTask.CommandKey))
-			{
-				CurrentTask = new CoordinatorRemoveNeedTask(this);
-				return CurrentTask.ProcessMessage(message, session);
-			}
-			return GetHelp();
+			response = default;
+			return false;
 		}
 	}
 }

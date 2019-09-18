@@ -29,5 +29,10 @@ namespace XR.Dodo
 		{
 			Debug(message, ConsoleColor.Red);
 		}
+
+		public static void Warning(string message)
+		{
+			Debug(message, ConsoleColor.Yellow);
+		}
 	}
 }

@@ -4,13 +4,14 @@ namespace XR.Dodo
 {
 	public class VolunteerWorkflow : Workflow
 	{
-		public enum EVolunteerState
+		/*public enum EVolunteerState
 		{
 			New,
 			Inducted,
 		}
 		public EVolunteerState State;
-		protected override ServerMessage ProcessMessageForRole(UserMessage message, UserSession session)
+
+		protected override bool ProcessMessageForRole(UserMessage message, UserSession session)
 		{
 			if(State == EVolunteerState.New)
 			{
@@ -24,7 +25,12 @@ namespace XR.Dodo
 
 		protected override ServerMessage GetHelp()
 		{
-			return new ServerMessage("Sorry, I didn't understand that.");
+			return new ServerMessage("Sorry, I didn't understand that. If you need some help as to what I can do, reply HELP");
+		}*/
+		protected override bool ProcessMessageForRole(UserMessage message, UserSession session, out ServerMessage response)
+		{
+			response = default;
+			return false;
 		}
 	}
 }

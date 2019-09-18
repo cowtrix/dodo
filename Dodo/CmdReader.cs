@@ -13,7 +13,7 @@ namespace XR.Dodo
 	{
 		public class Command
 		{
-			public Action<IEnumerable<string>> Action;
+			public Func<string, Task> Action;
 		}
 		private ConcurrentDictionary<string, Command> m_commands = new ConcurrentDictionary<string, Command>();
 
@@ -35,6 +35,16 @@ namespace XR.Dodo
 
 		public CmdReader()
 		{
+			AddCommand("t", (async x => {
+				var response = await DodoServer.TelegramGateway.FakeMessage(x, 999999);
+				Output(response.Content);
+				}));
+			AddCommand("s", (async x =>
+			{
+				var response = DodoServer.SMSGateway.FakeMessage(x, "07385641321");
+				Output(response.Content);
+			}));
+
 			var inputThread = new Task(() =>
 			{
 				string input = null;
@@ -68,6 +78,11 @@ namespace XR.Dodo
 			File.WriteAllText(OutputPath, $"{e.Message}");
 		}
 
+		private void Output(string text)
+		{
+			File.WriteAllText(OutputPath, text);
+		}
+
 		private void ProcessCmd(string line)
 		{
 			var split = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
@@ -76,10 +91,11 @@ namespace XR.Dodo
 			{
 				throw new Exception("No matching command found for: " + cmdKey);
 			}
-			command.Action(split.Skip(1));
+			var task = new Task(async () => await command.Action(split.Skip(1).Aggregate("", (current, next) => current + " " + next)));
+			task.Start();
 		}
 
-		public void AddCommand(string keyPhrase, Action<IEnumerable<string>> action)
+		public void AddCommand(string keyPhrase, Func<string, Task> action)
 		{
 			m_commands.TryAdd(keyPhrase, new Command()
 			{

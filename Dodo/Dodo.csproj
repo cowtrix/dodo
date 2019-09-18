@@ -107,16 +107,17 @@
     <Compile Include="CmdReader.cs" />
     <Compile Include="Gateways\TwilioGateway.cs" />
     <Compile Include="Utility.cs" />
-    <Compile Include="Workflows\CoordinatorRemoveNeedTask.cs" />
-    <Compile Include="Workflows\CoordinatorWhoIsTask.cs" />
-    <Compile Include="Workflows\Verification.cs" />
+    <Compile Include="Workflows\Tasks\CoordinatorRemoveNeedTask.cs" />
+    <Compile Include="Workflows\Tasks\CoordinatorWhoIsTask.cs" />
+    <Compile Include="Workflows\Tasks\IntroductionTask.cs" />
+    <Compile Include="Workflows\Tasks\Verification.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="Sessions\CoordinatorSession.cs" />
     <Compile Include="Sessions\VolunteerSession.cs" />
     <Compile Include="CoordinatorNeedsManager.cs" />
-    <Compile Include="Workflows\CoordinatorNeedsTask.cs" />
+    <Compile Include="Workflows\Tasks\CoordinatorNeedsTask.cs" />
     <Compile Include="Workflows\CoordinatorWorkflow.cs" />
     <Compile Include="ValidationExtensions.cs" />
     <Compile Include="Sessions\SessionManager.cs" />
@@ -131,7 +132,7 @@
     <Compile Include="Sessions\UserSession.cs" />
     <Compile Include="Workflows\VolunteerWorkflow.cs" />
     <Compile Include="Workflows\Workflow.cs" />
-    <Compile Include="Workflows\WorkflowTask.cs" />
+    <Compile Include="Workflows\Tasks\WorkflowTask.cs" />
     <Compile Include="WorkingGroup.cs" />
   </ItemGroup>
   <ItemGroup>
