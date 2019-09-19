@@ -24,7 +24,6 @@ namespace XR.Dodo
 		public static bool EmailIsValid(string emailAddress)
 		{
 			bool isValid = ValidEmailRegex.IsMatch(emailAddress);
-
 			return isValid;
 		}
 		public static bool ValidateNumber(ref string number)

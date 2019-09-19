@@ -44,6 +44,10 @@ namespace XR.Dodo
 				var response = DodoServer.SMSGateway.FakeMessage(x, "07385641321");
 				Output(response.Content);
 			}));
+			AddCommand("erroremails", (async x =>
+			{
+				DodoServer.SiteManager.GenerateErrorEmails(x);
+			}));
 
 			var inputThread = new Task(() =>
 			{
@@ -86,7 +90,7 @@ namespace XR.Dodo
 		private void ProcessCmd(string line)
 		{
 			var split = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-			var cmdKey = split.First();
+			var cmdKey = split.First().ToLowerInvariant();
 			if(!m_commands.TryGetValue(cmdKey, out var command))
 			{
 				throw new Exception("No matching command found for: " + cmdKey);

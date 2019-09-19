@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace XR.Dodo
@@ -30,7 +31,7 @@ namespace XR.Dodo
 			{
 				LoadFromGSheets(config);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				Logger.Exception(e);
 				LoadFromBackUp();
@@ -38,7 +39,7 @@ namespace XR.Dodo
 			UpdateErrorReport();
 			var saveTask = new Task(() =>
 			{
-				while(true)
+				while (true)
 				{
 					System.Threading.Thread.Sleep(60 * 1000);
 					try
@@ -55,10 +56,82 @@ namespace XR.Dodo
 					}
 				}
 			});
-			if(!DodoServer.Dummy)
+			if (!DodoServer.Dummy)
 			{
 				saveTask.Start();
 			}
+		}
+
+		public void GenerateErrorEmails(string outputPath)
+		{
+			outputPath = Path.GetFullPath(outputPath);
+			foreach (var site in Data.Sites)
+			{
+				if (site.Value.Status.Errors.Count == 0)
+				{
+					continue;
+				}
+				var rotaCoordsWithEmails = DodoServer.SessionManager.GetUsers()
+					.Where(user => user.AccessLevel == EUserAccessLevel.RotaCoordinator
+					&& user.CoordinatorRoles.Any(x => x.SiteCode == site.Key)
+					&& ValidationExtensions.EmailIsValid(user.Email)).ToList();
+				if (rotaCoordsWithEmails.Count() == 0)
+				{
+					Logger.Warning($"Errors exist on site spreadsheet {site.Value.SiteName} but there is no Rota manager with an email");
+					continue;
+				}
+
+				var sb = new StringBuilder();
+				for (int i = 0; i < rotaCoordsWithEmails.Count; i++)
+				{
+					var coord = rotaCoordsWithEmails[i];
+					sb.Append(coord.Email + ", ");
+				}
+				sb.AppendLine();
+				sb.AppendLine();
+
+				sb.Append("Hello ");
+				for (int i = 0; i < rotaCoordsWithEmails.Count; i++)
+				{
+					var coord = rotaCoordsWithEmails[i];
+					sb.Append(coord.Name + ", ");
+				}
+				sb.AppendLine();
+				sb.AppendLine();
+
+				sb.AppendLine($"This is an email to inform you of some errors that have been detected on the Autumn Rebellion Site Spreadsheet for {site.Value.SiteName} (site {site.Key}). "
+					+ $"You have been put on this spreadsheet as being in the Rota team, which is why you are receiving this email. This spreadsheet can be found here: {site.Value.URL}");
+				sb.AppendLine();
+				sb.AppendLine($"These errors usually relate to an improperly typed phone number, or putting more than one contact detail in the same cell. Please be aware that these "
+					+ "spreadsheets are read by an automated system, so you should endeavor to not significantly change the format of these spreadsheets and put properly formatted "
+					+ "data in the cells. If you have multiple contact details to input, you should put them in the same column for the working group, but one below the other.");
+				sb.AppendLine();
+				sb.AppendLine($"The errors for your site spreadsheet are:");
+
+				foreach (var error in site.Value.Status.Errors)
+				{
+					sb.AppendLine($"{error.Message} at Row {error.Row + 1}, Column {error.Column + 1}. The value of this cell is '{error.Value}'");
+				}
+				sb.AppendLine();
+
+				var siteCoords = DodoServer.SessionManager.GetUsers().Where(x => x.CoordinatorRoles.Any(y => y.SiteCode == site.Key));
+				sb.AppendLine($"You currently have {siteCoords.Count()} coordinators registered properly at your site, out of {site.Value.WorkingGroups.Count} roles.");
+				sb.AppendLine();
+
+				sb.AppendLine($"This is an automatically generated email. " +
+					"You can check the status of your spreadsheets at any time here: https://docs.google.com/spreadsheets/d/1ggsb9-ZjYcCK69f8vt0LQSWQbxFSgudGxHeA5r0-lc8");
+				sb.AppendLine();
+
+				sb.AppendLine("This spreadsheet will be updated regularly. When possible, please fix any errors shown. If you have any questions, don't hesitate to ask me.");
+				sb.AppendLine();
+
+				sb.AppendLine("Love and Rage,");
+				sb.AppendLine("Sean");
+				sb.AppendLine("ROS Rota Team");
+
+				File.WriteAllText(outputPath + site.Value.SiteName + ".txt", sb.ToString());
+			}
+			Logger.Debug("Output error emails to: " + outputPath);
 		}
 
 		public SiteSpreadsheet GetSite(int siteCode)
@@ -111,17 +184,6 @@ namespace XR.Dodo
 			foreach (var site in Data.Sites)
 			{
 				var siteCoords = DodoServer.SessionManager.GetUsers().Where(x => x.CoordinatorRoles.Any(y => y.SiteCode == site.Key));
-				/*var missingCoords = WorkingGroups.Where(x => !siteCoords.Any(y => y.CoordinatorRoles.Any(z => z.WorkingGroup.ShortCode == x.Value.ShortCode)));
-				foreach(var missing in missingCoords)
-				{
-					site.Value.Status.Errors.Add(new SpreadsheetError()
-					{
-						Column = 0,
-						Row = 0,
-						Message = $"No coordinators for {missing.Value.Name} found",
-					});
-				}*/
-
 				var errorCount = site.Value.Status.Errors.Count();
 				var rowList = new List<string>(){
 					site.Key.ToString(),
