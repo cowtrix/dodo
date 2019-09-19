@@ -20,7 +20,7 @@ namespace DodoTest
 			m_secret = DodoServer.SMSGatewaySecret;
 		}
 
-		public async Task<string> SendSMS(string from, string message)
+		public async Task<string> SendSMS(string from, string message, SMSGateway.Phone.ESMSMode mode)
 		{
 			if(!ValidationExtensions.ValidateNumber(ref from))
 			{
@@ -28,13 +28,25 @@ namespace DodoTest
 			}
 			var msg = new Dictionary<string, string>()
 			{
-				{ "from", from },
-				{ "message", message },
-				{ "message_id", "1" },
-				{ "sent_to", "+44784651921" },
-				{ "secret", m_secret },
-				{ "device_id", "1" },
-				{ "sent_timestamp", DateTime.UtcNow.ToFileTimeUtc().ToString() },
+				{ "ToCountry", "GB" },
+				{ "ToState", "" },
+				{ "SmsMessageSid", "" },
+				{ "NumMedia", "0" },
+				{ "ToCity", "" },
+				{ "FromZip", "" },
+				{ "SmsSid", "" },
+				{ "FromState", "" },
+				{ "SmsStatus", "" },
+				{ "FromCity", "" },
+				{ "Body", message },
+				{ "FromCountry", "GB" },
+				{ "To", DodoServer.SMSGateway.GetPhone(mode).Number.ToString() },
+				{ "ToZip", "" },
+				{ "NumSegments", "1" },
+				{ "MessageSid", "" },
+				{ "AccountSid", DodoServer.SMSGateway.AccountSID },
+				{ "From", from },
+				{ "ApiVersion", "2010-04-01" },
 			};
 			return await SendSMS(msg);
 		}

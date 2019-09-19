@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using XR.Dodo;
 
 namespace DodoTest
@@ -31,13 +32,23 @@ namespace DodoTest
 			DodoServer.CoordinatorNeedsManager.ClearAll();
 		}
 
+		long LongRandom(long min, long max, Random rand)
+		{
+			long result = rand.Next((Int32)(min >> 32), (Int32)(max >> 32));
+			result = (result << 32);
+			result = result | (long)rand.Next((Int32)min, (Int32)max);
+			return result;
+		}
+
 		public User GetTestUser(EUserAccessLevel accessLevel)
 		{
-			var ph = "441315103992";
-			var telegramID = 997875;
+			var r = new Random();
+			var ph = "44" + LongRandom(1000000000L, 9999999999L, r).ToString(); // "1315103992";
+			ValidationExtensions.ValidateNumber(ref ph);
+			var telegramID = r.Next(10000, 99999);
 			var user = new User()
 			{
-				Name = "Test",
+				Name = "Test" + Utility.RandomString(5, r.Next().ToString()),
 				PhoneNumber = ph,
 				TelegramUser = telegramID,
 			};

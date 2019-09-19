@@ -80,33 +80,6 @@ namespace XR.Dodo
 			Logger.Debug($"Saved user session data to {m_dataPath}");
 		}
 
-		/*public User MergeUsers(User first, User second)
-		{
-			if((!string.IsNullOrEmpty(first.PhoneNumber) || !string.IsNullOrEmpty(second.PhoneNumber))
-				&& first.PhoneNumber != second.PhoneNumber)
-			{
-				throw new Exception("Couldn't merge. Numbers conflicted!");
-			}
-			if ((first.TelegramUser != 0 || second.TelegramUser != 0)
-				&& first.TelegramUser != second.TelegramUser)
-			{
-				throw new Exception("Couldn't merge. Numbers conflicted!");
-			}
-			if (first.Name != second.Name)
-			{
-				if(first.AccessLevel < second.AccessLevel)
-				{
-					first.Name = second.Name;
-				}
-				else if(first.AccessLevel == second.AccessLevel)
-					first.Name += "/" + second.Name;
-			}
-			first.PhoneNumber = !string.IsNullOrEmpty(first.PhoneNumber) ? first.PhoneNumber : second.PhoneNumber;
-			first.Email = !string.IsNullOrEmpty(first.Email) ? first.PhoneNumber : second.Email;
-			first.TelegramUser = first.TelegramUser != 0 ? first.TelegramUser : second.TelegramUser;
-			return first;
-		}*/
-
 		public UserSession GetOrCreateSession(User user)
 		{
 			if(!_data.Users.TryGetValue(user.UUID, out var existingUser))
@@ -143,6 +116,51 @@ namespace XR.Dodo
 			return session;
 		}
 
+		public void TryVerify(string fromNumber, string code)
+		{
+			if (!string.IsNullOrEmpty(code))
+			{
+				var verificationMatch = _data.Sessions
+					.FirstOrDefault(x => (x.Value.Verification?.Code == code.Trim()));
+				if (verificationMatch.Value == null)
+				{
+					return;
+				}
+
+				var userToVerify = verificationMatch.Value.GetUser();
+				var existingUserWithNumber = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
+				string toRemove = existingUserWithNumber?.UUID;
+				if(existingUserWithNumber != null)
+				{
+					// Someone is already registered in the database with that phone number
+					// Which should only really ever happen with a coordinator
+					// So we copy over some stuff and then delete the existing user
+					if(!RemoveUser(existingUserWithNumber))
+					{
+						throw new Exception("Failed to remove user " + existingUserWithNumber.UUID);
+					}
+					userToVerify.Email = existingUserWithNumber.Email ?? userToVerify.Email;
+					foreach (var role in existingUserWithNumber.CoordinatorRoles)
+					{
+						userToVerify.CoordinatorRoles.Add(role);
+					}
+				}
+				if(!ValidationExtensions.ValidateNumber(ref fromNumber))
+				{
+					throw new Exception("Invalid number: " + fromNumber);
+				}
+				userToVerify.PhoneNumber = fromNumber;
+				DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}."), verificationMatch.Value);
+				userToVerify.Karma += 10;
+			}
+		}
+
+		private bool RemoveUser(User user)
+		{
+			return _data.Users.TryRemove(user.UUID, out _) &&
+			_data.Sessions.TryRemove(user.UUID, out _);
+		}
+
 		public UserSession GetSessionFromUserID(string ownerUID)
 		{
 			return _data.Sessions.FirstOrDefault(x => x.Key == ownerUID).Value;
@@ -157,7 +175,7 @@ namespace XR.Dodo
 			return result;
 		}
 
-		public User GetOrCreateUserFromPhoneNumber(string fromNumber, string messageString = null)
+		public User GetOrCreateUserFromPhoneNumber(string fromNumber)
 		{
 			if(string.IsNullOrEmpty(fromNumber))
 			{
@@ -166,17 +184,6 @@ namespace XR.Dodo
 			if(!ValidationExtensions.ValidateNumber(ref fromNumber))
 			{
 				return null;
-			}
-			if (!string.IsNullOrEmpty(messageString))
-			{
-				// Reroute SMS validation
-				var verificationMatch = _data.Sessions
-					.FirstOrDefault(x => (x.Value.Workflow.CurrentTask as Verification)?
-					.CodeString == messageString.Trim());
-				if (verificationMatch.Value != null)
-				{
-					return verificationMatch.Value.GetUser();
-				}
 			}
 			var user = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
 			if(user == null)

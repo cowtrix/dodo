@@ -48,6 +48,7 @@ namespace XR.Dodo
 				{
 					response = new ServerMessage("Sorry, I didn't understand that. If you've signed the volunteer agreement here: "
 						+ VolunteerAgreement + " then just reply with the word DONE to continue.");
+					user.Karma--;
 					return true;
 				}
 			}
@@ -78,6 +79,7 @@ namespace XR.Dodo
 				{
 					response = new ServerMessage($"Sorry, I didn't quite understand that date. For instance, if you were arriving on the 12th of October, you would reply 12/10" +
 						" Or if you want to stop telling me about yourself, reply CANCEL.");
+					user.Karma--;
 					return true;
 				}
 				if(startDate < new DateTime(2019, 10, 7))
@@ -111,6 +113,7 @@ namespace XR.Dodo
 					{
 						response = new ServerMessage($"Sorry, I didn't quite understand that date. For instance, if you were arriving on the 20th of October, you would reply 20/10" +
 							" Or if you aren't sure, just say NO, or if you want to stop telling me about yourself, reply CANCEL.");
+						user.Karma--;
 						return true;
 					}
 					if (endDate < user.StartDate)
@@ -127,9 +130,10 @@ namespace XR.Dodo
 			if (message.Gateway.Type == EGatewayType.Telegram)
 			{
 				response = new ServerMessage($"Brilliant, thanks {user.Name}. The next step is to verify your phone number so we can stay in touch with you. To do this, reply VERIFY.");
+				ExitTask();
 				return true;
 			}
-
+			ExitTask();
 			response = default;
 			return false;
 			/*

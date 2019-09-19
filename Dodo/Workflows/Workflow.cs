@@ -74,13 +74,14 @@ namespace XR.Dodo
 			{
 				return response;
 			}
-			return DidntUnderstand();
+			return DidntUnderstand(user);
 		}
 
 		protected abstract bool ProcessMessageForRole(UserMessage message, UserSession session, out ServerMessage response);
 
-		ServerMessage DidntUnderstand()
+		ServerMessage DidntUnderstand(User user)
 		{
+			user.Karma--;
 			return new ServerMessage("Sorry, I didn't understand that. If you'd like some help, reply HELP");
 		}
 	}

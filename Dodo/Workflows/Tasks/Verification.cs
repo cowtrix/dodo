@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,54 +10,46 @@ namespace XR.Dodo
 	{
 		public static string CommandKey { get { return "VERIFY"; } }
 
-		public string CodeString;
-		public bool SentPromptString;
-		public DateTime GenerationDate;
-
 		public Verification(Workflow workflow) : base(workflow)
 		{
 		}
 
+		private string GetVerificationNumber()
+		{
+			return DodoServer.SMSGateway.GetPhone(SMSGateway.Phone.ESMSMode.Verification).Number;
+		}
+
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
 		{
-			if(session.GetUser().IsVerified())
+			if (message.Gateway.Type != EGatewayType.Telegram)
 			{
-				response = new ServerMessage("It looks like you're already verified.");
+				response = new ServerMessage("Sorry, you need to message me on Telegram to verify your number. " +
+					$"You can do this by messaging VERIFY to {DodoServer.TelegramGateway.UserName}.");
+				return true;
 			}
-			var cmd = message.Content.ToUpperInvariant();
-			if (!SentPromptString)
+			var user = session.GetUser();
+			if (user.IsVerified())
 			{
-				SentPromptString = true;
-				CodeString = new Random().Next(10000, 99999).ToString();
-				GenerationDate = DateTime.Now;
+				session.Verification = null;
+				response = new ServerMessage("It looks like you're already verified for " + session.GetUser().PhoneNumber);
+				return true;
+			}
+			if (session.Verification == null || (DateTime.Now - session.Verification.TimeSent) > Timeout)
+			{
+				session.Verification = new UserSession.VerificationState()
+				{
+					Code = new Random().Next(10000, 99999).ToString(),
+					TimeSent = DateTime.Now,
+				};
 				response = new ServerMessage("Please take a moment to verify your phone number. " +
-					$"You can do this by texting {CodeString} to {DodoServer.GetSMSNumber()}." +
-					"This code will expire in 5 minutes.");
+					$"You can do this by texting {session.Verification.Code} to {GetVerificationNumber()}." +
+					$"This code will expire in {Timeout.TotalMinutes} minutes.");
+				ExitTask();
 				return true;
 			}
-			if(message.Gateway.Type == EGatewayType.Telegram)
-			{
-				if (cmd == "VERIFY")
-				{
-					response = new ServerMessage("Please take a moment to verify your phone number." +
-						$"You can do this by texting {CodeString} to {DodoServer.GetSMSNumber()}");
-				}
-				response = default;
-				return false;
-			}
-			if (message.ContentUpper.FirstOrDefault() == CodeString)
-			{
-				var ph = message.Source;
-				if(ValidationExtensions.ValidateNumber(ref ph))
-				{
-					session.GetUser().PhoneNumber = ph;
-					DodoServer.TelegramGateway.SendMessage(new ServerMessage("Awesome, you've verified your phone number as " + ph), session);
-					ExitTask();
-				}
-				response = default;
-				return true;
-			}
-			response = new ServerMessage("Sorry, that was the wrong code. You can try again, or if you'd like to skip verification for now, reply SKIP.");
+			response = new ServerMessage($"I'm still waiting for your verification code. SMS {session.Verification.Code} to {GetVerificationNumber()}." +
+					$"This code will expire in {Timeout.TotalMinutes} minutes.");
+			ExitTask();
 			return true;
 		}
 	}

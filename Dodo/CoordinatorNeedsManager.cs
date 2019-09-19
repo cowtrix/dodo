@@ -95,8 +95,12 @@ namespace XR.Dodo
 			{
 				return false;
 			}
-			if(user.SiteCode != 0 && !user.CoordinatorRoles.Any(x => x.SiteCode == need.SiteCode)) // RSO
+			if (user.AccessLevel <= EUserAccessLevel.RotaCoordinator && !user.CoordinatorRoles.Any(x => x.SiteCode == need.SiteCode)) // RSO
 			{
+				if (user.AccessLevel <= EUserAccessLevel.Coordinator && !user.CoordinatorRoles.Any(x => x.WorkingGroup.ShortCode == need.WorkingGroup.ShortCode)) // RSO
+				{
+					return false;
+				}
 				return false;
 			}
 			if(need.Amount == 0)

@@ -27,6 +27,7 @@ namespace XR.Dodo
 				{
 					ExitTask();
 					response = new ServerMessage("Sorry, it doesn't look like you're registered as a coordinator at any sites.");
+					user.Karma--;
 					return true;
 				}
 				if (approvedSites.Count == 1)

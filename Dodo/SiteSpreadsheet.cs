@@ -134,7 +134,6 @@ namespace XR.Dodo
 							var role = new Role(wg, roleName, SiteCode);
 							var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);
 							user.Name = name;
-							user.PhoneNumber = number;
 							user.Email = email;
 							user.CoordinatorRoles.Add(role);
 							WorkingGroups.Add(wg.ShortCode);

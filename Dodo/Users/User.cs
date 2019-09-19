@@ -17,10 +17,11 @@ namespace XR.Dodo
 	{
 		public string Name;
 		public string PhoneNumber;
-		public int TelegramUser;
-		public int SiteCode;
+		public int TelegramUser = -1;
+		public int SiteCode = -1;
 		public string UUID;
 		public string Email;
+		public int Karma;
 
 		public bool GDPR;
 		public DateTime StartDate;
@@ -30,7 +31,7 @@ namespace XR.Dodo
 
 		public bool IsVerified()
 		{
-			return !string.IsNullOrEmpty(PhoneNumber) && TelegramUser != 0;
+			return !string.IsNullOrEmpty(PhoneNumber) && TelegramUser >= 0;
 		}
 
 		[JsonIgnore]

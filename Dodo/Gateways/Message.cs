@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Linq;
 
 namespace XR.Dodo
@@ -11,6 +12,8 @@ namespace XR.Dodo
 		public DateTime TimeStamp;
 		public string MessageID;
 		public string Source;
+
+		[JsonIgnore]
 		public IMessageGateway Gateway;
 
 		public UserSession GetSession()

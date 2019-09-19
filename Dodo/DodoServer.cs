@@ -7,32 +7,20 @@ namespace XR.Dodo
 {
 	public static class DodoServer
 	{
-		public static string SMSGatewaySecret { get { return m_secrets[0]; } }
-		public static string TelegramGatewaySecret { get { return m_secrets[1]; } }
-		public static string CoordinatorDataID { get { return m_secrets[2]; } }
-		public static string TwilioSID { get { return m_secrets[3]; } }
-		public static string TwilioAuthToken { get { return m_secrets[4]; } }
-		public static string TwilioNumber { get { return m_secrets[5]; } }
+		public static string TelegramGatewaySecret { get { return m_secrets[0]; } }
+		public static string CoordinatorDataID { get { return m_secrets[1]; } }
+		public static string TwilioSID { get { return m_secrets[2]; } }
+		public static string TwilioAuthToken { get { return m_secrets[3]; } }
 
 		private static List<string> m_secrets;
 
 		public static SessionManager SessionManager;
 		public static SiteSpreadsheetManager SiteManager;
 		public static CoordinatorNeedsManager CoordinatorNeedsManager;
-		public static SMSGateaway SMSGateway;
+		public static SMSGateway SMSGateway;
 		public static TelegramGateway TelegramGateway;
-		public static TwilioGateway TwilioGateway;
 		private static CmdReader cmdReader = new CmdReader();
 		public static bool Dummy { get; private set; }
-
-		/// <summary>
-		/// This must return a number that will receive SMS messages from us
-		/// </summary>
-		/// <returns></returns>
-		public static string GetSMSNumber()
-		{
-			return TwilioNumber;
-		}
 
 		static void Main(string[] args)
 		{
@@ -55,14 +43,8 @@ namespace XR.Dodo
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(CoordinatorDataID);
 
 			// Set up gateways
-			SMSGateway = new SMSGateaway(SMSGatewaySecret, 8080);
+			SMSGateway = new SMSGateway(TwilioSID, TwilioAuthToken, 4096);
 			TelegramGateway = new TelegramGateway(TelegramGatewaySecret);
-			TwilioGateway = new TwilioGateway(TwilioSID, TwilioAuthToken, TwilioNumber);
-		}
-
-		public static void SendSMS(ServerMessage message, string phoneNumber)
-		{
-			TwilioGateway.SendMessage(message, phoneNumber);
 		}
 	}
 }
