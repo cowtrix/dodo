@@ -136,18 +136,12 @@
     <Compile Include="WorkingGroup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".secret">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include=".secret.sample" />
     <None Include="App.config" />
+    <None Include="config.json" />
     <None Include="credentials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-    <None Include="sites.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DodoCmd\DodoCmd.csproj">

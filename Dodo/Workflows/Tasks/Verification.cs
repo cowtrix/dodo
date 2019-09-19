@@ -16,7 +16,7 @@ namespace XR.Dodo
 
 		private string GetVerificationNumber()
 		{
-			return DodoServer.SMSGateway.GetPhone(SMSGateway.Phone.ESMSMode.Verification).Number;
+			return DodoServer.SMSGateway.GetPhone(Phone.ESMSMode.Verification).Number;
 		}
 
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)

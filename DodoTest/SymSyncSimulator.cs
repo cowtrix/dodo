@@ -12,15 +12,12 @@ namespace DodoTest
 		protected HttpClient m_client = new HttpClient();
 		protected readonly string m_address;
 
-		protected string m_secret;
-
 		public SymSyncSimulator(string target)
 		{
 			m_address = target;
-			m_secret = DodoServer.SMSGatewaySecret;
 		}
 
-		public async Task<string> SendSMS(string from, string message, SMSGateway.Phone.ESMSMode mode)
+		public async Task<string> SendSMS(string from, string message, Phone.ESMSMode mode)
 		{
 			if(!ValidationExtensions.ValidateNumber(ref from))
 			{

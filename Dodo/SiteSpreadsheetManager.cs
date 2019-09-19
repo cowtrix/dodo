@@ -21,12 +21,14 @@ namespace XR.Dodo
 		}
 		public SiteData Data;
 
-		public SiteSpreadsheetManager(string configPath)
+		public SiteSpreadsheetManager(Configuration config)
 		{
-			m_backupPath = Path.Combine("Backups", "sites.json");
+			m_statusID = config.SpreadsheetData.SiteSpreadsheetHealthReportID;
+			m_wgData = config.SpreadsheetData.WorkingGroupDataID; ;
+			m_backupPath = Path.Combine(config.BackupPath, "sites.json");
 			try
 			{
-				LoadFromGSheets(configPath);
+				LoadFromGSheets(config);
 			}
 			catch(Exception e)
 			{
@@ -236,11 +238,8 @@ namespace XR.Dodo
 			return !string.IsNullOrEmpty(wg.ShortCode);
 		}
 
-		void LoadFromGSheets(string configPath)
+		void LoadFromGSheets(Configuration config)
 		{
-			var configs = File.ReadAllLines(configPath);
-			m_statusID = configs.First();
-			m_wgData = configs.ElementAt(1);
 			if(DodoServer.Dummy)
 			{
 				LoadFromBackUp();
@@ -249,28 +248,9 @@ namespace XR.Dodo
 
 			Data = new SiteData();
 			LoadWorkingGroups();
-			foreach (var config in configs.Skip(2))
+			foreach (var site in config.SpreadsheetData.SiteSpreadsheets)
 			{
-				var cols = config.Split('\t');
-				try
-				{
-					if (cols.Length != 3)
-					{
-						Logger.Error($"Failed to read config at line: {config}");
-						continue;
-					}
-					if (!int.TryParse(cols[0], out var sitecode))
-					{
-						Logger.Error($"Failed to parse sitecode at line: {config}");
-						continue;
-					}
-					Data.Sites.Add(sitecode, new SiteSpreadsheet(sitecode, cols[1], cols[2], this));
-				}
-				catch
-				{
-					Logger.Error($"Could not load spreadsheet {cols[2]} ({cols[1]})");
-					throw;
-				}
+				Data.Sites.Add(site.SiteNumber, new SiteSpreadsheet(site.SiteNumber, site.SiteName, site.SheetID, this));
 			}
 			Logger.Debug("Finished loading");
 		}

@@ -20,9 +20,9 @@ namespace XR.Dodo
 
 		private SessionManagerData _data = new SessionManagerData();
 
-		public SessionManager(string dataPath)
+		public SessionManager(string backupLocation)
 		{
-			m_dataPath = dataPath;
+			m_dataPath = Path.Combine(backupLocation, "sessions.json");
 			LoadSessions();
 			var updateTask = new Task(() =>
 			{

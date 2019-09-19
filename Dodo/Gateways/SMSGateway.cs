@@ -15,20 +15,20 @@ using Twilio.TwiML;
 
 namespace XR.Dodo
 {
+	public class Phone
+	{
+		public enum ESMSMode
+		{
+			Verification,
+			Bot,
+		}
+		public ESMSMode Mode;
+		public string Name;
+		public string Number;
+	}
+
 	public class SMSGateway : IMessageGateway
 	{
-		public class Phone
-		{
-			public enum ESMSMode
-			{
-				Verification,
-				Bot,
-			}
-			public ESMSMode Mode;
-			public string Name;
-			public string Number;
-		}
-
 		public string AccountSID { get; private set; }
 		public string AccountAuth { get; private set; }
 
@@ -53,7 +53,7 @@ namespace XR.Dodo
 			// Add phones (TODO: load from file)
 			Phones.Add(new Phone()
 			{
-				Number = "+441315103992",
+				Number = "",
 				Name = "Trial",
 				Mode = Phone.ESMSMode.Verification,
 			});

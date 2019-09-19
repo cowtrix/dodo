@@ -22,7 +22,7 @@ public class UserTests : TestBase
 
 		var ph = coord.PhoneNumber;
 		ValidationExtensions.ValidateNumber(ref ph);
-		var smsResponse = await m_simulator.SendSMS(ph, code, SMSGateway.Phone.ESMSMode.Verification);	// Coord sms' code to number
+		var smsResponse = await m_simulator.SendSMS(ph, code, Phone.ESMSMode.Verification);	// Coord sms' code to number
 
 		var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(ph);    // So the user here should be the coord
 		Assert.IsTrue(ReferenceEquals(initialUser, user));
@@ -44,7 +44,7 @@ public class UserTests : TestBase
 
 		var ph = "441315103992";
 		ValidationExtensions.ValidateNumber(ref ph);
-		var smsResponse = await m_simulator.SendSMS(ph, code, SMSGateway.Phone.ESMSMode.Verification);
+		var smsResponse = await m_simulator.SendSMS(ph, code, Phone.ESMSMode.Verification);
 
 		var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(ph);
 		Assert.IsTrue(user.TelegramUser == initialUser.TelegramUser);
