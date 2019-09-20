@@ -36,7 +36,7 @@ namespace XR.Dodo
 		public CmdReader()
 		{
 			AddCommand("t", (async x => {
-				var response = await DodoServer.TelegramGateway.FakeMessage(x, 999999);
+				var response = DodoServer.TelegramGateway.FakeMessage(x, 999999);
 				Output(response.Content);
 				}));
 			AddCommand("s", (async x =>
@@ -47,6 +47,14 @@ namespace XR.Dodo
 			AddCommand("erroremails", (async x =>
 			{
 				DodoServer.SiteManager.GenerateErrorEmails(x);
+			}));
+			AddCommand("backup", (async x =>
+			{
+				DodoServer.Backup();
+			}));
+			AddCommand("load", (async x =>
+			{
+				DodoServer.Load(x);
 			}));
 
 			var inputThread = new Task(() =>
@@ -95,7 +103,7 @@ namespace XR.Dodo
 			{
 				throw new Exception("No matching command found for: " + cmdKey);
 			}
-			var task = new Task(async () => await command.Action(split.Skip(1).Aggregate("", (current, next) => current + " " + next)));
+			var task = new Task(async () => await command.Action(split.Skip(1).Aggregate("", (current, next) => current + " " + next).Trim()));
 			task.Start();
 		}
 

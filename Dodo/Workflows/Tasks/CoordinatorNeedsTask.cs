@@ -11,6 +11,7 @@ namespace XR.Dodo
 		public EParentGroup? ParentGroupFilter = null;
 
 		public static string CommandKey { get { return "NEED"; } }
+		public static string HelpString { get { return $"{CommandKey} - create a Volunteer Request, which means you'll be sent the contact details of volunteers eager to help out."; } }
 
 		public CoordinatorNeedsTask(Workflow workflow) : base(workflow)
 		{

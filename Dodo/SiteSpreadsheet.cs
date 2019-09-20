@@ -42,6 +42,11 @@ namespace XR.Dodo
 			}
 		}
 
+
+		public SiteSpreadsheet()
+		{
+		}
+
 		public SiteSpreadsheet(int siteCode, string siteName, string spreadSheetID, SiteSpreadsheetManager manager)
 		{
 			SpreadSheetID = spreadSheetID;

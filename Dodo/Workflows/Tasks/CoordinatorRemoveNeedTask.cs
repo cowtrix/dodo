@@ -10,6 +10,7 @@ namespace XR.Dodo
 		public CoordinatorNeedsManager.Need Need = null;
 
 		public static string CommandKey { get { return "DELETENEED"; } }
+		public static string HelpString { get { return $"{CommandKey} - delete a Volunteer Request that you or someone from your working group has made."; } }
 
 		public CoordinatorRemoveNeedTask(Workflow workflow) : base(workflow)
 		{

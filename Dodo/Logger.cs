@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace XR.Dodo
 {
 	public static class Logger
 	{
+		public static string LogPath = "dodoLog.log";
+
 		public static void Exception(Exception exception, string message = null)
 		{
 			if(!string.IsNullOrEmpty(message))
@@ -20,9 +23,11 @@ namespace XR.Dodo
 
 		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
 		{
+			message = $"[{DateTime.Now.ToString()}]\t{message}";
 			Console.ForegroundColor = foreground;
 			Console.BackgroundColor = background;
 			Console.WriteLine(message);
+			File.AppendAllText(LogPath, message + "\n");
 		}
 
 		public static void Error(string message)

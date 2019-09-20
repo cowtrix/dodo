@@ -1,39 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.IO;
 using System;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace XR.Dodo
 {
-	public class Configuration
+	public interface IBackup
 	{
-		public class Spreadsheets
-		{
-			public class SiteSheet
-			{
-				public string SheetID = "";
-				public int SiteNumber;
-				public string SiteName = "";
-			}
-			public List<SiteSheet> SiteSpreadsheets = new List<SiteSheet>();
-			public string CoordinatorNeedsSpreadsheetID = "";
-			public string SiteSpreadsheetHealthReportID = "";
-			public string WorkingGroupDataID = "";
-		}
-
-		public class Gateways
-		{
-			public string TwilioSID = "";
-			public string TwilioAuthToken = "";
-			public string TelegramGatewaySecret = "";
-			public int HTTPServerPort = 8080;
-			public List<Phone> Phones = new List<Phone>();
-		}
-
-		public Spreadsheets SpreadsheetData = new Spreadsheets();
-		public Gateways GatewayData = new Gateways();
-		public string BackupPath = "Backups";
+		void SaveToFile(string path);
+		void LoadFromFile(string path);
 	}
 
 	public static class DodoServer
@@ -45,7 +21,9 @@ namespace XR.Dodo
 		public static TelegramGateway TelegramGateway;
 
 		private static CmdReader cmdReader = new CmdReader();
-		private static Configuration config = new Configuration();
+		private static Configuration m_configuration = new Configuration();
+
+		private static object m_loadSaveLock = new object();
 
 		private static string ConfigPath { get { return Path.GetFullPath("config.json"); } }
 
@@ -67,37 +45,97 @@ namespace XR.Dodo
 			}
 			LoadConfig();
 
-			if (!Directory.Exists(config.BackupPath))
+			if (!Directory.Exists(m_configuration.BackupPath))
 			{
-				Directory.CreateDirectory(config.BackupPath);
+				Directory.CreateDirectory(m_configuration.BackupPath);
 			}
 
 			// Set up managers
-			SessionManager = new SessionManager(config.BackupPath);
-			SiteManager = new SiteSpreadsheetManager(config);
-			CoordinatorNeedsManager = new CoordinatorNeedsManager(config.SpreadsheetData.CoordinatorNeedsSpreadsheetID);
+			SessionManager = new SessionManager(m_configuration);
+			SiteManager = new SiteSpreadsheetManager(m_configuration);
+			CoordinatorNeedsManager = new CoordinatorNeedsManager(m_configuration);
 
 			// Set up gateways
-			SMSGateway = new SMSGateway(config.GatewayData.TwilioSID, config.GatewayData.TwilioAuthToken, config.GatewayData.HTTPServerPort);
-			TelegramGateway = new TelegramGateway(config.GatewayData.TelegramGatewaySecret);
+			SMSGateway = new SMSGateway(m_configuration.GatewayData.TwilioSID, m_configuration.GatewayData.TwilioAuthToken, m_configuration.GatewayData.HTTPServerPort);
+			TelegramGateway = new TelegramGateway(m_configuration.GatewayData.TelegramGatewaySecret);
+
+			var backupTask = new Task(() =>
+			{
+				Logger.Debug($"Backup scheduled for every {m_configuration.BackupInterval} minutes");
+				while(true)
+				{
+					System.Threading.Thread.Sleep(TimeSpan.FromMinutes(m_configuration.BackupInterval));
+					Backup();
+				}
+			});
+			backupTask.Start();
+		}
+
+		public static void Backup()
+		{
+			try
+			{
+				lock(m_loadSaveLock)
+				{
+					var existingFiles = Directory.GetFiles(m_configuration.BackupPath);
+					var cpyDirPath = Path.Combine(m_configuration.BackupPath, DateTime.Now.ToString().Replace("/", "_").Replace(":", "_").Replace(" ", "_"));
+					Directory.CreateDirectory(cpyDirPath);
+					foreach (var file in existingFiles)
+					{
+						File.Copy(file, Path.Combine(cpyDirPath, Path.GetFileName(file)));
+					}
+
+					SessionManager.SaveToFile(m_configuration.BackupPath);
+					SiteManager.SaveToFile(m_configuration.BackupPath);
+					CoordinatorNeedsManager.SaveToFile(m_configuration.BackupPath);
+				}
+				Logger.Debug("All backups saved");
+			}
+			catch (Exception e)
+			{
+				Logger.Exception(e, "Backup failed!");
+			}
+		}
+
+		public static void Load(string directory)
+		{
+			try
+			{
+				directory = Path.GetFullPath(directory);
+				if (!Directory.Exists(directory))
+				{
+					throw new DirectoryNotFoundException(directory);
+				}
+				lock (m_loadSaveLock)
+				{
+					SessionManager.LoadFromFile(directory);
+					SiteManager.LoadFromFile(directory);
+					CoordinatorNeedsManager.LoadFromFile(directory);
+				}
+				Logger.Debug("All backups loaded");
+			}
+			catch (Exception e)
+			{
+				Logger.Exception(e, $"Load of backup at {directory} failed!");
+			}
 		}
 
 		private static void GenerateSampleConfig()
 		{
 			Logger.Error($"Missing config file at {ConfigPath} - generating a blank one now");
-			config = new Configuration();
-			config.GatewayData.Phones.Add(new Phone()
+			m_configuration = new Configuration();
+			m_configuration.GatewayData.Phones.Add(new Phone()
 			{
 				Name = "Give the phone a name",
 				Number = "Replace this with the phone number",
 				Mode = Phone.ESMSMode.Bot,
 			});
-			config.SpreadsheetData.SiteSpreadsheets.Add(new Configuration.Spreadsheets.SiteSheet()
+			m_configuration.SpreadsheetData.SiteSpreadsheets.Add(new Configuration.Spreadsheets.SiteSheet()
 			{
 				SheetID = "Put the sheet ID here",
 				SiteName = "Put the name of the site here",
 			});
-			File.WriteAllText(ConfigPath + ".sample", JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings
+			File.WriteAllText(ConfigPath + ".sample", JsonConvert.SerializeObject(m_configuration, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
@@ -105,7 +143,7 @@ namespace XR.Dodo
 
 		private static void SaveConfig()
 		{
-			File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings
+			File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(m_configuration, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
@@ -113,7 +151,7 @@ namespace XR.Dodo
 
 		private static void LoadConfig()
 		{
-			config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigPath), new JsonSerializerSettings
+			m_configuration = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigPath), new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			});

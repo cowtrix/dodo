@@ -1,28 +1,29 @@
 {
-  "SpreadsheetData": {
-    "SiteSpreadsheets": [
-      {
-        "SheetID": "Put the sheet ID here",
-        "SiteNumber": 0,
-        "SiteName": "Put the name of the site here"
-      }
-    ],
-    "CoordinatorNeedsSpreadsheetID": "",
-    "SiteSpreadsheetHealthReportID": "",
-    "WorkingGroupDataID": ""
-  },
-  "GatewayData": {
-    "TwilioSID": "",
-    "TwilioAuthToken": "",
-    "TelegramGatewaySecret": "",
-    "HTTPServerPort": 8080,
-    "Phones": [
-      {
-        "Mode": 1,
-        "Name": "Give the phone a name",
-        "Number": "Replace this with the phone number"
-      }
-    ]
-  },
-  "BackupPath": "Backups"
+	"SpreadsheetData": {
+		"SiteSpreadsheets": [
+			{
+				"SheetID": "Put the sheet ID here",
+				"SiteNumber": 0,
+				"SiteName": "Put the name of the site here"
+			}
+		],
+		"CoordinatorNeedsSpreadsheetID": "",
+		"SiteSpreadsheetHealthReportID": "",
+		"WorkingGroupDataID": ""
+	},
+	"GatewayData": {
+		"TwilioSID": "",
+		"TwilioAuthToken": "",
+		"TelegramGatewaySecret": "",
+		"HTTPServerPort": 8080,
+		"Phones": [
+			{
+				"Mode": 1,
+				"Name": "Give the phone a name",
+				"Number": "Replace this with the phone number"
+			}
+		]
+	},
+	"BackupPath": "Backups",
+	"BackupInterval": 30
 }

@@ -42,9 +42,8 @@ namespace SimpleHttpServer
                 HttpRequest request = GetRequest(inputStream, outputStream);
 
                 // route and handle the request...
-                HttpResponse response = RouteRequest(inputStream, outputStream, request);      
-          
-                Console.WriteLine("{0} {1}",response.StatusCode,request.Url);
+                HttpResponse response = RouteRequest(inputStream, outputStream, request);
+                //Logger.Debug("HTTPSERVER: {0} {1}",response.StatusCode,request.Url);
                 // build a default response for errors
                 if (response.Content == null) {
                     if (response.StatusCode != "200") {
@@ -64,11 +63,11 @@ namespace SimpleHttpServer
         }
 
         // this formats the HTTP response...
-        private static void WriteResponse(Stream stream, HttpResponse response) {            
-            if (response.Content == null) {           
+        private static void WriteResponse(Stream stream, HttpResponse response) {
+            if (response.Content == null) {
                 response.Content = new byte[]{};
             }
-            
+
             // default to text/html content type
             if (!response.Headers.ContainsKey("Content-Type")) {
                 response.Headers["Content-Type"] = "text/html";
@@ -80,7 +79,7 @@ namespace SimpleHttpServer
             Write(stream, string.Join("\r\n", response.Headers.Select(x => string.Format("{0}: {1}", x.Key, x.Value))));
             Write(stream, "\r\n\r\n");
 
-            stream.Write(response.Content, 0, response.Content.Length);       
+            stream.Write(response.Content, 0, response.Content.Length);
         }
 
         public void AddRoute(Route route)
@@ -206,7 +205,7 @@ namespace SimpleHttpServer
                 int totalBytes = Convert.ToInt32(headers["Content-Length"]);
                 int bytesLeft = totalBytes;
                 byte[] bytes = new byte[totalBytes];
-               
+
                 while(bytesLeft > 0)
                 {
                     byte[] buffer = new byte[bytesLeft > 1024? 1024 : bytesLeft];

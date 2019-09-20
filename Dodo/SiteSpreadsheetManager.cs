@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace XR.Dodo
 {
-	public class SiteSpreadsheetManager
+	public class SiteSpreadsheetManager : IBackup
 	{
 		const string StatusRange = "A1:ZZZ";
 		private string m_statusID;
-		private string m_wgData;
-		private string m_backupPath;
+		private string m_wgDataID;
 
 		public class SiteData
 		{
@@ -25,8 +24,8 @@ namespace XR.Dodo
 		public SiteSpreadsheetManager(Configuration config)
 		{
 			m_statusID = config.SpreadsheetData.SiteSpreadsheetHealthReportID;
-			m_wgData = config.SpreadsheetData.WorkingGroupDataID; ;
-			m_backupPath = Path.Combine(config.BackupPath, "sites.json");
+			m_wgDataID = config.SpreadsheetData.WorkingGroupDataID; ;
+
 			try
 			{
 				LoadFromGSheets(config);
@@ -34,32 +33,9 @@ namespace XR.Dodo
 			catch (Exception e)
 			{
 				Logger.Exception(e);
-				LoadFromBackUp();
+				LoadFromFile(config.BackupPath);
 			}
 			UpdateErrorReport();
-			var saveTask = new Task(() =>
-			{
-				while (true)
-				{
-					System.Threading.Thread.Sleep(60 * 1000);
-					try
-					{
-						Logger.Debug($"Saved site data to {m_backupPath}");
-						File.WriteAllText(m_backupPath, JsonConvert.SerializeObject(Data, Formatting.Indented, new JsonSerializerSettings
-						{
-							TypeNameHandling = TypeNameHandling.Auto
-						}));
-					}
-					catch (Exception e)
-					{
-						Logger.Exception(e);
-					}
-				}
-			});
-			if (!DodoServer.Dummy)
-			{
-				saveTask.Start();
-			}
 		}
 
 		public void GenerateErrorEmails(string outputPath)
@@ -146,19 +122,6 @@ namespace XR.Dodo
 				throw new Exception("Invalid working group shortcode: " + code);
 			}
 			return Data.WorkingGroups[code];
-		}
-
-		private void LoadFromBackUp()
-		{
-			if(!File.Exists(m_backupPath))
-			{
-				Data = Data ?? new SiteData();
-				return;
-			}
-			Data = JsonConvert.DeserializeObject<SiteData>(File.ReadAllText(m_backupPath), new JsonSerializerSettings
-			{
-				TypeNameHandling = TypeNameHandling.Auto
-			});
 		}
 
 		void UpdateErrorReport()
@@ -304,7 +267,7 @@ namespace XR.Dodo
 		{
 			if(DodoServer.Dummy)
 			{
-				LoadFromBackUp();
+				LoadFromFile(config.BackupPath);
 				return;
 			}
 
@@ -319,7 +282,7 @@ namespace XR.Dodo
 
 		private void LoadWorkingGroups()
 		{
-			var wgData = GSheets.GetSheetRange(m_wgData, "A:D");
+			var wgData = GSheets.GetSheetRange(m_wgDataID, "A:D");
 			var parentGroup = EParentGroup.ActionSupport;
 			foreach(var row in wgData.Values.Skip(3))
 			{
@@ -377,6 +340,31 @@ namespace XR.Dodo
 		public List<SiteSpreadsheet> GetSites()
 		{
 			return Data.Sites.Values.ToList();
+		}
+
+		public void SaveToFile(string dataPath)
+		{
+			dataPath = Path.Combine(dataPath, "sites.json");
+			Logger.Debug($"Saved site data to {dataPath}");
+			File.WriteAllText(dataPath, JsonConvert.SerializeObject(Data, Formatting.Indented, new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			}));
+		}
+
+		public void LoadFromFile(string backupPath)
+		{
+			backupPath = Path.Combine(backupPath, "sites.json");
+			if (!File.Exists(backupPath))
+			{
+				Data = Data ?? new SiteData();
+				return;
+			}
+			Data = JsonConvert.DeserializeObject<SiteData>(File.ReadAllText(backupPath), new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			});
+			Logger.Debug("Loaded site data from " + backupPath);
 		}
 	}
 }

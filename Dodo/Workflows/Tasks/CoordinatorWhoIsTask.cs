@@ -8,6 +8,7 @@ namespace XR.Dodo
 	public class CoordinatorWhoIsTask : WorkflowTask
 	{
 		public static string CommandKey { get { return "WHOIS"; } }
+		public static string HelpString { get { return $"{CommandKey} - find out contact details for coordinators of certain Working Groups."; } }
 
 		public CoordinatorWhoIsTask(Workflow workflow) : base(workflow)
 		{

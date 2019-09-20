@@ -11,22 +11,27 @@ namespace XR.Dodo
 		public WorkflowTask CurrentTask;
 
 		[JsonIgnore]
-		private Dictionary<string, Type> m_tasks = new Dictionary<string, Type>();
+		public Dictionary<string, Type> Tasks = new Dictionary<string, Type>();
 
 		public Workflow()
 		{
-			AddTask<Verification>();
+			if(DodoServer.Dummy)
+				AddTask<Verification>(); // TODO Blocker is twilio account :(
+
+			AddTask<HelpTask>();
+			AddTask<InfoTask>();
+
 			CurrentTask = new IntroductionTask(this);
 		}
 
 		protected void AddTask<T>() where T: WorkflowTask
 		{
-			var cmd = typeof(T).GetProperty("CommandKey", BindingFlags.Public | BindingFlags.Static).GetValue(null) as string;
+			var cmd = typeof(T).GetProperty("CommandKey", BindingFlags.Public | BindingFlags.Static)?.GetValue(null) as string;
 			if(string.IsNullOrEmpty(cmd))
 			{
 				throw new Exception("Command key was empty for type " + typeof(T));
 			}
-			m_tasks.Add(cmd, typeof(T));
+			Tasks.Add(cmd, typeof(T));
 		}
 
 		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
@@ -42,6 +47,7 @@ namespace XR.Dodo
 					// Cancel the request
 					return CurrentTask.ExitTask();
 				}
+				// Do task specific help
 				if (message.ContentUpper.FirstOrDefault() == "HELP")
 				{
 					if(CurrentTask.GetHelp(out var helpResponse))
@@ -58,7 +64,11 @@ namespace XR.Dodo
 					return response;
 				}
 			}
-			if(m_tasks.TryGetValue(message.ContentUpper.FirstOrDefault(), out var newWorkflowType))
+			else if(message.ContentUpper.FirstOrDefault() == "CANCEL")
+			{
+				return new ServerMessage("It doesn't look like you're doing anything right now that I can cancel.");
+			}
+			else if (Tasks.TryGetValue(message.ContentUpper.FirstOrDefault(), out var newWorkflowType))
 			{
 				var newWorkflow = Activator.CreateInstance(newWorkflowType, this) as WorkflowTask;
 				if(newWorkflow != null)
@@ -70,7 +80,7 @@ namespace XR.Dodo
 					return response;
 				}
 			}
-			if(ProcessMessageForRole(message, session, out response))
+			else if(ProcessMessageForRole(message, session, out response))
 			{
 				return response;
 			}

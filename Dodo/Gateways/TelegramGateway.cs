@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -8,8 +10,16 @@ namespace XR.Dodo
 {
 	public class TelegramGateway : IMessageGateway
 	{
+		private class OutgoingMessage
+		{
+			public ServerMessage Message;
+			public UserSession Session;
+		}
+
+		private Queue<OutgoingMessage> m_outbox = new Queue<OutgoingMessage>();
 		readonly string m_secret;
 		TelegramBotClient m_botClient;
+		private int m_maxMsgPerSecond = 30;
 
 		public EGatewayType Type { get { return EGatewayType.Telegram; } }
 
@@ -22,7 +32,7 @@ namespace XR.Dodo
 			{
 				return;
 			}
-			var setup = new Task(() =>
+			var workerThread = new Task(async () =>
 			{
 				try
 				{
@@ -37,33 +47,53 @@ namespace XR.Dodo
 				{
 					Logger.Exception(e, "Failed to start Telegram Bot");
 				}
+
+				var timer = new Stopwatch();
+
+				timer.Start();
+				while(true)
+				{
+					try
+					{
+						int maxPerSecond = m_maxMsgPerSecond;
+						int messagesSent = 0;
+						while(messagesSent < maxPerSecond && m_outbox.Count > 0)
+						{
+							var outmsg = m_outbox.Dequeue();
+							await SendMessageAsync(outmsg);
+							messagesSent++;
+						}
+						while(timer.Elapsed < TimeSpan.FromSeconds(1))
+						{
+							Thread.Sleep(0);
+						}
+						timer.Restart();
+					}
+					catch (Exception e)
+					{
+						Logger.Exception(e);
+					}
+				}
 			});
-			setup.Start();
+			workerThread.Start();
 		}
 
 		public void SendMessage(ServerMessage message, UserSession session)
 		{
-			var t = new Task(async () =>
+			m_outbox.Enqueue(new OutgoingMessage()
 			{
-				try
-				{
-					await SendMessageAsync(message, session);
-				}
-				catch(Exception e)
-				{
-					Logger.Exception(e, $"Failed to send telegram message to {session.UserID}: " + message.Content);
-				}
+				Message = message,
+				Session = session,
 			});
-			t.Start();
 		}
 
-		async Task SendMessageAsync(ServerMessage message, UserSession session)
+		private async Task SendMessageAsync(OutgoingMessage msg)
 		{
-			if(message.Content.Length > 160)
+			if (msg.Message.Content.Length > 160)
 			{
 				Logger.Warning("Message length > sms limit");
 			}
-			await m_botClient.SendTextMessageAsync(session.GetUser().TelegramUser, message.Content);
+			await m_botClient.SendTextMessageAsync(msg.Session.GetUser().TelegramUser, msg.Message.Content);
 		}
 
 		async void Bot_OnMessage(object sender, MessageEventArgs e)
@@ -72,7 +102,8 @@ namespace XR.Dodo
 			{
 				var message = e.Message.Text;
 				var userID = e.Message.From.Id;
-				await SendMessageAsync(GetMessage(message, userID, out var session), session);
+				var outgoing = GetMessage(message, userID, out var session);
+				SendMessage(outgoing, session);
 			}
 			catch (Exception exception)
 			{
@@ -93,7 +124,7 @@ namespace XR.Dodo
 			return default(ServerMessage);
 		}
 
-		public async Task<ServerMessage> FakeMessage(string message, int userID)
+		public ServerMessage FakeMessage(string message, int userID)
 		{
 			return GetMessage(message, userID, out var _);
 		}

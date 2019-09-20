@@ -54,7 +54,7 @@ namespace SimpleHttpServer
 
 		public void Listen()
 		{
-			Console.WriteLine($"{GetLocalIPAddress()}:{Port}");
+			Console.WriteLine($"Started HTTP server at {GetLocalIPAddress()}:{Port}");
 
 			this.Listener = new TcpListener(IPAddress.Any, this.Port);
 			this.Listener.Start();

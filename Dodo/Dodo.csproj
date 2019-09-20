@@ -105,11 +105,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CmdReader.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Gateways\SMSGateway.cs" />
     <Compile Include="Gateways\TwilioGateway.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorRemoveNeedTask.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorWhoIsTask.cs" />
+    <Compile Include="Workflows\Tasks\HelpTask.cs" />
+    <Compile Include="Workflows\Tasks\InfoTask.cs" />
     <Compile Include="Workflows\Tasks\IntroductionTask.cs" />
     <Compile Include="Workflows\Tasks\Verification.cs" />
     <Compile Include="Gateways\Message.cs" />

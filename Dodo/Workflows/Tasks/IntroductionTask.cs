@@ -14,7 +14,7 @@ namespace XR.Dodo
 
 		public override TimeSpan Timeout { get { return TimeSpan.MaxValue; } }
 
-		enum EState
+		public enum EState
 		{
 			VolunteerAgreement,
 			GetName,
@@ -22,7 +22,7 @@ namespace XR.Dodo
 			GetEndDate,
 			Tutorial,
 		}
-		EState m_state = EState.VolunteerAgreement;
+		public EState State = EState.VolunteerAgreement;
 
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
 		{
@@ -32,14 +32,14 @@ namespace XR.Dodo
 				if(session.Inbox.Count == 1)    // First ever message
 				{
 					response = new ServerMessage("Hello! I'm your friendly Extinction Rebellion Bot. Whether you're a seasoned rebel, or you're just getting started, " +
-						"my purpose is to help you get involved in the Autumn Rebellion in London. " +
-						$"Firstly, take a second to read and sign our Volunteer Agreement here: {VolunteerAgreement}\n" +
+						"my purpose is to help you get involved in the Autumn Rebellion in London. Through me, you can find out what needs doing, who needs help, and how you can get involved. " +
+						$"Firstly, if you haven't yet, take a second to read and sign our Volunteer Agreement here: {VolunteerAgreement}\n" +
 						"When you've done that, reply with the word DONE, and we can move onto the next step.");
 					return true;
 				}
 				if (message.ContentUpper.FirstOrDefault() == "DONE")
 				{
-					m_state = EState.GetName;
+					State = EState.GetName;
 					response = new ServerMessage("Fantastic! Now, I'd like to find out a bit more about you. What's your name? You can give me your real name, or a nickname, I don't mind.");
 					user.GDPR = true;
 					return true;
@@ -53,17 +53,35 @@ namespace XR.Dodo
 				}
 			}
 
-			if(m_state == EState.GetName)
+			if(message.ContentUpper.FirstOrDefault() == "CANCEL")
 			{
-				user.Name = message.Content.Substring(0, Math.Min(message.Content.Length, 64)).Trim();
-				response = new ServerMessage($"Hello {user.Name}! Now, if you already know how you're getting involved in the Autumn Rebellion, " +
-					"you can just reply CANCEL. Otherwise, you can tell me a little more about yourself. Firstly, what date will you be arriving to the rebellion? " +
-					"For instance, if you were arriving on the 7th of October, you would reply 7/10");
-				m_state = EState.GetStartingDate;
+				response = new ServerMessage($"No problem. If you're ever confused, just reply HELP and I'll try to give you some guidance about what you can ask me to do. " +
+					"Why don't you try that now?");
+				ExitTask();
 				return true;
 			}
 
-			if(m_state == EState.GetStartingDate)
+			if (State == EState.GetName)
+			{
+				var name = message.Content.Substring(0, Math.Min(message.Content.Length, 32)).Trim();
+				user.Name = name;
+				if(user.Name != message.Content)
+				{
+					response = new ServerMessage($"Well, that was a bit long, so how about {user.Name}! Now, if you already know how you're getting involved in the Autumn Rebellion, " +
+						"you can just reply CANCEL. Otherwise, you can tell me a little more about yourself. Firstly, what date will you be arriving to the rebellion? " +
+						"For instance, if you were arriving on the 7th of October, you would reply 7/10");
+				}
+				else
+				{
+					response = new ServerMessage($"Hello {user.Name}! Now, if you already know how you're getting involved in the Autumn Rebellion, " +
+						"you can just reply CANCEL. Otherwise, you can tell me a little more about yourself. Firstly, what date will you be arriving to the rebellion? " +
+						"For instance, if you were arriving on the 7th of October, you would reply 7/10");
+				}
+				State = EState.GetStartingDate;
+				return true;
+			}
+
+			if(State == EState.GetStartingDate)
 			{
 				var split = message.ContentUpper.FirstOrDefault().Split('/');
 				DateTime startDate;
@@ -77,7 +95,7 @@ namespace XR.Dodo
 				}
 				catch
 				{
-					response = new ServerMessage($"Sorry, I didn't quite understand that date. For instance, if you were arriving on the 12th of October, you would reply 12/10" +
+					response = new ServerMessage($"Sorry, I didn't quite understand that date. For instance, if you were arriving on the 12th of October, you would reply 12/10." +
 						" Or if you want to stop telling me about yourself, reply CANCEL.");
 					user.Karma--;
 					return true;
@@ -91,11 +109,11 @@ namespace XR.Dodo
 				user.StartDate = startDate;
 				response = new ServerMessage($"Amazing! I'll see you on {user.StartDate.ToShortDateString()}. Now, do you know when you'll be leaving?" +
 					" Reply again with a date, or if you don't know, just say NO");
-				m_state = EState.GetEndDate;
+				State = EState.GetEndDate;
 				return true;
 			}
 
-			if (m_state == EState.GetEndDate)
+			if (State == EState.GetEndDate)
 			{
 				if (message.ContentUpper.FirstOrDefault() != "NO")
 				{
@@ -124,12 +142,14 @@ namespace XR.Dodo
 					}
 					user.EndDate = endDate;
 				}
-				m_state = EState.Tutorial;
+				State = EState.Tutorial;
 			}
 
 			if (message.Gateway.Type == EGatewayType.Telegram)
 			{
-				response = new ServerMessage($"Brilliant, thanks {user.Name}. The next step is to verify your phone number so we can stay in touch with you. To do this, reply VERIFY.");
+				response = new ServerMessage($"Brilliant, thanks {user.Name}. " +
+					"If you're ever confused, just reply HELP and I'll try to give you some guidance about what you can ask me to do. " +
+					"Why don't you try that now?");
 				ExitTask();
 				return true;
 			}
@@ -143,7 +163,7 @@ namespace XR.Dodo
 
 		public override bool CanCancel()
 		{
-			return m_state > EState.VolunteerAgreement;
+			return false;
 		}
 	}
 }

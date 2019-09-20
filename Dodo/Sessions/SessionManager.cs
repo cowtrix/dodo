@@ -9,9 +9,8 @@ using System.Collections.Concurrent;
 
 namespace XR.Dodo
 {
-	public class SessionManager
+	public class SessionManager : IBackup
 	{
-		readonly string m_dataPath;
 		public class SessionManagerData
 		{
 			public ConcurrentDictionary<string, User> Users = new ConcurrentDictionary<string, User>();
@@ -20,37 +19,29 @@ namespace XR.Dodo
 
 		private SessionManagerData _data = new SessionManagerData();
 
-		public SessionManager(string backupLocation)
+		public SessionManager(Configuration config)
 		{
-			m_dataPath = Path.Combine(backupLocation, "sessions.json");
-			LoadSessions();
-			var updateTask = new Task(() =>
-			{
-				while(true)
-				{
-					Thread.Sleep(60 * 1000);
-					SaveSessions();
-				}
-			});
-			updateTask.Start();
+			LoadFromFile(config.BackupPath);
 		}
 
-		void LoadSessions()
+		public void LoadFromFile(string backupFolder)
 		{
 			if(DodoServer.Dummy)
 			{
 				return;
 			}
-			if (!File.Exists(m_dataPath))
+			var dataPath = Path.Combine(backupFolder, "sessions.json");
+			if (!File.Exists(dataPath))
 			{
-				File.Create(m_dataPath).Close();
+				File.Create(dataPath).Close();
 			}
 			try
 			{
-				_data = JsonConvert.DeserializeObject<SessionManagerData>(File.ReadAllText(m_dataPath), new JsonSerializerSettings
+				_data = JsonConvert.DeserializeObject<SessionManagerData>(File.ReadAllText(dataPath), new JsonSerializerSettings
 				{
 					TypeNameHandling = TypeNameHandling.Auto
 				}) ?? _data;
+				Logger.Debug($"Loaded user session data from {dataPath}");
 			}
 			catch(Exception e)
 			{
@@ -58,26 +49,23 @@ namespace XR.Dodo
 			}
 		}
 
-		public List<User> GetUsers()
-		{
-			return _data.Users.Values.ToList();
-		}
-
-		void SaveSessions()
+		public void SaveToFile(string backupFolder)
 		{
 			if (DodoServer.Dummy)
 			{
 				return;
 			}
-			if (!File.Exists(m_dataPath))
-			{
-				File.Create(m_dataPath).Close();
-			}
-			File.WriteAllText(m_dataPath, JsonConvert.SerializeObject(_data, Formatting.Indented, new JsonSerializerSettings
+			var dataPath = Path.Combine(backupFolder, "sessions.json");
+			File.WriteAllText(dataPath, JsonConvert.SerializeObject(_data, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
-			Logger.Debug($"Saved user session data to {m_dataPath}");
+			Logger.Debug($"Saved user session data to {dataPath}");
+		}
+
+		public List<User> GetUsers()
+		{
+			return _data.Users.Values.ToList();
 		}
 
 		public UserSession GetOrCreateSession(User user)

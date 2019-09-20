@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace XR.Dodo
 {
-	public class CoordinatorNeedsManager
+	public class CoordinatorNeedsManager : IBackup
 	{
 		public class Need
 		{
@@ -31,13 +31,11 @@ namespace XR.Dodo
 		private List<Need> m_data;
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
-		private string m_backupPath;
 
-		public CoordinatorNeedsManager(string dataOutputID)
+		public CoordinatorNeedsManager(Configuration config)
 		{
-			m_dataOutputSpreadsheetID = dataOutputID;
-			m_backupPath = Path.Combine("Backups", "needs.json");
-			LoadFromBackup();
+			m_dataOutputSpreadsheetID = config.SpreadsheetData.CoordinatorNeedsSpreadsheetID;
+			LoadFromFile(config.BackupPath);
 			var updateTask = new Task(() =>
 			{
 				while (true)
@@ -47,36 +45,10 @@ namespace XR.Dodo
 						UpdateNeedsOnGSheet();
 				}
 			});
-
-			var saveTask = new Task(() =>
-			{
-				while (true)
-				{
-					Thread.Sleep(60 * 1000);
-					File.WriteAllText(m_backupPath, JsonConvert.SerializeObject(m_data, Formatting.Indented, new JsonSerializerSettings
-					{
-						TypeNameHandling = TypeNameHandling.Auto
-					}));
-				}
-			});
 			if(!DodoServer.Dummy)
 			{
 				updateTask.Start();
-				saveTask.Start();
 			}
-		}
-
-		private void LoadFromBackup()
-		{
-			if(!File.Exists(m_backupPath))
-			{
-				m_data = new List<Need>();
-				return;
-			}
-			m_data = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(m_backupPath), new JsonSerializerSettings
-			{
-				TypeNameHandling = TypeNameHandling.Auto
-			});
 		}
 
 		public void ClearAll()
@@ -143,6 +115,31 @@ namespace XR.Dodo
 				GSheets.WriteSheet(m_dataOutputSpreadsheetID, spreadsheet, "A1:ZZZ");
 			}
 			Logger.Debug($"Updated needs sheet");
+		}
+
+		public void SaveToFile(string backupFolder)
+		{
+			var dataPath = Path.Combine(backupFolder, "needs.json");
+			File.WriteAllText(dataPath, JsonConvert.SerializeObject(m_data, Formatting.Indented, new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			}));
+			Logger.Debug($"Saved user session data to {dataPath}");
+		}
+
+		public void LoadFromFile(string backupFolder)
+		{
+			var backupPath = Path.Combine(backupFolder, "needs.json");
+			if (!File.Exists(backupPath))
+			{
+				m_data = new List<Need>();
+				return;
+			}
+			m_data = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(backupPath), new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			});
+			Logger.Debug("Loaded needs data from " + backupPath);
 		}
 	}
 }
