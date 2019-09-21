@@ -8,7 +8,7 @@ using Twilio.Rest.Api.V2010.Account;
 
 namespace XR.Dodo
 {
-	public class TwilioGateway : IMessageGateway
+	/*public class TwilioGateway : IMessageGateway
 	{
 		private string m_originNumber;
 
@@ -41,5 +41,5 @@ namespace XR.Dodo
 				to: new Twilio.Types.PhoneNumber("+" + phoneNumber)
 			);
 		}
-	}
+	}*/
 }

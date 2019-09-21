@@ -7,12 +7,12 @@ using XR.Dodo;
 
 namespace DodoTest
 {
-	public class SymSyncSimulator
+	public class TwilioSimulator
 	{
 		protected HttpClient m_client = new HttpClient();
 		protected readonly string m_address;
 
-		public SymSyncSimulator(string target)
+		public TwilioSimulator(string target)
 		{
 			m_address = target;
 		}
@@ -41,7 +41,7 @@ namespace DodoTest
 				{ "ToZip", "" },
 				{ "NumSegments", "1" },
 				{ "MessageSid", "" },
-				{ "AccountSid", DodoServer.SMSGateway.AccountSID },
+				{ "AccountSid", DodoServer.Configuration.GatewayData.TwilioSID },
 				{ "From", from },
 				{ "ApiVersion", "2010-04-01" },
 			};

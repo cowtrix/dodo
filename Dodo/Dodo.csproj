@@ -106,8 +106,10 @@
   <ItemGroup>
     <Compile Include="CmdReader.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Gateways\SMSGateway.cs" />
+    <Compile Include="Gateways\HTTPGateway.cs" />
+    <Compile Include="Gateways\SMSSyncHttpHandler.cs" />
     <Compile Include="Gateways\TwilioGateway.cs" />
+    <Compile Include="Gateways\TwilioHttpHandler.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorRemoveNeedTask.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorWhoIsTask.cs" />
@@ -118,8 +120,6 @@
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Users\User.cs" />
-    <Compile Include="Sessions\CoordinatorSession.cs" />
-    <Compile Include="Sessions\VolunteerSession.cs" />
     <Compile Include="CoordinatorNeedsManager.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorNeedsTask.cs" />
     <Compile Include="Workflows\CoordinatorWorkflow.cs" />

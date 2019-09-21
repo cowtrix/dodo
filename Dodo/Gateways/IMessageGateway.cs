@@ -11,7 +11,6 @@ namespace XR.Dodo
 	{
 		SMS,
 		Telegram,
-		Twilio,
 	}
 
 	public interface IMessageGateway

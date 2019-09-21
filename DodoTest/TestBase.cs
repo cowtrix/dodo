@@ -8,12 +8,12 @@ namespace DodoTest
 	public abstract class TestBase
 	{
 		private TestContext testContextInstance;
-		protected SymSyncSimulator m_simulator;
+		protected TwilioSimulator m_simulator;
 
 		public TestBase()
 		{
 			DodoServer.Initialise("-d");
-			m_simulator = new SymSyncSimulator("http://localhost:8080");
+			m_simulator = new TwilioSimulator("http://localhost:8080/twilio");
 		}
 
 		/// <summary>

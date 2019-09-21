@@ -17,11 +17,11 @@ namespace XR.Dodo
 		public static SessionManager SessionManager;
 		public static SiteSpreadsheetManager SiteManager;
 		public static CoordinatorNeedsManager CoordinatorNeedsManager;
-		public static SMSGateway SMSGateway;
+		public static HTTPGateway SMSGateway;
 		public static TelegramGateway TelegramGateway;
 
 		private static CmdReader cmdReader = new CmdReader();
-		private static Configuration m_configuration = new Configuration();
+		public static Configuration Configuration = new Configuration();
 
 		private static object m_loadSaveLock = new object();
 
@@ -45,26 +45,26 @@ namespace XR.Dodo
 			}
 			LoadConfig();
 
-			if (!Directory.Exists(m_configuration.BackupPath))
+			if (!Directory.Exists(Configuration.BackupPath))
 			{
-				Directory.CreateDirectory(m_configuration.BackupPath);
+				Directory.CreateDirectory(Configuration.BackupPath);
 			}
 
 			// Set up managers
-			SessionManager = new SessionManager(m_configuration);
-			SiteManager = new SiteSpreadsheetManager(m_configuration);
-			CoordinatorNeedsManager = new CoordinatorNeedsManager(m_configuration);
+			SessionManager = new SessionManager(Configuration);
+			SiteManager = new SiteSpreadsheetManager(Configuration);
+			CoordinatorNeedsManager = new CoordinatorNeedsManager(Configuration);
 
 			// Set up gateways
-			SMSGateway = new SMSGateway(m_configuration.GatewayData.TwilioSID, m_configuration.GatewayData.TwilioAuthToken, m_configuration.GatewayData.HTTPServerPort);
-			TelegramGateway = new TelegramGateway(m_configuration.GatewayData.TelegramGatewaySecret);
+			SMSGateway = new HTTPGateway(Configuration);
+			TelegramGateway = new TelegramGateway(Configuration.GatewayData.TelegramGatewaySecret);
 
 			var backupTask = new Task(() =>
 			{
-				Logger.Debug($"Backup scheduled for every {m_configuration.BackupInterval} minutes");
+				Logger.Debug($"Backup scheduled for every {Configuration.BackupInterval} minutes");
 				while(true)
 				{
-					System.Threading.Thread.Sleep(TimeSpan.FromMinutes(m_configuration.BackupInterval));
+					System.Threading.Thread.Sleep(TimeSpan.FromMinutes(Configuration.BackupInterval));
 					Backup();
 				}
 			});
@@ -77,17 +77,17 @@ namespace XR.Dodo
 			{
 				lock(m_loadSaveLock)
 				{
-					var existingFiles = Directory.GetFiles(m_configuration.BackupPath);
-					var cpyDirPath = Path.Combine(m_configuration.BackupPath, DateTime.Now.ToString().Replace("/", "_").Replace(":", "_").Replace(" ", "_"));
+					var existingFiles = Directory.GetFiles(Configuration.BackupPath);
+					var cpyDirPath = Path.Combine(Configuration.BackupPath, DateTime.Now.ToString().Replace("/", "_").Replace(":", "_").Replace(" ", "_"));
 					Directory.CreateDirectory(cpyDirPath);
 					foreach (var file in existingFiles)
 					{
 						File.Copy(file, Path.Combine(cpyDirPath, Path.GetFileName(file)));
 					}
 
-					SessionManager.SaveToFile(m_configuration.BackupPath);
-					SiteManager.SaveToFile(m_configuration.BackupPath);
-					CoordinatorNeedsManager.SaveToFile(m_configuration.BackupPath);
+					SessionManager.SaveToFile(Configuration.BackupPath);
+					SiteManager.SaveToFile(Configuration.BackupPath);
+					CoordinatorNeedsManager.SaveToFile(Configuration.BackupPath);
 				}
 				Logger.Debug("All backups saved");
 			}
@@ -123,19 +123,19 @@ namespace XR.Dodo
 		private static void GenerateSampleConfig()
 		{
 			Logger.Error($"Missing config file at {ConfigPath} - generating a blank one now");
-			m_configuration = new Configuration();
-			m_configuration.GatewayData.Phones.Add(new Phone()
+			Configuration = new Configuration();
+			Configuration.GatewayData.Phones.Add(new Phone()
 			{
 				Name = "Give the phone a name",
 				Number = "Replace this with the phone number",
 				Mode = Phone.ESMSMode.Bot,
 			});
-			m_configuration.SpreadsheetData.SiteSpreadsheets.Add(new Configuration.Spreadsheets.SiteSheet()
+			Configuration.SpreadsheetData.SiteSpreadsheets.Add(new Configuration.Spreadsheets.SiteSheet()
 			{
 				SheetID = "Put the sheet ID here",
 				SiteName = "Put the name of the site here",
 			});
-			File.WriteAllText(ConfigPath + ".sample", JsonConvert.SerializeObject(m_configuration, Formatting.Indented, new JsonSerializerSettings
+			File.WriteAllText(ConfigPath + ".sample", JsonConvert.SerializeObject(Configuration, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
@@ -143,7 +143,7 @@ namespace XR.Dodo
 
 		private static void SaveConfig()
 		{
-			File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(m_configuration, Formatting.Indented, new JsonSerializerSettings
+			File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(Configuration, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
@@ -151,7 +151,7 @@ namespace XR.Dodo
 
 		private static void LoadConfig()
 		{
-			m_configuration = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigPath), new JsonSerializerSettings
+			Configuration = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(ConfigPath), new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			});

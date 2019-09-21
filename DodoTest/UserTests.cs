@@ -16,7 +16,7 @@ public class UserTests : TestBase
 		var initialUser = GetTestUser(EUserAccessLevel.Volunteer);  // Coord has talked to telegram but system doesn't know they are coord yet
 		initialUser.PhoneNumber = null;
 
-		var response = await DodoServer.TelegramGateway.FakeMessage("VERIFY", initialUser.TelegramUser);	// Verify process
+		var response = DodoServer.TelegramGateway.FakeMessage("VERIFY", initialUser.TelegramUser);	// Verify process
 		var code = response.Content.Substring(
 			"Please take a moment to verify your phone number. You can do this by texting ".Length, 5);	// Extract verification code
 
@@ -38,7 +38,7 @@ public class UserTests : TestBase
 		var initialUser = GetTestUser(EUserAccessLevel.Volunteer);
 		initialUser.PhoneNumber = null;
 
-		var response = await DodoServer.TelegramGateway.FakeMessage("VERIFY", initialUser.TelegramUser);
+		var response = DodoServer.TelegramGateway.FakeMessage("VERIFY", initialUser.TelegramUser);
 		var code = response.Content.Substring(
 			"Please take a moment to verify your phone number. You can do this by texting ".Length, 5);
 
@@ -57,7 +57,7 @@ public class UserTests : TestBase
 	public async Task VolunteerCannotRequestNeed()
 	{
 		var user = GetTestUser(EUserAccessLevel.Volunteer);
-		var response = await DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
+		var response = DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
 		Assert.IsTrue(response.Content.Contains("HELP"));
 	}
 
@@ -65,7 +65,7 @@ public class UserTests : TestBase
 	public async Task VolunteerCannotRequestWhoIs()
 	{
 		var user = GetTestUser(EUserAccessLevel.Volunteer);
-		var response = await DodoServer.TelegramGateway.FakeMessage("WHOIS", user.TelegramUser);
+		var response = DodoServer.TelegramGateway.FakeMessage("WHOIS", user.TelegramUser);
 		Assert.IsTrue(response.Content.Contains("HELP"));
 	}
 }

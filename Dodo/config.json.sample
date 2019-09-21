@@ -16,6 +16,7 @@
 		"TwilioAuthToken": "",
 		"TelegramGatewaySecret": "",
 		"HTTPServerPort": 8080,
+		"SmsSyncSecret": "",
 		"Phones": [
 			{
 				"Mode": 1,

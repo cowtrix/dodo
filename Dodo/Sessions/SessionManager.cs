@@ -88,18 +88,15 @@ namespace XR.Dodo
 			}
 			if (!_data.Sessions.TryGetValue(user.UUID, out var session))
 			{
-				if(user.AccessLevel > EUserAccessLevel.Volunteer)
-				{
-					session = new CoordinatorSession(user.UUID);
-				}
-				else
-				{
-					session = new VolunteerSession(user.UUID);
-				}
-				if(!_data.Sessions.TryAdd(user.UUID, session))
+				session = new UserSession(user.UUID);
+				if (!_data.Sessions.TryAdd(user.UUID, session))
 				{
 					return _data.Sessions[user.UUID];
 				}
+			}
+			if(user.AccessLevel > EUserAccessLevel.Volunteer && session.Workflow is VolunteerWorkflow)
+			{
+				session.Workflow = new CoordinatorWorkflow();
 			}
 			return session;
 		}

@@ -147,7 +147,7 @@ namespace XR.Dodo
 			foreach (var site in Data.Sites)
 			{
 				var siteCoords = DodoServer.SessionManager.GetUsers().Where(x => x.CoordinatorRoles.Any(y => y.SiteCode == site.Key));
-				var errorCount = site.Value.Status.Errors.Count();
+				var errorCount = site.Value.Status?.Errors.Count();
 				var rowList = new List<string>(){
 					site.Key.ToString(),
 					site.Value.SiteName,

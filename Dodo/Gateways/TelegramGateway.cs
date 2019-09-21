@@ -89,6 +89,11 @@ namespace XR.Dodo
 
 		private async Task SendMessageAsync(OutgoingMessage msg)
 		{
+			if(msg == null || msg.Message == default(ServerMessage))
+			{
+				Logger.Warning($"Attempted to send a null message to {msg?.Session?.GetUser()}");
+				return;
+			}
 			if (msg.Message.Content.Length > 160)
 			{
 				Logger.Warning("Message length > sms limit");

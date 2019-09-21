@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace XR.Dodo
 {
-	public abstract class UserSession
+	public class UserSession
 	{
 		public string UserID;
 
@@ -28,8 +28,7 @@ namespace XR.Dodo
 			return DodoServer.SessionManager.GetUserFromUserID(UserID);
 		}
 
-		public abstract Workflow Workflow { get; }
-
+		public Workflow Workflow = new VolunteerWorkflow();
 		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
 			return Workflow.ProcessMessage(message, session);

@@ -25,6 +25,7 @@ namespace XR.Dodo
 			public string TelegramGatewaySecret = "";
 			public int HTTPServerPort = 8080;
 			public List<Phone> Phones = new List<Phone>();
+			public string SmsSyncSecret = "";
 		}
 
 		public Spreadsheets SpreadsheetData = new Spreadsheets();

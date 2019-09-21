@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace XR.Dodo
@@ -45,6 +46,33 @@ namespace XR.Dodo
 			Content = content;
 			TimeStamp = DateTime.Now;
 			MessageID = Guid.NewGuid().ToString();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is ServerMessage message &&
+				   Content == message.Content &&
+				   TimeStamp == message.TimeStamp &&
+				   MessageID == message.MessageID;
+		}
+
+		public override int GetHashCode()
+		{
+			var hashCode = 1031664614;
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Content);
+			hashCode = hashCode * -1521134295 + TimeStamp.GetHashCode();
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(MessageID);
+			return hashCode;
+		}
+
+		public static bool operator ==(ServerMessage left, ServerMessage right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(ServerMessage left, ServerMessage right)
+		{
+			return !(left == right);
 		}
 	}
 }

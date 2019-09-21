@@ -29,9 +29,9 @@ namespace XR.Dodo
 		}
 		[JsonIgnore]
 		public SpreadsheetStatus Status { get; private set; }
-		public readonly int SiteCode;
-		public readonly string SiteName;
-		public readonly string SpreadSheetID;
+		public int SiteCode;
+		public string SiteName;
+		public string SpreadSheetID;
 		public HashSet<string> WorkingGroups = new HashSet<string>();
 
 		public string URL
