@@ -56,8 +56,12 @@ namespace XR.Dodo
 			{
 				DodoServer.Load(x);
 			}));
+            AddCommand("saveconfig", (async x =>
+            {
+                DodoServer.SaveConfig();
+            }));
 
-			var inputThread = new Task(() =>
+            var inputThread = new Task(() =>
 			{
 				string input = null;
 				while(true)

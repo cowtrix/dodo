@@ -29,7 +29,12 @@ namespace XR.Dodo
 
 		public HashSet<Role> CoordinatorRoles = new HashSet<Role>();
 
-		public bool IsVerified()
+        public override string ToString()
+        {
+            return $"{Name ?? PhoneNumber ?? TelegramUser.ToString()} - {AccessLevel}";
+        }
+
+        public bool IsVerified()
 		{
 			return !string.IsNullOrEmpty(PhoneNumber) && TelegramUser >= 0;
 		}

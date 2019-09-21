@@ -141,7 +141,7 @@ namespace XR.Dodo
 			}));
 		}
 
-		private static void SaveConfig()
+		public static void SaveConfig()
 		{
 			File.WriteAllText(ConfigPath, JsonConvert.SerializeObject(Configuration, Formatting.Indented, new JsonSerializerSettings
 			{

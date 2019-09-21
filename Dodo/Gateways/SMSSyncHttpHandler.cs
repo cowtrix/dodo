@@ -93,11 +93,13 @@ namespace XR.Dodo
 				{
 					return Failure("4042");
 				}
-				var phone = m_server.Phones.SingleOrDefault(x => x.Number == receiverNumber);
+
+                var body = request.QueryParams["message"];
+                var phone = m_server.Phones.FirstOrDefault(x => x.Type == Phone.EType.SMSSync);
 				if (phone == null)
 				{
-					Logger.Error("Unrecognized origin number: " + receiverNumber);
-					return Failure("4044");
+					Logger.Error($"Unrecognized origin number: {receiverNumber} with message: {body}");
+					return Success();
 				}
 
 				// The SMS received is valid and so we can process it
@@ -106,7 +108,6 @@ namespace XR.Dodo
 				{
 					return Failure("4046");
 				}
-				var body = request.QueryParams["message"];
 
 				if (phone.Mode == Phone.ESMSMode.Verification)
 				{

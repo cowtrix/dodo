@@ -33,14 +33,17 @@ namespace XR.Dodo
 	{
 		public int SiteCode;
 		public string Name;
-		public WorkingGroup WorkingGroup;
+        public string WorkingGroupCode;
+
+        [JsonIgnore]
+		public WorkingGroup WorkingGroup { get { return DodoServer.SiteManager.Data.WorkingGroups[WorkingGroupCode]; } }
 
 		[JsonIgnore]
 		public SiteSpreadsheet Site { get { return DodoServer.SiteManager.GetSite(SiteCode); } }
 
 		public Role(WorkingGroup workingGroup, string name, int siteCode)
 		{
-			WorkingGroup = workingGroup;
+			WorkingGroupCode = workingGroup.ShortCode;
 			Name = name;
 			SiteCode = siteCode;
 		}
@@ -51,7 +54,7 @@ namespace XR.Dodo
 			return role != null &&
 				   SiteCode == role.SiteCode &&
 				   Name == role.Name &&
-				   WorkingGroup.ShortCode ==  role.WorkingGroup.ShortCode;
+				   WorkingGroupCode ==  role.WorkingGroupCode;
 		}
 
 		public override int GetHashCode()
@@ -59,7 +62,7 @@ namespace XR.Dodo
 			var hashCode = -489653820;
 			hashCode = hashCode * -1521134295 + SiteCode.GetHashCode();
 			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
-			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(WorkingGroup.ShortCode);
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(WorkingGroupCode);
 			return hashCode;
 		}
 	}

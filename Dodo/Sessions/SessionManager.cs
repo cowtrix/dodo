@@ -109,6 +109,7 @@ namespace XR.Dodo
 					.FirstOrDefault(x => (x.Value.Verification?.Code == code.Trim()));
 				if (verificationMatch.Value == null)
 				{
+                    Logger.Warning($"User {fromNumber} sent invalid code to validation number: {code}");
 					return;
 				}
 
@@ -135,8 +136,17 @@ namespace XR.Dodo
 					throw new Exception("Invalid number: " + fromNumber);
 				}
 				userToVerify.PhoneNumber = fromNumber;
-				DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}."), verificationMatch.Value);
 				userToVerify.Karma += 10;
+                if (userToVerify.AccessLevel > EUserAccessLevel.Volunteer)
+                {
+                    DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}. " + 
+                        $"It looks like you're a coordinator for {userToVerify.CoordinatorRoles.First().WorkingGroup.Name}"), verificationMatch.Value);
+                }
+                else
+                {
+                    DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}."), verificationMatch.Value);
+                }
+                Logger.Debug($"Succesfully verified user {userToVerify} to number {userToVerify.PhoneNumber}");
 			}
 		}
 

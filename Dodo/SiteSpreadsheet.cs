@@ -140,6 +140,7 @@ namespace XR.Dodo
 							var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);
 							user.Name = name;
 							user.Email = email;
+                            user.GDPR = true;
 							user.CoordinatorRoles.Add(role);
 							WorkingGroups.Add(wg.ShortCode);
 						}

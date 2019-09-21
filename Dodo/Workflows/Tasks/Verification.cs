@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace XR.Dodo
 {
-	public class Verification : WorkflowTask
+	public class VerificationTask : WorkflowTask
 	{
 		public static string CommandKey { get { return "VERIFY"; } }
 		public static string HelpString { get { return $"{CommandKey} - use this to verify your phone number. A verified phone number is necessary for asking me to do some things."; } }
 
-		public Verification(Workflow workflow) : base(workflow)
+		public VerificationTask(Workflow workflow) : base(workflow)
 		{
 		}
 

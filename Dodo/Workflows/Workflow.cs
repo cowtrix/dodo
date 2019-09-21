@@ -15,8 +15,8 @@ namespace XR.Dodo
 
 		public Workflow()
 		{
-			if(DodoServer.Dummy)
-				AddTask<Verification>(); // TODO Blocker is twilio account :(
+			//kingif(DodoServer.Dummy)
+				AddTask<VerificationTask>(); // TODO Blocker is twilio account :(
 
 			AddTask<HelpTask>();
 			AddTask<InfoTask>();

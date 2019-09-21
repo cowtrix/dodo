@@ -80,6 +80,7 @@ namespace XR.Dodo
 
 		public void SendMessage(ServerMessage message, UserSession session)
 		{
+            Logger.Debug($"Telegram: Sent message to {session.GetUser()}");
 			m_outbox.Enqueue(new OutgoingMessage()
 			{
 				Message = message,
@@ -105,10 +106,10 @@ namespace XR.Dodo
 		{
 			try
 			{
-				var message = e.Message.Text;
+                var message = e.Message.Text;
 				var userID = e.Message.From.Id;
 				var outgoing = GetMessage(message, userID, out var session);
-				SendMessage(outgoing, session);
+                SendMessage(outgoing, session);
 			}
 			catch (Exception exception)
 			{
@@ -122,7 +123,8 @@ namespace XR.Dodo
 			if (!string.IsNullOrEmpty(message))
 			{
 				var user = DodoServer.SessionManager.GetOrCreateUserFromTelegramNumber(userID);
-				 session = DodoServer.SessionManager.GetOrCreateSession(user);
+				session = DodoServer.SessionManager.GetOrCreateSession(user);
+                Logger.Debug($"Telegram: received message from {session.GetUser()}");
 				var customMessage = new UserMessage(user, message, this, userID.ToString());
 				return session.ProcessMessage(customMessage, session);
 			}
