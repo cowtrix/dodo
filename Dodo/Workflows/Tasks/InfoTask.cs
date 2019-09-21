@@ -33,12 +33,61 @@ namespace XR.Dodo
 			m_commands = new Dictionary<string, InfoTaskDefinition>()
 			{
 				{ "ARRIVAL", new InfoTaskDefinition("the day you'll arrive to the Autumn Rebellion in London.", UpdateArrival) },
-				{ "DEPARTURE", new InfoTaskDefinition("the day you'll leave to the Autumn Rebellion in London.", UpdateDeparture) },
-				{ "EMAIL", new InfoTaskDefinition("add or update an email we can contact you at.", UpdateEmail) }
-			};
+				{ "DEPARTURE", new InfoTaskDefinition("the day you'll leave the Autumn Rebellion in London.", UpdateDeparture) },
+				{ "EMAIL", new InfoTaskDefinition("add or update an email we can contact you at.", UpdateEmail) },
+                { "SITE", new InfoTaskDefinition("change which site you're at.", UpdateSite) },
+            };
 		}
 
-		private bool UpdateEmail(User user, UserMessage message, out ServerMessage response)
+        private bool UpdateSite(User user, UserMessage message, out ServerMessage response)
+        {
+            string getSiteList()
+            {
+                var sb = new StringBuilder("Reply with the site number shown.\n");
+                foreach (var site in DodoServer.SiteManager.GetSites())
+                {
+                    if (site.SiteCode== 0)
+                    {
+                        continue;
+                    }
+                    sb.AppendLine($"{site.SiteCode} - {site.SiteName}");
+                }
+                if(user.SiteCode != -1)
+                {
+                    sb.AppendLine($"Your current site is: {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}.");
+                }
+                return sb.ToString();
+            }
+            
+            if (message.ContentUpper.FirstOrDefault() == "SITE")
+            {
+                if(user.StartDate != default && DateTime.Now > user.StartDate)
+                {
+                    response = new ServerMessage("Ok, which site are you at now? " + getSiteList());
+                    return true;
+                }
+                response = new ServerMessage("Ok, which site are you going to be at? " + getSiteList());
+                return true;
+            }
+            if(!int.TryParse(message.ContentUpper.FirstOrDefault(), out var siteCode) || 
+                !DodoServer.SiteManager.IsValidSiteCode(siteCode))
+            {
+                response = new ServerMessage("Sorry, that didn't seem like a valid choice. " +
+                    getSiteList());
+                return true;
+            }
+            user.SiteCode = siteCode;
+            if (user.StartDate != default && DateTime.Now > user.StartDate)
+            {
+                response = new ServerMessage($"Okay, you're at {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}. " + GetTaskString());
+                return true;
+            }
+            response = new ServerMessage($"Okay, you're going to be at the {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName} site. " + GetTaskString());
+            CurrentCommand = null;
+            return true;
+        }
+
+        private bool UpdateEmail(User user, UserMessage message, out ServerMessage response)
 		{
 			if (message.ContentUpper.FirstOrDefault() == "EMAIL")
 			{

@@ -7,7 +7,19 @@ using System;
 [TestClass]
 public class InfoTaskTests : TestBase
 {
-	[TestMethod]
+    [TestMethod]
+    public async Task CanChangeSite()
+    {
+        var newSite = 4;
+        var user = GetTestUser(EUserAccessLevel.Volunteer);
+        var session = DodoServer.SessionManager.GetOrCreateSession(user);
+        var msg = DodoServer.TelegramGateway.FakeMessage("info", user.TelegramUser);
+        msg = DodoServer.TelegramGateway.FakeMessage("site", user.TelegramUser);
+        msg = DodoServer.TelegramGateway.FakeMessage(newSite.ToString(), user.TelegramUser);
+        Assert.IsTrue(user.SiteCode == newSite);
+    }
+
+    [TestMethod]
 	public async Task ChangeEmail()
 	{
 		var newEmail = "test@changed.com";
