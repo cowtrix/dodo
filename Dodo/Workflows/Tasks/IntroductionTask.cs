@@ -4,6 +4,7 @@ using System.Text;
 
 namespace XR.Dodo
 {
+	[WorkflowTaskInfo(EUserAccessLevel.Volunteer)]
 	public class IntroductionTask : WorkflowTask
 	{
 		const string VolunteerAgreement = "https://actionnetwork.org/forms/xr-data-protection-agreement-2";
@@ -14,7 +15,7 @@ namespace XR.Dodo
 		{
 			VolunteerAgreement,
 			GetName,
-            GetSite,
+			GetSite,
 			GetStartingDate,
 			GetEndDate,
 			Tutorial,
@@ -26,7 +27,7 @@ namespace XR.Dodo
 			var user = session.GetUser();
 			if (!user.GDPR)
 			{
-				if(session.Inbox.Count == 1)    // First ever message
+				if(session.Inbox.Count == 1)	// First ever message
 				{
 					response = new ServerMessage("Hello! I'm your friendly Extinction Rebellion Bot. Whether you're a seasoned rebel, or you're just getting started, " +
 						"my purpose is to help you get involved in the Autumn Rebellion in London. Through me, you can find out what needs doing, who needs help, and how you can get involved. " +
@@ -62,53 +63,53 @@ namespace XR.Dodo
 			{
 				var name = message.Content.Substring(0, Math.Min(message.Content.Length, 32)).Trim();
 				user.Name = name;
-                var nameString = $"Hello {user.Name}! ";
-                if (user.Name != message.Content)
-                {
-                    nameString = $"Well, that was a bit long, so how about {user.Name}. ";
-                }
-                if (user.StartDate != default && DateTime.Now > user.StartDate)
-                {
-                    response = new ServerMessage(nameString + "Ok, which site are you at? " + GetSiteList());
-                    return true;
-                }
-                response = new ServerMessage(nameString + "Ok, which site are you going to be at? " + GetSiteList());
-                State = EState.GetSite;
+				var nameString = $"Hello {user.Name}! ";
+				if (user.Name != message.Content)
+				{
+					nameString = $"Well, that was a bit long, so how about {user.Name}. ";
+				}
+				if (user.StartDate != default && DateTime.Now > user.StartDate)
+				{
+					response = new ServerMessage(nameString + "Ok, which site are you at? " + GetSiteList());
+					return true;
+				}
+				response = new ServerMessage(nameString + "Ok, which site are you going to be at? " + GetSiteList());
+				State = EState.GetSite;
 				return true;
 			}
 
-            if (State == EState.GetSite)
-            {
-                const string responseString = "Now, if you already know how you're getting involved in the Autumn Rebellion, " +
-                        "you can just reply CANCEL. Otherwise, you can tell me a little more about yourself. Firstly, what date will you be arriving to the rebellion? " +
-                        "For instance, if you were arriving on the 7th of October, you would reply 7/10";
-                if(message.ContentUpper.FirstOrDefault() == "SKIP")
-                {
-                    response = new ServerMessage($"Okay, we can skip that for now. " + responseString);
-                    State = EState.GetStartingDate;
-                    return true;
-                }                
-                if (!int.TryParse(message.ContentUpper.FirstOrDefault(), out var siteCode) || siteCode == 0 ||
-                    !DodoServer.SiteManager.IsValidSiteCode(siteCode))
-                {
-                    response = new ServerMessage("Sorry, that didn't seem like a valid choice. " +
-                        GetSiteList());
-                    return true;
-                }
-                user.SiteCode = siteCode;
-                if (user.StartDate != default && DateTime.Now > user.StartDate)
-                {
-                    response = new ServerMessage($"Okay, you're at {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}. " + responseString);
-                }
-                else
-                {
-                    response = new ServerMessage($"Okay, you're going to be at the {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName} site. " + responseString);
-                }
-                State = EState.GetStartingDate;
-                return true;
-            }
+			if (State == EState.GetSite)
+			{
+				const string responseString = "Now, if you already know how you're getting involved in the Autumn Rebellion, " +
+						"you can just reply CANCEL. Otherwise, you can tell me a little more about yourself. Firstly, what date will you be arriving to the rebellion? " +
+						"For instance, if you were arriving on the 7th of October, you would reply 7/10";
+				if(message.ContentUpper.FirstOrDefault() == "SKIP")
+				{
+					response = new ServerMessage($"Okay, we can skip that for now. " + responseString);
+					State = EState.GetStartingDate;
+					return true;
+				}				
+				if (!int.TryParse(message.ContentUpper.FirstOrDefault(), out var siteCode) || siteCode == 0 ||
+					!DodoServer.SiteManager.IsValidSiteCode(siteCode))
+				{
+					response = new ServerMessage("Sorry, that didn't seem like a valid choice. " +
+						GetSiteList());
+					return true;
+				}
+				user.SiteCode = siteCode;
+				if (user.StartDate != default && DateTime.Now > user.StartDate)
+				{
+					response = new ServerMessage($"Okay, you're at {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}. " + responseString);
+				}
+				else
+				{
+					response = new ServerMessage($"Okay, you're going to be at the {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName} site. " + responseString);
+				}
+				State = EState.GetStartingDate;
+				return true;
+			}
 
-            if (State == EState.GetStartingDate)
+			if (State == EState.GetStartingDate)
 			{
 				var split = message.ContentUpper.FirstOrDefault().Split('/');
 				DateTime startDate;
@@ -188,22 +189,22 @@ namespace XR.Dodo
 			"I like Telegram more though, and it means I can be a bit more helpful to you. " +*/
 		}
 
-        string GetSiteList()
-        {
-            var sb = new StringBuilder("Reply with the site number shown.\n");
-            foreach (var site in DodoServer.SiteManager.GetSites())
-            {
-                if (site.SiteCode== 0)
-                    {
-                        continue;
-                    }
-                sb.AppendLine($"{site.SiteCode} - {site.SiteName}");
-            }
-            sb.AppendLine("Or, if you don't know, reply SKIP.");
-            return sb.ToString();
-        }
+		string GetSiteList()
+		{
+			var sb = new StringBuilder("Reply with the site number shown.\n");
+			foreach (var site in DodoServer.SiteManager.GetSites())
+			{
+				if (site.SiteCode== 0)
+					{
+						continue;
+					}
+				sb.AppendLine($"{site.SiteCode} - {site.SiteName}");
+			}
+			sb.AppendLine("Or, if you don't know, reply SKIP.");
+			return sb.ToString();
+		}
 
-        public override bool CanCancel()
+		public override bool CanCancel()
 		{
 			return false;
 		}

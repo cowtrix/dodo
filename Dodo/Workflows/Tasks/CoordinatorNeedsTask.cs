@@ -5,6 +5,7 @@ using System.Text;
 
 namespace XR.Dodo
 {
+	[WorkflowTaskInfo(EUserAccessLevel.Coordinator)]
 	public class CoordinatorNeedsTask : WorkflowTask
 	{
 		public CoordinatorNeedsManager.Need Need = new CoordinatorNeedsManager.Need();
@@ -62,6 +63,14 @@ namespace XR.Dodo
 					if(workingGroups.Count == 1 && user.AccessLevel != EUserAccessLevel.RotaCoordinator)
 					{
 						Need.WorkingGroup = workingGroups[0];
+						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(Need.WorkingGroup).Count();
+						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
+						{
+							response = new ServerMessage($"Sorry, the working group {Need.WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
+							ExitTask(session);
+							return true;
+						}
 					}
 					else
 					{
@@ -120,6 +129,14 @@ namespace XR.Dodo
 					if (workingGroups.Any(x => x.ShortCode == cmd))
 					{
 						Need.WorkingGroup = workingGroups.First(x => x.ShortCode == cmd);
+						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(Need.WorkingGroup).Count();
+						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
+						{
+							response = new ServerMessage($"Sorry, the working group {Need.WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
+							ExitTask(session);
+							return true;
+						}
 						if (i >= message.ContentUpper.Length - 1)
 						{
 							response = new ServerMessage(GetTimeRequestString());
@@ -132,6 +149,14 @@ namespace XR.Dodo
 						if (workingGroups.Count == 1)
 						{
 							Need.WorkingGroup = workingGroups[0];
+							var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(Need.WorkingGroup).Count();
+							if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
+							{
+								response = new ServerMessage($"Sorry, the working group {Need.WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+									$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
+								ExitTask(session);
+								return true;
+							}
 						}
 						else
 						{
@@ -274,7 +299,7 @@ namespace XR.Dodo
 					parentGroup = wg.ParentGroup;
 					sb.AppendLine($"{parentGroup}:");
 				}
-				sb.AppendLine($"        {wg.ShortCode} - {wg.Name}");
+				sb.AppendLine($"		{wg.ShortCode} - {wg.Name}");
 			}
 			return sb.ToString();
 		}

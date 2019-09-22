@@ -28,7 +28,7 @@ namespace XR.Dodo
 			return DodoServer.SessionManager.GetUserFromUserID(UserID);
 		}
 
-		public Workflow Workflow = new VolunteerWorkflow();
+		public Workflow Workflow = new Workflow();
 		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
 			return Workflow.ProcessMessage(message, session);

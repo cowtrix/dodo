@@ -94,10 +94,6 @@ namespace XR.Dodo
 					return _data.Sessions[user.UUID];
 				}
 			}
-			if(user.AccessLevel > EUserAccessLevel.Volunteer && session.Workflow is VolunteerWorkflow)
-			{
-				session.Workflow = new CoordinatorWorkflow();
-			}
 			return session;
 		}
 
@@ -109,7 +105,7 @@ namespace XR.Dodo
 					.FirstOrDefault(x => (x.Value.Verification?.Code == code.Trim()));
 				if (verificationMatch.Value == null)
 				{
-                    Logger.Warning($"User {fromNumber} sent invalid code to validation number: {code}");
+					Logger.Warning($"User {fromNumber} sent invalid code to validation number: {code}");
 					return;
 				}
 
@@ -118,11 +114,11 @@ namespace XR.Dodo
 				string toRemove = existingUserWithNumber?.UUID;
 				if(existingUserWithNumber != null)
 				{
-                    // Someone is already registered in the database with that phone number
-                    // Which should only really ever happen with a coordinator
-                    // So we copy over some stuff and then delete the existing user
-                    RemoveUser(existingUserWithNumber);
-                    userToVerify.Email = existingUserWithNumber.Email ?? userToVerify.Email;
+					// Someone is already registered in the database with that phone number
+					// Which should only really ever happen with a coordinator
+					// So we copy over some stuff and then delete the existing user
+					RemoveUser(existingUserWithNumber);
+					userToVerify.Email = existingUserWithNumber.Email ?? userToVerify.Email;
 					foreach (var role in existingUserWithNumber.CoordinatorRoles)
 					{
 						userToVerify.CoordinatorRoles.Add(role);
@@ -134,22 +130,22 @@ namespace XR.Dodo
 				}
 				userToVerify.PhoneNumber = fromNumber;
 				userToVerify.Karma += 10;
-                if (userToVerify.AccessLevel > EUserAccessLevel.Volunteer)
-                {
-                    DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}. " + 
-                        $"It looks like you're a coordinator for {userToVerify.CoordinatorRoles.First().WorkingGroup.Name}"), verificationMatch.Value);
-                }
-                else
-                {
-                    DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}."), verificationMatch.Value);
-                }
-                Logger.Debug($"Succesfully verified user {userToVerify} to number {userToVerify.PhoneNumber}");
+				if (userToVerify.AccessLevel > EUserAccessLevel.Volunteer)
+				{
+					DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}. " + 
+						$"It looks like you're a coordinator for {userToVerify.CoordinatorRoles.First().WorkingGroup.Name}"), verificationMatch.Value);
+				}
+				else
+				{
+					DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}."), verificationMatch.Value);
+				}
+				Logger.Debug($"Succesfully verified user {userToVerify} to number {userToVerify.PhoneNumber}");
 			}
 		}
 
 		private bool RemoveUser(User user)
 		{
-            Logger.Debug("Removed user " + user.UUID);
+			Logger.Debug("Removed user " + user.UUID);
 			return _data.Users.TryRemove(user.UUID, out _) &&
 			_data.Sessions.TryRemove(user.UUID, out _);
 		}

@@ -1,8 +1,19 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace XR.Dodo
 {
+	[AttributeUsage(AttributeTargets.Class)]
+	public class WorkflowTaskInfoAttribute : Attribute
+	{
+		public readonly EUserAccessLevel MinAccessLevel;
+		public WorkflowTaskInfoAttribute(EUserAccessLevel minAccessLevel)
+		{
+			MinAccessLevel = minAccessLevel;
+		}
+	}
+
 	public abstract class WorkflowTask
 	{
 		public DateTime TimeCreated;
@@ -27,6 +38,17 @@ namespace XR.Dodo
 		public virtual bool CanCancel()
 		{
 			return true;
+		}
+
+		public EUserAccessLevel GetMinimumAccessLevel()
+		{
+			return GetMinimumAccessLevel(GetType());
+		}
+
+		public static EUserAccessLevel GetMinimumAccessLevel(Type t)
+		{
+			var attr = (WorkflowTaskInfoAttribute)t.GetCustomAttributes(typeof(WorkflowTaskInfoAttribute), true).Single();
+			return attr.MinAccessLevel;
 		}
 	}
 }

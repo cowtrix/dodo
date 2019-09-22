@@ -5,6 +5,7 @@ using System.Text;
 
 namespace XR.Dodo
 {
+	[WorkflowTaskInfo(EUserAccessLevel.Coordinator)]
 	public class CoordinatorRemoveNeedTask : WorkflowTask
 	{
 		public CoordinatorNeedsManager.Need Need = null;

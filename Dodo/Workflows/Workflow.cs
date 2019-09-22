@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace XR.Dodo
 {
-	public abstract class Workflow
+	public class Workflow
 	{
 		public WorkflowTask CurrentTask;
 
@@ -15,11 +15,13 @@ namespace XR.Dodo
 
 		public Workflow()
 		{
-			//kingif(DodoServer.Dummy)
-				AddTask<VerificationTask>(); // TODO Blocker is twilio account :(
-
+			AddTask<VerificationTask>(); // TODO Blocker is twilio account :(
 			AddTask<HelpTask>();
 			AddTask<InfoTask>();
+
+			AddTask<CoordinatorWhoIsTask>();
+			AddTask<CoordinatorNeedsTask>();
+			AddTask<CoordinatorRemoveNeedTask>();
 
 			CurrentTask = new IntroductionTask();
 		}
@@ -47,6 +49,12 @@ namespace XR.Dodo
 					// Cancel the request
 					return CurrentTask.ExitTask(session);
 				}
+				if(CurrentTask.GetMinimumAccessLevel() > user.AccessLevel)
+				{
+					CurrentTask.ExitTask(session);
+					return new ServerMessage("Sorry, it doesn't look like you're authorised to do that."
+						+ (user.IsVerified() ? "" : " Please verify your account and try again."));
+				}
 				// Do task specific help
 				if (message.ContentUpper.FirstOrDefault() == "HELP")
 				{
@@ -71,7 +79,12 @@ namespace XR.Dodo
 			else if (Tasks.TryGetValue(message.ContentUpper.FirstOrDefault(), out var newWorkflowType))
 			{
 				var newWorkflow = Activator.CreateInstance(newWorkflowType) as WorkflowTask;
-                newWorkflow.TimeCreated = DateTime.Now;
+				if (newWorkflow.GetMinimumAccessLevel() > user.AccessLevel)
+				{
+					return new ServerMessage("Sorry, it doesn't look like you're authorised to do that."
+						+ (user.IsVerified() ? "" : " Please verify your account and try again."));
+				}
+				newWorkflow.TimeCreated = DateTime.Now;
 				if(newWorkflow != null)
 				{
 					CurrentTask = newWorkflow;
@@ -81,14 +94,8 @@ namespace XR.Dodo
 					return response;
 				}
 			}
-			else if(ProcessMessageForRole(message, session, out response))
-			{
-				return response;
-			}
 			return DidntUnderstand(user);
 		}
-
-		protected abstract bool ProcessMessageForRole(UserMessage message, UserSession session, out ServerMessage response);
 
 		ServerMessage DidntUnderstand(User user)
 		{

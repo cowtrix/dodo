@@ -27,15 +27,26 @@ namespace XR.Dodo
 			Mandate = mandate;
 			ShortCode = shortcode;
 		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is WorkingGroup group &&
+				   ShortCode == group.ShortCode;
+		}
+
+		public override int GetHashCode()
+		{
+			return -898233052 + EqualityComparer<string>.Default.GetHashCode(ShortCode);
+		}
 	}
 
 	public class Role
 	{
 		public int SiteCode;
 		public string Name;
-        public string WorkingGroupCode;
+		public string WorkingGroupCode;
 
-        [JsonIgnore]
+		[JsonIgnore]
 		public WorkingGroup WorkingGroup { get { return DodoServer.SiteManager.Data.WorkingGroups[WorkingGroupCode]; } }
 
 		[JsonIgnore]

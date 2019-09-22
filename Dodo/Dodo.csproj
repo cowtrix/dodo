@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XR.Dodo</RootNamespace>
     <AssemblyName>XR.Dodo</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -116,13 +116,12 @@
     <Compile Include="Workflows\Tasks\HelpTask.cs" />
     <Compile Include="Workflows\Tasks\InfoTask.cs" />
     <Compile Include="Workflows\Tasks\IntroductionTask.cs" />
-    <Compile Include="Workflows\Tasks\Verification.cs" />
+    <Compile Include="Workflows\Tasks\VerificationTask.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="CoordinatorNeedsManager.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorNeedsTask.cs" />
-    <Compile Include="Workflows\CoordinatorWorkflow.cs" />
     <Compile Include="ValidationExtensions.cs" />
     <Compile Include="Sessions\SessionManager.cs" />
     <Compile Include="SiteSpreadsheet.cs" />
@@ -133,7 +132,6 @@
     <Compile Include="Gateways\IMessageGateway.cs" />
     <Compile Include="Gateways\TelegramGateway.cs" />
     <Compile Include="Sessions\UserSession.cs" />
-    <Compile Include="Workflows\VolunteerWorkflow.cs" />
     <Compile Include="Workflows\Workflow.cs" />
     <Compile Include="Workflows\Tasks\WorkflowTask.cs" />
     <Compile Include="WorkingGroup.cs" />
@@ -159,7 +157,7 @@
       <Name>DodoCmd</Name>
     </ProjectReference>
     <ProjectReference Include="..\SimpleHttpServer\SimpleHttpServer.csproj">
-      <Project>{9E139539-C272-488A-BFCF-CADDF458DF9D}</Project>
+      <Project>{9e139539-c272-488a-bfcf-caddf458df9d}</Project>
       <Name>SimpleHttpServer</Name>
     </ProjectReference>
   </ItemGroup>

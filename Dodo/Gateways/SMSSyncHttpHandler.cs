@@ -20,7 +20,7 @@ namespace XR.Dodo
 		{
 			return new HttpResponse()
 			{
-				ContentAsUTF8 = "{\n    \"payload\":\n    {\n        \"success\": true,\n        \"error\": null\n    }\n}",
+				ContentAsUTF8 = "{\n	\"payload\":\n	{\n		\"success\": true,\n		\"error\": null\n	}\n}",
 				ReasonPhrase = "OK",
 				StatusCode = "200"
 			};
@@ -39,20 +39,20 @@ namespace XR.Dodo
 				return Success();
 			}
 			var sb = new StringBuilder();
-			sb.Append("{\r\n    \"payload\": {\r\n        \"success\": \"true\",\r\n        \"task\": \"send\",\r\n        \"messages\": [\r\n");
+			sb.Append("{\r\n	\"payload\": {\r\n		\"success\": \"true\",\r\n		\"task\": \"send\",\r\n		\"messages\": [\r\n");
 			foreach (var response in responses)
 			{
-				sb.AppendLine("            {");
-				sb.AppendLine($"                \"to\": \"{session.GetUser().PhoneNumber}\",");
-				sb.AppendLine($"                \"message\": \"{response.Content}\",");
-				sb.AppendLine($"                \"uuid\": \"{response.MessageID}\"");
-				sb.AppendLine("            }");
+				sb.AppendLine("			{");
+				sb.AppendLine($"				\"to\": \"{session.GetUser().PhoneNumber}\",");
+				sb.AppendLine($"				\"message\": \"{response.Content}\",");
+				sb.AppendLine($"				\"uuid\": \"{response.MessageID}\"");
+				sb.AppendLine("			}");
 				if (response.MessageID != responses.Last().MessageID)
 				{
 					sb.Append(",");
 				}
 			}
-			sb.Append("        ]\r\n    }\r\n}");
+			sb.Append("		]\r\n	}\r\n}");
 			return new HttpResponse()
 			{
 				ContentAsUTF8 = sb.ToString(),
@@ -65,7 +65,7 @@ namespace XR.Dodo
 		{
 			return new HttpResponse()
 			{
-				ContentAsUTF8 = $"{{\n    \"payload\":\n    {{\n        \"success\": false,\n        \"error\": {message}\n    }}\n}}",
+				ContentAsUTF8 = $"{{\n	\"payload\":\n	{{\n		\"success\": false,\n		\"error\": {message}\n	}}\n}}",
 				ReasonPhrase = "OK",
 				StatusCode = "200"
 			};
@@ -94,8 +94,8 @@ namespace XR.Dodo
 					return Failure("4042");
 				}
 
-                var body = request.QueryParams["message"];
-                var phone = m_server.Phones.FirstOrDefault(x => x.Type == Phone.EType.SMSSync);
+				var body = request.QueryParams["message"];
+				var phone = m_server.Phones.FirstOrDefault(x => x.Type == Phone.EType.SMSSync);
 				if (phone == null)
 				{
 					Logger.Error($"Unrecognized origin number: {receiverNumber} with message: {body}");

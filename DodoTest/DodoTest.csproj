@@ -69,6 +69,7 @@
     <Compile Include="RotaCoordinatorTests.cs" />
     <Compile Include="RSOCoordinatorTests.cs" />
     <Compile Include="SerializationTests.cs" />
+    <Compile Include="StressTests.cs" />
     <Compile Include="TwilioSimulator.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="UserTests.cs" />

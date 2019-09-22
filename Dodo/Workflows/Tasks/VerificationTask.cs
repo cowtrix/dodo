@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace XR.Dodo
 {
+	[WorkflowTaskInfo(EUserAccessLevel.Volunteer)]
 	public class VerificationTask : WorkflowTask
 	{
 		public static string CommandKey { get { return "VERIFY"; } }

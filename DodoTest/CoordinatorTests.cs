@@ -10,6 +10,21 @@ using DodoTest;
 public class CoordinatorTests : TestBase
 {
 	[TestMethod]
+	public void CannotAddMoreThanMaxNeeds()
+	{
+		var user = GetTestUser(EUserAccessLevel.Coordinator);
+		var session = DodoServer.SessionManager.GetOrCreateSession(user);
+		for (var i = 0; i < CoordinatorNeedsManager.MaxNeedCount + 1; ++i)
+		{
+			var msg = DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
+			msg = DodoServer.TelegramGateway.FakeMessage("7/10 08:00", user.TelegramUser);
+			msg = DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser);
+		}
+		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(user.CoordinatorRoles.First().WorkingGroup).Count()
+			== CoordinatorNeedsManager.MaxNeedCount);
+	}
+
+	[TestMethod]
 	public async Task AddNeed_Case1()
 	{
 		var user = GetTestUser(EUserAccessLevel.Coordinator);

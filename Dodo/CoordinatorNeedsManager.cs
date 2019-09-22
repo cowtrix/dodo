@@ -28,9 +28,10 @@ namespace XR.Dodo
 			}
 		}
 
-		private List<Need> m_data;
+		public List<Need> CurrentNeeds;
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
+		public const int MaxNeedCount = 5;
 
 		public CoordinatorNeedsManager(Configuration config)
 		{
@@ -53,12 +54,17 @@ namespace XR.Dodo
 
 		public void ClearAll()
 		{
-			m_data.Clear();
+			CurrentNeeds.Clear();
+		}
+
+		public IEnumerable<Need> GetNeedsForWorkingGroup(WorkingGroup group)
+		{
+			return CurrentNeeds.Where(x => x.WorkingGroup.Equals(group));
 		}
 
 		public List<Need> GetCurrentNeeds()
 		{
-			return m_data.ToList();
+			return CurrentNeeds.ToList();
 		}
 
 		public bool AddNeedRequest(User user, Need need)
@@ -75,19 +81,24 @@ namespace XR.Dodo
 				}
 				return false;
 			}
+			var currentNeeds = GetNeedsForWorkingGroup(need.WorkingGroup).Count();
+			if(currentNeeds > MaxNeedCount)
+			{
+				return false;
+			}
 			if(need.Amount == 0)
 			{
 				return RemoveNeed(need);
 			}
 			need.TimeOfRequest = DateTime.Now;
-			m_data.Add(need);
+			CurrentNeeds.Add(need);
 			m_dirty = true;
 			return true;
 		}
 
 		public bool RemoveNeed(Need need)
 		{
-			return m_data.Remove(need);
+			return CurrentNeeds.Remove(need);
 		}
 
 		void UpdateNeedsOnGSheet()
@@ -99,7 +110,7 @@ namespace XR.Dodo
 				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Contact Code", "Time Needed", "Time Updated"
 			});
 			var sites = DodoServer.SiteManager.GetSites();
-			foreach (var need in m_data)
+			foreach (var need in CurrentNeeds)
 			{
 				var site = sites.First(x => x.SiteCode == need.SiteCode);
 				spreadsheet.Add(new List<string>()
@@ -120,7 +131,7 @@ namespace XR.Dodo
 		public void SaveToFile(string backupFolder)
 		{
 			var dataPath = Path.Combine(backupFolder, "needs.json");
-			File.WriteAllText(dataPath, JsonConvert.SerializeObject(m_data, Formatting.Indented, new JsonSerializerSettings
+			File.WriteAllText(dataPath, JsonConvert.SerializeObject(CurrentNeeds, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
@@ -132,10 +143,10 @@ namespace XR.Dodo
 			var backupPath = Path.Combine(backupFolder, "needs.json");
 			if (!File.Exists(backupPath))
 			{
-				m_data = new List<Need>();
+				CurrentNeeds = new List<Need>();
 				return;
 			}
-			m_data = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(backupPath), new JsonSerializerSettings
+			CurrentNeeds = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(backupPath), new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			});

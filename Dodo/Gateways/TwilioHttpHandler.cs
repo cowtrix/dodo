@@ -111,7 +111,7 @@ namespace XR.Dodo
 		{
 			return new HttpResponse()
 			{
-				ContentAsUTF8 = $"{{\n    \"payload\":\n    {{\n        \"success\": false,\n        \"error\": {message}\n    }}\n}}",
+				ContentAsUTF8 = $"{{\n	\"payload\":\n	{{\n		\"success\": false,\n		\"error\": {message}\n	}}\n}}",
 				ReasonPhrase = "OK",
 				StatusCode = "200"
 			};

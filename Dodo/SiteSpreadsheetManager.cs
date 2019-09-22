@@ -275,12 +275,12 @@ namespace XR.Dodo
 			LoadWorkingGroups();
 			foreach (var site in config.SpreadsheetData.SiteSpreadsheets)
 			{
-                var sheet = new SiteSpreadsheet(site.SiteNumber, site.SiteName, site.SheetID, this);
-                if(sheet.WorkingGroups.Count == 0)
-                {
-                    continue;
-                }
-                Data.Sites.Add(site.SiteNumber, sheet);
+				var sheet = new SiteSpreadsheet(site.SiteNumber, site.SiteName, site.SheetID, this);
+				if(sheet.WorkingGroups.Count == 0)
+				{
+					continue;
+				}
+				Data.Sites.Add(site.SiteNumber, sheet);
 			}
 			Logger.Debug("Finished loading");
 		}

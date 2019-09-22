@@ -4,10 +4,11 @@ using System.Text;
 
 namespace XR.Dodo
 {
+	[WorkflowTaskInfo(EUserAccessLevel.Volunteer)]
 	public class HelpTask : WorkflowTask
 	{
 		public static string CommandKey { get { return "HELP"; } }
-		public static string HelpString { get { return $"{CommandKey} - use this to ask for help, if you're not sure what to do."; } }
+		public static string HelpString { get { return $"{CommandKey} - ask for help, if you're not sure what to do."; } }
 
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
 		{
@@ -15,6 +16,10 @@ namespace XR.Dodo
 			sb.AppendLine();
 			foreach(var taskType in session.Workflow.Tasks)
 			{
+				if(GetMinimumAccessLevel(taskType.Value) > session.GetUser().AccessLevel)
+				{
+					continue;
+				}
 				var helpStr = GetHelpStringFromType(taskType.Value);
 				if(string.IsNullOrEmpty(helpStr))
 				{

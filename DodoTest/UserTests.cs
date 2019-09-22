@@ -24,7 +24,7 @@ public class UserTests : TestBase
 		ValidationExtensions.ValidateNumber(ref ph);
 		var smsResponse = await m_simulator.SendSMS(ph, code, Phone.ESMSMode.Verification);	// Coord sms' code to number
 
-		var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(ph);    // So the user here should be the coord
+		var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(ph);	// So the user here should be the coord
 		Assert.IsTrue(ReferenceEquals(initialUser, user));
 		Assert.IsTrue(coord.Email == user.Email);
 		Assert.IsTrue(coord.PhoneNumber == user.PhoneNumber);

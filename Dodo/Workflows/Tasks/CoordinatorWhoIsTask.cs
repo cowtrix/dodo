@@ -5,6 +5,7 @@ using System.Text;
 
 namespace XR.Dodo
 {
+	[WorkflowTaskInfo(EUserAccessLevel.Coordinator)]
 	public class CoordinatorWhoIsTask : WorkflowTask
 	{
 		public static string CommandKey { get { return "WHOIS"; } }

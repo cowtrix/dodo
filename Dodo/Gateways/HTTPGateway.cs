@@ -20,13 +20,13 @@ namespace XR.Dodo
 			Verification,
 			Bot,
 		}
-        public enum EType
-        {
-            SMSSync,
-            Twilio,
-        }
-        public EType Type;
-        public ESMSMode Mode;
+		public enum EType
+		{
+			SMSSync,
+			Twilio,
+		}
+		public EType Type;
+		public ESMSMode Mode;
 		public string Name;
 		public string Number;
 	}

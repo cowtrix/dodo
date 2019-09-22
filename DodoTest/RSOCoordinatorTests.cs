@@ -34,7 +34,7 @@ public class RSOCoordinatorTests : TestBase
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
 		var msg = DodoServer.TelegramGateway.FakeMessage("need", user.TelegramUser);
 		msg = DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser); // Site
-		msg = DodoServer.TelegramGateway.FakeMessage("sd", user.TelegramUser);    // Working group
+		msg = DodoServer.TelegramGateway.FakeMessage("sd", user.TelegramUser);	// Working group
 		msg = DodoServer.TelegramGateway.FakeMessage("20/10 22:00", user.TelegramUser);   // Time
 		msg = DodoServer.TelegramGateway.FakeMessage("Many", user.TelegramUser); // Amount
 
