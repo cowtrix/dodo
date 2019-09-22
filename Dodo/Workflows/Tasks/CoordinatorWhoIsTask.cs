@@ -10,10 +10,6 @@ namespace XR.Dodo
 		public static string CommandKey { get { return "WHOIS"; } }
 		public static string HelpString { get { return $"{CommandKey} - find out contact details for coordinators of certain Working Groups."; } }
 
-		public CoordinatorWhoIsTask(Workflow workflow) : base(workflow)
-		{
-		}
-
 		public string ShortCode;
 
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
@@ -25,7 +21,7 @@ namespace XR.Dodo
 				string cmd = toUpper[i];
 				if (cmd == "CANCEL")
 				{
-					ExitTask();
+					ExitTask(session);
 					response = new ServerMessage("Okay, I've canceled this request.");
 				}
 				if(cmd == CommandKey || !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
@@ -42,7 +38,7 @@ namespace XR.Dodo
 				{
 					var wg = DodoServer.SiteManager.GetWorkingGroup(cmd);
 					var all = DodoServer.SessionManager.GetUsers().Where(x => x.CoordinatorRoles.Any(y => y.WorkingGroup.ShortCode == cmd));
-					ExitTask();
+					ExitTask(session);
 					response = new ServerMessage(all.Aggregate($"Coordinators for {wg.Name}:", (current, next) => current + "\n"
 						+ $"{next.Name} - Site: {next.CoordinatorRoles.First(x => x.WorkingGroup.ShortCode == cmd).Site.SiteName}, Ph: {next.PhoneNumber ?? "None"}, Email: {next.Email}"));
 					return true;

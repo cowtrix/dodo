@@ -21,7 +21,7 @@ namespace XR.Dodo
 			AddTask<HelpTask>();
 			AddTask<InfoTask>();
 
-			CurrentTask = new IntroductionTask(this);
+			CurrentTask = new IntroductionTask();
 		}
 
 		protected void AddTask<T>() where T: WorkflowTask
@@ -45,7 +45,7 @@ namespace XR.Dodo
 				if(CurrentTask.CanCancel() && message.ContentUpper.FirstOrDefault() == "CANCEL")
 				{
 					// Cancel the request
-					return CurrentTask.ExitTask();
+					return CurrentTask.ExitTask(session);
 				}
 				// Do task specific help
 				if (message.ContentUpper.FirstOrDefault() == "HELP")
@@ -57,7 +57,7 @@ namespace XR.Dodo
 				}
 				if (DateTime.Now - CurrentTask.TimeCreated > CurrentTask.Timeout)
 				{
-					CurrentTask.ExitTask();
+					CurrentTask.ExitTask(session);
 				}
 				else if(CurrentTask.ProcessMessage(message, session, out response))
 				{
@@ -70,7 +70,8 @@ namespace XR.Dodo
 			}
 			else if (Tasks.TryGetValue(message.ContentUpper.FirstOrDefault(), out var newWorkflowType))
 			{
-				var newWorkflow = Activator.CreateInstance(newWorkflowType, this) as WorkflowTask;
+				var newWorkflow = Activator.CreateInstance(newWorkflowType) as WorkflowTask;
+                newWorkflow.TimeCreated = DateTime.Now;
 				if(newWorkflow != null)
 				{
 					CurrentTask = newWorkflow;

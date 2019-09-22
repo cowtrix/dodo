@@ -11,10 +11,6 @@ namespace XR.Dodo
 		public static string CommandKey { get { return "VERIFY"; } }
 		public static string HelpString { get { return $"{CommandKey} - verify your phone number with us."; } }
 
-		public VerificationTask(Workflow workflow) : base(workflow)
-		{
-		}
-
 		private string GetVerificationNumber()
 		{
 			return DodoServer.SMSGateway.GetPhone(Phone.ESMSMode.Verification).Number;
@@ -45,12 +41,12 @@ namespace XR.Dodo
 				response = new ServerMessage("Please take a moment to verify your phone number. " +
 					$"You can do this by texting {session.Verification.Code} to {GetVerificationNumber()}." +
 					$"This code will expire in {Timeout.TotalMinutes} minutes.");
-				ExitTask();
+				ExitTask(session);
 				return true;
 			}
 			response = new ServerMessage($"I'm still waiting for your verification code. SMS {session.Verification.Code} to {GetVerificationNumber()}." +
 					$"This code will expire in {Timeout.TotalMinutes} minutes.");
-			ExitTask();
+			ExitTask(session);
 			return true;
 		}
 	}

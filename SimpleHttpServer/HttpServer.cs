@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2016 by David Jeske, Barend Erasmus and donated to the public domain
 
+using Common;
 using log4net;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
@@ -63,7 +64,14 @@ namespace SimpleHttpServer
 				TcpClient s = this.Listener.AcceptTcpClient();
 				Thread thread = new Thread(() =>
 				{
-					this.Processor.HandleClient(s);
+                    try
+                    {
+                        this.Processor.HandleClient(s);
+                    }
+					catch(Exception e)
+                    {
+                        Logger.Exception(e);
+                    }
 				});
 				thread.Start();
 				Thread.Sleep(1);

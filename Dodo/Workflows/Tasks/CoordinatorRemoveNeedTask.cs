@@ -12,10 +12,6 @@ namespace XR.Dodo
 		public static string CommandKey { get { return "DELETENEED"; } }
 		public static string HelpString { get { return $"{CommandKey} - delete a Volunteer Request that you or someone from your working group has made."; } }
 
-		public CoordinatorRemoveNeedTask(Workflow workflow) : base(workflow)
-		{
-		}
-
 		List<CoordinatorNeedsManager.Need> GetNeeds(User user)
 		{
 			var needs = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds();
@@ -43,7 +39,7 @@ namespace XR.Dodo
 				string cmd = (string)toUpper[i];
 				if (cmd == "CANCEL")
 				{
-					ExitTask();
+					ExitTask(session);
 					response = new ServerMessage("Okay, I've canceled this request.");
 					return true;
 				}
@@ -55,13 +51,13 @@ namespace XR.Dodo
 					if (int.TryParse(cmd, out var pick) && pick >= 0 && pick < needs.Count)
 					{
 						Need = needs[pick];
-						response = Finalize();
+						response = Finalize(session);
 						return true;
 					}
 					if(needs.Count == 1)
 					{
 						Need = needs.First();
-						response = Finalize();
+						response = Finalize(session);
 						return true;
 					}
 					response = GetNeedsMenu(needs);
@@ -73,9 +69,9 @@ namespace XR.Dodo
 			return false;
 		}
 
-		private ServerMessage Finalize()
+		private ServerMessage Finalize(UserSession session)
 		{
-			ExitTask();
+			ExitTask(session);
 			if (DodoServer.CoordinatorNeedsManager.RemoveNeed(Need))
 				return new ServerMessage("Great, I've removed that Volunteer Request from the system.");
 			else

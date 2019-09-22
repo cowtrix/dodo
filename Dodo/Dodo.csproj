@@ -150,6 +150,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{ac96d6e5-4ba4-457c-a83e-6966b5de982a}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DodoCmd\DodoCmd.csproj">
       <Project>{00a2a932-ebab-44e2-930f-5d659476a46d}</Project>
       <Name>DodoCmd</Name>

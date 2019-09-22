@@ -68,7 +68,7 @@ namespace DodoTest
 				user.CoordinatorRoles.Add(new Role(wg, "Test role", 0));
 			}
 			var session = DodoServer.SessionManager.GetOrCreateSession(user);
-			session.Workflow.CurrentTask.ExitTask();	// Just to skip intro
+			session.Workflow.CurrentTask.ExitTask(session);	// Just to skip intro
 			return user;
 		}
 	}

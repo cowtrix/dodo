@@ -6,10 +6,6 @@ namespace XR.Dodo
 {
 	public class IntroductionTask : WorkflowTask
 	{
-		public IntroductionTask(Workflow workflow) : base(workflow)
-		{
-		}
-
 		const string VolunteerAgreement = "https://actionnetwork.org/forms/xr-data-protection-agreement-2";
 
 		public override TimeSpan Timeout { get { return TimeSpan.MaxValue; } }
@@ -58,7 +54,7 @@ namespace XR.Dodo
 			{
 				response = new ServerMessage($"No problem. If you're ever confused, just reply HELP and I'll try to give you some guidance about what you can ask me to do. " +
 					"Why don't you try that now?");
-				ExitTask();
+				ExitTask(session);
 				return true;
 			}
 
@@ -181,10 +177,10 @@ namespace XR.Dodo
 				response = new ServerMessage($"Brilliant, thanks {user.Name}. " +
 					"If you're ever confused, just reply HELP and I'll try to give you some guidance about what you can ask me to do. " +
 					"Why don't you try that now?");
-				ExitTask();
+				ExitTask(session);
 				return true;
 			}
-			ExitTask();
+			ExitTask(session);
 			response = default;
 			return false;
 			/*

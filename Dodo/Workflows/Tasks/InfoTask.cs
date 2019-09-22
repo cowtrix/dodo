@@ -28,7 +28,7 @@ namespace XR.Dodo
 		[JsonIgnore]
 		private Dictionary<string, InfoTaskDefinition> m_commands;
 
-		public InfoTask(Workflow workflow) : base(workflow)
+		public InfoTask()
 		{
 			m_commands = new Dictionary<string, InfoTaskDefinition>()
 			{

@@ -8,21 +8,13 @@ namespace XR.Dodo
 		public DateTime TimeCreated;
 
 		[JsonIgnore]
-		protected readonly Workflow m_workflow;
-		[JsonIgnore]
 		public virtual TimeSpan Timeout { get { return TimeSpan.FromMinutes(5); } }
-
-		public WorkflowTask(Workflow workflow)
-		{
-			m_workflow = workflow;
-			TimeCreated = DateTime.Now;
-		}
 
 		public abstract bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response);
 
-		public virtual ServerMessage ExitTask()
+		public virtual ServerMessage ExitTask(UserSession session)
 		{
-			m_workflow.CurrentTask = null;
+			session.Workflow.CurrentTask = null;
 			return new ServerMessage("Okay, I've canceled that.");
 		}
 

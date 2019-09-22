@@ -13,10 +13,6 @@ namespace XR.Dodo
 		public static string CommandKey { get { return "NEED"; } }
 		public static string HelpString { get { return $"{CommandKey} - create a Volunteer Request, which means you'll be sent the contact details of volunteers eager to help out."; } }
 
-		public CoordinatorNeedsTask(Workflow workflow) : base(workflow)
-		{
-		}
-
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
 		{
 			for (int i = 0; i < message.ContentUpper.Length; i++)
@@ -26,7 +22,7 @@ namespace XR.Dodo
 				var approvedSites = ApprovedSites(user);
 				if(approvedSites.Count == 0)
 				{
-					ExitTask();
+					ExitTask(session);
 					response = new ServerMessage("Sorry, it doesn't look like you're registered as a coordinator at any sites.");
 					user.Karma--;
 					return true;
@@ -214,7 +210,7 @@ namespace XR.Dodo
 				}
 
 				DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, Need);
-				ExitTask();
+				ExitTask(session);
 				// "NEED 0 AD 7/10 08:00 3"
 				response = new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
 					$" In future, you could make this request in one go by saying NEED " +
