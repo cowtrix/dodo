@@ -60,6 +60,11 @@ namespace XR.Dodo
 			{
 				DodoServer.SaveConfig();
 			}));
+			AddCommand("shutdown", (async x =>
+			{
+				DodoServer.Backup();
+				Environment.Exit(0);
+			}));
 
 			var inputThread = new Task(() =>
 			{

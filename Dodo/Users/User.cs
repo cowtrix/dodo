@@ -50,8 +50,7 @@ namespace XR.Dodo
 					{
 						return EUserAccessLevel.RSO;
 					}
-					if(CoordinatorRoles.Any(x => x.WorkingGroup.ParentGroup == EParentGroup.MovementSupport &&
-						x.WorkingGroup.Name.ToUpperInvariant().Contains("ROTA")))
+					if(IsRotaCoordinator)
 					{
 						return EUserAccessLevel.RotaCoordinator;
 					}
@@ -59,6 +58,14 @@ namespace XR.Dodo
 				}
 				return EUserAccessLevel.Volunteer;
 			}
+		}
+
+		[JsonIgnore]
+		public bool IsRotaCoordinator
+		{
+			get {
+				return CoordinatorRoles.Any(x => //x.WorkingGroup.ParentGroup == EParentGroup.MovementSupport &&
+					  x.WorkingGroup.Name.ToUpperInvariant().Contains("ROTA")); }
 		}
 
 		public User()

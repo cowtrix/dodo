@@ -48,7 +48,7 @@ namespace XR.Dodo
 					continue;
 				}
 				var rotaCoordsWithEmails = DodoServer.SessionManager.GetUsers()
-					.Where(user => user.AccessLevel == EUserAccessLevel.RotaCoordinator
+					.Where(user => user.IsRotaCoordinator
 					&& user.CoordinatorRoles.Any(x => x.SiteCode == site.Key)
 					&& ValidationExtensions.EmailIsValid(user.Email)).ToList();
 				if (rotaCoordsWithEmails.Count() == 0)

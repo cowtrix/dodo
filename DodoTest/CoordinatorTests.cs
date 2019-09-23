@@ -21,7 +21,8 @@ public class CoordinatorTests : TestBase
 			msg = DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser);
 			msg = DodoServer.TelegramGateway.FakeMessage("tests", user.TelegramUser);
 		}
-		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(user.CoordinatorRoles.First().WorkingGroup).Count()
+		var role = user.CoordinatorRoles.First();
+		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(role.SiteCode, role.WorkingGroup).Count()
 			== CoordinatorNeedsManager.MaxNeedCount);
 	}
 
