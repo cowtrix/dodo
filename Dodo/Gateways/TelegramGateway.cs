@@ -81,7 +81,7 @@ namespace XR.Dodo
 
 		public void SendMessage(ServerMessage message, UserSession session)
 		{
-			Logger.Debug($"Telegram > {session.GetUser()}: {message.Content.Substring(0, Math.Min(message.Content.Length, 32))}{(message.Content.Length > 32 ? "..." : "")}");
+			Logger.Debug($"Telegram >> {session.GetUser()}: {message.Content.Substring(0, Math.Min(message.Content.Length, 32))}{(message.Content.Length > 32 ? "..." : "")}");
 			m_outbox.Enqueue(new OutgoingMessage()
 			{
 				Message = message,
@@ -125,7 +125,7 @@ namespace XR.Dodo
 			{
 				var user = DodoServer.SessionManager.GetOrCreateUserFromTelegramNumber(userID);
 				session = DodoServer.SessionManager.GetOrCreateSession(user);
-				Logger.Debug($"Telegram < {session.GetUser()}: {message.Substring(0, Math.Min(message.Length, 32))}{(message.Length > 32 ? "..." : "")}");
+				Logger.Debug($"{session.GetUser()} >> Telegram: {message.Substring(0, Math.Min(message.Length, 32))}{(message.Length > 32 ? "..." : "")}");
 				var customMessage = new UserMessage(user, message, this, userID.ToString());
 				return session.ProcessMessage(customMessage, session);
 			}

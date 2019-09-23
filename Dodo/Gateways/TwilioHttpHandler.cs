@@ -67,8 +67,9 @@ namespace XR.Dodo
 					DodoServer.SessionManager.TryVerify(fromNumber, body);
 					return Success();
 				}
-
+				
 				var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(fromNumber);
+				Logger.Debug($"{user} >> Twilio: {body.Substring(0, Math.Min(body.Length, 32))}{(body.Length > 32 ? "..." : "")}");
 				var message = new UserMessage(user, body, m_server, fromNumber);
 				var session = DodoServer.SessionManager.GetOrCreateSession(user);
 				if (session == null)
@@ -76,6 +77,7 @@ namespace XR.Dodo
 					return Failure("ERROR 0x34492"); // Number wasn't valid
 				}
 				var response = session.ProcessMessage(message, session);
+				Logger.Debug($"Twilio >> {user}: {response.Content.Substring(0, Math.Min(response.Content.Length, 32))}{(response.Content.Length > 32 ? "..." : "")}");
 				return Reply(response, session);
 			}
 			catch (Exception e)
