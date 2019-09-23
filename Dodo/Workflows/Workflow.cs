@@ -45,6 +45,7 @@ namespace XR.Dodo
 			{
 				// We have a task underway, so we process that
 				if(CurrentTask.CanCancel() && message.ContentUpper.FirstOrDefault() == "CANCEL")
+
 				{
 					// Cancel the request
 					return CurrentTask.ExitTask(session);

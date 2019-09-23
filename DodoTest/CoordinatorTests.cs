@@ -19,6 +19,7 @@ public class CoordinatorTests : TestBase
 			var msg = DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
 			msg = DodoServer.TelegramGateway.FakeMessage("7/10 08:00", user.TelegramUser);
 			msg = DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser);
+			msg = DodoServer.TelegramGateway.FakeMessage("tests", user.TelegramUser);
 		}
 		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(user.CoordinatorRoles.First().WorkingGroup).Count()
 			== CoordinatorNeedsManager.MaxNeedCount);
@@ -32,12 +33,14 @@ public class CoordinatorTests : TestBase
 		var msg = DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
 		msg = DodoServer.TelegramGateway.FakeMessage("7/10 08:00", user.TelegramUser);
 		msg = DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser);
+		msg = DodoServer.TelegramGateway.FakeMessage("TEST", user.TelegramUser);
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
 		Assert.IsTrue(need.WorkingGroup.Name == user.CoordinatorRoles.Single().WorkingGroup.Name);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 7, 8, 0, 0));
 		Assert.IsTrue(need.SiteCode == user.CoordinatorRoles.Single().SiteCode);
 		Assert.IsTrue(need.Amount == 3);
+		Assert.IsTrue(need.Description == "TEST");
 	}
 
 	[TestMethod]
@@ -46,12 +49,14 @@ public class CoordinatorTests : TestBase
 		var user = GetTestUser(EUserAccessLevel.Coordinator);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
 		var msg = DodoServer.TelegramGateway.FakeMessage("NEED 7/10 08:00 3", user.TelegramUser);
+		msg = DodoServer.TelegramGateway.FakeMessage("test", user.TelegramUser);
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
 		Assert.IsTrue(need.WorkingGroup.Name == user.CoordinatorRoles.Single().WorkingGroup.Name);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 7, 8, 0, 0));
 		Assert.IsTrue(need.SiteCode == user.CoordinatorRoles.Single().SiteCode);
 		Assert.IsTrue(need.Amount == 3);
+		Assert.AreEqual(need.Description, "test");
 	}
 
 	[TestMethod]
@@ -60,27 +65,12 @@ public class CoordinatorTests : TestBase
 		var user = GetTestUser(EUserAccessLevel.Coordinator);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
 		var role = user.CoordinatorRoles.First();
-		var need1 = new CoordinatorNeedsManager.Need()
-		{
-			WorkingGroup = role.WorkingGroup,
-			SiteCode = role.SiteCode,
-			TimeNeeded = DateTime.Now + TimeSpan.FromDays(1),
-			TimeOfRequest = DateTime.Now,
-			Amount = 4,
-		};
-		var need2 = new CoordinatorNeedsManager.Need()
-		{
-			WorkingGroup = role.WorkingGroup,
-			SiteCode = role.SiteCode,
-			TimeNeeded = DateTime.Now + TimeSpan.FromDays(2),
-			TimeOfRequest = DateTime.Now,
-			Amount = 4,
-		};
-		DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, need1);
-		DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, need2);
+		DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, role.WorkingGroup, role.SiteCode, 4, DateTime.Now, "test 1");
+		DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, role.WorkingGroup, role.SiteCode, 6, DateTime.Now, "test 2");
 
 		var msg = DodoServer.TelegramGateway.FakeMessage("DELETENEED", user.TelegramUser);
-		msg = DodoServer.TelegramGateway.FakeMessage("0", user.TelegramUser);
+		msg = DodoServer.TelegramGateway.FakeMessage(DodoServer.CoordinatorNeedsManager.CurrentNeeds.Keys.Random(),
+			user.TelegramUser);
 		Assert.IsFalse(msg.Content.Contains("Sorry"));
 		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Count == 1);
 	}
@@ -91,15 +81,7 @@ public class CoordinatorTests : TestBase
 		var user = GetTestUser(EUserAccessLevel.Coordinator);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
 		var role = user.CoordinatorRoles.First();
-		var need1 = new CoordinatorNeedsManager.Need()
-		{
-			WorkingGroup = role.WorkingGroup,
-			SiteCode = role.SiteCode,
-			TimeNeeded = DateTime.Now + TimeSpan.FromDays(1),
-			TimeOfRequest = DateTime.Now,
-			Amount = 4,
-		};
-		DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, need1);
+		DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, role.WorkingGroup, role.SiteCode, 6, DateTime.Now + TimeSpan.FromDays(1), "test 2");
 		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Count == 1);
 		var msg = DodoServer.TelegramGateway.FakeMessage("DELETENEED", user.TelegramUser);
 		Assert.IsFalse(msg.Content.Contains("Sorry"));

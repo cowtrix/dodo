@@ -138,7 +138,7 @@ namespace XR.Dodo
 		{
 			if(message.ContentUpper.FirstOrDefault() == "ARRIVAL")
 			{
-				if(user.StartDate != default)
+				if(user.StartDate < new DateTime(2019))
 				{
 					response = new ServerMessage($"I've currently got your arrival date as {user.StartDate.ToShortDateString()}. " +
 						"Tell me what date will you be arriving to the rebellion. " +
@@ -189,7 +189,7 @@ namespace XR.Dodo
 		{
 			if (message.ContentUpper.FirstOrDefault() == "DEPARTURE")
 			{
-				if (user.StartDate != default)
+				if (user.StartDate < new DateTime(2019))
 				{
 					response = new ServerMessage($"I've currently got your departure date as {user.EndDate.ToShortDateString()}. " +
 						"Tell me what date will you be leaving the rebellion. " +

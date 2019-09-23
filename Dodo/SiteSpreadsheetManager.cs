@@ -312,6 +312,10 @@ namespace XR.Dodo
 
 		public WorkingGroup GenerateWorkingGroup(string name, EParentGroup parentGroup, string mandate)
 		{
+			if(name.Contains("Site training"))
+			{
+				Logger.Debug("");
+			}
 			if(Data.WorkingGroups.Any(x => x.Value.Name == name && x.Value.ParentGroup == parentGroup))
 			{
 				return Data.WorkingGroups.First(x => x.Value.Name == name && x.Value.ParentGroup == parentGroup).Value;
@@ -336,8 +340,12 @@ namespace XR.Dodo
 			int tries = 1;
 			while (shortcode.Length < 2 || Data.WorkingGroups.ContainsKey(shortcode))
 			{
-				shortcode = (name.Substring(0, 1) + name.Substring(tries, 1)).ToString().ToUpperInvariant();
+				var nextChar = name.Substring(tries, 1);
 				tries++;
+				if(!char.IsWhiteSpace(nextChar[0]))
+				{
+					shortcode = (name.Substring(0, 1) + nextChar).ToString().ToUpperInvariant();
+				}
 			}
 			return shortcode;
 		}

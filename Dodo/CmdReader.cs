@@ -41,7 +41,7 @@ namespace XR.Dodo
 				}));
 			AddCommand("s", (async x =>
 			{
-				var response = DodoServer.SMSGateway.FakeMessage(x, "07385641321");
+				var response = DodoServer.SMSGateway.FakeMessage(x, "447856465191");
 				Output(response.Content);
 			}));
 			AddCommand("erroremails", (async x =>

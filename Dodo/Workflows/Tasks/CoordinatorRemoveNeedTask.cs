@@ -22,11 +22,11 @@ namespace XR.Dodo
 			}
 			if(user.AccessLevel == EUserAccessLevel.RotaCoordinator)
 			{
-				return needs.Where(x => user.CoordinatorRoles.Any(y => y.SiteCode == x.SiteCode)).ToList();
+				return needs.Where(x => user.CoordinatorRoles.Any(y => y.SiteCode == x.SiteCode)).OrderBy(x => x.TimeOfRequest).ToList();
 			}
 			if (user.AccessLevel == EUserAccessLevel.Coordinator)
 			{
-				return needs.Where(x => user.CoordinatorRoles.Any(y => y.WorkingGroup.ShortCode == x.WorkingGroup.ShortCode)).ToList();
+				return needs.Where(x => user.CoordinatorRoles.Any(y => y.WorkingGroup.ShortCode == x.WorkingGroup.ShortCode)).OrderBy(x => x.TimeOfRequest).ToList();
 			}
 			throw new Exception("Bad user: " + user.UUID);
 		}
@@ -38,30 +38,41 @@ namespace XR.Dodo
 			for (int i = 0; i < toUpper.Length; i++)
 			{
 				string cmd = (string)toUpper[i];
-				if (cmd == "CANCEL")
-				{
-					ExitTask(session);
-					response = new ServerMessage("Okay, I've canceled this request.");
-					return true;
-				}
-
 				var user = session.GetUser();
 				if(Need == null)
 				{
-					var needs = GetNeeds(user);
-					if (int.TryParse(cmd, out var pick) && pick >= 0 && pick < needs.Count)
+					var authorisedNeeds = GetNeeds(user);
+					if (DodoServer.CoordinatorNeedsManager.CurrentNeeds.TryGetValue(cmd, out var pick))
 					{
-						Need = needs[pick];
-						response = Finalize(session);
+						if(authorisedNeeds.Contains(pick))
+						{
+							Need = pick;
+							response = Finalize(session);
+						}
+						else
+						{
+							response = new ServerMessage("Sorry, it doesn't look like you're allowed to do that.");
+							ExitTask(session);
+						}
 						return true;
 					}
-					if(needs.Count == 1)
+					if (authorisedNeeds.Count == 0)
 					{
-						Need = needs.First();
-						response = Finalize(session);
+						response = new ServerMessage($"It doesn't look like your Working Group{(user.CoordinatorRoles.Count > 1 ? "s" : "")}" + 
+							" have any open Volunteer Requests. You can make a Volunteer Request with the NEED command.");
+						ExitTask(session);
 						return true;
+ 					}
+
+					if(cmd == "PREV")
+					{
+						m_page--;
 					}
-					response = GetNeedsMenu(needs);
+					if(cmd == "NEXT")
+					{
+						m_page++;
+					}
+					response = GetNeedsMenu(authorisedNeeds);
 					return true;
 				}
 
@@ -79,20 +90,36 @@ namespace XR.Dodo
 				return new ServerMessage("Sorry, that didn't work for some reason. Please try again.");
 		}
 
+		int m_page = 1;
+		const int MaxNeedsPerPage = 5;
 		private ServerMessage GetNeedsMenu(List<CoordinatorNeedsManager.Need> needs)
 		{
-			var sb = new StringBuilder("Please select a Volunteer Request to cancel:\n");
+			var totalPages = needs.Count / MaxNeedsPerPage + 1;
+			var sb = new StringBuilder("Please tell me the code for the Volunteer Request to cancel:\n");
 			var needIter = needs.OrderBy(x => x.SiteCode).ToList();
 			var siteCode = needIter.First().SiteCode;
-			for (int i = 0; i < needIter.Count; i++)
+			var startIndex = ((m_page - 1) % totalPages) * MaxNeedsPerPage;
+			for (int i = startIndex; i < Math.Min(needIter.Count, startIndex + MaxNeedsPerPage); i++)
 			{
 				CoordinatorNeedsManager.Need need = needIter[i];
-				if (siteCode != need.SiteCode)
+				if (siteCode != need.SiteCode || i == startIndex)
 				{
 					siteCode = need.SiteCode;
 					sb.AppendLine($"Site {siteCode}:");
 				}
-				sb.AppendLine($"{i} - {need.WorkingGroup.Name} - {need.Amount} for {need.TimeNeeded.ToString("dd/MM HH:mm")}");
+				sb.AppendLine($"\t{need.Key} - {need.WorkingGroup.Name} - {need.Amount} for {need.TimeNeeded.ToString("dd/MM HH:mm")}");
+			}
+			if(totalPages > 1)
+			{
+				if(m_page > 1)
+				{
+					sb.Append("◀reply PREV - ");
+				}
+				sb.Append($"pg{m_page}/{totalPages}");
+				if(m_page < totalPages)
+				{
+					sb.Append(" - reply NEXT▶");
+				}
 			}
 			return new ServerMessage(sb.ToString());
 		}

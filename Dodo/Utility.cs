@@ -65,7 +65,7 @@ namespace XR.Dodo
 
 		public static string ToDateTimeCode(DateTime timeNeeded)
 		{
-			return $"{timeNeeded.Day}/{timeNeeded.Month} {timeNeeded.Hour}:{timeNeeded.Minute}";
+			return $"{timeNeeded.Day}/{timeNeeded.Month} {timeNeeded.Hour}:{timeNeeded.Minute.ToString("00")}";
 		}
 	}
 }

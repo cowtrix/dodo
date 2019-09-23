@@ -30,6 +30,7 @@ namespace XR.Dodo
 			{
 				session.Verification = null;
 				response = new ServerMessage("It looks like you're already verified for " + session.GetUser().PhoneNumber);
+				ExitTask(session);
 				return true;
 			}
 			if (session.Verification == null || (DateTime.Now - session.Verification.TimeSent) > Timeout)

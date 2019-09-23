@@ -18,17 +18,26 @@ namespace XR.Dodo
 			public int Amount;
 			public DateTime TimeNeeded;
 			public DateTime TimeOfRequest;
+			public string Salt;
+			public string Description;
 
-			public Need()
+			[JsonIgnore]
+			public string Key { get { return $"{WorkingGroup.ShortCode}{SiteCode}{Salt}"; } }
+
+			public Need() { }
+
+			public Need(WorkingGroup group, int sitecode, int amount, DateTime timeNeeded, string desc)
 			{
-				SiteCode = -1;
-				WorkingGroup = default(WorkingGroup);
-				Amount = -1;
-				TimeOfRequest = default(DateTime);
+				SiteCode = sitecode;
+				WorkingGroup = group;
+				Amount = amount;
+				TimeOfRequest = DateTime.Now;
+				TimeNeeded = timeNeeded;
+				Description = desc;
 			}
 		}
 
-		public List<Need> CurrentNeeds;
+		public Dictionary<string,Need> CurrentNeeds;
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
 		public const int MaxNeedCount = 5;
@@ -57,48 +66,55 @@ namespace XR.Dodo
 			CurrentNeeds.Clear();
 		}
 
-		public IEnumerable<Need> GetNeedsForWorkingGroup(WorkingGroup group)
+		public IEnumerable<Need> GetNeedsForWorkingGroup(int sitecode, WorkingGroup group)
 		{
-			return CurrentNeeds.Where(x => x.WorkingGroup.Equals(group));
+			return CurrentNeeds.Values.Where(x => x.WorkingGroup.Equals(group) && x.SiteCode == sitecode);
 		}
 
 		public List<Need> GetCurrentNeeds()
 		{
-			return CurrentNeeds.ToList();
+			return CurrentNeeds.Values.ToList();
 		}
 
-		public bool AddNeedRequest(User user, Need need)
+		public bool AddNeedRequest(User user, WorkingGroup workingGroup, int sitecode, int amount, DateTime timeNeeded, string description)
 		{
 			if(user.AccessLevel <= EUserAccessLevel.Volunteer)
 			{
 				return false;
 			}
-			if (user.AccessLevel <= EUserAccessLevel.RotaCoordinator && !user.CoordinatorRoles.Any(x => x.SiteCode == need.SiteCode)) // RSO
+			if (user.AccessLevel <= EUserAccessLevel.RotaCoordinator && !user.CoordinatorRoles.Any(x => x.SiteCode == sitecode)) // RSO
 			{
-				if (user.AccessLevel <= EUserAccessLevel.Coordinator && !user.CoordinatorRoles.Any(x => x.WorkingGroup.ShortCode == need.WorkingGroup.ShortCode)) // RSO
+				if (user.AccessLevel <= EUserAccessLevel.Coordinator && !user.CoordinatorRoles.Any(x => x.WorkingGroup.ShortCode == workingGroup.ShortCode)) // RSO
 				{
 					return false;
 				}
 				return false;
 			}
-			var currentNeeds = GetNeedsForWorkingGroup(need.WorkingGroup).Count();
+			var currentNeeds = GetNeedsForWorkingGroup(sitecode, workingGroup).Count();
 			if(currentNeeds > MaxNeedCount)
 			{
 				return false;
 			}
-			if(need.Amount == 0)
+			if(amount == 0)
 			{
-				return RemoveNeed(need);
+				return false;
 			}
-			need.TimeOfRequest = DateTime.Now;
-			CurrentNeeds.Add(need);
+
+			var newNeed = new Need(workingGroup, sitecode, amount, timeNeeded, description);
+			do
+			{
+				newNeed.Salt = Utility.RandomString(2, new Random().Next().ToString());
+			}
+			while (CurrentNeeds.ContainsKey(newNeed.Key));
+			CurrentNeeds.Add(newNeed.Key, newNeed);
 			m_dirty = true;
 			return true;
 		}
 
 		public bool RemoveNeed(Need need)
 		{
-			return CurrentNeeds.Remove(need);
+			m_dirty = true;
+			return CurrentNeeds.Remove(need.Key);
 		}
 
 		void UpdateNeedsOnGSheet()
@@ -107,16 +123,17 @@ namespace XR.Dodo
 			var spreadsheet = new List<List<string>>();
 			spreadsheet.Add(new List<string>()
 			{
-				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Contact Code", "Time Needed", "Time Updated"
+				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Description", "Contact Code", "Time Needed", "Time Updated"
 			});
 			var sites = DodoServer.SiteManager.GetSites();
-			foreach (var need in CurrentNeeds)
+			foreach (var needKey in CurrentNeeds.OrderBy(x => x.Value.TimeOfRequest))
 			{
+				var need = needKey.Value;
 				var site = sites.First(x => x.SiteCode == need.SiteCode);
 				spreadsheet.Add(new List<string>()
 				{
 					site.SiteName, site.SiteCode.ToString(), need.WorkingGroup.ParentGroup.ToString(), need.WorkingGroup.Name,
-					(need.Amount == int.MaxValue  ? "Many" : need.Amount.ToString()), need.WorkingGroup.ShortCode + site.SiteCode.ToString(),
+					(need.Amount == int.MaxValue  ? "Many" : need.Amount.ToString()), need.Description, need.Key,
 					need.TimeNeeded.ToString(), need.TimeOfRequest.ToString()
 				});
 			}
@@ -143,10 +160,10 @@ namespace XR.Dodo
 			var backupPath = Path.Combine(backupFolder, "needs.json");
 			if (!File.Exists(backupPath))
 			{
-				CurrentNeeds = new List<Need>();
+				CurrentNeeds = new Dictionary<string, Need>();
 				return;
 			}
-			CurrentNeeds = JsonConvert.DeserializeObject<List<Need>>(File.ReadAllText(backupPath), new JsonSerializerSettings
+			CurrentNeeds = JsonConvert.DeserializeObject<Dictionary<string, Need>> (File.ReadAllText(backupPath), new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			});

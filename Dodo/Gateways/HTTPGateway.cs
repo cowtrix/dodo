@@ -155,6 +155,8 @@ namespace XR.Dodo
 
 		public ServerMessage FakeMessage(string msg, string phone)
 		{
+			DodoServer.SessionManager.TryVerify(phone, msg);
+			return default;
 			var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(phone);
 			var message = new UserMessage(user, msg, this, phone);
 			var session = DodoServer.SessionManager.GetOrCreateSession(user);

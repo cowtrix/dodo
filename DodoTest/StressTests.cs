@@ -10,7 +10,7 @@ using System.Collections.Generic;
 [TestClass]
 public class StressTests : TestBase
 {
-	[TestMethod]
+	/*[TestMethod]
 	public void TelegramStress()
 	{
 		int threadCount = 10;
@@ -31,5 +31,5 @@ public class StressTests : TestBase
 			task.Start();
 		}
 		Task.WaitAll(tasks.ToArray());
-	}
+	}*/
 }

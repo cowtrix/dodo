@@ -108,7 +108,10 @@ namespace XR.Dodo
 					Logger.Warning($"User {fromNumber} sent invalid code to validation number: {code}");
 					return;
 				}
-
+				if (!ValidationExtensions.ValidateNumber(ref fromNumber))
+				{
+					throw new Exception("Invalid number: " + fromNumber);
+				}
 				var userToVerify = verificationMatch.Value.GetUser();
 				var existingUserWithNumber = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
 				string toRemove = existingUserWithNumber?.UUID;
@@ -124,10 +127,7 @@ namespace XR.Dodo
 						userToVerify.CoordinatorRoles.Add(role);
 					}
 				}
-				if(!ValidationExtensions.ValidateNumber(ref fromNumber))
-				{
-					throw new Exception("Invalid number: " + fromNumber);
-				}
+				
 				userToVerify.PhoneNumber = fromNumber;
 				userToVerify.Karma += 10;
 				if (userToVerify.AccessLevel > EUserAccessLevel.Volunteer)

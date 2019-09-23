@@ -8,7 +8,11 @@ namespace XR.Dodo
 	[WorkflowTaskInfo(EUserAccessLevel.Coordinator)]
 	public class CoordinatorNeedsTask : WorkflowTask
 	{
-		public CoordinatorNeedsManager.Need Need = new CoordinatorNeedsManager.Need();
+		public WorkingGroup WorkingGroup;
+		public int Amount = -1;
+		public DateTime TimeNeeded;
+		public string Description;
+		public int SiteCode = -1;
 		public EParentGroup? ParentGroupFilter = null;
 
 		public static string CommandKey { get { return "NEED"; } }
@@ -30,13 +34,13 @@ namespace XR.Dodo
 				}
 				if (approvedSites.Count == 1)
 				{
-					Need.SiteCode = approvedSites[0].SiteCode;
+					SiteCode = approvedSites[0].SiteCode;
 				}
-				if (!DodoServer.SiteManager.IsValidSiteCode(Need.SiteCode))
+				if (!DodoServer.SiteManager.IsValidSiteCode(SiteCode))
 				{
 					if (int.TryParse(cmd, out var siteCode))
 					{
-						Need.SiteCode = siteCode;
+						SiteCode = siteCode;
 						if (i >= message.ContentUpper.Length - 1)
 						{
 							cmd = "XXXX";
@@ -58,15 +62,15 @@ namespace XR.Dodo
 				}
 
 				var workingGroups = ApprovedWorkingGroups(user);
-				if (!DodoServer.SiteManager.IsValidWorkingGroup(Need.WorkingGroup) && !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
+				if (!DodoServer.SiteManager.IsValidWorkingGroup(WorkingGroup) && !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
 				{
 					if(workingGroups.Count == 1 && user.AccessLevel != EUserAccessLevel.RotaCoordinator)
 					{
-						Need.WorkingGroup = workingGroups[0];
-						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(Need.WorkingGroup).Count();
+						WorkingGroup = workingGroups[0];
+						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
 						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
 						{
-							response = new ServerMessage($"Sorry, the working group {Need.WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+							response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
 								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
 							ExitTask(session);
 							return true;
@@ -124,15 +128,15 @@ namespace XR.Dodo
 					}
 				}
 
-				if (!DodoServer.SiteManager.IsValidWorkingGroup(Need.WorkingGroup))
+				if (!DodoServer.SiteManager.IsValidWorkingGroup(WorkingGroup))
 				{
 					if (workingGroups.Any(x => x.ShortCode == cmd))
 					{
-						Need.WorkingGroup = workingGroups.First(x => x.ShortCode == cmd);
-						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(Need.WorkingGroup).Count();
+						WorkingGroup = workingGroups.First(x => x.ShortCode == cmd);
+						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
 						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
 						{
-							response = new ServerMessage($"Sorry, the working group {Need.WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+							response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
 								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
 							ExitTask(session);
 							return true;
@@ -148,11 +152,11 @@ namespace XR.Dodo
 					{
 						if (workingGroups.Count == 1)
 						{
-							Need.WorkingGroup = workingGroups[0];
-							var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(Need.WorkingGroup).Count();
+							WorkingGroup = workingGroups[0];
+							var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
 							if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
 							{
-								response = new ServerMessage($"Sorry, the working group {Need.WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+								response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
 									$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
 								ExitTask(session);
 								return true;
@@ -166,12 +170,12 @@ namespace XR.Dodo
 					}
 				}
 
-				if (Need.TimeNeeded == default)
+				if (TimeNeeded == default)
 				{
-					var timeCommand = message.ContentUpper.Skip(i).Aggregate("", (f, s) => f + " " + s);
+					var timeCommand = message.ContentUpper.Skip(i).Aggregate("", (f, s) => f + " " + s).Trim();
 					if (timeCommand.StartsWith("NOW"))
 					{
-						Need.TimeNeeded = DateTime.Now;
+						TimeNeeded = DateTime.Now;
 						if (i >= message.ContentUpper.Length - 1)
 						{
 							response = new ServerMessage(GetNumberRequest());
@@ -186,7 +190,7 @@ namespace XR.Dodo
 							response = new ServerMessage($"Sorry, you can only request volunteers for the future.");
 							return true;
 						}
-						Need.TimeNeeded = date;
+						TimeNeeded = date;
 						if (i >= message.ContentUpper.Length - 2)
 						{
 							response = new ServerMessage("Now, tell me how many volunteers you need." +
@@ -208,38 +212,54 @@ namespace XR.Dodo
 					}
 				}
 
-				int count = 0;
-				if (cmd == "MANY")
+				if (Amount < 0)
 				{
-					Need.Amount = int.MaxValue;
-				}
-				else if (cmd == CommandKey)
-				{
-					response = new ServerMessage(GetNumberRequest());
-					return true;
-				}
-				else if (!int.TryParse(cmd, out count))
-				{
-					if (i >= message.ContentUpper.Length - 1)
+					int count = 0;
+					if (cmd == "MANY")
 					{
-						response = new ServerMessage("Sorry, I didn't understand that number." +
-							" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
-							" If you'd like to cancel, reply 'CANCEL'.");
+						Amount = int.MaxValue;
+					}
+					else if (cmd == CommandKey)
+					{
+						response = new ServerMessage(GetNumberRequest());
 						return true;
 					}
-					continue;
-				}
-				else
-				{
-					Need.Amount = count;
+					else if (!int.TryParse(cmd, out count) || count < 0 || count > 99)
+					{
+						if (i >= message.ContentUpper.Length - 1)
+						{
+							response = new ServerMessage("Sorry, I didn't understand that number." +
+								" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
+								" If you'd like to cancel, reply 'CANCEL'.");
+							return true;
+						}
+						continue;
+					}
+					else
+					{
+						Amount = count;
+					}
 				}
 
-				DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, Need);
+				if(Description == null)
+				{
+					response = new ServerMessage("Now, if you'd like, you can tell me in 160 characters or less what the role is. Or, to skip this step, reply SKIP");
+					Description = "";
+					return true;
+				}
+				if(Description == "" && message.ContentUpper.FirstOrDefault() != "SKIP")
+				{
+					Description = message.Content;
+				}
+
+				DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, WorkingGroup, SiteCode, Amount, TimeNeeded, Description);
 				ExitTask(session);
 				// "NEED 0 AD 7/10 08:00 3"
 				response = new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
 					$" In future, you could make this request in one go by saying NEED " +
-					$"{Need.SiteCode} {Need.WorkingGroup.ShortCode} {Utility.ToDateTimeCode(Need.TimeNeeded)} {(Need.Amount == int.MaxValue ? "MANY" : Need.Amount.ToString())}");
+					(user.AccessLevel >= EUserAccessLevel.RSO ? SiteCode + " " : "") +
+					(user.AccessLevel >= EUserAccessLevel.RotaCoordinator ? WorkingGroup.ShortCode + " " : "") + 
+					$"{ Utility.ToDateTimeCode(TimeNeeded)} {(Amount == int.MaxValue ? "MANY" : Amount.ToString())}");
 				return true;
 			}
 			response = default;

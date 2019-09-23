@@ -58,7 +58,7 @@ public class UserTests : TestBase
 	{
 		var user = GetTestUser(EUserAccessLevel.Volunteer);
 		var response = DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
-		Assert.IsTrue(response.Content.Contains("HELP"));
+		Assert.IsTrue(response.Content.Contains("Sorry"));
 	}
 
 	[TestMethod]
@@ -66,6 +66,6 @@ public class UserTests : TestBase
 	{
 		var user = GetTestUser(EUserAccessLevel.Volunteer);
 		var response = DodoServer.TelegramGateway.FakeMessage("WHOIS", user.TelegramUser);
-		Assert.IsTrue(response.Content.Contains("HELP"));
+		Assert.IsTrue(response.Content.Contains("Sorry"));
 	}
 }
