@@ -21,6 +21,7 @@ namespace XR.Dodo
 			public DateTime TimeOfRequest;
 			public string Salt;
 			public string Description;
+			public Dictionary<string, bool> PotentialVolunteers = new Dictionary<string, bool>();
 
 			[JsonIgnore]
 			public string Key { get { return $"{WorkingGroup.ShortCode}{SiteCode}{Salt}"; } }
@@ -38,7 +39,7 @@ namespace XR.Dodo
 			}
 		}
 
-		public Dictionary<string,Need> CurrentNeeds;
+		public Dictionary<string, Need> CurrentNeeds;
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
 		public const int MaxNeedCount = 5;
@@ -56,9 +57,46 @@ namespace XR.Dodo
 						UpdateNeedsOnGSheet();
 				}
 			});
-			if(!DodoServer.Dummy)
+			var matchMakerTask = new Task(async () =>
+			{
+				while(true)
+				{
+					try
+					{
+						await DoMatchmakingHunt();
+						Thread.Sleep(0);
+					}
+					catch(Exception e)
+					{
+						Logger.Exception(e, "Exception in matchmaker");
+					}
+				}
+			});
+			matchMakerTask.Start();
+			if (!DodoServer.Dummy)
 			{
 				updateTask.Start();
+			}
+		}
+
+		private async Task DoMatchmakingHunt()
+		{
+			if(!CurrentNeeds.Any())
+			{
+				return;
+			}
+			foreach(var needKey in CurrentNeeds)
+			{
+				var need = needKey.Value;
+				if(need.PotentialVolunteers.Count(x => x.Value) >= need.Amount)
+				{
+					// We've got confirmed volunteers
+					// TODO End the task?
+					continue;
+				}
+				var matchingUsers = DodoServer.SessionManager.GetUsers()
+					.Where(x => x.StartDate < need.TimeNeeded && x.EndDate > need.TimeNeeded)
+					.OrderBy(x => x.WorkingGroups.Contains(need.WorkingGroup));
 			}
 		}
 
@@ -145,6 +183,7 @@ namespace XR.Dodo
 			}
 			Logger.Debug($"Updated needs sheet");
 		}
+
 
 		public void SaveToFile(string backupFolder)
 		{

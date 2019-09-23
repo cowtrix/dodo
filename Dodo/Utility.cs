@@ -84,7 +84,7 @@ namespace XR.Dodo
 			}
 			catch (Exception e)
 			{
-				Logger.Exception(e, "Failed to parse time string: " + dt);
+				Logger.Exception(e, "Failed to parse time string: " + dt, nolog:true);
 			}
 			return false;
 		}

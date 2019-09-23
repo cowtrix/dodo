@@ -28,6 +28,7 @@ namespace XR.Dodo
 		public DateTime EndDate;
 
 		public HashSet<Role> CoordinatorRoles = new HashSet<Role>();
+		public HashSet<WorkingGroup> WorkingGroups = new HashSet<WorkingGroup>();
 
 		public override string ToString()
 		{
