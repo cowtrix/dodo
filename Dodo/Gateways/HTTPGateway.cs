@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Common;
+using Newtonsoft.Json;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using System;
@@ -117,6 +118,7 @@ namespace XR.Dodo
 					{
 						try
 						{
+							Logger.Debug("Received status check request");
 							return Status(request);
 						}
 						catch(Exception e)
