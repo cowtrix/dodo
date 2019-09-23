@@ -47,9 +47,9 @@ namespace XR.Dodo
 					if(i >= toUpper.Length - 1)
 					{
 						var sb = new StringBuilder("Please select the parent group:\n");
-						foreach(var parentGroup in Enum.GetValues(typeof(EParentGroup)))
+						foreach(var parentGroup in Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>())
 						{
-							sb.AppendLine($"{(int)parentGroup} - {parentGroup}");
+							sb.AppendLine($"{(int)parentGroup} - {parentGroup.GetName()}");
 						}
 						response = new ServerMessage(sb.ToString());
 						return true;
@@ -63,9 +63,9 @@ namespace XR.Dodo
 						if (!int.TryParse(cmd, out var parentGroup) || parentGroup < 0 || parentGroup > (int)EParentGroup.RSO)
 						{
 							var stb = new StringBuilder("Sorry, that didn't seem like a valid choice. Please select the parent group:\n");
-							foreach (var pg in Enum.GetValues(typeof(EParentGroup)))
+							foreach (var pg in Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>())
 							{
-								stb.AppendLine($"{(int)pg} - {pg}");
+								stb.AppendLine($"{(int)pg} - {pg.GetName()}");
 							}
 							stb.AppendLine("Or, if you want to cancel, reply CANCEL");
 							response = new ServerMessage(stb.ToString());

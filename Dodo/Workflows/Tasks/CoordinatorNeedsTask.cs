@@ -89,7 +89,7 @@ namespace XR.Dodo
 									ParentGroupFilter = list.ElementAt(number);
 									if (i >= message.ContentUpper.Length - 1)
 									{
-										response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
+										response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. "
 											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
 										return true;
 									}
@@ -258,7 +258,7 @@ namespace XR.Dodo
 				response = new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
 					$" In future, you could make this request in one go by saying NEED " +
 					(user.AccessLevel >= EUserAccessLevel.RSO ? SiteCode + " " : "") +
-					(user.AccessLevel >= EUserAccessLevel.RotaCoordinator ? WorkingGroup.ShortCode + " " : "") + 
+					(user.AccessLevel >= EUserAccessLevel.RotaCoordinator ? WorkingGroup.ShortCode + " " : "") +
 					$"{ Utility.ToDateTimeCode(TimeNeeded)} {(Amount == int.MaxValue ? "MANY" : Amount.ToString())}");
 				return true;
 			}

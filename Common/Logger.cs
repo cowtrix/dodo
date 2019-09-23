@@ -19,17 +19,20 @@ namespace Common
 		public static string LogPath = "dodoLog.log";
 		private static object m_fileLock = new object();
 
-		public static void Exception(Exception exception, string message = null)
+		public static void Exception(Exception exception, string message = null, bool nolog = false)
 		{
 			if(!string.IsNullOrEmpty(message))
 			{
 				Error(message);
 			}
-			ExceptionLog.Add(new ExceptionEntry()
+			if(!nolog)
 			{
-				Message = exception.Message,
-				TimeStamp = DateTime.Now,
-			});
+				ExceptionLog.Add(new ExceptionEntry()
+				{
+					Message = exception.Message,
+					TimeStamp = DateTime.Now,
+				});
+			}
 			Error(exception.Message);
 			Error(exception.StackTrace);
 		}

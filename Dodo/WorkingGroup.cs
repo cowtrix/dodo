@@ -5,11 +5,17 @@ namespace XR.Dodo
 {
 	public enum EParentGroup
 	{
+		[Name("Action Support")]
 		ActionSupport,
+		[Name("Arrestee Support")]
 		ArresteeSupport,
+		[Name("World Building")]
 		WorldBuildingProd,
+		[Name("Media And Messaging")]
 		MediaAndMessaging,
+		[Name("Movement Support")]
 		MovementSupport,
+		[Name("Rebel Support Office")]
 		RSO,
 	}
 

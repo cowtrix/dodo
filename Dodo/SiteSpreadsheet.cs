@@ -80,7 +80,6 @@ namespace XR.Dodo
 						continue;
 					}
 					var parentGroup = EParentGroup.ActionSupport;
-
 					for (var column = 1; column < row.Count; ++column)
 					{
 						try
@@ -169,7 +168,7 @@ namespace XR.Dodo
 								});
 							}
 							catch { }
-							Logger.Exception(e);
+							Logger.Exception(e, nolog:true);
 						}
 					}
 				}
