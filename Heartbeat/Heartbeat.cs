@@ -59,56 +59,67 @@ namespace XR.Heartbeat
 
 				while(true)
 				{
-					try
-					{
-						Thread.Sleep(TimeSpan.FromMinutes(m_configuration.PingInterval));
-						Ping ping = new Ping();
-						PingReply pingresult = ping.Send(m_configuration.PingAddress);
-						if (pingresult.Status.ToString() != "Success")
-						{
-							OnError($"Ping to {m_configuration.PingAddress} failed with error code: {pingresult.Status.ToString()}");
-							continue;
-						}
-						var httpReq = await GET(m_configuration.GetAddress);
-						if(!httpReq.IsSuccessStatusCode)
-						{
-							OnError($"GET request to {m_configuration.PingAddress} failed with error code: {httpReq.StatusCode} {httpReq.ReasonPhrase}");
-							continue;
-						}
-						var content = await httpReq.Content.ReadAsStringAsync();
-						var exceptions = JsonConvert.DeserializeObject<List<Logger.ExceptionEntry>>(content);
-						var newExceptions = exceptions.Where(x => x.TimeStamp >= m_lastCheck);
-						if(newExceptions.Any())
-						{
-							OnError($"Exceptions received from {m_configuration.PingAddress}");
-							foreach(var exc in newExceptions)
-							{
-								OnError($"{exc.TimeStamp}: {exc.Message}");
-							}
-						}
-						m_lastCheck = DateTime.Now;
-					}
-					catch (Exception e)
-					{
-						Console.WriteLine("Heartbeat had an exception: " + e.Message);
-					}
+					await DoCheck(0);
+					Thread.Sleep(TimeSpan.FromMinutes(m_configuration.PingInterval));
 				}
 			});
 			workerThread.Start();
 			while (true) ;
 		}
 
-		static void OnError(string errorMessage)
+		static async Task DoCheck(int checker)
+		{
+			try
+			{
+
+				Ping ping = new Ping();
+				PingReply pingresult = ping.Send(m_configuration.PingAddress);
+				if (pingresult.Status.ToString() != "Success")
+				{
+					await OnError($"Ping to {m_configuration.PingAddress} failed with error code: {pingresult.Status.ToString()}");
+					return;
+				}
+				var httpReq = await GET(m_configuration.GetAddress);
+				if (!httpReq.IsSuccessStatusCode)
+				{
+					await OnError($"GET request to {m_configuration.PingAddress} failed with error code: {httpReq.StatusCode} {httpReq.ReasonPhrase}");
+					return;
+				}
+				var content = await httpReq.Content.ReadAsStringAsync();
+				var exceptions = JsonConvert.DeserializeObject<List<Logger.ExceptionEntry>>(content);
+				var newExceptions = exceptions.Where(x => x.TimeStamp >= m_lastCheck);
+				if (newExceptions.Any())
+				{
+					await OnError($"Exceptions received from {m_configuration.PingAddress}");
+					foreach (var exc in newExceptions)
+					{
+						await OnError($"{exc.TimeStamp}: {exc.Message}");
+					}
+				}
+				else if(checker != 0)
+				{
+					await m_botClient.SendTextMessageAsync(checker, "All is well.");
+				}
+				m_lastCheck = DateTime.Now;
+			}
+			catch (Exception e)
+			{
+				await OnError("Something might be wrong, check: " + e.Message);
+				Console.WriteLine("Exception: " + e.Message);
+			}
+		}
+
+		static async Task OnError(string errorMessage)
 		{
 			foreach (var user in m_configuration.AuthorisedUsers)
 			{
-				m_botClient.SendTextMessageAsync(user, "ERROR: " + errorMessage);
+				await m_botClient.SendTextMessageAsync(user, errorMessage);
 			}
 		}
 
 		static void SaveConfig()
 		{
-			File.WriteAllText(m_configPath, JsonConvert.SerializeObject(new Configuration(), Formatting.Indented));
+			File.WriteAllText(m_configPath, JsonConvert.SerializeObject(m_configuration, Formatting.Indented));
 			Console.WriteLine("Saved config file at " + m_configPath);
 		}
 
@@ -133,9 +144,18 @@ namespace XR.Heartbeat
 					m_botClient.SendTextMessageAsync(userID, "Enter password");
 				}
 			}
+			if(m_configuration.AuthorisedUsers.Contains(userID))
+			{
+				if(message.ToLowerInvariant() == "check")
+				{
+					DoCheck(userID);
+					return;
+				}
+			}
 			if (message == "Unsubscribe" && m_configuration.AuthorisedUsers.Remove(userID))
 			{
 				m_botClient.SendTextMessageAsync(userID, "You've unsubscribed from updates.");
+				SaveConfig();
 				return;
 			}
 			if (message == m_configuration.Password)
@@ -147,7 +167,7 @@ namespace XR.Heartbeat
 				}
 				m_configuration.AuthorisedUsers.Add(userID);
 				SaveConfig();
-				m_botClient.SendTextMessageAsync(userID, "You were already authorised");
+				m_botClient.SendTextMessageAsync(userID, "You are now authorised");
 			}
 			else
 			{

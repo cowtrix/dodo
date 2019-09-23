@@ -103,7 +103,7 @@ namespace XR.Dodo
 
 				sb.AppendLine("Love and Rage,");
 				sb.AppendLine("Sean");
-				sb.AppendLine("ROS Rota Team");
+				sb.AppendLine("RSO Rota Team");
 
 				File.WriteAllText(outputPath + site.Value.SiteName + ".txt", sb.ToString());
 			}
