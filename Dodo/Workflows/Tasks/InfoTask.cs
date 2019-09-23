@@ -80,7 +80,6 @@ namespace XR.Dodo
 				}
 				return sb.ToString();
 			}
-			
 			if (message.ContentUpper.FirstOrDefault() == "SITE")
 			{
 				if(user.StartDate != default && DateTime.Now > user.StartDate)
@@ -91,7 +90,7 @@ namespace XR.Dodo
 				response = new ServerMessage("Ok, which site are you going to be at? " + getSiteList());
 				return true;
 			}
-			if(!int.TryParse(message.ContentUpper.FirstOrDefault(), out var siteCode) || 
+			if(!int.TryParse(message.ContentUpper.FirstOrDefault(), out var siteCode) ||
 				!DodoServer.SiteManager.IsValidSiteCode(siteCode))
 			{
 				response = new ServerMessage("Sorry, that didn't seem like a valid choice. " +

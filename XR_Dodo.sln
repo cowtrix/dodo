@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHttpServer", "SimpleHttpServer\SimpleHttpServer.csproj", "{9E139539-C272-488A-BFCF-CADDF458DF9D}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DodoCmd", "DodoCmd\DodoCmd.csproj", "{00A2A932-EBAB-44E2-930F-5D659476A46D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{AC96D6E5-4BA4-457C-A83E-6966B5DE982A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Heartbeat", "Heartbeat\Heartbeat.csproj", "{424EA9C1-A421-428A-AD3E-D9A3C59F5938}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{AC96D6E5-4BA4-457C-A83E-6966B5DE982A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC96D6E5-4BA4-457C-A83E-6966B5DE982A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC96D6E5-4BA4-457C-A83E-6966B5DE982A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{424EA9C1-A421-428A-AD3E-D9A3C59F5938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{424EA9C1-A421-428A-AD3E-D9A3C59F5938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{424EA9C1-A421-428A-AD3E-D9A3C59F5938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{424EA9C1-A421-428A-AD3E-D9A3C59F5938}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

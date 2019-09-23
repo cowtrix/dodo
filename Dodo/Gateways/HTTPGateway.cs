@@ -107,6 +107,27 @@ namespace XR.Dodo
 							StatusCode = "404",
 						};
 					}
+				},
+				new Route()
+				{
+					Name = "Status",
+					Method = "GET",
+					UrlRegex = @"/status(?:^/)*",
+					Callable = (HttpRequest request) =>
+					{
+						try
+						{
+							return Status(request);
+						}
+						catch(Exception e)
+						{
+							Logger.Exception(e);
+						}
+						return new HttpResponse()
+						{
+							StatusCode = "404",
+						};
+					}
 				}
 			};
 			m_server = new HttpServer(Port, route_config);
@@ -114,6 +135,15 @@ namespace XR.Dodo
 			m_serverThread.Start();
 		}
 
+		private HttpResponse Status(HttpRequest request)
+		{
+			return new HttpResponse()
+			{
+				ContentAsUTF8 = JsonConvert.SerializeObject(Logger.ExceptionLog, Formatting.Indented),
+				ReasonPhrase = "OK",
+				StatusCode = "200"
+			};
+		}
 
 		public Phone GetPhone()
 		{

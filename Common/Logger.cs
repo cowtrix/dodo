@@ -9,6 +9,13 @@ namespace Common
 {
 	public static class Logger
 	{
+		public struct ExceptionEntry
+		{
+			public string Message;
+			public DateTime TimeStamp;
+		}
+
+		public static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
 		public static string LogPath = "dodoLog.log";
 		private static object m_fileLock = new object();
 
@@ -18,6 +25,11 @@ namespace Common
 			{
 				Error(message);
 			}
+			ExceptionLog.Add(new ExceptionEntry()
+			{
+				Message = exception.Message,
+				TimeStamp = DateTime.Now,
+			});
 			Error(exception.Message);
 			Error(exception.StackTrace);
 		}
