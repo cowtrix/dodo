@@ -47,6 +47,10 @@ namespace DodoCmd
 					using (var writer = new StreamWriter(stream))
 						writer.WriteLine(cmd);
 				}
+				if(cmd == "shutdown")
+				{
+					Environment.Exit(0);
+				}
 			}
 		}
 

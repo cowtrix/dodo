@@ -21,7 +21,9 @@ namespace XR.Dodo
 			public DateTime TimeOfRequest;
 			public string Salt;
 			public string Description;
-			public Dictionary<string, bool> PotentialVolunteers = new Dictionary<string, bool>();
+
+			public ConcurrentDictionary<string, DateTime> ContactedVolunteers;
+			public List<string> ConfirmedVolunteers;
 
 			[JsonIgnore]
 			public string Key { get { return $"{WorkingGroup.ShortCode}{SiteCode}{Salt}"; } }
@@ -88,15 +90,18 @@ namespace XR.Dodo
 			foreach(var needKey in CurrentNeeds)
 			{
 				var need = needKey.Value;
-				if(need.PotentialVolunteers.Count(x => x.Value) >= need.Amount)
+				//if(need.PotentialVolunteers.Count(x => x.Value) >= need.Amount)
 				{
 					// We've got confirmed volunteers
 					// TODO End the task?
 					continue;
 				}
 				var matchingUsers = DodoServer.SessionManager.GetUsers()
-					.Where(x => x.StartDate < need.TimeNeeded && x.EndDate > need.TimeNeeded)
-					.OrderBy(x => x.WorkingGroupPreferences.Contains(need.WorkingGroup.ShortCode));
+					.Where(user => user.AccessLevel == EUserAccessLevel.Volunteer && user.SiteCode == need.SiteCode && user.StartDate < need.TimeNeeded && user.EndDate > need.TimeNeeded)	// Get volunteers who will be around at the time and at the site
+					.OrderBy(user => user.WorkingGroupPreferences.Contains(need.WorkingGroup.ShortCode))	// Put the ones who have selected this working group first
+					.ThenBy(user => user.GetTrustScore());
+				Logger.Debug($"Found {matchingUsers.Count()} volunteers for need {need.Key}");
+				
 			}
 		}
 

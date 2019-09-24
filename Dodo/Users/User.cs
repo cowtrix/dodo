@@ -76,5 +76,25 @@ namespace XR.Dodo
 		{
 			UUID = Guid.NewGuid().ToString();
 		}
+
+		public int GetTrustScore()
+		{
+			int trust = 0;
+			if(AccessLevel > EUserAccessLevel.Volunteer)
+			{
+				// We basically always trust anyone on a spreadsheet
+				trust += 5000;
+			}
+			if(GDPR)
+			{
+				trust += 10;
+			}
+			if(IsVerified())
+			{
+				trust += 100;
+			}
+			trust += Karma;
+			return trust;
+		}
 	}
 }

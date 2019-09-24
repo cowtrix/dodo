@@ -340,7 +340,7 @@ namespace XR.Dodo
 				}
 			}
 			int tries = 1;
-			while (shortcode.Length < 2 || Data.WorkingGroups.ContainsKey(shortcode))
+			while ((shortcode.Length < 2 || Data.WorkingGroups.ContainsKey(shortcode)) && tries < name.Length - 1)
 			{
 				var nextChar = name.Substring(tries, 1);
 				tries++;
@@ -348,6 +348,12 @@ namespace XR.Dodo
 				{
 					shortcode = (name.Substring(0, 1) + nextChar).ToString().ToUpperInvariant();
 				}
+			}
+			tries = 1;
+			while ((shortcode.Length < 2 || Data.WorkingGroups.ContainsKey(shortcode)))
+			{
+				shortcode = (name.Substring(0, 1) + Utility.RandomString(1, name + tries.ToString())).ToString().ToUpperInvariant();
+				tries++;
 			}
 			return shortcode;
 		}
