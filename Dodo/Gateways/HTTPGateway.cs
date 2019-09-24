@@ -194,5 +194,18 @@ namespace XR.Dodo
 			var session = DodoServer.SessionManager.GetOrCreateSession(user);
 			return session.ProcessMessage(message, session);
 		}
+
+		public void Broadcast(ServerMessage message, IEnumerable<User> users)
+		{
+			var phone = GetPhone(Phone.ESMSMode.Bot);
+			foreach(var user in users)
+			{
+				if (string.IsNullOrEmpty(user.PhoneNumber))
+				{
+					continue;
+				}
+				SendMessage(message, phone, user.PhoneNumber);
+			}
+		}
 	}
 }

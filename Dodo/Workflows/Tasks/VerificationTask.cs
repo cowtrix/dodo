@@ -22,7 +22,7 @@ namespace XR.Dodo
 			if (message.Gateway.Type != EGatewayType.Telegram)
 			{
 				response = new ServerMessage("Sorry, you need to message me on Telegram to verify your number. " +
-					$"You can do this by messaging VERIFY to {DodoServer.TelegramGateway.UserName}.");
+					$"You can do this by messaging {CommandKey} to {DodoServer.TelegramGateway.UserName}.");
 				return true;
 			}
 			var user = session.GetUser();

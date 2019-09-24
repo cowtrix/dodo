@@ -19,12 +19,19 @@ namespace XR.Dodo
 			AddTask<HelpTask>();
 			AddTask<InfoTask>();
 			AddTask<RolesTask>();
+			AddTask<MuteTask>();
 			AddTask<CoordinatorWhoIsTask>();
 			AddTask<CoordinatorNeedsTask>();
 			AddTask<CoordinatorRemoveNeedTask>();
 
 			CurrentTask = new IntroductionTask();
 		}
+
+		string[] m_greetingStrings = new[]
+		 {
+			"HELLO", "HI",
+		 };
+
 
 		protected void AddTask<T>() where T: WorkflowTask
 		{
@@ -40,12 +47,29 @@ namespace XR.Dodo
 		{
 			session.Inbox.Add(message);
 			var user = session.GetUser();
+			if(!user.Active)
+			{
+				user.Active = true;
+			}
+
+			// First we check if it's a valid role code
+			if(DodoServer.CoordinatorNeedsManager.CurrentNeeds.TryGetValue(message.Content.Trim(), out var need) && need.UserIsValidCandidate(user))
+			{
+				if(need.ConfirmedVolunteers.ContainsKey(user.UUID))
+				{
+					return new ServerMessage("You've already applied for this Volunteer Request.");
+				}
+				else
+				{
+					return need.AddConfirmation(user);
+				}
+			}
+
 			ServerMessage response;
 			if(CurrentTask != null)
 			{
 				// We have a task underway, so we process that
 				if(CurrentTask.CanCancel() && message.ContentUpper.FirstOrDefault() == "DONE")
-
 				{
 					// Cancel the request
 					return CurrentTask.ExitTask(session);
@@ -57,7 +81,7 @@ namespace XR.Dodo
 						+ (user.IsVerified() ? "" : " Please verify your account and try again."));
 				}
 				// Do task specific help
-				if (message.ContentUpper.FirstOrDefault() == "HELPME")
+				if (message.ContentUpper.FirstOrDefault() == HelpTask.CommandKey)
 				{
 					if(CurrentTask.GetHelp(out var helpResponse))
 					{
@@ -95,13 +119,17 @@ namespace XR.Dodo
 					return response;
 				}
 			}
+			else if(m_greetingStrings.Contains(message.ContentUpper.FirstOrDefault()))
+			{
+				return new ServerMessage($"Hello{(!string.IsNullOrEmpty(user.Name) ? " " + user.Name : "")}! If you'd like to see a list of things that you can ask me to do, just reply {HelpTask.CommandKey}");
+			}
 			return DidntUnderstand(user);
 		}
 
 		ServerMessage DidntUnderstand(User user)
 		{
 			user.Karma--;
-			return new ServerMessage("Sorry, I didn't understand that. If you'd like some help, reply HELPME");
+			return new ServerMessage($"Sorry, I didn't understand that. If you'd like some help, reply {HelpTask.CommandKey}");
 		}
 	}
 }

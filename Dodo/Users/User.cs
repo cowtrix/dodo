@@ -13,6 +13,8 @@ namespace XR.Dodo
 		RSO,
 	}
 
+	public delegate void OnMessageReceivedEvent(ServerMessage message, UserSession session);
+
 	public class User
 	{
 		public string Name;
@@ -22,23 +24,16 @@ namespace XR.Dodo
 		public string UUID;
 		public string Email;
 		public int Karma;
-
+		public bool Active = true;
 		public bool GDPR;
 		public DateTime StartDate;
-		public DateTime EndDate;
+		public DateTime EndDate = DateTime.MaxValue;
 
 		public HashSet<Role> CoordinatorRoles = new HashSet<Role>();
 		public HashSet<string> WorkingGroupPreferences = new HashSet<string>();
 
-		public override string ToString()
-		{
-			return $"{Name ?? PhoneNumber ?? TelegramUser.ToString()} ({AccessLevel})";
-		}
-
-		public bool IsVerified()
-		{
-			return !string.IsNullOrEmpty(PhoneNumber) && TelegramUser >= 0;
-		}
+		[JsonIgnore]
+		public OnMessageReceivedEvent OnMsgReceived;
 
 		[JsonIgnore]
 		public EUserAccessLevel AccessLevel
@@ -95,6 +90,16 @@ namespace XR.Dodo
 			}
 			trust += Karma;
 			return trust;
+		}
+
+		public override string ToString()
+		{
+			return $"{Name ?? PhoneNumber ?? TelegramUser.ToString()} ({AccessLevel})";
+		}
+
+		public bool IsVerified()
+		{
+			return !string.IsNullOrEmpty(PhoneNumber) && TelegramUser >= 0;
 		}
 	}
 }

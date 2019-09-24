@@ -129,17 +129,17 @@ namespace XR.Dodo
 						userToVerify.CoordinatorRoles.Add(role);
 					}
 				}
-				
+
 				userToVerify.PhoneNumber = fromNumber;
 				userToVerify.Karma += 10;
 				if (userToVerify.AccessLevel > EUserAccessLevel.Volunteer)
 				{
-					DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}. " + 
+					DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}. " +
 						$"It looks like you're a coordinator for {userToVerify.CoordinatorRoles.First().WorkingGroup.Name}"), verificationMatch.Value);
 				}
 				else
 				{
-					DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}."), verificationMatch.Value);
+					DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}."), verificationMatch.Value);
 				}
 				Logger.Debug($"Succesfully verified user {userToVerify} to number {userToVerify.PhoneNumber}");
 			}
@@ -154,7 +154,7 @@ namespace XR.Dodo
 
 		public UserSession GetSessionFromUserID(string ownerUID)
 		{
-			return _data.Sessions.FirstOrDefault(x => x.Key == ownerUID).Value;
+			return _data.Sessions.SingleOrDefault(x => x.Key == ownerUID).Value;
 		}
 
 		public User GetUserFromUserID(string ownerUID)
@@ -176,7 +176,7 @@ namespace XR.Dodo
 			{
 				return null;
 			}
-			var user = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
+			var user = _data.Users.SingleOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
 			if(user == null)
 			{
 				user = new User() { PhoneNumber = fromNumber };
@@ -187,7 +187,7 @@ namespace XR.Dodo
 
 		public User GetOrCreateUserFromTelegramNumber(int telegramId)
 		{
-			var user = _data.Users.FirstOrDefault(x => x.Value.TelegramUser == telegramId).Value;
+			var user = _data.Users.SingleOrDefault(x => x.Value.TelegramUser == telegramId).Value;
 			if (user == null)
 			{
 				user = new User() { TelegramUser = telegramId };

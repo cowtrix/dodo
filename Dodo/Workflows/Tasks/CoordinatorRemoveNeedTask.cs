@@ -26,7 +26,7 @@ namespace XR.Dodo
 			}
 			if (user.AccessLevel == EUserAccessLevel.Coordinator)
 			{
-				return needs.Where(x => user.CoordinatorRoles.Any(y => y.WorkingGroup.ShortCode == x.WorkingGroup.ShortCode)).OrderBy(x => x.TimeOfRequest).ToList();
+				return needs.Where(x => user.CoordinatorRoles.Any(y => y.WorkingGroup.ShortCode == x.WorkingGroupCode)).OrderBy(x => x.TimeOfRequest).ToList();
 			}
 			throw new Exception("Bad user: " + user.UUID);
 		}
@@ -58,11 +58,11 @@ namespace XR.Dodo
 					}
 					if (authorisedNeeds.Count == 0)
 					{
-						response = new ServerMessage($"It doesn't look like your Working Group{(user.CoordinatorRoles.Count > 1 ? "s" : "")}" + 
-							" have any open Volunteer Requests. You can make a Volunteer Request with the NEED command.");
+						response = new ServerMessage($"It doesn't look like your Working Group{(user.CoordinatorRoles.Count > 1 ? "s" : "")}" +
+							$" have any open Volunteer Requests. You can make a Volunteer Request with the {CoordinatorNeedsTask.CommandKey} command.");
 						ExitTask(session);
 						return true;
- 					}
+					}
 					if(cmd == "PREV")
 					{
 						m_page--;
@@ -112,7 +112,7 @@ namespace XR.Dodo
 					siteCode = need.SiteCode;
 					sb.AppendLine($"==Site {siteCode}=====");
 				}
-				sb.AppendLine($"{need.Key} - {need.WorkingGroup.Name} - {(need.Amount == int.MaxValue ? "MANY" : need.Amount.ToString())} for {need.TimeNeeded.ToString("dd/MM HH:mm")}");
+				sb.AppendLine($"{need.Key} > {need.WorkingGroup.Name} - {(need.Amount == int.MaxValue ? "MANY" : need.Amount.ToString())} for {Utility.ToDateTimeCode(need.TimeNeeded)}");
 			}
 			if(totalPages > 1)
 			{

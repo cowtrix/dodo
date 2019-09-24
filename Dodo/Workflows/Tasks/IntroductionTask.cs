@@ -56,7 +56,7 @@ namespace XR.Dodo
 
 			if(message.ContentUpper.FirstOrDefault() == "DONE")
 			{
-				response = new ServerMessage($"No problem. If you're ever confused, just reply HELPME and I'll try to give you some guidance about what you can ask me to do. " +
+				response = new ServerMessage($"No problem. If you're ever confused, just reply {HelpTask.CommandKey} and I'll try to give you some guidance about what you can ask me to do. " +
 					"Why don't you try that now?");
 				ExitTask(session);
 				return true;
@@ -108,7 +108,7 @@ namespace XR.Dodo
 				}
 				else
 				{
-					response = new ServerMessage($"Okay, you're going to be at the {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName} site. " + 
+					response = new ServerMessage($"Okay, you're going to be at the {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName} site. " +
 						wgPrefsString + GetParentGroupSelectionString());
 				}
 				State = EState.GetPrefs;
@@ -238,7 +238,7 @@ namespace XR.Dodo
 			if (message.Gateway.Type == EGatewayType.Telegram)
 			{
 				response = new ServerMessage($"Brilliant, thanks {user.Name}. " +
-					"If you're ever confused, just reply HELPME and I'll try to give you some guidance about what you can ask me to do. " +
+					$"If you're ever confused, just reply {HelpTask.CommandKey} and I'll try to give you some guidance about what you can ask me to do. " +
 					"Why don't you try that now?");
 				ExitTask(session);
 				return true;
@@ -247,7 +247,7 @@ namespace XR.Dodo
 			response = default;
 			return false;
 			/*
-			$"You can talk to me on Telegram at {DodoServer.TelegramGateway.UserName}, or you can SMS me at {DodoServer.GetSMSNumber()}. " +
+			$"You can talk to me on Telegram at {DodoServer.DefaultGateway.UserName}, or you can SMS me at {DodoServer.GetSMSNumber()}. " +
 			"I like Telegram more though, and it means I can be a bit more helpful to you. " +*/
 		}
 

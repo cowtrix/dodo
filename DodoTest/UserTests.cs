@@ -2,6 +2,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using XR.Dodo;
 using DodoTest;
+using System.Collections.Generic;
+using System.Linq;
+using System.Collections.Concurrent;
 
 [TestClass]
 public class UserTests : TestBase
@@ -67,5 +70,60 @@ public class UserTests : TestBase
 		var user = GetTestUser(EUserAccessLevel.Volunteer);
 		var response = DodoServer.TelegramGateway.FakeMessage("WHOIS", user.TelegramUser);
 		Assert.IsTrue(response.Content.Contains("Sorry"));
+	}
+
+	[TestMethod]
+	public async Task VolunteersAreContacted()
+	{
+		var volunteers = new ConcurrentDictionary<User, bool>();
+		string code = null;
+		void VolunteerReceiveRequest(ServerMessage mesg, UserSession sess)
+		{
+			var user = sess.GetUser();
+			Assert.IsTrue(volunteers.ContainsKey(user));
+			Assert.IsFalse(volunteers[user]);
+			Assert.IsTrue(mesg.Content.Contains(code));
+			volunteers[sess.GetUser()] = true;
+		};
+		for(var i = 0; i < 10; ++i)
+		{
+			var vol = GetTestUser(EUserAccessLevel.Volunteer);
+			vol.OnMsgReceived += VolunteerReceiveRequest;
+			volunteers.TryAdd(vol, false);
+		}
+
+		var requester = GetTestUser(EUserAccessLevel.Coordinator);
+		var msg = DodoServer.TelegramGateway.FakeMessage("NEED", requester.TelegramUser);
+		msg = DodoServer.TelegramGateway.FakeMessage("7/10 08:00", requester.TelegramUser);
+		msg = DodoServer.TelegramGateway.FakeMessage("10", requester.TelegramUser);
+		msg = DodoServer.TelegramGateway.FakeMessage("tests", requester.TelegramUser);
+		code = DodoServer.CoordinatorNeedsManager.CurrentNeeds.Single().Key;
+
+		while (volunteers.Any(x => !x.Value)) ;
+
+		bool confirmed = false;
+		void ReceiveVolunteerNumbers(ServerMessage mesg, UserSession sess)
+		{
+			if(mesg.Content.Contains("This request is now complete and has been removed."))
+			{
+				confirmed = true;
+			}
+			var user = volunteers.Single(x => mesg.Content.Contains(x.Key.PhoneNumber)).Key;
+			volunteers[user] = false;
+		};
+		requester.OnMsgReceived += ReceiveVolunteerNumbers;
+
+
+		foreach (var vol in volunteers)
+		{
+			vol.Key.OnMsgReceived = null;
+			msg = DodoServer.TelegramGateway.FakeMessage(code, vol.Key.TelegramUser);
+		}
+
+		while (volunteers.Any(x => x.Value) || !confirmed) ;
+
+		requester.OnMsgReceived = null;
+		DodoServer.CoordinatorNeedsManager.ProcessNeeds();
+		Assert.IsTrue(!DodoServer.CoordinatorNeedsManager.CurrentNeeds.Any());
 	}
 }

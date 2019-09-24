@@ -22,7 +22,7 @@ public class RotaCoordinatorTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage(desc, user.TelegramUser);
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
-		Assert.IsTrue(need.WorkingGroup.ShortCode == "AD");
+		Assert.IsTrue(need.WorkingGroupCode == "AD");
 		Assert.IsTrue(need.SiteCode == 1);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 7, 8, 0, 0));
 		Assert.IsTrue(need.Amount == 3);
@@ -38,7 +38,7 @@ public class RotaCoordinatorTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage(desc, user.TelegramUser);
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
-		Assert.IsTrue(need.WorkingGroup.ShortCode == "AD");
+		Assert.IsTrue(need.WorkingGroupCode == "AD");
 		Assert.IsTrue(need.SiteCode == 1);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 7, 8, 0, 0));
 		Assert.IsTrue(need.Amount == 3);

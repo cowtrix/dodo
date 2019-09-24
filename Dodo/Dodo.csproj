@@ -115,6 +115,7 @@
     <Compile Include="Workflows\Tasks\CoordinatorWhoIsTask.cs" />
     <Compile Include="Workflows\Tasks\HelpTask.cs" />
     <Compile Include="Workflows\Tasks\InfoTask.cs" />
+    <Compile Include="Workflows\Tasks\MuteTask.cs" />
     <Compile Include="Workflows\Tasks\RolesTask.cs" />
     <Compile Include="Workflows\Tasks\IntroductionTask.cs" />
     <Compile Include="Workflows\Tasks\VerificationTask.cs" />

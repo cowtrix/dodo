@@ -9,6 +9,7 @@ namespace DodoTest
 	{
 		private TestContext testContextInstance;
 		protected TwilioSimulator m_simulator;
+		private Random m_random = new Random();
 
 		public TestBase()
 		{
@@ -32,25 +33,25 @@ namespace DodoTest
 			DodoServer.CoordinatorNeedsManager.ClearAll();
 		}
 
-		long LongRandom(long min, long max, Random rand)
+		long LongRandom(long min, long max)
 		{
-			long result = rand.Next((Int32)(min >> 32), (Int32)(max >> 32));
+			long result = m_random.Next((Int32)(min >> 32), (Int32)(max >> 32));
 			result = (result << 32);
-			result = result | (long)rand.Next((Int32)min, (Int32)max);
+			result = result | (long)m_random.Next((Int32)min, (Int32)max);
 			return result;
 		}
 
-		public User GetTestUser(EUserAccessLevel accessLevel)
+		public User GetTestUser(EUserAccessLevel accessLevel, int siteCode = 3)
 		{
-			var r = new Random();
-			var ph = "44" + LongRandom(1000000000L, 9999999999L, r).ToString(); // "1315103992";
+			var ph = "44" + LongRandom(1000000000L, 9999999999L).ToString(); // "1315103992";
 			ValidationExtensions.ValidateNumber(ref ph);
-			var telegramID = r.Next(10000, 99999);
+			var telegramID = m_random.Next(10000, 99999);
 			var user = new User()
 			{
-				Name = "Test" + Utility.RandomString(5, r.Next().ToString()),
+				Name = "Test" + Utility.RandomString(5, m_random.Next().ToString()),
 				PhoneNumber = ph,
 				TelegramUser = telegramID,
+				SiteCode = siteCode,
 			};
 			if (accessLevel == EUserAccessLevel.Coordinator)
 			{

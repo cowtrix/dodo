@@ -20,10 +20,11 @@ namespace XR.Dodo
 		public static CoordinatorNeedsManager CoordinatorNeedsManager;
 		public static HTTPGateway SMSGateway;
 		public static TelegramGateway TelegramGateway;
-
-		private static CmdReader cmdReader = new CmdReader();
 		public static Configuration Configuration = new Configuration();
 
+		public static IMessageGateway DefaultGateway { get { return TelegramGateway; } }
+
+		private static CmdReader cmdReader = new CmdReader();
 		private static object m_loadSaveLock = new object();
 
 		private static string ConfigPath { get { return Path.GetFullPath("config.json"); } }

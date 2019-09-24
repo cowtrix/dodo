@@ -56,7 +56,7 @@ namespace XR.Dodo
 					}
 					else
 					{
-						response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " + 
+						response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " +
 							GetSiteNumberRequestString(approvedSites));
 						return true;
 					}
@@ -69,7 +69,7 @@ namespace XR.Dodo
 					{
 						WorkingGroup = workingGroups[0];
 						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
-						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
+						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 						{
 							response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
 								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
@@ -135,7 +135,7 @@ namespace XR.Dodo
 					{
 						WorkingGroup = workingGroups.First(x => x.ShortCode == cmd);
 						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
-						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
+						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 						{
 							response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
 								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
@@ -155,7 +155,7 @@ namespace XR.Dodo
 						{
 							WorkingGroup = workingGroups[0];
 							var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
-							if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCount)
+							if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 							{
 								response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
 									$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
@@ -165,7 +165,7 @@ namespace XR.Dodo
 						}
 						else
 						{
-							response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " + 
+							response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " +
 								GetWorkingGroupRequestString(workingGroups));
 							return true;
 						}
@@ -177,7 +177,7 @@ namespace XR.Dodo
 					var timeCommand = message.ContentUpper.Skip(i).Aggregate("", (f, s) => f + " " + s).Trim();
 					if (timeCommand.StartsWith("NOW"))
 					{
-						TimeNeeded = DateTime.Now;
+						TimeNeeded = DateTime.MaxValue;
 						if (i >= message.ContentUpper.Length - 1)
 						{
 							response = new ServerMessage(GetNumberRequest());
@@ -207,7 +207,7 @@ namespace XR.Dodo
 					{
 						if(i >= message.ContentUpper.Length - 1)
 						{
-							response = new ServerMessage(cmd == CommandKey ? "" : "Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " 
+							response = new ServerMessage((cmd == CommandKey ? "" : "Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. ")
 								+ GetTimeRequestString());
 							return true;
 						}
@@ -267,7 +267,7 @@ namespace XR.Dodo
 				}
 				// "NEED 0 AD 7/10 08:00 3"
 				response = new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
-					$" In future, you could make this request in one go by saying NEED " +
+					$" In future, you could make this request in one go by saying {CoordinatorNeedsTask.CommandKey} " +
 					(user.AccessLevel >= EUserAccessLevel.RSO ? SiteCode + " " : "") +
 					(user.AccessLevel >= EUserAccessLevel.RotaCoordinator ? WorkingGroup.ShortCode + " " : "") +
 					$"{ Utility.ToDateTimeCode(TimeNeeded)} {(Amount == int.MaxValue ? "MANY" : Amount.ToString())}");

@@ -177,7 +177,7 @@ namespace XR.Dodo
 			user.StartDate = startDate;
 			if(user.StartDate > user.EndDate)
 			{
-				user.EndDate = default;
+				user.EndDate = DateTime.MaxValue;
 			}
 			response = new ServerMessage($"Okay, I've updated your arrival date! I'll see you on {user.StartDate.ToShortDateString()}. {GetTaskString()}");
 			CurrentCommand = null;
@@ -188,7 +188,7 @@ namespace XR.Dodo
 		{
 			if (message.ContentUpper.FirstOrDefault() == "DEPARTURE")
 			{
-				if (user.StartDate < new DateTime(2019))
+				if (user.EndDate != DateTime.MaxValue)
 				{
 					response = new ServerMessage($"I've currently got your departure date as {user.EndDate.ToShortDateString()}. " +
 						"Tell me what date will you be leaving the rebellion. " +

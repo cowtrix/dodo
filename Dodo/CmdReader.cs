@@ -112,7 +112,7 @@ namespace XR.Dodo
 			{
 				throw new Exception("No matching command found for: " + cmdKey);
 			}
-			var task = new Task(async () => await command.Action(split.Length > 1 ? 
+			var task = new Task(async () => await command.Action(split.Length > 1 ?
 				split.Skip(1).Aggregate("", (current, next) => current + " " + next).Trim() : null));
 			task.Start();
 		}

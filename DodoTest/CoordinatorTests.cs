@@ -14,7 +14,7 @@ public class CoordinatorTests : TestBase
 	{
 		var user = GetTestUser(EUserAccessLevel.Coordinator);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
-		for (var i = 0; i < CoordinatorNeedsManager.MaxNeedCount + 1; ++i)
+		for (var i = 0; i < CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup + 1; ++i)
 		{
 			var msg = DodoServer.TelegramGateway.FakeMessage("NEED", user.TelegramUser);
 			msg = DodoServer.TelegramGateway.FakeMessage("7/10 08:00", user.TelegramUser);
@@ -23,7 +23,7 @@ public class CoordinatorTests : TestBase
 		}
 		var role = user.CoordinatorRoles.First();
 		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(role.SiteCode, role.WorkingGroup).Count()
-			== CoordinatorNeedsManager.MaxNeedCount);
+			== CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup);
 	}
 
 	[TestMethod]
@@ -37,7 +37,7 @@ public class CoordinatorTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage("TEST", user.TelegramUser);
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
-		Assert.IsTrue(need.WorkingGroup.Name == user.CoordinatorRoles.Single().WorkingGroup.Name);
+		Assert.IsTrue(need.WorkingGroupCode == user.CoordinatorRoles.Single().WorkingGroupCode);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 7, 8, 0, 0));
 		Assert.IsTrue(need.SiteCode == user.CoordinatorRoles.Single().SiteCode);
 		Assert.IsTrue(need.Amount == 3);
@@ -53,7 +53,7 @@ public class CoordinatorTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage("test", user.TelegramUser);
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
-		Assert.IsTrue(need.WorkingGroup.Name == user.CoordinatorRoles.Single().WorkingGroup.Name);
+		Assert.IsTrue(need.WorkingGroupCode == user.CoordinatorRoles.Single().WorkingGroupCode);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 7, 8, 0, 0));
 		Assert.IsTrue(need.SiteCode == user.CoordinatorRoles.Single().SiteCode);
 		Assert.IsTrue(need.Amount == 3);

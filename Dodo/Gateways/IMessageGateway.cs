@@ -17,5 +17,6 @@ namespace XR.Dodo
 	{
 		EGatewayType Type { get; }
 		void SendMessage(ServerMessage message, UserSession session);
+		void Broadcast(ServerMessage message, IEnumerable<User> users);
 	}
 }

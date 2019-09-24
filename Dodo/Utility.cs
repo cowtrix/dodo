@@ -64,6 +64,11 @@ namespace XR.Dodo
 
 		public static bool TryParseDateTime(string dt, out DateTime dateTime)
 		{
+			if(dt == "NOW")
+			{
+				dateTime = DateTime.MaxValue;
+				return true;
+			}
 			dateTime = default;
 			try
 			{
@@ -91,6 +96,10 @@ namespace XR.Dodo
 
 		public static string ToDateTimeCode(DateTime timeNeeded)
 		{
+			if(timeNeeded == DateTime.MaxValue)
+			{
+				return "NOW";
+			}
 			return $"{timeNeeded.Day}/{timeNeeded.Month} {timeNeeded.Hour}:{timeNeeded.Minute.ToString("00")}";
 		}
 	}

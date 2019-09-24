@@ -22,7 +22,7 @@ public class RSOCoordinatorTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage("skip", user.TelegramUser);   // skip desc
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
-		Assert.IsTrue(need.WorkingGroup.ShortCode == "AD");
+		Assert.IsTrue(need.WorkingGroupCode == "AD");
 		Assert.IsTrue(need.SiteCode == 3);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 2, 8, 0, 0));
 		Assert.IsTrue(need.Amount == 6);
@@ -43,7 +43,7 @@ public class RSOCoordinatorTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage(desc, user.TelegramUser); // Amount
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
-		Assert.IsTrue(need.WorkingGroup.ShortCode == "SD");
+		Assert.IsTrue(need.WorkingGroupCode == "SD");
 		Assert.IsTrue(need.SiteCode == 3);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 20, 22, 0, 0));
 		Assert.IsTrue(need.Amount == int.MaxValue);
@@ -70,7 +70,7 @@ public class RSOCoordinatorTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage(testDesc, user.TelegramUser);   // Amount
 
 		var need = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Single();
-		Assert.IsTrue(need.WorkingGroup.ShortCode == "AD");
+		Assert.IsTrue(need.WorkingGroupCode == "AD");
 		Assert.IsTrue(need.SiteCode == 4);
 		Assert.IsTrue(need.TimeNeeded == new DateTime(2019, 10, 7, 8, 0, 0));
 		Assert.IsTrue(need.Amount == 4);

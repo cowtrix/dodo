@@ -28,8 +28,6 @@ namespace XR.Dodo
 				sb.AppendLine(helpStr);
 			}
 			sb.AppendLine();
-			/*sb.AppendLine("If you want help to use a specific command, just say the command name, and then HELPME - for instance, INFO HELPME." +
-				" If you're still confused, reply HELPME CONTACT and someone will be in touch to help you out.");*/
 			response = new ServerMessage(sb.ToString());
 			ExitTask(session);
 			return true;

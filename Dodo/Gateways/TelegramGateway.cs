@@ -82,6 +82,11 @@ namespace XR.Dodo
 		public void SendMessage(ServerMessage message, UserSession session)
 		{
 			Logger.Debug($"Telegram >> {session.GetUser()}: {message.Content.Substring(0, Math.Min(message.Content.Length, 32))}{(message.Content.Length > 32 ? "..." : "")}");
+			if(DodoServer.Dummy)
+			{
+				session.GetUser().OnMsgReceived?.Invoke(message, session);
+				return;
+			}
 			m_outbox.Enqueue(new OutgoingMessage()
 			{
 				Message = message,
@@ -101,6 +106,14 @@ namespace XR.Dodo
 				Logger.Warning("Message length > sms limit");
 			}
 			await m_botClient.SendTextMessageAsync(msg.Session.GetUser().TelegramUser, msg.Message.Content);
+		}
+
+		public void Broadcast(ServerMessage serverMessage, IEnumerable<User> users)
+		{
+			foreach(var user in users)
+			{
+				SendMessage(serverMessage, DodoServer.SessionManager.GetOrCreateSession(user));
+			}
 		}
 
 		async void Bot_OnMessage(object sender, MessageEventArgs e)
