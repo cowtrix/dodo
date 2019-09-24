@@ -66,7 +66,7 @@ namespace XR.Dodo
 						}
 						while(timer.Elapsed < TimeSpan.FromSeconds(1))
 						{
-							Thread.Sleep(0);
+							await Task.Delay(100);
 						}
 						timer.Restart();
 					}

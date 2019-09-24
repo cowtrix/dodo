@@ -48,11 +48,11 @@ namespace XR.Dodo
 		{
 			m_dataOutputSpreadsheetID = config.SpreadsheetData.CoordinatorNeedsSpreadsheetID;
 			LoadFromFile(config.BackupPath);
-			var updateTask = new Task(() =>
+			var updateTask = new Task(async () =>
 			{
 				while (true)
 				{
-					Thread.Sleep(10 * 1000);
+					await Task.Delay(10 * 1000);
 					if(m_dirty)
 						UpdateNeedsOnGSheet();
 				}
@@ -64,7 +64,7 @@ namespace XR.Dodo
 					try
 					{
 						await DoMatchmakingHunt();
-						Thread.Sleep(0);
+						await Task.Delay(500);
 					}
 					catch(Exception e)
 					{
@@ -191,6 +191,11 @@ namespace XR.Dodo
 
 		public void SaveToFile(string backupFolder)
 		{
+			if(DodoServer.Dummy || DodoServer.NoLoad)
+			{
+				Logger.Debug("Skipped save in Needs Manager");
+				return;
+			}
 			var dataPath = Path.Combine(backupFolder, "needs.json");
 			File.WriteAllText(dataPath, JsonConvert.SerializeObject(CurrentNeeds, Formatting.Indented, new JsonSerializerSettings
 			{
@@ -202,7 +207,7 @@ namespace XR.Dodo
 		public void LoadFromFile(string backupFolder)
 		{
 			var backupPath = Path.Combine(backupFolder, "needs.json");
-			if (DodoServer.NoLoad || !File.Exists(backupPath))
+			if (DodoServer.Dummy || DodoServer.NoLoad || !File.Exists(backupPath))
 			{
 				CurrentNeeds = new ConcurrentDictionary<string, Need>();
 				return;

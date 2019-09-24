@@ -207,7 +207,8 @@ namespace XR.Dodo
 					{
 						if(i >= message.ContentUpper.Length - 1)
 						{
-							response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " + GetTimeRequestString());
+							response = new ServerMessage(cmd == CommandKey ? "" : "Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " 
+								+ GetTimeRequestString());
 							return true;
 						}
 						continue;

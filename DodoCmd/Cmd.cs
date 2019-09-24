@@ -15,7 +15,7 @@ namespace DodoCmd
 		public static string OutputPath = "cmdIn.data";
 		static void Main(string[] args)
 		{
-			Task outputReader = new Task(() =>
+			Task outputReader = new Task(async () =>
 			{
 				while (true)
 				{
@@ -35,7 +35,7 @@ namespace DodoCmd
 					{
 						Console.WriteLine("CMD:" + e);
 					}
-					Thread.Sleep(500);
+					await Task.Delay(500);
 				}
 			});
 			outputReader.Start();

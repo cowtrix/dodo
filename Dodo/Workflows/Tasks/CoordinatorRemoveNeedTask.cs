@@ -63,7 +63,6 @@ namespace XR.Dodo
 						ExitTask(session);
 						return true;
  					}
-
 					if(cmd == "PREV")
 					{
 						m_page--;
@@ -103,11 +102,12 @@ namespace XR.Dodo
 			var sb = new StringBuilder("Please tell me the code for the Volunteer Request to cancel:\n");
 			var needIter = needs.OrderBy(x => x.SiteCode).ToList();
 			var siteCode = needIter.First().SiteCode;
+			var needSiteCode = needs.Any(x => x.SiteCode != siteCode);
 			var startIndex = ((m_page - 1) % totalPages) * MaxNeedsPerPage;
 			for (int i = startIndex; i < Math.Min(needIter.Count, startIndex + MaxNeedsPerPage); i++)
 			{
 				CoordinatorNeedsManager.Need need = needIter[i];
-				if (siteCode != need.SiteCode || i == startIndex)
+				if (needSiteCode && siteCode != need.SiteCode || i == startIndex)
 				{
 					siteCode = need.SiteCode;
 					sb.AppendLine($"==Site {siteCode}=====");

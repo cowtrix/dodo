@@ -82,10 +82,11 @@ public class CoordinatorTests : TestBase
 		var user = GetTestUser(EUserAccessLevel.Coordinator);
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
 		var role = user.CoordinatorRoles.First();
-		DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, role.WorkingGroup, role.SiteCode, 6, DateTime.Now + TimeSpan.FromDays(1), "test 2");
+		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, role.WorkingGroup, role.SiteCode, 6, DateTime.Now + TimeSpan.FromDays(1), "test 2"));
+		var need = DodoServer.CoordinatorNeedsManager.CurrentNeeds.Single();
 		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Count == 1);
 		var msg = DodoServer.TelegramGateway.FakeMessage("DELETENEED", user.TelegramUser);
-		Assert.IsFalse(msg.Content.Contains("Sorry"));
+		msg = DodoServer.TelegramGateway.FakeMessage(need.Key, user.TelegramUser);
 		Assert.IsTrue(DodoServer.CoordinatorNeedsManager.GetCurrentNeeds().Count == 0);
 	}
 

@@ -14,48 +14,69 @@ namespace XR.Dodo
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
 		{
 			var user = session.GetUser();
-			var cmd = message.ContentUpper.FirstOrDefault();
-			if (message.ContentUpper.FirstOrDefault() == "DONE")
+			for (var i = 0; i < message.ContentUpper.Length; ++i)
 			{
-				response = ExitTask(session);
-				return true;
-			}
-			if (m_parentGroupFilter == null)
-			{
-				if(int.TryParse(cmd, out var pGroup) && pGroup >= 0 && pGroup <= (int)EParentGroup.RSO)
+				var cmd = message.ContentUpper[i];
+				if (message.ContentUpper.FirstOrDefault() == "DONE")
 				{
-					m_parentGroupFilter = (EParentGroup)pGroup;
-					response = new ServerMessage(GetWorkingGroupList(user, m_parentGroupFilter.Value));
+					response = ExitTask(session);
 					return true;
 				}
-				// Get parent group
-				response = new ServerMessage((cmd == CommandKey ? "" : "Sorry, I didn't understand that selection. ") + 
-					GetParentGroupSelectionString());
-				return true;
-			}
-			else
-			{
-				if(cmd == "BACK")
+				if (m_parentGroupFilter == null && !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
 				{
-					response = new ServerMessage(GetParentGroupSelectionString());
-					m_parentGroupFilter = null;
+					if (int.TryParse(cmd, out var pGroup) && pGroup >= 0 && pGroup <= (int)EParentGroup.RSO)
+					{
+						m_parentGroupFilter = (EParentGroup)pGroup;
+						if (i < message.ContentUpper.Length - 1)
+						{
+							continue;
+						}
+						response = new ServerMessage(GetWorkingGroupList(user, m_parentGroupFilter.Value));
+						return true;
+					}
+					// Get parent group
+					if (i < message.ContentUpper.Length - 1)
+					{
+						continue;
+					}
+					response = new ServerMessage((cmd == CommandKey ? "" : "Sorry, I didn't understand that selection. ") +
+						GetParentGroupSelectionString());
 					return true;
 				}
-				if(DodoServer.SiteManager.IsValidWorkingGroup(cmd, out var workingGroup))
+				else
 				{
-					string addedOrRemoved;
-					if(user.WorkingGroupPreferences.Contains(workingGroup.ShortCode))
+					if (cmd == "BACK")
 					{
-						addedOrRemoved = "Okay, I removed that. ";
-						user.WorkingGroupPreferences.Remove(workingGroup.ShortCode);
+						response = new ServerMessage(GetParentGroupSelectionString());
+						m_parentGroupFilter = null;
+						return true;
 					}
-					else
+					if (DodoServer.SiteManager.IsValidWorkingGroup(cmd, out var workingGroup))
 					{
-						addedOrRemoved = "Okay, I added that. ";
-						user.WorkingGroupPreferences.Add(workingGroup.ShortCode);
+						string addedOrRemoved;
+						if (user.WorkingGroupPreferences.Contains(workingGroup.ShortCode))
+						{
+							addedOrRemoved = $"Okay, I removed {workingGroup.Name} from your volunteering preferences. ";
+							user.WorkingGroupPreferences.Remove(workingGroup.ShortCode);
+						}
+						else
+						{
+							addedOrRemoved = $"Okay, I added {workingGroup.Name} to your volunteering preferences. ";
+							user.WorkingGroupPreferences.Add(workingGroup.ShortCode);
+						}
+						if (i < message.ContentUpper.Length - 1)
+						{
+							continue;
+						}
+						if(m_parentGroupFilter == null)
+						{
+							response = new ServerMessage(addedOrRemoved);
+							ExitTask(session);
+							return true;
+						}
+						response = new ServerMessage(addedOrRemoved + GetWorkingGroupList(user, m_parentGroupFilter.Value));
+						return true;
 					}
-					response = new ServerMessage(addedOrRemoved + GetWorkingGroupList(user, m_parentGroupFilter.Value));
-					return true;
 				}
 			}
 			response = default;

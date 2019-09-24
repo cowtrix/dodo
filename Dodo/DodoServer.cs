@@ -62,12 +62,12 @@ namespace XR.Dodo
 			SMSGateway = new HTTPGateway(Configuration);
 			TelegramGateway = new TelegramGateway(Configuration.GatewayData.TelegramGatewaySecret);
 
-			var backupTask = new Task(() =>
+			var backupTask = new Task(async () =>
 			{
 				Logger.Debug($"Backup scheduled for every {Configuration.BackupInterval} minutes");
 				while(true)
 				{
-					System.Threading.Thread.Sleep(TimeSpan.FromMinutes(Configuration.BackupInterval));
+					await Task.Delay(TimeSpan.FromMinutes(Configuration.BackupInterval));
 					Backup();
 				}
 			});

@@ -66,7 +66,7 @@ namespace XR.Dodo
 				Environment.Exit(0);
 			}));
 
-			var inputThread = new Task(() =>
+			var inputThread = new Task(async () =>
 			{
 				string input = null;
 				while(true)
@@ -88,7 +88,7 @@ namespace XR.Dodo
 					{
 						Exception(e);
 					}
-					Thread.Sleep(500);
+					await Task.Delay(500);
 				}
 			});
 			inputThread.Start();

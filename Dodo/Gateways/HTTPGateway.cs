@@ -118,7 +118,7 @@ namespace XR.Dodo
 					{
 						try
 						{
-							Logger.Debug("Received status check request");
+							Logger.Debug("Received status check request", writeToLog:false);
 							return Status(request);
 						}
 						catch(Exception e)

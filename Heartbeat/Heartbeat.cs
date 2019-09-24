@@ -60,7 +60,7 @@ namespace XR.Heartbeat
 				while(true)
 				{
 					await DoCheck(0);
-					Thread.Sleep(TimeSpan.FromMinutes(m_configuration.PingInterval));
+					await Task.Delay(TimeSpan.FromMinutes(m_configuration.PingInterval));
 				}
 			});
 			workerThread.Start();

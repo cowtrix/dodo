@@ -37,17 +37,20 @@ namespace Common
 			Error(exception.StackTrace);
 		}
 
-		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black)
+		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black, bool writeToLog = true)
 		{
 			try
 			{
-				message = $"[{DateTime.Now.ToString()}]\t{message}";
+				message = $"{(writeToLog ? "" : "~")}[{DateTime.Now.ToString()}]\t{message}";
 				Console.ForegroundColor = foreground;
 				Console.BackgroundColor = background;
 				Console.WriteLine(message);
-				lock (m_fileLock)
+				if(writeToLog)
 				{
-					File.AppendAllText(LogPath, message + "\n");
+					lock (m_fileLock)
+					{
+						File.AppendAllText(LogPath, message + "\n");
+					}
 				}
 			}
 			catch(Exception e)
