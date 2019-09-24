@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿//using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,6 +91,9 @@ namespace XR.Dodo
 				}
 				if (DateTime.Now - CurrentTask.TimeCreated > CurrentTask.Timeout)
 				{
+					DodoServer.DefaultGateway.SendMessage(
+						new ServerMessage($"Your last command - {Tasks.FirstOrDefault(x => x.Value == CurrentTask.GetType()).Key}" +
+						" - timed out due to inactivity."), session);
 					CurrentTask.ExitTask(session);
 				}
 				else if(CurrentTask.ProcessMessage(message, session, out response))
@@ -101,7 +105,7 @@ namespace XR.Dodo
 			{
 				return new ServerMessage("It doesn't look like you're doing anything right now that I can cancel.");
 			}
-			else if (Tasks.TryGetValue(message.ContentUpper.FirstOrDefault(), out var newWorkflowType))
+			if (Tasks.TryGetValue(message.ContentUpper.FirstOrDefault(), out var newWorkflowType))
 			{
 				var newWorkflow = Activator.CreateInstance(newWorkflowType) as WorkflowTask;
 				if (newWorkflow.GetMinimumAccessLevel() > user.AccessLevel)

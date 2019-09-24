@@ -19,7 +19,7 @@ namespace XR.Dodo
 		public DateTime TimeCreated;
 
 		[JsonIgnore]
-		public virtual TimeSpan Timeout { get { return TimeSpan.FromMinutes(5); } }
+		public virtual TimeSpan Timeout { get { return TimeSpan.FromMinutes(15); } }
 
 		public abstract bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response);
 

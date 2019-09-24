@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Common;
+using System.Collections.Concurrent;
 
 namespace XR.Dodo
 {
@@ -17,8 +18,8 @@ namespace XR.Dodo
 
 		public class SiteData
 		{
-			public Dictionary<int, SiteSpreadsheet> Sites = new Dictionary<int, SiteSpreadsheet>();
-			public Dictionary<string, WorkingGroup> WorkingGroups = new Dictionary<string, WorkingGroup>();
+			public ConcurrentDictionary<int, SiteSpreadsheet> Sites = new ConcurrentDictionary<int, SiteSpreadsheet>();
+			public ConcurrentDictionary<string, WorkingGroup> WorkingGroups = new ConcurrentDictionary<string, WorkingGroup>();
 		}
 		public SiteData Data;
 
@@ -286,7 +287,7 @@ namespace XR.Dodo
 				{
 					continue;
 				}
-				Data.Sites.Add(site.SiteNumber, sheet);
+				Data.Sites.TryAdd(site.SiteNumber, sheet);
 			}
 			Logger.Debug("Finished loading");
 		}
@@ -324,7 +325,7 @@ namespace XR.Dodo
 			}
 			var shortCode = GenerateShortCode(name);
 			var wg = new WorkingGroup(name, parentGroup, mandate, shortCode);
-			Data.WorkingGroups.Add(wg.ShortCode, wg);
+			Data.WorkingGroups.TryAdd(wg.ShortCode, wg);
 			return wg;
 		}
 

@@ -84,6 +84,12 @@ namespace XR.Dodo
 					{
 						try
 						{
+							var parentGroupString = parentGroupRow.ElementAtOrDefault(column) as string ?? "";
+							if(SiteSpreadsheetManager.TryStringToParentGroup(parentGroupString, out var newGroup))
+							{
+								parentGroup = newGroup;
+							}
+
 							var name = (rowString.ElementAt(column) as string).Trim();
 							if (string.IsNullOrEmpty(name))
 							{
@@ -136,6 +142,7 @@ namespace XR.Dodo
 							{
 								Logger.Debug($"Site {SiteCode} had custom Working Group {workingGroupName}");
 								wg = manager.GenerateWorkingGroup(workingGroupName, parentGroup, mandate);
+								manager.Data.WorkingGroups.TryAdd(wg.ShortCode, wg);
 							}
 							var role = new Role(wg, roleName, SiteCode);
 							var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace XR.Dodo
@@ -34,6 +35,11 @@ namespace XR.Dodo
 			ShortCode = shortcode;
 		}
 
+		public override string ToString()
+		{
+			return $"{Name}: {ParentGroup.GetName()} ({ShortCode})";
+		}
+
 		public override bool Equals(object obj)
 		{
 			return obj is WorkingGroup group &&
@@ -53,7 +59,17 @@ namespace XR.Dodo
 		public string WorkingGroupCode;
 
 		[JsonIgnore]
-		public WorkingGroup WorkingGroup { get { return DodoServer.SiteManager.Data.WorkingGroups[WorkingGroupCode]; } }
+		public WorkingGroup WorkingGroup
+		{
+			get
+			{
+				if(!DodoServer.SiteManager.Data.WorkingGroups.TryGetValue(WorkingGroupCode, out var wg))
+				{
+					throw new Exception($"Failed to look up Working Group with code: " + WorkingGroupCode);
+				}
+				return wg;
+			}
+		}
 
 		[JsonIgnore]
 		public SiteSpreadsheet Site { get { return DodoServer.SiteManager.GetSite(SiteCode); } }

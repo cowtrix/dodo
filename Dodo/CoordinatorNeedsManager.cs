@@ -102,7 +102,10 @@ namespace XR.Dodo
 				{
 					try
 					{
-						ProcessNeeds();
+						if(DodoServer.DefaultGateway != null)
+						{
+							ProcessNeeds();
+						}
 						await Task.Delay(TimeSpan.FromSeconds(10));
 					}
 					catch(Exception e)
@@ -138,7 +141,7 @@ namespace XR.Dodo
 					toRemove.Add(need.Key);
 					continue;
 				}
-				if (need.TimeNeeded < DateTime.Now || (need.TimeNeeded == DateTime.MaxValue && DateTime.Now > need.TimeOfRequest + TimeSpan.FromHours(1)))
+				if (need.TimeNeeded < DateTime.Now || (need.TimeNeeded == DateTime.MaxValue && DateTime.Now > need.TimeOfRequest + TimeSpan.FromMinutes(1)))
 				{
 					// We're past the needed date, cancel the request
 					var contacts = need.GetAllCoordinatorContacts();
@@ -154,15 +157,19 @@ namespace XR.Dodo
 					.OrderBy(user => user.WorkingGroupPreferences.Contains(need.WorkingGroupCode))	// Put the ones who have selected this working group first
 					.ThenBy(user => user.GetTrustScore())
 					.Take(Math.Max(0, need.Amount - need.ConfirmedVolunteers.Count)).ToList();
-				Logger.Debug($"Found {uncontactedMatchingUsers.Count()} new volunteers for need {need.Key}");
-				foreach(var volunteer in uncontactedMatchingUsers)
+				if(uncontactedMatchingUsers.Count == 0)
 				{
-					need.ContactedVolunteers.TryAdd(volunteer.UUID, false);
+					continue;
 				}
 				DodoServer.DefaultGateway.Broadcast(new ServerMessage($"Hello rebel! It looks like there might be a role needed at your site that you might be able to fill. " +
 						(need.Amount == int.MaxValue ? "" : $"There are {need.ConfirmedVolunteers.Count}/{need.Amount} spots still needing to be filled. ")
 						+ $"The role is {need.Description} with {need.WorkingGroup.Name}, starting {Utility.ToDateTimeCode(need.TimeNeeded)}. If you can do this, reply {need.Key}."),
 						uncontactedMatchingUsers);
+				Logger.Debug($"Found {uncontactedMatchingUsers.Count()} new volunteers for need {need.Key}");
+				foreach (var volunteer in uncontactedMatchingUsers)
+				{
+					need.ContactedVolunteers.TryAdd(volunteer.UUID, false);
+				}
 			}
 			foreach(var removeKey in toRemove)
 			{
@@ -242,7 +249,7 @@ namespace XR.Dodo
 			var spreadsheet = new List<List<string>>();
 			spreadsheet.Add(new List<string>()
 			{
-				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Description", "Contact Code", "Time Needed", "Time Updated"
+				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Role Description", "Contact Code", "Time Needed", "Time Updated"
 			});
 			var sites = DodoServer.SiteManager.GetSites();
 			foreach (var needKey in CurrentNeeds.OrderBy(x => x.Value.TimeOfRequest))

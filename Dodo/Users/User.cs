@@ -24,11 +24,12 @@ namespace XR.Dodo
 		public string UUID;
 		public string Email;
 		public int Karma;
-		public bool Active = true;
+		public bool Active;
 		public bool GDPR;
 		public DateTime StartDate;
 		public DateTime EndDate = DateTime.MaxValue;
 
+		[JsonIgnore]
 		public HashSet<Role> CoordinatorRoles = new HashSet<Role>();
 		public HashSet<string> WorkingGroupPreferences = new HashSet<string>();
 

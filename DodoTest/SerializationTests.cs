@@ -11,8 +11,8 @@ public class SerializationTests : TestBase
 	public void CheckSiteSerialization()
 	{
 		var data = new SiteSpreadsheetManager.SiteData();
-		data.Sites.Add(3, new SiteSpreadsheet(3, "Test", "", null));
-		data.WorkingGroups.Add("TE", new WorkingGroup("Test", EParentGroup.ActionSupport, "test", "TE"));
+		data.Sites.TryAdd(3, new SiteSpreadsheet(3, "Test", "", null));
+		data.WorkingGroups.TryAdd("TE", new WorkingGroup("Test", EParentGroup.ActionSupport, "test", "TE"));
 
 		var str = JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings
 		{

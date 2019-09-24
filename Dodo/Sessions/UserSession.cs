@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 using Newtonsoft.Json;
 
 namespace XR.Dodo
@@ -31,7 +32,15 @@ namespace XR.Dodo
 		public Workflow Workflow = new Workflow();
 		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
-			return Workflow.ProcessMessage(message, session);
+			try
+			{
+				return Workflow.ProcessMessage(message, session);
+			}
+			catch(Exception e)
+			{
+				Logger.Exception(e, "Unhandled exception in workflow");
+				return new ServerMessage("Sorry, something when wrong. Please try again.");
+			}
 		}
 	}
 }

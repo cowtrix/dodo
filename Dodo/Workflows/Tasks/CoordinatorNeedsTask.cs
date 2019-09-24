@@ -56,7 +56,7 @@ namespace XR.Dodo
 					}
 					else
 					{
-						response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " +
+						response = new ServerMessage((cmd == CommandKey ? "" : "Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. ") +
 							GetSiteNumberRequestString(approvedSites));
 						return true;
 					}
@@ -83,41 +83,53 @@ namespace XR.Dodo
 						if (ParentGroupFilter == null)
 						{
 							var list = Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>().ToList();
-							if (!SiteSpreadsheetManager.TryStringToParentGroup(cmd, out var parentGroup))
+							if (int.TryParse(cmd, out var number) && number >= 0 && number < list.Count 
+								&& (SiteCode > 0 || list[number] < EParentGroup.RSO))
 							{
-								if (int.TryParse(cmd, out var number) && number >= 0 && number < list.Count)
-								{
-									ParentGroupFilter = list.ElementAt(number);
-									if (i >= message.ContentUpper.Length - 1)
-									{
-										response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. "
-											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
-										return true;
-									}
-									continue;
-								}
+								ParentGroupFilter = list.ElementAt(number);
 								if (i >= message.ContentUpper.Length - 1)
 								{
-									var sb = new StringBuilder("Please tell me which Parent Group the working group belongs to:\n");
-									for (int j = 0; j < list.Count; j++)
+									var filteredGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value);
+									if (filteredGroups.Count() == 0)
 									{
-										if (list[j] == EParentGroup.RSO)
-										{
-											continue;
-										}
-										sb.AppendLine($"{j} - {list[j].GetName()}");
+										response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. " +
+											"It doesn't look like there are any coordinators registered for this Parent Group at this site.");
+										ExitTask(session);
+										return true;
 									}
-									sb.AppendLine("Or, if you already know the working group code, you can just tell me that.");
-									response = new ServerMessage(sb.ToString());
+									response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. "
+												+ GetWorkingGroupRequestString(filteredGroups));
 									return true;
 								}
 								continue;
 							}
-							ParentGroupFilter = parentGroup;
-							if (i >= message.ContentUpper.Length - 1)
+							else if (i >= message.ContentUpper.Length - 1)
 							{
-								response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
-											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
+								var sb = new StringBuilder("Please tell me which Parent Group the working group belongs to:\n");
+								for (int j = 0; j < list.Count; j++)
+								{
+									if (SiteCode > 0 && list[j] == EParentGroup.RSO)
+									{
+										continue;
+									}
+									sb.AppendLine($"{j} - {list[j].GetName()}");
+								}
+								sb.AppendLine("Or, if you already know the working group code, you can just tell me that.");
+								response = new ServerMessage(sb.ToString());
+								return true;
+							}
+							else if (i >= message.ContentUpper.Length - 1)
+							{
+								var filteredGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value);
+								if(filteredGroups.Count() == 0)
+								{
+									response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. " +
+										"It doesn't look like there are any coordinators registered for this Parent Group at this site.");
+									ExitTask(session);
+									return true;
+								}
+								response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. "
+											+ GetWorkingGroupRequestString(filteredGroups));
 								return true;
 							}
 							continue;
@@ -125,6 +137,13 @@ namespace XR.Dodo
 						else
 						{
 							workingGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value).ToList();
+							if (workingGroups.Count() == 0)
+							{
+								response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. " +
+									"It doesn't look like there are any coordinators registered for this Parent Group at this site.");
+								ExitTask(session);
+								return true;
+							}
 						}
 					}
 				}
