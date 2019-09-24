@@ -56,12 +56,13 @@ namespace XR.Dodo
 					}
 					else
 					{
-						response = new ServerMessage(GetSiteNumberRequestString(approvedSites));
+						response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " + 
+							GetSiteNumberRequestString(approvedSites));
 						return true;
 					}
 				}
 
-				var workingGroups = ApprovedWorkingGroups(user);
+				var workingGroups = ApprovedWorkingGroups(SiteCode, user);
 				if (!DodoServer.SiteManager.IsValidWorkingGroup(WorkingGroup) && !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
 				{
 					if(workingGroups.Count == 1 && user.AccessLevel != EUserAccessLevel.RotaCoordinator)
@@ -104,7 +105,7 @@ namespace XR.Dodo
 										{
 											continue;
 										}
-										sb.AppendLine($"{j} - {list[j]}");
+										sb.AppendLine($"{j} - {list[j].GetName()}");
 									}
 									sb.AppendLine("Or, if you already know the working group code, you can just tell me that.");
 									response = new ServerMessage(sb.ToString());
@@ -164,7 +165,8 @@ namespace XR.Dodo
 						}
 						else
 						{
-							response = new ServerMessage(GetWorkingGroupRequestString(workingGroups));
+							response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " + 
+								GetWorkingGroupRequestString(workingGroups));
 							return true;
 						}
 					}
@@ -195,7 +197,7 @@ namespace XR.Dodo
 						{
 							response = new ServerMessage("Now, tell me how many volunteers you need." +
 								" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
-								" If you'd like to cancel, reply 'CANCEL'.");
+								" If you'd like to cancel, reply 'DONE'.");
 							return true;
 						}
 						++i;
@@ -205,7 +207,7 @@ namespace XR.Dodo
 					{
 						if(i >= message.ContentUpper.Length - 1)
 						{
-							response = new ServerMessage(GetTimeRequestString());
+							response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " + GetTimeRequestString());
 							return true;
 						}
 						continue;
@@ -230,7 +232,7 @@ namespace XR.Dodo
 						{
 							response = new ServerMessage("Sorry, I didn't understand that number." +
 								" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
-								" If you'd like to cancel, reply 'CANCEL'.");
+								" If you'd like to cancel, reply 'DONE'.");
 							return true;
 						}
 						continue;
@@ -249,11 +251,19 @@ namespace XR.Dodo
 				}
 				if(Description == "" && message.ContentUpper.FirstOrDefault() != "SKIP")
 				{
+					if(message.Content.Length > 160)
+					{
+						response = new ServerMessage("Sorry, that was too long. If you'd like to cancel, reply 'DONE'. Or, to skip this step, reply SKIP");
+						return true;
+					}
 					Description = message.Content;
 				}
-
-				DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, WorkingGroup, SiteCode, Amount, TimeNeeded, Description);
 				ExitTask(session);
+				if (!DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, WorkingGroup, SiteCode, Amount, TimeNeeded, Description))
+				{
+					response = new ServerMessage("Sorry, there was a problem adding that Volunteer Request. Please try again.");
+					return true;
+				}
 				// "NEED 0 AD 7/10 08:00 3"
 				response = new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
 					$" In future, you could make this request in one go by saying NEED " +
@@ -287,14 +297,20 @@ namespace XR.Dodo
 			return allSites.Where(x => user.CoordinatorRoles.Any(y => y.SiteCode == x.SiteCode)).ToList();
 		}
 
-		private List<WorkingGroup> ApprovedWorkingGroups(User user)
+		private List<WorkingGroup> ApprovedWorkingGroups(int siteCode, User user)
 		{
 			if (user.AccessLevel == EUserAccessLevel.Coordinator)
 			{
 				return user.CoordinatorRoles.Select(x => x.WorkingGroup).ToList();
 			}
-			return DodoServer.SiteManager.Data.WorkingGroups.Values
-				.Where(x => x.ParentGroup != EParentGroup.RSO).ToList();
+			var site = DodoServer.SiteManager.GetSite(siteCode);
+			var allWgs = DodoServer.SiteManager.Data.WorkingGroups.Values
+				.Where(x => site.WorkingGroups.Contains(x.ShortCode));
+			if (user.AccessLevel == EUserAccessLevel.RotaCoordinator)
+			{
+				return allWgs.Where(x => x.ParentGroup != EParentGroup.RSO).ToList();
+			}
+			return allWgs.ToList();
 		}
 
 		private string GetSiteNumberRequestString(IEnumerable<SiteSpreadsheet> sites)
@@ -311,10 +327,11 @@ namespace XR.Dodo
 		{
 			var sb = new StringBuilder("Please select the Working Group from the list:\n");
 			var parentGroup = wgs.First().ParentGroup;
+			bool needHeaders = wgs.Any(x => x.ParentGroup != parentGroup);
 			for (var i = 0; i < wgs.Count(); i++)
 			{
 				var wg = (WorkingGroup)wgs.ElementAt(i);
-				if(i == 0 || wg.ParentGroup != parentGroup)
+				if(needHeaders && (i == 0 || wg.ParentGroup != parentGroup))
 				{
 					parentGroup = wg.ParentGroup;
 					sb.AppendLine($"{parentGroup}:");

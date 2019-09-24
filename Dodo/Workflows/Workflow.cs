@@ -18,7 +18,7 @@ namespace XR.Dodo
 			AddTask<VerificationTask>(); // TODO Blocker is twilio account :(
 			AddTask<HelpTask>();
 			AddTask<InfoTask>();
-
+			AddTask<RolesTask>();
 			AddTask<CoordinatorWhoIsTask>();
 			AddTask<CoordinatorNeedsTask>();
 			AddTask<CoordinatorRemoveNeedTask>();
@@ -44,7 +44,7 @@ namespace XR.Dodo
 			if(CurrentTask != null)
 			{
 				// We have a task underway, so we process that
-				if(CurrentTask.CanCancel() && message.ContentUpper.FirstOrDefault() == "CANCEL")
+				if(CurrentTask.CanCancel() && message.ContentUpper.FirstOrDefault() == "DONE")
 
 				{
 					// Cancel the request
@@ -57,7 +57,7 @@ namespace XR.Dodo
 						+ (user.IsVerified() ? "" : " Please verify your account and try again."));
 				}
 				// Do task specific help
-				if (message.ContentUpper.FirstOrDefault() == "HELP")
+				if (message.ContentUpper.FirstOrDefault() == "HELPME")
 				{
 					if(CurrentTask.GetHelp(out var helpResponse))
 					{
@@ -73,7 +73,7 @@ namespace XR.Dodo
 					return response;
 				}
 			}
-			else if(message.ContentUpper.FirstOrDefault() == "CANCEL")
+			else if(message.ContentUpper.FirstOrDefault() == "DONE")
 			{
 				return new ServerMessage("It doesn't look like you're doing anything right now that I can cancel.");
 			}
@@ -101,7 +101,7 @@ namespace XR.Dodo
 		ServerMessage DidntUnderstand(User user)
 		{
 			user.Karma--;
-			return new ServerMessage("Sorry, I didn't understand that. If you'd like some help, reply HELP");
+			return new ServerMessage("Sorry, I didn't understand that. If you'd like some help, reply HELPME");
 		}
 	}
 }

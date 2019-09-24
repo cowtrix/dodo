@@ -134,6 +134,7 @@ namespace XR.Dodo
 
 							if (!manager.GetWorkingGroupFromName(workingGroupName, out WorkingGroup wg))
 							{
+								Logger.Debug($"Site {SiteCode} had custom Working Group {workingGroupName}");
 								wg = manager.GenerateWorkingGroup(workingGroupName, parentGroup, mandate);
 							}
 							var role = new Role(wg, roleName, SiteCode);

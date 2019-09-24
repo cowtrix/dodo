@@ -67,7 +67,7 @@ namespace XR.Dodo
 							{
 								stb.AppendLine($"{(int)pg} - {pg.GetName()}");
 							}
-							stb.AppendLine("Or, if you want to cancel, reply CANCEL");
+							stb.AppendLine("Or, if you want to cancel, reply DONE");
 							response = new ServerMessage(stb.ToString());
 							return true;
 						}

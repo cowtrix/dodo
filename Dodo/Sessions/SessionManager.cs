@@ -27,8 +27,9 @@ namespace XR.Dodo
 
 		public void LoadFromFile(string backupFolder)
 		{
-			if(DodoServer.Dummy)
+			if(DodoServer.NoLoad || DodoServer.Dummy)
 			{
+				_data = _data ?? new SessionManagerData();
 				return;
 			}
 			var dataPath = Path.Combine(backupFolder, "sessions.json");

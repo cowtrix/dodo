@@ -39,7 +39,7 @@ namespace XR.Dodo
 			}
 		}
 
-		public Dictionary<string, Need> CurrentNeeds;
+		public ConcurrentDictionary<string, Need> CurrentNeeds;
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
 		public const int MaxNeedCount = 5;
@@ -96,7 +96,7 @@ namespace XR.Dodo
 				}
 				var matchingUsers = DodoServer.SessionManager.GetUsers()
 					.Where(x => x.StartDate < need.TimeNeeded && x.EndDate > need.TimeNeeded)
-					.OrderBy(x => x.WorkingGroups.Contains(need.WorkingGroup));
+					.OrderBy(x => x.WorkingGroupPreferences.Contains(need.WorkingGroup.ShortCode));
 			}
 		}
 
@@ -145,7 +145,11 @@ namespace XR.Dodo
 				newNeed.Salt = Utility.RandomString(2, new Random().Next().ToString());
 			}
 			while (CurrentNeeds.ContainsKey(newNeed.Key));
-			CurrentNeeds.Add(newNeed.Key, newNeed);
+			if(!CurrentNeeds.TryAdd(newNeed.Key, newNeed))
+			{
+				Logger.Alert("Could not add new need with key " + newNeed.Key);
+				return false;
+			}
 			m_dirty = true;
 			return true;
 		}
@@ -153,7 +157,7 @@ namespace XR.Dodo
 		public bool RemoveNeed(Need need)
 		{
 			m_dirty = true;
-			return CurrentNeeds.Remove(need.Key);
+			return CurrentNeeds.TryRemove(need.Key, out _);
 		}
 
 		void UpdateNeedsOnGSheet()
@@ -198,12 +202,12 @@ namespace XR.Dodo
 		public void LoadFromFile(string backupFolder)
 		{
 			var backupPath = Path.Combine(backupFolder, "needs.json");
-			if (!File.Exists(backupPath))
+			if (DodoServer.NoLoad || !File.Exists(backupPath))
 			{
-				CurrentNeeds = new Dictionary<string, Need>();
+				CurrentNeeds = new ConcurrentDictionary<string, Need>();
 				return;
 			}
-			CurrentNeeds = JsonConvert.DeserializeObject<Dictionary<string, Need>> (File.ReadAllText(backupPath), new JsonSerializerSettings
+			CurrentNeeds = JsonConvert.DeserializeObject<ConcurrentDictionary<string, Need>> (File.ReadAllText(backupPath), new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			});

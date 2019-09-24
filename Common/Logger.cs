@@ -65,5 +65,15 @@ namespace Common
 		{
 			Debug(message, ConsoleColor.Yellow);
 		}
+
+		public static void Alert(string message)
+		{
+			ExceptionLog.Add(new ExceptionEntry()
+			{
+				Message = message,
+				TimeStamp = DateTime.Now,
+			});
+			Debug(message, ConsoleColor.Cyan);
+		}
 	}
 }

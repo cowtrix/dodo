@@ -124,7 +124,7 @@ namespace XR.Dodo
 			}
 			if(!ValidationExtensions.EmailIsValid(message.Content.Trim()))
 			{
-				response = new ServerMessage("Sorry, that didn't seem like a valid email address to me. You can try again, or if you don't want to update your email, reply CANCEL");
+				response = new ServerMessage("Sorry, that didn't seem like a valid email address to me. You can try again, or if you don't want to update your email, reply DONE");
 				return true;
 			}
 			user.Email = message.Content.Trim();
@@ -164,14 +164,14 @@ namespace XR.Dodo
 			catch
 			{
 				response = new ServerMessage($"Sorry, I didn't quite understand that date. For instance, if you were arriving on the 12th of October, you would reply 12/10." +
-					" Or if you want to stop updating your arrival date, reply CANCEL.");
+					" Or if you want to stop updating your arrival date, reply DONE.");
 				user.Karma--;
 				return true;
 			}
 			if (startDate < new DateTime(2019, 10, 7))
 			{
 				response = new ServerMessage($"Looks like you're an early bird! But the rebellion starts on the 7th of October, so that's the earliest you can arrive. If that's the case, reply 7/10." +
-					" Or if you want to stop updating your arrival date, reply CANCEL.");
+					" Or if you want to stop updating your arrival date, reply DONE.");
 				return true;
 			}
 			user.StartDate = startDate;
@@ -214,20 +214,20 @@ namespace XR.Dodo
 			catch
 			{
 				response = new ServerMessage($"Sorry, I didn't quite understand that date. For instance, if you were departing on the 12th of October, you would reply 12/10." +
-					" Or if you want to stop updating your departure date, reply CANCEL.");
+					" Or if you want to stop updating your departure date, reply DONE.");
 				user.Karma--;
 				return true;
 			}
 			if (endDate < new DateTime(2019, 10, 7))
 			{
 				response = new ServerMessage($"Looks like you're an early bird! But the rebellion starts on the 7th of October, so that's the earliest you can leave. If that's the case, reply 7/10." +
-					" Or if you want to stop updating your arrival date, reply CANCEL.");
+					" Or if you want to stop updating your arrival date, reply DONE.");
 				return true;
 			}
 			if (user.StartDate != default && endDate < user.StartDate)
 			{
 				response = new ServerMessage($"Hmm, it looks like you're leaving earlier than you said you'd arrive ({user.StartDate}). Do you need to update your arrival date first?" +
-					" Or if you want to stop updating your arrival date, reply CANCEL.");
+					" Or if you want to stop updating your arrival date, reply DONE.");
 				return true;
 			}
 			user.EndDate = endDate;
@@ -241,7 +241,7 @@ namespace XR.Dodo
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
 		{
 			var user = session.GetUser();
-			if(message.ContentUpper.FirstOrDefault() == "CANCEL")
+			if(message.ContentUpper.FirstOrDefault() == "DONE")
 			{
 				CurrentCommand = null;
 				response = new ServerMessage("Okay, no worries. " + GetTaskString());
@@ -281,7 +281,7 @@ namespace XR.Dodo
 				sb.AppendLine($"{task.Key} - {task.Value.HelpString}");
 			}
 			sb.AppendLine();
-			sb.AppendLine("Or, if you're done, reply CANCEL");
+			sb.AppendLine("Or, if you're done, reply DONE");
 			return sb.ToString();
 		}
 

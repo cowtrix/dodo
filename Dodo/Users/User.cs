@@ -28,11 +28,11 @@ namespace XR.Dodo
 		public DateTime EndDate;
 
 		public HashSet<Role> CoordinatorRoles = new HashSet<Role>();
-		public HashSet<WorkingGroup> WorkingGroups = new HashSet<WorkingGroup>();
+		public HashSet<string> WorkingGroupPreferences = new HashSet<string>();
 
 		public override string ToString()
 		{
-			return $"{Name ?? PhoneNumber ?? TelegramUser.ToString()} - {AccessLevel}";
+			return $"{Name ?? PhoneNumber ?? TelegramUser.ToString()} ({AccessLevel})";
 		}
 
 		public bool IsVerified()
@@ -68,6 +68,9 @@ namespace XR.Dodo
 				return CoordinatorRoles.Any(x => //x.WorkingGroup.ParentGroup == EParentGroup.MovementSupport &&
 					  x.WorkingGroup.Name.ToUpperInvariant().Contains("ROTA")); }
 		}
+
+		[JsonIgnore]
+		public SiteSpreadsheet Site { get { return DodoServer.SiteManager.GetSite(SiteCode); } }
 
 		public User()
 		{

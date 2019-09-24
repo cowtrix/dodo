@@ -7,7 +7,7 @@ namespace XR.Dodo
 	[WorkflowTaskInfo(EUserAccessLevel.Volunteer)]
 	public class HelpTask : WorkflowTask
 	{
-		public static string CommandKey { get { return "HELP"; } }
+		public static string CommandKey { get { return "HELPME"; } }
 		public static string HelpString { get { return $"{CommandKey} - ask for help, if you're not sure what to do."; } }
 
 		public override bool ProcessMessage(UserMessage message, UserSession session, out ServerMessage response)
@@ -28,8 +28,8 @@ namespace XR.Dodo
 				sb.AppendLine(helpStr);
 			}
 			sb.AppendLine();
-			/*sb.AppendLine("If you want help to use a specific command, just say the command name, and then HELP - for instance, INFO HELP." +
-				" If you're still confused, reply HELP CONTACT and someone will be in touch to help you out.");*/
+			/*sb.AppendLine("If you want help to use a specific command, just say the command name, and then HELPME - for instance, INFO HELPME." +
+				" If you're still confused, reply HELPME CONTACT and someone will be in touch to help you out.");*/
 			response = new ServerMessage(sb.ToString());
 			ExitTask(session);
 			return true;

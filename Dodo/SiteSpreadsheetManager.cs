@@ -113,7 +113,7 @@ namespace XR.Dodo
 
 		public SiteSpreadsheet GetSite(int siteCode)
 		{
-			return Data.Sites.Single(x => x.Key == siteCode).Value;
+			return Data.Sites.SingleOrDefault(x => x.Key == siteCode).Value;
 		}
 
 		public WorkingGroup GetWorkingGroup(string code)
@@ -212,6 +212,11 @@ namespace XR.Dodo
 			return Data.WorkingGroups.ContainsKey(shortCode);
 		}
 
+		public bool IsValidWorkingGroup(string shortCode, out WorkingGroup workingGroup)
+		{
+			return Data.WorkingGroups.TryGetValue(shortCode, out workingGroup);
+		}
+
 		public bool IsValidSiteCode(int siteCode)
 		{
 			return Data.Sites.ContainsKey(siteCode);
@@ -290,7 +295,7 @@ namespace XR.Dodo
 		{
 			var wgData = GSheets.GetSheetRange(m_wgDataID, "A:D");
 			var parentGroup = EParentGroup.ActionSupport;
-			foreach(var row in wgData.Values.Skip(3))
+			foreach(var row in wgData.Values.Skip(1))
 			{
 				try
 				{
@@ -313,10 +318,6 @@ namespace XR.Dodo
 
 		public WorkingGroup GenerateWorkingGroup(string name, EParentGroup parentGroup, string mandate)
 		{
-			if(name.Contains("Site training"))
-			{
-				Logger.Debug("");
-			}
 			if(Data.WorkingGroups.Any(x => x.Value.Name == name && x.Value.ParentGroup == parentGroup))
 			{
 				return Data.WorkingGroups.First(x => x.Value.Name == name && x.Value.ParentGroup == parentGroup).Value;

@@ -29,6 +29,7 @@ namespace XR.Dodo
 		private static string ConfigPath { get { return Path.GetFullPath("config.json"); } }
 
 		public static bool Dummy { get; private set; }
+		public static bool NoLoad { get; private set; }
 
 		static void Main(string[] args)
 		{
@@ -38,8 +39,9 @@ namespace XR.Dodo
 		public static void Initialise(params string[] args)
 		{
 			Dummy = args.Any(x => x == "-d");
+			NoLoad = args.Any(x => x == "-nl");
 
-			if(!File.Exists(ConfigPath))
+			if (!File.Exists(ConfigPath))
 			{
 				GenerateSampleConfig();
 				return;

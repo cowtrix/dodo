@@ -72,7 +72,12 @@ namespace XR.Dodo
 					{
 						m_page++;
 					}
-					response = GetNeedsMenu(authorisedNeeds);
+					string didntUnderstand = "";
+					if(cmd != CommandKey)
+					{
+						didntUnderstand = "Sorry, I didn't understand that code. If you'd like to cancel, reply DONE. ";
+					}
+					response = new ServerMessage(didntUnderstand + GetNeedsMenu(authorisedNeeds));
 					return true;
 				}
 
@@ -91,8 +96,8 @@ namespace XR.Dodo
 		}
 
 		int m_page = 1;
-		const int MaxNeedsPerPage = 5;
-		private ServerMessage GetNeedsMenu(List<CoordinatorNeedsManager.Need> needs)
+		const int MaxNeedsPerPage = 10;
+		private string GetNeedsMenu(List<CoordinatorNeedsManager.Need> needs)
 		{
 			var totalPages = needs.Count / MaxNeedsPerPage + 1;
 			var sb = new StringBuilder("Please tell me the code for the Volunteer Request to cancel:\n");
@@ -105,9 +110,9 @@ namespace XR.Dodo
 				if (siteCode != need.SiteCode || i == startIndex)
 				{
 					siteCode = need.SiteCode;
-					sb.AppendLine($"Site {siteCode}:");
+					sb.AppendLine($"==Site {siteCode}=====");
 				}
-				sb.AppendLine($"\t{need.Key} - {need.WorkingGroup.Name} - {need.Amount} for {need.TimeNeeded.ToString("dd/MM HH:mm")}");
+				sb.AppendLine($"{need.Key} - {need.WorkingGroup.Name} - {(need.Amount == int.MaxValue ? "MANY" : need.Amount.ToString())} for {need.TimeNeeded.ToString("dd/MM HH:mm")}");
 			}
 			if(totalPages > 1)
 			{
@@ -121,7 +126,7 @@ namespace XR.Dodo
 					sb.Append(" - reply NEXT▶");
 				}
 			}
-			return new ServerMessage(sb.ToString());
+			return sb.ToString();
 		}
 	}
 }

@@ -11,11 +11,14 @@ namespace XR.Dodo
 
 		public override TimeSpan Timeout { get { return TimeSpan.MaxValue; } }
 
+		public EParentGroup? m_parentGroupFilter;
+
 		public enum EState
 		{
 			VolunteerAgreement,
 			GetName,
 			GetSite,
+			GetPrefs,
 			GetStartingDate,
 			GetEndDate,
 			Tutorial,
@@ -51,9 +54,9 @@ namespace XR.Dodo
 				}
 			}
 
-			if(message.ContentUpper.FirstOrDefault() == "CANCEL")
+			if(message.ContentUpper.FirstOrDefault() == "DONE")
 			{
-				response = new ServerMessage($"No problem. If you're ever confused, just reply HELP and I'll try to give you some guidance about what you can ask me to do. " +
+				response = new ServerMessage($"No problem. If you're ever confused, just reply HELPME and I'll try to give you some guidance about what you can ask me to do. " +
 					"Why don't you try that now?");
 				ExitTask(session);
 				return true;
@@ -68,27 +71,28 @@ namespace XR.Dodo
 				{
 					nameString = $"Well, that was a bit long, so how about {user.Name}. ";
 				}
+				nameString += "Now, if you already know how you're getting involved in the Autumn Rebellion, " +
+						"you can just reply DONE. Otherwise, you can tell me a little more about yourself. Firstly, ";
 				if (user.StartDate != default && DateTime.Now > user.StartDate)
 				{
-					response = new ServerMessage(nameString + "Ok, which site are you at? " + GetSiteList());
+					response = new ServerMessage(nameString + "which site are you at? " + GetSiteList());
 					return true;
 				}
-				response = new ServerMessage(nameString + "Ok, which site are you going to be at? " + GetSiteList());
+				response = new ServerMessage(nameString + "which site are you going to be at? " + GetSiteList());
 				State = EState.GetSite;
 				return true;
 			}
 
+			const string wgPrefsString = "Now you can tell me about what Working Groups you'd like to volunteer for. " +
+				"You can find out about what each Working Group does here: http://www.REPLACE.ME\n";
 			if (State == EState.GetSite)
 			{
-				const string responseString = "Now, if you already know how you're getting involved in the Autumn Rebellion, " +
-						"you can just reply CANCEL. Otherwise, you can tell me a little more about yourself. Firstly, what date will you be arriving to the rebellion? " +
-						"For instance, if you were arriving on the 7th of October, you would reply 7/10";
 				if(message.ContentUpper.FirstOrDefault() == "SKIP")
 				{
-					response = new ServerMessage($"Okay, we can skip that for now. " + responseString);
-					State = EState.GetStartingDate;
+					response = new ServerMessage($"Okay, we can skip that. " + wgPrefsString + GetParentGroupSelectionString());
+					State = EState.GetPrefs;
 					return true;
-				}				
+				}
 				if (!int.TryParse(message.ContentUpper.FirstOrDefault(), out var siteCode) || siteCode == 0 ||
 					!DodoServer.SiteManager.IsValidSiteCode(siteCode))
 				{
@@ -99,14 +103,72 @@ namespace XR.Dodo
 				user.SiteCode = siteCode;
 				if (user.StartDate != default && DateTime.Now > user.StartDate)
 				{
-					response = new ServerMessage($"Okay, you're at {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}. " + responseString);
+					response = new ServerMessage($"Okay, you're at {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}. " +
+						wgPrefsString + GetParentGroupSelectionString());
 				}
 				else
 				{
-					response = new ServerMessage($"Okay, you're going to be at the {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName} site. " + responseString);
+					response = new ServerMessage($"Okay, you're going to be at the {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName} site. " + 
+						wgPrefsString + GetParentGroupSelectionString());
 				}
-				State = EState.GetStartingDate;
+				State = EState.GetPrefs;
 				return true;
+			}
+
+			var cmd = message.ContentUpper.FirstOrDefault();
+			if (State == EState.GetPrefs)
+			{
+				const string responseString = "Now, what date will you be arriving to the rebellion? " +
+						"For instance, if you were arriving on the 7th of October, you would reply 7/10";
+				if (message.ContentUpper.FirstOrDefault() == "SKIP")
+				{
+					response = new ServerMessage($"Okay, we can skip that for now. " + responseString);
+					State = EState.GetStartingDate;
+					return true;
+				}
+				if (message.ContentUpper.FirstOrDefault() == "DONE")
+				{
+					response = new ServerMessage(responseString);
+					State = EState.GetStartingDate;
+					return true;
+				}
+				if (m_parentGroupFilter == null)
+				{
+					if(int.TryParse(cmd, out var pGroup) && pGroup >= 0 && pGroup <= (int)EParentGroup.RSO)
+					{
+						m_parentGroupFilter = (EParentGroup)pGroup;
+						response = new ServerMessage(GetWorkingGroupList(user, m_parentGroupFilter.Value));
+						return true;
+					}
+					// Get parent group
+					response = new ServerMessage("Sorry, I didn't understand that selection. " + GetParentGroupSelectionString());
+					return true;
+				}
+				else
+				{
+					if(cmd == "BACK")
+					{
+						response = new ServerMessage(GetParentGroupSelectionString());
+						m_parentGroupFilter = null;
+						return true;
+					}
+					if(DodoServer.SiteManager.IsValidWorkingGroup(cmd, out var workingGroup))
+					{
+						string addedOrRemoved;
+						if(user.WorkingGroupPreferences.Contains(workingGroup.ShortCode))
+						{
+							addedOrRemoved = "Okay, I removed that.";
+							user.WorkingGroupPreferences.Remove(workingGroup.ShortCode);
+						}
+						else
+						{
+							addedOrRemoved = "Okay, I added that.";
+							user.WorkingGroupPreferences.Add(workingGroup.ShortCode);
+						}
+						response = new ServerMessage(addedOrRemoved + GetWorkingGroupList(user, m_parentGroupFilter.Value));
+						return true;
+					}
+				}
 			}
 
 			if (State == EState.GetStartingDate)
@@ -124,14 +186,14 @@ namespace XR.Dodo
 				catch
 				{
 					response = new ServerMessage($"Sorry, I didn't quite understand that date. For instance, if you were arriving on the 12th of October, you would reply 12/10." +
-						" Or if you want to stop telling me about yourself, reply CANCEL.");
+						" Or if you want to stop telling me about yourself, reply DONE.");
 					user.Karma--;
 					return true;
 				}
 				if(startDate < new DateTime(2019, 10, 7))
 				{
 					response = new ServerMessage($"Looks like you're an early bird! But the rebellion starts on the 7th of October, so that's the earliest you can arrive. If that's the case, reply 7/10." +
-						" Or if you want to stop telling me about yourself, reply CANCEL.");
+						" Or if you want to stop telling me about yourself, reply DONE.");
 					return true;
 				}
 				user.StartDate = startDate;
@@ -158,14 +220,14 @@ namespace XR.Dodo
 					catch
 					{
 						response = new ServerMessage($"Sorry, I didn't quite understand that date. For instance, if you were arriving on the 20th of October, you would reply 20/10" +
-							" Or if you aren't sure, just say NO, or if you want to stop telling me about yourself, reply CANCEL.");
+							" Or if you aren't sure, just say NO, or if you want to stop telling me about yourself, reply DONE.");
 						user.Karma--;
 						return true;
 					}
 					if (endDate < user.StartDate)
 					{
 						response = new ServerMessage($"Hmm, {endDate.ToShortDateString()} can't be right, it sounds like you're leaving before you arrive. " +
-							" If you aren't sure, just say NO, or if you want to stop telling me about yourself, reply CANCEL.");
+							" If you aren't sure, just say NO, or if you want to stop telling me about yourself, reply DONE.");
 						return true;
 					}
 					user.EndDate = endDate;
@@ -176,7 +238,7 @@ namespace XR.Dodo
 			if (message.Gateway.Type == EGatewayType.Telegram)
 			{
 				response = new ServerMessage($"Brilliant, thanks {user.Name}. " +
-					"If you're ever confused, just reply HELP and I'll try to give you some guidance about what you can ask me to do. " +
+					"If you're ever confused, just reply HELPME and I'll try to give you some guidance about what you can ask me to do. " +
 					"Why don't you try that now?");
 				ExitTask(session);
 				return true;
@@ -187,6 +249,32 @@ namespace XR.Dodo
 			/*
 			$"You can talk to me on Telegram at {DodoServer.TelegramGateway.UserName}, or you can SMS me at {DodoServer.GetSMSNumber()}. " +
 			"I like Telegram more though, and it means I can be a bit more helpful to you. " +*/
+		}
+
+		private string GetWorkingGroupList(User user, EParentGroup pg)
+		{
+			var site = user.Site;
+			var wgs = DodoServer.SiteManager.Data.WorkingGroups.Where(x => x.Value.ParentGroup == pg);
+			var sb = new StringBuilder("Select a Working Group to add it to your preferences:\n");
+			foreach(var wg in wgs.Where(x => site == null || site.WorkingGroups.Contains(x.Key)))
+			{
+				sb.AppendLine($"{wg.Value.ShortCode} - {wg.Value.Name} " +
+					$"{(user.WorkingGroupPreferences.Contains(wg.Value.ShortCode) ? "✓" : "-")}");
+			}
+			sb.AppendLine("To change Parent Groups, reply BACK");
+			sb.AppendLine("When you're done, reply DONE");
+			return sb.ToString();
+		}
+
+		string GetParentGroupSelectionString()
+		{
+			var sb = new StringBuilder("Select a Parent Group to select the Working Groups you can volunteer for.\n");
+			foreach(var parentGroup in Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>())
+			{
+				sb.AppendLine($"{(int)parentGroup} - {parentGroup.GetName()}");
+			}
+			sb.AppendLine("When you're done, reply DONE");
+			return sb.ToString();
 		}
 
 		string GetSiteList()
