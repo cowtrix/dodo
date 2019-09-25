@@ -14,9 +14,18 @@ namespace XR.Dodo
 		{
 			var sb = new StringBuilder("You can tell me to do things by sending me commands, which are simple words. Here's a list of what you can do right now:\n");
 			sb.AppendLine();
-			foreach(var taskType in session.Workflow.Tasks)
+			var user = session.GetUser();
+			foreach (var taskType in session.Workflow.Tasks)
 			{
-				if(GetMinimumAccessLevel(taskType.Value) > session.GetUser().AccessLevel)
+				if(GetMinimumAccessLevel(taskType.Value) > user.AccessLevel)
+				{
+					continue;
+				}
+				if(taskType.Value == typeof(RolesTask) && user.AccessLevel > EUserAccessLevel.Volunteer)
+				{
+					continue;
+				}
+				if(taskType.Value == typeof(VerificationTask) && (session.GetUser().IsVerified() || message.Gateway.Type != EGatewayType.Telegram))
 				{
 					continue;
 				}

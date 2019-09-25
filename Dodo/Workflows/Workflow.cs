@@ -54,7 +54,7 @@ namespace XR.Dodo
 			}
 
 			// First we check if it's a valid role code
-			if(DodoServer.CoordinatorNeedsManager.CurrentNeeds.TryGetValue(message.Content.Trim(), out var need) && need.UserIsValidCandidate(user))
+			if(DodoServer.CoordinatorNeedsManager.CurrentNeeds.TryGetValue(message.Content?.Trim(), out var need) && need.UserIsValidCandidate(user))
 			{
 				if(need.ConfirmedVolunteers.ContainsKey(user.UUID))
 				{

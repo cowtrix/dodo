@@ -21,6 +21,7 @@ namespace XR.Dodo
 			public string Description;
 			public DateTime TimeNeeded;
 			public DateTime TimeOfRequest;
+			public DateTime LastBroadcast;
 			public string Salt;
 
 			public ConcurrentDictionary<string, bool> ContactedVolunteers = new ConcurrentDictionary<string, bool>();
@@ -131,6 +132,12 @@ namespace XR.Dodo
 			foreach(var needKey in CurrentNeeds)
 			{
 				var need = needKey.Value;
+				var now = DateTime.Now;
+				if(now > need.LastBroadcast + TimeSpan.FromMinutes(10))
+				{
+					continue;
+				}
+				need.LastBroadcast = now;
 				if(need.ConfirmedVolunteers.Count >= need.Amount)
 				{
 					// We've got confirmed volunteers, cancel the request
@@ -141,7 +148,7 @@ namespace XR.Dodo
 					toRemove.Add(need.Key);
 					continue;
 				}
-				if (need.TimeNeeded < DateTime.Now || (need.TimeNeeded == DateTime.MaxValue && DateTime.Now > need.TimeOfRequest + TimeSpan.FromMinutes(1)))
+				if (need.TimeNeeded < now || (need.TimeNeeded == DateTime.MaxValue && now > need.TimeOfRequest + TimeSpan.FromHours(6)))
 				{
 					// We're past the needed date, cancel the request
 					var contacts = need.GetAllCoordinatorContacts();

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 using Common;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace XR.Dodo
 {
@@ -79,6 +80,24 @@ namespace XR.Dodo
 			workerThread.Start();
 		}
 
+		public void SendNumberRequest(string msg, UserSession session)
+		{
+			var rkm = new ReplyKeyboardMarkup();
+			rkm.OneTimeKeyboard = true;
+			rkm.Keyboard = new[]
+			{
+				new[]
+				{
+					new KeyboardButton("Share")
+					{
+						RequestContact = true
+					}
+				}
+			};
+			m_botClient.SendTextMessageAsync(session.GetUser().TelegramUser, 
+				msg, replyMarkup:rkm);
+		}
+
 		public void SendMessage(ServerMessage message, UserSession session)
 		{
 			Logger.Debug($"Telegram >> {session.GetUser()}: {message.Content.Substring(0, Math.Min(message.Content.Length, 32))}{(message.Content.Length > 32 ? "..." : "")}");
@@ -122,8 +141,18 @@ namespace XR.Dodo
 			{
 				var message = e.Message.Text;
 				var userID = e.Message.From.Id;
+
+				if(userID == e.Message.Contact?.UserId)
+				{
+					// Verification recieveds
+					DodoServer.SessionManager.TryVerify(e.Message.Contact.PhoneNumber, userID);
+				}
+
 				var outgoing = GetMessage(message, userID, out var session);
-				SendMessage(outgoing, session);
+				if(!string.IsNullOrEmpty(outgoing.Content))
+				{
+					SendMessage(outgoing, session);
+				}
 			}
 			catch (Exception exception)
 			{

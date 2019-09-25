@@ -65,6 +65,15 @@ namespace XR.Dodo
 				DodoServer.Backup();
 				Environment.Exit(0);
 			}));
+			AddCommand("deleteuser", (async x =>
+			{
+				var user = DodoServer.SessionManager.GetUserFromUserID(x);
+				if(user == null)
+				{
+					Output("Couldn't find user");
+				}
+				DodoServer.SessionManager.RemoveUser(user);
+			}));
 
 			var inputThread = new Task(async () =>
 			{

@@ -12,13 +12,6 @@ namespace XR.Dodo
 		public List<UserMessage> Inbox = new List<UserMessage>();
 		public List<ServerMessage> Outbox = new List<ServerMessage>();
 
-		public class VerificationState
-		{
-			public string Code;
-			public DateTime TimeSent;
-		}
-		public VerificationState Verification;
-		
 		public UserSession(string uuid)
 		{
 			UserID = uuid;

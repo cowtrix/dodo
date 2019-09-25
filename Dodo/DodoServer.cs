@@ -132,7 +132,6 @@ namespace XR.Dodo
 			{
 				Name = "Give the phone a name",
 				Number = "Replace this with the phone number",
-				Mode = Phone.ESMSMode.Bot,
 			});
 			Configuration.SpreadsheetData.SiteSpreadsheets.Add(new Configuration.Spreadsheets.SiteSheet()
 			{

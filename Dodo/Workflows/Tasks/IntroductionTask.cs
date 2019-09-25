@@ -16,6 +16,7 @@ namespace XR.Dodo
 		public enum EState
 		{
 			VolunteerAgreement,
+			TwilioVerify,
 			GetName,
 			GetSite,
 			GetPrefs,
@@ -40,10 +41,14 @@ namespace XR.Dodo
 				}
 				if (message.ContentUpper.FirstOrDefault() == "DONE")
 				{
-					State = EState.GetName;
-					response = new ServerMessage("Fantastic! Now, I'd like to find out a bit more about you. What's your name? You can give me your real name, or a nickname, I don't mind.");
 					user.GDPR = true;
-					return true;
+					if (message.Gateway.Type != EGatewayType.Telegram)
+					{
+						State = EState.GetName;
+						response = new ServerMessage("Fantastic! Now, I'd like to find out a bit more about you. What's your name? You can give me your real name, or a nickname, I don't mind.");
+						return true;
+					}
+					State = EState.TwilioVerify;
 				}
 				else
 				{
@@ -52,6 +57,25 @@ namespace XR.Dodo
 					user.Karma--;
 					return true;
 				}
+			}
+
+			if(State == EState.TwilioVerify && message.Gateway.Type == EGatewayType.Telegram)
+			{
+				if(user.IsVerified())
+				{
+					if(user.AccessLevel > EUserAccessLevel.Volunteer)
+					{
+						ExitTask(session);
+						response = new ServerMessage("Because you're a coordinator, I already have some information about you. Why not see what you can ask me to do by replying " + HelpTask.CommandKey);
+						return true;
+					}
+					State = EState.GetName;
+					response = new ServerMessage("Now, I'd like to find out a bit more about you. What's your name? You can give me your real name, or a nickname, I don't mind.");
+					return true;
+				}
+				DodoServer.TelegramGateway.SendNumberRequest("Please share your phone number with me, so I can pass on your contact details to rebels looking for volunteers.", session);
+				response = default;
+				return true;
 			}
 
 			if(message.ContentUpper.FirstOrDefault() == "DONE")
