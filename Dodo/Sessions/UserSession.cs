@@ -27,7 +27,10 @@ namespace XR.Dodo
 		{
 			try
 			{
-				return Workflow.ProcessMessage(message, session);
+				var msg = Workflow.ProcessMessage(message, session);
+				msg.TimeStamp = DateTime.Now;
+				session.Outbox.Add(msg);
+				return msg;
 			}
 			catch(Exception e)
 			{

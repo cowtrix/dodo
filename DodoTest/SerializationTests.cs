@@ -8,10 +8,20 @@ using Newtonsoft.Json;
 public class SerializationTests : TestBase
 {
 	[TestMethod]
+	public void ValidateNumbers()
+	{
+		string invalid = "test";
+		Assert.IsFalse(ValidationExtensions.ValidateNumber(ref invalid));
+
+		string valid = "+44 132 510 3992";
+		Assert.IsTrue(ValidationExtensions.ValidateNumber(ref valid));
+	}
+
+	[TestMethod]
 	public void CheckSiteSerialization()
 	{
 		var data = new SiteSpreadsheetManager.SiteData();
-		data.Sites.TryAdd(3, new SiteSpreadsheet(3, "Test", "", null));
+		data.Sites.TryAdd(3, new SiteSpreadsheet(3, "Test", ""));
 		data.WorkingGroups.TryAdd("TE", new WorkingGroup("Test", EParentGroup.ActionSupport, "test", "TE"));
 
 		var str = JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings

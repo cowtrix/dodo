@@ -6,6 +6,8 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using Common;
 
 namespace XR.Dodo
 {
@@ -74,6 +76,54 @@ namespace XR.Dodo
 				}
 				DodoServer.SessionManager.RemoveUser(user);
 			}));
+			AddCommand("searchuser", (async x =>
+			{
+				var users = DodoServer.SessionManager.GetUsers()
+					.Where(u => (u.Name ?? "").ToUpperInvariant().Contains(x.ToUpperInvariant()) || u.TelegramUser.ToString().Contains(x) || 
+					(u.UUID ?? "").Contains(x) || (u.Email ?? "").ToUpperInvariant().Contains(x.ToUpperInvariant()) || (u.PhoneNumber ?? "").Contains(x) ||
+					x.ToUpperInvariant() == u.AccessLevel.ToString().ToUpperInvariant());
+				if(!users.Any())
+				{
+					Output("No matches found");
+					return;
+				}
+				var sb = new StringBuilder();
+				foreach(var user in users)
+				{
+					sb.AppendLine($"{user.UUID}: {user}");
+				}
+				Output(sb.ToString());
+			}));
+			AddCommand("conv", (async x =>
+			{
+				var user = DodoServer.SessionManager.GetUserFromUserID(x);
+				if (user == null)
+				{
+					Output("Couldn't find user");
+				}
+				var session = DodoServer.SessionManager.GetOrCreateSession(user);
+				var ins = session.Inbox.Select(inMsg => new { TimeStamp = inMsg.TimeStamp, Content = inMsg.Content, Type = "<<" });
+				var outs = session.Outbox.Select(outMsg => new { TimeStamp = outMsg.TimeStamp, Content = outMsg.Content, Type = ">>" });
+				var all = ins.Concat(outs).OrderBy(msg => msg.TimeStamp);
+				var sb = new StringBuilder(user.ToString() + "\n");
+				foreach (var msg in all)
+				{
+					sb.AppendLine($"{msg.TimeStamp} {msg.Type} {msg.Content}");
+				}
+				Output(sb.ToString());
+			}));
+			AddCommand("coordemails", (async x =>
+			{
+				var users = DodoServer.SessionManager.GetUsers()
+					.Where(user => user.AccessLevel >= EUserAccessLevel.Coordinator &&
+					!string.IsNullOrEmpty(user.Email));
+				var sb = new StringBuilder();
+				foreach (var user in users)
+				{
+					sb.AppendLine(user.Email); ;
+				}
+				Output(sb.ToString());
+			}));
 
 			var inputThread = new Task(async () =>
 			{
@@ -115,15 +165,22 @@ namespace XR.Dodo
 
 		private void ProcessCmd(string line)
 		{
-			var split = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-			var cmdKey = split.First().ToLowerInvariant();
-			if(!m_commands.TryGetValue(cmdKey, out var command))
+			try
 			{
-				throw new Exception("No matching command found for: " + cmdKey);
+				var split = line.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+				var cmdKey = split.First().ToLowerInvariant();
+				if (!m_commands.TryGetValue(cmdKey, out var command))
+				{
+					throw new Exception("No matching command found for: " + cmdKey);
+				}
+				var task = new Task(async () => await command.Action(split.Length > 1 ?
+					split.Skip(1).Aggregate("", (current, next) => current + " " + next).Trim() : ""));
+				task.Start();
 			}
-			var task = new Task(async () => await command.Action(split.Length > 1 ?
-				split.Skip(1).Aggregate("", (current, next) => current + " " + next).Trim() : null));
-			task.Start();
+			catch(Exception e)
+			{
+				Logger.Exception(e);
+			}
 		}
 
 		public void AddCommand(string keyPhrase, Func<string, Task> action)

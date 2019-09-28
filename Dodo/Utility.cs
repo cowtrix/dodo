@@ -62,6 +62,11 @@ namespace XR.Dodo
 			  .Select(s => s[random.Next(s.Length)]).ToArray());
 		}
 
+		public static string NeedAmountToString(int amount)
+		{
+			return amount == int.MaxValue ? "MANY" : amount.ToString();
+		}
+
 		public static bool TryParseDateTime(string dt, out DateTime dateTime)
 		{
 			if(dt == "NOW")

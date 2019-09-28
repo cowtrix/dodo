@@ -39,7 +39,8 @@ namespace XR.Dodo
 					{
 						continue;
 					}
-					response = new ServerMessage((cmd == CommandKey ? "" : "Sorry, I didn't understand that selection. ") +
+					response = new ServerMessage((cmd == CommandKey ? "Okay, tell me which Working Groups you'd like to volunteer for. " +
+						$"If you aren't sure what working groups are, or what a specific one does, go here: {DodoServer.RolesSiteURL} for more information.\n" : "Sorry, I didn't understand that selection. ") +
 						GetParentGroupSelectionString());
 					return true;
 				}

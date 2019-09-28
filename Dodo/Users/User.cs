@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace XR.Dodo
@@ -18,6 +19,7 @@ namespace XR.Dodo
 	public class User
 	{
 		public string Name;
+		[Phone]
 		public string PhoneNumber;
 		public int TelegramUser = -1;
 		public int SiteCode = -1;
@@ -61,8 +63,7 @@ namespace XR.Dodo
 		public bool IsRotaCoordinator
 		{
 			get {
-				return CoordinatorRoles.Any(x => //x.WorkingGroup.ParentGroup == EParentGroup.MovementSupport &&
-					  x.WorkingGroup.Name.ToUpperInvariant().Contains("ROTA")); }
+				return CoordinatorRoles.Any(x => x.WorkingGroup.Name.ToUpperInvariant().Contains("ROTA")); }
 		}
 
 		[JsonIgnore]

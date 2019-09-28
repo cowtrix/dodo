@@ -62,7 +62,7 @@ namespace XR.Dodo
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
-			Logger.Debug($"Saved user session data to {dataPath}");
+			//Logger.Debug($"Saved user session data to {dataPath}");
 		}
 
 		public List<User> GetUsers()
@@ -101,13 +101,18 @@ namespace XR.Dodo
 
 		public void TryVerify(string phoneNumber, int telegramUser)
 		{
+			var originalNumber = phoneNumber;
 			if (!ValidationExtensions.ValidateNumber(ref phoneNumber))
 			{
-				throw new Exception("Invalid number: " + phoneNumber);
+				DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Your number - {originalNumber} - doesn't seem like a valid mobile phone number. If you think this is a mistake, please contact the Rota Team Rebellion Bot support."), telegramUser);
+				Logger.Error("Invalid number: " + phoneNumber);
+				return;
 			}
 			var existingTelegramUser = GetOrCreateUserFromTelegramNumber(telegramUser);
-			if(existingTelegramUser.IsVerified())
+			var session = GetOrCreateSession(existingTelegramUser);
+			if (existingTelegramUser.IsVerified())
 			{
+				DodoServer.TelegramGateway.SendMessage(new ServerMessage($"You've already verified your number with me. Thanks though!"), session);
 				return;
 			}
 			var existingPhoneUser = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == phoneNumber).Value;
@@ -128,7 +133,7 @@ namespace XR.Dodo
 
 			existingTelegramUser.PhoneNumber = phoneNumber;
 			existingTelegramUser.Karma += 10;
-			var session = GetOrCreateSession(existingTelegramUser);
+			
 			if (existingTelegramUser.AccessLevel > EUserAccessLevel.Volunteer)
 			{
 				DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Hi {existingTelegramUser.Name}! You've verified your number as {existingTelegramUser.PhoneNumber}. " +
@@ -136,7 +141,7 @@ namespace XR.Dodo
 			}
 			else
 			{
-				DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {existingPhoneUser.PhoneNumber}."), session);
+				DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {existingTelegramUser.PhoneNumber}."), session);
 			}
 			
 			Logger.Debug($"Succesfully verified user {existingTelegramUser.TelegramUser} to number {existingTelegramUser.PhoneNumber}");
@@ -180,7 +185,8 @@ namespace XR.Dodo
 			{
 				return null;
 			}
-			var user = _data.Users.SingleOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
+			var user = _data.Users.Where(x => x.Value.PhoneNumber == fromNumber)
+				.OrderByDescending(i => i.Value.AccessLevel).FirstOrDefault().Value;
 			if(user == null)
 			{
 				user = new User() { PhoneNumber = fromNumber };

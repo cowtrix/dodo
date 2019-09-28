@@ -82,6 +82,10 @@ namespace XR.Dodo
 
 		private HttpResponse Reply(ServerMessage response, UserSession session)
 		{
+			if (!session.Outbox.Any(x => x.MessageID == response.MessageID))
+			{
+				session.Outbox.Add(response);
+			}
 			var messagingResponse = new MessagingResponse();
 			messagingResponse.Message(response.Content);
 			return new HttpResponse()

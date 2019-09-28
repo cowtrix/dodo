@@ -25,12 +25,19 @@ namespace XR.Dodo
 		public static IMessageGateway DefaultGateway { get { return TelegramGateway; } }
 
 		private static CmdReader cmdReader = new CmdReader();
+		private static ReminderManager m_reminder;
 		private static object m_loadSaveLock = new object();
 
 		private static string ConfigPath { get { return Path.GetFullPath("config.json"); } }
 
 		public static bool Dummy { get; private set; }
 		public static bool NoLoad { get; private set; }
+		public static DateTime RebellionStartDate { get { return new DateTime(2019, 10, 7); } }
+
+		public static string SiteMapURL = "http://shorturl.at/jnEJ3";
+		public const string RolesSiteURL = "http://rebellionroles.earth";
+		public const string CoordinatorUserGuideURL = "https://shorturl.at/aotzX";
+		public const string VolunteerUserGuideURL = "https://shorturl.at/bhvwA";
 
 		static void Main(string[] args)
 		{
@@ -57,6 +64,7 @@ namespace XR.Dodo
 			// Set up managers
 			SessionManager = new SessionManager(Configuration);
 			SiteManager = new SiteSpreadsheetManager(Configuration);
+			SiteManager.Initialise(Configuration);
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(Configuration);
 
 			// Set up gateways
@@ -73,6 +81,8 @@ namespace XR.Dodo
 				}
 			});
 			backupTask.Start();
+
+			m_reminder = new ReminderManager();
 		}
 
 		public static void Backup()

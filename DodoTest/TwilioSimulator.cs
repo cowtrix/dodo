@@ -17,7 +17,7 @@ namespace DodoTest
 			m_address = target;
 		}
 
-		public async Task<string> SendSMS(string from, string message, Phone.ESMSMode mode)
+		public async Task<string> SendSMS(string from, string message)
 		{
 			if(!ValidationExtensions.ValidateNumber(ref from))
 			{
@@ -37,7 +37,7 @@ namespace DodoTest
 				{ "FromCity", "" },
 				{ "Body", message },
 				{ "FromCountry", "GB" },
-				{ "To", DodoServer.SMSGateway.GetPhone(mode).Number.ToString() },
+				{ "To", DodoServer.SMSGateway.GetPhone().Number.ToString() },
 				{ "ToZip", "" },
 				{ "NumSegments", "1" },
 				{ "MessageSid", "" },

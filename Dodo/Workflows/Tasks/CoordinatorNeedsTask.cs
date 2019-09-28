@@ -211,10 +211,19 @@ namespace XR.Dodo
 							response = new ServerMessage($"Sorry, you can only request volunteers for the future.");
 							return true;
 						}
-						TimeNeeded = date;
+						var maxStr = "";
+						if(date - DateTime.Now < TimeSpan.FromHours(6))
+						{
+							TimeNeeded = DateTime.MaxValue;
+							maxStr = "It looks like that's within the next few hours - it's better to use NOW when that's the case. I've changed that for you. ";
+						}
+						else
+						{
+							TimeNeeded = date;
+						}						
 						if (i >= message.ContentUpper.Length - 2)
 						{
-							response = new ServerMessage("Now, tell me how many volunteers you need." +
+							response = new ServerMessage(maxStr + "Now, tell me how many volunteers you need." +
 								" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
 								" If you'd like to cancel, reply 'DONE'.");
 							return true;
@@ -279,13 +288,15 @@ namespace XR.Dodo
 					Description = message.Content;
 				}
 				ExitTask(session);
-				if (!DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, WorkingGroup, SiteCode, Amount, TimeNeeded, Description))
+				string key = null;
+				if (!DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, WorkingGroup, SiteCode, Amount, TimeNeeded, Description, out key))
 				{
 					response = new ServerMessage("Sorry, there was a problem adding that Volunteer Request. Please try again.");
 					return true;
 				}
 				// "NEED 0 AD 7/10 08:00 3"
 				response = new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
+					$" The code for this Volunteer Request is {key}." +
 					$" In future, you could make this request in one go by saying {CoordinatorNeedsTask.CommandKey} " +
 					(user.AccessLevel >= EUserAccessLevel.RSO ? SiteCode + " " : "") +
 					(user.AccessLevel >= EUserAccessLevel.RotaCoordinator ? WorkingGroup.ShortCode + " " : "") +

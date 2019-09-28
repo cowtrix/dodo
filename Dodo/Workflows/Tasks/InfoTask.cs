@@ -78,6 +78,7 @@ namespace XR.Dodo
 				{
 					sb.AppendLine($"Your current site is: {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}.");
 				}
+				sb.AppendLine($"If you aren't sure, you can see a map of the sites here: {DodoServer.SiteMapURL}");
 				return sb.ToString();
 			}
 			if (message.ContentUpper.FirstOrDefault() == "SITE")
@@ -137,7 +138,7 @@ namespace XR.Dodo
 		{
 			if(message.ContentUpper.FirstOrDefault() == "ARRIVAL")
 			{
-				if(user.StartDate < new DateTime(2019))
+				if(user.StartDate > new DateTime(2019))
 				{
 					response = new ServerMessage($"I've currently got your arrival date as {user.StartDate.ToShortDateString()}. " +
 						"Tell me what date will you be arriving to the rebellion. " +
@@ -168,7 +169,7 @@ namespace XR.Dodo
 				user.Karma--;
 				return true;
 			}
-			if (startDate < new DateTime(2019, 10, 7))
+			if (startDate < DodoServer.RebellionStartDate)
 			{
 				response = new ServerMessage($"Looks like you're an early bird! But the rebellion starts on the 7th of October, so that's the earliest you can arrive. If that's the case, reply 7/10." +
 					" Or if you want to stop updating your arrival date, reply DONE.");
@@ -218,7 +219,7 @@ namespace XR.Dodo
 				user.Karma--;
 				return true;
 			}
-			if (endDate < new DateTime(2019, 10, 7))
+			if (endDate < DodoServer.RebellionStartDate)
 			{
 				response = new ServerMessage($"Looks like you're an early bird! But the rebellion starts on the 7th of October, so that's the earliest you can leave. If that's the case, reply 7/10." +
 					" Or if you want to stop updating your arrival date, reply DONE.");

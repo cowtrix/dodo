@@ -27,7 +27,10 @@ namespace XR.Dodo
 		{
 			m_statusID = config.SpreadsheetData.SiteSpreadsheetHealthReportID;
 			m_wgDataID = config.SpreadsheetData.WorkingGroupDataID; ;
+		}
 
+		public void Initialise(Configuration config)
+		{
 			try
 			{
 				LoadFromGSheets(config);
@@ -282,7 +285,8 @@ namespace XR.Dodo
 			LoadWorkingGroups();
 			foreach (var site in config.SpreadsheetData.SiteSpreadsheets)
 			{
-				var sheet = new SiteSpreadsheet(site.SiteNumber, site.SiteName, site.SheetID, this);
+				var sheet = new SiteSpreadsheet(site.SiteNumber, site.SiteName, site.SheetID);
+				sheet.LoadFromGSheets(this);
 				if(sheet.WorkingGroups.Count == 0)
 				{
 					continue;
@@ -367,7 +371,7 @@ namespace XR.Dodo
 		public void SaveToFile(string dataPath)
 		{
 			dataPath = Path.Combine(dataPath, "sites.json");
-			Logger.Debug($"Saved site data to {dataPath}");
+			//Logger.Debug($"Saved site data to {dataPath}");
 			File.WriteAllText(dataPath, JsonConvert.SerializeObject(Data, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto

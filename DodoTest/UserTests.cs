@@ -9,7 +9,7 @@ using System.Collections.Concurrent;
 [TestClass]
 public class UserTests : TestBase
 {
-	[TestMethod]
+	/*[TestMethod]
 	public async Task CheckCoordinatorVerification()
 	{
 		var coord = GetTestUser(EUserAccessLevel.Coordinator);  // Coord account has been loaded from RSO spreadsheet, has a phone number
@@ -33,9 +33,9 @@ public class UserTests : TestBase
 		Assert.IsTrue(coord.PhoneNumber == user.PhoneNumber);
 		Assert.IsTrue(user.IsVerified());
 		Assert.IsTrue(user.AccessLevel == EUserAccessLevel.Coordinator);
-	}
+	}*/
 
-	[TestMethod]
+	/*[TestMethod]
 	public async Task CheckVolunteerVerification()
 	{
 		var initialUser = GetTestUser(EUserAccessLevel.Volunteer);
@@ -47,14 +47,14 @@ public class UserTests : TestBase
 
 		var ph = "441315103992";
 		ValidationExtensions.ValidateNumber(ref ph);
-		var smsResponse = await m_simulator.SendSMS(ph, code, Phone.ESMSMode.Verification);
+		var smsResponse = await m_simulator.SendSMS(ph, code);
 
 		var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(ph);
 		Assert.IsTrue(user.TelegramUser == initialUser.TelegramUser);
 		Assert.IsTrue(user.PhoneNumber == ph);
 		Assert.IsTrue(user.IsVerified());
 		Assert.IsTrue(user.AccessLevel == EUserAccessLevel.Volunteer);
-	}
+	}*/
 
 	[TestMethod]
 	public async Task VolunteerCannotRequestNeed()

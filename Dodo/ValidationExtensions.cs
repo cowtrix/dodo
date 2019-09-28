@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PhoneNumbers;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace XR.Dodo
@@ -26,6 +27,7 @@ namespace XR.Dodo
 			bool isValid = ValidEmailRegex.IsMatch(emailAddress);
 			return isValid;
 		}
+
 		public static bool ValidateNumber(ref string number)
 		{
 			number = number.Replace(" ", "").Replace("-", "");
@@ -33,7 +35,6 @@ namespace XR.Dodo
 			{
 				return true;
 			}
-
 			if(!number.StartsWith("+44"))
 			{
 				if(number.StartsWith("07"))
@@ -49,8 +50,26 @@ namespace XR.Dodo
 					number = "+" + number;
 				}
 			}
-			return Regex.IsMatch(number,
-				@"^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$");
+			if (number.StartsWith("00"))
+			{
+				// Replace 00 at beginning with +
+				number = "+" + number.Remove(0, 2);
+			}
+			if(!number.StartsWith("+"))
+			{
+				number = "+" + number;
+			}
+			try
+			{
+				PhoneNumberUtil.GetInstance().Parse(number, "");
+			}
+			catch
+			{
+				return false;
+			}
+			return true;
+			//return Regex.IsMatch(number,
+			//	@"^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$");
 		}
 	}
 }

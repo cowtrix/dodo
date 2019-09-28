@@ -37,6 +37,15 @@ namespace XR.Dodo
 				sb.AppendLine(helpStr);
 			}
 			sb.AppendLine();
+			if (user.AccessLevel > EUserAccessLevel.Volunteer)
+			{
+				sb.AppendLine("Or for more info, check out the Coordinator User Guide here: " + DodoServer.CoordinatorUserGuideURL);
+			}
+			else
+			{
+				sb.AppendLine("Or for more info, check out the User Guide here: " + DodoServer.VolunteerUserGuideURL);
+			}
+			
 			response = new ServerMessage(sb.ToString());
 			ExitTask(session);
 			return true;

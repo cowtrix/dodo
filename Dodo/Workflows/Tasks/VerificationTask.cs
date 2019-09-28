@@ -23,9 +23,10 @@ namespace XR.Dodo
 			if(user.IsVerified())
 			{
 				response = new ServerMessage("It looks like you've already verified your number as " + user.PhoneNumber);
+				ExitTask(session);
 				return true;
 			}
-			DodoServer.TelegramGateway.SendNumberRequest("Please take a moment to share your phone number with us.", 
+			DodoServer.TelegramGateway.SendNumberRequest("Please take a moment to share your phone number with us by pressing the button on your keyboard below.", 
 				session);
 			response = default;
 			return true;
