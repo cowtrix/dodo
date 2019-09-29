@@ -54,7 +54,7 @@ namespace XR.Dodo
 
 			var cmd = message.ContentUpper.FirstOrDefault() ?? "";
 			// First we check if it's a valid role code
-			if (DodoServer.CoordinatorNeedsManager.CurrentNeeds.TryGetValue(cmd, out var need) && need.UserIsValidCandidate(user))
+			if (DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.TryGetValue(cmd, out var need) && need.UserIsValidCandidate(user))
 			{
 				if(need.ConfirmedVolunteers.ContainsKey(user.UUID))
 				{
@@ -64,6 +64,10 @@ namespace XR.Dodo
 				{
 					return need.AddConfirmation(user);
 				}
+			}
+			else if(DodoServer.CoordinatorNeedsManager.Data.PreviousCodes.ContainsKey(cmd))
+			{
+				return new ServerMessage("It looks like this Volunteer Request has been filled. Stay tuned for more in the near future!");
 			}
 
 			// Or if it's a newbie code

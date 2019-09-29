@@ -97,7 +97,7 @@ public class UserTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage("7/10 08:00", requester.TelegramUser);
 		msg = DodoServer.TelegramGateway.FakeMessage("10", requester.TelegramUser);
 		msg = DodoServer.TelegramGateway.FakeMessage("tests", requester.TelegramUser);
-		code = DodoServer.CoordinatorNeedsManager.CurrentNeeds.Single().Key;
+		code = DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.Single().Key;
 
 		while (volunteers.Any(x => !x.Value)) ;
 
@@ -124,6 +124,6 @@ public class UserTests : TestBase
 
 		requester.OnMsgReceived = null;
 		DodoServer.CoordinatorNeedsManager.ProcessNeeds();
-		Assert.IsTrue(!DodoServer.CoordinatorNeedsManager.CurrentNeeds.Any());
+		Assert.IsTrue(!DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.Any());
 	}
 }

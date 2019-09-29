@@ -100,8 +100,8 @@ namespace XR.Dodo
 				{
 					nameString = $"Well, that was a bit long, so how about {user.Name}. ";
 				}
-				nameString += "Now, if you already know how you're getting involved in the Autumn Rebellion, " +
-						"you can just reply DONE. Otherwise, you can tell me a little more about yourself. Firstly, ";
+				nameString += "Now, if you already know how you're getting involved in the Autumn Rebellion and you don't want me to notify you about roles, " +
+						"you can just reply DONE. Otherwise, you need to tell me a little more about yourself. Firstly, ";
 				if (user.StartDate != default && DateTime.Now > user.StartDate)
 				{
 					response = new ServerMessage(nameString + "which site are you at? " + GetSiteList());

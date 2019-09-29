@@ -15,18 +15,21 @@ namespace XR.Dodo
 
 		List<CoordinatorNeedsManager.Need> GetNeeds(User user)
 		{
-			var needs = DodoServer.CoordinatorNeedsManager.GetCurrentNeeds();
+			var needs = DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds;
 			if (user.AccessLevel == EUserAccessLevel.RSO)
 			{
-				return needs;
+				return needs.Values.ToList();
 			}
 			if(user.AccessLevel == EUserAccessLevel.RotaCoordinator)
 			{
-				return needs.Where(x => user.CoordinatorRoles.Any(y => y.SiteCode == x.SiteCode)).OrderBy(x => x.TimeOfRequest).ToList();
+				return needs.Where(x => user.CoordinatorRoles.Any(y => y.SiteCode == x.Value.SiteCode))
+					.OrderBy(x => x.Value.TimeOfRequest).Select(x => x.Value).ToList();
 			}
 			if (user.AccessLevel == EUserAccessLevel.Coordinator)
 			{
-				return needs.Where(x => user.CoordinatorRoles.Any(y => y.WorkingGroup.ShortCode == x.WorkingGroupCode)).OrderBy(x => x.TimeOfRequest).ToList();
+				return needs.Where(x => user.CoordinatorRoles
+					.Any(y => y.WorkingGroup.ShortCode == x.Value.WorkingGroupCode))
+					.OrderBy(x => x.Value.TimeOfRequest).Select(x => x.Value).ToList();
 			}
 			throw new Exception("Bad user: " + user.UUID);
 		}
@@ -42,7 +45,7 @@ namespace XR.Dodo
 				if(Need == null)
 				{
 					var authorisedNeeds = GetNeeds(user);
-					if (DodoServer.CoordinatorNeedsManager.CurrentNeeds.TryGetValue(cmd, out var pick))
+					if (DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.TryGetValue(cmd, out var pick))
 					{
 						if(authorisedNeeds.Contains(pick))
 						{

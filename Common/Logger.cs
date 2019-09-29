@@ -23,7 +23,7 @@ namespace Common
 		{
 			if(!string.IsNullOrEmpty(message))
 			{
-				Error(message, nolog);
+				Error(message, true);
 			}
 			if(!nolog)
 			{
@@ -33,8 +33,8 @@ namespace Common
 					TimeStamp = DateTime.Now,
 				});
 			}
-			Error(exception.Message);
-			Error(exception.StackTrace);
+			Error(exception.Message, true);
+			Error(exception.StackTrace, true);
 		}
 
 		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black, bool writeToLog = true)

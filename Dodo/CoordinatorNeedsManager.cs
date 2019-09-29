@@ -65,7 +65,8 @@ namespace XR.Dodo
 			public List<User> GetAllCoordinatorContacts()
 			{
 				var activeCoordinators = DodoServer.SessionManager.GetUsers()
-					.Where(user => user.Active && user.CoordinatorRoles.Any(role => role.WorkingGroup.ShortCode == WorkingGroupCode))
+					.Where(user => user.Active && user.CoordinatorRoles.Any(role => role.SiteCode == SiteCode) &&
+					user.CoordinatorRoles.Any(role => role.WorkingGroup.ShortCode == WorkingGroupCode))
 					.ToList();
 				if (!activeCoordinators.Any(user => user.UUID == Creator))
 				{
@@ -79,10 +80,15 @@ namespace XR.Dodo
 			}
 		}
 
-		public ConcurrentDictionary<string, Need> CurrentNeeds;
+		public class NeedsData
+		{
+			public ConcurrentDictionary<string, Need> CurrentNeeds = new ConcurrentDictionary<string, Need>();
+			public ConcurrentDictionary<string, DateTime> PreviousCodes = new ConcurrentDictionary<string, DateTime>();
+		}
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
 		public const int MaxNeedCountPerWorkingGroup = 8;
+		public NeedsData Data = new NeedsData();
 
 		private TimeSpan m_timeout { get { return TimeSpan.FromMinutes(20); } }
 
@@ -126,12 +132,12 @@ namespace XR.Dodo
 
 		public void ProcessNeeds()
 		{
-			if(!CurrentNeeds.Any())
+			if(!Data.CurrentNeeds.Any())
 			{
 				return;
 			}
 			List<string> toRemove = new List<string>();
-			foreach(var needKey in CurrentNeeds)
+			foreach(var needKey in Data.CurrentNeeds)
 			{
 				var need = needKey.Value;
 				var now = DateTime.Now;
@@ -150,7 +156,7 @@ namespace XR.Dodo
 					toRemove.Add(need.Key);
 					continue;
 				}
-				if (need.TimeNeeded < now || (need.TimeNeeded == DateTime.MaxValue && now > need.TimeOfRequest + TimeSpan.FromHours(6)))
+				if (need.TimeNeeded < now || (need.TimeNeeded == DateTime.MaxValue && now > need.TimeOfRequest + TimeSpan.FromHours(24)))
 				{
 					// We're past the needed date, cancel the request
 					var contacts = need.GetAllCoordinatorContacts();
@@ -189,17 +195,12 @@ namespace XR.Dodo
 
 		public void ClearAll()
 		{
-			CurrentNeeds.Clear();
+			Data.CurrentNeeds.Clear();
 		}
 
 		public IEnumerable<Need> GetNeedsForWorkingGroup(int sitecode, WorkingGroup group)
 		{
-			return CurrentNeeds.Values.Where(x => x.WorkingGroupCode == group.ShortCode && x.SiteCode == sitecode);
-		}
-
-		public List<Need> GetCurrentNeeds()
-		{
-			return CurrentNeeds.Values.ToList();
+			return Data.CurrentNeeds.Values.Where(x => x.WorkingGroupCode == group.ShortCode && x.SiteCode == sitecode);
 		}
 
 		public bool AddNeedRequest(User user, WorkingGroup workingGroup, int sitecode, int amount, DateTime timeNeeded, string description)
@@ -236,12 +237,13 @@ namespace XR.Dodo
 			{
 				newNeed.Salt = Utility.RandomString(2, new Random().Next().ToString());
 			}
-			while (CurrentNeeds.ContainsKey(newNeed.Key));
-			if(!CurrentNeeds.TryAdd(newNeed.Key, newNeed))
+			while (Data.CurrentNeeds.ContainsKey(newNeed.Key));
+			if(!Data.CurrentNeeds.TryAdd(newNeed.Key, newNeed))
 			{
 				Logger.Alert("Could not add new need with key " + newNeed.Key);
 				return false;
 			}
+			Data.PreviousCodes.TryRemove(newNeed.Key, out _);
 			key = newNeed.Key;
 			m_dirty = true;
 			return true;
@@ -250,25 +252,26 @@ namespace XR.Dodo
 		public bool RemoveNeed(Need need)
 		{
 			m_dirty = true;
-			return CurrentNeeds.TryRemove(need.Key, out _);
+			Data.PreviousCodes.TryAdd(need.Key, DateTime.Now);
+			return Data.CurrentNeeds.TryRemove(need.Key, out _);
 		}
 
 		public bool RemoveNeed(string needKey)
 		{
 			m_dirty = true;
-			return CurrentNeeds.TryRemove(needKey, out _);
+			return Data.CurrentNeeds.TryRemove(needKey, out _);
 		}
 
-		void UpdateNeedsOnGSheet()
+		public void UpdateNeedsOnGSheet()
 		{
 			m_dirty = false;
 			var spreadsheet = new List<List<string>>();
 			spreadsheet.Add(new List<string>()
 			{
-				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Role Description", "Contact Code", "Time Needed", "Time Updated"
+				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Role Description", "Contact Code", "Time Needed", "Time Updated", "Volunteers Confirmed"
 			});
 			var sites = DodoServer.SiteManager.GetSites();
-			foreach (var needKey in CurrentNeeds.OrderBy(x => x.Value.TimeOfRequest))
+			foreach (var needKey in Data.CurrentNeeds.OrderBy(x => x.Value.TimeOfRequest))
 			{
 				var need = needKey.Value;
 				var site = sites.First(x => x.SiteCode == need.SiteCode);
@@ -276,7 +279,7 @@ namespace XR.Dodo
 				{
 					site.SiteName, site.SiteCode.ToString(), need.WorkingGroup.ParentGroup.ToString(), need.WorkingGroup.Name,
 					(need.Amount == int.MaxValue  ? "MANY" : need.Amount.ToString()), need.Description, need.Key,
-					(need.TimeNeeded == DateTime.MaxValue ? "NOW" : need.TimeNeeded.ToString()), need.TimeOfRequest.ToString()
+					(need.TimeNeeded == DateTime.MaxValue ? "NOW" : need.TimeNeeded.ToString()), need.TimeOfRequest.ToString(), need.ConfirmedVolunteers.Count.ToString(),
 				});
 			}
 			if(!DodoServer.Dummy)
@@ -295,7 +298,7 @@ namespace XR.Dodo
 				return;
 			}
 			var dataPath = Path.Combine(backupFolder, "needs.json");
-			File.WriteAllText(dataPath, JsonConvert.SerializeObject(CurrentNeeds, Formatting.Indented, new JsonSerializerSettings
+			File.WriteAllText(dataPath, JsonConvert.SerializeObject(Data, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
@@ -307,14 +310,14 @@ namespace XR.Dodo
 			var backupPath = Path.Combine(backupFolder, "needs.json");
 			if (DodoServer.Dummy || DodoServer.NoLoad || !File.Exists(backupPath))
 			{
-				CurrentNeeds = new ConcurrentDictionary<string, Need>();
+				Data = new NeedsData();
 				return;
 			}
-			CurrentNeeds = JsonConvert.DeserializeObject<ConcurrentDictionary<string, Need>> (File.ReadAllText(backupPath), new JsonSerializerSettings
+			Data = JsonConvert.DeserializeObject<NeedsData> (File.ReadAllText(backupPath), new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			});
-			Logger.Debug("Loaded needs data from " + backupPath);
+			Logger.Debug($"Loaded {Data.CurrentNeeds.Count} Volunteer Requests from " + backupPath);
 		}
 	}
 }

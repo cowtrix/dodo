@@ -109,6 +109,12 @@ namespace XR.Dodo
 			return true;
 		}
 
+		public override ServerMessage ExitTask(UserSession session)
+		{
+			base.ExitTask(session);
+			return new ServerMessage("Great, I've updated your information.");
+		}
+
 		private bool UpdateEmail(User user, UserMessage message, out ServerMessage response)
 		{
 			if (message.ContentUpper.FirstOrDefault() == "EMAIL")

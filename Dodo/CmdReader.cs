@@ -124,6 +124,19 @@ namespace XR.Dodo
 				}
 				Output(sb.ToString());
 			}));
+			AddCommand("stats", (async x =>
+			{
+				var users = DodoServer.SessionManager.GetUsers();
+				var sb = new StringBuilder();
+				sb.AppendLine($"Total Users: {users.Count}");
+				sb.AppendLine($"Coordinators: {users.Where(user => user.AccessLevel > EUserAccessLevel.Volunteer).Count()}");
+				sb.AppendLine($"Active Users: {users.Where(user => user.Active).Count()}");
+				Output(sb.ToString());
+			}));
+			AddCommand("updateneedssheet", (async x =>
+			{
+				DodoServer.CoordinatorNeedsManager.UpdateNeedsOnGSheet();
+			}));
 
 			var inputThread = new Task(async () =>
 			{
