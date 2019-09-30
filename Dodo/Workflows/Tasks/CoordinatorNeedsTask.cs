@@ -56,7 +56,7 @@ namespace XR.Dodo
 					}
 					else
 					{
-						response = new ServerMessage("Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. " +
+						response = new ServerMessage((cmd == CommandKey ? "" : "Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. ") +
 							GetSiteNumberRequestString(approvedSites));
 						return true;
 					}
@@ -83,41 +83,53 @@ namespace XR.Dodo
 						if (ParentGroupFilter == null)
 						{
 							var list = Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>().ToList();
-							if (!SiteSpreadsheetManager.TryStringToParentGroup(cmd, out var parentGroup))
+							if (int.TryParse(cmd, out var number) && number >= 0 && number < list.Count 
+								&& (SiteCode > 0 || list[number] < EParentGroup.RSO))
 							{
-								if (int.TryParse(cmd, out var number) && number >= 0 && number < list.Count)
-								{
-									ParentGroupFilter = list.ElementAt(number);
-									if (i >= message.ContentUpper.Length - 1)
-									{
-										response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. "
-											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
-										return true;
-									}
-									continue;
-								}
+								ParentGroupFilter = list.ElementAt(number);
 								if (i >= message.ContentUpper.Length - 1)
 								{
-									var sb = new StringBuilder("Please tell me which Parent Group the working group belongs to:\n");
-									for (int j = 0; j < list.Count; j++)
+									var filteredGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value);
+									if (filteredGroups.Count() == 0)
 									{
-										if (list[j] == EParentGroup.RSO)
-										{
-											continue;
-										}
-										sb.AppendLine($"{j} - {list[j].GetName()}");
+										response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. " +
+											"It doesn't look like there are any coordinators registered for this Parent Group at this site.");
+										ExitTask(session);
+										return true;
 									}
-									sb.AppendLine("Or, if you already know the working group code, you can just tell me that.");
-									response = new ServerMessage(sb.ToString());
+									response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. "
+												+ GetWorkingGroupRequestString(filteredGroups));
 									return true;
 								}
 								continue;
 							}
-							ParentGroupFilter = parentGroup;
-							if (i >= message.ContentUpper.Length - 1)
+							else if (i >= message.ContentUpper.Length - 1)
 							{
-								response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value}. "
-											+ GetWorkingGroupRequestString(workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value)));
+								var sb = new StringBuilder("Please tell me which Parent Group the working group belongs to:\n");
+								for (int j = 0; j < list.Count; j++)
+								{
+									if (SiteCode > 0 && list[j] == EParentGroup.RSO)
+									{
+										continue;
+									}
+									sb.AppendLine($"{j} - {list[j].GetName()}");
+								}
+								sb.AppendLine("Or, if you already know the working group code, you can just tell me that.");
+								response = new ServerMessage(sb.ToString());
+								return true;
+							}
+							else if (i >= message.ContentUpper.Length - 1)
+							{
+								var filteredGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value);
+								if(filteredGroups.Count() == 0)
+								{
+									response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. " +
+										"It doesn't look like there are any coordinators registered for this Parent Group at this site.");
+									ExitTask(session);
+									return true;
+								}
+								response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. "
+											+ GetWorkingGroupRequestString(filteredGroups));
 								return true;
 							}
 							continue;
@@ -125,6 +137,13 @@ namespace XR.Dodo
 						else
 						{
 							workingGroups = workingGroups.Where(x => x.ParentGroup == ParentGroupFilter.Value).ToList();
+							if (workingGroups.Count() == 0)
+							{
+								response = new ServerMessage($"Okay, you selected {ParentGroupFilter.Value.GetName()}. " +
+									"It doesn't look like there are any coordinators registered for this Parent Group at this site.");
+								ExitTask(session);
+								return true;
+							}
 						}
 					}
 				}
@@ -192,10 +211,19 @@ namespace XR.Dodo
 							response = new ServerMessage($"Sorry, you can only request volunteers for the future.");
 							return true;
 						}
-						TimeNeeded = date;
+						var maxStr = "";
+						if(date - DateTime.Now < TimeSpan.FromHours(6))
+						{
+							TimeNeeded = DateTime.MaxValue;
+							maxStr = "It looks like that's within the next few hours - it's better to use NOW when that's the case. I've changed that for you. ";
+						}
+						else
+						{
+							TimeNeeded = date;
+						}						
 						if (i >= message.ContentUpper.Length - 2)
 						{
-							response = new ServerMessage("Now, tell me how many volunteers you need." +
+							response = new ServerMessage(maxStr + "Now, tell me how many volunteers you need." +
 								" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
 								" If you'd like to cancel, reply 'DONE'.");
 							return true;
@@ -260,13 +288,15 @@ namespace XR.Dodo
 					Description = message.Content;
 				}
 				ExitTask(session);
-				if (!DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, WorkingGroup, SiteCode, Amount, TimeNeeded, Description))
+				string key = null;
+				if (!DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, WorkingGroup, SiteCode, Amount, TimeNeeded, Description, out key))
 				{
 					response = new ServerMessage("Sorry, there was a problem adding that Volunteer Request. Please try again.");
 					return true;
 				}
 				// "NEED 0 AD 7/10 08:00 3"
 				response = new ServerMessage("Thanks, you'll be hearing from me soon with some details of volunteers to help." +
+					$" The code for this Volunteer Request is {key}." +
 					$" In future, you could make this request in one go by saying {CoordinatorNeedsTask.CommandKey} " +
 					(user.AccessLevel >= EUserAccessLevel.RSO ? SiteCode + " " : "") +
 					(user.AccessLevel >= EUserAccessLevel.RotaCoordinator ? WorkingGroup.ShortCode + " " : "") +

@@ -20,6 +20,7 @@ namespace XR.Dodo
 			var user = session.GetUser();
 			user.Active = false;
 			response = new ServerMessage("Okay, I won't bother you until you message me again.");
+			ExitTask(session);
 			return true;
 		}
 	}

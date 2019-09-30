@@ -37,7 +37,7 @@ namespace XR.Dodo
 					var wg = DodoServer.SiteManager.GetWorkingGroup(cmd);
 					var all = DodoServer.SessionManager.GetUsers().Where(x => x.Active && x.CoordinatorRoles.Any(y => y.WorkingGroup.ShortCode == cmd));
 					ExitTask(session);
-					response = new ServerMessage(all.Aggregate($"Coordinators for {wg.Name}:", (current, next) => current + "\n"
+					response = new ServerMessage(all.Aggregate($"Active coordinators for {wg.Name}:", (current, next) => current + "\n"
 						+ $"{next.Name} - Site: {next.CoordinatorRoles.First(x => x.WorkingGroup.ShortCode == cmd).Site.SiteName}, Ph: {next.PhoneNumber ?? "None"}, Email: {next.Email}"));
 					return true;
 				}

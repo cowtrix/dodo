@@ -21,6 +21,7 @@ namespace XR.Dodo
 			public string Description;
 			public DateTime TimeNeeded;
 			public DateTime TimeOfRequest;
+			public DateTime LastBroadcast;
 			public string Salt;
 
 			public ConcurrentDictionary<string, bool> ContactedVolunteers = new ConcurrentDictionary<string, bool>();
@@ -48,7 +49,7 @@ namespace XR.Dodo
 
 			public bool UserIsValidCandidate(User user)
 			{
-				return user.Active && user.IsVerified() && user.AccessLevel == EUserAccessLevel.Volunteer && user.SiteCode == SiteCode && user.StartDate < TimeNeeded && user.EndDate > TimeNeeded;
+				return user.Active && user.IsVerified() && user.AccessLevel == EUserAccessLevel.Volunteer && user.SiteCode == SiteCode && (TimeNeeded < DodoServer.RebellionStartDate || (user.StartDate < TimeNeeded && user.EndDate >= TimeNeeded));
 			}
 
 			public ServerMessage AddConfirmation(User user)
@@ -56,6 +57,8 @@ namespace XR.Dodo
 				ConfirmedVolunteers.TryAdd(user.UUID, false);
 				DodoServer.DefaultGateway.Broadcast(new ServerMessage($"You've got a new volunteer for role {Key}: {Description}. You can contact them at {user.PhoneNumber}"),
 					GetAllCoordinatorContacts());
+				Logger.Debug($"User {user} confirmed for role {Key}");
+				user.Active = false;
 				return new ServerMessage("Great, I've confirmed your availability for this role. A coordinator will be in touch soon.");
 			}
 
@@ -79,7 +82,7 @@ namespace XR.Dodo
 		public ConcurrentDictionary<string, Need> CurrentNeeds;
 		private readonly string m_dataOutputSpreadsheetID;
 		private bool m_dirty;
-		public const int MaxNeedCountPerWorkingGroup = 3;
+		public const int MaxNeedCountPerWorkingGroup = 8;
 
 		private TimeSpan m_timeout { get { return TimeSpan.FromMinutes(20); } }
 
@@ -102,7 +105,10 @@ namespace XR.Dodo
 				{
 					try
 					{
-						ProcessNeeds();
+						if(DodoServer.DefaultGateway != null)
+						{
+							ProcessNeeds();
+						}
 						await Task.Delay(TimeSpan.FromSeconds(10));
 					}
 					catch(Exception e)
@@ -128,17 +134,23 @@ namespace XR.Dodo
 			foreach(var needKey in CurrentNeeds)
 			{
 				var need = needKey.Value;
+				var now = DateTime.Now;
+				if(now < need.LastBroadcast + TimeSpan.FromMinutes(10))
+				{
+					continue;
+				}
+				need.LastBroadcast = now;
 				if(need.ConfirmedVolunteers.Count >= need.Amount)
 				{
 					// We've got confirmed volunteers, cancel the request
 					var contacts = need.GetAllCoordinatorContacts();
 					DodoServer.DefaultGateway.Broadcast(
-						new ServerMessage($"It looks like you've gotten {need.Amount} confirmed volunteers for Volunteer Request {need.Key} ({need.WorkingGroup.Name})." +
+						new ServerMessage($"It looks like you've gotten {Utility.NeedAmountToString(need.Amount)} confirmed volunteers for Volunteer Request {need.Key} ({need.WorkingGroup.Name})." +
 						$" This request is now complete and has been removed. You can make a new request at any time with the {CoordinatorNeedsTask.CommandKey} command."), contacts);
 					toRemove.Add(need.Key);
 					continue;
 				}
-				if (need.TimeNeeded < DateTime.Now || (need.TimeNeeded == DateTime.MaxValue && DateTime.Now > need.TimeOfRequest + TimeSpan.FromHours(1)))
+				if (need.TimeNeeded < now || (need.TimeNeeded == DateTime.MaxValue && now > need.TimeOfRequest + TimeSpan.FromHours(6)))
 				{
 					// We're past the needed date, cancel the request
 					var contacts = need.GetAllCoordinatorContacts();
@@ -150,19 +162,24 @@ namespace XR.Dodo
 				}
 				// Find potentials and notify
 				var allUsers = DodoServer.SessionManager.GetUsers();
+				var clampedNeed = Math.Min(need.Amount, 20);
 				var uncontactedMatchingUsers = allUsers.Where(user => need.UserIsValidCandidate(user) && !need.ConfirmedVolunteers.ContainsKey(user.UUID) && !need.ContactedVolunteers.ContainsKey(user.UUID))	// Get volunteers who will be around at the time and at the site
 					.OrderBy(user => user.WorkingGroupPreferences.Contains(need.WorkingGroupCode))	// Put the ones who have selected this working group first
 					.ThenBy(user => user.GetTrustScore())
 					.Take(Math.Max(0, need.Amount - need.ConfirmedVolunteers.Count)).ToList();
+				if(uncontactedMatchingUsers.Count == 0)
+				{
+					continue;
+				}
+				DodoServer.DefaultGateway.Broadcast(new ServerMessage($"Hello rebel! It looks like there might be a role needed at your site that you might be able to fill. " +
+						(need.Amount == int.MaxValue ? "" : $"There are {need.Amount - need.ConfirmedVolunteers.Count}/{need.Amount} spots still needing to be filled. ")
+						+ $"The role is {need.Description} with {need.WorkingGroup.Name}, starting {Utility.ToDateTimeCode(need.TimeNeeded)}. If you can do this, reply {need.Key}."),
+						uncontactedMatchingUsers);
 				Logger.Debug($"Found {uncontactedMatchingUsers.Count()} new volunteers for need {need.Key}");
-				foreach(var volunteer in uncontactedMatchingUsers)
+				foreach (var volunteer in uncontactedMatchingUsers)
 				{
 					need.ContactedVolunteers.TryAdd(volunteer.UUID, false);
 				}
-				DodoServer.DefaultGateway.Broadcast(new ServerMessage($"Hello rebel! It looks like there might be a role needed at your site that you might be able to fill. " +
-						(need.Amount == int.MaxValue ? "" : $"There are {need.ConfirmedVolunteers.Count}/{need.Amount} spots still needing to be filled. ")
-						+ $"The role is {need.Description} with {need.WorkingGroup.Name}, starting {Utility.ToDateTimeCode(need.TimeNeeded)}. If you can do this, reply {need.Key}."),
-						uncontactedMatchingUsers);
 			}
 			foreach(var removeKey in toRemove)
 			{
@@ -187,7 +204,13 @@ namespace XR.Dodo
 
 		public bool AddNeedRequest(User user, WorkingGroup workingGroup, int sitecode, int amount, DateTime timeNeeded, string description)
 		{
-			if(user.AccessLevel <= EUserAccessLevel.Volunteer)
+			return AddNeedRequest(user, workingGroup, sitecode, amount, timeNeeded, description, out _);
+		}
+
+		public bool AddNeedRequest(User user, WorkingGroup workingGroup, int sitecode, int amount, DateTime timeNeeded, string description, out string key)
+		{
+			key = null;
+			if (user.AccessLevel <= EUserAccessLevel.Volunteer)
 			{
 				return false;
 			}
@@ -208,7 +231,6 @@ namespace XR.Dodo
 			{
 				return false;
 			}
-
 			var newNeed = new Need(user, workingGroup, sitecode, amount, timeNeeded, description);
 			do
 			{
@@ -220,6 +242,7 @@ namespace XR.Dodo
 				Logger.Alert("Could not add new need with key " + newNeed.Key);
 				return false;
 			}
+			key = newNeed.Key;
 			m_dirty = true;
 			return true;
 		}
@@ -242,7 +265,7 @@ namespace XR.Dodo
 			var spreadsheet = new List<List<string>>();
 			spreadsheet.Add(new List<string>()
 			{
-				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Description", "Contact Code", "Time Needed", "Time Updated"
+				"Site", "SiteCode", "Parent Group", "Working Group", "Amount Needed", "Role Description", "Contact Code", "Time Needed", "Time Updated"
 			});
 			var sites = DodoServer.SiteManager.GetSites();
 			foreach (var needKey in CurrentNeeds.OrderBy(x => x.Value.TimeOfRequest))
@@ -276,7 +299,7 @@ namespace XR.Dodo
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
-			Logger.Debug($"Saved user session data to {dataPath}");
+			//Logger.Debug($"Saved user session data to {dataPath}");
 		}
 
 		public void LoadFromFile(string backupFolder)

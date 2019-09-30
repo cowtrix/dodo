@@ -11,11 +11,14 @@ namespace XR.Dodo
 
 		public override TimeSpan Timeout { get { return TimeSpan.MaxValue; } }
 
+		public bool ReminderSent;
+
 		public EParentGroup? m_parentGroupFilter;
 
 		public enum EState
 		{
 			VolunteerAgreement,
+			TwilioVerify,
 			GetName,
 			GetSite,
 			GetPrefs,
@@ -32,29 +35,55 @@ namespace XR.Dodo
 			{
 				if(session.Inbox.Count == 1)	// First ever message
 				{
+					var wgEntryPref = user.WorkingGroupPreferences.FirstOrDefault();
 					response = new ServerMessage("Hello! I'm your friendly Extinction Rebellion Bot. Whether you're a seasoned rebel, or you're just getting started, " +
 						"my purpose is to help you get involved in the Autumn Rebellion in London. Through me, you can find out what needs doing, who needs help, and how you can get involved. " +
+						(wgEntryPref != null ? $"It looks like you're interested in the {DodoServer.SiteManager.GetWorkingGroup(wgEntryPref).Name} Working Group. I'll try and send you more roles in that group." : "") +
 						$"Firstly, if you haven't yet, take a second to read and sign our Volunteer Agreement here: {VolunteerAgreement}\n" +
 						"When you've done that, reply with the word DONE, and we can move onto the next step.");
 					return true;
 				}
 				if (message.ContentUpper.FirstOrDefault() == "DONE")
 				{
-					State = EState.GetName;
-					response = new ServerMessage("Fantastic! Now, I'd like to find out a bit more about you. What's your name? You can give me your real name, or a nickname, I don't mind.");
 					user.GDPR = true;
-					return true;
+					if (message.Gateway.Type != EGatewayType.Telegram)
+					{
+						State = EState.GetName;
+						response = new ServerMessage("Fantastic! Now, I'd like to find out a bit more about you. What's your name? You can give me your real name, or a nickname, I don't mind.");
+						return true;
+					}
+					State = EState.TwilioVerify;
 				}
 				else
 				{
-					response = new ServerMessage("Sorry, I didn't understand that. If you've signed the volunteer agreement here: "
+					response = new ServerMessage((message.ContentUpper.FirstOrDefault() != RolesTask.CommandKey ? "Sorry, I didn't understand that. " : "")
+						+ "If you've signed the volunteer agreement here: "
 						+ VolunteerAgreement + " then just reply with the word DONE to continue.");
 					user.Karma--;
 					return true;
 				}
 			}
 
-			if(message.ContentUpper.FirstOrDefault() == "DONE")
+			if(State == EState.TwilioVerify && message.Gateway.Type == EGatewayType.Telegram)
+			{
+				if(user.IsVerified())
+				{
+					if(user.AccessLevel > EUserAccessLevel.Volunteer)
+					{
+						ExitTask(session);
+						response = new ServerMessage("Because you're a coordinator, I already have some information about you. Why not see what you can ask me to do by replying " + HelpTask.CommandKey);
+						return true;
+					}
+					State = EState.GetName;
+					response = new ServerMessage("Now, I'd like to find out a bit more about you. What's your name? You can give me your real name, or a nickname, I don't mind.");
+					return true;
+				}
+				DodoServer.TelegramGateway.SendNumberRequest("Please share your phone number with me, so I can pass on your contact details to rebels looking for volunteers. Do this by pressing the button that appears below.", session);
+				response = default;
+				return true;
+			}
+
+			if(State != EState.GetPrefs && message.ContentUpper.FirstOrDefault() == "DONE")
 			{
 				response = new ServerMessage($"No problem. If you're ever confused, just reply {HelpTask.CommandKey} and I'll try to give you some guidance about what you can ask me to do. " +
 					"Why don't you try that now?");
@@ -83,13 +112,13 @@ namespace XR.Dodo
 				return true;
 			}
 
-			const string wgPrefsString = "Now you can tell me about what Working Groups you'd like to volunteer for. " +
-				"You can find out about what each Working Group does here: http://www.REPLACE.ME\n";
+			var wgPrefsString = "Now you can tell me about what Working Groups you'd like to volunteer for. " +
+				$"Or if you'd like to skip this for now, reply SKIP. You can find out about what each Parent & Working Group does here: {DodoServer.RolesSiteURL}\n";
 			if (State == EState.GetSite)
 			{
 				if(message.ContentUpper.FirstOrDefault() == "SKIP")
 				{
-					response = new ServerMessage($"Okay, we can skip that. " + wgPrefsString + GetParentGroupSelectionString());
+					response = new ServerMessage($"Okay, we can skip that. " + wgPrefsString + GetParentGroupSelectionString(user.SiteCode));
 					State = EState.GetPrefs;
 					return true;
 				}
@@ -104,12 +133,12 @@ namespace XR.Dodo
 				if (user.StartDate != default && DateTime.Now > user.StartDate)
 				{
 					response = new ServerMessage($"Okay, you're at {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}. " +
-						wgPrefsString + GetParentGroupSelectionString());
+						wgPrefsString + GetParentGroupSelectionString(user.SiteCode));
 				}
 				else
 				{
 					response = new ServerMessage($"Okay, you're going to be at the {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName} site. " +
-						wgPrefsString + GetParentGroupSelectionString());
+						wgPrefsString + GetParentGroupSelectionString(user.SiteCode));
 				}
 				State = EState.GetPrefs;
 				return true;
@@ -141,14 +170,14 @@ namespace XR.Dodo
 						return true;
 					}
 					// Get parent group
-					response = new ServerMessage("Sorry, I didn't understand that selection. " + GetParentGroupSelectionString());
+					response = new ServerMessage("Sorry, I didn't understand that selection. " + GetParentGroupSelectionString(user.SiteCode));
 					return true;
 				}
 				else
 				{
 					if(cmd == "BACK")
 					{
-						response = new ServerMessage(GetParentGroupSelectionString());
+						response = new ServerMessage(GetParentGroupSelectionString(user.SiteCode));
 						m_parentGroupFilter = null;
 						return true;
 					}
@@ -157,12 +186,12 @@ namespace XR.Dodo
 						string addedOrRemoved;
 						if(user.WorkingGroupPreferences.Contains(workingGroup.ShortCode))
 						{
-							addedOrRemoved = "Okay, I removed that.";
+							addedOrRemoved = "Okay, I removed that. ";
 							user.WorkingGroupPreferences.Remove(workingGroup.ShortCode);
 						}
 						else
 						{
-							addedOrRemoved = "Okay, I added that.";
+							addedOrRemoved = "Okay, I added that. ";
 							user.WorkingGroupPreferences.Add(workingGroup.ShortCode);
 						}
 						response = new ServerMessage(addedOrRemoved + GetWorkingGroupList(user, m_parentGroupFilter.Value));
@@ -190,7 +219,7 @@ namespace XR.Dodo
 					user.Karma--;
 					return true;
 				}
-				if(startDate < new DateTime(2019, 10, 7))
+				if(startDate < DodoServer.RebellionStartDate)
 				{
 					response = new ServerMessage($"Looks like you're an early bird! But the rebellion starts on the 7th of October, so that's the earliest you can arrive. If that's the case, reply 7/10." +
 						" Or if you want to stop telling me about yourself, reply DONE.");
@@ -266,11 +295,17 @@ namespace XR.Dodo
 			return sb.ToString();
 		}
 
-		string GetParentGroupSelectionString()
+		string GetParentGroupSelectionString(int sitecode)
 		{
 			var sb = new StringBuilder("Select a Parent Group to select the Working Groups you can volunteer for.\n");
 			foreach(var parentGroup in Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>())
 			{
+				var siteManager = DodoServer.SiteManager;
+				var site = siteManager.GetSite(sitecode);
+				if (site != null && !site.WorkingGroups.Any(wgCode => siteManager.GetWorkingGroup(wgCode).ParentGroup == parentGroup))
+				{
+					continue;
+				}
 				sb.AppendLine($"{(int)parentGroup} - {parentGroup.GetName()}");
 			}
 			sb.AppendLine("When you're done, reply DONE");
@@ -288,6 +323,7 @@ namespace XR.Dodo
 					}
 				sb.AppendLine($"{site.SiteCode} - {site.SiteName}");
 			}
+			sb.AppendLine($"If you aren't sure, you can see a Site Map here: {DodoServer.SiteMapURL}");
 			sb.AppendLine("Or, if you don't know, reply SKIP.");
 			return sb.ToString();
 		}

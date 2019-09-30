@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿//using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +29,9 @@ namespace XR.Dodo
 		}
 
 		string[] m_greetingStrings = new[]
-		 {
-			"HELLO", "HI",
-		 };
-
+		{
+			"HELLO", "HI", "/START",
+		};
 
 		protected void AddTask<T>() where T: WorkflowTask
 		{
@@ -52,8 +52,9 @@ namespace XR.Dodo
 				user.Active = true;
 			}
 
+			var cmd = message.ContentUpper.FirstOrDefault() ?? "";
 			// First we check if it's a valid role code
-			if(DodoServer.CoordinatorNeedsManager.CurrentNeeds.TryGetValue(message.Content.Trim(), out var need) && need.UserIsValidCandidate(user))
+			if (DodoServer.CoordinatorNeedsManager.CurrentNeeds.TryGetValue(cmd, out var need) && need.UserIsValidCandidate(user))
 			{
 				if(need.ConfirmedVolunteers.ContainsKey(user.UUID))
 				{
@@ -63,6 +64,16 @@ namespace XR.Dodo
 				{
 					return need.AddConfirmation(user);
 				}
+			}
+
+			// Or if it's a newbie code
+			if(cmd == RolesTask.CommandKey && 
+				CurrentTask is IntroductionTask &&
+				DodoServer.SiteManager.IsValidWorkingGroup(message.ContentUpper.LastOrDefault(), out var wg))
+			{
+				user.WorkingGroupPreferences.Add(wg.ShortCode);
+				message.Gateway.SendMessage(new ServerMessage($"Great - you'll be contacted about roles in the {wg.Name} Working Group! " +
+					"But before I can do that, you need to answer a few questions and do some things for me."), session);
 			}
 
 			ServerMessage response;
@@ -90,6 +101,9 @@ namespace XR.Dodo
 				}
 				if (DateTime.Now - CurrentTask.TimeCreated > CurrentTask.Timeout)
 				{
+					DodoServer.DefaultGateway.SendMessage(
+						new ServerMessage($"Your last command - {Tasks.FirstOrDefault(x => x.Value == CurrentTask.GetType()).Key}" +
+						" - timed out due to inactivity."), session);
 					CurrentTask.ExitTask(session);
 				}
 				else if(CurrentTask.ProcessMessage(message, session, out response))
@@ -101,7 +115,7 @@ namespace XR.Dodo
 			{
 				return new ServerMessage("It doesn't look like you're doing anything right now that I can cancel.");
 			}
-			else if (Tasks.TryGetValue(message.ContentUpper.FirstOrDefault(), out var newWorkflowType))
+			if (Tasks.TryGetValue(message.ContentUpper.FirstOrDefault(), out var newWorkflowType))
 			{
 				var newWorkflow = Activator.CreateInstance(newWorkflowType) as WorkflowTask;
 				if (newWorkflow.GetMinimumAccessLevel() > user.AccessLevel)

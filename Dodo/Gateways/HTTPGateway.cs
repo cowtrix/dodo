@@ -16,18 +16,6 @@ namespace XR.Dodo
 {
 	public class Phone
 	{
-		public enum ESMSMode
-		{
-			Verification,
-			Bot,
-		}
-		public enum EType
-		{
-			SMSSync,
-			Twilio,
-		}
-		public EType Type;
-		public ESMSMode Mode;
 		public string Name;
 		public string Number;
 	}
@@ -118,7 +106,7 @@ namespace XR.Dodo
 					{
 						try
 						{
-							Logger.Debug("Received status check request", writeToLog:false);
+							//Logger.Debug("Received status check request", writeToLog:false);
 							return Status(request);
 						}
 						catch(Exception e)
@@ -152,11 +140,6 @@ namespace XR.Dodo
 			return Phones.Random();
 		}
 
-		public Phone GetPhone(Phone.ESMSMode mode)
-		{
-			return Phones.Where(x => x.Mode == mode).Random();
-		}
-
 		public void Shutdown()
 		{
 			m_server.IsActive = false;
@@ -164,7 +147,7 @@ namespace XR.Dodo
 
 		public void SendMessage(ServerMessage message, UserSession session)
 		{
-			SendMessage(message, GetPhone(Phone.ESMSMode.Bot), session);
+			SendMessage(message, GetPhone(), session);
 		}
 
 		public void SendMessage(ServerMessage message, Phone origin, UserSession session)
@@ -187,8 +170,6 @@ namespace XR.Dodo
 
 		public ServerMessage FakeMessage(string msg, string phone)
 		{
-			DodoServer.SessionManager.TryVerify(phone, msg);
-			return default;
 			var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(phone);
 			var message = new UserMessage(user, msg, this, phone);
 			var session = DodoServer.SessionManager.GetOrCreateSession(user);
@@ -197,7 +178,7 @@ namespace XR.Dodo
 
 		public void Broadcast(ServerMessage message, IEnumerable<User> users)
 		{
-			var phone = GetPhone(Phone.ESMSMode.Bot);
+			var phone = GetPhone();
 			foreach(var user in users)
 			{
 				if (string.IsNullOrEmpty(user.PhoneNumber))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 using Newtonsoft.Json;
 
 namespace XR.Dodo
@@ -11,13 +12,6 @@ namespace XR.Dodo
 		public List<UserMessage> Inbox = new List<UserMessage>();
 		public List<ServerMessage> Outbox = new List<ServerMessage>();
 
-		public class VerificationState
-		{
-			public string Code;
-			public DateTime TimeSent;
-		}
-		public VerificationState Verification;
-		
 		public UserSession(string uuid)
 		{
 			UserID = uuid;
@@ -31,7 +25,18 @@ namespace XR.Dodo
 		public Workflow Workflow = new Workflow();
 		public ServerMessage ProcessMessage(UserMessage message, UserSession session)
 		{
-			return Workflow.ProcessMessage(message, session);
+			try
+			{
+				var msg = Workflow.ProcessMessage(message, session);
+				msg.TimeStamp = DateTime.Now;
+				session.Outbox.Add(msg);
+				return msg;
+			}
+			catch(Exception e)
+			{
+				Logger.Exception(e, "Unhandled exception in workflow");
+				return new ServerMessage("Sorry, something when wrong. Please try again.");
+			}
 		}
 	}
 }

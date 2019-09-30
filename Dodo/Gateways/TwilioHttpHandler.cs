@@ -61,13 +61,6 @@ namespace XR.Dodo
 					return Failure("4046");
 				}
 				var body = request.QueryParams["Body"];
-
-				if (phone.Mode == Phone.ESMSMode.Verification)
-				{
-					DodoServer.SessionManager.TryVerify(fromNumber, body);
-					return Success();
-				}
-				
 				var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(fromNumber);
 				Logger.Debug($"{user} >> Twilio: {body.Substring(0, Math.Min(body.Length, 32))}{(body.Length > 32 ? "..." : "")}");
 				var message = new UserMessage(user, body, m_server, fromNumber);
@@ -89,6 +82,10 @@ namespace XR.Dodo
 
 		private HttpResponse Reply(ServerMessage response, UserSession session)
 		{
+			if (!session.Outbox.Any(x => x.MessageID == response.MessageID))
+			{
+				session.Outbox.Add(response);
+			}
 			var messagingResponse = new MessagingResponse();
 			messagingResponse.Message(response.Content);
 			return new HttpResponse()

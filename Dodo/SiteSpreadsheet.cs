@@ -48,21 +48,16 @@ namespace XR.Dodo
 		{
 		}
 
-		public SiteSpreadsheet(int siteCode, string siteName, string spreadSheetID, SiteSpreadsheetManager manager)
+		public SiteSpreadsheet(int siteCode, string siteName, string spreadSheetID)
 		{
 			SpreadSheetID = spreadSheetID;
 			SiteCode = siteCode;
 			SiteName = siteName;
 			Status = new SpreadsheetStatus();
 			Logger.Debug("Loading spreadsheet for site " + siteName);
-			if(DodoServer.Dummy)
-			{
-				return;
-			}
-			LoadFromGSheets(manager);
 		}
 
-		private void LoadFromGSheets(SiteSpreadsheetManager manager)
+		public void LoadFromGSheets(SiteSpreadsheetManager manager)
 		{
 			try
 			{
@@ -84,6 +79,12 @@ namespace XR.Dodo
 					{
 						try
 						{
+							var parentGroupString = parentGroupRow.ElementAtOrDefault(column) as string ?? "";
+							if(SiteSpreadsheetManager.TryStringToParentGroup(parentGroupString, out var newGroup))
+							{
+								parentGroup = newGroup;
+							}
+
 							var name = (rowString.ElementAt(column) as string).Trim();
 							if (string.IsNullOrEmpty(name))
 							{
@@ -117,7 +118,7 @@ namespace XR.Dodo
 							{
 								var phoneIndex = spreadSheet.Values.IndexOf(nextNumberRowIndex);
 								throw new SpreadsheetException(phoneIndex, column,
-									"Value wasn't a valid UK Mobile number", number);
+									"Value wasn't a valid phone number", number);
 							}
 							if (!string.IsNullOrEmpty(email) && !ValidationExtensions.EmailIsValid(email))
 							{
@@ -136,9 +137,17 @@ namespace XR.Dodo
 							{
 								Logger.Debug($"Site {SiteCode} had custom Working Group {workingGroupName}");
 								wg = manager.GenerateWorkingGroup(workingGroupName, parentGroup, mandate);
+								manager.Data.WorkingGroups.TryAdd(wg.ShortCode, wg);
 							}
 							var role = new Role(wg, roleName, SiteCode);
 							var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);
+							var session = DodoServer.SessionManager.GetOrCreateSession(user);
+							if (session.Inbox.Count > 0 && session.Workflow.CurrentTask is IntroductionTask)
+							{
+								DodoServer.DefaultGateway.SendMessage(new ServerMessage($"You're now recognised as a {user.Name}, a Coordinator for {role.WorkingGroup}"), session);
+								session.Workflow.CurrentTask.ExitTask(session);
+							}
+
 							user.Name = name;
 							user.Email = email;
 							user.GDPR = true;

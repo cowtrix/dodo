@@ -62,7 +62,7 @@ namespace XR.Dodo
 			{
 				TypeNameHandling = TypeNameHandling.Auto
 			}));
-			Logger.Debug($"Saved user session data to {dataPath}");
+			//Logger.Debug($"Saved user session data to {dataPath}");
 		}
 
 		public List<User> GetUsers()
@@ -99,55 +99,64 @@ namespace XR.Dodo
 			return session;
 		}
 
-		public void TryVerify(string fromNumber, string code)
+		public void TryVerify(string phoneNumber, int telegramUser)
 		{
-			if (!string.IsNullOrEmpty(code))
+			var originalNumber = phoneNumber;
+			if (!ValidationExtensions.ValidateNumber(ref phoneNumber))
 			{
-				var verificationMatch = _data.Sessions
-					.FirstOrDefault(x => (x.Value.Verification?.Code == code.Trim()));
-				if (verificationMatch.Value == null)
+				DodoServer.TelegramGateway.SendMessage(new ServerMessage($"Your number - {originalNumber} - doesn't seem like a valid mobile phone number. If you think this is a mistake, please contact the Rota Team Rebellion Bot support."), telegramUser);
+				Logger.Error("Invalid number: " + phoneNumber);
+				return;
+			}
+			var existingTelegramUser = GetOrCreateUserFromTelegramNumber(telegramUser);
+			var session = GetOrCreateSession(existingTelegramUser);
+			if (existingTelegramUser.IsVerified())
+			{
+				DodoServer.TelegramGateway.SendMessage(new ServerMessage($"You've already verified your number with me. Thanks though!"), session);
+				return;
+			}
+			var existingPhoneUser = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == phoneNumber).Value;
+			string toRemove = existingPhoneUser?.UUID;
+			if(existingPhoneUser != null)
+			{
+				// Someone is already registered in the database with that phone number
+				// Which should only really ever happen with a coordinator
+				// So we copy over some stuff and then delete the existing user
+				RemoveUser(existingPhoneUser);
+				existingTelegramUser.Name = existingTelegramUser.Name ?? existingPhoneUser.Name;
+				existingTelegramUser.Email = existingPhoneUser.Email ?? existingPhoneUser.Email;
+				foreach (var role in existingPhoneUser.CoordinatorRoles)
 				{
-					Logger.Warning($"User {fromNumber} sent invalid code to validation number: {code}");
-					return;
+					existingTelegramUser.CoordinatorRoles.Add(role);
 				}
-				if (!ValidationExtensions.ValidateNumber(ref fromNumber))
-				{
-					throw new Exception("Invalid number: " + fromNumber);
-				}
-				var userToVerify = verificationMatch.Value.GetUser();
-				var existingUserWithNumber = _data.Users.FirstOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
-				string toRemove = existingUserWithNumber?.UUID;
-				if(existingUserWithNumber != null)
-				{
-					// Someone is already registered in the database with that phone number
-					// Which should only really ever happen with a coordinator
-					// So we copy over some stuff and then delete the existing user
-					RemoveUser(existingUserWithNumber);
-					userToVerify.Email = existingUserWithNumber.Email ?? userToVerify.Email;
-					foreach (var role in existingUserWithNumber.CoordinatorRoles)
-					{
-						userToVerify.CoordinatorRoles.Add(role);
-					}
-				}
+			}
 
-				userToVerify.PhoneNumber = fromNumber;
-				userToVerify.Karma += 10;
-				if (userToVerify.AccessLevel > EUserAccessLevel.Volunteer)
-				{
-					DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}. " +
-						$"It looks like you're a coordinator for {userToVerify.CoordinatorRoles.First().WorkingGroup.Name}"), verificationMatch.Value);
-				}
-				else
-				{
-					DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {userToVerify.PhoneNumber}."), verificationMatch.Value);
-				}
-				Logger.Debug($"Succesfully verified user {userToVerify} to number {userToVerify.PhoneNumber}");
+			existingTelegramUser.PhoneNumber = phoneNumber;
+			existingTelegramUser.Karma += 10;
+			
+			if (existingTelegramUser.AccessLevel > EUserAccessLevel.Volunteer)
+			{
+				DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Hi {existingTelegramUser.Name}! You've verified your number as {existingTelegramUser.PhoneNumber}. " +
+					$"It looks like you're a coordinator for {existingTelegramUser.CoordinatorRoles.First().WorkingGroup.Name}"), session);
+			}
+			else
+			{
+				DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {existingTelegramUser.PhoneNumber}."), session);
+			}
+			
+			Logger.Debug($"Succesfully verified user {existingTelegramUser.TelegramUser} to number {existingTelegramUser.PhoneNumber}");
+
+			if(session.Workflow.CurrentTask is IntroductionTask)
+			{
+				DodoServer.TelegramGateway.SendMessage(session.ProcessMessage(new UserMessage(existingTelegramUser,
+					"", DodoServer.TelegramGateway, existingTelegramUser.TelegramUser.ToString()), session), session);
 			}
 		}
 
-		private bool RemoveUser(User user)
+		public bool RemoveUser(User user)
 		{
 			Logger.Debug("Removed user " + user.UUID);
+			
 			return _data.Users.TryRemove(user.UUID, out _) &&
 			_data.Sessions.TryRemove(user.UUID, out _);
 		}
@@ -176,7 +185,8 @@ namespace XR.Dodo
 			{
 				return null;
 			}
-			var user = _data.Users.SingleOrDefault(x => x.Value.PhoneNumber == fromNumber).Value;
+			var user = _data.Users.Where(x => x.Value.PhoneNumber == fromNumber)
+				.OrderByDescending(i => i.Value.AccessLevel).FirstOrDefault().Value;
 			if(user == null)
 			{
 				user = new User() { PhoneNumber = fromNumber };

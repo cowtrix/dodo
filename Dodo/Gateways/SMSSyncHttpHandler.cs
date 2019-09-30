@@ -96,7 +96,7 @@ namespace XR.Dodo
 				}
 
 				var body = request.QueryParams["message"];
-				var phone = m_server.Phones.FirstOrDefault(x => x.Type == Phone.EType.SMSSync);
+				var phone = m_server.Phones.FirstOrDefault();
 				if (phone == null)
 				{
 					Logger.Error($"Unrecognized origin number: {receiverNumber} with message: {body}");
@@ -108,12 +108,6 @@ namespace XR.Dodo
 				if (!ValidationExtensions.ValidateNumber(ref fromNumber))
 				{
 					return Failure("4046");
-				}
-
-				if (phone.Mode == Phone.ESMSMode.Verification)
-				{
-					DodoServer.SessionManager.TryVerify(fromNumber, body);
-					return Success();
 				}
 
 				var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(fromNumber);

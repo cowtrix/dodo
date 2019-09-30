@@ -23,7 +23,7 @@ namespace Common
 		{
 			if(!string.IsNullOrEmpty(message))
 			{
-				Error(message);
+				Error(message, nolog);
 			}
 			if(!nolog)
 			{
@@ -59,8 +59,16 @@ namespace Common
 			}
 		}
 
-		public static void Error(string message)
+		public static void Error(string message, bool nolog = false)
 		{
+			if (!nolog)
+			{
+				ExceptionLog.Add(new ExceptionEntry()
+				{
+					Message = message,
+					TimeStamp = DateTime.Now,
+				});
+			}
 			Debug(message, ConsoleColor.Red);
 		}
 

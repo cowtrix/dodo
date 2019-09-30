@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Common;
+using System.Collections.Concurrent;
 
 namespace XR.Dodo
 {
@@ -17,8 +18,8 @@ namespace XR.Dodo
 
 		public class SiteData
 		{
-			public Dictionary<int, SiteSpreadsheet> Sites = new Dictionary<int, SiteSpreadsheet>();
-			public Dictionary<string, WorkingGroup> WorkingGroups = new Dictionary<string, WorkingGroup>();
+			public ConcurrentDictionary<int, SiteSpreadsheet> Sites = new ConcurrentDictionary<int, SiteSpreadsheet>();
+			public ConcurrentDictionary<string, WorkingGroup> WorkingGroups = new ConcurrentDictionary<string, WorkingGroup>();
 		}
 		public SiteData Data;
 
@@ -26,7 +27,10 @@ namespace XR.Dodo
 		{
 			m_statusID = config.SpreadsheetData.SiteSpreadsheetHealthReportID;
 			m_wgDataID = config.SpreadsheetData.WorkingGroupDataID; ;
+		}
 
+		public void Initialise(Configuration config)
+		{
 			try
 			{
 				LoadFromGSheets(config);
@@ -281,12 +285,13 @@ namespace XR.Dodo
 			LoadWorkingGroups();
 			foreach (var site in config.SpreadsheetData.SiteSpreadsheets)
 			{
-				var sheet = new SiteSpreadsheet(site.SiteNumber, site.SiteName, site.SheetID, this);
+				var sheet = new SiteSpreadsheet(site.SiteNumber, site.SiteName, site.SheetID);
+				sheet.LoadFromGSheets(this);
 				if(sheet.WorkingGroups.Count == 0)
 				{
 					continue;
 				}
-				Data.Sites.Add(site.SiteNumber, sheet);
+				Data.Sites.TryAdd(site.SiteNumber, sheet);
 			}
 			Logger.Debug("Finished loading");
 		}
@@ -324,7 +329,7 @@ namespace XR.Dodo
 			}
 			var shortCode = GenerateShortCode(name);
 			var wg = new WorkingGroup(name, parentGroup, mandate, shortCode);
-			Data.WorkingGroups.Add(wg.ShortCode, wg);
+			Data.WorkingGroups.TryAdd(wg.ShortCode, wg);
 			return wg;
 		}
 
@@ -366,7 +371,7 @@ namespace XR.Dodo
 		public void SaveToFile(string dataPath)
 		{
 			dataPath = Path.Combine(dataPath, "sites.json");
-			Logger.Debug($"Saved site data to {dataPath}");
+			//Logger.Debug($"Saved site data to {dataPath}");
 			File.WriteAllText(dataPath, JsonConvert.SerializeObject(Data, Formatting.Indented, new JsonSerializerSettings
 			{
 				TypeNameHandling = TypeNameHandling.Auto
