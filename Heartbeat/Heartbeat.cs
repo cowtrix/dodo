@@ -71,7 +71,6 @@ namespace XR.Heartbeat
 		{
 			try
 			{
-
 				Ping ping = new Ping();
 				PingReply pingresult = ping.Send(m_configuration.PingAddress);
 				if (pingresult.Status.ToString() != "Success")
@@ -111,9 +110,21 @@ namespace XR.Heartbeat
 
 		static async Task OnError(string errorMessage)
 		{
-			foreach (var user in m_configuration.AuthorisedUsers)
+			while(true)
 			{
-				await m_botClient.SendTextMessageAsync(user, errorMessage);
+				try
+				{
+					foreach (var user in m_configuration.AuthorisedUsers)
+					{
+						await m_botClient.SendTextMessageAsync(user, errorMessage);
+					}
+					return;
+				}
+				catch (Exception e)
+				{
+					Logger.Exception(e);
+					await Task.Delay(TimeSpan.FromMinutes(1));
+				}
 			}
 		}
 
