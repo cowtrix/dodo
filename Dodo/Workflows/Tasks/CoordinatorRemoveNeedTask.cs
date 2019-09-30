@@ -79,7 +79,7 @@ namespace XR.Dodo
 					{
 						didntUnderstand = "Sorry, I didn't understand that code. If you'd like to cancel, reply DONE. ";
 					}
-					response = new ServerMessage(didntUnderstand + GetNeedsMenu(authorisedNeeds));
+					response = new ServerMessage(didntUnderstand + GetNeedsMenu(authorisedNeeds, user));
 					return true;
 				}
 
@@ -99,7 +99,7 @@ namespace XR.Dodo
 
 		int m_page = 1;
 		const int MaxNeedsPerPage = 10;
-		private string GetNeedsMenu(List<CoordinatorNeedsManager.Need> needs)
+		private string GetNeedsMenu(List<CoordinatorNeedsManager.Need> needs, User user)
 		{
 			var totalPages = needs.Count / MaxNeedsPerPage + 1;
 			var sb = new StringBuilder("Please tell me the code for the Volunteer Request to cancel:\n");
@@ -115,7 +115,8 @@ namespace XR.Dodo
 					siteCode = need.SiteCode;
 					sb.AppendLine($"==Site {siteCode}=====");
 				}
-				sb.AppendLine($"{need.Key} > {need.WorkingGroup.Name} - {(need.Amount == int.MaxValue ? "MANY" : need.Amount.ToString())} for {Utility.ToDateTimeCode(need.TimeNeeded)}");
+				bool isMine = need.Creator == user.UUID;
+				sb.AppendLine($"\t{(isMine ? "*" : "")}{need.Key} > {need.WorkingGroup.Name} - {(need.Amount == int.MaxValue ? "MANY" : need.Amount.ToString())} for {Utility.ToDateTimeCode(need.TimeNeeded)}");
 			}
 			if(totalPages > 1)
 			{

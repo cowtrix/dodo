@@ -95,6 +95,7 @@ namespace XR.Dodo
 							email = email.Trim();
 							var nextNumberRowIndex = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Number");
 							var number = nextNumberRowIndex.ElementAtOrDefault(column) as string ?? "";
+							var rawNumber = number;
 							var workingGroupName = workingGroupRow.ElementAtOrDefault(column) as string ?? "";
 							var roleName = spreadSheet.Values
 								.First(x =>
@@ -118,7 +119,7 @@ namespace XR.Dodo
 							{
 								var phoneIndex = spreadSheet.Values.IndexOf(nextNumberRowIndex);
 								throw new SpreadsheetException(phoneIndex, column,
-									"Value wasn't a valid phone number", number);
+									"Value wasn't a valid phone number", rawNumber);
 							}
 							if (!string.IsNullOrEmpty(email) && !ValidationExtensions.EmailIsValid(email))
 							{
@@ -135,9 +136,9 @@ namespace XR.Dodo
 
 							if (!manager.GetWorkingGroupFromName(workingGroupName, out WorkingGroup wg))
 							{
-								Logger.Debug($"Site {SiteCode} had custom Working Group {workingGroupName}");
 								wg = manager.GenerateWorkingGroup(workingGroupName, parentGroup, mandate);
 								manager.Data.WorkingGroups.TryAdd(wg.ShortCode, wg);
+								Logger.Debug($"Site {SiteCode} had custom Working Group {workingGroupName} with code {wg.ShortCode}");
 							}
 							var role = new Role(wg, roleName, SiteCode);
 							var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);

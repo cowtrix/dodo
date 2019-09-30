@@ -112,6 +112,23 @@ namespace XR.Dodo
 				}
 				Output(sb.ToString());
 			}));
+			AddCommand("user", (async x =>
+			{
+				var user = DodoServer.SessionManager.GetUserFromUserID(x);
+				if (user == null)
+				{
+					Output("Couldn't find user");
+				}
+				var session = DodoServer.SessionManager.GetOrCreateSession(user);
+				var sb = new StringBuilder(user.UUID + "\n");
+				sb.AppendLine($"Name: {user.Name}");
+				sb.AppendLine($"Email: {user.Email}");
+				sb.AppendLine($"Ph: {user.PhoneNumber}");
+				sb.AppendLine($"Site: {user.SiteCode} {user.Site?.SiteName}");
+				sb.AppendLine($"Telegram: {user.TelegramUser}");
+				sb.AppendLine($"Access Level: {user.AccessLevel}");
+				Output(sb.ToString());
+			}));
 			AddCommand("coordemails", (async x =>
 			{
 				var users = DodoServer.SessionManager.GetUsers()
@@ -120,7 +137,7 @@ namespace XR.Dodo
 				var sb = new StringBuilder();
 				foreach (var user in users)
 				{
-					sb.AppendLine(user.Email); ;
+					sb.AppendLine(user.Email);
 				}
 				Output(sb.ToString());
 			}));
@@ -129,9 +146,34 @@ namespace XR.Dodo
 				var users = DodoServer.SessionManager.GetUsers();
 				var sb = new StringBuilder();
 				sb.AppendLine($"Total Users: {users.Count}");
-				sb.AppendLine($"Coordinators: {users.Where(user => user.AccessLevel > EUserAccessLevel.Volunteer).Count()}");
-				sb.AppendLine($"Active Users: {users.Where(user => user.Active).Count()}");
+				sb.AppendLine($"Coordinators: {users.Where(user => user.AccessLevel > EUserAccessLevel.Volunteer).Count()} (Active: {users.Where(user => user.AccessLevel > EUserAccessLevel.Volunteer && user.Active).Count()})");
+				sb.AppendLine($"Volunteers: {users.Where(user => user.AccessLevel == EUserAccessLevel.Volunteer).Count()} (Active: {users.Where(user => user.AccessLevel == EUserAccessLevel.Volunteer && user.Active).Count()})");
+				sb.AppendLine($"Total Msg In: {users.Sum(user => DodoServer.SessionManager.GetOrCreateSession(user).Inbox.Count)}");
+				sb.AppendLine($"Total Msg Out: {users.Sum(user => DodoServer.SessionManager.GetOrCreateSession(user).Outbox.Count)}");
 				Output(sb.ToString());
+
+			}));
+			AddCommand("needs", (async x =>
+			{
+				var needs = DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds;
+				var sb = new StringBuilder("Current Needs:\n");
+				foreach(var need in needs)
+				{
+					var wg = DodoServer.SiteManager.GetWorkingGroup(need.Value.WorkingGroupCode);
+					sb.AppendLine($"\t{need.Key}:");
+					sb.AppendLine($"\t\tDescription: {need.Value.Description}");
+					sb.AppendLine($"\t\tWorking Group: {wg.Name} ({wg.ShortCode}) @ {wg.ParentGroup}");
+					sb.AppendLine($"\t\tSite: {need.Value.SiteCode}");
+					sb.AppendLine($"\t\tAmount: {Utility.NeedAmountToString(need.Value.Amount)}");
+					sb.AppendLine($"\t\tTime Needed: {need.Value.TimeNeeded}");
+					sb.AppendLine($"\t\tTime Requested: {need.Value.TimeOfRequest}");
+					sb.AppendLine($"\t\tCreator: {need.Value.Creator}");
+					sb.AppendLine($"\t\tContacted: {need.Value.ContactedVolunteers.Count}");
+					sb.AppendLine($"\t\tConfirmed: {need.Value.ConfirmedVolunteers.Count}");
+					sb.AppendLine($"\t\tLast Broadcast: {need.Value.LastBroadcast}");
+				}
+				Output(sb.ToString());
+
 			}));
 			AddCommand("updateneedssheet", (async x =>
 			{

@@ -141,7 +141,8 @@ namespace XR.Dodo
 			{
 				var need = needKey.Value;
 				var now = DateTime.Now;
-				if(now < need.LastBroadcast + TimeSpan.FromMinutes(10))
+				if(now < need.LastBroadcast + (now < DodoServer.RebellionStartDate ? TimeSpan.FromHours(6) 
+					: TimeSpan.FromMinutes(30)))
 				{
 					continue;
 				}
@@ -169,7 +170,10 @@ namespace XR.Dodo
 				// Find potentials and notify
 				var allUsers = DodoServer.SessionManager.GetUsers();
 				var clampedNeed = Math.Min(need.Amount, 20);
-				var uncontactedMatchingUsers = allUsers.Where(user => need.UserIsValidCandidate(user) && !need.ConfirmedVolunteers.ContainsKey(user.UUID) && !need.ContactedVolunteers.ContainsKey(user.UUID))	// Get volunteers who will be around at the time and at the site
+				var uncontactedMatchingUsers = allUsers.Where(user => need.UserIsValidCandidate(user) && 
+					!need.ConfirmedVolunteers.ContainsKey(user.UUID) && 
+					!need.ContactedVolunteers.ContainsKey(user.UUID) &&
+					!(DodoServer.SessionManager.GetOrCreateSession(user).Workflow.CurrentTask is IntroductionTask))	// Get volunteers who will be around at the time and at the site
 					.OrderBy(user => user.WorkingGroupPreferences.Contains(need.WorkingGroupCode))	// Put the ones who have selected this working group first
 					.ThenBy(user => user.GetTrustScore())
 					.Take(Math.Max(0, need.Amount - need.ConfirmedVolunteers.Count)).ToList();
@@ -251,14 +255,13 @@ namespace XR.Dodo
 
 		public bool RemoveNeed(Need need)
 		{
-			m_dirty = true;
-			Data.PreviousCodes.TryAdd(need.Key, DateTime.Now);
-			return Data.CurrentNeeds.TryRemove(need.Key, out _);
+			return RemoveNeed(need.Key);
 		}
 
 		public bool RemoveNeed(string needKey)
 		{
 			m_dirty = true;
+			Data.PreviousCodes.TryAdd(needKey, DateTime.Now);
 			return Data.CurrentNeeds.TryRemove(needKey, out _);
 		}
 

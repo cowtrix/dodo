@@ -284,7 +284,7 @@ namespace XR.Dodo
 		{
 			var site = user.Site;
 			var wgs = DodoServer.SiteManager.Data.WorkingGroups.Where(x => x.Value.ParentGroup == pg);
-			var sb = new StringBuilder("Select a Working Group to add it to your preferences:\n");
+			var sb = new StringBuilder("Select a Working Group to add or remove it from your preferences:\n");
 			foreach(var wg in wgs.Where(x => site == null || site.WorkingGroups.Contains(x.Key)))
 			{
 				sb.AppendLine($"{wg.Value.ShortCode} - {wg.Value.Name} " +

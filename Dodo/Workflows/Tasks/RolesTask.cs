@@ -95,7 +95,7 @@ namespace XR.Dodo
 				return $"Sorry, it doesn't look like there are any coordinators for this parent group yet at site {site.SiteName}."
 					+ GetParentGroupSelectionString();
 			}
-			var sb = new StringBuilder("Select a Working Group to add it to your preferences:\n");
+			var sb = new StringBuilder("Select a Working Group to add or remove it from your preferences:\n");
 			foreach(var wg in wgs)
 			{
 				sb.AppendLine($"{wg.Value.ShortCode} - {wg.Value.Name} " +

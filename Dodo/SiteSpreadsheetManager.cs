@@ -298,7 +298,7 @@ namespace XR.Dodo
 
 		private void LoadWorkingGroups()
 		{
-			var wgData = GSheets.GetSheetRange(m_wgDataID, "A:D");
+			var wgData = GSheets.GetSheetRange(m_wgDataID, "A:E");
 			var parentGroup = EParentGroup.ActionSupport;
 			foreach(var row in wgData.Values.Skip(1))
 			{
@@ -311,7 +311,8 @@ namespace XR.Dodo
 					}
 					var wgName = rowStrings.ElementAtOrDefault(2);
 					var mandate = rowStrings.ElementAtOrDefault(3);
-					var wg = GenerateWorkingGroup(wgName, parentGroup, mandate);
+					var code = rowStrings.ElementAtOrDefault(4);
+					var wg = GenerateWorkingGroup(wgName, parentGroup, mandate, code);
 				}
 				catch(Exception e)
 				{
@@ -319,6 +320,17 @@ namespace XR.Dodo
 				}
 			}
 			Logger.Debug($"Loaded {Data.WorkingGroups.Count} working groups.");
+		}
+
+		public WorkingGroup GenerateWorkingGroup(string name, EParentGroup parentGroup, string mandate, string code)
+		{
+			if(code.Length != 2 || Data.WorkingGroups.ContainsKey(code))
+			{
+				throw new Exception($"Couldn't add Working Group {name} to {parentGroup} with code {code}");
+			}
+			var wg = new WorkingGroup(name, parentGroup, mandate, code);
+			Data.WorkingGroups.TryAdd(wg.ShortCode, wg);
+			return wg;
 		}
 
 		public WorkingGroup GenerateWorkingGroup(string name, EParentGroup parentGroup, string mandate)
