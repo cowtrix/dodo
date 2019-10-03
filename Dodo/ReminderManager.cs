@@ -54,6 +54,43 @@ namespace XR.Dodo
 				}
 			});
 			introReminderTask.Start();
+
+			var coordCheckinTask = new Task(async () =>
+			{
+				while (true)
+				{
+					var sm = DodoServer.SessionManager;
+					try
+					{
+						var now = DateTime.Now;
+						var timer = now < DodoServer.RebellionStartDate ? TimeSpan.FromDays(3) : TimeSpan.FromDays(1);
+						if (now.Hour < 24 && now.Hour > 8)
+						{
+							var coords = DodoServer.SessionManager.GetUsers().Where(user => user.AccessLevel > EUserAccessLevel.Volunteer && user.TelegramUser > 0);
+							foreach (var coord in coords)
+							{
+								if (DodoServer.CoordinatorNeedsManager.Data.CheckinReminders.TryGetValue(coord.UUID, out var lastReminder) && now - lastReminder < timer)
+								{
+									continue;
+								}
+								if (DodoServer.CoordinatorNeedsManager.Data.Checkins.TryGetValue(coord.UUID, out var checkin) && now - checkin.TimeSubmitted < timer)
+								{
+									continue;
+								}
+								DodoServer.CoordinatorNeedsManager.Data.CheckinReminders.TryAdd(coord.UUID, now);
+								DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Hi {coord.Name}, it looks like you haven't checked in for a while and told me how you're doing. You can do this with the CHECKIN command."), 
+									DodoServer.SessionManager.GetOrCreateSession(coord));
+							}
+						}
+					}
+					catch (Exception e)
+					{
+						Logger.Exception(e);
+					}
+					await Task.Delay(TimeSpan.FromMinutes(10));
+				}
+			});
+			coordCheckinTask.Start();
 		}
 	}
 }

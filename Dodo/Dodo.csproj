@@ -126,6 +126,7 @@
     <Compile Include="Workflows\Tasks\MuteTask.cs" />
     <Compile Include="Workflows\Tasks\RolesTask.cs" />
     <Compile Include="Workflows\Tasks\IntroductionTask.cs" />
+    <Compile Include="Workflows\Tasks\CoordinatorCheckin.cs" />
     <Compile Include="Workflows\Tasks\VerificationTask.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Users\User.cs" />

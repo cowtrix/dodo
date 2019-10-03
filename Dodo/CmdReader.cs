@@ -127,17 +127,23 @@ namespace XR.Dodo
 				sb.AppendLine($"Site: {user.SiteCode} {user.Site?.SiteName}");
 				sb.AppendLine($"Telegram: {user.TelegramUser}");
 				sb.AppendLine($"Access Level: {user.AccessLevel}");
+				foreach(var role in user.CoordinatorRoles)
+				{
+					sb.AppendLine($"Role: {role.Name}");
+					sb.AppendLine($"\tSite: {role.SiteCode}");
+					sb.AppendLine($"\tWorking Group: {role.WorkingGroupCode}");
+				}
 				Output(sb.ToString());
 			}));
 			AddCommand("coordemails", (async x =>
 			{
 				var users = DodoServer.SessionManager.GetUsers()
-					.Where(user => user.AccessLevel >= EUserAccessLevel.Coordinator &&
+					.Where(user => user.AccessLevel >= EUserAccessLevel.Coordinator && !user.IsVerified() &&
 					!string.IsNullOrEmpty(user.Email));
 				var sb = new StringBuilder();
 				foreach (var user in users)
 				{
-					sb.AppendLine(user.Email);
+					sb.AppendLine($"{user.Email} - {user.Name} ({user.PhoneNumber})");
 				}
 				Output(sb.ToString());
 			}));
@@ -150,6 +156,9 @@ namespace XR.Dodo
 				sb.AppendLine($"Volunteers: {users.Where(user => user.AccessLevel == EUserAccessLevel.Volunteer).Count()} (Active: {users.Where(user => user.AccessLevel == EUserAccessLevel.Volunteer && user.Active).Count()})");
 				sb.AppendLine($"Total Msg In: {users.Sum(user => DodoServer.SessionManager.GetOrCreateSession(user).Inbox.Count)}");
 				sb.AppendLine($"Total Msg Out: {users.Sum(user => DodoServer.SessionManager.GetOrCreateSession(user).Outbox.Count)}");
+				sb.AppendLine($"Volunteer Requests Broadcast: {DodoServer.CoordinatorNeedsManager.Data.TotalRequestsSent}");
+				sb.AppendLine($"Volunteer Requests Confirmed: {DodoServer.CoordinatorNeedsManager.Data.TotalRequestsAccepted}");
+				sb.AppendLine($"Hit Rate: {DodoServer.CoordinatorNeedsManager.Data.TotalRequestsAccepted / (float)DodoServer.CoordinatorNeedsManager.Data.TotalRequestsSent}");
 				Output(sb.ToString());
 
 			}));

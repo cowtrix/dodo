@@ -32,5 +32,6 @@ namespace XR.Dodo
 		public Gateways GatewayData = new Gateways();
 		public string BackupPath = "Backups";
 		public int BackupInterval = 10;
+		public List<string> AdminUsers = new List<string>();
 	}
 }

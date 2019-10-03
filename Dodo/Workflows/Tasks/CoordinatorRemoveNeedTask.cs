@@ -16,7 +16,7 @@ namespace XR.Dodo
 		List<CoordinatorNeedsManager.Need> GetNeeds(User user)
 		{
 			var needs = DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds;
-			if (user.AccessLevel == EUserAccessLevel.RSO)
+			if (user.AccessLevel >= EUserAccessLevel.RSO)
 			{
 				return needs.Values.ToList();
 			}

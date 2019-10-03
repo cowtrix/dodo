@@ -12,6 +12,7 @@ namespace XR.Dodo
 		Coordinator,
 		RotaCoordinator,
 		RSO,
+		Admin,
 	}
 
 	public delegate void OnMessageReceivedEvent(ServerMessage message, UserSession session);
@@ -43,13 +44,17 @@ namespace XR.Dodo
 		{
 			get
 			{
+				if(DodoServer.IsAdmin(this))
+				{
+					return EUserAccessLevel.Admin;
+				}
 				if(CoordinatorRoles.Count > 0)
 				{
 					if(CoordinatorRoles.Any(x => x.SiteCode == 0))
 					{
 						return EUserAccessLevel.RSO;
 					}
-					if(IsRotaCoordinator)
+					if(IsRotaCoordinator || IsCoordinator)
 					{
 						return EUserAccessLevel.RotaCoordinator;
 					}
@@ -64,6 +69,17 @@ namespace XR.Dodo
 		{
 			get {
 				return CoordinatorRoles.Any(x => x.WorkingGroup.Name.ToUpperInvariant().Contains("ROTA")); }
+		}
+
+		[JsonIgnore]
+		public bool IsCoordinator
+		{
+			get
+			{
+				return CoordinatorRoles.Any(x => x.Name.ToUpperInvariant().Contains("INTERNAL COORDINATOR") 
+					|| x.Name.ToUpperInvariant().Contains("EXTERNAL COORDINATOR")
+					|| x.WorkingGroup.Name.ToUpperInvariant().Contains("INTEGRATION"));
+			}
 		}
 
 		[JsonIgnore]
@@ -96,7 +112,7 @@ namespace XR.Dodo
 
 		public override string ToString()
 		{
-			return $"{Name ?? PhoneNumber ?? TelegramUser.ToString()} ({AccessLevel})";
+			return $"{Name ?? PhoneNumber ?? TelegramUser.ToString()} ({AccessLevel}|{UUID.Substring(0, 8)})";
 		}
 
 		public bool IsVerified()

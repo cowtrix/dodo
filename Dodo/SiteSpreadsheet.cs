@@ -62,9 +62,59 @@ namespace XR.Dodo
 			try
 			{
 				ValueRange spreadSheet = null;
-				spreadSheet = GSheets.GetSheetRange(SpreadSheetID, "A:ZZZ");
+				spreadSheet = GSheets.GetSheetRange(SpreadSheetID, "People, mandates and contacts!A:ZZZ");
 				var parentGroupRow = spreadSheet.Values.First(x => x.Any() && (x.First() as string).ToUpperInvariant().Contains("PARENT GROUP"));
 				var workingGroupRow = spreadSheet.Values.First(x => x.Any() && (x.First() as string).ToUpperInvariant().Contains("WORKING GROUP"));
+
+				var internalCoords = spreadSheet.Values.Where(x => x.Any() && (x.First() as string).ToUpperInvariant().Contains("INTERNAL COORDINATOR"));
+				var externalCoords = spreadSheet.Values.Where(x => x.Any() && (x.First() as string).ToUpperInvariant().Contains("EXTERNAL COORDINATOR"));
+
+				var parentGroup = EParentGroup.ActionSupport;
+				for(var i = 0; i < parentGroupRow.Count(); ++i)
+				{
+					var parentGroupString = parentGroupRow.ElementAtOrDefault(i) as string ?? "";
+					if (SiteSpreadsheetManager.TryStringToParentGroup(parentGroupString, out var newGroup))
+					{
+						parentGroup = newGroup;
+
+						if (!manager.GetWorkingGroupFromName("Parent Group Coordinators", EParentGroup.RSO, out WorkingGroup wg))
+						{
+							wg = manager.GenerateWorkingGroup("Parent Group Coordinators", EParentGroup.RSO, "");
+							manager.Data.WorkingGroups.TryAdd(wg.ShortCode, wg);
+						}
+
+						foreach(var internalCoordRow in internalCoords)
+						{
+							var intCName = internalCoordRow.ElementAtOrDefault(i) as string ?? "";
+							var intCNumber = internalCoordRow.ElementAtOrDefault(i + 1) as string ?? "";
+							var intCEmail = internalCoordRow.ElementAtOrDefault(i + 2) as string ?? "";
+							if (!string.IsNullOrEmpty(intCNumber) && ValidationExtensions.ValidateNumber(ref intCNumber))
+							{
+								var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(intCNumber);
+								user.Name = user.Name ?? intCName;
+								user.Email = user.Email ?? intCEmail;
+								user.GDPR = true;
+								user.CoordinatorRoles.Add(new Role(wg, $"{parentGroup.GetName()} Internal Coordinator", SiteCode));
+							}
+						}
+						
+						foreach(var externalCoordRow in externalCoords)
+						{
+							var extCName = externalCoordRow.ElementAtOrDefault(i) as string ?? "";
+							var extCNumber = externalCoordRow.ElementAtOrDefault(i + 1) as string ?? "";
+							var extCEmail = externalCoordRow.ElementAtOrDefault(i + 2) as string ?? "";
+							if (!string.IsNullOrEmpty(extCNumber) && ValidationExtensions.ValidateNumber(ref extCNumber))
+							{
+								var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(extCNumber);
+								user.Name = user.Name ?? extCName;
+								user.Email = user.Email ?? extCEmail;
+								user.GDPR = true;
+								user.CoordinatorRoles.Add(new Role(wg, $"{parentGroup.GetName()} External Coordinator", SiteCode));
+							}
+						}
+					}
+				}
+
 				for (var rowIndex = 0; rowIndex < spreadSheet.Values.Count; ++rowIndex)
 				{
 					var row = spreadSheet.Values[rowIndex];
@@ -74,7 +124,7 @@ namespace XR.Dodo
 					{
 						continue;
 					}
-					var parentGroup = EParentGroup.ActionSupport;
+					parentGroup = EParentGroup.ActionSupport;
 					for (var column = 1; column < row.Count; ++column)
 					{
 						try
@@ -96,7 +146,7 @@ namespace XR.Dodo
 							var nextNumberRowIndex = spreadSheet.Values.Skip(rowIndex).First(x => (x.First() as string).Trim() == "Number");
 							var number = nextNumberRowIndex.ElementAtOrDefault(column) as string ?? "";
 							var rawNumber = number;
-							var workingGroupName = workingGroupRow.ElementAtOrDefault(column) as string ?? "";
+							var workingGroupName = (workingGroupRow.ElementAtOrDefault(column) as string ?? "").Trim();
 							var roleName = spreadSheet.Values
 								.First(x =>
 								{
@@ -134,7 +184,7 @@ namespace XR.Dodo
 								email = null;
 							}
 
-							if (!manager.GetWorkingGroupFromName(workingGroupName, out WorkingGroup wg))
+							if (!manager.GetWorkingGroupFromName(workingGroupName, parentGroup, out WorkingGroup wg))
 							{
 								wg = manager.GenerateWorkingGroup(workingGroupName, parentGroup, mandate);
 								manager.Data.WorkingGroups.TryAdd(wg.ShortCode, wg);
@@ -142,15 +192,8 @@ namespace XR.Dodo
 							}
 							var role = new Role(wg, roleName, SiteCode);
 							var user = DodoServer.SessionManager.GetOrCreateUserFromPhoneNumber(number);
-							var session = DodoServer.SessionManager.GetOrCreateSession(user);
-							if (session.Inbox.Count > 0 && session.Workflow.CurrentTask is IntroductionTask)
-							{
-								DodoServer.DefaultGateway.SendMessage(new ServerMessage($"You're now recognised as a {user.Name}, a Coordinator for {role.WorkingGroup}"), session);
-								session.Workflow.CurrentTask.ExitTask(session);
-							}
-
-							user.Name = name;
-							user.Email = email;
+							user.Name = user.Name ?? name;
+							user.Email = email ?? user.Email;
 							user.GDPR = true;
 							user.CoordinatorRoles.Add(role);
 							WorkingGroups.Add(wg.ShortCode);

@@ -23,6 +23,8 @@ namespace XR.Dodo
 		}
 		public SiteData Data;
 
+		public const int OffSiteNumber = -999;
+
 		public SiteSpreadsheetManager(Configuration config)
 		{
 			m_statusID = config.SpreadsheetData.SiteSpreadsheetHealthReportID;
@@ -213,7 +215,7 @@ namespace XR.Dodo
 
 		public bool IsValidWorkingGroup(string shortCode)
 		{
-			return Data.WorkingGroups.ContainsKey(shortCode);
+			return !string.IsNullOrEmpty(shortCode) && Data.WorkingGroups.ContainsKey(shortCode);
 		}
 
 		public bool IsValidWorkingGroup(string shortCode, out WorkingGroup workingGroup)
@@ -223,7 +225,7 @@ namespace XR.Dodo
 
 		public bool IsValidSiteCode(int siteCode)
 		{
-			return Data.Sites.ContainsKey(siteCode);
+			return siteCode == OffSiteNumber || Data.Sites.ContainsKey(siteCode);
 		}
 
 		public static bool TryStringToParentGroup(string str, out EParentGroup group)
@@ -267,9 +269,9 @@ namespace XR.Dodo
 			return false;
 		}
 
-		public bool GetWorkingGroupFromName(string workingGroupName, out WorkingGroup wg)
+		public bool GetWorkingGroupFromName(string workingGroupName, EParentGroup pgroup, out WorkingGroup wg)
 		{
-			wg = Data.WorkingGroups.Values.FirstOrDefault(x => x.Name.Contains(workingGroupName) || workingGroupName.Contains(x.Name));
+			wg = Data.WorkingGroups.Values.FirstOrDefault(x => x.ParentGroup == pgroup && x.Name.ToUpperInvariant() == workingGroupName.ToUpperInvariant());
 			return !string.IsNullOrEmpty(wg.ShortCode);
 		}
 

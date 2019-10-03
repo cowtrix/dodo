@@ -4,6 +4,7 @@ using System;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Common;
+using System.Collections.Generic;
 
 namespace XR.Dodo
 {
@@ -21,7 +22,6 @@ namespace XR.Dodo
 		public static HTTPGateway SMSGateway;
 		public static TelegramGateway TelegramGateway;
 		public static Configuration Configuration = new Configuration();
-
 		public static IMessageGateway DefaultGateway { get { return TelegramGateway; } }
 
 		private static CmdReader cmdReader = new CmdReader();
@@ -34,7 +34,7 @@ namespace XR.Dodo
 		public static bool NoLoad { get; private set; }
 		public static DateTime RebellionStartDate { get { return new DateTime(2019, 10, 7); } }
 
-		public static string SiteMapURL = "http://shorturl.at/jnEJ3";
+		public static string SiteMapURL = "http://shorturl.at/fqOT7";
 		public const string RolesSiteURL = "http://rebellionroles.earth";
 		public const string CoordinatorUserGuideURL = "https://shorturl.at/aotzX";
 		public const string VolunteerUserGuideURL = "https://shorturl.at/bhvwA";
@@ -42,6 +42,11 @@ namespace XR.Dodo
 		static void Main(string[] args)
 		{
 			Initialise(args);
+		}
+
+		public static bool IsAdmin(User user)
+		{
+			return Configuration.AdminUsers.Contains(user.UUID);
 		}
 
 		public static void Initialise(params string[] args)

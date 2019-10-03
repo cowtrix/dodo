@@ -132,10 +132,6 @@ namespace XR.Dodo
 				Logger.Warning($"Attempted to send a null message to {msg?.Session?.GetUser()}");
 				return;
 			}
-			if (msg.Message.Content.Length > 160)
-			{
-				Logger.Warning("Message length > sms limit");
-			}
 			await m_botClient.SendTextMessageAsync(msg.Session.GetUser().TelegramUser, msg.Message.Content);
 		}
 

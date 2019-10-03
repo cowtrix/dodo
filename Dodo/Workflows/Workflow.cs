@@ -24,6 +24,7 @@ namespace XR.Dodo
 			AddTask<CoordinatorWhoIsTask>();
 			AddTask<CoordinatorNeedsTask>();
 			AddTask<CoordinatorRemoveNeedTask>();
+			AddTask<CoordinatorCheckin>();
 
 			CurrentTask = new IntroductionTask();
 		}

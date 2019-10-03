@@ -8,7 +8,7 @@ namespace XR.Dodo
 	[WorkflowTaskInfo(EUserAccessLevel.Coordinator)]
 	public class CoordinatorNeedsTask : WorkflowTask
 	{
-		public WorkingGroup WorkingGroup;
+		public string WorkingGroupCode;
 		public int Amount = -1;
 		public DateTime TimeNeeded;
 		public string Description;
@@ -38,7 +38,19 @@ namespace XR.Dodo
 				}
 				if (!DodoServer.SiteManager.IsValidSiteCode(SiteCode))
 				{
-					if (int.TryParse(cmd, out var siteCode))
+					if(cmd == "OFFSITE")
+					{
+						SiteCode = SiteSpreadsheetManager.OffSiteNumber;
+						if (i >= message.ContentUpper.Length - 1)
+						{
+							cmd = "XXXX";
+						}
+						else
+						{
+							continue;
+						}
+					}
+					else if (int.TryParse(cmd, out var siteCode))
 					{
 						SiteCode = siteCode;
 						if (i >= message.ContentUpper.Length - 1)
@@ -57,32 +69,33 @@ namespace XR.Dodo
 					else
 					{
 						response = new ServerMessage((cmd == CommandKey ? "" : "Sorry, I didn't understand that. If you'd like to cancel, reply 'DONE'. ") +
-							GetSiteNumberRequestString(approvedSites));
+							GetSiteNumberRequestString(approvedSites) + (user.AccessLevel >= EUserAccessLevel.RSO ? " Or, if you'd like to make an off-site request, reply OFFSITE." : ""));
 						return true;
 					}
 				}
 
 				var workingGroups = ApprovedWorkingGroups(SiteCode, user);
-				if (!DodoServer.SiteManager.IsValidWorkingGroup(WorkingGroup) && !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
+				if (!DodoServer.SiteManager.IsValidWorkingGroup(WorkingGroupCode) && !DodoServer.SiteManager.IsValidWorkingGroup(cmd))
 				{
 					if(workingGroups.Count == 1 && user.AccessLevel != EUserAccessLevel.RotaCoordinator)
 					{
-						WorkingGroup = workingGroups[0];
-						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
+						var wg = DodoServer.SiteManager.GetWorkingGroup(WorkingGroupCode);
+						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, wg).Count();
 						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 						{
-							response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+							response = new ServerMessage($"Sorry, the working group {wg.Name} already has the maximum amount of Volunteer Requests. " +
 								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
 							ExitTask(session);
 							return true;
 						}
+						WorkingGroupCode = workingGroups[0].ShortCode;
 					}
 					else
 					{
 						// Filter by parent group
 						if (ParentGroupFilter == null)
 						{
-							var list = Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>().ToList();
+							var list = Enum.GetValues(typeof(EParentGroup)).OfType<EParentGroup>().Where(pg => workingGroups.Any(wg => wg.ParentGroup == pg)).ToList();
 							if (int.TryParse(cmd, out var number) && number >= 0 && number < list.Count 
 								&& (SiteCode > 0 || list[number] < EParentGroup.RSO))
 							{
@@ -148,19 +161,20 @@ namespace XR.Dodo
 					}
 				}
 
-				if (!DodoServer.SiteManager.IsValidWorkingGroup(WorkingGroup))
+				if (!DodoServer.SiteManager.IsValidWorkingGroup(WorkingGroupCode))
 				{
 					if (workingGroups.Any(x => x.ShortCode == cmd))
 					{
-						WorkingGroup = workingGroups.First(x => x.ShortCode == cmd);
-						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
+						var wg = workingGroups.First(x => x.ShortCode == cmd);
+						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, wg).Count();
 						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 						{
-							response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+							response = new ServerMessage($"Sorry, the working group {wg.Name} already has the maximum amount of Volunteer Requests. " +
 								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
 							ExitTask(session);
 							return true;
 						}
+						WorkingGroupCode = wg.ShortCode;
 						if (i >= message.ContentUpper.Length - 1)
 						{
 							response = new ServerMessage(GetTimeRequestString());
@@ -172,15 +186,16 @@ namespace XR.Dodo
 					{
 						if (workingGroups.Count == 1)
 						{
-							WorkingGroup = workingGroups[0];
-							var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, WorkingGroup).Count();
+							var wg = workingGroups[0];
+							var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, wg).Count();
 							if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 							{
-								response = new ServerMessage($"Sorry, the working group {WorkingGroup.Name} already has the maximum amount of Volunteer Requests. " +
+								response = new ServerMessage($"Sorry, the working group {wg.Name} already has the maximum amount of Volunteer Requests. " +
 									$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
 								ExitTask(session);
 								return true;
 							}
+							WorkingGroupCode = wg.ShortCode;
 						}
 						else
 						{
@@ -224,7 +239,7 @@ namespace XR.Dodo
 						if (i >= message.ContentUpper.Length - 2)
 						{
 							response = new ServerMessage(maxStr + "Now, tell me how many volunteers you need." +
-								" Reply with a number, or if you just need as many people as possible, reply 'MANY'." +
+								" Reply with a number between 1-99, or if you need more than 99, reply 'MANY'." +
 								" If you'd like to cancel, reply 'DONE'.");
 							return true;
 						}
@@ -242,18 +257,29 @@ namespace XR.Dodo
 						continue;
 					}
 				}
-
+				string manyStr = "";
 				if (Amount < 0)
 				{
 					int count = 0;
 					if (cmd == "MANY")
 					{
+						if(DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.Any(need => need.Value.SiteCode == SiteCode && need.Value.WorkingGroupCode == WorkingGroupCode && need.Value.Amount == int.MaxValue))
+						{
+							response = new ServerMessage("Sorry, your Working Group can only have one MANY Volunteer Request at a time. Please delete your other Request with the DELETENEED command and try again.");
+							return true;
+						}
+						manyStr = "Please think about if you really need MANY volunteers. Abuse of this feature will result in you no longer being able to make Volunteer Requests." +
+							" If you need less than 99 volunteers - please give a number, even if it's an estimate. If you don't think you actually need MANY, reply DONE now and start again. ";
 						Amount = int.MaxValue;
 					}
 					else if (cmd == CommandKey)
 					{
-						response = new ServerMessage(GetNumberRequest());
-						return true;
+						if (i >= message.ContentUpper.Length - 1)
+						{
+							response = new ServerMessage(GetNumberRequest());
+							return true;
+						}
+						continue;
 					}
 					else if (!int.TryParse(cmd, out count) || count < 0 || count > 99)
 					{
@@ -274,7 +300,7 @@ namespace XR.Dodo
 
 				if(Description == null)
 				{
-					response = new ServerMessage("Now, if you'd like, you can tell me in 160 characters or less what the role is. Or, to skip this step, reply SKIP");
+					response = new ServerMessage(manyStr + "Now, if you'd like, you can tell me in 160 characters or less what the role is. Or, to skip this step, reply SKIP");
 					Description = "";
 					return true;
 				}
@@ -289,7 +315,7 @@ namespace XR.Dodo
 				}
 				ExitTask(session);
 				string key = null;
-				if (!DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, WorkingGroup, SiteCode, Amount, TimeNeeded, Description, out key))
+				if (!DodoServer.CoordinatorNeedsManager.AddNeedRequest(user, DodoServer.SiteManager.GetWorkingGroup(WorkingGroupCode), SiteCode, Amount, TimeNeeded, Description, out key))
 				{
 					response = new ServerMessage("Sorry, there was a problem adding that Volunteer Request. Please try again.");
 					return true;
@@ -299,7 +325,7 @@ namespace XR.Dodo
 					$" The code for this Volunteer Request is {key}." +
 					$" In future, you could make this request in one go by saying {CoordinatorNeedsTask.CommandKey} " +
 					(user.AccessLevel >= EUserAccessLevel.RSO ? SiteCode + " " : "") +
-					(user.AccessLevel >= EUserAccessLevel.RotaCoordinator ? WorkingGroup.ShortCode + " " : "") +
+					(user.AccessLevel >= EUserAccessLevel.RotaCoordinator ? WorkingGroupCode + " " : "") +
 					$"{ Utility.ToDateTimeCode(TimeNeeded)} {(Amount == int.MaxValue ? "MANY" : Amount.ToString())}");
 				return true;
 			}
@@ -321,7 +347,7 @@ namespace XR.Dodo
 		private List<SiteSpreadsheet> ApprovedSites(User user)
 		{
 			var allSites = DodoServer.SiteManager.GetSites();
-			if (user.AccessLevel == EUserAccessLevel.RSO)
+			if (user.AccessLevel >= EUserAccessLevel.RSO)
 			{
 				return allSites;
 			}
@@ -334,13 +360,13 @@ namespace XR.Dodo
 			{
 				return user.CoordinatorRoles.Select(x => x.WorkingGroup).ToList();
 			}
+			if(user.AccessLevel >= EUserAccessLevel.RSO && siteCode == SiteSpreadsheetManager.OffSiteNumber)
+			{
+				return DodoServer.SiteManager.Data.WorkingGroups.Values.ToList();
+			}
 			var site = DodoServer.SiteManager.GetSite(siteCode);
 			var allWgs = DodoServer.SiteManager.Data.WorkingGroups.Values
 				.Where(x => site.WorkingGroups.Contains(x.ShortCode));
-			if (user.AccessLevel == EUserAccessLevel.RotaCoordinator)
-			{
-				return allWgs.Where(x => x.ParentGroup != EParentGroup.RSO).ToList();
-			}
 			return allWgs.ToList();
 		}
 
@@ -359,6 +385,7 @@ namespace XR.Dodo
 			var sb = new StringBuilder("Please select the Working Group from the list:\n");
 			var parentGroup = wgs.First().ParentGroup;
 			bool needHeaders = wgs.Any(x => x.ParentGroup != parentGroup);
+			wgs = wgs.OrderBy(x => x.ParentGroup).ThenBy(x => x.ShortCode);
 			for (var i = 0; i < wgs.Count(); i++)
 			{
 				var wg = (WorkingGroup)wgs.ElementAt(i);

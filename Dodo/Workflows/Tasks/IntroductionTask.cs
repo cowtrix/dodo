@@ -38,7 +38,7 @@ namespace XR.Dodo
 					var wgEntryPref = user.WorkingGroupPreferences.FirstOrDefault();
 					response = new ServerMessage("Hello! I'm your friendly Extinction Rebellion Bot. Whether you're a seasoned rebel, or you're just getting started, " +
 						"my purpose is to help you get involved in the Autumn Rebellion in London. Through me, you can find out what needs doing, who needs help, and how you can get involved. " +
-						(wgEntryPref != null ? $"It looks like you're interested in the {DodoServer.SiteManager.GetWorkingGroup(wgEntryPref).Name} Working Group. I'll try and send you more roles in that group." : "") +
+						(wgEntryPref != null ? $"It looks like you're interested in the {DodoServer.SiteManager.GetWorkingGroup(wgEntryPref).Name} Working Group. I'll try and send you more roles in that group. " : "") +
 						$"Firstly, if you haven't yet, take a second to read and sign our Volunteer Agreement here: {VolunteerAgreement}\n" +
 						"When you've done that, reply with the word DONE, and we can move onto the next step.");
 					return true;
