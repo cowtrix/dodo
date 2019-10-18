@@ -71,7 +71,7 @@ namespace XR.Dodo
 						}
 						if(m_parentGroupFilter == null)
 						{
-							response = new ServerMessage(addedOrRemoved);
+							response = new ServerMessage(addedOrRemoved + " If you didn't mean to do this, just repeat the last command.");
 							ExitTask(session);
 							return true;
 						}
@@ -87,12 +87,11 @@ namespace XR.Dodo
 		private string GetWorkingGroupList(User user, EParentGroup pg)
 		{
 			var site = user.Site;
-			var wgs = DodoServer.SiteManager.Data.WorkingGroups.Where(x => x.Value.ParentGroup == pg &&
-				(site == null || site.WorkingGroups.Contains(x.Key)));
+			var wgs = DodoServer.SiteManager.Data.WorkingGroups.Where(x => x.Value.ParentGroup == pg);
 			if(wgs.Count() == 0)
 			{
 				m_parentGroupFilter = null;
-				return $"Sorry, it doesn't look like there are any coordinators for this parent group yet at site {site.SiteName}."
+				return $"Sorry, it doesn't look like there are any coordinators for this parent group yet at site {site?.SiteName}."
 					+ GetParentGroupSelectionString();
 			}
 			var sb = new StringBuilder("Select a Working Group to add or remove it from your preferences:\n");

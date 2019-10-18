@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -122,7 +123,19 @@ namespace XR.Dodo
 		public void SendMessage(ServerMessage message, int userID)
 		{
 			Logger.Debug($"Telegram >> {userID}: {message.Content.Substring(0, Math.Min(message.Content.Length, 32))}{(message.Content.Length > 32 ? "..." : "")}");
-			m_botClient.SendTextMessageAsync(userID, message.Content);
+			try
+			{
+				m_botClient.SendTextMessageAsync(userID, message.Content);
+			}
+			catch(Exception e)
+			{
+				if(!e.Message.Contains("Forbidden: bot was blocked by the user"))
+				{
+					throw;
+				}
+				var user = DodoServer.SessionManager.GetOrCreateUserFromTelegramNumber(userID);
+				user.Active = false;
+			}
 		}
 
 		private async Task SendMessageAsync(OutgoingMessage msg)
@@ -132,8 +145,20 @@ namespace XR.Dodo
 				Logger.Warning($"Attempted to send a null message to {msg?.Session?.GetUser()}");
 				return;
 			}
-			await m_botClient.SendTextMessageAsync(msg.Session.GetUser().TelegramUser, msg.Message.Content);
-		}
+			try
+			{ 
+				await m_botClient.SendTextMessageAsync(msg.Session.GetUser().TelegramUser, msg.Message.Content);
+			}
+			catch(Exception e)
+			{
+				if(!e.Message.Contains("Forbidden: bot was blocked by the user"))
+				{
+					throw;
+				}
+				var user = msg.Session.GetUser();
+				user.Active = false;
+			}
+}
 
 		public void Broadcast(ServerMessage serverMessage, IEnumerable<User> users)
 		{

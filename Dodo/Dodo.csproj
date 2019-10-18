@@ -142,6 +142,7 @@
     <Compile Include="Gateways\IMessageGateway.cs" />
     <Compile Include="Gateways\TelegramGateway.cs" />
     <Compile Include="Sessions\UserSession.cs" />
+    <Compile Include="Workflows\Tasks\SettingsTask.cs" />
     <Compile Include="Workflows\Workflow.cs" />
     <Compile Include="Workflows\Tasks\WorkflowTask.cs" />
     <Compile Include="WorkingGroup.cs" />

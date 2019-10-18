@@ -102,8 +102,9 @@ namespace XR.Dodo
 				}
 				nameString += "Now, if you already know how you're getting involved in the Autumn Rebellion and you don't want me to notify you about roles, " +
 						"you can just reply DONE. Otherwise, you need to tell me a little more about yourself. Firstly, ";
-				if (user.StartDate != default && DateTime.Now > user.StartDate)
+				if (DateTime.Now > DodoServer.RebellionStartDate)
 				{
+					State = EState.GetSite;
 					response = new ServerMessage(nameString + "which site are you at? " + GetSiteList());
 					return true;
 				}
@@ -125,12 +126,13 @@ namespace XR.Dodo
 				if (!int.TryParse(message.ContentUpper.FirstOrDefault(), out var siteCode) || siteCode == 0 ||
 					!DodoServer.SiteManager.IsValidSiteCode(siteCode))
 				{
-					response = new ServerMessage("Sorry, that didn't seem like a valid choice. " +
+					response = new ServerMessage(
+						(message.ContentUpper.FirstOrDefault() != RolesTask.CommandKey ? "Sorry, that didn't seem like a valid choice. " : "") +
 						GetSiteList());
 					return true;
 				}
 				user.SiteCode = siteCode;
-				if (user.StartDate != default && DateTime.Now > user.StartDate)
+				if (DateTime.Now > DodoServer.RebellionStartDate)
 				{
 					response = new ServerMessage($"Okay, you're at {DodoServer.SiteManager.GetSite(user.SiteCode).SiteName}. " +
 						wgPrefsString + GetParentGroupSelectionString(user.SiteCode));
@@ -170,7 +172,9 @@ namespace XR.Dodo
 						return true;
 					}
 					// Get parent group
-					response = new ServerMessage("Sorry, I didn't understand that selection. " + GetParentGroupSelectionString(user.SiteCode));
+					response = new ServerMessage(
+						(message.ContentUpper.FirstOrDefault() != RolesTask.CommandKey ? "Sorry, I didn't understand that selection. " : "") +
+						GetParentGroupSelectionString(user.SiteCode));
 					return true;
 				}
 				else
@@ -285,7 +289,7 @@ namespace XR.Dodo
 			var site = user.Site;
 			var wgs = DodoServer.SiteManager.Data.WorkingGroups.Where(x => x.Value.ParentGroup == pg);
 			var sb = new StringBuilder("Select a Working Group to add or remove it from your preferences:\n");
-			foreach(var wg in wgs.Where(x => site == null || site.WorkingGroups.Contains(x.Key)))
+			foreach(var wg in wgs.Where(x => x.Value.ParentGroup != EParentGroup.RSO))
 			{
 				sb.AppendLine($"{wg.Value.ShortCode} - {wg.Value.Name} " +
 					$"{(user.WorkingGroupPreferences.Contains(wg.Value.ShortCode) ? "✓" : "-")}");

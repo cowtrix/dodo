@@ -148,19 +148,19 @@ namespace XR.Dodo
 							var rawNumber = number;
 							var workingGroupName = (workingGroupRow.ElementAtOrDefault(column) as string ?? "").Trim();
 							var roleName = spreadSheet.Values
-								.First(x =>
+								.FirstOrDefault(x =>
 								{
 									var str = (x.FirstOrDefault() as string ?? "").ToLowerInvariant();
 									return str.Contains("working group");
 								})
-								.ElementAtOrDefault(column) as string ?? "";
+								?.ElementAtOrDefault(column) as string ?? "";
 							var mandate = spreadSheet.Values
-								.First(x =>
+								.FirstOrDefault(x =>
 								{
 									var str = (x.FirstOrDefault() as string ?? "").ToLowerInvariant();
 									return str.Contains("mandate");
 								})
-								.ElementAtOrDefault(column) as string ?? "";
+								?.ElementAtOrDefault(column) as string ?? "";
 							if (string.IsNullOrEmpty(number))
 							{
 								continue;

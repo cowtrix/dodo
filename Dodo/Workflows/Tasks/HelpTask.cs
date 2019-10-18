@@ -21,7 +21,7 @@ namespace XR.Dodo
 				{
 					continue;
 				}
-				if(taskType.Value == typeof(RolesTask) && user.AccessLevel > EUserAccessLevel.Volunteer)
+				if((taskType.Value == typeof(RolesTask) || taskType.Value == typeof(SettingsTask)) && user.AccessLevel > EUserAccessLevel.Volunteer)
 				{
 					continue;
 				}
@@ -43,9 +43,12 @@ namespace XR.Dodo
 			}
 			else
 			{
-				sb.AppendLine("Or for more info, check out the User Guide here: " + DodoServer.VolunteerUserGuideURL);
+				sb.AppendLine("Or for more info, check out the User Guide here: " + DodoServer.VolunteerUserGuideURL + 
+					" When a role comes up that I think you might be interested in, I'll send you a message about it. " +
+					"That message will contain a code that you can respond with, which will tell me that you're interested. " + 
+					"Then, I'll share your number with a coordinator who will be in touch about the role. ");
 			}
-			
+			sb.AppendLine($"If you still need help, you can email {DodoServer.SupportEmail} for more assistance.");
 			response = new ServerMessage(sb.ToString());
 			ExitTask(session);
 			return true;

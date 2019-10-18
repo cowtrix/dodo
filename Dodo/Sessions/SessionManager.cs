@@ -156,6 +156,8 @@ namespace XR.Dodo
 		public bool RemoveUser(User user)
 		{
 			Logger.Debug("Removed user " + user.UUID);
+			DodoServer.CoordinatorNeedsManager.Data.Checkins.TryRemove(user.UUID, out _);
+			DodoServer.CoordinatorNeedsManager.Data.CheckinReminders.TryRemove(user.UUID, out _);
 			
 			return _data.Users.TryRemove(user.UUID, out _) &&
 			_data.Sessions.TryRemove(user.UUID, out _);
@@ -170,7 +172,7 @@ namespace XR.Dodo
 		{
 			if(!_data.Users.TryGetValue(ownerUID, out var result))
 			{
-				throw new Exception("Could not find user with id " + ownerUID);
+				return null;
 			}
 			return result;
 		}

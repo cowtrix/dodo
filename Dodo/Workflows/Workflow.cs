@@ -21,6 +21,7 @@ namespace XR.Dodo
 			AddTask<InfoTask>();
 			AddTask<RolesTask>();
 			AddTask<MuteTask>();
+			AddTask<SettingsTask>();
 			AddTask<CoordinatorWhoIsTask>();
 			AddTask<CoordinatorNeedsTask>();
 			AddTask<CoordinatorRemoveNeedTask>();
@@ -106,7 +107,7 @@ namespace XR.Dodo
 				}
 				if (DateTime.Now - CurrentTask.TimeCreated > CurrentTask.Timeout)
 				{
-					DodoServer.DefaultGateway.SendMessage(
+					message.Gateway.SendMessage(
 						new ServerMessage($"Your last command - {Tasks.FirstOrDefault(x => x.Value == CurrentTask.GetType()).Key}" +
 						" - timed out due to inactivity."), session);
 					CurrentTask.ExitTask(session);

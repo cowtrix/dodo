@@ -12,7 +12,7 @@ namespace XR.Dodo
 		public int Amount = -1;
 		public DateTime TimeNeeded;
 		public string Description;
-		public int SiteCode = -1;
+		public int SiteCode = SiteSpreadsheetManager.OffSiteNumber;
 		public EParentGroup? ParentGroupFilter = null;
 
 		public static string CommandKey { get { return "NEED"; } }
@@ -50,7 +50,7 @@ namespace XR.Dodo
 							continue;
 						}
 					}
-					else if (int.TryParse(cmd, out var siteCode))
+					else if (int.TryParse(cmd, out var siteCode) && DodoServer.SiteManager.IsValidSiteCode(siteCode))
 					{
 						SiteCode = siteCode;
 						if (i >= message.ContentUpper.Length - 1)
@@ -79,16 +79,17 @@ namespace XR.Dodo
 				{
 					if(workingGroups.Count == 1 && user.AccessLevel != EUserAccessLevel.RotaCoordinator)
 					{
-						var wg = DodoServer.SiteManager.GetWorkingGroup(WorkingGroupCode);
+						var wg = workingGroups.First();
 						var existingNeedCount = DodoServer.CoordinatorNeedsManager.GetNeedsForWorkingGroup(SiteCode, wg).Count();
 						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 						{
 							response = new ServerMessage($"Sorry, the working group {wg.Name} already has the maximum amount of Volunteer Requests. " +
-								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
+								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}. " +
+								$"To request that this limit be raised for your Working Group, please email {DodoServer.SupportEmail}");
 							ExitTask(session);
 							return true;
 						}
-						WorkingGroupCode = workingGroups[0].ShortCode;
+						WorkingGroupCode = wg.ShortCode;
 					}
 					else
 					{
@@ -170,7 +171,8 @@ namespace XR.Dodo
 						if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 						{
 							response = new ServerMessage($"Sorry, the working group {wg.Name} already has the maximum amount of Volunteer Requests. " +
-								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
+								$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}. " +
+								$"To request that this limit be raised for your Working Group, please email {DodoServer.SupportEmail}");
 							ExitTask(session);
 							return true;
 						}
@@ -191,7 +193,8 @@ namespace XR.Dodo
 							if (existingNeedCount >= CoordinatorNeedsManager.MaxNeedCountPerWorkingGroup)
 							{
 								response = new ServerMessage($"Sorry, the working group {wg.Name} already has the maximum amount of Volunteer Requests. " +
-									$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}");
+									$"To be able to add a new one, you must remove an existing one. Do this by saying {CoordinatorRemoveNeedTask.CommandKey}. " +
+									$"To request that this limit be raised for your Working Group, please email {DodoServer.SupportEmail}");
 								ExitTask(session);
 								return true;
 							}

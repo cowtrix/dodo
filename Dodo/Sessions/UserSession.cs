@@ -35,7 +35,7 @@ namespace XR.Dodo
 			catch(Exception e)
 			{
 				Logger.Exception(e, "Unhandled exception in workflow");
-				return new ServerMessage("Sorry, something when wrong. Please try again.");
+				return new ServerMessage("Sorry, something went wrong. Please try again.");
 			}
 		}
 	}

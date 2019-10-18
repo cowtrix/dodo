@@ -135,6 +135,15 @@ namespace XR.Dodo
 				}
 				Output(sb.ToString());
 			}));
+			AddCommand("deletecheckin", (async x =>
+			{
+				var user = DodoServer.SessionManager.GetUserFromUserID(x);
+				if (user == null)
+				{
+					Output("Couldn't find user");
+				}
+				DodoServer.CoordinatorNeedsManager.Data.Checkins.TryRemove(user.UUID, out _);
+			}));
 			AddCommand("coordemails", (async x =>
 			{
 				var users = DodoServer.SessionManager.GetUsers()
@@ -159,11 +168,18 @@ namespace XR.Dodo
 				sb.AppendLine($"Volunteer Requests Broadcast: {DodoServer.CoordinatorNeedsManager.Data.TotalRequestsSent}");
 				sb.AppendLine($"Volunteer Requests Confirmed: {DodoServer.CoordinatorNeedsManager.Data.TotalRequestsAccepted}");
 				sb.AppendLine($"Hit Rate: {DodoServer.CoordinatorNeedsManager.Data.TotalRequestsAccepted / (float)DodoServer.CoordinatorNeedsManager.Data.TotalRequestsSent}");
+				sb.AppendLine($"Requests Completed: {DodoServer.CoordinatorNeedsManager.Data.VolunteerRequestsCompleted}");
+				sb.AppendLine($"0 contacts:{DodoServer.SessionManager.GetUsers().Count(user => user.AccessLevel == EUserAccessLevel.Volunteer && !DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.Any(need => need.Value.ContactedVolunteers.ContainsKey(user.UUID)))}");
+				//sab.AppendLine($"Valid contacts:{DodoServer.SessionManager.GetUsers().Where(x}")
 				Output(sb.ToString());
 
 			}));
 			AddCommand("needs", (async x =>
 			{
+				foreach (var b in DodoServer.SessionManager.GetUsers())
+				{
+					b.RequestsSent += DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.Count(need => need.Value.ContactedVolunteers.ContainsKey(b.UUID));
+				}
 				var needs = DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds;
 				var sb = new StringBuilder("Current Needs:\n");
 				foreach(var need in needs)
@@ -180,6 +196,7 @@ namespace XR.Dodo
 					sb.AppendLine($"\t\tContacted: {need.Value.ContactedVolunteers.Count}");
 					sb.AppendLine($"\t\tConfirmed: {need.Value.ConfirmedVolunteers.Count}");
 					sb.AppendLine($"\t\tLast Broadcast: {need.Value.LastBroadcast}");
+					sb.AppendLine($"\t\tValid: {DodoServer.SessionManager.GetUsers().Count(user => need.Value.UserIsValidCandidate(user))}");
 				}
 				Output(sb.ToString());
 
@@ -187,6 +204,35 @@ namespace XR.Dodo
 			AddCommand("updateneedssheet", (async x =>
 			{
 				DodoServer.CoordinatorNeedsManager.UpdateNeedsOnGSheet();
+			}));
+			AddCommand("broadcast", (async x =>
+			{
+				if (!File.Exists(x))
+					return;
+				var msg = File.ReadAllText(x);
+				Output("Are you really sure?\n" + msg);
+				if(Console.ReadLine() == "YES")
+				{
+					DodoServer.TelegramGateway.Broadcast(new ServerMessage(msg),
+						DodoServer.SessionManager.GetUsers().Where(user => user.Active && user.TelegramUser > 0));
+				}
+			}));
+			AddCommand("site", (async x =>
+			{
+				if (!int.TryParse(x, out var siteNumber) || !DodoServer.SiteManager.IsValidSiteCode(siteNumber))
+				{
+					Output("Couldn't find site " + siteNumber);
+					return;
+				}
+				if (siteNumber == SiteSpreadsheetManager.OffSiteNumber)
+				{
+					Output("OFFSITE");
+					return;
+				}
+				var site = DodoServer.SiteManager.GetSite(siteNumber);
+				Output($"Site Name: {site.SiteName}\n" +
+					site.WorkingGroups.Select(code => DodoServer.SiteManager.GetWorkingGroup(code)).Aggregate("",
+					(current, next) => current == "" ? next.ToString() : current.ToString() + "\n" + next.ToString()));
 			}));
 
 			var inputThread = new Task(async () =>
@@ -237,8 +283,19 @@ namespace XR.Dodo
 				{
 					throw new Exception("No matching command found for: " + cmdKey);
 				}
-				var task = new Task(async () => await command.Action(split.Length > 1 ?
-					split.Skip(1).Aggregate("", (current, next) => current + " " + next).Trim() : ""));
+				var task = new Task(async () =>
+				{
+					try
+					{
+						await command.Action(split.Length > 1 ?
+							split.Skip(1).Aggregate("", (current, next) => current + " " + next).Trim() : "");
+					}
+					catch (Exception e)
+					{
+						Logger.Exception(e);
+					}
+
+				});
 				task.Start();
 			}
 			catch(Exception e)

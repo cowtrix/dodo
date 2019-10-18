@@ -84,7 +84,7 @@ namespace XR.Dodo
 				{
 					throw new Exception("Bad date format: " + dt);
 				}
-				var timeSplit = split[1].Split(':');
+				var timeSplit = split[1].Split(new[] { ":", "." }, StringSplitOptions.RemoveEmptyEntries);
 				if (timeSplit.Length != 2 || !int.TryParse(timeSplit[0], out var hour) || !int.TryParse(timeSplit[1], out var minute))
 				{
 					throw new Exception("Bad time format: " + dt);

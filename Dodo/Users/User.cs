@@ -19,6 +19,13 @@ namespace XR.Dodo
 
 	public class User
 	{
+		public enum ESpamSetting
+		{
+			DEFAULT,
+			MORE,
+			LESS,
+		}
+
 		public string Name;
 		[Phone]
 		public string PhoneNumber;
@@ -31,6 +38,8 @@ namespace XR.Dodo
 		public bool GDPR;
 		public DateTime StartDate;
 		public DateTime EndDate = DateTime.MaxValue;
+		public ESpamSetting SpamSetting = ESpamSetting.DEFAULT;
+		public int RequestsSent;
 
 		[JsonIgnore]
 		public HashSet<Role> CoordinatorRoles = new HashSet<Role>();

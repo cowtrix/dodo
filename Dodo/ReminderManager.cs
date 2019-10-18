@@ -11,6 +11,7 @@ namespace XR.Dodo
 		{
 			var introReminderTask = new Task(async () =>
 			{
+				await Task.Delay(TimeSpan.FromMinutes(5));
 				while (true)
 				{
 					var sm = DodoServer.SessionManager;
@@ -63,10 +64,10 @@ namespace XR.Dodo
 					try
 					{
 						var now = DateTime.Now;
-						var timer = now < DodoServer.RebellionStartDate ? TimeSpan.FromDays(3) : TimeSpan.FromDays(1);
+						var timer = TimeSpan.FromDays(1);
 						if (now.Hour < 24 && now.Hour > 8)
 						{
-							var coords = DodoServer.SessionManager.GetUsers().Where(user => user.AccessLevel > EUserAccessLevel.Volunteer && user.TelegramUser > 0);
+							/*var coords = DodoServer.SessionManager.GetUsers().Where(user => user.Active && user.AccessLevel > EUserAccessLevel.Volunteer && user.TelegramUser > 0);
 							foreach (var coord in coords)
 							{
 								if (DodoServer.CoordinatorNeedsManager.Data.CheckinReminders.TryGetValue(coord.UUID, out var lastReminder) && now - lastReminder < timer)
@@ -78,9 +79,22 @@ namespace XR.Dodo
 									continue;
 								}
 								DodoServer.CoordinatorNeedsManager.Data.CheckinReminders.TryAdd(coord.UUID, now);
-								DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Hi {coord.Name}, it looks like you haven't checked in for a while and told me how you're doing. You can do this with the CHECKIN command."), 
-									DodoServer.SessionManager.GetOrCreateSession(coord));
-							}
+								var session = DodoServer.SessionManager.GetOrCreateSession(coord);
+								if (checkin?.Stressed > 3 || checkin?.Unsafe > 3)
+								{
+									DodoServer.DefaultGateway.SendMessage(
+										new ServerMessage($"Hi {coord.Name}, last time you checked in it sounded like you might need someone to talk to. " +
+										"You might be interested in the Rebel Listeners, a dedicated team of qualified counselors who want to listen. " +
+										$"You can email them at {DodoServer.ListenerEmail}. Let me know how you're doing sometime by checking in."),
+										session);
+								}
+								else
+								{
+									DodoServer.DefaultGateway.SendMessage(
+										new ServerMessage($"Hi {coord.Name}, it looks like you haven't checked in for a while and told me how you're doing. You can do this with the CHECKIN command."),
+										session);
+								}
+							}*/
 						}
 					}
 					catch (Exception e)
