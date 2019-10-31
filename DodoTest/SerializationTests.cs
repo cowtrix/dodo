@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using XR.Dodo;
+using Dodo.Dodo;
 using DodoTest;
 using Newtonsoft.Json;
 

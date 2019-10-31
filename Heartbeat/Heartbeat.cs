@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Args;
 
-namespace XR.Heartbeat
+namespace Dodo.Heartbeat
 {
 	public class Configuration
 	{

@@ -1,0 +1,104 @@
+{
+	"SpreadsheetData": {
+		"SiteSpreadsheets": [
+			{
+				"SheetID": "15eVFkBDWfBtnlExyRsWXKnGP5wIRmzZh3NvObDHrhrc",
+				"SiteNumber": 0,
+				"SiteName": "Rebellion Support Office"
+			},
+			{
+				"SheetID": "1XxP0hT8LuPYpEKbGd5lLrkMMlpmTZtF2sigPmTRfso4",
+				"SiteNumber": 1,
+				"SiteName": "Bristol sharing with Wales"
+			},
+			{
+				"SheetID": "1Zl9Tn4t7aK41k8bQMAwf5WkIz10pSZL6B8BVMvpbEoE",
+				"SiteNumber": 2,
+				"SiteName": "North"
+			},
+			{
+				"SheetID": "1rrYmzsgHSyBh-r9H9ZA3JItprclSWU3oIpJ6QKuhchI",
+				"SiteNumber": 3,
+				"SiteName": "South West"
+			},
+			{
+				"SheetID": "1BmF78Cb9BztgOr_Ndv5DRNjpWv2b2HinLWKP8yno-3s",
+				"SiteNumber": 4,
+				"SiteName": "East of England + Midlands"
+			},
+			{
+				"SheetID": "1gCFNt8ftHMZHtfhbXk1EZowVv0h6U-nIwD0OBGQ0p_s",
+				"SiteNumber": 5,
+				"SiteName": "South East"
+			},
+			{
+				"SheetID": "1UIflTfqGEWHudQ0hSTfiWccCgayVsLaXqWnV9ft3Ktw",
+				"SiteNumber": 6,
+				"SiteName": "Scotland Sharing with Cumbria and NE (Newcastle)"
+			},
+			{
+				"SheetID": "1O1g7hKEJbwtdyB6HlKt6MzVabIOPMvH4PU_obtwkyTs",
+				"SiteNumber": 7,
+				"SiteName": "London A"
+			},
+			{
+				"SheetID": "1Ob9YN-7Ge4qLKaIkJOuOaM8Y80UzsSHiFFTlMdC68C4",
+				"SiteNumber": 8,
+				"SiteName": "London B"
+			},
+			{
+				"SheetID": "1PDpPaj5cNNdUGQ74iiT-3AompgceNlW36nyvy6oArGY",
+				"SiteNumber": 9,
+				"SiteName": "London C"
+			},
+			{
+				"SheetID": "10FT2IrMpi95Cl7UlCGAMIXcnjBJy3Z_aHFPW6oLAI9A",
+				"SiteNumber": 10,
+				"SiteName": "Animal Rebellion"
+			},
+			{
+				"SheetID": "1LXaTeQJQ0j9-T4gjfobeUTPWkr2v5MeDnC8sg7fmdSA",
+				"SiteNumber": 11,
+				"SiteName": "Global Justice"
+			},
+			{
+				"SheetID": "1kRVD07vGY3QX9qryD6jbISQkdjE337R3xsF9sKHDmJE",
+				"SiteNumber": 12,
+				"SiteName": "Unnamed Site"
+			},
+			{
+				"SheetID": "1oELohT-TEC2O3qFQHgmZjB9Kv9P5cYVK8FActl7dzf8",
+				"SiteNumber": 13,
+				"SiteName": "Unnamed Site"
+			},
+			{
+				"SheetID": "1iSv3-wyRdQ1rA_Lf8sFd05HirlUPxIqg5tNVTbKUwo0",
+				"SiteNumber": 14,
+				"SiteName": "Unnamed Site"
+			},
+			{
+				"SheetID": "1eA_M4WjLcKl4RN9si0KdgwcewuzNJSgsCNsU_CEAW5s",
+				"SiteNumber": 15,
+				"SiteName": "Unnamed Site"
+			}
+		],
+		"CoordinatorNeedsSpreadsheetID": "1bpOMWkWV-T_tYDMyMJRqM66wys945JkGuELY_YkOPKM",
+		"SiteSpreadsheetHealthReportID": "1ggsb9-ZjYcCK69f8vt0LQSWQbxFSgudGxHeA5r0-lc8",
+		"WorkingGroupDataID": "1UENBV6kjfapWArAJdE6XFVavy8gk8Ytj_8Zkrzimsmw"
+	},
+	"GatewayData": {
+		"TwilioSID": "ACa48f08042b18e33b2ecea0c5c938b1e2",
+		"TwilioAuthToken": "b0ed065c04e3d1f201ad319c2faf49cb",
+		"TelegramGatewaySecret": "968178107:AAEbj5YlBEkBcJAzvIpYLnHcJQPtGv5nY-A",
+		"HTTPServerPort": 8080,
+		"Phones": [
+			{
+				"Mode": 0,
+				"Name": "Twilio test account",
+				"Number": "+441315103992"
+			}
+		]
+	},
+	"BackupPath": "Backups",
+	"BackupInterval": 30
+}

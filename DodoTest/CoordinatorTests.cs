@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System.Linq;
-using XR.Dodo;
+using Dodo.Dodo;
 using DodoTest;
 
 [TestClass]

@@ -9,12 +9,10 @@ namespace Common
 {
 	public static class ReflectionExtensions
 	{
-		public static IEnumerable<T> GetChildClasses<T>() where T:class
+		public static IEnumerable<Type> GetChildClasses<T>() where T:class
 		{
-			return from t in Assembly.GetExecutingAssembly().GetTypes()
-				   where t.GetInterfaces().Contains(typeof(T))
-							&& t.GetConstructor(Type.EmptyTypes) != null
-				   select Activator.CreateInstance(t) as T;
+			return AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetTypes()).ConcatenateCollection()
+				.Where(t => typeof(T).IsAssignableFrom(t) && !t.IsAbstract);
 		}
 
 		public static T GetCustomAttribute<T>(MemberInfo info) where T:Attribute

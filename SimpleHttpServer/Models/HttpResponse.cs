@@ -9,8 +9,8 @@ using System.Text;
 //
 //	  (a) it's not possible to send 8-bit clean responses (like file content)
 //	  (b) it's 
-//	   must be loaded into memory in the the Content property. If you want to send large files,
-//	   this has to be reworked so a handler can write to the output stream instead. 
+//	must be loaded into memory in the the Content property. If you want to send large files,
+//	this has to be reworked so a handler can write to the output stream instead. 
 
 namespace SimpleHttpServer.Models
 {

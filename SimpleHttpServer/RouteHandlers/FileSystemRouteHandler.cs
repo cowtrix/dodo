@@ -25,10 +25,10 @@ namespace SimpleHttpServer.RouteHandlers
 			url_part = url_part.Replace("/../", "/");
 			url_part = url_part.Replace("//","/");
 			url_part = url_part.Replace(@"\\",@"\");
-			url_part = url_part.Replace(":","");		   
+			url_part = url_part.Replace(":","");
 			url_part = url_part.Replace("/",Path.DirectorySeparatorChar.ToString());
-		   
-			// make sure the first part of the path is not 
+
+			// make sure the first part of the path is not
 			if (url_part.Length > 0) {
 				var first_char = url_part.ElementAt(0);
 				if (first_char == '/' || first_char == '\\') {
@@ -36,7 +36,7 @@ namespace SimpleHttpServer.RouteHandlers
 				}
 			}
 			var local_path = Path.Combine(this.BasePath, url_part);
-				
+
 			if (ShowDirectories && Directory.Exists(local_path)) {
 				// Console.WriteLine("FileSystemRouteHandler Dir {0}",local_path);
 				return Handle_LocalDir(request, local_path);
@@ -51,7 +51,7 @@ namespace SimpleHttpServer.RouteHandlers
 			}
 		}
 
-		HttpResponse Handle_LocalFile(HttpRequest request, string local_path) {		
+		HttpResponse Handle_LocalFile(HttpRequest request, string local_path) {
 			var file_extension = Path.GetExtension(local_path);
 
 			var response = new HttpResponse();
@@ -66,13 +66,13 @@ namespace SimpleHttpServer.RouteHandlers
 		HttpResponse Handle_LocalDir(HttpRequest request, string local_path) {
 			var output = new StringBuilder();
 			output.Append(string.Format("<h1> Directory: {0} </h1>",request.Url));
-						
-			foreach (var entry in Directory.GetFiles(local_path)) {				
+
+			foreach (var entry in Directory.GetFiles(local_path)) {
 				var file_info = new System.IO.FileInfo(entry);
 
 				var filename = file_info.Name;
-				output.Append(string.Format("<a href=\"{1}\">{1}</a> <br>",filename,filename));				
-			}			
+				output.Append(string.Format("<a href=\"{1}\">{1}</a> <br>",filename,filename));
+			}
 
 			return new HttpResponse() {
 				StatusCode = "200",
@@ -109,7 +109,7 @@ namespace SimpleHttpServer.RouteHandlers
 
 		#region Big freaking list of mime types
 
-		// combination of values from Windows 7 Registry and 
+		// combination of values from Windows 7 Registry and
 		// from C:\Windows\System32\inetsrv\config\applicationHost.config
 		// some added, including .7z and .dat
 		{".323", "text/h323"},

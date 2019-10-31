@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using XR.Dodo;
+using Dodo.Dodo;
 
 namespace DodoTest
 {

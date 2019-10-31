@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using XR.Dodo;
+using Dodo.Dodo;
 using DodoTest;
 
 [TestClass]
@@ -18,8 +18,8 @@ public class RSOCoordinatorTests : TestBase
 		msg = DodoServer.TelegramGateway.FakeMessage("0", user.TelegramUser);	// Parent group
 		msg = DodoServer.TelegramGateway.FakeMessage("AD", user.TelegramUser);	// Working group
 		msg = DodoServer.TelegramGateway.FakeMessage("02/10 08:00", user.TelegramUser);	// Time
-		msg = DodoServer.TelegramGateway.FakeMessage("6", user.TelegramUser);   // Amount
-		msg = DodoServer.TelegramGateway.FakeMessage("skip", user.TelegramUser);   // skip desc
+		msg = DodoServer.TelegramGateway.FakeMessage("6", user.TelegramUser);// Amount
+		msg = DodoServer.TelegramGateway.FakeMessage("skip", user.TelegramUser);// skip desc
 
 		var need = DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.Single().Value;
 		Assert.IsTrue(need.WorkingGroupCode == "AD");
@@ -38,7 +38,7 @@ public class RSOCoordinatorTests : TestBase
 		var msg = DodoServer.TelegramGateway.FakeMessage("need", user.TelegramUser);
 		msg = DodoServer.TelegramGateway.FakeMessage("3", user.TelegramUser); // Site
 		msg = DodoServer.TelegramGateway.FakeMessage("sd", user.TelegramUser);	// Working group
-		msg = DodoServer.TelegramGateway.FakeMessage("20/10 22:00", user.TelegramUser);   // Time
+		msg = DodoServer.TelegramGateway.FakeMessage("20/10 22:00", user.TelegramUser);// Time
 		msg = DodoServer.TelegramGateway.FakeMessage("Many", user.TelegramUser); // Amount
 		msg = DodoServer.TelegramGateway.FakeMessage(desc, user.TelegramUser); // Amount
 
@@ -67,7 +67,7 @@ public class RSOCoordinatorTests : TestBase
 		const string testDesc = "Foo bard";
 		var session = DodoServer.SessionManager.GetOrCreateSession(user);
 		var msg = DodoServer.TelegramGateway.FakeMessage($"NEED 4 AD 7/10 08:00 4", user.TelegramUser);
-		msg = DodoServer.TelegramGateway.FakeMessage(testDesc, user.TelegramUser);   // Amount
+		msg = DodoServer.TelegramGateway.FakeMessage(testDesc, user.TelegramUser);// Amount
 
 		var need = DodoServer.CoordinatorNeedsManager.Data.CurrentNeeds.Single().Value;
 		Assert.IsTrue(need.WorkingGroupCode == "AD");
