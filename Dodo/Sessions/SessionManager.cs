@@ -133,7 +133,6 @@ namespace XR.Dodo
 
 			existingTelegramUser.PhoneNumber = phoneNumber;
 			existingTelegramUser.Karma += 10;
-			
 			if (existingTelegramUser.AccessLevel > EUserAccessLevel.Volunteer)
 			{
 				DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Hi {existingTelegramUser.Name}! You've verified your number as {existingTelegramUser.PhoneNumber}. " +
@@ -143,7 +142,6 @@ namespace XR.Dodo
 			{
 				DodoServer.DefaultGateway.SendMessage(new ServerMessage($"Awesome! You've verified your number as {existingTelegramUser.PhoneNumber}."), session);
 			}
-			
 			Logger.Debug($"Succesfully verified user {existingTelegramUser.TelegramUser} to number {existingTelegramUser.PhoneNumber}");
 
 			if(session.Workflow.CurrentTask is IntroductionTask)
@@ -158,7 +156,7 @@ namespace XR.Dodo
 			Logger.Debug("Removed user " + user.UUID);
 			DodoServer.CoordinatorNeedsManager.Data.Checkins.TryRemove(user.UUID, out _);
 			DodoServer.CoordinatorNeedsManager.Data.CheckinReminders.TryRemove(user.UUID, out _);
-			
+
 			return _data.Users.TryRemove(user.UUID, out _) &&
 			_data.Sessions.TryRemove(user.UUID, out _);
 		}

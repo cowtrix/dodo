@@ -56,11 +56,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SpreadsheetTools\SpreadsheetTools.csproj">
-      <Project>{26f40dbb-06bf-4dd2-8bbe-69059eddfa44}</Project>
-      <Name>SpreadsheetTools</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

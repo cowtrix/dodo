@@ -12,7 +12,7 @@ namespace SimpleHttpServer
 	{
 		public static HttpResponse InternalServerError()
 		{
-			string content = File.ReadAllText("Resources/Pages/500.html"); 
+			string content = File.ReadAllText("Resources/Pages/500.html");
 
 			return new HttpResponse()
 			{
@@ -31,6 +31,16 @@ namespace SimpleHttpServer
 				ReasonPhrase = "NotFound",
 				StatusCode = "404",
 				ContentAsUTF8 = content
+			};
+		}
+
+		public static HttpResponse Error(string errorMessage, int errorCode = 200)
+		{
+			return new HttpResponse()
+			{
+				ReasonPhrase = "Error",
+				StatusCode = errorCode.ToString(),
+				ContentAsUTF8 = errorMessage
 			};
 		}
 	}

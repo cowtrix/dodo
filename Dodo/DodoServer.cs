@@ -19,7 +19,7 @@ namespace XR.Dodo
 		public static SessionManager SessionManager;
 		public static SiteSpreadsheetManager SiteManager;
 		public static CoordinatorNeedsManager CoordinatorNeedsManager;
-		public static HTTPGateway SMSGateway;
+		public static HTTPServer SMSGateway;
 		public static TelegramGateway TelegramGateway;
 		public static Configuration Configuration = new Configuration();
 		public static IMessageGateway DefaultGateway { get { return TelegramGateway; } }
@@ -75,7 +75,7 @@ namespace XR.Dodo
 			CoordinatorNeedsManager = new CoordinatorNeedsManager(Configuration);
 
 			// Set up gateways
-			SMSGateway = new HTTPGateway(Configuration);
+			SMSGateway = new HTTPServer(Configuration);
 			TelegramGateway = new TelegramGateway(Configuration.GatewayData.TelegramGatewaySecret);
 
 			var backupTask = new Task(async () =>

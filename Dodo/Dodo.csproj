@@ -113,10 +113,12 @@
   <ItemGroup>
     <Compile Include="CmdReader.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Gateways\HTTPGateway.cs" />
-    <Compile Include="Gateways\SMSSyncHttpHandler.cs" />
-    <Compile Include="Gateways\TwilioGateway.cs" />
-    <Compile Include="Gateways\TwilioHttpHandler.cs" />
+    <Compile Include="HTTP Server\HTTPServer.cs" />
+    <Compile Include="HTTP Server\RESTHandler.cs" />
+    <Compile Include="HTTP Server\RouteAttribute.cs" />
+    <Compile Include="HTTP Server\SMSSyncHttpHandler.cs" />
+    <Compile Include="HTTP Server\TwilioGateway.cs" />
+    <Compile Include="HTTP Server\TwilioHttpHandler.cs" />
     <Compile Include="ReminderManager.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorRemoveNeedTask.cs" />
@@ -128,7 +130,7 @@
     <Compile Include="Workflows\Tasks\IntroductionTask.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorCheckin.cs" />
     <Compile Include="Workflows\Tasks\VerificationTask.cs" />
-    <Compile Include="Gateways\Message.cs" />
+    <Compile Include="HTTP Server\Message.cs" />
     <Compile Include="Users\User.cs" />
     <Compile Include="CoordinatorNeedsManager.cs" />
     <Compile Include="Workflows\Tasks\CoordinatorNeedsTask.cs" />
@@ -139,8 +141,8 @@
     <Compile Include="GSheets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SiteSpreadsheetManager.cs" />
-    <Compile Include="Gateways\IMessageGateway.cs" />
-    <Compile Include="Gateways\TelegramGateway.cs" />
+    <Compile Include="HTTP Server\IMessageGateway.cs" />
+    <Compile Include="HTTP Server\TelegramGateway.cs" />
     <Compile Include="Sessions\UserSession.cs" />
     <Compile Include="Workflows\Tasks\SettingsTask.cs" />
     <Compile Include="Workflows\Workflow.cs" />

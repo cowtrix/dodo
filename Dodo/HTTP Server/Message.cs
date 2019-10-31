@@ -35,7 +35,7 @@ namespace XR.Dodo
 		}
 	}
 
-	public struct ServerMessage
+	public class ServerMessage
 	{
 		public string Content;
 		public DateTime TimeStamp;
@@ -47,32 +47,14 @@ namespace XR.Dodo
 			TimeStamp = DateTime.Now;
 			MessageID = Guid.NewGuid().ToString();
 		}
+	}
 
-		public override bool Equals(object obj)
+	public class ServerMessageChoice : ServerMessage
+	{
+		public List<string> Commands;
+		public ServerMessageChoice(string content, List<string> commands) : base(content)
 		{
-			return obj is ServerMessage message &&
-				   Content == message.Content &&
-				   TimeStamp == message.TimeStamp &&
-				   MessageID == message.MessageID;
-		}
-
-		public override int GetHashCode()
-		{
-			var hashCode = 1031664614;
-			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Content);
-			hashCode = hashCode * -1521134295 + TimeStamp.GetHashCode();
-			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(MessageID);
-			return hashCode;
-		}
-
-		public static bool operator ==(ServerMessage left, ServerMessage right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(ServerMessage left, ServerMessage right)
-		{
-			return !(left == right);
+			Commands = commands;
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace XR.Dodo
 	{
 		public string SmsSyncSecret { get; private set; }
 
-		public SMSSyncHttpHandler(Configuration config, HTTPGateway server) : base(config, server)
+		public SMSSyncHttpHandler(Configuration config, HTTPServer server) : base(config, server)
 		{
 			SmsSyncSecret = config.GatewayData.SmsSyncSecret;
 		}

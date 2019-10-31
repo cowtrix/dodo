@@ -11,7 +11,7 @@ namespace XR.Dodo
 {
 	public class TwilioHttpHandler : HttpGatewayHandler
 	{
-		public TwilioHttpHandler(Configuration config, HTTPGateway server) : base(config, server)
+		public TwilioHttpHandler(Configuration config, HTTPServer server) : base(config, server)
 		{
 			AccountSID = config.GatewayData.TwilioSID;
 			AccountAuth = config.GatewayData.TwilioAuthToken;
