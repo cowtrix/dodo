@@ -1,5 +1,4 @@
 ﻿using Common;
-using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
@@ -33,7 +32,7 @@ namespace SimpleHttpServer.REST
 				{
 					Name = attr.Name,
 					UrlRegex = attr.URLRegex,
-					Method = attr.RequestType.ToString(),
+					Method = attr.RequestType,
 					Callable = (req) =>
 					{
 						try

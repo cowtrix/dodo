@@ -1,6 +1,5 @@
 ﻿using Common;
 using Newtonsoft.Json;
-using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,21 @@ namespace SimpleHttpServer.REST
 {
 	public interface IRESTResource
 	{
+		Guid UUID { get; }
 		string ResourceURL { get; }
+	}
+
+	public abstract class Resource : IRESTResource
+	{
+		[NoPatch]
+		[View]
+		public Guid UUID { get; private set; }
+		public abstract string ResourceURL { get; }
+
+		public Resource()
+		{
+			UUID = new Guid();
+		}
 	}
 
 	public abstract class ObjectRESTHandler<T> : RESTHandler where T: class, IRESTResource
@@ -22,12 +35,23 @@ namespace SimpleHttpServer.REST
 		protected abstract T GetResource(string url);
 
 		/// <summary>
+		/// Determine if the given request is authorised, if not throw a HTTPException.FORBIDDEN
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		protected abstract bool IsAuthorised(HttpRequest request);
+
+		/// <summary>
 		/// Create a new object, and return the resource url.
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns>If the creation schema is not correct, an example schema. If it is correct, the view of the object and it's new resource url.</returns>
 		protected virtual HttpResponse CreateObject(HttpRequest request)
 		{
+			if(!IsAuthorised(request))
+			{
+				throw HTTPException.FORBIDDEN;
+			}
 			if(GetResource(request.Url) != null)
 			{
 				throw HTTPException.CONFLICT;
@@ -58,6 +82,10 @@ namespace SimpleHttpServer.REST
 		/// <returns>The view of the object that has been updated.</returns>
 		protected virtual HttpResponse UpdateObject(HttpRequest request)
 		{
+			if (!IsAuthorised(request))
+			{
+				throw HTTPException.FORBIDDEN;
+			}
 			var target = GetResource(request.Url);
 			if(target == null)
 			{
@@ -70,6 +98,10 @@ namespace SimpleHttpServer.REST
 
 		protected virtual HttpResponse DeleteObject(HttpRequest request)
 		{
+			if (!IsAuthorised(request))
+			{
+				throw HTTPException.FORBIDDEN;
+			}
 			var target = GetResource(request.Url);
 			if (target == null)
 			{

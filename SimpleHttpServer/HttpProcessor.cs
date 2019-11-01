@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2016 by David Jeske, Barend Erasmus and donated to the public domain
 
+using Common;
 using log4net;
 using SimpleHttpServer.Models;
 using System;
@@ -37,28 +38,38 @@ namespace SimpleHttpServer
 		#region Public Methods
 		public void HandleClient(TcpClient tcpClient)
 		{
-				Stream inputStream = GetInputStream(tcpClient);
-				Stream outputStream = GetOutputStream(tcpClient);
-				HttpRequest request = GetRequest(inputStream, outputStream);
+			Stream inputStream = GetInputStream(tcpClient);
+			Stream outputStream = GetOutputStream(tcpClient);
 
+			try
+			{
+				HttpRequest request = GetRequest(inputStream, outputStream);
 				// route and handle the request...
 				HttpResponse response = RouteRequest(inputStream, outputStream, request);
 				//Logger.Debug("HTTPSERVER: {0} {1}",response.StatusCode,request.Url);
 				// build a default response for errors
-				if (response.Content == null) {
-					if (response.StatusCode != "200") {
+				if (response.Content == null)
+				{
+					if (response.StatusCode != "200")
+					{
 						response.ContentAsUTF8 = string.Format("{0} {1} <p> {2}", response.StatusCode, request.Url, response.ReasonPhrase);
 					}
 				}
-
 				WriteResponse(outputStream, response);
-
+			}
+			catch(Exception e)
+			{
+				Logger.Exception(e);
+			}
+			finally
+			{
 				outputStream.Flush();
 				outputStream.Close();
 				outputStream = null;
 
 				inputStream.Close();
 				inputStream = null;
+			}
 
 		}
 

@@ -26,6 +26,12 @@ namespace SimpleHttpServer.REST
 
 	public static class JsonViewUtility
 	{
+		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
+		{
+			typeof(string),
+			typeof(Guid),
+		};
+
 		/// <summary>
 		/// This will generate a JSON object that represents viewable (public facing) properties of this object
 		/// An object is marked as viewable with the ViewAttribute
@@ -38,7 +44,7 @@ namespace SimpleHttpServer.REST
 			{
 				// Simple case, property is a primitive type
 				if ((prop.PropertyType.IsValueType && prop.PropertyType.IsPrimitive)
-					|| prop.PropertyType == typeof(string))
+					|| m_explicitValueTypes.Contains(prop.PropertyType))
 				{
 					vals.Add(prop.Name, prop.GetValue(obj));
 				}
@@ -51,7 +57,7 @@ namespace SimpleHttpServer.REST
 			{
 				// Simple case, property is a primitive type
 				if ((field.FieldType.IsValueType && field.FieldType.IsPrimitive)
-					|| field.FieldType == typeof(string))
+					|| m_explicitValueTypes.Contains(field.FieldType))
 				{
 					vals.Add(field.Name, field.GetValue(obj));
 				}

@@ -1,13 +1,8 @@
 ﻿using Common;
-using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace SimpleHttpServer.REST
 {
@@ -15,7 +10,6 @@ namespace SimpleHttpServer.REST
 	{
 		GET,
 		POST,
-		PUT,
 		DELETE,
 		PATCH,
 	}

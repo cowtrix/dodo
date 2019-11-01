@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2016 by Barend Erasmus and donated to the public domain
 
+using SimpleHttpServer.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SimpleHttpServer.Models
 {
 	public class HttpRequest
 	{
-		public readonly string Method;
+		public readonly EHTTPRequestType Method;
 		public readonly string Domain;
 		public readonly string Url;
 		public string Path { get; set; }
@@ -22,7 +23,10 @@ namespace SimpleHttpServer.Models
 
 		public HttpRequest(string method, string url, string content, Dictionary<string, string> headers)
 		{
-			Method = method;
+			if (!Enum.TryParse(method, true, out Method))
+			{
+				throw new InvalidCastException($"Invalid HTTP method " + method);
+			}
 			Url = url;
 			Domain = Dns.GetHostEntry(Dns.GetHostName()).HostName;
 			Content = content;

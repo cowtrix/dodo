@@ -36,24 +36,16 @@ namespace Dodo.Users
 		}
 	}
 
-	public class User : IRESTResource
+	public class User : Resource
 	{
-		public string ResourceURL { get { return $"u/{WebAuth.Username}"; } }
-
-		/// <summary>
-		/// The unique identifier for this user
-		/// </summary>
-		[NoPatch]
-		[View]
-		public string UUID { get; private set; }
+		public override string ResourceURL { get { return $"u/{WebAuth.Username}"; } }
 
 		[NoPatch]
 		[View]
 		public WebPortalAuth WebAuth;
 
-		public User(WebPortalAuth auth)
+		public User(WebPortalAuth auth) : base()
 		{
-			UUID = System.Guid.NewGuid().ToString();
 			WebAuth = auth;
 		}
 
