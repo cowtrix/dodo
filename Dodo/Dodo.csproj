@@ -35,6 +35,9 @@
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,11 +50,21 @@
   <ItemGroup>
     <Compile Include="DodoServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DodoRESTHandler.cs" />
+    <Compile Include="Rebellion\Rebellion.cs" />
+    <Compile Include="Users\SessionManager.cs" />
+    <Compile Include="Users\User.cs" />
+    <Compile Include="Users\UserRESTHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{AC96D6E5-4BA4-457C-A83E-6966B5DE982A}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SimpleHttpServer\SimpleHttpServer.csproj">
       <Project>{9E139539-C272-488A-BFCF-CADDF458DF9D}</Project>
       <Name>SimpleHttpServer</Name>

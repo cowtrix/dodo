@@ -1,5 +1,5 @@
-﻿using Dodo.Dodo;
-using SimpleHttpServer.Models;
+﻿using Dodo.Users;
+using SimpleHttpServer.REST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,22 +11,12 @@ namespace Dodo
 	internal static class DodoServer
 	{
 		private static RESTServer m_restServer;
+		public static SessionManager SessionManager;
+
 		static void Main(string[] args)
 		{
+			SessionManager = new SessionManager();
 			m_restServer = new RESTServer(8080);
-		}
-	}
-
-	public class Test : RESTHandler
-	{
-		[Route("Test", @"/test(?:^/)*", EHTTPRequestType.GET)]
-		public HttpResponse TestPage(HttpRequest request)
-		{
-			return new HttpResponse()
-			{
-				ContentAsUTF8 = "Hello world!",
-				StatusCode = "200",
-			};
 		}
 	}
 }

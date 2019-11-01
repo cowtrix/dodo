@@ -1,4 +1,5 @@
-﻿using SimpleHttpServer.Models;
+﻿using Newtonsoft.Json;
+using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,6 +42,48 @@ namespace SimpleHttpServer
 				ReasonPhrase = "Error",
 				StatusCode = errorCode.ToString(),
 				ContentAsUTF8 = errorMessage
+			};
+		}
+
+		public static HttpResponse Forbidden()
+		{
+			return new HttpResponse()
+			{
+				ReasonPhrase = "Error",
+				StatusCode = "403",
+			};
+		}
+
+		public static HttpResponse OK()
+		{
+			return new HttpResponse()
+			{
+				ReasonPhrase = "OK",
+				StatusCode = "200",
+			};
+		}
+
+		public static HttpResponse OK(object result)
+		{
+			return new HttpResponse()
+			{
+				ReasonPhrase = "OK",
+				StatusCode = "200",
+				ContentAsUTF8 = JsonConvert.SerializeObject(result, Formatting.Indented)
+			};
+		}
+
+		public static HttpResponse ResourceCreated(object result, string location)
+		{
+			return new HttpResponse()
+			{
+				ReasonPhrase = "Created",
+				StatusCode = "201",
+				Headers = new Dictionary<string, string>()
+				{
+					{ "Location", location }
+				},
+				ContentAsUTF8 = JsonConvert.SerializeObject(result, Formatting.Indented)
 			};
 		}
 	}

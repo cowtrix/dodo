@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 
@@ -11,6 +12,7 @@ namespace SimpleHttpServer.Models
 	public class HttpRequest
 	{
 		public readonly string Method;
+		public readonly string Domain;
 		public readonly string Url;
 		public string Path { get; set; }
 		public readonly string Content;
@@ -22,19 +24,19 @@ namespace SimpleHttpServer.Models
 		{
 			Method = method;
 			Url = url;
+			Domain = Dns.GetHostEntry(Dns.GetHostName()).HostName;
 			Content = content;
 			Headers = headers;
-			Headers = new Dictionary<string, string>();
 			QueryParams = new Dictionary<string, string>();
-			if(string.IsNullOrEmpty(Content))
+			var paramsIndex = url.IndexOf('?') + 1;
+			if(paramsIndex > 0)
 			{
-				return;
-			}
-			var parameters = Content.Split('&');
-			foreach (var p in parameters)
-			{
-				var keyVal = p.Split('=');
-				QueryParams.Add(keyVal.First(), HttpUtility.UrlDecode(keyVal.Last()));
+				var parameters = url.Substring(paramsIndex).Split('&');
+				foreach (var p in parameters)
+				{
+					var keyVal = p.Split('=');
+					QueryParams.Add(keyVal.First(), HttpUtility.UrlDecode(keyVal.Last()));
+				}
 			}
 		}
 

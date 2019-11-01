@@ -9,7 +9,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Dodo.Dodo
+namespace SimpleHttpServer.REST
 {
 	public enum EHTTPRequestType
 	{
@@ -17,6 +17,7 @@ namespace Dodo.Dodo
 		POST,
 		PUT,
 		DELETE,
+		PATCH,
 	}
 
 	public class RESTServer

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Dodo.Dodo
+namespace SimpleHttpServer.REST
 {
 	public abstract class RESTHandler
 	{
@@ -42,11 +42,17 @@ namespace Dodo.Dodo
 						}
 						catch(Exception e)
 						{
-							Logger.Exception(e);
-							return HttpBuilder.Error("Error processing request: " + e.Message);
+							Logger.Exception(e.InnerException);
+							if(e.InnerException is HTTPException)
+							{
+								return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message, (e.InnerException as HTTPException).ErrorCode);
+							}
+							return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message);
 						}
 					},
 				});
+
+				Logger.Debug($"Added route for {attr.Name} @ {attr.URLRegex}");
 			}
 		}
 	}

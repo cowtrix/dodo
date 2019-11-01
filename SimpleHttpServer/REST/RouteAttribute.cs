@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dodo.Dodo
+namespace SimpleHttpServer.REST
 {
 	[AttributeUsage(AttributeTargets.Method)]
 	public class RouteAttribute : Attribute
