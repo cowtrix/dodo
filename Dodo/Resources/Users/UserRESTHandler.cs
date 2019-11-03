@@ -51,12 +51,12 @@ namespace Dodo.Users
 
 		protected override dynamic GetCreationSchema()
 		{
-			return new { Username = "", PasswordHash = "" };
+			return new { Username = "", Password = "" };
 		}
 
-		protected override User CreateFromSchema(dynamic info)
+		protected override User CreateFromSchema(HttpRequest request, dynamic info)
 		{
-			return DodoServer.SessionManager.CreateNew(new WebPortalAuth(info.Username.ToString(), info.PasswordHash.ToString()));
+			return DodoServer.SessionManager.CreateNew(new WebPortalAuth(info.Username.ToString(), info.Password.ToString()));
 		}
 
 		protected override void DeleteObjectInternal(User target)
