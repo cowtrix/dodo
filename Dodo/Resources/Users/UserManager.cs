@@ -6,10 +6,12 @@ namespace Dodo.Users
 {
 	public class UserManager : ResourceManager<User>
 	{
+		public override string BackupPath => "users";
+
 		public User CreateNew(WebPortalAuth webAuth)
 		{
 			webAuth.Validate();
-			if (Get(x => x.WebAuth.Username == webAuth.Username) != null)
+			if (GetSingle(x => x.WebAuth.Username == webAuth.Username) != null)
 			{
 				throw new Exception("User already exists with username " + webAuth.Username);
 			}

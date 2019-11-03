@@ -21,7 +21,7 @@ namespace SimpleHttpServer.REST
 
 		public Resource()
 		{
-			UUID = new Guid();
+			UUID = Guid.NewGuid();
 		}
 	}
 
@@ -56,8 +56,17 @@ namespace SimpleHttpServer.REST
 			{
 				throw HTTPException.CONFLICT;
 			}
-			var creationInfo = JsonExtensions.DeserializeAnonymousType(request.Content, GetCreationSchema());
-			var createdObject = CreateFromSchema(creationInfo);
+			var schema = GetCreationSchema();
+			T createdObject = null;
+			try
+			{
+				var creationInfo = JsonExtensions.DeserializeAnonymousType(request.Content, schema);
+				createdObject = CreateFromSchema(request, creationInfo);
+			}
+			catch(Exception e)
+			{
+				throw new Exception($"Failed to deserialise JSON. Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
+			}
 			return HttpBuilder.ResourceCreated(JsonViewUtility.GenerateJsonView(createdObject), createdObject.ResourceURL);
 		}
 
@@ -71,7 +80,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <param name="info">The schema to use</param>
 		/// <returns>An object of type T created with the given schema</returns>
-		protected abstract T CreateFromSchema(dynamic info);
+		protected abstract T CreateFromSchema(HttpRequest request, dynamic info);
 
 		/// <summary>
 		/// Update an object with a string->object dictionary, where the string is the name of the field

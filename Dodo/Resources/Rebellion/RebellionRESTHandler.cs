@@ -1,4 +1,5 @@
 ﻿using Dodo.Users;
+using Newtonsoft.Json;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
@@ -10,10 +11,16 @@ namespace Dodo.Rebellions
 	{
 		const string URL_REGEX = "rebellions/(?:^/)*";
 
-		[Route("Create a new rebellion", "rebellions/create", EHTTPRequestType.POST)]
+		[Route("Create a new rebellion", "newrebellion", EHTTPRequestType.POST)]
 		public HttpResponse Register(HttpRequest request)
 		{
 			return CreateObject(request);
+		}
+
+		[Route("List all rebellions", "rebellions", EHTTPRequestType.GET)]
+		public HttpResponse List(HttpRequest request)
+		{
+			return HttpBuilder.OK(DodoServer.RebellionManager.Get(x => true).GenerateJsonView());
 		}
 
 		[Route("Get a rebellion", URL_REGEX, EHTTPRequestType.GET)]
@@ -50,16 +57,22 @@ namespace Dodo.Rebellions
 
 		protected override dynamic GetCreationSchema()
 		{
-			return new {  };
+			return new { RebellionName = "", Location = new GeoLocation() };
 		}
 
-		protected override Rebellion CreateFromSchema(dynamic info)
+		protected override Rebellion CreateFromSchema(HttpRequest request, dynamic info)
 		{
+			var user = GetRequestOwner(request);
+			if(user == null)
+			{
+				throw HTTPException.LOGIN;
+			}
+			return new Rebellion(user, info.RebellionName.ToString(), JsonConvert.DeserializeObject<GeoLocation>(info.Location.ToString()));
 		}
 
 		protected override void DeleteObjectInternal(Rebellion target)
 		{
-
+			DodoServer.RebellionManager.Delete(target);
 		}
 
 		protected override bool IsAuthorised(User user, EHTTPRequestType requestType, Rebellion target)

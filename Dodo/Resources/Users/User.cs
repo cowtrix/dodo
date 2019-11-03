@@ -44,6 +44,9 @@ namespace Dodo.Users
 		[View]
 		public WebPortalAuth WebAuth;
 
+		public User() : base()
+		{ }
+
 		public User(WebPortalAuth auth) : base()
 		{
 			WebAuth = auth;

@@ -16,7 +16,7 @@ namespace Common
 		public static IEnumerable<Type> GetChildClasses<T>() where T:class
 		{
 			return AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetTypes()).ConcatenateCollection()
-				.Where(t => typeof(T).IsAssignableFrom(t) && !t.IsAbstract);
+				.Where(t => typeof(T).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface);
 		}
 
 		public static T GetCustomAttribute<T>(MemberInfo info) where T:Attribute

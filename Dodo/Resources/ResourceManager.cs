@@ -1,4 +1,6 @@
-﻿using SimpleHttpServer.REST;
+﻿using Common;
+using Newtonsoft.Json;
+using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -6,13 +8,15 @@ using System.Linq;
 
 namespace Dodo
 {
-	public class ResourceManager<T> where T:Resource
+	public abstract class ResourceManager<T> : IBackup where T:Resource
 	{
 		public class Data
 		{
 			public ConcurrentDictionary<Guid, T> Entries = new ConcurrentDictionary<Guid, T>();
 		}
 		protected Data InternalData;
+
+		public abstract string BackupPath { get; }
 
 		public ResourceManager()
 		{
@@ -43,6 +47,19 @@ namespace Dodo
 		public virtual IEnumerable<T> Get(Func<T, bool> selector)
 		{
 			return InternalData.Entries.Where(kvp => selector(kvp.Value)).Select(kvp => kvp.Value);
+		}
+
+		public string Serialize()
+		{
+			return JsonConvert.SerializeObject(InternalData, Formatting.Indented, new JsonSerializerSettings
+			{
+				TypeNameHandling = TypeNameHandling.Auto
+			});
+		}
+
+		public void Deserialize(string json)
+		{
+			InternalData = JsonConvert.DeserializeObject(json) as Data;
 		}
 	}
 }

@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 
 namespace Dodo
 {
-	internal static class DodoServer
+	public static class DodoServer
 	{
 		private static RESTServer m_restServer;
 		public static UserManager SessionManager;
 		public static RebellionManager RebellionManager;
 
 		static void Main(string[] args)
+		{
+			Initialise();
+		}
+
+		public static void Initialise()
 		{
 			SessionManager = new UserManager();
 			RebellionManager = new RebellionManager();

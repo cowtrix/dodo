@@ -44,5 +44,6 @@ namespace Dodo
 		/// <param name="target">The resource they are targeting</param>
 		/// <returns></returns>
 		protected abstract bool IsAuthorised(User user, EHTTPRequestType requestType, T target);
+
 	}
 }

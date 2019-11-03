@@ -11,6 +11,7 @@ namespace SimpleHttpServer.REST
 		public static HTTPException FORBIDDEN { get { return new HTTPException("Forbidden", 403); } }
 		public static HTTPException NOT_FOUND { get { return new HTTPException("Resource not found", 404); } }
 		public static HTTPException CONFLICT { get { return new HTTPException("Conflict - resource may already exist", 409); } }
+		public static Exception LOGIN { get { return new HTTPException("You need to login", 302); } }
 
 		public readonly int ErrorCode;
 		public HTTPException(string message, int errorCode) : base(message)
