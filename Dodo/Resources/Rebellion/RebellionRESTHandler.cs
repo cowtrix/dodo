@@ -75,7 +75,7 @@ namespace Dodo.Rebellions
 			DodoServer.RebellionManager.Delete(target);
 		}
 
-		protected override bool IsAuthorised(User user, EHTTPRequestType requestType, Rebellion target)
+		protected override bool IsAuthorised(User user, HttpRequest request, Rebellion target)
 		{
 			// TODO
 			return true;

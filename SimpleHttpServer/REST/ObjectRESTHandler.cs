@@ -1,4 +1,5 @@
 ﻿using Common;
+using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using System;
@@ -63,7 +64,7 @@ namespace SimpleHttpServer.REST
 				var creationInfo = JsonExtensions.DeserializeAnonymousType(request.Content, schema);
 				createdObject = CreateFromSchema(request, creationInfo);
 			}
-			catch(Exception e)
+			catch(RuntimeBinderException e)
 			{
 				throw new Exception($"Failed to deserialise JSON. Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
 			}

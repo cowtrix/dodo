@@ -6,10 +6,10 @@ namespace Dodo.Users
 {
 	public struct WebPortalAuth
 	{
-		public WebPortalAuth(string userName, string passwordHash) : this()
+		public WebPortalAuth(string userName, string password) : this()
 		{
 			Username = userName;
-			PasswordHash = passwordHash;
+			PasswordHash = SHA256Utility.SHA256(password);
 		}
 
 		/// <summary>
@@ -22,6 +22,11 @@ namespace Dodo.Users
 		/// Am MD5 hash of the user's password
 		/// </summary>
 		public string PasswordHash { get; private set; }
+
+		public bool Challenge(string password)
+		{
+			return SHA256Utility.SHA256(password) == PasswordHash;
+		}
 
 		public void Validate()
 		{
@@ -50,12 +55,6 @@ namespace Dodo.Users
 		public User(WebPortalAuth auth) : base()
 		{
 			WebAuth = auth;
-		}
-
-		public bool IsValidToken(string token)
-		{
-			// TODO
-			return true;
 		}
 	}
 }

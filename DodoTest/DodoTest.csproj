@@ -72,6 +72,10 @@
     <Compile Include="SimpleTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{AC96D6E5-4BA4-457C-A83E-6966B5DE982A}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dodo\Dodo.csproj">
       <Project>{88cfdf77-c083-452b-b502-534112cb799a}</Project>
       <Name>Dodo</Name>

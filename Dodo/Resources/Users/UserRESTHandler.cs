@@ -64,7 +64,7 @@ namespace Dodo.Users
 			DodoServer.SessionManager.Delete(target);
 		}
 
-		protected override bool IsAuthorised(User user, EHTTPRequestType requestType, User target)
+		protected override bool IsAuthorised(User user, HttpRequest request, User target)
 		{
 			// TODO
 			return true;

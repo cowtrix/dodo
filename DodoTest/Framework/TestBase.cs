@@ -1,4 +1,6 @@
-﻿using Dodo;
+﻿using Common;
+using Dodo;
+using Dodo.Rebellions;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -16,6 +18,9 @@ namespace DodoTest
 		private TestContext testContextInstance;
 		private Random m_random = new Random();
 		protected RestClient RestClient = new RestClient("http://localhost:8080");
+
+		protected string CurrentLogin = "TestUser";
+		protected string CurrentPassword = "password";
 
 		public TestBase()
 		{
@@ -43,6 +48,20 @@ namespace DodoTest
 			request.AddJsonBody(new { Username = username, Password = password });
 			var response = RestClient.Execute(request);
 			return JsonConvert.DeserializeObject<JObject>(response.Content);
+		}
+
+		protected JObject CreateNewRebellion(string name, GeoLocation location)
+		{
+			var request = new RestRequest("newrebellion", Method.POST);
+			request.AddHeader("user", CurrentLogin);
+			request.AddHeader("token", CurrentPassword);
+			request.AddJsonBody(new { RebellionName = name, Location = new GeoLocation(66, 66) });
+			var response = RestClient.Execute(request).Content;
+			if(!response.IsValidJson())
+			{
+				throw new Exception(response);
+			}
+			return JsonConvert.DeserializeObject<JObject>(response);
 		}
 
 		long LongRandom(long min, long max)

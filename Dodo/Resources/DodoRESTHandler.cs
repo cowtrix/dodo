@@ -21,11 +21,11 @@ namespace Dodo
 				return null;
 			}
 			var user = DodoServer.SessionManager.GetSingle(x => x.WebAuth.Username == username);
-			if(user != null && user.IsValidToken(token))
+			if(user != null && !user.WebAuth.Challenge(token))
 			{
-				return user;
+				throw HTTPException.FORBIDDEN;
 			}
-			return null;
+			return user;
 		}
 
 		protected override bool IsAuthorised(HttpRequest request)
@@ -33,17 +33,17 @@ namespace Dodo
 			var requestType = request.Method;
 			var target = GetResource(request.Url);
 			var owner = GetRequestOwner(request);
-			return IsAuthorised(owner, request.Method, target);
+			return IsAuthorised(owner, request, target);
 		}
 
 		/// <summary>
 		/// Is the given user authorized to make the specified request against the target?
 		/// </summary>
-		/// <param name="user">The user making the request</param>
+		/// <param name="owner">The user making the request</param>
 		/// <param name="requestType">The type of request</param>
 		/// <param name="target">The resource they are targeting</param>
 		/// <returns></returns>
-		protected abstract bool IsAuthorised(User user, EHTTPRequestType requestType, T target);
+		protected abstract bool IsAuthorised(User owner, HttpRequest request, T target);
 
 	}
 }
