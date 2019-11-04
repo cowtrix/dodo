@@ -1,26 +1,27 @@
 ﻿using System;
+using System.Security;
 
 namespace Common
 {
 	public static class ConsoleExtensions
 	{
-		public static string ReadPassword()
+		public static SecureString ReadPassword()
 		{
-			string pass = "";
+			var pass = new SecureString();
 			do
 			{
 				ConsoleKeyInfo key = Console.ReadKey(true);
 				// Backspace Should Not Work
 				if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
 				{
-					pass += key.KeyChar;
+					pass.AppendChar(key.KeyChar);
 					Console.Write("*");
 				}
 				else
 				{
 					if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
 					{
-						pass = pass.Substring(0, (pass.Length - 1));
+						pass.RemoveAt(pass.Length - 1);
 						Console.Write("\b \b");
 					}
 					else if (key.Key == ConsoleKey.Enter)

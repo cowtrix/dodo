@@ -7,20 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace Dodo.Rebellions
 {
-	public struct GeoLocation
-	{
-		[View]
-		public double Latitude;
-		[View]
-		public double Longitude;
-
-		public GeoLocation(double latitude, double longitude)
-		{
-			Latitude = latitude;
-			Longitude = longitude;
-		}
-	}
-
 	public class Rebellion : Resource
 	{
 		[View]
@@ -31,9 +17,9 @@ namespace Dodo.Rebellions
 		[View]
 		public GeoLocation Location;
 		[View]
-		public ConcurrentDictionary<string, WorkingGroup> WorkingGroups = new ConcurrentDictionary<string, WorkingGroup>();
+		public ConcurrentBag<ResourceReferece<WorkingGroup>> WorkingGroups = new ConcurrentBag<ResourceReferece<WorkingGroup>>();
 		[View]
-		public ConcurrentDictionary<string, LocalGroup> LocalGroups = new ConcurrentDictionary<string, LocalGroup>();
+		public ConcurrentBag<Guid> LocalGroups = new ConcurrentBag<Guid>();
 
 		public Rebellion (User creator, string rebellionName, GeoLocation location)
 		{
@@ -46,16 +32,17 @@ namespace Dodo.Rebellions
 		{
 			get
 			{
-				return $"rebellions/{System.Net.WebUtility.UrlEncode(Regex.Replace(RebellionName.ToLower(), @"\s+", ""))}";
+				return $"rebellions/{RebellionName.StripForURL()}";
 			}
 		}
 	}
 
-	public class WorkingGroup
+	public abstract class RebellionResource : Resource
 	{
-	}
-
-	public class LocalGroup
-	{
+		public Rebellion Rebellion { get; private set; }
+		public RebellionResource(Rebellion owner)
+		{
+			Rebellion = owner;
+		}
 	}
 }

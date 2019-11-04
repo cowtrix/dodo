@@ -37,6 +37,29 @@ namespace SimpleHttpServer.REST
 				m_handlers.Add(handler);
 				handler.AddRoutes(routeConfig);
 			}
+			routeConfig.Add(new Route()
+			{
+				Name = "Resource lookup",
+				Method = EHTTPRequestType.GET,
+				UrlRegex = "resources/(?:^/)*",
+				Callable = request =>
+				{
+					if(!Guid.TryParse(request.Url.Substring("/resources/".Length), out var guid))
+					{
+						return HttpBuilder.NotFound();
+					}
+					var resource = ResourceUtility.GetResourceByGuid(guid);
+					if(resource == null)
+					{
+						return HttpBuilder.NotFound();
+					}
+					if(!ResourceUtility.IsAuthorized(request, resource))
+					{
+						return HttpBuilder.Forbidden();
+					}
+					return HttpBuilder.OK(resource.GenerateJsonView());
+				},
+			});
 			m_server = new HttpServer(Port, routeConfig);
 			m_serverThread = new Thread(new ThreadStart(m_server.Listen));
 			m_serverThread.Start();

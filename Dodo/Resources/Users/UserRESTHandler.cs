@@ -1,6 +1,8 @@
 ﻿using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Dodo.Users
@@ -44,9 +46,9 @@ namespace Dodo.Users
 			{
 				return null;
 			}
-			var username = url.Substring(url.LastIndexOf('/') + 1);
-			var sessionManager = DodoServer.SessionManager;
-			return sessionManager.GetSingle(x => x.WebAuth.Username == username);
+			var username = url.Substring(1);
+			var sessionManager = DodoServer.UserManager;
+			return sessionManager.GetSingle(x => x.ResourceURL == username);
 		}
 
 		protected override dynamic GetCreationSchema()
@@ -56,12 +58,14 @@ namespace Dodo.Users
 
 		protected override User CreateFromSchema(HttpRequest request, dynamic info)
 		{
-			return DodoServer.SessionManager.CreateNew(new WebPortalAuth(info.Username.ToString(), info.Password.ToString()));
+			var newUser = new User(new WebPortalAuth(info.Username.ToString(), info.Password.ToString()));
+			DodoServer.UserManager.Add(newUser);
+			return newUser;
 		}
 
 		protected override void DeleteObjectInternal(User target)
 		{
-			DodoServer.SessionManager.Delete(target);
+			DodoServer.UserManager.Delete(target);
 		}
 
 		protected override bool IsAuthorised(User user, HttpRequest request, User target)

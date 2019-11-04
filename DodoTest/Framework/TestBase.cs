@@ -11,6 +11,25 @@ using System.Collections.Generic;
 
 namespace DodoTest
 {
+	public static class AssertX
+	{
+		public static void Throws<T>(Action action, Func<Exception, bool> exceptionValidator) where T:Exception
+		{
+			try
+			{
+				action();
+			}
+			catch(T e)
+			{
+				if(!exceptionValidator(e))
+				{
+					throw new AssertFailedException("Incorrect exception was thrown: " + e.Message);
+				}
+				return;
+			}
+			throw new AssertFailedException("Exception was not thrown");
+		}
+	}
 
 	[TestClass]
 	public abstract class TestBase
@@ -40,6 +59,7 @@ namespace DodoTest
 		[TestCleanup]
 		public void Clean()
 		{
+			DodoServer.CleanAllData();
 		}
 
 		protected JObject RegisterUser(string username, string password)
@@ -58,6 +78,33 @@ namespace DodoTest
 			request.AddJsonBody(new { RebellionName = name, Location = new GeoLocation(66, 66) });
 			var response = RestClient.Execute(request).Content;
 			if(!response.IsValidJson())
+			{
+				throw new Exception(response);
+			}
+			return JsonConvert.DeserializeObject<JObject>(response);
+		}
+
+		protected JObject PatchObject<T>(string url, T anonObj)
+		{
+			var request = new RestRequest("resource/" + url, Method.PATCH);
+			request.AddHeader("user", CurrentLogin);
+			request.AddHeader("token", CurrentPassword);
+			request.AddJsonBody(anonObj);
+			var response = RestClient.Execute(request).Content;
+			if (!response.IsValidJson())
+			{
+				throw new Exception(response);
+			}
+			return JsonConvert.DeserializeObject<JObject>(response);
+		}
+
+		protected JObject GetResource(string url)
+		{
+			var request = new RestRequest("resource/" + url, Method.GET);
+			request.AddHeader("user", CurrentLogin);
+			request.AddHeader("token", CurrentPassword);
+			var response = RestClient.Execute(request).Content;
+			if (!response.IsValidJson())
 			{
 				throw new Exception(response);
 			}

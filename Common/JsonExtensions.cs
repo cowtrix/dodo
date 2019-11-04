@@ -7,7 +7,6 @@ using System.Reflection;
 
 namespace Common
 {
-
 	public static class JsonExtensions
 	{
 		public static bool IsValidJson(this string value)

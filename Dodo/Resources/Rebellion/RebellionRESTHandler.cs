@@ -1,8 +1,10 @@
-﻿using Dodo.Users;
+﻿using Common;
+using Dodo.Users;
 using Newtonsoft.Json;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Dodo.Rebellions
@@ -20,7 +22,7 @@ namespace Dodo.Rebellions
 		[Route("List all rebellions", "rebellions", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
-			return HttpBuilder.OK(DodoServer.RebellionManager.Get(x => true).GenerateJsonView());
+			return HttpBuilder.OK(DodoServer.RebellionManager.Get(x => true).ToList().GenerateJsonView());
 		}
 
 		[Route("Get a rebellion", URL_REGEX, EHTTPRequestType.GET)]
@@ -67,7 +69,9 @@ namespace Dodo.Rebellions
 			{
 				throw HTTPException.LOGIN;
 			}
-			return new Rebellion(user, info.RebellionName.ToString(), JsonConvert.DeserializeObject<GeoLocation>(info.Location.ToString()));
+			var newRebellion = new Rebellion(user, info.RebellionName.ToString(), JsonConvert.DeserializeObject<GeoLocation>(info.Location.ToString()));
+			DodoServer.RebellionManager.Add(newRebellion);
+			return newRebellion;
 		}
 
 		protected override void DeleteObjectInternal(Rebellion target)

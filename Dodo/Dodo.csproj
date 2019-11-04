@@ -51,10 +51,11 @@
     <Compile Include="DodoServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\DodoRESTHandler.cs" />
+    <Compile Include="Resources\Rebellion\LocalGroup.cs" />
     <Compile Include="Resources\Rebellion\Rebellion.cs" />
     <Compile Include="Resources\Rebellion\RebellionManager.cs" />
     <Compile Include="Resources\Rebellion\RebellionRESTHandler.cs" />
-    <Compile Include="Resources\ResourceManager.cs" />
+    <Compile Include="Resources\Rebellion\WorkingGroup.cs" />
     <Compile Include="Resources\Users\User.cs" />
     <Compile Include="Resources\Users\UserManager.cs" />
     <Compile Include="Resources\Users\UserRESTHandler.cs" />

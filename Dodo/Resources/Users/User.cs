@@ -43,11 +43,13 @@ namespace Dodo.Users
 
 	public class User : Resource
 	{
-		public override string ResourceURL { get { return $"u/{WebAuth.Username}"; } }
+		public override string ResourceURL { get { return $"u/{WebAuth.Username.StripForURL()}"; } }
 
 		[NoPatch]
 		[View]
 		public WebPortalAuth WebAuth;
+		[View]
+		public string Email;
 
 		public User() : base()
 		{ }

@@ -1,4 +1,5 @@
-﻿using Dodo.Rebellions;
+﻿using Common;
+using Dodo.Rebellions;
 using Dodo.Users;
 using SimpleHttpServer.REST;
 using System;
@@ -12,8 +13,9 @@ namespace Dodo
 	public static class DodoServer
 	{
 		private static RESTServer m_restServer;
-		public static UserManager SessionManager;
+		public static UserManager UserManager;
 		public static RebellionManager RebellionManager;
+		private static BackupManager m_backupManager;
 
 		static void Main(string[] args)
 		{
@@ -22,9 +24,17 @@ namespace Dodo
 
 		public static void Initialise()
 		{
-			SessionManager = new UserManager();
+			UserManager = new UserManager();
 			RebellionManager = new RebellionManager();
+			m_backupManager = new BackupManager()
+				.RegisterBackup(UserManager)
+				.RegisterBackup(RebellionManager);
 			m_restServer = new RESTServer(8080);
+		}
+
+		public static void CleanAllData()
+		{
+			UserManager.Clear();
 		}
 	}
 }

@@ -19,6 +19,24 @@ namespace DodoTest
 		}
 
 		[TestMethod]
+		public void CanPatchUser()
+		{
+			RegisterUser(CurrentLogin, CurrentPassword);
+			var patchObj = new { Email = "Patched Value" };
+			var patchedUser = PatchObject("u/" + CurrentLogin, patchObj);
+			Assert.IsTrue(patchedUser.Value<string>("Email") == patchObj.Email);
+		}
+
+		[TestMethod]
+		public void CanGetUserByResource()
+		{
+			var newUser = RegisterUser(CurrentLogin, CurrentPassword);
+			var guid = newUser.Value<string>("UUID");
+			var newUserResource = GetResource(guid);
+			Assert.IsTrue(newUser.ToString() == newUserResource.ToString());
+		}
+
+		[TestMethod]
 		public void CanCreateNewRebellion()
 		{
 			var newUser = RegisterUser(CurrentLogin, CurrentPassword);
@@ -26,6 +44,12 @@ namespace DodoTest
 			Assert.IsTrue(rebellion.Value<string>("RebellionName") == "Test Rebellion");
 			Assert.IsTrue(rebellion.Value<JObject>("Location").Value<double>("Latitude") == 66);
 			Assert.IsTrue(rebellion.Value<JObject>("Location").Value<double>("Longitude") == 66);
+		}
+
+		[TestMethod]
+		public void CannotCreateNewRebellionIfNotLoggedIn()
+		{
+			AssertX.Throws<Exception>(() => CreateNewRebellion("Test Rebellion", new GeoLocation(66, 66)), e => e.Message.Contains("You need to login"));
 		}
 	}
 }

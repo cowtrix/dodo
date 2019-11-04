@@ -68,6 +68,8 @@
   <ItemGroup>
     <Compile Include="REST\JsonViewUtility.cs" />
     <Compile Include="REST\ObjectRESTHandler.cs" />
+    <Compile Include="REST\ResourceManager.cs" />
+    <Compile Include="REST\ResourceUtility.cs" />
     <Compile Include="REST\RESTHandler.cs" />
     <Compile Include="REST\RESTServer.cs" />
     <Compile Include="REST\RouteAttribute.cs" />

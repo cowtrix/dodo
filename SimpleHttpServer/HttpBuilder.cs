@@ -86,5 +86,14 @@ namespace SimpleHttpServer
 				ContentAsUTF8 = JsonConvert.SerializeObject(result, Formatting.Indented)
 			};
 		}
+
+		public static HttpResponse Custom(string reason, int code)
+		{
+			return new HttpResponse()
+			{
+				ReasonPhrase = reason,
+				StatusCode = code.ToString(),
+			};
+		}
 	}
 }

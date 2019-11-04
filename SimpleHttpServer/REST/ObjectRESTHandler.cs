@@ -7,25 +7,6 @@ using System.Collections.Generic;
 
 namespace SimpleHttpServer.REST
 {
-	public interface IRESTResource
-	{
-		Guid UUID { get; }
-		string ResourceURL { get; }
-	}
-
-	public abstract class Resource : IRESTResource
-	{
-		[NoPatch]
-		[View]
-		public Guid UUID { get; private set; }
-		public abstract string ResourceURL { get; }
-
-		public Resource()
-		{
-			UUID = Guid.NewGuid();
-		}
-	}
-
 	public abstract class ObjectRESTHandler<T> : RESTHandler where T: class, IRESTResource
 	{
 		/// <summary>
@@ -63,6 +44,10 @@ namespace SimpleHttpServer.REST
 			{
 				var creationInfo = JsonExtensions.DeserializeAnonymousType(request.Content, schema);
 				createdObject = CreateFromSchema(request, creationInfo);
+			}
+			catch(NullReferenceException e)
+			{
+				throw new Exception($"Failed to deserialise JSON. Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
 			}
 			catch(RuntimeBinderException e)
 			{
@@ -118,7 +103,7 @@ namespace SimpleHttpServer.REST
 				throw HTTPException.NOT_FOUND;
 			}
 			DeleteObjectInternal(target);
-			return HttpBuilder.OK();
+			return HttpBuilder.Custom("Resource deleted", 204);
 		}
 		protected abstract void DeleteObjectInternal(T target);
 	}

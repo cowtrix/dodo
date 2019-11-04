@@ -1,4 +1,5 @@
-﻿using Dodo.Users;
+﻿using Common;
+using Dodo.Users;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 
@@ -6,8 +7,7 @@ namespace Dodo
 {
 	public abstract class DodoRESTHandler<T> : ObjectRESTHandler<T> where T: class, IRESTResource
 	{
-		const string USERNAME_KEY = "user";
-		const string TOKEN_KEY = "token";
+		const string TOKEN_KEY = "Authorization";
 
 		/// <summary>
 		/// Get the user that made an HTTP request.
@@ -16,12 +16,18 @@ namespace Dodo
 		/// <returns>The user that made this request</returns>
 		protected static User GetRequestOwner(HttpRequest request)
 		{
-			if(!request.Headers.TryGetValue(USERNAME_KEY, out var username) || !request.Headers.TryGetValue(TOKEN_KEY, out var token))
+			if(!request.Headers.TryGetValue(TOKEN_KEY, out var token))
 			{
 				return null;
 			}
-			var user = DodoServer.SessionManager.GetSingle(x => x.WebAuth.Username == username);
-			if(user != null && !user.WebAuth.Challenge(token))
+			var tokens = token.Trim().Split(' ');
+			if(tokens.Length !=2 || tokens[0] != "Basic")
+			{
+				throw HTTPException.UNAUTHORIZED;
+			}
+			var decode = StringExtensions.Base64Decode(tokens[1]).Split(':');
+			var user = DodoServer.UserManager.GetSingle(x => x.WebAuth.Username == decode[0]);
+			if(user != null && !user.WebAuth.Challenge(decode[1]))
 			{
 				throw HTTPException.FORBIDDEN;
 			}
@@ -44,6 +50,5 @@ namespace Dodo
 		/// <param name="target">The resource they are targeting</param>
 		/// <returns></returns>
 		protected abstract bool IsAuthorised(User owner, HttpRequest request, T target);
-
 	}
 }

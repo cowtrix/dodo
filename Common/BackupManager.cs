@@ -29,8 +29,9 @@ namespace Common
 	{
 		public ConfigVariable<int> BackupInterval = new ConfigVariable<int>("BackupInterval", 5);
 		public ConfigVariable<string> BackupLocation = new ConfigVariable<string>("BackupLocation", "Backups");
-		public ConfigVariable<bool> Encrypt = new ConfigVariable<bool>("EncryptBackups", true);
+		public ConfigVariable<bool> Encrypt = new ConfigVariable<bool>("EncryptBackups", false);
 		ConcurrentDictionary<IBackup, Task> m_backups = new ConcurrentDictionary<IBackup, Task>();
+		private SecureString m_pass;
 
 		public BackupManager()
 		{
@@ -38,9 +39,14 @@ namespace Common
 			{
 				Directory.CreateDirectory(BackupLocation.Value);
 			}
+			if (Encrypt.Value)
+			{
+				Console.Write("Enter data password: ");
+				m_pass = ConsoleExtensions.ReadPassword();
+			}
 		}
 
-		public void RegisterBackup(IBackup backup)
+		public BackupManager RegisterBackup(IBackup backup)
 		{
 			m_backups[backup] = new Task(async () =>
 			{
@@ -48,21 +54,21 @@ namespace Common
 				{
 					var target = backup;
 					var path = Path.GetFullPath(Path.Combine(BackupLocation.Value, target.BackupPath + ".json"));
-					var data = File.ReadAllText(path);
-					var pass = "";
-					if (Encrypt.Value)
+					if (File.Exists(path))
 					{
-						Console.Write("Enter decryption password: ");
-						pass = ConsoleExtensions.ReadPassword();
-						data = StringCipher.Decrypt(data, pass);
+						var data = File.ReadAllText(path);
+						if (Encrypt.Value)
+						{
+							data = StringCipher.Decrypt(data, m_pass.ToString());
+						}
 					}
 					await Task.Delay(TimeSpan.FromMinutes(BackupInterval.Value));
 					try
 					{
-						data = target.Serialize();
+						var data = target.Serialize();
 						if(Encrypt.Value)
 						{
-							data = StringCipher.Encrypt(data, pass);
+							data = StringCipher.Encrypt(data, m_pass.ToString());
 						}
 						File.WriteAllText(path, data);
 					}
@@ -72,6 +78,8 @@ namespace Common
 					}
 				}
 			});
+			m_backups[backup].Start();
+			return this;
 		}
 	}
 }

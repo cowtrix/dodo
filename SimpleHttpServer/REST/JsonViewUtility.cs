@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -8,6 +11,7 @@ namespace SimpleHttpServer.REST
 {
 	public class HTTPException : Exception
 	{
+		public static HTTPException UNAUTHORIZED { get { return new HTTPException("Unauthorised", 401); } }
 		public static HTTPException FORBIDDEN { get { return new HTTPException("Forbidden", 403); } }
 		public static HTTPException NOT_FOUND { get { return new HTTPException("Resource not found", 404); } }
 		public static HTTPException CONFLICT { get { return new HTTPException("Conflict - resource may already exist", 409); } }
@@ -31,6 +35,7 @@ namespace SimpleHttpServer.REST
 		{
 			typeof(string),
 			typeof(Guid),
+			typeof(GeoLocation)
 		};
 
 		/// <summary>
@@ -68,6 +73,16 @@ namespace SimpleHttpServer.REST
 				}
 			}
 			return vals;
+		}
+
+		/// <summary>
+		/// This will generate a JSON object that represents viewable (public facing) properties of this object
+		/// An object is marked as viewable with the ViewAttribute
+		/// </summary>
+		/// <returns></returns>
+		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj)
+		{
+			return obj.Select(x => x.GenerateJsonView()).ToList();
 		}
 	}
 }

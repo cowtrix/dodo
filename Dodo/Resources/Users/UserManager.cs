@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SimpleHttpServer.Models;
+using SimpleHttpServer.REST;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
@@ -18,6 +20,12 @@ namespace Dodo.Users
 			var newUser = new User(webAuth);
 			InternalData.Entries[newUser.UUID] = newUser;
 			return newUser;
+		}
+
+		protected override bool IsAuthorised(HttpRequest request, User resource)
+		{
+			// TODO
+			return true;
 		}
 	}
 }

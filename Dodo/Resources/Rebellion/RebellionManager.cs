@@ -1,4 +1,7 @@
-﻿using Dodo.Users;
+﻿using Common;
+using Dodo.Users;
+using SimpleHttpServer.Models;
+using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -19,6 +22,12 @@ namespace Dodo.Rebellions
 			var newRebellion = new Rebellion(creator, name, location);
 			InternalData.Entries.TryAdd(newRebellion.UUID, newRebellion);
 			return newRebellion;
+		}
+
+		protected override bool IsAuthorised(HttpRequest request, Rebellion resource)
+		{
+			// TODO
+			return true;
 		}
 	}
 }
