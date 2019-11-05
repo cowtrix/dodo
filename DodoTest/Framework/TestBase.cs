@@ -62,19 +62,22 @@ namespace DodoTest
 			DodoServer.CleanAllData();
 		}
 
-		protected JObject RegisterUser(string username, string password)
+		protected JObject RegisterUser(string username, string password, string email = "")
 		{
 			var request = new RestRequest("register", Method.POST);
-			request.AddJsonBody(new { Username = username, Password = password });
-			var response = RestClient.Execute(request);
-			return JsonConvert.DeserializeObject<JObject>(response.Content);
+			request.AddJsonBody(new { Username = username, Password = password, Email = email });
+			var response = RestClient.Execute(request).Content;
+			if (!response.IsValidJson())
+			{
+				throw new Exception(response);
+			}
+			return JsonConvert.DeserializeObject<JObject>(response);
 		}
 
 		protected JObject CreateNewRebellion(string name, GeoLocation location)
 		{
 			var request = new RestRequest("newrebellion", Method.POST);
-			request.AddHeader("user", CurrentLogin);
-			request.AddHeader("token", CurrentPassword);
+			AuthoriseRequest(request, CurrentLogin, CurrentPassword);
 			request.AddJsonBody(new { RebellionName = name, Location = new GeoLocation(66, 66) });
 			var response = RestClient.Execute(request).Content;
 			if(!response.IsValidJson())
@@ -86,9 +89,8 @@ namespace DodoTest
 
 		protected JObject PatchObject<T>(string url, T anonObj)
 		{
-			var request = new RestRequest("resource/" + url, Method.PATCH);
-			request.AddHeader("user", CurrentLogin);
-			request.AddHeader("token", CurrentPassword);
+			var request = new RestRequest(url, Method.PATCH);
+			AuthoriseRequest(request, CurrentLogin, CurrentPassword);
 			request.AddJsonBody(anonObj);
 			var response = RestClient.Execute(request).Content;
 			if (!response.IsValidJson())
@@ -100,15 +102,19 @@ namespace DodoTest
 
 		protected JObject GetResource(string url)
 		{
-			var request = new RestRequest("resource/" + url, Method.GET);
-			request.AddHeader("user", CurrentLogin);
-			request.AddHeader("token", CurrentPassword);
+			var request = new RestRequest("resources/" + url, Method.GET);
+			AuthoriseRequest(request, CurrentLogin, CurrentPassword);
 			var response = RestClient.Execute(request).Content;
 			if (!response.IsValidJson())
 			{
 				throw new Exception(response);
 			}
 			return JsonConvert.DeserializeObject<JObject>(response);
+		}
+
+		protected static void AuthoriseRequest(RestRequest request, string user, string password)
+		{
+			request.AddHeader("Authorization", "Basic " + StringExtensions.Base64Encode($"{user}:{password}"));
 		}
 
 		long LongRandom(long min, long max)

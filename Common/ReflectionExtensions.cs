@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Common
 {
+	/// <summary>
+	/// This signifies that a property or field cannot be updated via a PATCH REST command and must be updated
+	/// through some internal method
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class NoPatchAttribute : Attribute { }
 
@@ -51,6 +55,14 @@ namespace Common
 			}
 		}
 
+		/// <summary>
+		/// Given a string/object dictionary, where the string is the name of a field or property and the
+		/// object is the value to be set, patch the values of a target object
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="targetObject"></param>
+		/// <param name="values"></param>
+		/// <returns></returns>
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values) where T : class
 		{
 			var targetProperties = targetObject.GetType().GetProperties();

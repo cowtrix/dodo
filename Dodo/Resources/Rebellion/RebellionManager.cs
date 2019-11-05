@@ -24,10 +24,16 @@ namespace Dodo.Rebellions
 			return newRebellion;
 		}
 
-		protected override bool IsAuthorised(HttpRequest request, Rebellion resource)
+		protected override bool IsAuthorised(HttpRequest request, Rebellion resource, out EViewVisibility visibility)
 		{
-			// TODO
-			return true;
+			var requestOwner = DodoRESTServer.GetRequestOwner(request);
+			if (requestOwner == resource.Creator.Value)
+			{
+				visibility = EViewVisibility.OWNER;
+				return true;
+			}
+			visibility = EViewVisibility.PUBLIC;
+			return request.Method == EHTTPRequestType.GET;
 		}
 	}
 }

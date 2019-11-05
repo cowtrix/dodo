@@ -12,10 +12,10 @@ namespace Dodo.Rebellions
 			Name = name;
 			Location = location;
 		}
-		[View]
+		[View(EViewVisibility.PUBLIC)]
 		public string Name { get; private set; }
 		public override string ResourceURL => $"lg/{Name}".StripForURL();
-		[View]
+		[View(EViewVisibility.PUBLIC)]
 		public GeoLocation Location { get; private set; }
 		public ConcurrentBag<ResourceReference<User>> Members = new ConcurrentBag<ResourceReference<User>>();
 	}

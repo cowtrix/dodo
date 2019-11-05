@@ -17,6 +17,7 @@ namespace SimpleHttpServer.REST
 	public class RESTServer
 	{
 		public readonly int Port;
+		protected List<Route> Routes = new List<Route>();
 		private static HttpServer m_server;
 		private Thread m_serverThread;
 		private List<RESTHandler> m_handlers = new List<RESTHandler>();
@@ -30,37 +31,17 @@ namespace SimpleHttpServer.REST
 			// Start HTTP server for receiving messages
 			Port = port;
 			var handlers = ReflectionExtensions.GetChildClasses<RESTHandler>();
-			var routeConfig = new List<Route>();
 			foreach (var handlerType in handlers)
 			{
 				var handler = Activator.CreateInstance(handlerType) as RESTHandler;
 				m_handlers.Add(handler);
-				handler.AddRoutes(routeConfig);
+				handler.AddRoutes(Routes);
 			}
-			routeConfig.Add(new Route()
-			{
-				Name = "Resource lookup",
-				Method = EHTTPRequestType.GET,
-				UrlRegex = "resources/(?:^/)*",
-				Callable = request =>
-				{
-					if(!Guid.TryParse(request.Url.Substring("/resources/".Length), out var guid))
-					{
-						return HttpBuilder.NotFound();
-					}
-					var resource = ResourceUtility.GetResourceByGuid(guid);
-					if(resource == null)
-					{
-						return HttpBuilder.NotFound();
-					}
-					if(!ResourceUtility.IsAuthorized(request, resource))
-					{
-						return HttpBuilder.Forbidden();
-					}
-					return HttpBuilder.OK(resource.GenerateJsonView());
-				},
-			});
-			m_server = new HttpServer(Port, routeConfig);
+		}
+
+		public void Start()
+		{
+			m_server = new HttpServer(Port, Routes);
 			m_serverThread = new Thread(new ThreadStart(m_server.Listen));
 			m_serverThread.Start();
 		}

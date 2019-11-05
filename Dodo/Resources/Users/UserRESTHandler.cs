@@ -1,4 +1,5 @@
-﻿using SimpleHttpServer;
+﻿using Dodo.Resources;
+using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System;
@@ -20,12 +21,17 @@ namespace Dodo.Users
 		[Route("Get a user", URL_REGEX, EHTTPRequestType.GET)]
 		public HttpResponse GetUser(HttpRequest request)
 		{
+			var owner = DodoRESTServer.GetRequestOwner(request);
 			var user = GetResource(request.Url);
 			if(user == null)
 			{
 				throw HTTPException.NOT_FOUND;
 			}
-			return HttpBuilder.OK(user.GenerateJsonView());
+			if (!user.IsAuthorised(owner, request, out var view))
+			{
+				throw HTTPException.FORBIDDEN;
+			}
+			return HttpBuilder.OK(user.GenerateJsonView(view));
 		}
 
 		[Route("Delete a user", URL_REGEX, EHTTPRequestType.DELETE)]
@@ -46,32 +52,31 @@ namespace Dodo.Users
 			{
 				return null;
 			}
-			var username = url.Substring(1);
-			var sessionManager = DodoServer.UserManager;
+			if(url.StartsWith("/"))
+			{
+				url = url.Substring(1);
+			}
+			var username = url.ToLowerInvariant();
+			var sessionManager = DodoServer.ResourceManager<User>();
 			return sessionManager.GetSingle(x => x.ResourceURL == username);
 		}
 
 		protected override dynamic GetCreationSchema()
 		{
-			return new { Username = "", Password = "" };
+			return new { Username = "", Password = "", Email = "" };
 		}
 
 		protected override User CreateFromSchema(HttpRequest request, dynamic info)
 		{
 			var newUser = new User(new WebPortalAuth(info.Username.ToString(), info.Password.ToString()));
-			DodoServer.UserManager.Add(newUser);
+			newUser.Email = info.Email;
+			DodoServer.ResourceManager<User>().Add(newUser);
 			return newUser;
 		}
 
 		protected override void DeleteObjectInternal(User target)
 		{
-			DodoServer.UserManager.Delete(target);
-		}
-
-		protected override bool IsAuthorised(User user, HttpRequest request, User target)
-		{
-			// TODO
-			return true;
+			DodoServer.ResourceManager<User>().Delete(target);
 		}
 	}
 }

@@ -15,8 +15,9 @@ namespace DodoTest
 		[TestMethod]
 		public void CanRegisterNewUser()
 		{
-			var newUser = RegisterUser(CurrentLogin, CurrentPassword);
+			var newUser = RegisterUser(CurrentLogin, CurrentPassword, "test@web.com");
 			Assert.IsTrue(newUser.Value<JObject>("WebAuth").Value<string>("Username") == CurrentLogin);
+			Assert.IsTrue(newUser.Value<string>("Email") == "test@web.com");
 		}
 
 		[TestMethod]

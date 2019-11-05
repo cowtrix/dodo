@@ -72,14 +72,19 @@ namespace SimpleHttpServer.REST
 			return ResourceManagers.SingleOrDefault(x => x.Key.Get(resource => resource.UUID == guid).Any()).Key;
 		}
 
-		public static bool IsAuthorized<T>(HttpRequest request, T resource) where T:Resource
+		public static IResourceManager GetManagerForResource(this Resource resource)
+		{
+			return GetManagerForResource(resource.UUID);
+		}
+
+		public static bool IsAuthorized<T>(HttpRequest request, T resource, out EViewVisibility visibility) where T:Resource
 		{
 			var rm = GetManagerForResource(resource.UUID);
 			if(rm == null)
 			{
 				throw new Exception($"Orphan resource {resource} with guid {resource.UUID}");
 			}
-			return rm.IsAuthorised(request, resource);
+			return rm.IsAuthorised(request, resource, out visibility);
 		}
 	}
 }

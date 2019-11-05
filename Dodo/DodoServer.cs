@@ -12,10 +12,9 @@ namespace Dodo
 {
 	public static class DodoServer
 	{
-		private static RESTServer m_restServer;
-		public static UserManager UserManager;
-		public static RebellionManager RebellionManager;
+		private static DodoRESTServer m_restServer;
 		private static BackupManager m_backupManager;
+		private static Dictionary<Type, IResourceManager> m_resourceManagers;
 
 		static void Main(string[] args)
 		{
@@ -24,17 +23,31 @@ namespace Dodo
 
 		public static void Initialise()
 		{
-			UserManager = new UserManager();
-			RebellionManager = new RebellionManager();
-			m_backupManager = new BackupManager()
-				.RegisterBackup(UserManager)
-				.RegisterBackup(RebellionManager);
-			m_restServer = new RESTServer(8080);
+			m_resourceManagers = new Dictionary<Type, IResourceManager>
+			{
+				{ typeof(User), new UserManager() },
+				{ typeof(Rebellion), new RebellionManager() },
+			};
+			/*m_backupManager = new BackupManager();
+			foreach(var rm in m_resourceManagers)
+			{
+				m_backupManager.RegisterBackup(rm.Value);
+			}*/
+			m_restServer = new DodoRESTServer(8080);
+			m_restServer.Start();
+		}
+
+		public static IResourceManager<T> ResourceManager<T>() where T: Resource
+		{
+			return m_resourceManagers[typeof(T)] as IResourceManager<T>;
 		}
 
 		public static void CleanAllData()
 		{
-			UserManager.Clear();
+			foreach (var rm in m_resourceManagers)
+			{
+				rm.Value.Clear();
+			}
 		}
 	}
 }

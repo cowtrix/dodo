@@ -1,54 +1,17 @@
 ﻿using Common;
+using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
-using System;
 
 namespace Dodo.Users
 {
-	public struct WebPortalAuth
-	{
-		public WebPortalAuth(string userName, string password) : this()
-		{
-			Username = userName;
-			PasswordHash = SHA256Utility.SHA256(password);
-		}
-
-		/// <summary>
-		/// The user's username
-		/// </summary>
-		[View]
-		public string Username { get; private set; }
-
-		/// <summary>
-		/// Am MD5 hash of the user's password
-		/// </summary>
-		public string PasswordHash { get; private set; }
-
-		public bool Challenge(string password)
-		{
-			return SHA256Utility.SHA256(password) == PasswordHash;
-		}
-
-		public void Validate()
-		{
-			if (string.IsNullOrEmpty(Username))
-			{
-				throw new Exception("Username cannot be null");
-			}
-			if (string.IsNullOrEmpty(PasswordHash))
-			{
-				throw new Exception("PasswordHash cannot be null");
-			}
-		}
-	}
-
-	public class User : Resource
+	public class User : DodoResource
 	{
 		public override string ResourceURL { get { return $"u/{WebAuth.Username.StripForURL()}"; } }
 
 		[NoPatch]
-		[View]
+		[View(EViewVisibility.PUBLIC)]
 		public WebPortalAuth WebAuth;
-		[View]
+		[View(EViewVisibility.OWNER)]
 		public string Email;
 
 		public User() : base()
@@ -57,6 +20,11 @@ namespace Dodo.Users
 		public User(WebPortalAuth auth) : base()
 		{
 			WebAuth = auth;
+		}
+
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

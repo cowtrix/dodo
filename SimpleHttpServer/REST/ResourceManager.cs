@@ -21,25 +21,56 @@ namespace SimpleHttpServer.REST
 	/// </summary>
 	public abstract class Resource : IRESTResource
 	{
+
 		[NoPatch]
-		[View]
+		[View(EViewVisibility.PUBLIC)]
 		public Guid UUID { get; private set; }
-		[View]
+		[View(EViewVisibility.PUBLIC)]
 		public abstract string ResourceURL { get; }
 
 		public Resource()
 		{
 			UUID = Guid.NewGuid();
 		}
+
+		public override bool Equals(object obj)
+		{
+			var resource = obj as Resource;
+			return resource != null &&
+				   UUID.Equals(resource.UUID) &&
+				   ResourceURL == resource.ResourceURL;
+		}
+
+		public override int GetHashCode()
+		{
+			var hashCode = 1286416240;
+			hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(UUID);
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ResourceURL);
+			return hashCode;
+		}
 	}
 
-	public interface IResourceManager
+	public interface IResourceManager : IBackup
 	{
 		IEnumerable<Resource> Get(Func<Resource, bool> selector);
-		bool IsAuthorised(HttpRequest request, Resource resource);
+		bool IsAuthorised(HttpRequest request, Resource resource, out EViewVisibility visibility);
+		void Clear();
 	}
 
-	public abstract class ResourceManager<T> : IResourceManager, IBackup where T:Resource
+	public interface IResourceManager<T> : IResourceManager
+	{
+		bool Add(T newObject);
+		bool Delete(T objToDelete);
+		T GetSingle(Func<T, bool> selector);
+		T GetFirst(Func<T, bool> selector);
+		IEnumerable<T> Get(Func<T, bool> selector);
+	}
+
+	/// <summary>
+	/// A ResourceManager keeps track of, deletes, creates and generally manages a class of object.
+	/// </summary>
+	/// <typeparam name="T">The class to be managed</typeparam>
+	public abstract class ResourceManager<T> : IResourceManager<T>, IBackup where T:Resource
 	{
 		public class Data
 		{
@@ -52,7 +83,7 @@ namespace SimpleHttpServer.REST
 
 		public ResourceManager()
 		{
-			InternalData = InternalData ?? new Data();
+			InternalData = InternalData ?? new Data();	// This is to support custom child class implementations of this::Data
 			ResourceUtility.Register(this);
 		}
 
@@ -109,15 +140,15 @@ namespace SimpleHttpServer.REST
 			InternalData = JsonConvert.DeserializeObject(json) as Data;
 		}
 
-		public bool IsAuthorised(HttpRequest request, Resource resource)
+		public bool IsAuthorised(HttpRequest request, Resource resource, out EViewVisibility visibility)
 		{
 			if(!(resource is T))
 			{
 				throw new Exception("Incorrect Resource Manager for " + resource);
 			}
-			return IsAuthorised(request, resource as T);
+			return IsAuthorised(request, resource as T, out visibility);
 		}
 
-		protected abstract bool IsAuthorised(HttpRequest request, T resource);
+		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EViewVisibility visibility);
 	}
 }

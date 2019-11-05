@@ -17,11 +17,11 @@ namespace SimpleHttpServer.REST
 		protected abstract T GetResource(string url);
 
 		/// <summary>
-		/// Determine if the given request is authorised, if not throw a HTTPException.FORBIDDEN
+		/// Determine if the given request is authorized
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		protected abstract bool IsAuthorised(HttpRequest request);
+		protected abstract bool IsAuthorised(HttpRequest request, out EViewVisibility visibility);
 
 		/// <summary>
 		/// Create a new object, and return the resource url.
@@ -30,7 +30,7 @@ namespace SimpleHttpServer.REST
 		/// <returns>If the creation schema is not correct, an example schema. If it is correct, the view of the object and it's new resource url.</returns>
 		protected virtual HttpResponse CreateObject(HttpRequest request)
 		{
-			if(!IsAuthorised(request))
+			if(!IsAuthorised(request, out var view))
 			{
 				throw HTTPException.FORBIDDEN;
 			}
@@ -53,7 +53,7 @@ namespace SimpleHttpServer.REST
 			{
 				throw new Exception($"Failed to deserialise JSON. Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
 			}
-			return HttpBuilder.ResourceCreated(JsonViewUtility.GenerateJsonView(createdObject), createdObject.ResourceURL);
+			return HttpBuilder.OK(createdObject.GenerateJsonView(view));
 		}
 
 		/// <summary>
@@ -67,7 +67,6 @@ namespace SimpleHttpServer.REST
 		/// <param name="info">The schema to use</param>
 		/// <returns>An object of type T created with the given schema</returns>
 		protected abstract T CreateFromSchema(HttpRequest request, dynamic info);
-
 		/// <summary>
 		/// Update an object with a string->object dictionary, where the string is the name of the field
 		/// and the object is the value to be set. For nested classes, the object should be deserialized
@@ -77,7 +76,7 @@ namespace SimpleHttpServer.REST
 		/// <returns>The view of the object that has been updated.</returns>
 		protected virtual HttpResponse UpdateObject(HttpRequest request)
 		{
-			if (!IsAuthorised(request))
+			if (!IsAuthorised(request, out var view))
 			{
 				throw HTTPException.FORBIDDEN;
 			}
@@ -88,12 +87,11 @@ namespace SimpleHttpServer.REST
 			}
 			var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.Content);
 			target.PatchObject(values);
-			return HttpBuilder.OK(target.GenerateJsonView());
+			return HttpBuilder.OK(target.GenerateJsonView(view));
 		}
-
 		protected virtual HttpResponse DeleteObject(HttpRequest request)
 		{
-			if (!IsAuthorised(request))
+			if (!IsAuthorised(request, out _))
 			{
 				throw HTTPException.FORBIDDEN;
 			}

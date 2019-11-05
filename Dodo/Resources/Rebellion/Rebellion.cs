@@ -1,5 +1,6 @@
 ﻿using Common;
 using Dodo.Users;
+using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
@@ -7,23 +8,23 @@ using System.Text.RegularExpressions;
 
 namespace Dodo.Rebellions
 {
-	public class Rebellion : Resource
+	public class Rebellion : DodoResource
 	{
-		[View]
+		[View(EViewVisibility.PUBLIC)]
 		public string RebellionName;
-		[View]
+		[View(EViewVisibility.OWNER)]
 		[NoPatch]
-		public Guid Creator;
-		[View]
+		public ResourceReference<User> Creator;
+		[View(EViewVisibility.PUBLIC)]
 		public GeoLocation Location;
-		[View]
+		[View(EViewVisibility.PUBLIC)]
 		public ConcurrentBag<ResourceReference<WorkingGroup>> WorkingGroups = new ConcurrentBag<ResourceReference<WorkingGroup>>();
-		[View]
+		[View(EViewVisibility.PUBLIC)]
 		public ConcurrentBag<ResourceReference<LocalGroup>> LocalGroups = new ConcurrentBag<ResourceReference<LocalGroup>>();
 
 		public Rebellion (User creator, string rebellionName, GeoLocation location)
 		{
-			Creator = creator.UUID;
+			Creator = new ResourceReference<User>(creator);
 			RebellionName = rebellionName;
 			Location = location;
 		}
@@ -35,14 +36,23 @@ namespace Dodo.Rebellions
 				return $"rebellions/{RebellionName.StripForURL()}";
 			}
 		}
+
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
-	public abstract class RebellionResource : Resource
+	public abstract class RebellionResource : DodoResource
 	{
 		public Rebellion Rebellion { get; private set; }
 		public RebellionResource(Rebellion owner)
 		{
 			Rebellion = owner;
+		}
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
+		{
+			return Rebellion.IsAuthorised(requestOwner, request, out visibility);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Common;
+using Dodo.Resources;
 using Dodo.Users;
 using Newtonsoft.Json;
 using SimpleHttpServer;
@@ -22,18 +23,23 @@ namespace Dodo.Rebellions
 		[Route("List all rebellions", "rebellions", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
-			return HttpBuilder.OK(DodoServer.RebellionManager.Get(x => true).ToList().GenerateJsonView());
+			return HttpBuilder.OK(DodoServer.ResourceManager<Rebellion>().Get(x => true).ToList().GenerateJsonView((EViewVisibility.PUBLIC)));
 		}
 
 		[Route("Get a rebellion", URL_REGEX, EHTTPRequestType.GET)]
 		public HttpResponse GetUser(HttpRequest request)
 		{
-			var user = GetResource(request.Url);
-			if(user == null)
+			var owner = DodoRESTServer.GetRequestOwner(request);
+			var rebellion = GetResource(request.Url);
+			if (rebellion == null)
 			{
 				throw HTTPException.NOT_FOUND;
 			}
-			return HttpBuilder.OK(user.GenerateJsonView());
+			if (!rebellion.IsAuthorised(owner, request, out var view))
+			{
+				throw HTTPException.FORBIDDEN;
+			}
+			return HttpBuilder.OK(rebellion.GenerateJsonView(view));
 		}
 
 		[Route("Delete a rebellion", URL_REGEX, EHTTPRequestType.DELETE)]
@@ -54,7 +60,7 @@ namespace Dodo.Rebellions
 			{
 				return null;
 			}
-			return DodoServer.RebellionManager.GetSingle(x => x.ResourceURL == url);
+			return DodoServer.ResourceManager<Rebellion>().GetSingle(x => x.ResourceURL == url);
 		}
 
 		protected override dynamic GetCreationSchema()
@@ -64,25 +70,19 @@ namespace Dodo.Rebellions
 
 		protected override Rebellion CreateFromSchema(HttpRequest request, dynamic info)
 		{
-			var user = GetRequestOwner(request);
+			var user = DodoRESTServer.GetRequestOwner(request);
 			if(user == null)
 			{
 				throw HTTPException.LOGIN;
 			}
 			var newRebellion = new Rebellion(user, info.RebellionName.ToString(), JsonConvert.DeserializeObject<GeoLocation>(info.Location.ToString()));
-			DodoServer.RebellionManager.Add(newRebellion);
+			DodoServer.ResourceManager<Rebellion>().Add(newRebellion);
 			return newRebellion;
 		}
 
 		protected override void DeleteObjectInternal(Rebellion target)
 		{
-			DodoServer.RebellionManager.Delete(target);
-		}
-
-		protected override bool IsAuthorised(User user, HttpRequest request, Rebellion target)
-		{
-			// TODO
-			return true;
+			DodoServer.ResourceManager<Rebellion>().Delete(target);
 		}
 	}
 }

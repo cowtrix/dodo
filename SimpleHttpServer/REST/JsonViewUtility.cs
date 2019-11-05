@@ -24,10 +24,22 @@ namespace SimpleHttpServer.REST
 		}
 	}
 
+	public enum EViewVisibility
+	{
+		PUBLIC,
+		OWNER,
+	}
+
 	/// <summary>
-	/// Fields and properties with this attribute will be serialized in REST api queries
+	/// Fields and properties with this attribute will be serialized in REST api queries.
 	/// </summary>
-	public class ViewAttribute : Attribute { }
+	public class ViewAttribute : Attribute {
+		public EViewVisibility Visibility { get; private set; }
+		public ViewAttribute(EViewVisibility visibility)
+		{
+			Visibility = visibility;
+		}
+	}
 
 	public static class JsonViewUtility
 	{
@@ -39,15 +51,20 @@ namespace SimpleHttpServer.REST
 		};
 
 		/// <summary>
-		/// This will generate a JSON object that represents viewable (public facing) properties of this object
+		/// This will generate a JSON object that represents viewable (public facing) properties of this object.
 		/// An object is marked as viewable with the ViewAttribute
 		/// </summary>
-		/// <returns></returns>
-		public static Dictionary<string, object> GenerateJsonView(this object obj)
+		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
+		public static Dictionary<string, object> GenerateJsonView(this object obj, EViewVisibility visibility)
 		{
 			var vals = new Dictionary<string, object>();
-			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead && p.GetCustomAttribute<ViewAttribute>() != null))
+			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
 			{
+				var attr = prop.GetCustomAttribute<ViewAttribute>();
+				if (attr == null || attr.Visibility > visibility)
+				{
+					continue;
+				}
 				// Simple case, property is a primitive type
 				if ((prop.PropertyType.IsValueType && prop.PropertyType.IsPrimitive)
 					|| m_explicitValueTypes.Contains(prop.PropertyType))
@@ -56,11 +73,16 @@ namespace SimpleHttpServer.REST
 				}
 				else	// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
 				{
-					vals.Add(prop.Name, prop.GetValue(obj).GenerateJsonView());
+					vals.Add(prop.Name, prop.GetValue(obj).GenerateJsonView(visibility));
 				}
 			}
-			foreach (var field in obj.GetType().GetFields().Where(p => p.GetCustomAttribute<ViewAttribute>() != null))
+			foreach (var field in obj.GetType().GetFields())
 			{
+				var attr = field.GetCustomAttribute<ViewAttribute>();
+				if (attr == null || attr.Visibility > visibility)
+				{
+					continue;
+				}
 				// Simple case, property is a primitive type
 				if ((field.FieldType.IsValueType && field.FieldType.IsPrimitive)
 					|| m_explicitValueTypes.Contains(field.FieldType))
@@ -69,7 +91,7 @@ namespace SimpleHttpServer.REST
 				}
 				else    // Object is a composite type (e.g. a struct or class) and so we recursively serialize it
 				{
-					vals.Add(field.Name, field.GetValue(obj).GenerateJsonView());
+					vals.Add(field.Name, field.GetValue(obj).GenerateJsonView(visibility));
 				}
 			}
 			return vals;
@@ -80,9 +102,9 @@ namespace SimpleHttpServer.REST
 		/// An object is marked as viewable with the ViewAttribute
 		/// </summary>
 		/// <returns></returns>
-		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj)
+		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj, EViewVisibility visibility)
 		{
-			return obj.Select(x => x.GenerateJsonView()).ToList();
+			return obj.Select(x => x.GenerateJsonView(visibility)).ToList();
 		}
 	}
 }
