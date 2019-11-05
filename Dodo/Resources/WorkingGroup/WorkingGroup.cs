@@ -1,4 +1,6 @@
-﻿using SimpleHttpServer.REST;
+﻿using Dodo.Users;
+using SimpleHttpServer.REST;
+using System.Collections.Concurrent;
 
 namespace Dodo.Rebellions
 {
@@ -11,5 +13,6 @@ namespace Dodo.Rebellions
 		[View]
 		public string Name { get; private set; }
 		public override string ResourceURL => $"{Rebellion.ResourceURL}/wg/{Name}".StripForURL();
+		public ConcurrentBag<ResourceReference<User>> Members = new ConcurrentBag<ResourceReference<User>>();
 	}
 }

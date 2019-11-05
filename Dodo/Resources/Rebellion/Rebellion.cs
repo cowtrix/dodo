@@ -17,9 +17,9 @@ namespace Dodo.Rebellions
 		[View]
 		public GeoLocation Location;
 		[View]
-		public ConcurrentBag<ResourceReferece<WorkingGroup>> WorkingGroups = new ConcurrentBag<ResourceReferece<WorkingGroup>>();
+		public ConcurrentBag<ResourceReference<WorkingGroup>> WorkingGroups = new ConcurrentBag<ResourceReference<WorkingGroup>>();
 		[View]
-		public ConcurrentBag<Guid> LocalGroups = new ConcurrentBag<Guid>();
+		public ConcurrentBag<ResourceReference<LocalGroup>> LocalGroups = new ConcurrentBag<ResourceReference<LocalGroup>>();
 
 		public Rebellion (User creator, string rebellionName, GeoLocation location)
 		{
