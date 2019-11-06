@@ -12,7 +12,7 @@ namespace Dodo.Rebellions
 {
 	public class RebellionRESTHandler : DodoRESTHandler<Rebellion>
 	{
-		const string URL_REGEX = "rebellions/(?:^/)*";
+		const string URL_REGEX = Rebellion.ROOT + "/(?:^/)*";
 
 		[Route("Create a new rebellion", "newrebellion", EHTTPRequestType.POST)]
 		public HttpResponse Register(HttpRequest request)
@@ -20,7 +20,7 @@ namespace Dodo.Rebellions
 			return CreateObject(request);
 		}
 
-		[Route("List all rebellions", "rebellions", EHTTPRequestType.GET)]
+		[Route("List all rebellions", "/^rebellions$/", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
 			return HttpBuilder.OK(DodoServer.ResourceManager<Rebellion>().Get(x => true).ToList().GenerateJsonView((EViewVisibility.PUBLIC)));

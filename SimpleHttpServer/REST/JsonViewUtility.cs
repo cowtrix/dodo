@@ -26,6 +26,7 @@ namespace SimpleHttpServer.REST
 
 	public enum EViewVisibility
 	{
+		HIDDEN,
 		PUBLIC,
 		OWNER,
 	}

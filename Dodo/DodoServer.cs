@@ -1,6 +1,8 @@
 ﻿using Common;
+using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Users;
+using Dodo.WorkingGroups;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Generic;
@@ -27,6 +29,8 @@ namespace Dodo
 			{
 				{ typeof(User), new UserManager() },
 				{ typeof(Rebellion), new RebellionManager() },
+				{ typeof(LocalGroup), new LocalGroupManager() },
+				{ typeof(WorkingGroup), new WorkingGroupManager() },
 			};
 			/*m_backupManager = new BackupManager();
 			foreach(var rm in m_resourceManagers)

@@ -56,10 +56,14 @@
     <Compile Include="Resources\DodoResourceManager.cs" />
     <Compile Include="Resources\DodoRESTHandler.cs" />
     <Compile Include="Resources\LocalGroup\LocalGroup.cs" />
+    <Compile Include="Resources\LocalGroup\LocalGroupManager.cs" />
+    <Compile Include="Resources\LocalGroup\LocalGroupRESTHandler.cs" />
     <Compile Include="Resources\Rebellion\Rebellion.cs" />
     <Compile Include="Resources\Rebellion\RebellionManager.cs" />
     <Compile Include="Resources\Rebellion\RebellionRESTHandler.cs" />
     <Compile Include="Resources\Users\WebPortalAuth.cs" />
+    <Compile Include="Resources\WorkingGroup\WorkingGroupManager.cs" />
+    <Compile Include="Resources\WorkingGroup\WorkingGroupRESTHandler.cs" />
     <Compile Include="Resources\WorkingGroup\WorkingGroup.cs" />
     <Compile Include="Resources\Users\User.cs" />
     <Compile Include="Resources\Users\UserManager.cs" />

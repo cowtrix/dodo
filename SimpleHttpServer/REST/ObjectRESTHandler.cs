@@ -76,14 +76,14 @@ namespace SimpleHttpServer.REST
 		/// <returns>The view of the object that has been updated.</returns>
 		protected virtual HttpResponse UpdateObject(HttpRequest request)
 		{
-			if (!IsAuthorised(request, out var view))
-			{
-				throw HTTPException.FORBIDDEN;
-			}
 			var target = GetResource(request.Url);
 			if(target == null)
 			{
 				throw HTTPException.NOT_FOUND;
+			}
+			if (!IsAuthorised(request, out var view))
+			{
+				throw HTTPException.FORBIDDEN;
 			}
 			var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.Content);
 			target.PatchObject(values);

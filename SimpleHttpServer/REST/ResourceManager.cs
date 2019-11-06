@@ -10,7 +10,7 @@ namespace SimpleHttpServer.REST
 {
 	public interface IRESTResource
 	{
-		Guid UUID { get; }
+		Guid GUID { get; }
 		string ResourceURL { get; }
 	}
 
@@ -24,30 +24,32 @@ namespace SimpleHttpServer.REST
 
 		[NoPatch]
 		[View(EViewVisibility.PUBLIC)]
-		public Guid UUID { get; private set; }
+		public Guid GUID { get; private set; }
 		[View(EViewVisibility.PUBLIC)]
 		public abstract string ResourceURL { get; }
 
 		public Resource()
 		{
-			UUID = Guid.NewGuid();
+			GUID = Guid.NewGuid();
 		}
 
 		public override bool Equals(object obj)
 		{
 			var resource = obj as Resource;
 			return resource != null &&
-				   UUID.Equals(resource.UUID) &&
+				   GUID.Equals(resource.GUID) &&
 				   ResourceURL == resource.ResourceURL;
 		}
 
 		public override int GetHashCode()
 		{
 			var hashCode = 1286416240;
-			hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(UUID);
+			hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(GUID);
 			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ResourceURL);
 			return hashCode;
 		}
+
+		public virtual void OnDestroy() { }
 	}
 
 	public interface IResourceManager : IBackup
@@ -89,17 +91,18 @@ namespace SimpleHttpServer.REST
 
 		public virtual bool Add(T newObject)
 		{
-			if(ResourceUtility.GetResourceByGuid(newObject.UUID) != null || Get(x => x.ResourceURL == newObject.ResourceURL).Any())
+			if(ResourceUtility.GetResourceByGuid(newObject.GUID) != null || Get(x => x.ResourceURL == newObject.ResourceURL).Any())
 			{
 				throw HTTPException.CONFLICT;
 			}
-			return InternalData.Entries.TryAdd(newObject.UUID, newObject);
+			return InternalData.Entries.TryAdd(newObject.GUID, newObject);
 		}
 
 		public virtual bool Delete(T objToDelete)
 		{
-			return InternalData.Entries.TryRemove(objToDelete.UUID, out var deletedEntry)
-				&& InternalData.Archive.TryAdd(deletedEntry.UUID, deletedEntry);
+			objToDelete.OnDestroy();
+			return InternalData.Entries.TryRemove(objToDelete.GUID, out var deletedEntry)
+				&& InternalData.Archive.TryAdd(deletedEntry.GUID, deletedEntry);
 		}
 
 		public virtual T GetSingle(Func<T, bool> selector)

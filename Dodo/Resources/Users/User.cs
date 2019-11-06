@@ -6,7 +6,8 @@ namespace Dodo.Users
 {
 	public class User : DodoResource
 	{
-		public override string ResourceURL { get { return $"u/{WebAuth.Username.StripForURL()}"; } }
+		public const string ROOT = "u";
+		public override string ResourceURL { get { return $"{ROOT}/{WebAuth.Username.StripForURL()}"; } }
 
 		[NoPatch]
 		[View(EViewVisibility.PUBLIC)]
@@ -14,17 +15,23 @@ namespace Dodo.Users
 		[View(EViewVisibility.OWNER)]
 		public string Email;
 
-		public User() : base()
+		public User() : base(null)
 		{ }
 
-		public User(WebPortalAuth auth) : base()
+		public User(WebPortalAuth auth) : base(null)
 		{
 			WebAuth = auth;
 		}
 
 		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
 		{
-			throw new System.NotImplementedException();
+			if(requestOwner == this)
+			{
+				visibility = EViewVisibility.OWNER;
+				return true;
+			}
+			visibility = EViewVisibility.HIDDEN;
+			return false;
 		}
 	}
 }

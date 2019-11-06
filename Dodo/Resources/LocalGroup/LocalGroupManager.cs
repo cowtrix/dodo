@@ -7,10 +7,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
-namespace Dodo.Rebellions
+namespace Dodo.LocalGroups
 {
-	public class RebellionManager : DodoResourceManager<Rebellion>
+	public class LocalGroupManager : DodoResourceManager<LocalGroup>
 	{
-		public override string BackupPath => "rebellions";
+		public override string BackupPath => "localgroups";
 	}
 }

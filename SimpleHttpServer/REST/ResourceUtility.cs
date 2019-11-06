@@ -14,7 +14,7 @@ namespace SimpleHttpServer.REST
 		public T Value { get { return ResourceUtility.GetResourceByGuid<T>(Guid); } }
 		public ResourceReference(T resource)
 		{
-			Guid = resource.UUID;
+			Guid = resource != null ? resource.GUID : default;
 		}
 
 		public override bool Equals(object obj)
@@ -56,33 +56,33 @@ namespace SimpleHttpServer.REST
 		{
 			return ResourceManagers.Where(x => x.Key.GetType().GenericTypeArguments.FirstOrDefault() == typeof(T))
 				.Select(x => x.Key as ResourceManager<T>)
-				.Select(x => x.GetSingle(resource => resource.UUID == guid))
+				.Select(x => x.GetSingle(resource => resource.GUID == guid))
 				.SingleOrDefault();
 		}
 
 		public static Resource GetResourceByGuid(this Guid guid)
 		{
-			return ResourceManagers.Select(x => x.Key.Get(resource => resource.UUID == guid))
+			return ResourceManagers.Select(x => x.Key.Get(resource => resource.GUID == guid))
 				.ConcatenateCollection()
 				.SingleOrDefault() as Resource;
 		}
 
 		public static IResourceManager GetManagerForResource(this Guid guid)
 		{
-			return ResourceManagers.SingleOrDefault(x => x.Key.Get(resource => resource.UUID == guid).Any()).Key;
+			return ResourceManagers.SingleOrDefault(x => x.Key.Get(resource => resource.GUID == guid).Any()).Key;
 		}
 
 		public static IResourceManager GetManagerForResource(this Resource resource)
 		{
-			return GetManagerForResource(resource.UUID);
+			return GetManagerForResource(resource.GUID);
 		}
 
 		public static bool IsAuthorized<T>(HttpRequest request, T resource, out EViewVisibility visibility) where T:Resource
 		{
-			var rm = GetManagerForResource(resource.UUID);
+			var rm = GetManagerForResource(resource.GUID);
 			if(rm == null)
 			{
-				throw new Exception($"Orphan resource {resource} with guid {resource.UUID}");
+				throw new Exception($"Orphan resource {resource} with guid {resource.GUID}");
 			}
 			return rm.IsAuthorised(request, resource, out visibility);
 		}

@@ -77,7 +77,17 @@ namespace Common
 				{
 					throw new Exception($"Cannot patch property {targetProp.Name}");
 				}
-				targetProp.SetValue(targetObject, val.Value);
+				try
+				{
+					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString());
+					var subTargetObject = targetProp.GetValue(targetObject);
+					subTargetObject = subTargetObject.PatchObject(subValues);
+					targetProp.SetValue(targetObject, subTargetObject);
+				}
+				catch
+				{
+					targetProp.SetValue(targetObject, val.Value);
+				}
 			}
 			var targetFields = targetObject.GetType().GetFields();
 			foreach (var val in values)

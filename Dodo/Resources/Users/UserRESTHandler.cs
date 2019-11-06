@@ -10,7 +10,7 @@ namespace Dodo.Users
 {
 	public class UserRESTHandler : DodoRESTHandler<User>
 	{
-		const string URL_REGEX = "u/(?:^/)*";
+		const string URL_REGEX = User.ROOT + "/(?:^/)*";
 
 		[Route("Register a new user", "register", EHTTPRequestType.POST)]
 		public HttpResponse Register(HttpRequest request)
