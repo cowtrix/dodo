@@ -48,7 +48,7 @@ namespace Dodo
 				{
 					try
 					{
-						if (!Guid.TryParse(request.Url.Substring("/resources/".Length), out var guid))
+						if (!Guid.TryParse(request.Url.Substring("resources/".Length), out var guid))
 						{
 							throw HTTPException.NOT_FOUND;
 						}

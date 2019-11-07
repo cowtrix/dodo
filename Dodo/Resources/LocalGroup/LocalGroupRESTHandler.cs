@@ -12,15 +12,16 @@ namespace Dodo.LocalGroups
 {
 	public class LocalGroupRESTHandler : DodoRESTHandler<LocalGroup>
 	{
+		const string CREATION_URL = "newlocalgroup";
 		const string URL_REGEX = LocalGroup.ROOT + "/(?:^/)*";
 
-		[Route("Create a new local group", "newlocalgroup", EHTTPRequestType.POST)]
+		[Route("Create a new local group", "^" + CREATION_URL, EHTTPRequestType.POST)]
 		public HttpResponse CreateLocalGroup(HttpRequest request)
 		{
 			return CreateObject(request);
 		}
 
-		[Route("List all local groups", "/^localgroups$/", EHTTPRequestType.GET)]
+		[Route("List all local groups", "^localgroups$", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
 			return HttpBuilder.OK(DodoServer.ResourceManager<LocalGroup>().Get(x => true).ToList().GenerateJsonView((EViewVisibility.PUBLIC)));

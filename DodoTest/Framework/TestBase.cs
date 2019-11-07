@@ -6,10 +6,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using SimpleHttpServer.REST;
 using System;
 using System.Collections.Generic;
 
-namespace DodoTest
+namespace RESTTests
 {
 	public static class AssertX
 	{
@@ -110,6 +111,33 @@ namespace DodoTest
 				throw new Exception(response);
 			}
 			return JsonConvert.DeserializeObject<JObject>(response);
+		}
+
+		protected JObject RequestJSON(string url, Method method, object data = null, string user = null, string password = null)
+		{
+			var request = new RestRequest(url, method);
+			AuthoriseRequest(request, user ?? CurrentLogin, password ?? CurrentPassword);
+			if (data != null)
+			{
+				request.AddJsonBody(data);
+			}
+			var response = RestClient.Execute(request).Content;
+			if (!response.IsValidJson())
+			{
+				throw new Exception(response);
+			}
+			return JsonConvert.DeserializeObject<JObject>(response);
+		}
+
+		protected IRestResponse Request(string url, Method method, object data = null)
+		{
+			var request = new RestRequest(url, method);
+			AuthoriseRequest(request, CurrentLogin, CurrentPassword);
+			if (data != null)
+			{
+				request.AddJsonBody(data);
+			}
+			return RestClient.Execute(request);
 		}
 
 		protected static void AuthoriseRequest(RestRequest request, string user, string password)

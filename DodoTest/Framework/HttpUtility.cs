@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace DodoTest
+namespace RESTTests
 {
 	public class HttpUtility
 	{

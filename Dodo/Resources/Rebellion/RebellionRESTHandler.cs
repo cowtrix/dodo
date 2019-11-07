@@ -20,7 +20,7 @@ namespace Dodo.Rebellions
 			return CreateObject(request);
 		}
 
-		[Route("List all rebellions", "/^rebellions$/", EHTTPRequestType.GET)]
+		[Route("List all rebellions", "^rebellions$", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
 			return HttpBuilder.OK(DodoServer.ResourceManager<Rebellion>().Get(x => true).ToList().GenerateJsonView((EViewVisibility.PUBLIC)));

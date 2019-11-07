@@ -22,7 +22,7 @@ namespace Dodo.WorkingGroups
 			return CreateObject(request);
 		}
 
-		[Route("List all working groups", "/^workinggroups$/", EHTTPRequestType.GET)]
+		[Route("List all working groups", "^workinggroups$", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
 			return HttpBuilder.OK(DodoServer.ResourceManager<WorkingGroup>().Get(x => true).ToList().GenerateJsonView((EViewVisibility.PUBLIC)));

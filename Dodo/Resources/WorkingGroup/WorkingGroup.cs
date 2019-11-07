@@ -17,6 +17,8 @@ namespace Dodo.WorkingGroups
 		[View(EViewVisibility.PUBLIC)]
 		[NoPatch]
 		public string Name { get; private set; }
+		[View(EViewVisibility.PUBLIC)]
+		public string Mandate;
 		public override string ResourceURL => $"{ROOT}/{Rebellion.RebellionName.StripForURL()}/{Name.StripForURL()}";
 		public ConcurrentBag<ResourceReference<User>> Members = new ConcurrentBag<ResourceReference<User>>();
 	}
