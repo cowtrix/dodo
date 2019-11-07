@@ -37,7 +37,7 @@ namespace Dodo
 			{
 				m_backupManager.RegisterBackup(rm.Value);
 			}*/
-			m_restServer = new DodoRESTServer(8080);
+			m_restServer = new DodoRESTServer(443, "server.pfx", "password");
 			m_restServer.Start();
 		}
 

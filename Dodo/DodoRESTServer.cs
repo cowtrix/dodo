@@ -37,7 +37,7 @@ namespace Dodo
 			return user;
 		}
 
-		public DodoRESTServer(int port) : base(port)
+		public DodoRESTServer(int port, string certificate, string sslPassword) : base(port, certificate, sslPassword)
 		{
 			Routes.Add(new Route()
 			{

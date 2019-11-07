@@ -35,6 +35,10 @@ namespace Common
 			}
 			Error(exception.Message, true);
 			Error(exception.StackTrace, true);
+			if (exception.InnerException != null)
+			{
+				Exception(exception.InnerException, "Inner exception: ", nolog);
+			}
 		}
 
 		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black, bool writeToLog = true)

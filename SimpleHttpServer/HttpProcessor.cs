@@ -1,13 +1,15 @@
 ﻿// Copyright (C) 2016 by David Jeske, Barend Erasmus and donated to the public domain
 
 using Common;
-using log4net;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -34,63 +36,41 @@ namespace SimpleHttpServer
 		#endregion
 
 		#region Public Methods
-		public void HandleClient(TcpClient tcpClient)
+		public void HandleClient(TcpClient client)
 		{
-			Stream inputStream = GetInputStream(tcpClient);
-			Stream outputStream = GetOutputStream(tcpClient);
-
+			// A client has connected. Create the
+			// SslStream using the client's network stream.
+			var sslStream = new SslStream(client.GetStream(), false);
+			// Authenticate the server but don't require the client to authenticate.
 			try
 			{
-				HttpRequest request = GetRequest(inputStream, outputStream);
-				// route and handle the request...
-				HttpResponse response = RouteRequest(inputStream, outputStream, request);
-				//Logger.Debug("HTTPSERVER: {0} {1}",response.StatusCode,request.Url);
-				// build a default response for errors
-				if (response.Content == null)
-				{
-					if (response.StatusCode != "200")
-					{
-						response.ContentAsUTF8 = string.Format("{0} {1} <p> {2}", response.StatusCode, request.Url, response.ReasonPhrase);
-					}
-				}
-				WriteResponse(outputStream, response);
+				sslStream.AuthenticateAsServer(HttpServer.ServerCertificate, clientCertificateRequired: false, checkCertificateRevocation: true);
+				// Set timeouts for the read and write to 5 seconds.
+				sslStream.ReadTimeout = 500000;			// TODO set to sane values
+				sslStream.WriteTimeout = 500000;
+				// Read a message from the client.
+				var request = ReadMessage(sslStream);
+
+				// Write a message to the client.
+				var response = RouteRequest(request);
+				WriteResponse(sslStream, response);
 			}
-			catch(Exception e)
+			catch (AuthenticationException e)
 			{
-				Logger.Exception(e);
+				Logger.Exception(e, "Authentication failed - closing the connection.");
+				sslStream.Close();
+				client.Close();
+				return;
 			}
 			finally
 			{
-				outputStream.Flush();
-				outputStream.Close();
-				outputStream = null;
-
-				inputStream.Close();
-				inputStream = null;
+				// The client stream will be closed with the sslStream
+				// because we specified this behavior when creating
+				// the sslStream.
+				sslStream.Close();
+				client.Close();
 			}
-
 		}
-
-		// this formats the HTTP response...
-		private static void WriteResponse(Stream stream, HttpResponse response) {
-			if (response.Content == null) {
-				response.Content = new byte[]{};
-			}
-
-			// default to text/html content type
-			if (!response.Headers.ContainsKey("Content-Type")) {
-				response.Headers["Content-Type"] = "text/html";
-			}
-
-			response.Headers["Content-Length"] = response.Content.Length.ToString();
-
-			Write(stream, string.Format("HTTP/1.0 {0} {1}\r\n",response.StatusCode,response.ReasonPhrase));
-			Write(stream, string.Join("\r\n", response.Headers.Select(x => string.Format("{0}: {1}", x.Key, x.Value))));
-			Write(stream, "\r\n\r\n");
-
-			stream.Write(response.Content, 0, response.Content.Length);
-		}
-
 		public void AddRoute(Route route)
 		{
 			this.Routes.Add(route);
@@ -99,6 +79,51 @@ namespace SimpleHttpServer
 		#endregion
 
 		#region Private Methods
+		static HttpRequest ReadMessage(SslStream sslStream)
+		{
+			// Read the  message sent by the client.
+			var ms = new MemoryStream();
+			var sm = new StreamWriter(ms);
+			var chars = ReadFromSSlStream(sslStream);
+			sm.Write(chars, 0, chars.Length);
+			sm.Flush();
+			ms.Position = 0;
+			return GetRequest(ms, sslStream);
+		}
+
+		static char[] ReadFromSSlStream(SslStream sslStream)
+		{
+			byte[] buffer = new byte[2048];
+			var bytes = sslStream.Read(buffer, 0, buffer.Length);
+			// Use Decoder class to convert from bytes to UTF8
+			// in case a character spans two buffers.
+			Decoder decoder = Encoding.UTF8.GetDecoder();
+			char[] chars = new char[decoder.GetCharCount(buffer, 0, bytes)];
+			decoder.GetChars(buffer, 0, bytes, chars, 0);
+			return chars;
+		}
+
+		private static void WriteResponse(Stream stream, HttpResponse response)
+		{
+			if (response.Content == null)
+			{
+				response.Content = new byte[] { };
+			}
+
+			// default to text/html content type
+			if (!response.Headers.ContainsKey("Content-Type"))
+			{
+				response.Headers["Content-Type"] = "text/html";
+			}
+
+			response.Headers["Content-Length"] = response.Content.Length.ToString();
+
+			Write(stream, string.Format("HTTP/1.0 {0} {1}\r\n", response.StatusCode, response.ReasonPhrase));
+			Write(stream, string.Join("\r\n", response.Headers.Select(x => string.Format("{0}: {1}", x.Key, x.Value))));
+			Write(stream, "\r\n\r\n");
+
+			stream.Write(response.Content, 0, response.Content.Length);
+		}
 
 		private static string Readline(Stream stream)
 		{
@@ -121,19 +146,8 @@ namespace SimpleHttpServer
 			stream.Write(bytes, 0, bytes.Length);
 		}
 
-		protected virtual Stream GetOutputStream(TcpClient tcpClient)
+		protected virtual HttpResponse RouteRequest(HttpRequest request)
 		{
-			return tcpClient.GetStream();
-		}
-
-		protected virtual Stream GetInputStream(TcpClient tcpClient)
-		{
-			return tcpClient.GetStream();
-		}
-
-		protected virtual HttpResponse RouteRequest(Stream inputStream, Stream outputStream, HttpRequest request)
-		{
-
 			List<Route> routes = this.Routes.Where(x => Regex.Match(request.Url, x.UrlRegex).Success).ToList();
 
 			if (!routes.Any())
@@ -165,10 +179,9 @@ namespace SimpleHttpServer
 				Logger.Exception(ex);
 				return HttpBuilder.InternalServerError();
 			}
-
 		}
 
-		private HttpRequest GetRequest(Stream inputStream, Stream outputStream)
+		private static HttpRequest GetRequest(Stream inputStream, SslStream sslStream)
 		{
 			//Read Request Line
 			string request = Readline(inputStream);
@@ -207,7 +220,6 @@ namespace SimpleHttpServer
 				string value = line.Substring(pos, line.Length - pos);
 				headers.Add(name, value);
 			}
-
 			string content = null;
 			if (headers.ContainsKey("Content-Length"))
 			{
@@ -215,10 +227,22 @@ namespace SimpleHttpServer
 				int bytesLeft = totalBytes;
 				byte[] bytes = new byte[totalBytes];
 
-				while(bytesLeft > 0)
+				var sslBody = sslStream.Read(buffer, 0, buffer.Length);
+				// Use Decoder class to convert from bytes to UTF8
+				// in case a character spans two buffers.
+				Decoder decoder = Encoding.UTF8.GetDecoder();
+				char[] chars = new char[decoder.GetCharCount(buffer, 0, bytes)];
+				decoder.GetChars(buffer, 0, bytes, chars, 0);
+				sm.Write(chars, 0, chars.Length);
+
+				while (bytesLeft > 0)
 				{
 					byte[] buffer = new byte[bytesLeft > 1024? 1024 : bytesLeft];
 					int n = inputStream.Read(buffer, 0, buffer.Length);
+					if(n == 0)
+					{
+						throw new Exception("Unexpected end of stream");
+					}
 					buffer.CopyTo(bytes, totalBytes - bytesLeft);
 
 					bytesLeft -= n;
@@ -226,8 +250,7 @@ namespace SimpleHttpServer
 
 				content = Encoding.ASCII.GetString(bytes);
 			}
-
-
+			inputStream.Dispose();
 			return new HttpRequest(method, url, content, headers);
 		}
 

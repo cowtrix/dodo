@@ -1,7 +1,6 @@
 ﻿// Copyright (C) 2016 by David Jeske, Barend Erasmus and donated to the public domain
 
 using Common;
-using log4net;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using System;
@@ -10,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
 namespace SimpleHttpServer
@@ -19,6 +19,7 @@ namespace SimpleHttpServer
 	{
 		#region Fields
 
+		public static X509Certificate ServerCertificate = null;
 		public int Port { get; private set; }
 		private TcpListener Listener;
 		private HttpProcessor Processor;
@@ -26,17 +27,16 @@ namespace SimpleHttpServer
 
 		#endregion
 
-		private static readonly ILog log = LogManager.GetLogger(typeof(HttpServer));
-
 		#region Public Methods
-		public HttpServer(int port, List<Route> routes)
+		public HttpServer(int port, List<Route> routes, string certificate, string certificatePassword)
 		{
-			this.Port = port;
-			this.Processor = new HttpProcessor();
+			ServerCertificate = new X509Certificate2(certificate, certificatePassword);
+			Port = port;
+			Processor = new HttpProcessor();
 
 			foreach (var route in routes)
 			{
-				this.Processor.AddRoute(route);
+				Processor.AddRoute(route);
 			}
 		}
 
@@ -59,14 +59,14 @@ namespace SimpleHttpServer
 
 			Listener = new TcpListener(IPAddress.Any, Port);
 			Listener.Start();
-			while (this.IsActive)
+			while (IsActive)
 			{
 				TcpClient s = this.Listener.AcceptTcpClient();
 				Thread thread = new Thread(() =>
 				{
 					try
 					{
-						this.Processor.HandleClient(s);
+						Processor.HandleClient(s);
 					}
 					catch(Exception e)
 					{
