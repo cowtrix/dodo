@@ -12,10 +12,17 @@ namespace Dodo
 		protected override bool IsAuthorised(HttpRequest request, out EViewVisibility visibility)
 		{
 			var target = GetResource(request.Url);
-			if(target == null && request.Method == EHTTPRequestType.POST)
+			if(target == null)
 			{
 				// TODO
-				visibility = EViewVisibility.OWNER;
+				if (request.Method == EHTTPRequestType.POST)
+				{
+					visibility = EViewVisibility.OWNER;
+				}
+				else
+				{
+					visibility = EViewVisibility.HIDDEN;
+				}
 				return true;
 			}
 			var rm = ResourceUtility.GetManagerForResource(target);

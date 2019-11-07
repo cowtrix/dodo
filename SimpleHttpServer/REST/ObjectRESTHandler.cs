@@ -86,6 +86,10 @@ namespace SimpleHttpServer.REST
 				throw HTTPException.FORBIDDEN;
 			}
 			var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.Content);
+			if(values == null)
+			{
+				throw new HTTPException("Invalid JSON body", 400);
+			}
 			target.PatchObject(values);
 			return HttpBuilder.OK(target.GenerateJsonView(view));
 		}

@@ -19,14 +19,16 @@ namespace RESTTests
 		[TestMethod]
 		public virtual void CanCreate()
 		{
-			RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			Assert.IsNotNull(createdObj.Value<string>("GUID"));
 		}
 
 		[TestMethod]
 		public virtual void CanGet()
 		{
 			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			RequestJSON(obj.Value<string>("ResourceURL"), Method.GET);
+			var resourceObj = RequestJSON(obj.Value<string>("ResourceURL"), Method.GET);
+			Assert.IsNotNull(resourceObj.Value<string>("GUID"));
 		}
 
 		[TestMethod]
@@ -41,7 +43,8 @@ namespace RESTTests
 		public virtual void CanGetByResource()
 		{
 			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			RequestJSON("resources/" + obj.Value<string>("GUID"), Method.GET);
+			var resourceObj = RequestJSON("resources/" + obj.Value<string>("GUID"), Method.GET);
+			Assert.AreEqual(resourceObj.Value<string>("GUID"), obj.Value<string>("GUID"));
 		}
 
 		public abstract object GetPatchSchema();
