@@ -30,7 +30,7 @@ namespace SimpleHttpServer
 		#region Public Methods
 		public HttpServer(int port, List<Route> routes, string certificate, string certificatePassword)
 		{
-			ServerCertificate = new X509Certificate2(certificate, certificatePassword);
+			ServerCertificate = ServerCertificate ?? new X509Certificate2(certificate, certificatePassword);
 			Port = port;
 			Processor = new HttpProcessor();
 

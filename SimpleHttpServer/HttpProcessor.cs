@@ -49,7 +49,7 @@ namespace SimpleHttpServer
 				sslStream.ReadTimeout = 500000;			// TODO set to sane values
 				sslStream.WriteTimeout = 500000;
 				// Read a message from the client.
-				var request = ReadMessage(sslStream);
+				var request = GetRequest(sslStream);
 
 				// Write a message to the client.
 				var response = RouteRequest(request);
@@ -79,28 +79,23 @@ namespace SimpleHttpServer
 		#endregion
 
 		#region Private Methods
-		static HttpRequest ReadMessage(SslStream sslStream)
+		static char[] ReadFromSSlStream(SslStream sslStream, int totalSize = 1)
 		{
-			// Read the  message sent by the client.
-			var ms = new MemoryStream();
-			var sm = new StreamWriter(ms);
-			var chars = ReadFromSSlStream(sslStream);
-			sm.Write(chars, 0, chars.Length);
-			sm.Flush();
-			ms.Position = 0;
-			return GetRequest(ms, sslStream);
-		}
-
-		static char[] ReadFromSSlStream(SslStream sslStream)
-		{
-			byte[] buffer = new byte[2048];
-			var bytes = sslStream.Read(buffer, 0, buffer.Length);
-			// Use Decoder class to convert from bytes to UTF8
-			// in case a character spans two buffers.
-			Decoder decoder = Encoding.UTF8.GetDecoder();
-			char[] chars = new char[decoder.GetCharCount(buffer, 0, bytes)];
-			decoder.GetChars(buffer, 0, bytes, chars, 0);
-			return chars;
+			int chunkSize = 2048;
+			byte[] buffer = new byte[chunkSize];
+			List<char> result = new List<char>();
+			while(totalSize > 0)
+			{
+				var bytes = sslStream.Read(buffer, 0, buffer.Length);
+				totalSize -= bytes;
+				// Use Decoder class to convert from bytes to UTF8
+				// in case a character spans two buffers.
+				Decoder decoder = Encoding.UTF8.GetDecoder();
+				char[] chars = new char[decoder.GetCharCount(buffer, 0, bytes)];
+				decoder.GetChars(buffer, 0, bytes, chars, 0);
+				result.AddRange(chars);
+			}
+			return result.ToArray();
 		}
 
 		private static void WriteResponse(Stream stream, HttpResponse response)
@@ -181,77 +176,79 @@ namespace SimpleHttpServer
 			}
 		}
 
-		private static HttpRequest GetRequest(Stream inputStream, SslStream sslStream)
+		private static HttpRequest GetRequest(SslStream sslStream)
 		{
-			//Read Request Line
-			string request = Readline(inputStream);
-
-			string[] tokens = request.Split(' ');
-			if (tokens.Length != 3)
+			// Read the  message sent by the client.
+			using (var inputStream = new MemoryStream())
+			using (var streamwriter = new StreamWriter(inputStream))
 			{
-				throw new Exception("invalid http request line");
-			}
-			string method = tokens[0].ToUpper();
-			string url = tokens[1];
-			string protocolVersion = tokens[2];
+				var chars = ReadFromSSlStream(sslStream);
+				streamwriter.Write(chars, 0, chars.Length);
+				streamwriter.Flush();
+				inputStream.Position = 0;
 
-			//Read Headers
-			Dictionary<string, string> headers = new Dictionary<string, string>();
-			string line;
-			while ((line = Readline(inputStream)) != null)
-			{
-				if (line.Equals(""))
+				//Read Request Line
+				string request = Readline(inputStream);
+
+				string[] tokens = request.Split(' ');
+				if (tokens.Length != 3)
 				{
-					break;
+					throw new Exception("invalid http request line");
 				}
+				string method = tokens[0].ToUpper();
+				string url = tokens[1];
+				string protocolVersion = tokens[2];
 
-				int separator = line.IndexOf(':');
-				if (separator == -1)
+				//Read Headers
+				Dictionary<string, string> headers = new Dictionary<string, string>();
+				string line;
+				while ((line = Readline(inputStream)) != null)
 				{
-					throw new Exception("invalid http header line: " + line);
-				}
-				string name = line.Substring(0, separator);
-				int pos = separator + 1;
-				while ((pos < line.Length) && (line[pos] == ' '))
-				{
-					pos++;
-				}
-
-				string value = line.Substring(pos, line.Length - pos);
-				headers.Add(name, value);
-			}
-			string content = null;
-			if (headers.ContainsKey("Content-Length"))
-			{
-				int totalBytes = Convert.ToInt32(headers["Content-Length"]);
-				int bytesLeft = totalBytes;
-				byte[] bytes = new byte[totalBytes];
-
-				var sslBody = sslStream.Read(buffer, 0, buffer.Length);
-				// Use Decoder class to convert from bytes to UTF8
-				// in case a character spans two buffers.
-				Decoder decoder = Encoding.UTF8.GetDecoder();
-				char[] chars = new char[decoder.GetCharCount(buffer, 0, bytes)];
-				decoder.GetChars(buffer, 0, bytes, chars, 0);
-				sm.Write(chars, 0, chars.Length);
-
-				while (bytesLeft > 0)
-				{
-					byte[] buffer = new byte[bytesLeft > 1024? 1024 : bytesLeft];
-					int n = inputStream.Read(buffer, 0, buffer.Length);
-					if(n == 0)
+					if (line.Equals(""))
 					{
-						throw new Exception("Unexpected end of stream");
+						break;
 					}
-					buffer.CopyTo(bytes, totalBytes - bytesLeft);
 
-					bytesLeft -= n;
+					int separator = line.IndexOf(':');
+					if (separator == -1)
+					{
+						throw new Exception("invalid http header line: " + line);
+					}
+					string name = line.Substring(0, separator);
+					int pos = separator + 1;
+					while ((pos < line.Length) && (line[pos] == ' '))
+					{
+						pos++;
+					}
+
+					string value = line.Substring(pos, line.Length - pos);
+					headers.Add(name, value);
 				}
-
-				content = Encoding.ASCII.GetString(bytes);
+				string content = null;
+				if (headers.ContainsKey("Content-Length"))
+				{
+					int totalBytes = Convert.ToInt32(headers["Content-Length"]);
+					int bytesLeft = totalBytes;
+					if (inputStream.Length < inputStream.Position + totalBytes)
+					{
+						streamwriter.Write(ReadFromSSlStream(sslStream, bytesLeft));
+						streamwriter.Flush();
+					}
+					byte[] bytes = new byte[totalBytes];
+					while (bytesLeft > 0)
+					{
+						byte[] buffer = new byte[bytesLeft > 1024 ? 1024 : bytesLeft];
+						int n = inputStream.Read(buffer, 0, buffer.Length);
+						if (n == 0)
+						{
+							throw new Exception("Unexpected end of stream");
+						}
+						buffer.CopyTo(bytes, totalBytes - bytesLeft);
+						bytesLeft -= n;
+					}
+				}
+				return new HttpRequest(method, url, content, headers);
 			}
-			inputStream.Dispose();
-			return new HttpRequest(method, url, content, headers);
 		}
 
 		#endregion
