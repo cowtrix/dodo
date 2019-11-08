@@ -69,7 +69,7 @@ namespace Dodo.Users
 
 		protected override User CreateFromSchema(HttpRequest request, dynamic info)
 		{
-			var newUser = new User(new WebPortalAuth(info.Username.ToString(), info.Password.ToString()));
+			var newUser = new User(new WebPortalAuth(info.Username.ToString(), info.Password.ToString()), info.Password.ToString());
 			newUser.Email = info.Email;
 			DodoServer.ResourceManager<User>().Add(newUser);
 			return newUser;

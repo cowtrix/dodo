@@ -68,6 +68,7 @@
     <Compile Include="Resources\Users\User.cs" />
     <Compile Include="Resources\Users\UserManager.cs" />
     <Compile Include="Resources\Users\UserRESTHandler.cs" />
+    <Compile Include="Utility\UserMultiSigStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -151,12 +151,13 @@ namespace RESTTests
 			{
 				request.AddJsonBody(data);
 			}
-			var response = RestClient.Execute(request).Content;
-			if (!response.IsValidJson())
+			var response = RestClient.Execute(request);
+			var content = response.Content;
+			if (!content.IsValidJson())
 			{
-				throw new Exception(response);
+				throw new Exception(content);
 			}
-			return JsonConvert.DeserializeObject<JObject>(response);
+			return JsonConvert.DeserializeObject<JObject>(content);
 		}
 
 		protected IRestResponse Request(string url, Method method, object data = null)
