@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpExtensions.cs" />
     <Compile Include="REST\JsonViewUtility.cs" />
     <Compile Include="REST\ObjectRESTHandler.cs" />
     <Compile Include="REST\ResourceManager.cs" />

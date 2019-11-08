@@ -53,7 +53,7 @@ namespace SimpleHttpServer.REST
 			{
 				throw new Exception($"Failed to deserialise JSON. Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
 			}
-			return HttpBuilder.OK(createdObject.GenerateJsonView(view));
+			return HttpBuilder.OK(createdObject.GenerateJsonView(view, password));
 		}
 
 		/// <summary>

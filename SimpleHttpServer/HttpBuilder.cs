@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace SimpleHttpServer
 {
+
 	public class HttpBuilder
 	{
 		public static HttpResponse InternalServerError()

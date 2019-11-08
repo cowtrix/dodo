@@ -8,7 +8,7 @@ namespace Dodo.Users
 	{
 		public class EncryptedData
 		{
-
+			public string PrivateString;
 		}
 
 		public const string ROOT = "u";
