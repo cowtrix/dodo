@@ -2,42 +2,11 @@
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SimpleHttpServer.REST
 {
-	public struct ResourceReference<T> where T : Resource
-	{
-		public Guid Guid;
-		public T Value { get { return ResourceUtility.GetResourceByGuid<T>(Guid); } }
-		public ResourceReference(T resource)
-		{
-			Guid = resource != null ? resource.GUID : default;
-		}
-
-		public override bool Equals(object obj)
-		{
-			return obj is ResourceReference<T> reference &&
-				   Guid.Equals(reference.Guid);
-		}
-
-		public override int GetHashCode()
-		{
-			return -737073652 + EqualityComparer<Guid>.Default.GetHashCode(Guid);
-		}
-
-		public static bool operator ==(ResourceReference<T> left, ResourceReference<T> right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(ResourceReference<T> left, ResourceReference<T> right)
-		{
-			return !(left == right);
-		}
-	}
 
 	public static class ResourceUtility
 	{
