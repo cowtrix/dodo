@@ -229,22 +229,26 @@ namespace SimpleHttpServer
 				{
 					int totalBytes = Convert.ToInt32(headers["Content-Length"]);
 					int bytesLeft = totalBytes;
+					// TODO handle chunked requests better than the below does
 					if (inputStream.Length < inputStream.Position + totalBytes)
 					{
-						streamwriter.Write(ReadFromSSlStream(sslStream, bytesLeft));
-						streamwriter.Flush();
+						content = new string(ReadFromSSlStream(sslStream, bytesLeft));
 					}
-					byte[] bytes = new byte[totalBytes];
-					while (bytesLeft > 0)
+					else
 					{
-						byte[] buffer = new byte[bytesLeft > 1024 ? 1024 : bytesLeft];
-						int n = inputStream.Read(buffer, 0, buffer.Length);
-						if (n == 0)
+						byte[] bytes = new byte[totalBytes];
+						while (bytesLeft > 0)
 						{
-							throw new Exception("Unexpected end of stream");
+							byte[] buffer = new byte[bytesLeft > 1024 ? 1024 : bytesLeft];
+							int n = inputStream.Read(buffer, 0, buffer.Length);
+							if (n == 0)
+							{
+								throw new Exception("Unexpected end of stream");
+							}
+							buffer.CopyTo(bytes, totalBytes - bytesLeft);
+							bytesLeft -= n;
 						}
-						buffer.CopyTo(bytes, totalBytes - bytesLeft);
-						bytesLeft -= n;
+						content = Encoding.ASCII.GetString(bytes);
 					}
 				}
 				return new HttpRequest(method, url, content, headers);
