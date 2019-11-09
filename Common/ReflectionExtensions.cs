@@ -63,55 +63,100 @@ namespace Common
 		/// <param name="targetObject"></param>
 		/// <param name="values"></param>
 		/// <returns></returns>
-		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values) where T : class
+		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values,
+			object requester, string passphrase) where T : class
 		{
+			if(typeof(T).IsValueType || typeof(T) == typeof(string) && values.Count == 1)
+			{
+				targetObject = (T)values.First().Value;
+				return targetObject;
+			}
+			if (targetObject is IDecryptable)
+			{
+				var decryptable = targetObject as IDecryptable;
+				if (!decryptable.TryGetValue(requester, passphrase, out var encryptedObject))
+				{
+					return targetObject;
+				}
+				encryptedObject.PatchObject(values, requester, passphrase);
+				decryptable.SetValue(encryptedObject, requester, passphrase);
+				return targetObject;
+			}
 			var targetProperties = targetObject.GetType().GetProperties();
 			foreach (var val in values)
 			{
-				var targetProp = targetProperties.FirstOrDefault(x => x.Name == val.Key);
-				if(targetProp == null)
+				var targetMember = targetProperties.FirstOrDefault(x => x.Name == val.Key);
+				if (targetMember == null)
 				{
 					continue;
 				}
-				if (targetProp.GetCustomAttribute<NoPatchAttribute>() != null)
+				if (targetMember.GetCustomAttribute<NoPatchAttribute>() != null)
 				{
-					throw new Exception($"Cannot patch property {targetProp.Name}");
+					throw new Exception($"Cannot patch field {targetMember.Name}");
+				}
+				object objToPatch = targetObject;
+				var value = targetMember.GetValue(targetObject);
+				var fieldValue = value;
+				var valueToSet = val.Value;
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.PropertyType) &&
+					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
+				{
+					// Auth is incorrect
+					continue;
 				}
 				try
 				{
 					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString());
-					var subTargetObject = targetProp.GetValue(targetObject);
-					subTargetObject = subTargetObject.PatchObject(subValues);
-					targetProp.SetValue(targetObject, subTargetObject);
+					valueToSet = value.PatchObject(subValues, requester, passphrase);
 				}
 				catch
 				{
-					targetProp.SetValue(targetObject, val.Value);
 				}
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.PropertyType))
+				{
+					var decryptable = fieldValue as IDecryptable;
+					decryptable.SetValue(valueToSet, requester, passphrase);
+					valueToSet = decryptable;
+				}
+				targetMember.SetValue(targetObject, valueToSet);
 			}
 			var targetFields = targetObject.GetType().GetFields();
 			foreach (var val in values)
 			{
-				var targetField = targetFields.FirstOrDefault(x => x.Name == val.Key);
-				if (targetField == null)
+				var targetMember = targetFields.FirstOrDefault(x => x.Name == val.Key);
+				if (targetMember == null)
 				{
 					continue;
 				}
-				if (targetField.GetCustomAttribute<NoPatchAttribute>() != null)
+				if (targetMember.GetCustomAttribute<NoPatchAttribute>() != null)
 				{
-					throw new Exception($"Cannot patch field {targetField.Name}");
+					throw new Exception($"Cannot patch field {targetMember.Name}");
+				}
+				object objToPatch = targetObject;
+				var value = targetMember.GetValue(targetObject);
+				var fieldValue = value;
+				var valueToSet = val.Value;
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.FieldType) &&
+					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
+				{
+					// Auth is incorrect
+					continue;
 				}
 				try
 				{
 					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString());
-					var subTargetObject = targetField.GetValue(targetObject);
-					subTargetObject = subTargetObject.PatchObject(subValues);
-					targetField.SetValue(targetObject, subTargetObject);
+					valueToSet = value.PatchObject(subValues, requester, passphrase);
 				}
 				catch
 				{
-					targetField.SetValue(targetObject, val.Value);
 				}
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.FieldType))
+				{
+					var decryptable = fieldValue as IDecryptable;
+					decryptable.SetValue(valueToSet, requester, passphrase);
+					valueToSet = decryptable;
+				}
+				targetMember.SetValue(targetObject, valueToSet);
 			}
 			return targetObject;
 		}

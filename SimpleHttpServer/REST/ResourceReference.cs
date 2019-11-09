@@ -11,7 +11,10 @@ namespace SimpleHttpServer.REST
 		{
 			Guid = resource != null ? resource.GUID : default;
 		}
-
+		public ResourceReference(Guid guid)
+		{
+			Guid = guid;
+		}
 		public static implicit operator T(ResourceReference<T> d) => d.Value;
 		public static explicit operator ResourceReference<T>(T b) => new ResourceReference<T>(b);
 

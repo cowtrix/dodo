@@ -1,13 +1,49 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using Common;
+using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SimpleHttpServer.REST;
 
 namespace Security
 {
 	[TestClass]
 	public class MultiSig
 	{
+		class TestEncryptedData
+		{
+			public string StringValue = "This is a test string";
+			public string StringProperty { get; set; }
+			public int IntValue = 12345;
+			public GeoLocation Location = new GeoLocation(43, 62);
+			public ResourceReference<User> UserReference = new ResourceReference<User>(Guid.NewGuid());
+			public EncryptedStore<string> EncryptedString;
+		}
+
+		[TestMethod]
+		public void CanPatch()
+		{
+			var key = "user";
+			var password = "password";
+			var data = new TestEncryptedData()
+			{
+				EncryptedString = new EncryptedStore<string>("my encrypted value", password)
+			};
+			
+			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
+			multiSig = multiSig.PatchObject(new Dictionary<string, object>()
+			{
+				{ "IntValue", 54321 },
+				{ "StringProperty", "test" },
+				{ "EncryptedString", "a new value" }
+			}, key, password);
+			data = multiSig.GetValue(key, password);
+			Assert.AreEqual(54321, data.IntValue);
+			Assert.AreEqual("test", data.StringProperty);
+			Assert.AreEqual("a new value", data.EncryptedString.GetValue(password));
+		}
+
 		[TestMethod]
 		public void IntData()
 		{

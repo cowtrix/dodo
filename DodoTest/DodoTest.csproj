@@ -74,7 +74,7 @@
     <Compile Include="REST\RebellionTests.cs" />
     <Compile Include="REST\UserTests.cs" />
     <Compile Include="REST\WorkingGroupTests.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="MultiSig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

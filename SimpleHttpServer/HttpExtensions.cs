@@ -8,7 +8,7 @@ namespace SimpleHttpServer
 	{
 		public static bool GetUserPassword(this HttpRequest request, out string username, out string password)
 		{
-			if (!request.Headers.TryGetValue(TOKEN_KEY, out var token))
+			if (!request.Headers.TryGetValue(RESTServer.TOKEN_KEY, out var token))
 			{
 				username = null;
 				password = null;

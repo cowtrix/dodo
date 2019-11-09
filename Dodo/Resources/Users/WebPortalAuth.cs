@@ -10,6 +10,7 @@ namespace Dodo.Users
 		{
 			Username = userName;
 			PasswordHash = SHA256Utility.SHA256(password);
+			PassPhrase = new EncryptedStore<string>(Guid.NewGuid().ToString(), password);
 		}
 
 		/// <summary>
@@ -23,9 +24,17 @@ namespace Dodo.Users
 		/// </summary>
 		public string PasswordHash { get; private set; }
 
-		public bool Challenge(string password)
+		public EncryptedStore<string> PassPhrase;
+
+		public bool Challenge(string password, out string passphrase)
 		{
-			return SHA256Utility.SHA256(password) == PasswordHash;
+			if(SHA256Utility.SHA256(password) != PasswordHash)
+			{
+				passphrase = null;
+				return false;
+			}
+			passphrase = PassPhrase.GetValue(password);
+			return true;
 		}
 
 		public void Validate()

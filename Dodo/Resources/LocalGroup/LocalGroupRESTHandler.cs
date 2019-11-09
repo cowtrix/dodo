@@ -24,13 +24,15 @@ namespace Dodo.LocalGroups
 		[Route("List all local groups", "^localgroups$", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
-			return HttpBuilder.OK(DodoServer.ResourceManager<LocalGroup>().Get(x => true).ToList().GenerateJsonView((EViewVisibility.PUBLIC)));
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passPhrase);
+			return HttpBuilder.OK(DodoServer.ResourceManager<LocalGroup>().Get(x => true).ToList()
+				.GenerateJsonView(EViewVisibility.PUBLIC, owner, passPhrase));
 		}
 
 		[Route("Get a local group", URL_REGEX, EHTTPRequestType.GET)]
 		public HttpResponse GetUser(HttpRequest request)
 		{
-			var owner = DodoRESTServer.GetRequestOwner(request);
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passPhrase);
 			var localGroup = GetResource(request.Url);
 			if (localGroup == null)
 			{
@@ -40,7 +42,7 @@ namespace Dodo.LocalGroups
 			{
 				throw HTTPException.FORBIDDEN;
 			}
-			return HttpBuilder.OK(localGroup.GenerateJsonView(view));
+			return HttpBuilder.OK(localGroup.GenerateJsonView(view, owner, passPhrase));
 		}
 
 		[Route("Delete a local group", URL_REGEX, EHTTPRequestType.DELETE)]

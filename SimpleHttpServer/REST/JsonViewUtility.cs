@@ -56,7 +56,7 @@ namespace SimpleHttpServer.REST
 		/// An object is marked as viewable with the ViewAttribute
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
-		public static Dictionary<string, object> GenerateJsonView(this object obj, EViewVisibility visibility)
+		public static Dictionary<string, object> GenerateJsonView(this object obj, EViewVisibility visibility, object requester, string passPhrase)
 		{
 			var vals = new Dictionary<string, object>();
 			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
@@ -72,9 +72,18 @@ namespace SimpleHttpServer.REST
 				{
 					vals.Add(prop.Name, prop.GetValue(obj));
 				}
+				else if(typeof(IDecryptable).IsAssignableFrom(prop.PropertyType))
+				{
+					var decryptable = prop.GetValue(obj) as IDecryptable;
+					if(!decryptable.TryGetValue(requester, passPhrase, out var data))
+					{
+						continue;
+					}
+					vals.Add(prop.Name, data.GenerateJsonView(visibility, requester, passPhrase));
+				}
 				else	// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
 				{
-					vals.Add(prop.Name, prop.GetValue(obj).GenerateJsonView(visibility));
+					vals.Add(prop.Name, prop.GetValue(obj).GenerateJsonView(visibility, requester, passPhrase));
 				}
 			}
 			foreach (var field in obj.GetType().GetFields())
@@ -90,9 +99,18 @@ namespace SimpleHttpServer.REST
 				{
 					vals.Add(field.Name, field.GetValue(obj));
 				}
+				else if (typeof(IDecryptable).IsAssignableFrom(field.FieldType))
+				{
+					var decryptable = field.GetValue(obj) as IDecryptable;
+					if (!decryptable.TryGetValue(requester, passPhrase, out var data))
+					{
+						continue;
+					}
+					vals.Add(field.Name, data.GenerateJsonView(visibility, requester, passPhrase));
+				}
 				else    // Object is a composite type (e.g. a struct or class) and so we recursively serialize it
 				{
-					vals.Add(field.Name, field.GetValue(obj).GenerateJsonView(visibility));
+					vals.Add(field.Name, field.GetValue(obj).GenerateJsonView(visibility, requester, passPhrase));
 				}
 			}
 			return vals;
@@ -103,9 +121,10 @@ namespace SimpleHttpServer.REST
 		/// An object is marked as viewable with the ViewAttribute
 		/// </summary>
 		/// <returns></returns>
-		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj, EViewVisibility visibility)
+		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj, 
+			EViewVisibility visibility, object requester, string passPhrase)
 		{
-			return obj.Select(x => x.GenerateJsonView(visibility)).ToList();
+			return obj.Select(x => x.GenerateJsonView(visibility, requester, passPhrase)).ToList();
 		}
 	}
 }

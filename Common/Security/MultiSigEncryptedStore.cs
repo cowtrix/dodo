@@ -8,7 +8,7 @@ namespace Common
 	/// </summary>
 	/// <typeparam name="TKey"></typeparam>
 	/// <typeparam name="TVal"></typeparam>
-	public class MultiSigEncryptedStore<TKey, TVal>
+	public class MultiSigEncryptedStore<TKey, TVal> : IKeyDecryptable<TKey,TVal>
 	{
 		/// <summary>
 		/// Here we store keys to a common encrypted passphrase that can be used to decrypt the data.
@@ -58,6 +58,23 @@ namespace Common
 			}
 			var passPhrase = unlockPhrase.GetValue(ownerPass);
 			m_keyStore.TryAdd(newKey, new EncryptedStore<string>(passPhrase, newUserPass));
+		}
+
+		public bool TryGetValue(object requester, string password, out object result)
+		{
+			try
+			{
+				result = GetValue((TKey)requester, password);
+				return true;
+			}
+			catch { }
+			result = null;
+			return false;
+		}
+
+		public void SetValue(object innerObject, object requester, string passphrase)
+		{
+			SetValue((TVal)innerObject, (TKey)requester, passphrase);
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		protected abstract bool IsAuthorised(HttpRequest request, out EViewVisibility visibility);
+		protected abstract bool IsAuthorised(HttpRequest request, out EViewVisibility visibility, out object contxt, out string passphrase);
 
 		/// <summary>
 		/// Create a new object, and return the resource url.
@@ -30,7 +30,7 @@ namespace SimpleHttpServer.REST
 		/// <returns>If the creation schema is not correct, an example schema. If it is correct, the view of the object and it's new resource url.</returns>
 		protected virtual HttpResponse CreateObject(HttpRequest request)
 		{
-			if(!IsAuthorised(request, out var view))
+			if(!IsAuthorised(request, out var view, out var context, out var password))
 			{
 				throw HTTPException.FORBIDDEN;
 			}
@@ -53,7 +53,7 @@ namespace SimpleHttpServer.REST
 			{
 				throw new Exception($"Failed to deserialise JSON. Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
 			}
-			return HttpBuilder.OK(createdObject.GenerateJsonView(view, password));
+			return HttpBuilder.OK(createdObject.GenerateJsonView(view, context, password));
 		}
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace SimpleHttpServer.REST
 			{
 				throw HTTPException.NOT_FOUND;
 			}
-			if (!IsAuthorised(request, out var view))
+			if (!IsAuthorised(request, out var view, out var context, out var passphrase))
 			{
 				throw HTTPException.FORBIDDEN;
 			}
@@ -90,12 +90,12 @@ namespace SimpleHttpServer.REST
 			{
 				throw new HTTPException("Invalid JSON body", 400);
 			}
-			target.PatchObject(values);
-			return HttpBuilder.OK(target.GenerateJsonView(view));
+			target.PatchObject(values, context, passphrase);
+			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 		}
 		protected virtual HttpResponse DeleteObject(HttpRequest request)
 		{
-			if (!IsAuthorised(request, out _))
+			if (!IsAuthorised(request, out _, out _, out _))
 			{
 				throw HTTPException.FORBIDDEN;
 			}

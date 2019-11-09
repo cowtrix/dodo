@@ -22,7 +22,7 @@ namespace Dodo.Users
 		[Route("Get a user", URL_REGEX, EHTTPRequestType.GET)]
 		public HttpResponse GetUser(HttpRequest request)
 		{
-			var owner = DodoRESTServer.GetRequestOwner(request);
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			var user = GetResource(request.Url);
 			if(user == null)
 			{
@@ -32,7 +32,7 @@ namespace Dodo.Users
 			{
 				throw HTTPException.FORBIDDEN;
 			}
-			return HttpBuilder.OK(user.GenerateJsonView(view));
+			return HttpBuilder.OK(user.GenerateJsonView(view, owner, passphrase));
 		}
 
 		[Route("Delete a user", URL_REGEX, EHTTPRequestType.DELETE)]

@@ -17,6 +17,8 @@ namespace SimpleHttpServer.REST
 
 	public class RESTServer
 	{
+		public const string TOKEN_KEY = "Authorization";
+
 		public readonly int Port;
 		protected List<Route> Routes = new List<Route>();
 		private static HttpServer m_server;

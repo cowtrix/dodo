@@ -25,13 +25,15 @@ namespace Dodo.WorkingGroups
 		[Route("List all working groups", "^workinggroups$", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
-			return HttpBuilder.OK(DodoServer.ResourceManager<WorkingGroup>().Get(x => true).ToList().GenerateJsonView((EViewVisibility.PUBLIC)));
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
+			return HttpBuilder.OK(DodoServer.ResourceManager<WorkingGroup>().Get(x => true).ToList()
+				.GenerateJsonView(EViewVisibility.PUBLIC, owner, passphrase));
 		}
 
 		[Route("Get a working group", URL_REGEX, EHTTPRequestType.GET)]
 		public HttpResponse GetUser(HttpRequest request)
 		{
-			var owner = DodoRESTServer.GetRequestOwner(request);
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			var workingGroup = GetResource(request.Url);
 			if (workingGroup == null)
 			{
@@ -41,7 +43,7 @@ namespace Dodo.WorkingGroups
 			{
 				throw HTTPException.FORBIDDEN;
 			}
-			return HttpBuilder.OK(workingGroup.GenerateJsonView(view));
+			return HttpBuilder.OK(workingGroup.GenerateJsonView(view, owner, passphrase));
 		}
 
 		[Route("Delete a working group", URL_REGEX, EHTTPRequestType.DELETE)]

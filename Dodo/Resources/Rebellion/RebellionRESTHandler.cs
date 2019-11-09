@@ -23,13 +23,15 @@ namespace Dodo.Rebellions
 		[Route("List all rebellions", "^rebellions$", EHTTPRequestType.GET)]
 		public HttpResponse List(HttpRequest request)
 		{
-			return HttpBuilder.OK(DodoServer.ResourceManager<Rebellion>().Get(x => true).ToList().GenerateJsonView((EViewVisibility.PUBLIC)));
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
+			return HttpBuilder.OK(DodoServer.ResourceManager<Rebellion>().Get(x => true).ToList()
+				.GenerateJsonView(EViewVisibility.PUBLIC, owner, passphrase));
 		}
 
 		[Route("Get a rebellion", URL_REGEX, EHTTPRequestType.GET)]
 		public HttpResponse GetUser(HttpRequest request)
 		{
-			var owner = DodoRESTServer.GetRequestOwner(request);
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			var rebellion = GetResource(request.Url);
 			if (rebellion == null)
 			{
@@ -39,7 +41,7 @@ namespace Dodo.Rebellions
 			{
 				throw HTTPException.FORBIDDEN;
 			}
-			return HttpBuilder.OK(rebellion.GenerateJsonView(view));
+			return HttpBuilder.OK(rebellion.GenerateJsonView(view, owner, passphrase));
 		}
 
 		[Route("Delete a rebellion", URL_REGEX, EHTTPRequestType.DELETE)]

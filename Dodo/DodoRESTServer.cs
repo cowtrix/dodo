@@ -10,8 +10,6 @@ namespace Dodo
 {
 	public class DodoRESTServer : RESTServer
 	{
-		const string TOKEN_KEY = "Authorization";
-
 		/// <summary>
 		/// Get the user that made an HTTP request.
 		/// </summary>
@@ -19,6 +17,12 @@ namespace Dodo
 		/// <returns>The user that made this request</returns>
 		public static User GetRequestOwner(HttpRequest request)
 		{
+			return GetRequestOwner(request, out _);
+		}
+
+		public static User GetRequestOwner(HttpRequest request, out string passphrase)
+		{
+			passphrase = null;
 			if (!request.Headers.TryGetValue(TOKEN_KEY, out var token))
 			{
 				return null;
@@ -30,7 +34,7 @@ namespace Dodo
 			}
 			var decode = StringExtensions.Base64Decode(tokens[1]).Split(':');
 			var user = DodoServer.ResourceManager<User>().GetSingle(x => x.WebAuth.Username == decode[0]);
-			if (user != null && !user.WebAuth.Challenge(decode[1]))
+			if (user != null && !user.WebAuth.Challenge(decode[1], out passphrase))
 			{
 				throw HTTPException.FORBIDDEN;
 			}
@@ -61,8 +65,8 @@ namespace Dodo
 						{
 							throw HTTPException.FORBIDDEN;
 						}
-						var owner = GetRequestOwner(request);
-						return HttpBuilder.OK(resource.GenerateJsonView(view));
+						var owner = GetRequestOwner(request, out var passphrase);
+						return HttpBuilder.OK(resource.GenerateJsonView(view, owner, passphrase));
 					}
 					catch (Exception e)
 					{
