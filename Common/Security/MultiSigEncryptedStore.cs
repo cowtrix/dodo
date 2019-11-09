@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Common
 {
@@ -15,12 +17,16 @@ namespace Common
 		/// A key, corresponding with a valid password, will give the common passphrase that can
 		/// be used to decrypt the data.
 		/// </summary>
+		[JsonProperty]
 		private ConcurrentDictionary<TKey, EncryptedStore<string>> m_keyStore = new ConcurrentDictionary<TKey, EncryptedStore<string>>();
+		[JsonProperty]
 		private EncryptedStore<TVal> m_data;
+
+		public MultiSigEncryptedStore() { }
 
 		public MultiSigEncryptedStore(TVal data, TKey key, string password)
 		{
-			var passPhrase = SHA256Utility.SHA256(Guid.NewGuid().ToString() + key.GetHashCode().ToString() + data.GetHashCode());	// Generate a passphrase
+			var passPhrase = SHA256Utility.SHA256(Guid.NewGuid().ToString() + key.GetHashCode().ToString() + data?.GetHashCode());	// Generate a passphrase
 			m_keyStore.TryAdd(key, new EncryptedStore<string>(passPhrase, password)); // Store the creating key and the passphrase with the given password
 			m_data = new EncryptedStore<TVal>(data, passPhrase);	// Encrypt the common data with the common passphrase
 		}
@@ -74,6 +80,14 @@ namespace Common
 
 		public void SetValue(object innerObject, object requester, string passphrase)
 		{
+			var data = GetValue((TKey)requester, passphrase);
+			try
+			{
+				data = data.PatchObject(innerObject as Dictionary<string, object>, requester, passphrase);
+				SetValue(data, (TKey)requester, passphrase);
+				return;
+			}
+			catch { }
 			SetValue((TVal)innerObject, (TKey)requester, passphrase);
 		}
 	}

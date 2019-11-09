@@ -13,12 +13,17 @@ namespace Security
 	{
 		class TestEncryptedData
 		{
+			public class InnerClass
+			{
+				public double DoubleProperty { get; set; }
+			}
 			public string StringValue = "This is a test string";
 			public string StringProperty { get; set; }
 			public int IntValue = 12345;
 			public GeoLocation Location = new GeoLocation(43, 62);
 			public ResourceReference<User> UserReference = new ResourceReference<User>(Guid.NewGuid());
 			public EncryptedStore<string> EncryptedString;
+			public MultiSigEncryptedStore<string, InnerClass> EncryptedObject;
 		}
 
 		[TestMethod]
@@ -28,7 +33,12 @@ namespace Security
 			var password = "password";
 			var data = new TestEncryptedData()
 			{
-				EncryptedString = new EncryptedStore<string>("my encrypted value", password)
+				EncryptedString = new EncryptedStore<string>("my encrypted value", password),
+				EncryptedObject = new MultiSigEncryptedStore<string, TestEncryptedData.InnerClass>(
+					new TestEncryptedData.InnerClass()
+					{
+						DoubleProperty = 4.7
+					}, key, password)
 			};
 			
 			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
@@ -36,12 +46,17 @@ namespace Security
 			{
 				{ "IntValue", 54321 },
 				{ "StringProperty", "test" },
-				{ "EncryptedString", "a new value" }
+				{ "EncryptedString", "a new value" },
+				{ "EncryptedObject", new Dictionary<string,object>()
+				{
+					{ "DoubleProperty", 7.1 }
+				} }
 			}, key, password);
 			data = multiSig.GetValue(key, password);
 			Assert.AreEqual(54321, data.IntValue);
 			Assert.AreEqual("test", data.StringProperty);
 			Assert.AreEqual("a new value", data.EncryptedString.GetValue(password));
+			Assert.AreEqual(7.1, data.EncryptedObject.GetValue(key, password).DoubleProperty);
 		}
 
 		[TestMethod]

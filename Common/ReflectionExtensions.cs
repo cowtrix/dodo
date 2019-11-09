@@ -64,7 +64,7 @@ namespace Common
 		/// <param name="values"></param>
 		/// <returns></returns>
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values,
-			object requester, string passphrase) where T : class
+			object requester, string passphrase)
 		{
 			if(typeof(T).IsValueType || typeof(T) == typeof(string) && values.Count == 1)
 			{
@@ -144,7 +144,7 @@ namespace Common
 				}
 				try
 				{
-					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString());
+					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(valueToSet.ToString());
 					valueToSet = value.PatchObject(subValues, requester, passphrase);
 				}
 				catch

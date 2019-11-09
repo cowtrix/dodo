@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Common
 {
@@ -40,6 +41,14 @@ namespace Common
 
 		public void SetValue(object innerObject, object requester, string passphrase)
 		{
+			var data = GetValue(passphrase);
+			try
+			{
+				data = data.PatchObject(innerObject as Dictionary<string, object>, requester, passphrase);
+				SetValue(data, passphrase);
+				return;
+			}
+			catch { }
 			SetValue((T)innerObject, passphrase);
 		}
 
