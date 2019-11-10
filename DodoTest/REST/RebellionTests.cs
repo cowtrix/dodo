@@ -1,4 +1,5 @@
 ﻿using Common;
+using Dodo.Gateways;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,6 +30,20 @@ namespace RESTTests
 			{
 				RequestJSON(CreationURL, Method.POST, GetCreationSchema(), "", "");
 			}, e => e.Message.Contains("You need to login"));
+		}
+
+		[TestMethod]
+		public void CannotPatchProtectedField()
+		{
+			var rebellion = CreateNewRebellion("Test rebellion", new GeoLocation());
+			var newUser = RegisterUser("Second user", "password");
+			RequestJSON(rebellion.Value<string>("ResourceURL"), Method.PATCH, new
+			{
+				BotConfiguration = new RebellionBotConfiguration()
+				{
+					TelegramConfig = new RebellionBotConfiguration.TelegramConfiguration()
+				}
+			}, "Second user", "password");
 		}
 
 		public override object GetPatchSchema()

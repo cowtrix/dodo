@@ -21,6 +21,7 @@ namespace Dodo.LocalGroups
 		public override string ResourceURL => $"{ROOT}/{Name.StripForURL()}";
 		[View(EViewVisibility.PUBLIC)]
 		public GeoLocation Location { get; private set; }
+		
 		public ConcurrentBag<ResourceReference<User>> Members = new ConcurrentBag<ResourceReference<User>>();
 		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
 		{

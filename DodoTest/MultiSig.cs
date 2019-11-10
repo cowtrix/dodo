@@ -24,6 +24,7 @@ namespace Security
 			public ResourceReference<User> UserReference = new ResourceReference<User>(Guid.NewGuid());
 			public EncryptedStore<string> EncryptedString;
 			public MultiSigEncryptedStore<string, InnerClass> EncryptedObject;
+			public MultiSigEncryptedStore<string, GeoLocation> EncryptedObjectProp { get; set; }
 		}
 
 		[TestMethod]
@@ -38,7 +39,9 @@ namespace Security
 					new TestEncryptedData.InnerClass()
 					{
 						DoubleProperty = 4.7
-					}, key, password)
+					}, key, password),
+				EncryptedObjectProp = new MultiSigEncryptedStore<string, GeoLocation>(
+					new GeoLocation(45, 45), key, password)
 			};
 			
 			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
@@ -50,6 +53,10 @@ namespace Security
 				{ "EncryptedObject", new Dictionary<string,object>()
 				{
 					{ "DoubleProperty", 7.1 }
+				} },
+				{ "EncryptedObjectProp", new Dictionary<string,object>()
+				{
+					{ "Latitude", 4 }
 				} }
 			}, key, password);
 			data = multiSig.GetValue(key, password);
@@ -57,6 +64,7 @@ namespace Security
 			Assert.AreEqual("test", data.StringProperty);
 			Assert.AreEqual("a new value", data.EncryptedString.GetValue(password));
 			Assert.AreEqual(7.1, data.EncryptedObject.GetValue(key, password).DoubleProperty);
+			Assert.AreEqual(4, data.EncryptedObjectProp.GetValue(key, password).Latitude);
 		}
 
 		[TestMethod]

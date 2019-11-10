@@ -69,6 +69,7 @@
     <Compile Include="Security\StringCipher.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="ValidationExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

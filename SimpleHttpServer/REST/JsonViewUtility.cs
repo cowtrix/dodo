@@ -58,6 +58,10 @@ namespace SimpleHttpServer.REST
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
 		public static Dictionary<string, object> GenerateJsonView(this object obj, EViewVisibility visibility, object requester, string passPhrase)
 		{
+			if(obj == null)
+			{
+				return null;
+			}
 			var vals = new Dictionary<string, object>();
 			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
 			{

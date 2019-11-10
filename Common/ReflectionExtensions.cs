@@ -66,7 +66,7 @@ namespace Common
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values,
 			object requester, string passphrase)
 		{
-			if(typeof(T).IsValueType || typeof(T) == typeof(string) && values.Count == 1)
+			if(((typeof(T).IsValueType && typeof(T).IsPrimitive) || typeof(T) == typeof(string)) && values.Count == 1)
 			{
 				targetObject = (T)values.First().Value;
 				return targetObject;
@@ -156,7 +156,14 @@ namespace Common
 					decryptable.SetValue(valueToSet, requester, passphrase);
 					valueToSet = decryptable;
 				}
-				targetMember.SetValue(targetObject, valueToSet);
+				if(targetObject.GetType().IsValueType)
+				{
+					targetMember.SetValueDirect(__makeref(targetObject), valueToSet);
+				}
+				else
+				{
+					targetMember.SetValue(targetObject, valueToSet);
+				}
 			}
 			return targetObject;
 		}

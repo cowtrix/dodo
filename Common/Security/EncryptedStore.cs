@@ -9,6 +9,8 @@ namespace Common
 		[JsonProperty]
 		private string m_encryptedData;
 
+		public EncryptedStore() { }
+
 		public EncryptedStore(T value, string password)
 		{
 			if(value != default)

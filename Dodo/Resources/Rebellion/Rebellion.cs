@@ -1,4 +1,5 @@
 ﻿using Common;
+using Dodo.Gateways;
 using Dodo.LocalGroups;
 using Dodo.Users;
 using Dodo.WorkingGroups;
@@ -22,6 +23,8 @@ namespace Dodo.Rebellions
 		public ConcurrentBag<ResourceReference<WorkingGroup>> WorkingGroups = new ConcurrentBag<ResourceReference<WorkingGroup>>();
 		[View(EViewVisibility.PUBLIC)]
 		public ConcurrentBag<ResourceReference<LocalGroup>> LocalGroups = new ConcurrentBag<ResourceReference<LocalGroup>>();
+		[View(EViewVisibility.OWNER)]
+		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
 
 		public Rebellion (User creator, string rebellionName, GeoLocation location) : base(creator)
 		{

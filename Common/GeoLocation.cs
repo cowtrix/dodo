@@ -2,8 +2,8 @@
 {
 	public struct GeoLocation
 	{
-		public double Latitude { get; private set; }
-		public double Longitude { get; private set; }
+		public double Latitude;
+		public double Longitude;
 		public GeoLocation(double latitude, double longitude)
 		{
 			Latitude = latitude;
