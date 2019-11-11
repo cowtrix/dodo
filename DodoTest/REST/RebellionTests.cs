@@ -37,13 +37,13 @@ namespace RESTTests
 		{
 			var rebellion = CreateNewRebellion("Test rebellion", new GeoLocation());
 			var newUser = RegisterUser("Second user", "password");
-			RequestJSON(rebellion.Value<string>("ResourceURL"), Method.PATCH, new
+			AssertX.Throws<Exception>(() => RequestJSON(rebellion.Value<string>("ResourceURL"), Method.PATCH, new
 			{
 				BotConfiguration = new RebellionBotConfiguration()
 				{
 					TelegramConfig = new RebellionBotConfiguration.TelegramConfiguration()
 				}
-			}, "Second user", "password");
+			}, "Second user", "password"), (e) => e.Message.Contains("Insufficient privileges"));
 		}
 
 		public override object GetPatchSchema()

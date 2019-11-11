@@ -9,7 +9,7 @@ namespace Dodo
 {
 	public abstract class DodoRESTHandler<T> : ObjectRESTHandler<T> where T: DodoResource, IRESTResource
 	{
-		protected override bool IsAuthorised(HttpRequest request, out EViewVisibility visibility, out object context, out string passphrase)
+		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out string passphrase)
 		{
 			var target = GetResource(request.Url);
 			context = null;
@@ -19,11 +19,11 @@ namespace Dodo
 				// TODO
 				if (request.Method == EHTTPRequestType.POST)
 				{
-					visibility = EViewVisibility.OWNER;
+					visibility = EPermissionLevel.OWNER;
 				}
 				else
 				{
-					visibility = EViewVisibility.HIDDEN;
+					visibility = EPermissionLevel.PUBLIC;
 				}
 				return true;
 			}

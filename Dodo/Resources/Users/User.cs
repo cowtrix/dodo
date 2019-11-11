@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Security;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 
@@ -15,11 +16,11 @@ namespace Dodo.Users
 		public override string ResourceURL { get { return $"{ROOT}/{WebAuth.Username.StripForURL()}"; } }
 
 		[NoPatch]
-		[View(EViewVisibility.PUBLIC)]
+		[View(EPermissionLevel.USER)]
 		public WebPortalAuth WebAuth;
-		[View(EViewVisibility.OWNER)]
+		[View(EPermissionLevel.OWNER)]
 		public string Email;
-		[View(EViewVisibility.OWNER)]
+		[View(EPermissionLevel.OWNER)]
 		public EncryptedStore<EncryptedData> PrivateData;
 
 		public User() : base(null)
@@ -31,14 +32,14 @@ namespace Dodo.Users
 			PrivateData = new EncryptedStore<EncryptedData>(new EncryptedData(), password);
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
 		{
 			if(requestOwner == this)
 			{
-				visibility = EViewVisibility.OWNER;
+				visibility = EPermissionLevel.OWNER;
 				return true;
 			}
-			visibility = EViewVisibility.HIDDEN;
+			visibility = EPermissionLevel.PUBLIC;
 			return false;
 		}
 	}

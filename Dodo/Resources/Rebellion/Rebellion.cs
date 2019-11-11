@@ -14,16 +14,23 @@ namespace Dodo.Rebellions
 	public class Rebellion : DodoResource
 	{
 		public const string ROOT = "rebellions";
-		[View(EViewVisibility.PUBLIC)]
+
+		[View(EPermissionLevel.USER, EPermissionLevel.OWNER)]
 		[NoPatch]
 		public string RebellionName;
-		[View(EViewVisibility.PUBLIC)]
+
+		[View(EPermissionLevel.USER, EPermissionLevel.OWNER)]
 		public GeoLocation Location;
-		[View(EViewVisibility.PUBLIC)]
+
+		[NoPatch]
+		[View(EPermissionLevel.USER)]
 		public ConcurrentBag<ResourceReference<WorkingGroup>> WorkingGroups = new ConcurrentBag<ResourceReference<WorkingGroup>>();
-		[View(EViewVisibility.PUBLIC)]
+
+		[NoPatch]
+		[View(EPermissionLevel.USER)]
 		public ConcurrentBag<ResourceReference<LocalGroup>> LocalGroups = new ConcurrentBag<ResourceReference<LocalGroup>>();
-		[View(EViewVisibility.OWNER)]
+
+		[View(EPermissionLevel.OWNER)]
 		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
 
 		public Rebellion (User creator, string rebellionName, GeoLocation location) : base(creator)
@@ -40,14 +47,14 @@ namespace Dodo.Rebellions
 			}
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
 		{
 			if(requestOwner == Creator.Value)
 			{
-				visibility = EViewVisibility.OWNER;
+				visibility = EPermissionLevel.OWNER;
 				return true;
 			}
-			visibility = EViewVisibility.PUBLIC;
+			visibility = EPermissionLevel.USER;
 			return true;
 		}
 	}
@@ -59,7 +66,7 @@ namespace Dodo.Rebellions
 		{
 			Rebellion = owner;
 		}
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
 		{
 			return Rebellion.IsAuthorised(requestOwner, request, out visibility);
 		}

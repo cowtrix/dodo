@@ -11,6 +11,6 @@ namespace Dodo
 			Creator = new ResourceReference<User>(creator);
 		}
 		public ResourceReference<User> Creator { get; private set; }
-		public abstract bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility);
+		public abstract bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility);
 	}
 }

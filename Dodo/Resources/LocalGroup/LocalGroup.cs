@@ -15,22 +15,22 @@ namespace Dodo.LocalGroups
 			Name = name;
 			Location = location;
 		}
-		[View(EViewVisibility.PUBLIC)]
+		[View(EPermissionLevel.USER)]
 		[NoPatch]
 		public string Name { get; private set; }
 		public override string ResourceURL => $"{ROOT}/{Name.StripForURL()}";
-		[View(EViewVisibility.PUBLIC)]
+		[View(EPermissionLevel.USER)]
 		public GeoLocation Location { get; private set; }
 		
 		public ConcurrentBag<ResourceReference<User>> Members = new ConcurrentBag<ResourceReference<User>>();
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EViewVisibility visibility)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
 		{
 			if(requestOwner == Creator.Value)
 			{
-				visibility = EViewVisibility.OWNER;
+				visibility = EPermissionLevel.OWNER;
 				return true;
 			}
-			visibility = EViewVisibility.PUBLIC;
+			visibility = EPermissionLevel.USER;
 			return true;
 		}
 	}

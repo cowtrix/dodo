@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
+using SimpleHttpServer.REST;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Common
+namespace Common.Security
 {
 	public class EncryptedStore<T> : IDecryptable<T>
 	{
@@ -41,12 +43,16 @@ namespace Common
 			}
 		}
 
-		public void SetValue(object innerObject, object requester, string passphrase)
+		public void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase)
 		{
 			var data = GetValue(passphrase);
 			try
 			{
-				data = data.PatchObject(innerObject as Dictionary<string, object>, requester, passphrase);
+				if (data == default)
+				{
+					data = Activator.CreateInstance<T>();
+				}
+				data = data.PatchObject((Dictionary<string, object>)innerObject, view, requester, passphrase);
 				SetValue(data, passphrase);
 				return;
 			}

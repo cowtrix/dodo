@@ -46,7 +46,7 @@ namespace SimpleHttpServer.REST
 			return GetManagerForResource(resource.GUID);
 		}
 
-		public static bool IsAuthorized<T>(HttpRequest request, T resource, out EViewVisibility visibility) where T:Resource
+		public static bool IsAuthorized<T>(HttpRequest request, T resource, out EPermissionLevel visibility) where T:Resource
 		{
 			var rm = GetManagerForResource(resource.GUID);
 			if(rm == null)

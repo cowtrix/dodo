@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using Common;
 using Dodo;
-using Dodo.Rebellions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace RESTTests
 {
-
 	public abstract class RESTTestBase<T> : TestBase where T:DodoResource
 	{
 		public abstract string CreationURL { get; }
@@ -56,36 +50,12 @@ namespace RESTTests
 			Assert.AreNotEqual(obj.ToString(), patch.ToString());
 		}
 
-		/*
-
 		[TestMethod]
-		public void CanGetUserByResource()
+		public virtual void CannotPatchInvalid()
 		{
-			var newUser = RegisterUser(CurrentLogin, CurrentPassword);
-			var guid = newUser.Value<string>("UUID");
-			var newUserResource = GetResource(guid);
-			Assert.IsTrue(newUser.ToString() == newUserResource.ToString());
+			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			AssertX.Throws<Exception>(() => RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, new { FakeField = "Not a field" }),
+				x => x.Message.Contains("Invalid field names"));
 		}
-
-		[TestMethod]
-		public void CanPatchUser()
-		{
-			RegisterUser(CurrentLogin, CurrentPassword);
-			var patchObj = new { Email = "Patched Value" };
-			var patchedUser = PatchObject("u/" + CurrentLogin, patchObj);
-			Assert.IsTrue(patchedUser.Value<string>("Email") == patchObj.Email);
-		}
-
-		[TestMethod]
-		public void CanCreateNewRebellion()
-		{
-			var newUser = RegisterUser(CurrentLogin, CurrentPassword);
-			var rebellion = CreateNewRebellion("Test Rebellion", new GeoLocation(66, 66));
-			Assert.IsTrue(rebellion.Value<string>("RebellionName") == "Test Rebellion");
-			Assert.IsTrue(rebellion.Value<JObject>("Location").Value<double>("Latitude") == 66);
-			Assert.IsTrue(rebellion.Value<JObject>("Location").Value<double>("Longitude") == 66);
-		}
-
-		*/
 	}
 }

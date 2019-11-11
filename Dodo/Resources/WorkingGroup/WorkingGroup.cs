@@ -14,10 +14,10 @@ namespace Dodo.WorkingGroups
 		{
 			Name = name;
 		}
-		[View(EViewVisibility.PUBLIC)]
+		[View(EPermissionLevel.USER)]
 		[NoPatch]
 		public string Name { get; private set; }
-		[View(EViewVisibility.PUBLIC)]
+		[View(EPermissionLevel.USER)]
 		public string Mandate;
 		public override string ResourceURL => $"{ROOT}/{Rebellion.RebellionName.StripForURL()}/{Name.StripForURL()}";
 		public ConcurrentBag<ResourceReference<WorkingGroup>> SubGroups = new ConcurrentBag<ResourceReference<WorkingGroup>>();

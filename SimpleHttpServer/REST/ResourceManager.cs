@@ -23,9 +23,9 @@ namespace SimpleHttpServer.REST
 	{
 
 		[NoPatch]
-		[View(EViewVisibility.PUBLIC)]
+		[View(EPermissionLevel.USER)]
 		public Guid GUID { get; private set; }
-		[View(EViewVisibility.PUBLIC)]
+		[View(EPermissionLevel.USER)]
 		public abstract string ResourceURL { get; }
 
 		public Resource()
@@ -55,7 +55,7 @@ namespace SimpleHttpServer.REST
 	public interface IResourceManager : IBackup
 	{
 		IEnumerable<Resource> Get(Func<Resource, bool> selector);
-		bool IsAuthorised(HttpRequest request, Resource resource, out EViewVisibility visibility);
+		bool IsAuthorised(HttpRequest request, Resource resource, out EPermissionLevel visibility);
 		void Clear();
 	}
 
@@ -143,7 +143,7 @@ namespace SimpleHttpServer.REST
 			InternalData = JsonConvert.DeserializeObject(json) as Data;
 		}
 
-		public bool IsAuthorised(HttpRequest request, Resource resource, out EViewVisibility visibility)
+		public bool IsAuthorised(HttpRequest request, Resource resource, out EPermissionLevel visibility)
 		{
 			if(!(resource is T))
 			{
@@ -152,6 +152,6 @@ namespace SimpleHttpServer.REST
 			return IsAuthorised(request, resource as T, out visibility);
 		}
 
-		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EViewVisibility visibility);
+		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility);
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace Common
+﻿using SimpleHttpServer.REST;
+
+namespace Common.Security
 {
 	public interface IKeyDecryptable<TKey, TVal> : IDecryptable
 	{
@@ -14,9 +16,9 @@
 		T GetValue(string password);
 	}
 
-	public interface IDecryptable 
+	public interface IDecryptable
 	{
 		bool TryGetValue(object requester, string passphrase, out object result);
-		void SetValue(object innerObject, object requester, string passphrase);
+		void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase);
 	}
 }

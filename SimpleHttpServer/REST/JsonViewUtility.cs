@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -24,21 +25,30 @@ namespace SimpleHttpServer.REST
 		}
 	}
 
-	public enum EViewVisibility
+	public enum EPermissionLevel : byte
 	{
-		HIDDEN,
-		PUBLIC,
-		OWNER,
+		PUBLIC = 0,	// Any requester
+		USER = 1,	// A valid, signed in user
+		OWNER = 2,	// An owner of the resource
+		SYSTEM = byte.MaxValue,
 	}
 
 	/// <summary>
 	/// Fields and properties with this attribute will be serialized in REST api queries.
 	/// </summary>
 	public class ViewAttribute : Attribute {
-		public EViewVisibility Visibility { get; private set; }
-		public ViewAttribute(EViewVisibility visibility)
+		public EPermissionLevel ViewPermission { get; private set; }
+		public EPermissionLevel EditPermission { get; private set; }
+		public ViewAttribute(EPermissionLevel viewPermission)
 		{
-			Visibility = visibility;
+			ViewPermission = viewPermission;
+			EditPermission = viewPermission;
+		}
+
+		public ViewAttribute(EPermissionLevel viewPermission, EPermissionLevel editPermission)
+		{
+			ViewPermission = viewPermission;
+			EditPermission = editPermission;
 		}
 	}
 
@@ -56,7 +66,7 @@ namespace SimpleHttpServer.REST
 		/// An object is marked as viewable with the ViewAttribute
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
-		public static Dictionary<string, object> GenerateJsonView(this object obj, EViewVisibility visibility, object requester, string passPhrase)
+		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility, object requester, string passPhrase)
 		{
 			if(obj == null)
 			{
@@ -66,7 +76,7 @@ namespace SimpleHttpServer.REST
 			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
 			{
 				var attr = prop.GetCustomAttribute<ViewAttribute>();
-				if (attr == null || attr.Visibility > visibility)
+				if (attr == null || attr.ViewPermission > visibility)
 				{
 					continue;
 				}
@@ -93,7 +103,7 @@ namespace SimpleHttpServer.REST
 			foreach (var field in obj.GetType().GetFields())
 			{
 				var attr = field.GetCustomAttribute<ViewAttribute>();
-				if (attr == null || attr.Visibility > visibility)
+				if (attr == null || attr.ViewPermission > visibility)
 				{
 					continue;
 				}
@@ -125,10 +135,147 @@ namespace SimpleHttpServer.REST
 		/// An object is marked as viewable with the ViewAttribute
 		/// </summary>
 		/// <returns></returns>
-		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj, 
-			EViewVisibility visibility, object requester, string passPhrase)
+		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj,
+			EPermissionLevel visibility, object requester, string passPhrase)
 		{
 			return obj.Select(x => x.GenerateJsonView(visibility, requester, passPhrase)).ToList();
+		}
+
+		/// <summary>
+		/// Given a string/object dictionary, where the string is the name of a field or property and the
+		/// object is the value to be set, patch the values of a target object
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="targetObject"></param>
+		/// <param name="values"></param>
+		/// <returns></returns>
+		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel visibility,
+			object requester, string passphrase)
+		{
+			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
+			if ((targetType.IsValueType && targetType.IsPrimitive)
+					|| m_explicitValueTypes.Contains(targetType))
+			{
+				return (T)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values), targetType);
+			}
+			if (targetObject is IDecryptable)
+			{
+				var decryptable = targetObject as IDecryptable;
+				if (!decryptable.TryGetValue(requester, passphrase, out var encryptedObject))
+				{
+					return targetObject;
+				}
+				encryptedObject.PatchObject(values, visibility, requester, passphrase);
+				decryptable.SetValue(encryptedObject, visibility, requester, passphrase);
+				return targetObject;
+			}
+			var targetProperties = targetObject.GetType().GetProperties();
+			var targetFields = targetObject.GetType().GetFields();
+
+			var validFields = values.Select(kvp => targetProperties.FirstOrDefault(x => x.Name == kvp.Key) as MemberInfo ??
+				targetFields.FirstOrDefault(x => x.Name == kvp.Key) as MemberInfo)
+				.Where(member => member != null);
+			if(validFields.Count() != values.Count)
+			{
+				throw new Exception("Invalid field names");
+			}
+			if(validFields.Where(member => member.GetCustomAttribute<ViewAttribute>()?.EditPermission <= visibility).Count() != values.Count)
+			{
+				throw new Exception("Insufficient privileges");
+			}
+
+			foreach (var val in values)
+			{
+				var targetMember = targetProperties.FirstOrDefault(x => x.Name == val.Key);
+				if (targetMember == null)
+				{
+					continue;
+				}
+				if (targetMember.GetCustomAttribute<NoPatchAttribute>() != null)
+				{
+					throw new Exception($"Cannot patch field {targetMember.Name}: NoPatch");
+				}
+				var viewAttr = targetMember.GetCustomAttribute<ViewAttribute>();
+				if(viewAttr == null || viewAttr.EditPermission > visibility)
+				{
+					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
+				}
+				object objToPatch = targetObject;
+				var value = targetMember.GetValue(targetObject);
+				var fieldValue = value;
+				var valueToSet = val.Value;
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.PropertyType) &&
+					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
+				{
+					// Auth is incorrect
+					continue;
+				}
+				try
+				{
+					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString());
+					valueToSet = value.PatchObject(subValues, visibility, requester, passphrase);
+				}
+				catch
+				{
+				}
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.PropertyType))
+				{
+					var decryptable = fieldValue as IDecryptable;
+					decryptable.SetValue(valueToSet, visibility, requester, passphrase);
+					valueToSet = decryptable;
+				}
+				targetMember.SetValue(targetObject, valueToSet);
+			}
+			foreach (var val in values)
+			{
+				var targetMember = targetFields.FirstOrDefault(x => x.Name == val.Key);
+				if (targetMember == null)
+				{
+					continue;
+				}
+				if (targetMember.GetCustomAttribute<NoPatchAttribute>() != null)
+				{
+					throw new Exception($"Cannot patch field {targetMember.Name}");
+				}
+				var viewAttr = targetMember.GetCustomAttribute<ViewAttribute>();
+				if (viewAttr == null || viewAttr.EditPermission > visibility)
+				{
+					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
+				}
+				object objToPatch = targetObject;
+				var value = targetMember.GetValue(targetObject);
+				var fieldValue = value;
+				object valueToSet = val.Value;
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.FieldType) &&
+					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
+				{
+					// Auth is incorrect
+					continue;
+				}
+				try
+				{
+					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(valueToSet.ToString());
+					valueToSet = value.PatchObject(subValues, visibility, requester, passphrase);
+				}
+				catch
+				{
+				}
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.FieldType))
+				{
+					var decryptable = fieldValue as IDecryptable;
+					decryptable.SetValue(valueToSet, visibility, requester, passphrase);
+					valueToSet = decryptable;
+				}
+				if (targetObject.GetType().IsValueType)
+				{
+					targetMember.SetValueDirect(__makeref(targetObject), valueToSet);
+				}
+				else
+				{
+					targetMember.SetValue(targetObject, valueToSet);
+				}
+			}
+			return targetObject;
 		}
 	}
 }

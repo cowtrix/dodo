@@ -80,6 +80,9 @@
     <Compile Include="HttpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteHandlers\FileSystemRouteHandler.cs" />
+    <Compile Include="Security\EncryptedStore.cs" />
+    <Compile Include="Security\IDecryptable.cs" />
+    <Compile Include="Security\MultiSigEncryptedStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

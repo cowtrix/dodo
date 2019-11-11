@@ -25,7 +25,7 @@ namespace Dodo.Rebellions
 		{
 			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			return HttpBuilder.OK(DodoServer.ResourceManager<Rebellion>().Get(x => true).ToList()
-				.GenerateJsonView(EViewVisibility.PUBLIC, owner, passphrase));
+				.GenerateJsonView(EPermissionLevel.USER, owner, passphrase));
 		}
 
 		[Route("Get a rebellion", URL_REGEX, EHTTPRequestType.GET)]

@@ -13,7 +13,7 @@ namespace Common
 			{
 				throw new ArgumentNullException(nameof(enumerable));
 			}
-			if(enumerable.Count() == 0)
+			if(!enumerable.Any())
 			{
 				throw new Exception("Collection cannot be empty");
 			}

@@ -27,7 +27,7 @@ namespace Dodo.WorkingGroups
 		{
 			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			return HttpBuilder.OK(DodoServer.ResourceManager<WorkingGroup>().Get(x => true).ToList()
-				.GenerateJsonView(EViewVisibility.PUBLIC, owner, passphrase));
+				.GenerateJsonView(EPermissionLevel.USER, owner, passphrase));
 		}
 
 		[Route("Get a working group", URL_REGEX, EHTTPRequestType.GET)]

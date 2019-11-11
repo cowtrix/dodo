@@ -21,7 +21,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		protected abstract bool IsAuthorised(HttpRequest request, out EViewVisibility visibility, out object contxt, out string passphrase);
+		protected abstract bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object contxt, out string passphrase);
 
 		/// <summary>
 		/// Create a new object, and return the resource url.
@@ -90,7 +90,7 @@ namespace SimpleHttpServer.REST
 			{
 				throw new HTTPException("Invalid JSON body", 400);
 			}
-			target.PatchObject(values, context, passphrase);
+			target.PatchObject(values, view, context, passphrase);
 			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 		}
 		protected virtual HttpResponse DeleteObject(HttpRequest request)

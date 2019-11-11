@@ -2,31 +2,16 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Common;
-using Dodo.Users;
+using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RESTTests;
 using SimpleHttpServer.REST;
 
 namespace Security
 {
 	[TestClass]
-	public class MultiSig
+	public class MultiSig : TestDataBase
 	{
-		class TestEncryptedData
-		{
-			public class InnerClass
-			{
-				public double DoubleProperty { get; set; }
-			}
-			public string StringValue = "This is a test string";
-			public string StringProperty { get; set; }
-			public int IntValue = 12345;
-			public GeoLocation Location = new GeoLocation(43, 62);
-			public ResourceReference<User> UserReference = new ResourceReference<User>(Guid.NewGuid());
-			public EncryptedStore<string> EncryptedString;
-			public MultiSigEncryptedStore<string, InnerClass> EncryptedObject;
-			public MultiSigEncryptedStore<string, GeoLocation> EncryptedObjectProp { get; set; }
-		}
-
 		[TestMethod]
 		public void CanPatch()
 		{
@@ -43,7 +28,7 @@ namespace Security
 				EncryptedObjectProp = new MultiSigEncryptedStore<string, GeoLocation>(
 					new GeoLocation(45, 45), key, password)
 			};
-			
+
 			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
 			multiSig = multiSig.PatchObject(new Dictionary<string, object>()
 			{
@@ -54,17 +39,55 @@ namespace Security
 				{
 					{ "DoubleProperty", 7.1 }
 				} },
-				{ "EncryptedObjectProp", new Dictionary<string,object>()
-				{
-					{ "Latitude", 4 }
-				} }
-			}, key, password);
+				{ "EncryptedObjectProp", new GeoLocation(4, 67) }
+			}, EPermissionLevel.USER, key, password);
 			data = multiSig.GetValue(key, password);
 			Assert.AreEqual(54321, data.IntValue);
 			Assert.AreEqual("test", data.StringProperty);
 			Assert.AreEqual("a new value", data.EncryptedString.GetValue(password));
 			Assert.AreEqual(7.1, data.EncryptedObject.GetValue(key, password).DoubleProperty);
 			Assert.AreEqual(4, data.EncryptedObjectProp.GetValue(key, password).Latitude);
+		}
+
+		[TestMethod]
+		public void CannotPatchWithoutViewAttribute()
+		{
+			var key = "user";
+			var password = "password";
+			var data = new TestEncryptedData();
+
+			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
+			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
+			{
+				{ "StringValue", "this shouldn't succeed" },
+			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Insufficient privileges"));
+		}
+
+		[TestMethod]
+		public void CannotPatchWithInsufficientView()
+		{
+			var key = "user";
+			var password = "password";
+			var data = new TestEncryptedData();
+
+			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
+			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
+			{
+				{ "Location", new GeoLocation() },
+			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Insufficient privileges"));
+		}
+
+		[TestMethod]
+		public void NonexistantFieldThrowsError()
+		{
+			var key = "user";
+			var password = "password";
+			var data = new TestEncryptedData();
+			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
+			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
+			{
+				{ "NonExistantField", new GeoLocation() },
+			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Invalid field names"));
 		}
 
 		[TestMethod]

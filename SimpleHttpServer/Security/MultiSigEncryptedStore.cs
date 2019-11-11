@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
+using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Common
+namespace Common.Security
 {
 	/// <summary>
 	/// This class allows multiple key/password combinations to be able to decrypt a single piece of data.
@@ -78,12 +79,16 @@ namespace Common
 			return false;
 		}
 
-		public void SetValue(object innerObject, object requester, string passphrase)
+		public void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase)
 		{
 			var data = GetValue((TKey)requester, passphrase);
 			try
 			{
-				data = data.PatchObject(innerObject as Dictionary<string, object>, requester, passphrase);
+				if (data == default)
+				{
+					data = Activator.CreateInstance<TVal>();
+				}
+				data = data.PatchObject((Dictionary<string, object>)innerObject, view, requester, passphrase);
 				SetValue(data, (TKey)requester, passphrase);
 				return;
 			}

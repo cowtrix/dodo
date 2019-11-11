@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Security;
 using SimpleHttpServer.REST;
 using System;
 
@@ -16,7 +17,7 @@ namespace Dodo.Users
 		/// <summary>
 		/// The user's username
 		/// </summary>
-		[View(EViewVisibility.PUBLIC)]
+		[View(EPermissionLevel.USER)]
 		public string Username { get; private set; }
 
 		/// <summary>

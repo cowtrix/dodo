@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\HttpUtility.cs" />
+    <Compile Include="Security\RawData.cs" />
     <Compile Include="REST\LocalGroupTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Framework\TestBase.cs" />
@@ -74,7 +75,9 @@
     <Compile Include="REST\RebellionTests.cs" />
     <Compile Include="REST\UserTests.cs" />
     <Compile Include="REST\WorkingGroupTests.cs" />
-    <Compile Include="MultiSig.cs" />
+    <Compile Include="Security\MultiSig.cs" />
+    <Compile Include="Security\TestDataBase.cs" />
+    <Compile Include="StateMachines\StateMachines.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

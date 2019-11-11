@@ -26,7 +26,7 @@ namespace Dodo.LocalGroups
 		{
 			var owner = DodoRESTServer.GetRequestOwner(request, out var passPhrase);
 			return HttpBuilder.OK(DodoServer.ResourceManager<LocalGroup>().Get(x => true).ToList()
-				.GenerateJsonView(EViewVisibility.PUBLIC, owner, passPhrase));
+				.GenerateJsonView(EPermissionLevel.USER, owner, passPhrase));
 		}
 
 		[Route("Get a local group", URL_REGEX, EHTTPRequestType.GET)]

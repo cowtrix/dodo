@@ -11,21 +11,21 @@ namespace Dodo.Gateways
 	{
 		public class TelegramConfiguration
 		{
-			[View(EViewVisibility.OWNER)]
+			[View(EPermissionLevel.OWNER)]
 			public string BotSecret;
 		}
 
 		public class TwilioConfiguration
 		{
-			[View(EViewVisibility.OWNER)]
+			[View(EPermissionLevel.OWNER)]
 			public string SID = "";
-			[View(EViewVisibility.OWNER)]
+			[View(EPermissionLevel.OWNER)]
 			public string AuthToken = "";
 		}
 
-		[View(EViewVisibility.OWNER)]
+		[View(EPermissionLevel.OWNER)]
 		public TelegramConfiguration TelegramConfig;
-		[View(EViewVisibility.OWNER)]
+		[View(EPermissionLevel.OWNER)]
 		public TwilioConfiguration TwilioConfig;
 	}
 }
