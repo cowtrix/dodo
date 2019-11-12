@@ -9,23 +9,32 @@ namespace StateMachines
 	[TestClass]
 	public class StateMachines
 	{
-		[TestMethod]
-		public void CanLoadStateMachine()
+		private StateMachine<string, string, string> GetTestStateMachine()
 		{
-			var firstState = new State("First State");
-			var secondState = new State("Second state");
-			firstState.AddTransition(secondState, new TransitionAlways());
-			var definition = new StateMachineDefinition("Test SM")
-				.AddState(firstState)
+			var firstState = new StringState("First State", "first");
+			var secondState = new StringState("Second state", "second");
+			firstState.AddTransition(secondState, new TransitionAlways<string, string>());
+			var definition = new StateMachineDefinition<string, string>("Test SM", firstState)
 				.AddState(secondState);
-
 			var json = JsonConvert.SerializeObject(definition, Formatting.Indented, new JsonSerializerSettings()
 			{
 				PreserveReferencesHandling = PreserveReferencesHandling.All,
 				TypeNameHandling = TypeNameHandling.Auto,
 			});
+			return new StateMachine<string, string, string>(json);
+		}
 
-			var stateMachine = new StateMachine(json);
+		[TestMethod]
+		public void CanLoad()
+		{
+			GetTestStateMachine();
+		}
+
+		[TestMethod]
+		public void CanStep()
+		{
+			var sm = GetTestStateMachine();
+			Assert.AreEqual("second", sm.Step("doesn't matter"));
 		}
 	}
 }

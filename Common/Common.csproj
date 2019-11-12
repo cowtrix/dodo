@@ -65,6 +65,7 @@
     <Compile Include="Security\SHA256Utility.cs" />
     <Compile Include="Security\StringCipher.cs" />
     <Compile Include="StateMachines\StateMachine.cs" />
+    <Compile Include="StateMachines\StringStateMachine.cs" />
     <Compile Include="StateMachines\Transition.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Utility.cs" />

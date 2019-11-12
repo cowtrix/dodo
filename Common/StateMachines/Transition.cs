@@ -2,31 +2,31 @@
 
 namespace Common.StateMachines
 {
-	public interface ITransitionCondition
+	public interface ITransitionCondition<TInput, TOutput>
 	{
-		bool ShouldTransition(State origin, State destination, params object[] args);
+		bool ShouldTransition(State<TInput, TOutput> origin, State<TInput, TOutput> destination, TInput input);
 	}
 
 	[Name("Always")]
-	public struct TransitionAlways : ITransitionCondition
+	public struct TransitionAlways<TInput, TOutput> : ITransitionCondition<TInput, TOutput>
 	{
-		public bool ShouldTransition(State origin, State destination, params object[] args)
+		public bool ShouldTransition(State<TInput, TOutput> origin, State<TInput, TOutput> destination, TInput input)
 		{
 			return true;
 		}
 	}
 
-	public class Transition
+	public class Transition<TInput, TOutput>
 	{
-		[JsonProperty(IsReference = true, ItemIsReference = true)]
-		public State Origin;
+		[JsonProperty(ItemIsReference = true)]
+		public State<TInput, TOutput> Origin;
 
-		[JsonProperty(IsReference = true, ItemIsReference = true)]
-		public State Destination;
+		[JsonProperty(ItemIsReference = true)]
+		public State<TInput, TOutput> Destination;
 
-		public ITransitionCondition Condition;
+		public ITransitionCondition<TInput, TOutput> Condition;
 
-		public Transition(State origin, State destination, ITransitionCondition condition)
+		public Transition(State<TInput, TOutput> origin, State<TInput, TOutput> destination, ITransitionCondition<TInput, TOutput> condition)
 		{
 			Origin = origin;
 			Destination = destination;
