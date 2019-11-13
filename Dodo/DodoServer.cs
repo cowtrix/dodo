@@ -31,6 +31,7 @@ namespace Dodo
 				{ typeof(Rebellion), new RebellionManager() },
 				{ typeof(LocalGroup), new LocalGroupManager() },
 				{ typeof(WorkingGroup), new WorkingGroupManager() },
+				{ typeof(Task), new WorkingGroupManager() },
 			};
 			/*m_backupManager = new BackupManager();
 			foreach(var rm in m_resourceManagers)

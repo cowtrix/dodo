@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace Common.StateMachines
 {
@@ -16,20 +17,36 @@ namespace Common.StateMachines
 		}
 	}
 
+	[Name("Input Equals")]
+	public struct TransitionInputEquals<TInput, TOutput> : ITransitionCondition<TInput, TOutput>
+	{
+		public TInput Value;
+		public TransitionInputEquals(TInput value)
+		{
+			Value = value;
+		}
+
+		public bool ShouldTransition(State<TInput, TOutput> origin, State<TInput, TOutput> destination, TInput input)
+		{
+			return Value.Equals(input);
+		}
+	}
+
+
 	public class Transition<TInput, TOutput>
 	{
-		[JsonProperty(ItemIsReference = true)]
-		public State<TInput, TOutput> Origin;
+		public Guid OriginState { get; set; }
 
-		[JsonProperty(ItemIsReference = true)]
-		public State<TInput, TOutput> Destination;
+		public Guid DestinationState { get; set; }
 
-		public ITransitionCondition<TInput, TOutput> Condition;
+		public ITransitionCondition<TInput, TOutput> Condition { get; set; }
+
+		public Transition() { }
 
 		public Transition(State<TInput, TOutput> origin, State<TInput, TOutput> destination, ITransitionCondition<TInput, TOutput> condition)
 		{
-			Origin = origin;
-			Destination = destination;
+			OriginState = origin.GUID;
+			DestinationState = destination.GUID;
 			Condition = condition;
 		}
 	}

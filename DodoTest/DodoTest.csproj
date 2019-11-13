@@ -77,7 +77,7 @@
     <Compile Include="REST\WorkingGroupTests.cs" />
     <Compile Include="Security\MultiSig.cs" />
     <Compile Include="Security\TestDataBase.cs" />
-    <Compile Include="StateMachines\StateMachines.cs" />
+    <Compile Include="StateMachines\StringStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

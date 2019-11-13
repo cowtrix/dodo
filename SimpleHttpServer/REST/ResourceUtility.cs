@@ -21,12 +21,10 @@ namespace SimpleHttpServer.REST
 			return System.Net.WebUtility.UrlEncode(Regex.Replace(s.ToLower(), @"\s+", ""));
 		}
 
-		public static T GetResourceByGuid<T>(this Guid guid) where T : Resource
+		public static T GetResourceByGuid<T>(this Guid guid) where T : IRESTResource
 		{
-			return ResourceManagers.Where(x => x.Key.GetType().GenericTypeArguments.FirstOrDefault() == typeof(T))
-				.Select(x => x.Key as ResourceManager<T>)
-				.Select(x => x.GetSingle(resource => resource.GUID == guid))
-				.SingleOrDefault();
+			var rm = GetManagerForResource(guid) as IResourceManager<T>;
+			return rm.GetSingle(resource => resource.GUID == guid);
 		}
 
 		public static Resource GetResourceByGuid(this Guid guid)

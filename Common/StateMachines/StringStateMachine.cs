@@ -16,14 +16,16 @@ namespace Common.StateMachines
 			OutputString = output;
 		}
 
-		public override State<string, string> OnEnter(string input)
+		public override State<string, string> OnEntry(string input, out string output)
 		{
+			output = OutputString;
 			return this;
 		}
 
-		public override string Output(string input)
+		public override State<string, string> OnReentry(string input, out string output)
 		{
-			return OutputString;
+			output = OutputString;
+			return this;
 		}
 	}
 }

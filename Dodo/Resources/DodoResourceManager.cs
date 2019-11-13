@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Dodo.Resources
 {
-	public abstract class DodoResourceManager<T> : ResourceManager<T> where T : DodoResource
+	public abstract class DodoResourceManager<T> : ResourceManager<T> where T : class, IDodoResource
 	{
 		protected override bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility)
 		{

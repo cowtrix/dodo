@@ -19,6 +19,11 @@ namespace Dodo
 		}
 	}
 
+	public abstract class ClientMessage : Message
+	{
+		public ClientMessage(string content) : base(content) { }
+	}
+
 	public abstract class ServerMessage : Message
 	{
 		public ServerMessage(string content) : base(content) { }

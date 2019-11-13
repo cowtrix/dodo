@@ -8,54 +8,10 @@ using System.Linq;
 
 namespace SimpleHttpServer.REST
 {
-	public interface IRESTResource
-	{
-		Guid GUID { get; }
-		string ResourceURL { get; }
-	}
-
-	/// <summary>
-	/// A resource is a component that can be interacted with through REST API calls
-	/// It has a location on the server (given by ResourceURL) that MUST be unique
-	/// It also has a UUID, which can be an alternate accessor using resources/uuid
-	/// </summary>
-	public abstract class Resource : IRESTResource
-	{
-
-		[NoPatch]
-		[View(EPermissionLevel.USER)]
-		public Guid GUID { get; private set; }
-		[View(EPermissionLevel.USER)]
-		public abstract string ResourceURL { get; }
-
-		public Resource()
-		{
-			GUID = Guid.NewGuid();
-		}
-
-		public override bool Equals(object obj)
-		{
-			var resource = obj as Resource;
-			return resource != null &&
-				   GUID.Equals(resource.GUID) &&
-				   ResourceURL == resource.ResourceURL;
-		}
-
-		public override int GetHashCode()
-		{
-			var hashCode = 1286416240;
-			hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(GUID);
-			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ResourceURL);
-			return hashCode;
-		}
-
-		public virtual void OnDestroy() { }
-	}
-
 	public interface IResourceManager : IBackup
 	{
-		IEnumerable<Resource> Get(Func<Resource, bool> selector);
-		bool IsAuthorised(HttpRequest request, Resource resource, out EPermissionLevel visibility);
+		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector);
+		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility);
 		void Clear();
 	}
 
@@ -72,7 +28,7 @@ namespace SimpleHttpServer.REST
 	/// A ResourceManager keeps track of, deletes, creates and generally manages a class of object.
 	/// </summary>
 	/// <typeparam name="T">The class to be managed</typeparam>
-	public abstract class ResourceManager<T> : IResourceManager<T>, IBackup where T:Resource
+	public abstract class ResourceManager<T> : IResourceManager<T>, IBackup where T: class, IRESTResource
 	{
 		public class Data
 		{
@@ -120,9 +76,9 @@ namespace SimpleHttpServer.REST
 			return InternalData.Entries.Where(kvp => selector(kvp.Value)).Select(kvp => kvp.Value);
 		}
 
-		public virtual IEnumerable<Resource> Get(Func<Resource, bool> selector)
+		public virtual IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector)
 		{
-			return InternalData.Entries.Where(kvp => selector(kvp.Value)).Select(kvp => kvp.Value);
+			return InternalData.Entries.Where(kvp => selector(kvp.Value)).Select(kvp => (IRESTResource)kvp.Value);
 		}
 
 		public virtual void Clear()
@@ -143,7 +99,7 @@ namespace SimpleHttpServer.REST
 			InternalData = JsonConvert.DeserializeObject(json) as Data;
 		}
 
-		public bool IsAuthorised(HttpRequest request, Resource resource, out EPermissionLevel visibility)
+		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility)
 		{
 			if(!(resource is T))
 			{
