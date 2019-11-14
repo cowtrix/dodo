@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Security;
+using Dodo.LocalGroups;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 
@@ -7,21 +8,16 @@ namespace Dodo.Users
 {
 	public class User : DodoResource
 	{
-		public class EncryptedData
-		{
-			public string PrivateString;
-		}
-
 		public const string ROOT = "u";
 		public override string ResourceURL { get { return $"{ROOT}/{WebAuth.Username.StripForURL()}"; } }
 
 		[NoPatch]
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.OWNER)]
 		public WebPortalAuth WebAuth;
 		[View(EPermissionLevel.OWNER)]
 		public string Email;
 		[View(EPermissionLevel.OWNER)]
-		public EncryptedStore<EncryptedData> PrivateData;
+		public ResourceReference<LocalGroup> LocalGroup;
 
 		public User() : base(null)
 		{ }
@@ -29,7 +25,6 @@ namespace Dodo.Users
 		public User(WebPortalAuth auth, string password) : base(null)
 		{
 			WebAuth = auth;
-			PrivateData = new EncryptedStore<EncryptedData>(new EncryptedData(), password);
 		}
 
 		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)

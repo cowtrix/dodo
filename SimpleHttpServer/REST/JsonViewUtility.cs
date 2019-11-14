@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace SimpleHttpServer.REST
 {
@@ -29,7 +30,8 @@ namespace SimpleHttpServer.REST
 	{
 		PUBLIC = 0,	// Any requester
 		USER = 1,	// A valid, signed in user
-		OWNER = 2,	// An owner of the resource
+		ADMIN = 2,	// An administrator of the resource
+		OWNER = 3,	// An owner of the resource
 		SYSTEM = byte.MaxValue,
 	}
 
@@ -66,13 +68,17 @@ namespace SimpleHttpServer.REST
 		/// An object is marked as viewable with the ViewAttribute
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
-		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility, object requester, string passPhrase)
+		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
 		{
 			if(obj == null)
 			{
 				return null;
 			}
 			var vals = new Dictionary<string, object>();
+			if (memberName != "GenerateJsonView")
+			{
+				vals.Add("Permission", visibility);
+			}
 			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
 			{
 				var attr = prop.GetCustomAttribute<ViewAttribute>();

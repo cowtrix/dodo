@@ -15,11 +15,11 @@ namespace Dodo.Rebellions
 	{
 		public const string ROOT = "rebellions";
 
-		[View(EPermissionLevel.USER, EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
 		[NoPatch]
 		public string RebellionName;
 
-		[View(EPermissionLevel.USER, EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
 		public GeoLocation Location;
 
 		[NoPatch]
@@ -30,7 +30,7 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.USER)]
 		public ConcurrentBag<ResourceReference<LocalGroup>> LocalGroups = new ConcurrentBag<ResourceReference<LocalGroup>>();
 
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
 
 		public Rebellion (User creator, string rebellionName, GeoLocation location) : base(creator)

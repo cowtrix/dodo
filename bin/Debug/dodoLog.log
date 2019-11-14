@@ -1,0 +1,19 @@
+[14/11/2019 11:24:51]	Added route for Create a new working group @ newworkinggroup
+[14/11/2019 11:24:51]	Added route for List all working groups @ ^workinggroups$
+[14/11/2019 11:24:51]	Added route for Get a working group @ workinggroups/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Update a working group @ workinggroups/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Register a new user @ ^register
+[14/11/2019 11:24:51]	Added route for Get a user @ u/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Delete a user @ u/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Update a user @ u/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Create a new rebellion @ newrebellion
+[14/11/2019 11:24:51]	Added route for List all rebellions @ ^rebellions$
+[14/11/2019 11:24:51]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Create a new local group @ ^newlocalgroup
+[14/11/2019 11:24:51]	Added route for List all local groups @ ^localgroups$
+[14/11/2019 11:24:51]	Added route for Get a local group @ localgroups/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Delete a local group @ localgroups/(?:^/)*
+[14/11/2019 11:24:51]	Added route for Update a local group @ localgroups/(?:^/)*
