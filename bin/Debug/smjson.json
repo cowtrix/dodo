@@ -1,0 +1,52 @@
+{
+  "Name": "Test SM",
+  "States": [
+    {
+      "$type": "Common.StateMachines.StringState, Common",
+      "OutputString": "first",
+      "Name": "1st",
+      "GUID": "5e8ddc89-0c23-4fdf-b69e-6019585639a5",
+      "Transitions": [
+        {
+          "OriginState": "5e8ddc89-0c23-4fdf-b69e-6019585639a5",
+          "DestinationState": "b0587611-40e7-4155-8987-1345580f715a",
+          "Condition": {
+            "$type": "Common.StateMachines.TransitionInputEquals`2[[System.String, mscorlib],[System.String, mscorlib]], Common",
+            "Value": "test"
+          }
+        },
+        {
+          "OriginState": "5e8ddc89-0c23-4fdf-b69e-6019585639a5",
+          "DestinationState": "de1f0f20-1454-4a09-86f8-c3bc6126d713",
+          "Condition": {
+            "$type": "Common.StateMachines.TransitionAlways`2[[System.String, mscorlib],[System.String, mscorlib]], Common"
+          }
+        }
+      ]
+    },
+    {
+      "$type": "Common.StateMachines.StringState, Common",
+      "OutputString": "second",
+      "Name": "2nd",
+      "GUID": "de1f0f20-1454-4a09-86f8-c3bc6126d713",
+      "Transitions": []
+    },
+    {
+      "$type": "Common.StateMachines.StringState, Common",
+      "OutputString": "third",
+      "Name": "3rd",
+      "GUID": "b0587611-40e7-4155-8987-1345580f715a",
+      "Transitions": [
+        {
+          "OriginState": "b0587611-40e7-4155-8987-1345580f715a",
+          "DestinationState": "5e8ddc89-0c23-4fdf-b69e-6019585639a5",
+          "Condition": {
+            "$type": "Common.StateMachines.TransitionInputEquals`2[[System.String, mscorlib],[System.String, mscorlib]], Common",
+            "Value": "blah"
+          }
+        }
+      ]
+    }
+  ],
+  "RootState": "5e8ddc89-0c23-4fdf-b69e-6019585639a5"
+}

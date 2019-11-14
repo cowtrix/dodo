@@ -54,13 +54,19 @@ namespace SimpleHttpServer.REST
 		}
 	}
 
+	public interface IVerifiable
+	{
+		void CheckValue();
+	}
+
 	public static class JsonViewUtility
 	{
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
 			typeof(string),
 			typeof(Guid),
-			typeof(GeoLocation)
+			typeof(GeoLocation),
+			typeof(IResourceReference)
 		};
 
 		/// <summary>
@@ -77,7 +83,7 @@ namespace SimpleHttpServer.REST
 			var vals = new Dictionary<string, object>();
 			if (memberName != "GenerateJsonView")
 			{
-				vals.Add("Permission", visibility);
+				vals.Add("PERMISSION", visibility.GetName());
 			}
 			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
 			{
@@ -88,7 +94,7 @@ namespace SimpleHttpServer.REST
 				}
 				// Simple case, property is a primitive type
 				if ((prop.PropertyType.IsValueType && prop.PropertyType.IsPrimitive)
-					|| m_explicitValueTypes.Contains(prop.PropertyType))
+					|| m_explicitValueTypes.Any(t => prop.PropertyType.IsAssignableFrom(t)))
 				{
 					vals.Add(prop.Name, prop.GetValue(obj));
 				}
@@ -115,7 +121,7 @@ namespace SimpleHttpServer.REST
 				}
 				// Simple case, property is a primitive type
 				if ((field.FieldType.IsValueType && field.FieldType.IsPrimitive)
-					|| m_explicitValueTypes.Contains(field.FieldType))
+					|| m_explicitValueTypes.Any(t => field.FieldType.IsAssignableFrom(t)))
 				{
 					vals.Add(field.Name, field.GetValue(obj));
 				}
@@ -160,9 +166,14 @@ namespace SimpleHttpServer.REST
 		{
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
 			if ((targetType.IsValueType && targetType.IsPrimitive)
-					|| m_explicitValueTypes.Contains(targetType))
+					|| m_explicitValueTypes.Any(t => t.IsAssignableFrom(targetType)))
 			{
-				return (T)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values), targetType);
+				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values), targetType);
+				if(val is IVerifiable)
+				{
+					(val as IVerifiable).CheckValue();
+				}
+				return (T)val;
 			}
 			if (targetObject is IDecryptable)
 			{
@@ -263,8 +274,9 @@ namespace SimpleHttpServer.REST
 					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(valueToSet.ToString());
 					valueToSet = value.PatchObject(subValues, visibility, requester, passphrase);
 				}
-				catch
+				catch (Exception e)
 				{
+					Logger.Exception(e);
 				}
 				if (typeof(IDecryptable).IsAssignableFrom(targetMember.FieldType))
 				{
