@@ -69,7 +69,7 @@ namespace Dodo.WorkingGroups
 
 		protected override dynamic GetCreationSchema()
 		{
-			return new { RebellionGUID = "", WorkingGroupName = "" };
+			return new { RebellionGUID = "", ParentGroup = "", WorkingGroupName = "" };
 		}
 
 		protected override WorkingGroup CreateFromSchema(HttpRequest request, dynamic info)
@@ -84,7 +84,18 @@ namespace Dodo.WorkingGroups
 			{
 				throw new HTTPException("Rebellion doesn't exist with that GUID", 404);
 			}
-			var newWorkingGroup = new WorkingGroup(user, rebellion, info.WorkingGroupName.ToString());
+			string parentWGstring = info.ParentWorkingGroupGUID.ToString();
+			ResourceReference<WorkingGroup> parentWG = default;
+			if (!string.IsNullOrEmpty(parentWGstring))
+			{
+				if(!Guid.TryParse(parentWGstring, out Guid guid))
+				{
+					throw new HTTPException($"Working Group with Guid {parentWGstring} not found", 404);
+				}
+				parentWG = rebellion.WorkingGroups.Single(x => x.Guid == guid);
+				parentWG.CheckValue();
+			}
+			var newWorkingGroup = new WorkingGroup(user, rebellion, parentWG.Value, info.WorkingGroupName.ToString());
 			DodoServer.ResourceManager<WorkingGroup>().Add(newWorkingGroup);
 			return newWorkingGroup;
 		}

@@ -59,7 +59,7 @@ namespace Dodo.Rebellions
 		}
 	}
 
-	public abstract class RebellionResource : DodoResource
+	public abstract class RebellionResource : GroupResource
 	{
 		public Rebellion Rebellion { get; private set; }
 		public RebellionResource(User creator, Rebellion owner) : base(creator)

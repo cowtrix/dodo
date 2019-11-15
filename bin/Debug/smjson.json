@@ -5,19 +5,19 @@
       "$type": "Common.StateMachines.StringState, Common",
       "OutputString": "first",
       "Name": "1st",
-      "GUID": "5e8ddc89-0c23-4fdf-b69e-6019585639a5",
+      "GUID": "a798e4af-0555-4c5c-b7b5-292d5998db33",
       "Transitions": [
         {
-          "OriginState": "5e8ddc89-0c23-4fdf-b69e-6019585639a5",
-          "DestinationState": "b0587611-40e7-4155-8987-1345580f715a",
+          "OriginState": "a798e4af-0555-4c5c-b7b5-292d5998db33",
+          "DestinationState": "8f68cfc6-8991-4cae-8f75-bebffc204548",
           "Condition": {
             "$type": "Common.StateMachines.TransitionInputEquals`2[[System.String, mscorlib],[System.String, mscorlib]], Common",
             "Value": "test"
           }
         },
         {
-          "OriginState": "5e8ddc89-0c23-4fdf-b69e-6019585639a5",
-          "DestinationState": "de1f0f20-1454-4a09-86f8-c3bc6126d713",
+          "OriginState": "a798e4af-0555-4c5c-b7b5-292d5998db33",
+          "DestinationState": "ec537dac-9c4c-4e87-a641-37b8d095df32",
           "Condition": {
             "$type": "Common.StateMachines.TransitionAlways`2[[System.String, mscorlib],[System.String, mscorlib]], Common"
           }
@@ -28,18 +28,18 @@
       "$type": "Common.StateMachines.StringState, Common",
       "OutputString": "second",
       "Name": "2nd",
-      "GUID": "de1f0f20-1454-4a09-86f8-c3bc6126d713",
+      "GUID": "ec537dac-9c4c-4e87-a641-37b8d095df32",
       "Transitions": []
     },
     {
       "$type": "Common.StateMachines.StringState, Common",
       "OutputString": "third",
       "Name": "3rd",
-      "GUID": "b0587611-40e7-4155-8987-1345580f715a",
+      "GUID": "8f68cfc6-8991-4cae-8f75-bebffc204548",
       "Transitions": [
         {
-          "OriginState": "b0587611-40e7-4155-8987-1345580f715a",
-          "DestinationState": "5e8ddc89-0c23-4fdf-b69e-6019585639a5",
+          "OriginState": "8f68cfc6-8991-4cae-8f75-bebffc204548",
+          "DestinationState": "a798e4af-0555-4c5c-b7b5-292d5998db33",
           "Condition": {
             "$type": "Common.StateMachines.TransitionInputEquals`2[[System.String, mscorlib],[System.String, mscorlib]], Common",
             "Value": "blah"
@@ -48,5 +48,5 @@
       ]
     }
   ],
-  "RootState": "5e8ddc89-0c23-4fdf-b69e-6019585639a5"
+  "RootState": "a798e4af-0555-4c5c-b7b5-292d5998db33"
 }

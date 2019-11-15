@@ -23,7 +23,7 @@ namespace RESTTests
 
 		public override object GetCreationSchema()
 		{
-			return new { RebellionGUID = Rebellion, WorkingGroupName = "Test Rebellion" };
+			return new { RebellionGUID = Rebellion, ParentWorkingGroupGUID = "", WorkingGroupName = "Test Working Group" };
 		}
 
 		public override object GetPatchSchema()

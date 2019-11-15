@@ -1204,3 +1204,1091 @@
 [14/11/2019 18:05:21]	Added route for Get a local group @ localgroups/(?:^/)*
 [14/11/2019 18:05:21]	Added route for Delete a local group @ localgroups/(?:^/)*
 [14/11/2019 18:05:21]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 10:27:13]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 10:27:13]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Register a new user @ ^register
+[15/11/2019 10:27:13]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 10:27:13]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 10:27:13]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 10:27:13]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 10:27:13]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 10:27:13]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 10:27:15]	Error parsing boolean value. Path '', line 1, position 1.
+[15/11/2019 10:27:15]	   at Newtonsoft.Json.JsonTextReader.ParseTrue()
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:32:48]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 10:32:48]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:32:48]	Inner exception: 
+[15/11/2019 10:32:48]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 10:32:48]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 10:32:48]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 10:32:48]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:32:48]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 10:32:48]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:32:49]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 10:32:49]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:32:49]	Inner exception: 
+[15/11/2019 10:32:49]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 10:32:49]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 10:32:49]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 10:32:49]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:32:49]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 10:32:49]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:32:50]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 10:32:50]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 10:32:50]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Register a new user @ ^register
+[15/11/2019 10:32:50]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 10:32:50]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 10:32:50]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 10:32:50]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 10:32:50]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 10:32:50]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 10:32:52]	Invalid field names
+[15/11/2019 10:32:52]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 197
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.LocalGroups.LocalGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\LocalGroup\LocalGroupRESTHandler.cs:line 57
+[15/11/2019 10:32:52]	You need to login
+[15/11/2019 10:32:52]	   at Dodo.Rebellions.RebellionRESTHandler.CreateFromSchema(HttpRequest request, Object info) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 78
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute3[T0,T1,T2,TRet](CallSite site, T0 arg0, T1 arg1, T2 arg2)
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 46
+   at Dodo.Rebellions.RebellionRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 20
+[15/11/2019 10:32:53]	Insufficient privileges
+[15/11/2019 10:32:53]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 201
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 10:32:53]	Invalid field names
+[15/11/2019 10:32:53]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 197
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 10:32:53]	Error parsing boolean value. Path '', line 1, position 1.
+[15/11/2019 10:32:53]	   at Newtonsoft.Json.JsonTextReader.ParseTrue()
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:32:53]	Invalid field names
+[15/11/2019 10:32:53]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 197
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Users.UserRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+[15/11/2019 10:32:53]	Failed to deserialise JSON. Expected:
+ {
+  "RebellionGUID": "",
+  "ParentWorkingGroupGUID": "",
+  "WorkingGroupName": ""
+}
+[15/11/2019 10:32:53]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 10:32:53]	Failed to deserialise JSON. Expected:
+ {
+  "RebellionGUID": "",
+  "ParentWorkingGroupGUID": "",
+  "WorkingGroupName": ""
+}
+[15/11/2019 10:32:53]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 10:32:53]	Failed to deserialise JSON. Expected:
+ {
+  "RebellionGUID": "",
+  "ParentWorkingGroupGUID": "",
+  "WorkingGroupName": ""
+}
+[15/11/2019 10:32:53]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 10:32:54]	Failed to deserialise JSON. Expected:
+ {
+  "RebellionGUID": "",
+  "ParentWorkingGroupGUID": "",
+  "WorkingGroupName": ""
+}
+[15/11/2019 10:32:54]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 10:32:54]	Failed to deserialise JSON. Expected:
+ {
+  "RebellionGUID": "",
+  "ParentWorkingGroupGUID": "",
+  "WorkingGroupName": ""
+}
+[15/11/2019 10:32:54]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 10:32:54]	Failed to deserialise JSON. Expected:
+ {
+  "RebellionGUID": "",
+  "ParentWorkingGroupGUID": "",
+  "WorkingGroupName": ""
+}
+[15/11/2019 10:32:54]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 10:33:57]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 10:33:57]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:33:57]	Inner exception: 
+[15/11/2019 10:33:57]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 10:33:57]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 10:33:57]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 10:33:57]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:33:57]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 10:33:57]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:33:58]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 10:33:58]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:33:58]	Inner exception: 
+[15/11/2019 10:33:58]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 10:33:58]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 10:33:58]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 10:33:58]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:33:58]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 10:33:58]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:33:59]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 10:33:59]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 10:33:59]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Register a new user @ ^register
+[15/11/2019 10:33:59]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 10:33:59]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 10:33:59]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 10:33:59]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 10:33:59]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 10:33:59]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 10:34:01]	Invalid field names
+[15/11/2019 10:34:01]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 197
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.LocalGroups.LocalGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\LocalGroup\LocalGroupRESTHandler.cs:line 57
+[15/11/2019 10:34:01]	You need to login
+[15/11/2019 10:34:01]	   at Dodo.Rebellions.RebellionRESTHandler.CreateFromSchema(HttpRequest request, Object info) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 78
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute3[T0,T1,T2,TRet](CallSite site, T0 arg0, T1 arg1, T2 arg2)
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 46
+   at Dodo.Rebellions.RebellionRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 20
+[15/11/2019 10:34:02]	Insufficient privileges
+[15/11/2019 10:34:02]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 201
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 10:34:02]	Invalid field names
+[15/11/2019 10:34:02]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 197
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 10:34:02]	Error parsing boolean value. Path '', line 1, position 1.
+[15/11/2019 10:34:02]	   at Newtonsoft.Json.JsonTextReader.ParseTrue()
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:34:02]	Invalid field names
+[15/11/2019 10:34:02]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 197
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Users.UserRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+[15/11/2019 10:34:03]	Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+[15/11/2019 10:34:03]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 274
+[15/11/2019 10:34:03]	Invalid field names
+[15/11/2019 10:34:03]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 197
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 58
+[15/11/2019 11:11:49]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 11:11:49]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 11:11:49]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Register a new user @ ^register
+[15/11/2019 11:11:49]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 11:11:49]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 11:11:49]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 11:11:49]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 11:11:49]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 11:11:49]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 11:12:12]	Rebellion doesn't exist with that GUID
+[15/11/2019 11:12:12]	   at Dodo.WorkingGroups.WorkingGroupRESTHandler.CreateFromSchema(HttpRequest request, Object info) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 85
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute3[T0,T1,T2,TRet](CallSite site, T0 arg0, T1 arg1, T2 arg2)
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 46
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 11:12:19]	Failed to deserialise JSON. Expected:
+ {
+  "RebellionGUID": "",
+  "ParentWorkingGroupGUID": "",
+  "WorkingGroupName": ""
+}
+[15/11/2019 11:12:19]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 11:13:02]	Failed to deserialise JSON. Expected:
+ {
+  "RebellionGUID": "",
+  "ParentWorkingGroupGUID": "",
+  "WorkingGroupName": ""
+}
+[15/11/2019 11:13:02]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 11:17:20]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 11:17:20]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 11:17:20]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Register a new user @ ^register
+[15/11/2019 11:17:20]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 11:17:20]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 11:17:20]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 11:17:20]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 11:17:20]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 11:17:20]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 11:19:06]	Resource not found
+[15/11/2019 11:19:06]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.DeleteObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 105
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.DeleteUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 52
+[15/11/2019 14:36:13]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 14:36:13]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 14:36:13]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Register a new user @ ^register
+[15/11/2019 14:36:13]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 14:36:13]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 14:36:13]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 14:36:13]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 14:36:13]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 14:36:13]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 14:38:20]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 14:38:20]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Register a new user @ ^register
+[15/11/2019 14:38:20]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 14:38:20]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 14:38:20]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 14:38:20]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 14:38:20]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 14:38:20]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 14:40:22]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 14:40:22]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Register a new user @ ^register
+[15/11/2019 14:40:22]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 14:40:22]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 14:40:22]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 14:40:22]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 14:40:22]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 14:40:22]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 15:14:35]	Object reference not set to an instance of an object.
+[15/11/2019 15:14:35]	   at Common.Logger.Exception(Exception exception, String message, Boolean nolog) in C:\Users\gbfinnes\github\dodo\Common\Logger.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+   at SimpleHttpServer.HttpProcessor.RouteRequest(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\HttpProcessor.cs:line 172
+[15/11/2019 15:14:35]	Thread was being aborted.
+[15/11/2019 15:14:35]	   at SimpleHttpServer.HttpProcessor.RouteRequest(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\HttpProcessor.cs:line 175
+   at SimpleHttpServer.HttpProcessor.HandleClient(TcpClient client) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\HttpProcessor.cs:line 55
+   at SimpleHttpServer.HttpServer.<>c__DisplayClass10_0.<Listen>b__0() in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\HttpServer.cs:line 69
+[15/11/2019 15:14:54]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 15:14:54]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 15:14:54]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Register a new user @ ^register
+[15/11/2019 15:14:54]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 15:14:54]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 15:14:54]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 15:14:54]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 15:14:54]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 15:14:54]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 15:50:52]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 15:50:52]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Register a new user @ ^register
+[15/11/2019 15:50:52]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 15:50:52]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 15:50:52]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 15:50:52]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 15:50:52]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 15:50:52]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 15:51:52]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 15:51:52]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Register a new user @ ^register
+[15/11/2019 15:51:52]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 15:51:52]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 15:51:52]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 15:51:52]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 15:51:52]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 15:51:52]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 15:55:39]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 15:55:39]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Register a new user @ ^register
+[15/11/2019 15:55:39]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 15:55:39]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 15:55:39]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 15:55:39]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 15:55:39]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 15:55:39]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 16:00:28]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 16:00:28]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Register a new user @ ^register
+[15/11/2019 16:00:28]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 16:00:28]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 16:00:28]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 16:00:28]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 16:00:28]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 16:00:28]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 16:02:54]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 16:02:54]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Register a new user @ ^register
+[15/11/2019 16:02:54]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 16:02:54]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 16:02:54]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 16:02:54]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 16:02:54]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 16:02:54]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 16:03:49]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 16:03:49]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Register a new user @ ^register
+[15/11/2019 16:03:49]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 16:03:49]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 16:03:49]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 16:03:49]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 16:03:49]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 16:03:49]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 16:08:37]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 16:08:37]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Register a new user @ ^register
+[15/11/2019 16:08:37]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 16:08:37]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 16:08:37]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 16:08:37]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 16:08:37]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 16:08:37]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 16:08:39]	Invalid field names
+[15/11/2019 16:08:39]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.LocalGroups.LocalGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\LocalGroup\LocalGroupRESTHandler.cs:line 57
+[15/11/2019 16:08:39]	You need to login
+[15/11/2019 16:08:39]	   at Dodo.Rebellions.RebellionRESTHandler.CreateFromSchema(HttpRequest request, Object info) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 78
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute3[T0,T1,T2,TRet](CallSite site, T0 arg0, T1 arg1, T2 arg2)
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 46
+   at Dodo.Rebellions.RebellionRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 20
+[15/11/2019 16:08:39]	Insufficient privileges
+[15/11/2019 16:08:39]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 216
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 16:08:40]	Invalid field names
+[15/11/2019 16:08:40]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 16:08:40]	Error parsing boolean value. Path '', line 1, position 1.
+[15/11/2019 16:08:40]	   at Newtonsoft.Json.JsonTextReader.ParseTrue()
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:08:40]	Invalid field names
+[15/11/2019 16:08:40]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Users.UserRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+[15/11/2019 16:08:41]	Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+[15/11/2019 16:08:41]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:08:41]	Invalid field names
+[15/11/2019 16:08:41]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 58
+[15/11/2019 16:18:11]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 16:18:11]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:18:11]	Inner exception: 
+[15/11/2019 16:18:11]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 16:18:11]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 16:18:11]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 16:18:11]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:18:11]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 16:18:11]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:18:12]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 16:18:12]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:18:12]	Inner exception: 
+[15/11/2019 16:18:12]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 16:18:12]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 16:18:12]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 16:18:12]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:18:12]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 16:18:12]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:18:13]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 16:18:13]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 16:18:13]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Register a new user @ ^register
+[15/11/2019 16:18:13]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 16:18:13]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 16:18:13]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 16:18:13]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 16:18:13]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 16:18:13]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 16:18:16]	Invalid field names
+[15/11/2019 16:18:16]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.LocalGroups.LocalGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\LocalGroup\LocalGroupRESTHandler.cs:line 57
+[15/11/2019 16:18:16]	You need to login
+[15/11/2019 16:18:16]	   at Dodo.Rebellions.RebellionRESTHandler.CreateFromSchema(HttpRequest request, Object info) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 78
+   at System.Dynamic.UpdateDelegates.UpdateAndExecute3[T0,T1,T2,TRet](CallSite site, T0 arg0, T1 arg1, T2 arg2)
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 46
+   at Dodo.Rebellions.RebellionRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 20
+[15/11/2019 16:18:16]	Insufficient privileges
+[15/11/2019 16:18:16]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 216
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 16:18:16]	Invalid field names
+[15/11/2019 16:18:16]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 16:18:17]	Error parsing boolean value. Path '', line 1, position 1.
+[15/11/2019 16:18:17]	   at Newtonsoft.Json.JsonTextReader.ParseTrue()
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:18:17]	Invalid field names
+[15/11/2019 16:18:17]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Users.UserRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+[15/11/2019 16:18:17]	Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+[15/11/2019 16:18:17]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 16:18:17]	Invalid field names
+[15/11/2019 16:18:17]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 58
+[15/11/2019 17:08:46]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 17:08:46]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 17:08:46]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Create a new role @ ^newrole$
+[15/11/2019 17:08:46]	Added route for List all roles @ ^roles$
+[15/11/2019 17:08:46]	Added route for Get a role @ roles/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Delete a role @ roles/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Update a role @ roles/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Register a new user @ ^register
+[15/11/2019 17:08:46]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 17:08:46]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 17:08:46]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 17:08:46]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 17:08:46]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 17:08:46]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 17:08:49]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:08:49]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:08:49]	Inner exception: 
+[15/11/2019 17:08:49]	The given key was not present in the dictionary.
+[15/11/2019 17:08:49]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:08:49]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:08:49]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:08:49]	Inner exception: 
+[15/11/2019 17:08:49]	The given key was not present in the dictionary.
+[15/11/2019 17:08:49]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:08:49]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:08:49]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:08:49]	Inner exception: 
+[15/11/2019 17:08:49]	The given key was not present in the dictionary.
+[15/11/2019 17:08:49]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:08:49]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:08:49]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:08:49]	Inner exception: 
+[15/11/2019 17:08:49]	The given key was not present in the dictionary.
+[15/11/2019 17:08:49]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:08:49]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:08:49]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:08:49]	Inner exception: 
+[15/11/2019 17:08:49]	The given key was not present in the dictionary.
+[15/11/2019 17:08:49]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:08:49]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:08:49]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:08:49]	Inner exception: 
+[15/11/2019 17:08:49]	The given key was not present in the dictionary.
+[15/11/2019 17:08:49]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:09:38]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 17:09:38]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 17:09:38]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Create a new role @ ^newrole$
+[15/11/2019 17:09:38]	Added route for List all roles @ ^roles$
+[15/11/2019 17:09:38]	Added route for Get a role @ roles/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Delete a role @ roles/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Update a role @ roles/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Register a new user @ ^register
+[15/11/2019 17:09:38]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 17:09:38]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 17:09:38]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 17:09:38]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 17:09:38]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 17:09:38]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 17:09:41]	Failed to deserialise JSON. Expected:
+ {
+  "GroupGUID": "",
+  "Name": "",
+  "Mandate": ""
+}
+[15/11/2019 17:09:41]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.Roles.RoleRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\Roles\RoleRESTHandler.cs:line 23
+[15/11/2019 17:09:42]	Failed to deserialise JSON. Expected:
+ {
+  "GroupGUID": "",
+  "Name": "",
+  "Mandate": ""
+}
+[15/11/2019 17:09:42]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.Roles.RoleRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\Roles\RoleRESTHandler.cs:line 23
+[15/11/2019 17:09:42]	Failed to deserialise JSON. Expected:
+ {
+  "GroupGUID": "",
+  "Name": "",
+  "Mandate": ""
+}
+[15/11/2019 17:09:42]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.Roles.RoleRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\Roles\RoleRESTHandler.cs:line 23
+[15/11/2019 17:09:42]	Failed to deserialise JSON. Expected:
+ {
+  "GroupGUID": "",
+  "Name": "",
+  "Mandate": ""
+}
+[15/11/2019 17:09:42]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.Roles.RoleRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\Roles\RoleRESTHandler.cs:line 23
+[15/11/2019 17:09:43]	Failed to deserialise JSON. Expected:
+ {
+  "GroupGUID": "",
+  "Name": "",
+  "Mandate": ""
+}
+[15/11/2019 17:09:43]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.Roles.RoleRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\Roles\RoleRESTHandler.cs:line 23
+[15/11/2019 17:09:43]	Failed to deserialise JSON. Expected:
+ {
+  "GroupGUID": "",
+  "Name": "",
+  "Mandate": ""
+}
+[15/11/2019 17:09:43]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 54
+   at Dodo.Roles.RoleRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\Roles\RoleRESTHandler.cs:line 23
+[15/11/2019 17:10:49]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 17:10:49]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 17:10:49]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Create a new role @ ^newrole$
+[15/11/2019 17:10:49]	Added route for List all roles @ ^roles$
+[15/11/2019 17:10:49]	Added route for Get a role @ roles/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Delete a role @ roles/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Update a role @ roles/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Register a new user @ ^register
+[15/11/2019 17:10:49]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 17:10:49]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 17:10:49]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 17:10:49]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 17:10:49]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 17:10:49]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 17:11:36]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:11:36]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 99
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.Roles.RoleRESTHandler.Register(HttpRequest request)
+[15/11/2019 17:11:36]	Inner exception: 
+[15/11/2019 17:11:36]	Object reference not set to an instance of an object.
+[15/11/2019 17:11:36]	   at Dodo.Roles.Role.get_ResourceURL()
+[15/11/2019 17:11:55]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 17:11:55]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 17:11:55]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Create a new role @ ^newrole$
+[15/11/2019 17:11:55]	Added route for List all roles @ ^roles$
+[15/11/2019 17:11:55]	Added route for Get a role @ roles/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Delete a role @ roles/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Update a role @ roles/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Register a new user @ ^register
+[15/11/2019 17:11:55]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 17:11:55]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 17:11:55]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 17:11:55]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 17:11:55]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 17:11:55]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 17:14:21]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 17:14:21]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Create a new role @ ^newrole$
+[15/11/2019 17:14:21]	Added route for List all roles @ ^roles$
+[15/11/2019 17:14:21]	Added route for Get a role @ roles/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Delete a role @ roles/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Update a role @ roles/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Register a new user @ ^register
+[15/11/2019 17:14:21]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 17:14:21]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 17:14:21]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 17:14:21]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 17:14:21]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 17:14:21]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 17:14:33]	Sequence contains more than one matching element
+[15/11/2019 17:14:33]	   at System.Linq.Enumerable.SingleOrDefault[TSource](IEnumerable`1 source, Func`2 predicate)
+   at SimpleHttpServer.HttpProcessor.RouteRequest(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\HttpProcessor.cs:line 151
+   at SimpleHttpServer.HttpProcessor.HandleClient(TcpClient client) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\HttpProcessor.cs:line 55
+   at SimpleHttpServer.HttpServer.<>c__DisplayClass10_0.<Listen>b__0() in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\HttpServer.cs:line 69
+[15/11/2019 17:26:50]	Added route for Register a new user @ ^register
+[15/11/2019 17:26:50]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 17:26:50]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 17:26:50]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 17:26:50]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 17:26:50]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 17:26:50]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 17:26:50]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 17:26:50]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 17:26:53]	Invalid field names
+[15/11/2019 17:26:53]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Users.UserRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+[15/11/2019 17:26:53]	Error parsing boolean value. Path '', line 1, position 1.
+[15/11/2019 17:26:53]	   at Newtonsoft.Json.JsonTextReader.ParseTrue()
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289

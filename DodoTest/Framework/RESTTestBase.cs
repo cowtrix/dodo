@@ -1,6 +1,7 @@
 ﻿using System;
 using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace RESTTests
@@ -15,7 +16,10 @@ namespace RESTTests
 		{
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			Assert.IsNotNull(createdObj.Value<string>("GUID"));
+			CheckCreatedObject(createdObj);
 		}
+
+		protected virtual void CheckCreatedObject(JObject obj) { }
 
 		[TestMethod]
 		public virtual void CanGet()
@@ -23,7 +27,10 @@ namespace RESTTests
 			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			var resourceObj = RequestJSON(obj.Value<string>("ResourceURL"), Method.GET);
 			Assert.IsNotNull(resourceObj.Value<string>("GUID"));
+			CheckGetObject(resourceObj);
 		}
+
+		protected virtual void CheckGetObject(JObject obj) { }
 
 		[TestMethod]
 		public virtual void CanDestroy()
@@ -48,7 +55,9 @@ namespace RESTTests
 			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			var patch = RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, GetPatchSchema());
 			Assert.AreNotEqual(obj.ToString(), patch.ToString());
+			CheckPatchedObject(patch);
 		}
+		protected virtual void CheckPatchedObject(JObject obj) { }
 
 		[TestMethod]
 		public virtual void CannotPatchInvalid()

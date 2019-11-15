@@ -7,7 +7,7 @@ using System.Collections.Concurrent;
 
 namespace Dodo.LocalGroups
 {
-	public class LocalGroup : DodoResource
+	public class LocalGroup : GroupResource
 	{
 		public const string ROOT = "localgroups";
 		public LocalGroup(User owner, string name, GeoLocation location) : base(owner)
@@ -21,7 +21,7 @@ namespace Dodo.LocalGroups
 		public override string ResourceURL => $"{ROOT}/{Name.StripForURL()}";
 		[View(EPermissionLevel.USER)]
 		public GeoLocation Location { get; private set; }
-		
+
 		public ConcurrentBag<ResourceReference<User>> Members = new ConcurrentBag<ResourceReference<User>>();
 		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
 		{

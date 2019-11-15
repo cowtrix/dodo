@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\HttpUtility.cs" />
+    <Compile Include="REST\RoleTests.cs" />
     <Compile Include="Security\RawData.cs" />
     <Compile Include="REST\LocalGroupTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

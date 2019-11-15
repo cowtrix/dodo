@@ -37,17 +37,5 @@ namespace Dodo.Users
 			passphrase = PassPhrase.GetValue(password);
 			return true;
 		}
-
-		public void Validate()
-		{
-			if (string.IsNullOrEmpty(Username))
-			{
-				throw new Exception("Username cannot be null");
-			}
-			if (string.IsNullOrEmpty(PasswordHash))
-			{
-				throw new Exception("PasswordHash cannot be null");
-			}
-		}
 	}
 }

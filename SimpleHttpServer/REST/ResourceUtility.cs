@@ -23,15 +23,14 @@ namespace SimpleHttpServer.REST
 
 		public static T GetResourceByGuid<T>(this Guid guid) where T : class, IRESTResource
 		{
-			var rm = GetManagerForResource(guid) as IResourceManager<T>;
-			return rm?.GetSingle(resource => resource.GUID == guid);
+			var rm = GetManagerForResource(guid);
+			return (T)rm?.GetSingle(resource => resource.GUID == guid);
 		}
 
-		public static Resource GetResourceByGuid(this Guid guid)
+		public static IRESTResource GetResourceByGuid(this Guid guid)
 		{
-			return ResourceManagers.Select(x => x.Key.Get(resource => resource.GUID == guid))
-				.ConcatenateCollection()
-				.SingleOrDefault() as Resource;
+			var rm = GetManagerForResource(guid);
+			return rm?.GetSingle(resource => resource.GUID == guid);
 		}
 
 		public static IResourceManager GetManagerForResource(this Guid guid)

@@ -10,6 +10,8 @@ namespace SimpleHttpServer.REST
 {
 	public interface IResourceManager : IBackup
 	{
+		IRESTResource GetSingle(Func<IRESTResource, bool> selector);
+		IRESTResource GetFirst(Func<IRESTResource, bool> selector);
 		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector);
 		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility);
 		void Clear();
@@ -109,5 +111,15 @@ namespace SimpleHttpServer.REST
 		}
 
 		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility);
+
+		public IRESTResource GetSingle(Func<IRESTResource, bool> selector)
+		{
+			return InternalData.Entries.SingleOrDefault(kvp => selector(kvp.Value)).Value;
+		}
+
+		public IRESTResource GetFirst(Func<IRESTResource, bool> selector)
+		{
+			return InternalData.Entries.FirstOrDefault(kvp => selector(kvp.Value)).Value;
+		}
 	}
 }

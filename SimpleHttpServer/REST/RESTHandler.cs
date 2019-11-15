@@ -9,7 +9,7 @@ namespace SimpleHttpServer.REST
 {
 	public abstract class RESTHandler
 	{
-		public void AddRoutes(List<Route> routeList)
+		public virtual void AddRoutes(List<Route> routeList)
 		{
 			var allMethods = GetType().GetMethods();
 			foreach(var method in allMethods)
@@ -33,26 +33,30 @@ namespace SimpleHttpServer.REST
 					Name = attr.Name,
 					UrlRegex = attr.URLRegex,
 					Method = attr.RequestType,
-					Callable = (req) =>
-					{
-						try
-						{
-							return method.Invoke(this, new[] { req }) as HttpResponse;
-						}
-						catch(Exception e)
-						{
-							Logger.Exception(e.InnerException);
-							if(e.InnerException is HTTPException)
-							{
-								return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message, (e.InnerException as HTTPException).ErrorCode);
-							}
-							return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message);
-						}
-					},
+					Callable = WrapRawCall((req) => method.Invoke(this, new[] { req }) as HttpResponse),
 				});
-
 				Logger.Debug($"Added route for {attr.Name} @ {attr.URLRegex}");
 			}
+		}
+
+		protected Func<HttpRequest, HttpResponse> WrapRawCall(Func<HttpRequest, HttpResponse> call)
+		{
+			return (req) =>
+			{
+				try
+				{
+					return call(req);
+				}
+				catch (Exception e)
+				{
+					Logger.Exception(e.InnerException);
+					if (e.InnerException is HTTPException)
+					{
+						return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message, (e.InnerException as HTTPException).ErrorCode);
+					}
+					return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message);
+				}
+			};
 		}
 	}
 }
