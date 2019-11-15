@@ -17,7 +17,7 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.USER)]
 		public string Mandate { get; set; }
 
-		public override string ResourceURL => $"{ROOT}/{ParentGroup.Value.ResourceURL}/{Name.StripForURL()}";
+		public override string ResourceURL => $"{ParentGroup.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
 		public Role(GroupResource parent, string roleName, string mandate) : base(parent.Creator)
 		{

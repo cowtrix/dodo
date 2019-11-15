@@ -17,7 +17,8 @@ namespace Dodo.WorkingGroups
 	/// </summary>
 	public class WorkingGroup : RebellionResource
 	{
-		public const string ROOT = "workinggroups";
+		public const string ROOT = "wg";
+
 		public WorkingGroup(User creator, Rebellion owner, WorkingGroup parentGroup, string name) : base(creator, owner)
 		{
 			Name = name;
@@ -38,7 +39,7 @@ namespace Dodo.WorkingGroups
 		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
 		public string Mandate = "";
 
-		public override string ResourceURL => $"{ROOT}/{Rebellion.RebellionName.StripForURL()}/{Name.StripForURL()}";
+		public override string ResourceURL => $"{Rebellion.RebellionName.StripForURL()}/{ROOT}/{Name.StripForURL()}";
 
 		/// <summary>
 		/// An optional parent group that contains this working group

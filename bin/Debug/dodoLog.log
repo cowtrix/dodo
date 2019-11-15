@@ -2292,3 +2292,633 @@
    at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
    at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
    at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 17:34:30]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 17:34:30]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 17:34:30]	Inner exception: 
+[15/11/2019 17:34:30]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 17:34:30]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 17:34:30]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 17:34:30]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 17:34:30]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 17:34:30]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 17:34:30]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 17:34:30]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 17:34:30]	Inner exception: 
+[15/11/2019 17:34:30]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 17:34:30]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 17:34:30]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 17:34:30]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 17:34:30]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 17:34:30]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 17:34:31]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 17:34:31]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 17:34:31]	Added route for Get a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Delete a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Update a working group @ workinggroups/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Create a new role @ ^newrole$
+[15/11/2019 17:34:31]	Added route for List all roles @ ^roles$
+[15/11/2019 17:34:31]	Added route for Get a role @ roles/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Delete a role @ roles/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Update a role @ roles/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Register a new user @ ^register
+[15/11/2019 17:34:31]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 17:34:31]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 17:34:31]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 17:34:31]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 17:34:31]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 17:34:31]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 17:34:34]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:34]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:34]	Inner exception: 
+[15/11/2019 17:34:34]	The given key was not present in the dictionary.
+[15/11/2019 17:34:34]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:34]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:34]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:34]	Inner exception: 
+[15/11/2019 17:34:34]	The given key was not present in the dictionary.
+[15/11/2019 17:34:34]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:34]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:34]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:34]	Inner exception: 
+[15/11/2019 17:34:34]	The given key was not present in the dictionary.
+[15/11/2019 17:34:34]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:34]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:34]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:34]	Inner exception: 
+[15/11/2019 17:34:34]	The given key was not present in the dictionary.
+[15/11/2019 17:34:34]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:34]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:34]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:34]	Inner exception: 
+[15/11/2019 17:34:34]	The given key was not present in the dictionary.
+[15/11/2019 17:34:34]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:34]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:34]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:34]	Inner exception: 
+[15/11/2019 17:34:34]	The given key was not present in the dictionary.
+[15/11/2019 17:34:34]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:34]	Invalid field names
+[15/11/2019 17:34:34]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.LocalGroups.LocalGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\LocalGroup\LocalGroupRESTHandler.cs:line 57
+[15/11/2019 17:34:34]	You need to login
+[15/11/2019 17:34:34]	   at Dodo.Rebellions.RebellionRESTHandler.CreateFromSchema(HttpRequest request, Object info) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 78
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 46
+   at Dodo.Rebellions.RebellionRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 20
+[15/11/2019 17:34:35]	Insufficient privileges
+[15/11/2019 17:34:35]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 216
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 17:34:35]	Invalid field names
+[15/11/2019 17:34:35]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 17:34:35]	Error parsing boolean value. Path '', line 1, position 1.
+[15/11/2019 17:34:35]	   at Newtonsoft.Json.JsonTextReader.ParseTrue()
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 17:34:35]	Invalid field names
+[15/11/2019 17:34:35]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Users.UserRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+[15/11/2019 17:34:35]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:35]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:35]	Inner exception: 
+[15/11/2019 17:34:35]	The given key was not present in the dictionary.
+[15/11/2019 17:34:35]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:36]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:36]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:36]	Inner exception: 
+[15/11/2019 17:34:36]	The given key was not present in the dictionary.
+[15/11/2019 17:34:36]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:36]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:36]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:36]	Inner exception: 
+[15/11/2019 17:34:36]	The given key was not present in the dictionary.
+[15/11/2019 17:34:36]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:36]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:36]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:36]	Inner exception: 
+[15/11/2019 17:34:36]	The given key was not present in the dictionary.
+[15/11/2019 17:34:36]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:36]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:36]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:36]	Inner exception: 
+[15/11/2019 17:34:36]	The given key was not present in the dictionary.
+[15/11/2019 17:34:36]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 17:34:36]	Exception has been thrown by the target of an invocation.
+[15/11/2019 17:34:36]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 17:34:36]	Inner exception: 
+[15/11/2019 17:34:36]	The given key was not present in the dictionary.
+[15/11/2019 17:34:36]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 57
+[15/11/2019 18:32:23]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 18:32:23]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 18:32:23]	Added route for Get a working group @ workinggroups/(?:^/)*/workinggroups/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Delete a working group @ workinggroups/(?:^/)*/workinggroups/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Update a working group @ workinggroups/(?:^/)*/workinggroups/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Create a new role @ ^newrole$
+[15/11/2019 18:32:23]	Added route for List all roles @ ^roles$
+[15/11/2019 18:32:23]	Added route for Get a role @ roles/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Delete a role @ roles/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Update a role @ roles/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Register a new user @ ^register
+[15/11/2019 18:32:23]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 18:32:23]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 18:32:23]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 18:32:23]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 18:32:23]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 18:32:23]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 18:43:25]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 18:43:25]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 18:43:25]	Inner exception: 
+[15/11/2019 18:43:25]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 18:43:25]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 18:43:25]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 18:43:25]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 18:43:25]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 18:43:25]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 18:43:25]	Error converting value 54321 to type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]'. Path '', line 1, position 5.
+[15/11/2019 18:43:25]	   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.CreateValueInternal(JsonReader reader, Type objectType, JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, Object existingValue)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 18:43:25]	Inner exception: 
+[15/11/2019 18:43:25]	Could not cast or convert from System.Int64 to System.Collections.Generic.Dictionary`2[System.String,System.Object].
+[15/11/2019 18:43:25]	   at Newtonsoft.Json.Utilities.ConvertUtils.EnsureTypeAssignable(Object value, Type initialType, Type targetType)
+   at Newtonsoft.Json.Utilities.ConvertUtils.ConvertOrCast(Object initialValue, CultureInfo culture, Type targetType)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.EnsureType(JsonReader reader, Object value, CultureInfo culture, JsonContract contract, Type targetType)
+[15/11/2019 18:43:25]	Unexpected character encountered while parsing value: a. Path '', line 0, position 0.
+[15/11/2019 18:43:25]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 18:43:25]	Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+[15/11/2019 18:43:25]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 18:43:27]	Added route for Create a new working group @ newworkinggroup
+[15/11/2019 18:43:27]	Added route for List all working groups @ ^workinggroups$
+[15/11/2019 18:43:27]	Added route for Get a working group @ wg/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Delete a working group @ wg/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Update a working group @ wg/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Create a new role @ ^newrole$
+[15/11/2019 18:43:27]	Added route for List all roles @ ^roles$
+[15/11/2019 18:43:27]	Added route for Get a role @ roles/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Delete a role @ roles/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Update a role @ roles/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Register a new user @ ^register
+[15/11/2019 18:43:27]	Added route for Get a user @ u/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Delete a user @ u/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Update a user @ u/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Create a new rebellion @ newrebellion
+[15/11/2019 18:43:27]	Added route for List all rebellions @ ^rebellions$
+[15/11/2019 18:43:27]	Added route for Get a rebellion @ rebellions/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Delete a rebellion @ rebellions/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Update a rebellion @ rebellions/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Create a new local group @ ^newlocalgroup
+[15/11/2019 18:43:27]	Added route for List all local groups @ ^localgroups$
+[15/11/2019 18:43:27]	Added route for Get a local group @ localgroups/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Delete a local group @ localgroups/(?:^/)*
+[15/11/2019 18:43:27]	Added route for Update a local group @ localgroups/(?:^/)*
+[15/11/2019 18:43:29]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:29]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:29]	Inner exception: 
+[15/11/2019 18:43:29]	The given key was not present in the dictionary.
+[15/11/2019 18:43:29]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:29]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:29]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:29]	Inner exception: 
+[15/11/2019 18:43:29]	The given key was not present in the dictionary.
+[15/11/2019 18:43:29]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:29]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:29]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:29]	Inner exception: 
+[15/11/2019 18:43:29]	The given key was not present in the dictionary.
+[15/11/2019 18:43:29]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:29]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:29]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:29]	Inner exception: 
+[15/11/2019 18:43:29]	The given key was not present in the dictionary.
+[15/11/2019 18:43:29]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:29]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:29]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:29]	Inner exception: 
+[15/11/2019 18:43:29]	The given key was not present in the dictionary.
+[15/11/2019 18:43:29]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:29]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:29]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:29]	Inner exception: 
+[15/11/2019 18:43:29]	The given key was not present in the dictionary.
+[15/11/2019 18:43:29]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:30]	Invalid field names
+[15/11/2019 18:43:30]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.LocalGroups.LocalGroupRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\LocalGroup\LocalGroupRESTHandler.cs:line 57
+[15/11/2019 18:43:30]	You need to login
+[15/11/2019 18:43:30]	   at Dodo.Rebellions.RebellionRESTHandler.CreateFromSchema(HttpRequest request, Object info) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 78
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 46
+   at Dodo.Rebellions.RebellionRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 20
+[15/11/2019 18:43:30]	Insufficient privileges
+[15/11/2019 18:43:30]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 216
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 18:43:30]	Invalid field names
+[15/11/2019 18:43:30]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Rebellions.RebellionRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 56
+[15/11/2019 18:43:31]	Error parsing boolean value. Path '', line 1, position 1.
+[15/11/2019 18:43:31]	   at Newtonsoft.Json.JsonTextReader.ParseTrue()
+   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[15/11/2019 18:43:31]	Invalid field names
+[15/11/2019 18:43:31]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 212
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 93
+   at Dodo.Users.UserRESTHandler.UpdateUser(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+[15/11/2019 18:43:31]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:31]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:31]	Inner exception: 
+[15/11/2019 18:43:31]	The given key was not present in the dictionary.
+[15/11/2019 18:43:31]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:31]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:31]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:31]	Inner exception: 
+[15/11/2019 18:43:31]	The given key was not present in the dictionary.
+[15/11/2019 18:43:31]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:31]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:31]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:31]	Inner exception: 
+[15/11/2019 18:43:31]	The given key was not present in the dictionary.
+[15/11/2019 18:43:31]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:31]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:31]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:31]	Inner exception: 
+[15/11/2019 18:43:31]	The given key was not present in the dictionary.
+[15/11/2019 18:43:31]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:31]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:31]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:31]	Inner exception: 
+[15/11/2019 18:43:31]	The given key was not present in the dictionary.
+[15/11/2019 18:43:31]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58
+[15/11/2019 18:43:31]	Exception has been thrown by the target of an invocation.
+[15/11/2019 18:43:31]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, BindingFlags invokeAttr, Binder binder, Object[] index, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.GetValue(Object obj, Object[] index)
+   at System.Reflection.PropertyInfo.GetValue(Object obj)
+   at SimpleHttpServer.REST.JsonViewUtility.GenerateJsonView(Object obj, EPermissionLevel visibility, Object requester, String passPhrase, String memberName) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 112
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 56
+   at Dodo.WorkingGroups.WorkingGroupRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroupRESTHandler.cs:line 22
+[15/11/2019 18:43:31]	Inner exception: 
+[15/11/2019 18:43:31]	The given key was not present in the dictionary.
+[15/11/2019 18:43:31]	   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at Dodo.DodoServer.ResourceManager[T]() in C:\Users\gbfinnes\github\dodo\Dodo\DodoServer.cs:line 47
+   at Dodo.WorkingGroups.WorkingGroup.get_Roles() in C:\Users\gbfinnes\github\dodo\Dodo\Resources\WorkingGroup\WorkingGroup.cs:line 58

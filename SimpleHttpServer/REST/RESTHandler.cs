@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace SimpleHttpServer.REST
 {
@@ -28,13 +29,8 @@ namespace SimpleHttpServer.REST
 				{
 					throw new Exception($"Invalid method signature {GetType().Name}::{method.Name}. Expected single HTTPRequest parameter.");
 				}
-				routeList.Add(new Route()
-				{
-					Name = attr.Name,
-					UrlRegex = attr.URLRegex,
-					Method = attr.RequestType,
-					Callable = WrapRawCall((req) => method.Invoke(this, new[] { req }) as HttpResponse),
-				});
+				routeList.Add(new Route(attr.Name, attr.RequestType, (url) => Regex.Match(url, attr.URLRegex).Success,
+					WrapRawCall((req) => method.Invoke(this, new[] { req }) as HttpResponse)));
 				Logger.Debug($"Added route for {attr.Name} @ {attr.URLRegex}");
 			}
 		}

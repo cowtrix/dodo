@@ -143,7 +143,7 @@ namespace SimpleHttpServer
 
 		protected virtual HttpResponse RouteRequest(HttpRequest request)
 		{
-			List<Route> routes = this.Routes.Where(x => Regex.Match(request.Url, x.UrlRegex).Success).ToList();
+			List<Route> routes = this.Routes.Where(x => x.UrlMatcher(request.Url)).ToList();
 
 			if (!routes.Any())
 				return HttpBuilder.NotFound();
@@ -158,13 +158,7 @@ namespace SimpleHttpServer
 
 				};
 
-			// extract the path if there is one
-			var match = Regex.Match(request.Url,route.UrlRegex);
-			if (match.Groups.Count > 1) {
-				request.Path = (match.Groups[1].Value);
-			} else {
-				request.Path = (request.Url);
-			}
+			request.Path = request.Url;
 
 			// trigger the route handler...
 			request.Route = route;

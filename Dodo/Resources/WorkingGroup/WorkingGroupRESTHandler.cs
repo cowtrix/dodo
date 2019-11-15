@@ -17,7 +17,7 @@ namespace Dodo.WorkingGroups
 		const string URL_REGEX = WorkingGroup.ROOT + "/(?:^/)*";
 
 		[Route("Create a new working group", "newworkinggroup", EHTTPRequestType.POST)]
-		public HttpResponse Register(HttpRequest request)
+		public HttpResponse Create(HttpRequest request)
 		{
 			return CreateObject(request);
 		}
@@ -31,7 +31,7 @@ namespace Dodo.WorkingGroups
 		}
 
 		[Route("Get a working group", URL_REGEX, EHTTPRequestType.GET)]
-		public HttpResponse GetUser(HttpRequest request)
+		public HttpResponse Get(HttpRequest request)
 		{
 			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			var workingGroup = GetResource(request.Url);

@@ -5,6 +5,7 @@ using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System;
+using System.Collections.Generic;
 
 namespace Dodo
 {
@@ -43,12 +44,9 @@ namespace Dodo
 
 		public DodoRESTServer(int port, string certificate, string sslPassword) : base(port, certificate, sslPassword)
 		{
-			Routes.Add(new Route()
-			{
-				Name = "Resource lookup",
-				Method = EHTTPRequestType.GET,
-				UrlRegex = "resources/(?:^/)*",
-				Callable = request =>
+			// Add resource lookup
+			Routes.Add(new Route("Resource lookup", EHTTPRequestType.GET, (url) => url.StartsWith("resources/"),
+				request =>
 				{
 					try
 					{
@@ -77,8 +75,8 @@ namespace Dodo
 						}
 						return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message);
 					}
-				},
-			});
+				}
+			));
 		}
 	}
 }
