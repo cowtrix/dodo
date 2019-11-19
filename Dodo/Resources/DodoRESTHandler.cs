@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using System.Collections.Generic;
+using Common;
 using Dodo.Resources;
 using Dodo.Users;
 using SimpleHttpServer;
@@ -9,6 +10,12 @@ namespace Dodo
 {
 	public abstract class DodoRESTHandler<T> : ObjectRESTHandler<T> where T: DodoResource, IRESTResource
 	{
+		protected override bool UrlIsMatch(string url)
+		{
+			var rm = DodoServer.ResourceManager<T>();
+			return rm.GetSingle(x => x.ResourceURL == url) != null;
+		}
+
 		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out string passphrase)
 		{
 			var target = GetResource(request.Url);

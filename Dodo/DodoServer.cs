@@ -1,6 +1,7 @@
 ﻿using Common;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
+using Dodo.Roles;
 using Dodo.Users;
 using Dodo.WorkingGroups;
 using SimpleHttpServer.REST;
@@ -32,6 +33,7 @@ namespace Dodo
 				{ typeof(LocalGroup), new LocalGroupManager() },
 				{ typeof(WorkingGroup), new WorkingGroupManager() },
 				{ typeof(Task), new WorkingGroupManager() },
+				{ typeof(Role), new RoleManager() },
 			};
 			/*m_backupManager = new BackupManager();
 			foreach(var rm in m_resourceManagers)

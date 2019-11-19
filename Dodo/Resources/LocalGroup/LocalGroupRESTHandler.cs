@@ -29,34 +29,6 @@ namespace Dodo.LocalGroups
 				.GenerateJsonView(EPermissionLevel.USER, owner, passPhrase));
 		}
 
-		[Route("Get a local group", URL_REGEX, EHTTPRequestType.GET)]
-		public HttpResponse GetUser(HttpRequest request)
-		{
-			var owner = DodoRESTServer.GetRequestOwner(request, out var passPhrase);
-			var localGroup = GetResource(request.Url);
-			if (localGroup == null)
-			{
-				throw HTTPException.NOT_FOUND;
-			}
-			if (!localGroup.IsAuthorised(owner, request, out var view))
-			{
-				throw HTTPException.FORBIDDEN;
-			}
-			return HttpBuilder.OK(localGroup.GenerateJsonView(view, owner, passPhrase));
-		}
-
-		[Route("Delete a local group", URL_REGEX, EHTTPRequestType.DELETE)]
-		public HttpResponse DeleteUser(HttpRequest request)
-		{
-			return DeleteObject(request);
-		}
-
-		[Route("Update a local group", URL_REGEX, EHTTPRequestType.PATCH)]
-		public HttpResponse UpdateUser(HttpRequest request)
-		{
-			return UpdateObject(request);
-		}
-
 		protected override LocalGroup GetResource(string url)
 		{
 			if(!Regex.IsMatch(url, URL_REGEX))

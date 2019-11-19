@@ -19,34 +19,6 @@ namespace Dodo.Users
 			return CreateObject(request);
 		}
 
-		[Route("Get a user", URL_REGEX, EHTTPRequestType.GET)]
-		public HttpResponse GetUser(HttpRequest request)
-		{
-			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
-			var user = GetResource(request.Url);
-			if(user == null)
-			{
-				throw HTTPException.NOT_FOUND;
-			}
-			if (!user.IsAuthorised(owner, request, out var view))
-			{
-				throw HTTPException.FORBIDDEN;
-			}
-			return HttpBuilder.OK(user.GenerateJsonView(view, owner, passphrase));
-		}
-
-		[Route("Delete a user", URL_REGEX, EHTTPRequestType.DELETE)]
-		public HttpResponse DeleteUser(HttpRequest request)
-		{
-			return DeleteObject(request);
-		}
-
-		[Route("Update a user", URL_REGEX, EHTTPRequestType.PATCH)]
-		public HttpResponse UpdateUser(HttpRequest request)
-		{
-			return UpdateObject(request);
-		}
-
 		protected override User GetResource(string url)
 		{
 			if(!Regex.IsMatch(url, URL_REGEX))

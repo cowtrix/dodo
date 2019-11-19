@@ -45,12 +45,16 @@ namespace SimpleHttpServer.REST
 				}
 				catch (Exception e)
 				{
-					Logger.Exception(e.InnerException);
-					if (e.InnerException is HTTPException)
+					Logger.Exception(e);
+					if(e.InnerException != null)
 					{
-						return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message, (e.InnerException as HTTPException).ErrorCode);
+						e = e.InnerException;
 					}
-					return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message);
+					if (e is HTTPException)
+					{
+						return HttpBuilder.Error("Error processing request:\n" + e.Message, (e as HTTPException).ErrorCode);
+					}
+					return HttpBuilder.Error("Error processing request:\n" + e.Message);
 				}
 			};
 		}

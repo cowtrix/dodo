@@ -9,6 +9,31 @@ namespace SimpleHttpServer.REST
 {
 	public abstract class ObjectRESTHandler<T> : RESTHandler where T: class, IRESTResource
 	{
+		public override void AddRoutes(List<Route> routeList)
+		{
+			routeList.Add(new Route(
+				$"{GetType().Name} GET",
+				EHTTPRequestType.GET,
+				UrlIsMatch,
+				WrapRawCall((req) => GetObject(req))
+				));
+			routeList.Add(new Route(
+				$"{GetType().Name} PATCH",
+				EHTTPRequestType.PATCH,
+				UrlIsMatch,
+				WrapRawCall((req) => UpdateObject(req))
+				));
+			routeList.Add(new Route(
+				$"{GetType().Name} DELETE",
+				EHTTPRequestType.DELETE,
+				UrlIsMatch,
+				WrapRawCall((req) => DeleteObject(req))
+				));
+			base.AddRoutes(routeList);
+		}
+
+		protected abstract bool UrlIsMatch(string url);
+
 		/// <summary>
 		/// Get the resource of this type given a url.
 		/// </summary>
@@ -21,7 +46,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		protected abstract bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object contxt, out string passphrase);
+		protected abstract bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out string passphrase);
 
 		/// <summary>
 		/// Create a new object, and return the resource url.
@@ -107,6 +132,20 @@ namespace SimpleHttpServer.REST
 			DeleteObjectInternal(target);
 			return HttpBuilder.Custom("Resource deleted", 204);
 		}
+		public HttpResponse GetObject(HttpRequest request)
+		{
+			var target = GetResource(request.Url);
+			if (target == null)
+			{
+				throw HTTPException.NOT_FOUND;
+			}
+			if (!IsAuthorised(request, out var view, out var context, out var passphrase))
+			{
+				throw HTTPException.FORBIDDEN;
+			}
+			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
+		}
+
 		protected abstract void DeleteObjectInternal(T target);
 	}
 }
