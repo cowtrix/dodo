@@ -17,6 +17,8 @@ namespace Dodo.Users
 		[View(EPermissionLevel.OWNER)]
 		public string Email;
 		[View(EPermissionLevel.OWNER)]
+		public string Name;
+		[View(EPermissionLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 
 		public User() : base(null)

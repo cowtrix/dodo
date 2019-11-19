@@ -56,7 +56,7 @@ namespace Dodo.WorkingGroups
 			{
 				throw new HTTPException("Rebellion doesn't exist with that GUID", 404);
 			}
-			string parentWGstring = info.ParentWorkingGroupGUID.ToString();
+			string parentWGstring = info.ParentGroup.ToString();
 			ResourceReference<WorkingGroup> parentWG = default;
 			if (!string.IsNullOrEmpty(parentWGstring))
 			{

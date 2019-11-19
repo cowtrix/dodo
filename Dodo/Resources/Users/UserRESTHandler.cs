@@ -1,4 +1,5 @@
-﻿using Dodo.Resources;
+﻿using Common;
+using Dodo.Resources;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
@@ -36,13 +37,22 @@ namespace Dodo.Users
 
 		protected override dynamic GetCreationSchema()
 		{
-			return new { Username = "", Password = "", Email = "" };
+			return new { Username = "", Name = "", Password = "", Email = "" };
 		}
 
 		protected override User CreateFromSchema(HttpRequest request, dynamic info)
 		{
+			if (!ValidationExtensions.StrongPassword(info.Password.ToString(), out string error))
+			{
+				throw new Exception(error);
+			}
+			if (!ValidationExtensions.EmailIsValid(info.Email.ToString()))
+			{
+				throw new Exception("Invalid email address");
+			}
 			var newUser = new User(new WebPortalAuth(info.Username.ToString(), info.Password.ToString()), info.Password.ToString());
 			newUser.Email = info.Email;
+			newUser.Name = info.Name.ToString();
 			DodoServer.ResourceManager<User>().Add(newUser);
 			return newUser;
 		}
