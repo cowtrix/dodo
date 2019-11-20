@@ -1,9 +1,73 @@
-﻿using System;
+﻿using RestSharp;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Common
 {
+
+	public interface IVerifiable
+	{
+		void CheckValue();
+	}
+
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	public abstract class VerifyMemberBase : Attribute
+	{
+		public abstract bool Verify(object value, out string error);
+	}
+
+	public class EmailAttribute : VerifyMemberBase
+	{
+		public override bool Verify(object value, out string error)
+		{
+			error = "Invalid email";
+			return ValidationExtensions.EmailIsValid(value as string);
+		}
+	}
+
+	public class PhoneNumberAttribute : VerifyMemberBase
+	{
+		public override bool Verify(object value, out string error)
+		{
+			var ph = value as string;
+			if(!ValidationExtensions.ValidateNumber(ref ph))
+			{
+				error = "Invalid phone number";
+				return false;
+			}
+			error = null;
+			return true;
+		}
+	}
+
+	public class UsernameAttribute : VerifyMemberBase
+	{
+		public override bool Verify(object value, out string error)
+		{
+			var str = value as string;
+			if (!ValidationExtensions.UsernameIsValid(str, out error))
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
+	public class UserFriendlyNameAttribute : VerifyMemberBase
+	{
+		public override bool Verify(object value, out string error)
+		{
+			var str = value as string;
+			if (!ValidationExtensions.NameIsValid(str, out error))
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
 
 	public static class ValidationExtensions
 	{
@@ -70,6 +134,29 @@ namespace Common
 			return true;
 			//return Regex.IsMatch(number,
 			//	@"^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$");
+		}
+
+		static IList<string> m_reservedWords = new List<string>()
+		{
+			"COORDINATOR", "ADMIN",
+		};
+		public static bool NameIsValid(string name, out string error)
+		{
+			const int NAME_MIN_LENGTH = 3;
+			const int NAME_MAX_LENGTH = 64;
+			if (string.IsNullOrEmpty(name) || name.Length < NAME_MIN_LENGTH || name.Length > NAME_MAX_LENGTH)
+			{
+				error = $"Name length must be between {NAME_MIN_LENGTH} and {NAME_MAX_LENGTH} characters long";
+				return false;
+			}
+			var reserved = m_reservedWords.FirstOrDefault(w => name.ToUpperInvariant().Contains(w));
+			if(!string.IsNullOrEmpty(reserved))
+			{
+				error = $"Name contains reserved word: " + reserved;
+				return false;
+			}
+			error = null;
+			return true;
 		}
 
 		public static bool UsernameIsValid(string username, out string error)

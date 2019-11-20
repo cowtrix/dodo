@@ -4225,3 +4225,877 @@
    at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
    at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
    at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:09:58]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:09:58]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:09:58]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:09:58]	Added route for List all roles @ ^roles$
+[20/11/2019 17:09:58]	Added route for Register a new user @ ^register
+[20/11/2019 17:09:58]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:09:58]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:09:58]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:09:58]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:19:24]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:19:24]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:19:24]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:19:24]	Added route for List all roles @ ^roles$
+[20/11/2019 17:19:24]	Added route for Register a new user @ ^register
+[20/11/2019 17:19:24]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:19:24]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:19:24]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:19:24]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:25:42]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:25:42]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:25:42]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:25:42]	Added route for List all roles @ ^roles$
+[20/11/2019 17:25:42]	Added route for Register a new user @ ^register
+[20/11/2019 17:25:42]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:25:42]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:25:42]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:25:42]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:29:33]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:29:33]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:29:33]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:29:33]	Added route for List all roles @ ^roles$
+[20/11/2019 17:29:33]	Added route for Register a new user @ ^register
+[20/11/2019 17:29:33]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:29:33]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:29:33]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:29:33]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:29:35]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:29:35]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:29:35]	Inner exception: 
+[20/11/2019 17:29:35]	Exception of type 'System.Exception' was thrown.
+[20/11/2019 17:29:35]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:30:00]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:30:00]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:30:00]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:30:00]	Added route for List all roles @ ^roles$
+[20/11/2019 17:30:00]	Added route for Register a new user @ ^register
+[20/11/2019 17:30:00]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:30:00]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:30:00]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:30:00]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:30:35]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:30:35]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:30:35]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:30:35]	Added route for List all roles @ ^roles$
+[20/11/2019 17:30:35]	Added route for Register a new user @ ^register
+[20/11/2019 17:30:35]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:30:35]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:30:35]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:30:35]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:36:00]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:36:00]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:36:00]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:36:00]	Added route for List all roles @ ^roles$
+[20/11/2019 17:36:00]	Added route for Register a new user @ ^register
+[20/11/2019 17:36:00]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:36:00]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:36:00]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:36:00]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:36:02]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:36:02]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:36:02]	Inner exception: 
+[20/11/2019 17:36:02]	Name length must be between 3 and 64 characters long
+[20/11/2019 17:36:02]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:37:00]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:37:00]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:37:00]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:37:00]	Added route for List all roles @ ^roles$
+[20/11/2019 17:37:00]	Added route for Register a new user @ ^register
+[20/11/2019 17:37:00]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:37:00]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:37:00]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:37:00]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:37:02]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:37:02]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:37:02]	Inner exception: 
+[20/11/2019 17:37:02]	Name length must be between 3 and 64 characters long
+[20/11/2019 17:37:02]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:37:03]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:37:03]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:37:03]	Inner exception: 
+[20/11/2019 17:37:03]	Name length must be between 3 and 64 characters long
+[20/11/2019 17:37:03]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:37:03]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:37:03]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:37:03]	Inner exception: 
+[20/11/2019 17:37:03]	Name contains reserved word: COORDINATOR
+[20/11/2019 17:37:03]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:39:22]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:39:22]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:39:22]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:39:22]	Added route for List all roles @ ^roles$
+[20/11/2019 17:39:22]	Added route for Register a new user @ ^register
+[20/11/2019 17:39:22]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:39:22]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:39:22]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:39:22]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:39:24]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:39:24]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:39:24]	Inner exception: 
+[20/11/2019 17:39:24]	Name length must be between 3 and 64 characters long
+[20/11/2019 17:39:24]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:39:24]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:39:24]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:39:24]	Inner exception: 
+[20/11/2019 17:39:24]	Name length must be between 3 and 64 characters long
+[20/11/2019 17:39:24]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:39:24]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:39:24]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:39:24]	Inner exception: 
+[20/11/2019 17:39:24]	Name contains reserved word: COORDINATOR
+[20/11/2019 17:39:24]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:39:24]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:39:24]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:39:24]	Inner exception: 
+[20/11/2019 17:39:24]	Name contains reserved word: ADMIN
+[20/11/2019 17:39:24]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:39:57]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 17:39:57]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 17:39:57]	Added route for Create a new role @ ^newrole$
+[20/11/2019 17:39:57]	Added route for List all roles @ ^roles$
+[20/11/2019 17:39:57]	Added route for Register a new user @ ^register
+[20/11/2019 17:39:57]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 17:39:57]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 17:39:57]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 17:39:57]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 17:39:59]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:39:59]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:39:59]	Inner exception: 
+[20/11/2019 17:39:59]	Name length must be between 3 and 64 characters long
+[20/11/2019 17:39:59]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:39:59]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:39:59]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:39:59]	Inner exception: 
+[20/11/2019 17:39:59]	Name length must be between 3 and 64 characters long
+[20/11/2019 17:39:59]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:39:59]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:39:59]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:39:59]	Inner exception: 
+[20/11/2019 17:39:59]	Name contains reserved word: COORDINATOR
+[20/11/2019 17:39:59]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 17:39:59]	Exception has been thrown by the target of an invocation.
+[20/11/2019 17:39:59]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 17:39:59]	Inner exception: 
+[20/11/2019 17:39:59]	Name contains reserved word: ADMIN
+[20/11/2019 17:39:59]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:02:10]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 18:02:10]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 18:02:10]	Added route for Create a new role @ ^newrole$
+[20/11/2019 18:02:10]	Added route for List all roles @ ^roles$
+[20/11/2019 18:02:10]	Added route for Register a new user @ ^register
+[20/11/2019 18:02:10]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 18:02:10]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 18:02:10]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 18:02:10]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 18:02:12]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:02:12]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 305
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:14]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 18:03:14]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 18:03:14]	Added route for Create a new role @ ^newrole$
+[20/11/2019 18:03:14]	Added route for List all roles @ ^roles$
+[20/11/2019 18:03:14]	Added route for Register a new user @ ^register
+[20/11/2019 18:03:14]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 18:03:14]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 18:03:14]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 18:03:14]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 18:03:16]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:03:16]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 305
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:51]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 18:03:51]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 18:03:51]	Added route for Create a new role @ ^newrole$
+[20/11/2019 18:03:51]	Added route for List all roles @ ^roles$
+[20/11/2019 18:03:51]	Added route for Register a new user @ ^register
+[20/11/2019 18:03:51]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 18:03:51]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 18:03:51]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 18:03:51]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 18:03:54]	Object reference not set to an instance of an object.
+[20/11/2019 18:03:54]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 255
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:54]	Invalid field names
+[20/11/2019 18:03:54]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:54]	Object reference not set to an instance of an object.
+[20/11/2019 18:03:54]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 255
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:54]	Invalid field names
+[20/11/2019 18:03:54]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:54]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:54]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:54]	Inner exception: 
+[20/11/2019 18:03:54]	You need to login
+[20/11/2019 18:03:54]	   at Dodo.Rebellions.RebellionRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 46
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Rebellions.RebellionRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 24
+[20/11/2019 18:03:54]	Insufficient privileges
+[20/11/2019 18:03:54]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 211
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Object reference not set to an instance of an object.
+[20/11/2019 18:03:55]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 303
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Invalid field names
+[20/11/2019 18:03:55]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Invalid email address
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Invalid email address
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Invalid email address
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Name contains reserved word: COORDINATOR
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Name contains reserved word: ADMIN
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Username must be at least 3 characters
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Username must be at least 3 characters
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Username can only contain alphanumeric characters and _
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Username can only contain alphanumeric characters and _
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Username was invalid, Expected: aaaaa Received: AAAAA
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Password should not be empty
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 42
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Password should be between 8 and 20 characters
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 42
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Password should be between 8 and 20 characters
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 42
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:03:55]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Inner exception: 
+[20/11/2019 18:03:55]	Password should contain at least one symbol
+[20/11/2019 18:03:55]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 42
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:03:55]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:03:55]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 305
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:55]	Unexpected character encountered while parsing value: B. Path '', line 0, position 0.
+[20/11/2019 18:03:55]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[20/11/2019 18:03:55]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:03:55]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 305
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:56]	Cannot patch field Email
+[20/11/2019 18:03:56]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 270
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:56]	Invalid field names
+[20/11/2019 18:03:56]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:56]	Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+[20/11/2019 18:03:56]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[20/11/2019 18:03:56]	Object reference not set to an instance of an object.
+[20/11/2019 18:03:56]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 303
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:03:56]	Invalid field names
+[20/11/2019 18:03:56]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:49]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 18:06:49]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 18:06:49]	Added route for Create a new role @ ^newrole$
+[20/11/2019 18:06:49]	Added route for List all roles @ ^roles$
+[20/11/2019 18:06:49]	Added route for Register a new user @ ^register
+[20/11/2019 18:06:49]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 18:06:49]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 18:06:49]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 18:06:49]	Added route for List all local groups @ ^localgroups$
+[20/11/2019 18:06:51]	Object reference not set to an instance of an object.
+[20/11/2019 18:06:51]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 255
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:51]	Invalid field names
+[20/11/2019 18:06:51]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:52]	Object reference not set to an instance of an object.
+[20/11/2019 18:06:52]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 255
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:52]	Invalid field names
+[20/11/2019 18:06:52]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:52]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:52]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:52]	Inner exception: 
+[20/11/2019 18:06:52]	You need to login
+[20/11/2019 18:06:52]	   at Dodo.Rebellions.RebellionRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 46
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Rebellions.RebellionRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Rebellion\RebellionRESTHandler.cs:line 24
+[20/11/2019 18:06:52]	Insufficient privileges
+[20/11/2019 18:06:52]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 211
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Invalid field names
+[20/11/2019 18:06:53]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Invalid email address
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Invalid email address
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Invalid email address
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 47
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Name contains reserved word: COORDINATOR
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Name contains reserved word: ADMIN
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 56
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Username must be at least 3 characters
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Username must be at least 3 characters
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Username can only contain alphanumeric characters and _
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Username can only contain alphanumeric characters and _
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Username was invalid, Expected: aaaaa Received: AAAAA
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 52
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Password should not be empty
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 42
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Password should be between 8 and 20 characters
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 42
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Password should be between 8 and 20 characters
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 42
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Exception has been thrown by the target of an invocation.
+[20/11/2019 18:06:53]	   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor)
+   at System.Reflection.RuntimeMethodInfo.UnsafeInvokeInternal(Object obj, Object[] parameters, Object[] arguments)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.MethodBase.Invoke(Object obj, Object[] parameters)
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass0_0.<AddRoutes>b__1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 33
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Inner exception: 
+[20/11/2019 18:06:53]	Password should contain at least one symbol
+[20/11/2019 18:06:53]	   at Dodo.Users.UserRESTHandler.CreateFromSchema(HttpRequest request, IRESTResourceSchema schema) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 42
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 71
+   at Dodo.Users.UserRESTHandler.Register(HttpRequest request) in C:\Users\gbfinnes\github\dodo\Dodo\Resources\Users\UserRESTHandler.cs:line 28
+[20/11/2019 18:06:53]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:06:53]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 305
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Unexpected character encountered while parsing value: C. Path '', line 0, position 0.
+[20/11/2019 18:06:53]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[20/11/2019 18:06:53]	Name length must be between 3 and 64 characters long
+[20/11/2019 18:06:53]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 305
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:53]	Unexpected character encountered while parsing value: J. Path '', line 0, position 0.
+[20/11/2019 18:06:53]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[20/11/2019 18:06:53]	Invalid field names
+[20/11/2019 18:06:53]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:06:54]	Unexpected character encountered while parsing value: T. Path '', line 0, position 0.
+[20/11/2019 18:06:54]	   at Newtonsoft.Json.JsonTextReader.ParseValue()
+   at Newtonsoft.Json.JsonTextReader.Read()
+   at Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   at Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   at Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 289
+[20/11/2019 18:06:54]	Invalid field names
+[20/11/2019 18:06:54]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 207
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 118
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_1(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 24
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[20/11/2019 18:07:20]	Added route for Create a new working group @ newworkinggroup
+[20/11/2019 18:07:20]	Added route for List all working groups @ ^workinggroups$
+[20/11/2019 18:07:20]	Added route for Create a new role @ ^newrole$
+[20/11/2019 18:07:20]	Added route for List all roles @ ^roles$
+[20/11/2019 18:07:20]	Added route for Register a new user @ ^register
+[20/11/2019 18:07:20]	Added route for Create a new rebellion @ newrebellion
+[20/11/2019 18:07:20]	Added route for List all rebellions @ ^rebellions$
+[20/11/2019 18:07:20]	Added route for Create a new local group @ ^newlocalgroup
+[20/11/2019 18:07:20]	Added route for List all local groups @ ^localgroups$

@@ -18,6 +18,7 @@ namespace Dodo.Users
 		/// The user's username
 		/// </summary>
 		[View(EPermissionLevel.USER)]
+		[Username]
 		public string Username { get; private set; }
 
 		/// <summary>

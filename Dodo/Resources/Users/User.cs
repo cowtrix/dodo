@@ -14,10 +14,16 @@ namespace Dodo.Users
 		[NoPatch]
 		[View(EPermissionLevel.OWNER)]
 		public WebPortalAuth WebAuth;
+
 		[View(EPermissionLevel.OWNER)]
+		[Email]
+		[NoPatch]
 		public string Email;
+
 		[View(EPermissionLevel.OWNER)]
+		[UserFriendlyName]
 		public string Name;
+
 		[View(EPermissionLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 

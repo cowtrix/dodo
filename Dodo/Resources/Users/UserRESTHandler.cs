@@ -51,6 +51,10 @@ namespace Dodo.Users
 			{
 				throw new Exception(error);
 			}
+			if(!ValidationExtensions.NameIsValid(info.Name, out error))
+			{
+				throw new Exception(error);
+			}
 			var newUser = new User(new WebPortalAuth(username, password), password);
 			newUser.Email = email;
 			newUser.Name = info.Name.ToString();

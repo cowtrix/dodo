@@ -20,7 +20,7 @@ namespace RESTTests
 
 		public override object GetPatchSchema()
 		{
-			return new { Email = "newemail@web.com" };
+			return new { Name = "John Doe" };
 		}
 
 		[TestMethod]
@@ -34,6 +34,22 @@ namespace RESTTests
 
 			AssertX.Throws<Exception>(() => RegisterUser(email: "myemail @gmail.com"),
 				e => e.Message.Contains("Invalid email address"));
+		}
+
+		[TestMethod]
+		public void CannotCreateWithInvalidName()
+		{
+			AssertX.Throws<Exception>(() => RegisterUser(name: ""),
+				e => e.Message.Contains("Name length must be between "));
+
+			AssertX.Throws<Exception>(() => RegisterUser(name: StringExtensions.RandomString(256)),
+				e => e.Message.Contains("Name length must be between "));
+
+			AssertX.Throws<Exception>(() => RegisterUser(name: "I'm a coordinator"),
+				e => e.Message.Contains("Name contains reserved word: COORDINATOR"));
+
+			AssertX.Throws<Exception>(() => RegisterUser(name: "System Administrator"),
+				e => e.Message.Contains("Name contains reserved word: ADMIN"));
 		}
 
 		[TestMethod]
@@ -69,6 +85,18 @@ namespace RESTTests
 
 			AssertX.Throws<Exception>(() => RegisterUser(password: "password"),
 				e => e.Message.Contains("Password should contain at least one symbol"));
+		}
+
+		[TestMethod]
+		public void CannotPatchUserWithInvalidName()
+		{
+			var obj = RegisterUser();
+
+			AssertX.Throws<Exception>(() => RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, new { Name = "" }),
+				e => e.Message.Contains("Name length must be between "));
+
+			AssertX.Throws<Exception>(() => RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, new { Name = StringExtensions.RandomString(256) }),
+				e => e.Message.Contains("Name length must be between "));
 		}
 	}
 }

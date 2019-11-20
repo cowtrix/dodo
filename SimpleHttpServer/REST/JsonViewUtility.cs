@@ -54,11 +54,6 @@ namespace SimpleHttpServer.REST
 		}
 	}
 
-	public interface IVerifiable
-	{
-		void CheckValue();
-	}
-
 	public static class JsonViewUtility
 	{
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
@@ -256,6 +251,11 @@ namespace SimpleHttpServer.REST
 					decryptable.SetValue(valueToSet, visibility, requester, passphrase);
 					valueToSet = decryptable;
 				}
+				var checkAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
+				if(checkAttr != null && !checkAttr.Verify(valueToSet, out var error))
+				{
+					throw new Exception(error);
+				}
 				targetMember.SetValue(targetObject, valueToSet);
 			}
 			foreach (var val in values)
@@ -298,6 +298,11 @@ namespace SimpleHttpServer.REST
 					var decryptable = fieldValue as IDecryptable;
 					decryptable.SetValue(valueToSet, visibility, requester, passphrase);
 					valueToSet = decryptable;
+				}
+				var checkAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
+				if (checkAttr != null && !checkAttr.Verify(valueToSet, out var error))
+				{
+					throw new Exception(error);
 				}
 				if (targetObject.GetType().IsValueType)
 				{
