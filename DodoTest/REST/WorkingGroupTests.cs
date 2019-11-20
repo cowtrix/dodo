@@ -16,14 +16,14 @@ namespace RESTTests
 		[TestInitialize]
 		public void Setup()
 		{
-			RequestJSON("register", Method.POST, new { Username = CurrentLogin, Password = CurrentPassword, Email = "" });
+			RegisterUser(DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 			Rebellion = RequestJSON("newrebellion", Method.POST, new { RebellionName = "Test Rebellion", Location = new GeoLocation(45, 97) })
 				.Value<string>("GUID");
 		}
 
 		public override object GetCreationSchema()
 		{
-			return new { RebellionGUID = Rebellion, ParentWorkingGroupGUID = "", WorkingGroupName = "Test Working Group" };
+			return new WorkingGroupRESTHandler.CreationSchema { RebellionGUID = Rebellion, ParentGroup = "", WorkingGroupName = "Test Working Group" };
 		}
 
 		public override object GetPatchSchema()

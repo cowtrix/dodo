@@ -16,11 +16,6 @@ namespace SimpleHttpServer.REST
 			ResourceManagers[manager] = true;
 		}
 
-		public static string StripForURL(this string s)
-		{
-			return System.Net.WebUtility.UrlEncode(Regex.Replace(s.ToLower(), @"\s+", ""));
-		}
-
 		public static T GetResourceByGuid<T>(this Guid guid) where T : class, IRESTResource
 		{
 			var rm = GetManagerForResource(guid);

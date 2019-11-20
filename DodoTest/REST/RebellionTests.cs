@@ -14,13 +14,18 @@ namespace RESTTests
 		public override string CreationURL => "newrebellion";
 		public override object GetCreationSchema()
 		{
-			return new { RebellionName = "Test Rebellion", Location = new GeoLocation(45, 97) };
+			return new RebellionRESTHandler.CreationSchema { RebellionName = "Test Rebellion", Location = new GeoLocation(45, 97) };
+		}
+
+		public override object GetPatchSchema()
+		{
+			return new { Location = new GeoLocation(62, 41) };
 		}
 
 		[TestInitialize]
 		public void Setup()
 		{
-			RequestJSON("register", Method.POST, new { Username = CurrentLogin, Password = CurrentPassword, Email = "" });
+			RegisterUser(DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 		}
 
 		[TestMethod]
@@ -36,19 +41,14 @@ namespace RESTTests
 		public void CannotPatchProtectedField()
 		{
 			var rebellion = CreateNewRebellion("Test rebellion", new GeoLocation());
-			var newUser = RegisterUser("Second user", "password");
+			var newUser = RegisterRandomUser(out var username, out _, out var password, out _);
 			AssertX.Throws<Exception>(() => RequestJSON(rebellion.Value<string>("ResourceURL"), Method.PATCH, new
 			{
 				BotConfiguration = new RebellionBotConfiguration()
 				{
 					TelegramConfig = new RebellionBotConfiguration.TelegramConfiguration()
 				}
-			}, "Second user", "password"), (e) => e.Message.Contains("Insufficient privileges"));
-		}
-
-		public override object GetPatchSchema()
-		{
-			return new { Location = new GeoLocation(62, 41) };
+			}, username, password), (e) => e.Message.Contains("Insufficient privileges"));
 		}
 	}
 }

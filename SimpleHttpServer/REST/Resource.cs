@@ -8,9 +8,11 @@ namespace SimpleHttpServer.REST
 	{
 		Guid GUID { get; }
 		string ResourceURL { get; }
-
 		void OnDestroy();
 	}
+
+	public interface IRESTResourceSchema
+	{ }
 
 	/// <summary>
 	/// A resource is a component that can be interacted with through REST API calls

@@ -21,8 +21,6 @@ namespace SimpleHttpServer
 
 		#region Fields
 
-		private static int MAX_POST_SIZE = 10 * 1024 * 1024; // 10MB
-
 		private List<Route> Routes = new List<Route>();
 
 		#endregion

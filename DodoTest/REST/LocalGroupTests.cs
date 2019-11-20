@@ -13,12 +13,12 @@ namespace RESTTests
 		[TestInitialize]
 		public void Setup()
 		{
-			RequestJSON("register", Method.POST, new { Username = CurrentLogin, Password = CurrentPassword, Email = "" });
+			RegisterUser(DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 		}
 
 		public override object GetCreationSchema()
 		{
-			return new { Name = "", Location = new GeoLocation(87, 14) };
+			return new LocalGroupRESTHandler.CreationSchema { Name = "", Location = new GeoLocation(87, 14) };
 		}
 
 		public override object GetPatchSchema()

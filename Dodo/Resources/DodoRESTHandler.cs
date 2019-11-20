@@ -12,8 +12,19 @@ namespace Dodo
 	{
 		protected override bool UrlIsMatch(string url)
 		{
+			return GetResource(url) != null;
+		}
+
+		protected override T GetResource(string url)
+		{
 			var rm = DodoServer.ResourceManager<T>();
-			return rm.GetSingle(x => x.ResourceURL == url) != null;
+			return rm.GetSingle(x => x.ResourceURL == url);
+		}
+
+		protected override void DeleteObjectInternal(T target)
+		{
+			var rm = DodoServer.ResourceManager<T>();
+			rm.Delete(target);
 		}
 
 		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out string passphrase)

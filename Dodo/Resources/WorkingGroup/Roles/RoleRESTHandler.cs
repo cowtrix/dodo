@@ -16,7 +16,12 @@ namespace Dodo.Roles
 {
 	public class RoleRESTHandler : DodoRESTHandler<Role>
 	{
-		const string URL_REGEX = Role.ROOT + "/(?:^/)*";
+		public class CreationSchema : IRESTResourceSchema
+		{
+			public string Name = "";
+			public string Mandate = "";
+			public string GroupGUID = "";
+		}
 
 		[Route("Create a new role", "^newrole$", EHTTPRequestType.POST)]
 		public HttpResponse Register(HttpRequest request)
@@ -32,22 +37,14 @@ namespace Dodo.Roles
 				.GenerateJsonView(EPermissionLevel.USER, owner, passphrase));
 		}
 
-		protected override Role GetResource(string url)
+		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			if(!Regex.IsMatch(url, URL_REGEX))
-			{
-				return null;
-			}
-			return DodoServer.ResourceManager<Role>().GetSingle(x => x.ResourceURL == url);
+			return new CreationSchema();
 		}
 
-		protected override dynamic GetCreationSchema()
+		protected override Role CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
-			return new { GroupGUID = "", Name = "", Mandate = "" };
-		}
-
-		protected override Role CreateFromSchema(HttpRequest request, dynamic info)
-		{
+			var info = (CreationSchema)schema;
 			var user = DodoRESTServer.GetRequestOwner(request);
 			if(user == null)
 			{
@@ -60,14 +57,9 @@ namespace Dodo.Roles
 			{
 				throw new HTTPException("Group doesn't exist with that GUID", 404);
 			}
-			var newRole = new Role(group, info.Name.ToString(), info.Mandate.ToString());
+			var newRole = new Role(group, info.Name, info.Mandate);
 			DodoServer.ResourceManager<Role>().Add(newRole);
 			return newRole;
-		}
-
-		protected override void DeleteObjectInternal(Role target)
-		{
-			DodoServer.ResourceManager<Role>().Delete(target);
 		}
 	}
 }

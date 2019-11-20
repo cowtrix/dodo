@@ -15,7 +15,7 @@ namespace RESTTests
 		[TestInitialize]
 		public void Setup()
 		{
-			RequestJSON("register", Method.POST, new { Username = CurrentLogin, Password = CurrentPassword, Email = "" });
+			RegisterUser(DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 			var rebellion = RequestJSON("newrebellion", Method.POST, new { RebellionName = "Test Rebellion", Location = new GeoLocation(45, 97) })
 				.Value<string>("GUID");
 			WorkingGroupGUID = RequestJSON("newworkinggroup", Method.POST, new { RebellionGUID = rebellion, ParentWorkingGroupGUID = "", WorkingGroupName = "Test Working Group" })
@@ -24,7 +24,7 @@ namespace RESTTests
 
 		public override object GetCreationSchema()
 		{
-			return new { GroupGUID = WorkingGroupGUID, Name = "Test Role", Mandate = "Test mandate" };
+			return new RoleRESTHandler.CreationSchema { GroupGUID = WorkingGroupGUID, Name = "Test Role", Mandate = "Test mandate" };
 		}
 
 		public override object GetPatchSchema()

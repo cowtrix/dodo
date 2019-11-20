@@ -13,7 +13,12 @@ namespace Dodo.LocalGroups
 	public class LocalGroupRESTHandler : DodoRESTHandler<LocalGroup>
 	{
 		const string CREATION_URL = "newlocalgroup";
-		const string URL_REGEX = LocalGroup.ROOT + "/(?:^/)*";
+
+		public class CreationSchema : IRESTResourceSchema
+		{
+			public string Name = "";
+			public GeoLocation Location = new GeoLocation();
+		}
 
 		[Route("Create a new local group", "^" + CREATION_URL, EHTTPRequestType.POST)]
 		public HttpResponse CreateLocalGroup(HttpRequest request)
@@ -29,35 +34,22 @@ namespace Dodo.LocalGroups
 				.GenerateJsonView(EPermissionLevel.USER, owner, passPhrase));
 		}
 
-		protected override LocalGroup GetResource(string url)
+		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			if(!Regex.IsMatch(url, URL_REGEX))
-			{
-				return null;
-			}
-			return DodoServer.ResourceManager<LocalGroup>().GetSingle(x => x.ResourceURL == url);
+			return new CreationSchema();
 		}
 
-		protected override dynamic GetCreationSchema()
+		protected override LocalGroup CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
-			return new { Name = "", Location = new GeoLocation() };
-		}
-
-		protected override LocalGroup CreateFromSchema(HttpRequest request, dynamic info)
-		{
+			var info = (CreationSchema)schema;
 			var user = DodoRESTServer.GetRequestOwner(request);
 			if(user == null)
 			{
 				throw HTTPException.LOGIN;
 			}
-			var localGroup = new LocalGroup(user, info.Name.ToString(), JsonConvert.DeserializeObject<GeoLocation>(info.Location.ToString()));
+			var localGroup = new LocalGroup(user, info.Name, info.Location);
 			DodoServer.ResourceManager<LocalGroup>().Add(localGroup);
 			return localGroup;
-		}
-
-		protected override void DeleteObjectInternal(LocalGroup target)
-		{
-			DodoServer.ResourceManager<LocalGroup>().Delete(target);
 		}
 	}
 }

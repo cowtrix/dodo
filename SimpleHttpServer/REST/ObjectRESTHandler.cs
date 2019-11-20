@@ -67,8 +67,8 @@ namespace SimpleHttpServer.REST
 			T createdObject = null;
 			try
 			{
-				var creationInfo = JsonExtensions.DeserializeAnonymousType(request.Content, schema);
-				createdObject = CreateFromSchema(request, creationInfo);
+				var creationInfo = JsonConvert.DeserializeObject(request.Content, schema.GetType());
+				createdObject = CreateFromSchema(request, (IRESTResourceSchema)creationInfo);
 			}
 			catch(NullReferenceException)
 			{
@@ -84,14 +84,14 @@ namespace SimpleHttpServer.REST
 		/// <summary>
 		/// Return an anonymous type representing the necessary information in the creation of this object
 		/// </summary>
-		/// <returns>An anonymous type with default values that specifies the schema type</returns>
-		protected abstract dynamic GetCreationSchema();
+		/// <returns>An type with default values that specifies the schema type</returns>
+		protected abstract IRESTResourceSchema GetCreationSchema();
 		/// <summary>
 		/// Create a new object of type T given the schema specified in this.GetCreationSchema()
 		/// </summary>
-		/// <param name="info">The schema to use</param>
+		/// <param name="schema">The schema to use</param>
 		/// <returns>An object of type T created with the given schema</returns>
-		protected abstract T CreateFromSchema(HttpRequest request, dynamic info);
+		protected abstract T CreateFromSchema(HttpRequest request, IRESTResourceSchema schema);
 		/// <summary>
 		/// Update an object with a string->object dictionary, where the string is the name of the field
 		/// and the object is the value to be set. For nested classes, the object should be deserialized

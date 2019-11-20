@@ -14,7 +14,12 @@ namespace Dodo.WorkingGroups
 {
 	public class WorkingGroupRESTHandler : DodoRESTHandler<WorkingGroup>
 	{
-		const string URL_REGEX = WorkingGroup.ROOT + "/(?:^/)*";
+		public class CreationSchema : IRESTResourceSchema
+		{
+			public string WorkingGroupName = "";
+			public string ParentGroup = "";
+			public string RebellionGUID = "";
+		}
 
 		[Route("Create a new working group", "newworkinggroup", EHTTPRequestType.POST)]
 		public HttpResponse Create(HttpRequest request)
@@ -30,22 +35,14 @@ namespace Dodo.WorkingGroups
 				.GenerateJsonView(EPermissionLevel.USER, owner, passphrase));
 		}
 
-		protected override WorkingGroup GetResource(string url)
+		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			if(!Regex.IsMatch(url, URL_REGEX))
-			{
-				return null;
-			}
-			return DodoServer.ResourceManager<WorkingGroup>().GetSingle(x => x.ResourceURL == url);
+			return new CreationSchema();
 		}
 
-		protected override dynamic GetCreationSchema()
+		protected override WorkingGroup CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
-			return new { RebellionGUID = "", ParentGroup = "", WorkingGroupName = "" };
-		}
-
-		protected override WorkingGroup CreateFromSchema(HttpRequest request, dynamic info)
-		{
+			var info = (CreationSchema)schema;
 			var user = DodoRESTServer.GetRequestOwner(request);
 			if(user == null)
 			{
@@ -70,11 +67,6 @@ namespace Dodo.WorkingGroups
 			var newWorkingGroup = new WorkingGroup(user, rebellion, parentWG.Value, info.WorkingGroupName.ToString());
 			DodoServer.ResourceManager<WorkingGroup>().Add(newWorkingGroup);
 			return newWorkingGroup;
-		}
-
-		protected override void DeleteObjectInternal(WorkingGroup target)
-		{
-			DodoServer.ResourceManager<WorkingGroup>().Delete(target);
 		}
 	}
 }

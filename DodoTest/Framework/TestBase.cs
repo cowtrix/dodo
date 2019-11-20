@@ -42,8 +42,10 @@ namespace RESTTests
 		private Random m_random = new Random();
 		protected RestClient RestClient = new RestClient("https://localhost:443");
 
-		protected string CurrentLogin = "TestUser";
-		protected string CurrentPassword = "password";
+		protected string DefaultUsername = "test_user";
+		protected string DefaultName = "Test User";
+		protected string DefaultPassword = "x@asjdbasjdas";
+		protected string DefaultEmail = "test@web.com";
 
 		public TestBase()
 		{
@@ -93,10 +95,15 @@ namespace RESTTests
 			DodoServer.CleanAllData();
 		}
 
-		protected JObject RegisterUser(string username, string password, string email = "")
+		protected JObject RegisterUser(string username = null, string name = null, string password = null, string email = null)
 		{
+			username = username ?? DefaultUsername;
+			name = name ?? DefaultName;
+			password = password ?? DefaultPassword;
+			email = email ?? DefaultEmail;
+
 			var request = new RestRequest("register", Method.POST);
-			request.AddJsonBody(new { Username = username, Password = password, Email = email });
+			request.AddJsonBody(new { Username = username, Name = name, Password = password, Email = email });
 			var response = RestClient.Execute(request).Content;
 			if (!response.IsValidJson())
 			{
@@ -105,10 +112,19 @@ namespace RESTTests
 			return JsonConvert.DeserializeObject<JObject>(response);
 		}
 
+		protected JObject RegisterRandomUser(out string username, out string name, out string password, out string email)
+		{
+			username = StringExtensions.RandomString(10).ToLower();
+			name = StringExtensions.RandomString(10).ToLower();
+			password = "@" + username;
+			email = $"{StringExtensions.RandomString(5).ToLower()}@{StringExtensions.RandomString(5).ToLower()}.com";
+			return RegisterUser(username, name, password, email);
+		}
+
 		protected JObject CreateNewRebellion(string name, GeoLocation location)
 		{
 			var request = new RestRequest("newrebellion", Method.POST);
-			AuthoriseRequest(request, CurrentLogin, CurrentPassword);
+			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
 			request.AddJsonBody(new { RebellionName = name, Location = new GeoLocation(66, 66) });
 			var response = RestClient.Execute(request).Content;
 			if(!response.IsValidJson())
@@ -121,7 +137,7 @@ namespace RESTTests
 		protected JObject PatchObject<T>(string url, T anonObj)
 		{
 			var request = new RestRequest(url, Method.PATCH);
-			AuthoriseRequest(request, CurrentLogin, CurrentPassword);
+			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
 			request.AddJsonBody(anonObj);
 			var response = RestClient.Execute(request).Content;
 			if (!response.IsValidJson())
@@ -134,7 +150,7 @@ namespace RESTTests
 		protected JObject GetResource(string url)
 		{
 			var request = new RestRequest("resources/" + url, Method.GET);
-			AuthoriseRequest(request, CurrentLogin, CurrentPassword);
+			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
 			var response = RestClient.Execute(request).Content;
 			if (!response.IsValidJson())
 			{
@@ -146,7 +162,7 @@ namespace RESTTests
 		protected JObject RequestJSON(string url, Method method, object data = null, string user = null, string password = null)
 		{
 			var request = new RestRequest(url, method);
-			AuthoriseRequest(request, user ?? CurrentLogin, password ?? CurrentPassword);
+			AuthoriseRequest(request, user ?? DefaultUsername, password ?? DefaultPassword);
 			if (data != null)
 			{
 				request.AddJsonBody(data);
@@ -163,7 +179,7 @@ namespace RESTTests
 		protected IRestResponse Request(string url, Method method, object data = null)
 		{
 			var request = new RestRequest(url, method);
-			AuthoriseRequest(request, CurrentLogin, CurrentPassword);
+			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
 			if (data != null)
 			{
 				request.AddJsonBody(data);

@@ -12,7 +12,11 @@ namespace Dodo.Rebellions
 {
 	public class RebellionRESTHandler : DodoRESTHandler<Rebellion>
 	{
-		const string URL_REGEX = Rebellion.ROOT + "/(?:^/)*";
+		public class CreationSchema : IRESTResourceSchema
+		{
+			public string RebellionName = "";
+			public GeoLocation Location = new GeoLocation();
+		}
 
 		[Route("Create a new rebellion", "newrebellion", EHTTPRequestType.POST)]
 		public HttpResponse Register(HttpRequest request)
@@ -28,35 +32,22 @@ namespace Dodo.Rebellions
 				.GenerateJsonView(EPermissionLevel.USER, owner, passphrase));
 		}
 
-		protected override Rebellion GetResource(string url)
+		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			if(!Regex.IsMatch(url, URL_REGEX))
-			{
-				return null;
-			}
-			return DodoServer.ResourceManager<Rebellion>().GetSingle(x => x.ResourceURL == url);
+			return new CreationSchema();
 		}
 
-		protected override dynamic GetCreationSchema()
+		protected override Rebellion CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
-			return new { RebellionName = "", Location = new GeoLocation() };
-		}
-
-		protected override Rebellion CreateFromSchema(HttpRequest request, dynamic info)
-		{
+			var info = (CreationSchema)schema;
 			var user = DodoRESTServer.GetRequestOwner(request);
 			if(user == null)
 			{
 				throw HTTPException.LOGIN;
 			}
-			var newRebellion = new Rebellion(user, info.RebellionName.ToString(), JsonConvert.DeserializeObject<GeoLocation>(info.Location.ToString()));
+			var newRebellion = new Rebellion(user, info.RebellionName, info.Location);
 			DodoServer.ResourceManager<Rebellion>().Add(newRebellion);
 			return newRebellion;
-		}
-
-		protected override void DeleteObjectInternal(Rebellion target)
-		{
-			DodoServer.ResourceManager<Rebellion>().Delete(target);
 		}
 	}
 }
