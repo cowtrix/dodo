@@ -41,13 +41,8 @@ namespace SimpleHttpServer.REST
 	public class ViewAttribute : Attribute {
 		public EPermissionLevel ViewPermission { get; private set; }
 		public EPermissionLevel EditPermission { get; private set; }
-		public ViewAttribute(EPermissionLevel viewPermission)
-		{
-			ViewPermission = viewPermission;
-			EditPermission = EPermissionLevel.ADMIN;
-		}
 
-		public ViewAttribute(EPermissionLevel viewPermission, EPermissionLevel editPermission)
+		public ViewAttribute(EPermissionLevel viewPermission, EPermissionLevel editPermission = EPermissionLevel.ADMIN)
 		{
 			ViewPermission = viewPermission;
 			EditPermission = editPermission;
@@ -175,6 +170,8 @@ namespace SimpleHttpServer.REST
 			object requester, string passphrase)
 		{
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
+			// Firstly, if we hit a primitive type or a specially included type, we just convert the whole thing
+			// to an object of that type with Json
 			if ((targetType.IsValueType && targetType.IsPrimitive)
 					|| m_explicitValueTypes.Any(t => t.IsAssignableFrom(targetType)))
 			{
@@ -185,6 +182,7 @@ namespace SimpleHttpServer.REST
 				}
 				return (T)val;
 			}
+			// If the object is decryptable, we handle this transparently and redirect the data within
 			if (targetObject is IDecryptable)
 			{
 				var decryptable = targetObject as IDecryptable;
@@ -196,11 +194,12 @@ namespace SimpleHttpServer.REST
 				decryptable.SetValue(encryptedObject, visibility, requester, passphrase);
 				return targetObject;
 			}
-			var targetProperties = targetObject.GetType().GetProperties();
-			var targetFields = targetObject.GetType().GetFields();
 
-			var validFields = values.Select(kvp => targetProperties.FirstOrDefault(x => x.Name == kvp.Key) as MemberInfo ??
-				targetFields.FirstOrDefault(x => x.Name == kvp.Key) as MemberInfo)
+			// Get fields and properties
+			var members = new List<MemberInfo>(targetObject.GetType().GetProperties());
+			members.AddRange(targetObject.GetType().GetFields());
+
+			var validFields = values.Select(kvp => members.FirstOrDefault(x => x.Name == kvp.Key))
 				.Where(member => member != null);
 			if(validFields.Count() != values.Count)
 			{
@@ -211,9 +210,44 @@ namespace SimpleHttpServer.REST
 				throw new Exception("Insufficient privileges");
 			}
 
+			// Define common actions to handle properties and fields
+			Action<MemberInfo, object, object> SetValue = (member, target, val) =>
+			{
+				if (member is PropertyInfo)
+					(member as PropertyInfo).SetValue(target, val);
+				else if (member is FieldInfo)
+				{
+					if (target.GetType().IsValueType)
+					{
+						(member as FieldInfo).SetValueDirect(__makeref(target), val);
+					}
+					else
+					{
+						(member as FieldInfo).SetValue(target, val);
+					}
+				}
+			};
+			Func<MemberInfo, object, object> GetValue = (member, target) =>
+			{
+				if (member is PropertyInfo)
+					return (member as PropertyInfo).GetValue(target);
+				else if (member is FieldInfo)
+					return (member as FieldInfo).GetValue(target);
+				throw new Exception("Unsupported MemberInfo type" + member.GetType());
+			};
+			Func<MemberInfo, Type> GetMemberType = (member) =>
+			{
+				if (member is PropertyInfo)
+					return (member as PropertyInfo).PropertyType;
+				else if (member is FieldInfo)
+					return (member as FieldInfo).FieldType;
+				throw new Exception("Unsupported MemberInfo type" + member.GetType());
+			};
+
+			// Go through the dictionary and set the values
 			foreach (var val in values)
 			{
-				var targetMember = targetProperties.FirstOrDefault(x => x.Name == val.Key);
+				var targetMember = validFields.FirstOrDefault(x => x.Name == val.Key);
 				if (targetMember == null)
 				{
 					continue;
@@ -228,10 +262,10 @@ namespace SimpleHttpServer.REST
 					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
 				}
 				object objToPatch = targetObject;
-				var value = targetMember.GetValue(targetObject);
+				var value = GetValue(targetMember, targetObject);
 				var fieldValue = value;
 				var valueToSet = val.Value;
-				if (typeof(IDecryptable).IsAssignableFrom(targetMember.PropertyType) &&
+				if (typeof(IDecryptable).IsAssignableFrom(GetMemberType(targetMember)) &&
 					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
 				{
 					// Auth is incorrect
@@ -245,7 +279,7 @@ namespace SimpleHttpServer.REST
 				catch
 				{
 				}
-				if (typeof(IDecryptable).IsAssignableFrom(targetMember.PropertyType))
+				if (typeof(IDecryptable).IsAssignableFrom(GetMemberType(targetMember)))
 				{
 					var decryptable = fieldValue as IDecryptable;
 					decryptable.SetValue(valueToSet, visibility, requester, passphrase);
@@ -256,62 +290,7 @@ namespace SimpleHttpServer.REST
 				{
 					throw new Exception(error);
 				}
-				targetMember.SetValue(targetObject, valueToSet);
-			}
-			foreach (var val in values)
-			{
-				var targetMember = targetFields.FirstOrDefault(x => x.Name == val.Key);
-				if (targetMember == null)
-				{
-					continue;
-				}
-				if (targetMember.GetCustomAttribute<NoPatchAttribute>() != null)
-				{
-					throw new Exception($"Cannot patch field {targetMember.Name}");
-				}
-				var viewAttr = targetMember.GetCustomAttribute<ViewAttribute>();
-				if (viewAttr == null || viewAttr.EditPermission > visibility)
-				{
-					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
-				}
-				object objToPatch = targetObject;
-				var value = targetMember.GetValue(targetObject);
-				var fieldValue = value;
-				object valueToSet = val.Value;
-				if (typeof(IDecryptable).IsAssignableFrom(targetMember.FieldType) &&
-					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
-				{
-					// Auth is incorrect
-					continue;
-				}
-				try
-				{
-					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(valueToSet.ToString());
-					valueToSet = value.PatchObject(subValues, visibility, requester, passphrase);
-				}
-				catch (Exception e)
-				{
-					Logger.Exception(e);
-				}
-				if (typeof(IDecryptable).IsAssignableFrom(targetMember.FieldType))
-				{
-					var decryptable = fieldValue as IDecryptable;
-					decryptable.SetValue(valueToSet, visibility, requester, passphrase);
-					valueToSet = decryptable;
-				}
-				var checkAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
-				if (checkAttr != null && !checkAttr.Verify(valueToSet, out var error))
-				{
-					throw new Exception(error);
-				}
-				if (targetObject.GetType().IsValueType)
-				{
-					targetMember.SetValueDirect(__makeref(targetObject), valueToSet);
-				}
-				else
-				{
-					targetMember.SetValue(targetObject, valueToSet);
-				}
+				SetValue(targetMember, targetObject, valueToSet);
 			}
 			return targetObject;
 		}

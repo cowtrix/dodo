@@ -2,6 +2,7 @@
 using Dodo.LocalGroups;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using SimpleHttpServer.REST;
 using System;
@@ -21,6 +22,23 @@ namespace RESTTests
 		public override object GetPatchSchema()
 		{
 			return new { Name = "John Doe" };
+		}
+
+		protected override void CheckCreatedObject(JObject obj)
+		{
+			Assert.IsTrue(obj.GetValue("WebAuth").Value<string>("Username") == DefaultUsername);
+			Assert.IsTrue(obj.Value<string>("Email") == DefaultEmail);
+			Assert.IsTrue(obj.Value<string>("Name") == DefaultName);
+		}
+
+		protected override void CheckGetObject(JObject obj)
+		{
+			CheckCreatedObject(obj);
+		}
+
+		protected override void CheckPatchedObject(JObject obj)
+		{
+			Assert.IsTrue(obj.Value<string>("Name") == "John Doe");
 		}
 
 		[TestMethod]

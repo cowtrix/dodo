@@ -14,7 +14,7 @@ namespace Dodo.Rebellions
 	{
 		public class CreationSchema : IRESTResourceSchema
 		{
-			public string RebellionName = "";
+			public string Name = "";
 			public GeoLocation Location = new GeoLocation();
 		}
 
@@ -45,7 +45,11 @@ namespace Dodo.Rebellions
 			{
 				throw HTTPException.LOGIN;
 			}
-			var newRebellion = new Rebellion(user, info.RebellionName, info.Location);
+			if(!ValidationExtensions.NameIsValid(info.Name, out var error))
+			{
+				throw new System.Exception(error);
+			}
+			var newRebellion = new Rebellion(user, info.Name, info.Location);
 			DodoServer.ResourceManager<Rebellion>().Add(newRebellion);
 			return newRebellion;
 		}

@@ -56,6 +56,7 @@
     <Compile Include="Gateways\IMessageGateway.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Gateways\RebellionBotConfiguration.cs" />
+    <Compile Include="Resources\RebellionResource.cs" />
     <Compile Include="Resources\WorkflowTasks\Task.cs" />
     <Compile Include="Gateways\TelegramGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

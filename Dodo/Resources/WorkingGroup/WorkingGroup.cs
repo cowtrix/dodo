@@ -36,10 +36,10 @@ namespace Dodo.WorkingGroups
 		/// <summary>
 		/// The mandate of the working group - a description of its duties, what it's for
 		/// </summary>
-		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.USER)]
 		public string Mandate = "";
 
-		public override string ResourceURL => $"{Rebellion.RebellionName.StripForURL()}/{ROOT}/{Name.StripForURL()}";
+		public override string ResourceURL => $"{Rebellion.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
 		/// <summary>
 		/// An optional parent group that contains this working group

@@ -11,8 +11,7 @@ namespace Dodo.Users
 {
 	public class UserRESTHandler : DodoRESTHandler<User>
 	{
-		public const string CREATION_URL = "register";
-		const string URL_REGEX = User.ROOT + "/(?:^/)*";
+		public const string CREATION_URL = "^register$";
 
 		public class CreationSchema : IRESTResourceSchema
 		{
@@ -22,10 +21,29 @@ namespace Dodo.Users
 			public string Email = "";
 		}
 
-		[Route("Register a new user", "^" + CREATION_URL, EHTTPRequestType.POST)]
+		[Route("Register a new user", CREATION_URL, EHTTPRequestType.POST)]
 		public HttpResponse Register(HttpRequest request)
 		{
 			return CreateObject(request);
+		}
+
+		[Route("Reset a password for an email", "^resetpassword$", EHTTPRequestType.POST)]
+		public HttpResponse ResetPassword(HttpRequest request)
+		{
+			throw new NotImplementedException();
+			if(DodoRESTServer.GetRequestOwner(request) != null)
+			{
+				return HttpBuilder.Forbidden();
+			}
+			var email = JsonExtensions.DeserializeAnonymousType(request.Content, new { Email = "" }).Email;
+			var userWithEmail = DodoServer.ResourceManager<User>().GetSingle(x => x.Email == email);
+			if(userWithEmail == null)
+			{
+				return HttpBuilder.NotFound();
+			}
+			userWithEmail.WebAuth.PasswordResetToken = WebPortalAuth.ResetToken.Generate();
+			// TODO send an email with the auth link
+			return HttpBuilder.OK();
 		}
 
 		protected override IRESTResourceSchema GetCreationSchema()

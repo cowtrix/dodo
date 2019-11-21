@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Security;
+using Newtonsoft.Json;
 using SimpleHttpServer.REST;
 using System;
 
@@ -7,11 +8,29 @@ namespace Dodo.Users
 {
 	public struct WebPortalAuth
 	{
+		public struct ResetToken
+		{
+			const int TimeoutMinutes = 15;
+			[JsonProperty]
+			private string m_token;
+			[JsonProperty]
+			private DateTime m_timestamp;
+
+			public static ResetToken Generate()
+			{
+				return new ResetToken()
+				{
+					m_token = KeyGenerator.GetUniqueKey(64),
+					m_timestamp = DateTime.Now,
+				};
+			}
+		}
+
 		public WebPortalAuth(string userName, string password) : this()
 		{
 			Username = userName;
 			PasswordHash = SHA256Utility.SHA256(password);
-			PassPhrase = new EncryptedStore<string>(Guid.NewGuid().ToString(), password);
+			PassPhrase = new EncryptedStore<string>(KeyGenerator.GetUniqueKey(256), password);
 		}
 
 		/// <summary>
@@ -25,6 +44,8 @@ namespace Dodo.Users
 		/// Am MD5 hash of the user's password
 		/// </summary>
 		public string PasswordHash { get; private set; }
+
+		public ResetToken PasswordResetToken;
 
 		public EncryptedStore<string> PassPhrase;
 

@@ -15,12 +15,15 @@ namespace Dodo.Rebellions
 	{
 		public const string ROOT = "rebellions";
 
-		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.USER)]
 		[NoPatch]
 		public string RebellionName;
 
-		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.USER)]
 		public GeoLocation Location;
+
+		[View(EPermissionLevel.USER)]
+		public string Description;
 
 		[NoPatch]
 		[View(EPermissionLevel.USER)]
@@ -56,19 +59,6 @@ namespace Dodo.Rebellions
 			}
 			visibility = EPermissionLevel.USER;
 			return true;
-		}
-	}
-
-	public abstract class RebellionResource : GroupResource
-	{
-		public Rebellion Rebellion { get; private set; }
-		public RebellionResource(User creator, Rebellion owner) : base(creator)
-		{
-			Rebellion = owner;
-		}
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
-		{
-			return Rebellion.IsAuthorised(requestOwner, request, out visibility);
 		}
 	}
 }

@@ -14,7 +14,7 @@ namespace RESTTests
 		public override string CreationURL => "newrebellion";
 		public override object GetCreationSchema()
 		{
-			return new RebellionRESTHandler.CreationSchema { RebellionName = "Test Rebellion", Location = new GeoLocation(45, 97) };
+			return new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion", Location = new GeoLocation(45, 97) };
 		}
 
 		public override object GetPatchSchema()

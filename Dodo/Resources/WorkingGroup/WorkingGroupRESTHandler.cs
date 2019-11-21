@@ -64,6 +64,10 @@ namespace Dodo.WorkingGroups
 				parentWG = rebellion.WorkingGroups.Single(x => x.Guid == guid);
 				parentWG.CheckValue();
 			}
+			if(!ValidationExtensions.NameIsValid(info.WorkingGroupName, out var error))
+			{
+				throw new Exception(error);
+			}
 			var newWorkingGroup = new WorkingGroup(user, rebellion, parentWG.Value, info.WorkingGroupName.ToString());
 			DodoServer.ResourceManager<WorkingGroup>().Add(newWorkingGroup);
 			return newWorkingGroup;
