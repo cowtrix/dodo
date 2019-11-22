@@ -1,8 +1,10 @@
 ﻿using Common;
 using Dodo.Rebellions;
 using Dodo.Users;
+using Dodo.WorkingGroups;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using System;
 
 namespace Dodo.Roles
 {

@@ -123,9 +123,9 @@ namespace RESTTests
 
 		protected JObject CreateNewRebellion(string name, GeoLocation location)
 		{
-			var request = new RestRequest("newrebellion", Method.POST);
+			var request = new RestRequest("rebellions/create", Method.POST);
 			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
-			request.AddJsonBody(new { RebellionName = name, Location = new GeoLocation(66, 66) });
+			request.AddJsonBody(new RebellionRESTHandler.CreationSchema { Name = name, Location = new GeoLocation(66, 66) });
 			var response = RestClient.Execute(request).Content;
 			if(!response.IsValidJson())
 			{

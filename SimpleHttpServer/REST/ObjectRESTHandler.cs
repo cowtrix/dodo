@@ -12,27 +12,38 @@ namespace SimpleHttpServer.REST
 		public override void AddRoutes(List<Route> routeList)
 		{
 			routeList.Add(new Route(
+				$"{GetType().Name} POST",
+				EHTTPRequestType.POST,
+				URLIsCreation,
+				WrapRawCall((req) => CreateObject(req))
+				));
+			routeList.Add(new Route(
 				$"{GetType().Name} GET",
 				EHTTPRequestType.GET,
-				UrlIsMatch,
+				URLIsResource,
 				WrapRawCall((req) => GetObject(req))
 				));
 			routeList.Add(new Route(
 				$"{GetType().Name} PATCH",
 				EHTTPRequestType.PATCH,
-				UrlIsMatch,
+				URLIsResource,
 				WrapRawCall((req) => UpdateObject(req))
 				));
 			routeList.Add(new Route(
 				$"{GetType().Name} DELETE",
 				EHTTPRequestType.DELETE,
-				UrlIsMatch,
+				URLIsResource,
 				WrapRawCall((req) => DeleteObject(req))
 				));
 			base.AddRoutes(routeList);
 		}
 
-		protected abstract bool UrlIsMatch(string url);
+		protected bool URLIsResource(string url)
+		{
+			return GetResource(url) != null;
+		}
+
+		protected abstract bool URLIsCreation(string url);
 
 		/// <summary>
 		/// Get the resource of this type given a url.
@@ -67,16 +78,15 @@ namespace SimpleHttpServer.REST
 			T createdObject = null;
 			try
 			{
-				var creationInfo = JsonConvert.DeserializeObject(request.Content, schema.GetType());
+				var creationInfo = JsonConvert.DeserializeObject(request.Content, schema.GetType(), new JsonSerializerSettings()
+				{
+					CheckAdditionalContent = true,
+				});
 				createdObject = CreateFromSchema(request, (IRESTResourceSchema)creationInfo);
 			}
-			catch(NullReferenceException)
+			catch(Exception e)
 			{
-				throw new Exception($"Failed to deserialise JSON. Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
-			}
-			catch(RuntimeBinderException)
-			{
-				throw new Exception($"Failed to deserialise JSON. Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
+				throw new Exception($"Failed to deserialise JSON: {e.Message}\n Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
 			}
 			return HttpBuilder.OK(createdObject.GenerateJsonView(view, context, password));
 		}
@@ -86,12 +96,14 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <returns>An type with default values that specifies the schema type</returns>
 		protected abstract IRESTResourceSchema GetCreationSchema();
+
 		/// <summary>
 		/// Create a new object of type T given the schema specified in this.GetCreationSchema()
 		/// </summary>
 		/// <param name="schema">The schema to use</param>
 		/// <returns>An object of type T created with the given schema</returns>
 		protected abstract T CreateFromSchema(HttpRequest request, IRESTResourceSchema schema);
+
 		/// <summary>
 		/// Update an object with a string->object dictionary, where the string is the name of the field
 		/// and the object is the value to be set. For nested classes, the object should be deserialized

@@ -4,17 +4,20 @@ using Dodo.Rebellions;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System.Collections.Concurrent;
+using System;
+using Dodo.Roles;
 
 namespace Dodo.LocalGroups
 {
 	public class LocalGroup : GroupResource
 	{
 		public const string ROOT = "localgroups";
-		public LocalGroup(User owner, string name, GeoLocation location) : base(owner)
+		public LocalGroup(User owner, LocalGroupRESTHandler.CreationSchema schema) : base(owner, null)
 		{
-			Name = name;
-			Location = location;
+			Name = schema.Name;
+			Location = schema.Location;
 		}
+
 		[View(EPermissionLevel.USER)]
 		[NoPatch]
 		public string Name { get; private set; }
@@ -32,6 +35,15 @@ namespace Dodo.LocalGroups
 			}
 			visibility = EPermissionLevel.USER;
 			return true;
+		}
+
+		public override bool CanContain(Type type)
+		{
+			if (type == typeof(Role))
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }

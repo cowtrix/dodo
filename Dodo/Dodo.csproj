@@ -56,7 +56,7 @@
     <Compile Include="Gateways\IMessageGateway.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Gateways\RebellionBotConfiguration.cs" />
-    <Compile Include="Resources\RebellionResource.cs" />
+    <Compile Include="Resources\GroupResource.cs" />
     <Compile Include="Resources\WorkflowTasks\Task.cs" />
     <Compile Include="Gateways\TelegramGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,9 +71,9 @@
     <Compile Include="Resources\Rebellion\RebellionRESTHandler.cs" />
     <Compile Include="Resources\WorkflowTasks\TaskManager.cs" />
     <Compile Include="Resources\Users\WebPortalAuth.cs" />
-    <Compile Include="Resources\WorkingGroup\Roles\Role.cs" />
-    <Compile Include="Resources\WorkingGroup\Roles\RoleManager.cs" />
-    <Compile Include="Resources\WorkingGroup\Roles\RoleRESTHandler.cs" />
+    <Compile Include="Resources\Roles\Role.cs" />
+    <Compile Include="Resources\Roles\RoleManager.cs" />
+    <Compile Include="Resources\Roles\RoleRESTHandler.cs" />
     <Compile Include="Resources\WorkingGroup\WorkingGroupManager.cs" />
     <Compile Include="Resources\WorkingGroup\WorkingGroupRESTHandler.cs" />
     <Compile Include="Resources\WorkingGroup\WorkingGroup.cs" />

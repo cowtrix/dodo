@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -12,26 +14,33 @@ namespace Dodo.LocalGroups
 {
 	public class LocalGroupRESTHandler : DodoRESTHandler<LocalGroup>
 	{
-		const string CREATION_URL = "newlocalgroup";
-
 		public class CreationSchema : IRESTResourceSchema
 		{
 			public string Name = "";
 			public GeoLocation Location = new GeoLocation();
 		}
 
-		[Route("Create a new local group", "^" + CREATION_URL, EHTTPRequestType.POST)]
-		public HttpResponse CreateLocalGroup(HttpRequest request)
+		public override void AddRoutes(List<Route> routeList)
 		{
-			return CreateObject(request);
+			routeList.Add(new Route(
+				$"{GetType().Name} LIST",
+				EHTTPRequestType.GET,
+				URLIsList,
+				WrapRawCall((req) => HttpBuilder.OK(ResourceManager.Get(x => true)
+					.Select(x => x.GUID.ToString())
+					.ToList()))
+				));
+			base.AddRoutes(routeList);
 		}
 
-		[Route("List all local groups", "^localgroups$", EHTTPRequestType.GET)]
-		public HttpResponse List(HttpRequest request)
+		protected bool URLIsList(string url)
 		{
-			var owner = DodoRESTServer.GetRequestOwner(request, out var passPhrase);
-			return HttpBuilder.OK(DodoServer.ResourceManager<LocalGroup>().Get(x => true).ToList()
-				.GenerateJsonView(EPermissionLevel.USER, owner, passPhrase));
+			return url == LocalGroup.ROOT;
+		}
+
+		protected override bool URLIsCreation(string url)
+		{
+			return url == LocalGroup.ROOT + "/create";
 		}
 
 		protected override IRESTResourceSchema GetCreationSchema()
@@ -47,7 +56,15 @@ namespace Dodo.LocalGroups
 			{
 				throw HTTPException.LOGIN;
 			}
-			var localGroup = new LocalGroup(user, info.Name, info.Location);
+			if(!ValidationExtensions.NameIsValid(info.Name, out var error))
+			{
+				throw new Exception(error);
+			}
+			var localGroup = new LocalGroup(user, info);
+			if(URLIsCreation(localGroup.ResourceURL))
+			{
+				throw new Exception("Reserved Resource URL");
+			}
 			DodoServer.ResourceManager<LocalGroup>().Add(localGroup);
 			return localGroup;
 		}

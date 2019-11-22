@@ -21,12 +21,6 @@ namespace Dodo.Users
 			public string Email = "";
 		}
 
-		[Route("Register a new user", CREATION_URL, EHTTPRequestType.POST)]
-		public HttpResponse Register(HttpRequest request)
-		{
-			return CreateObject(request);
-		}
-
 		[Route("Reset a password for an email", "^resetpassword$", EHTTPRequestType.POST)]
 		public HttpResponse ResetPassword(HttpRequest request)
 		{
@@ -76,8 +70,17 @@ namespace Dodo.Users
 			var newUser = new User(new WebPortalAuth(username, password), password);
 			newUser.Email = email;
 			newUser.Name = info.Name.ToString();
+			if (URLIsCreation(newUser.ResourceURL))
+			{
+				throw new Exception("Reserved Resource URL");
+			}
 			DodoServer.ResourceManager<User>().Add(newUser);
 			return newUser;
+		}
+
+		protected override bool URLIsCreation(string url)
+		{
+			return url == "register";
 		}
 	}
 }

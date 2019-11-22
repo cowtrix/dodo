@@ -16,17 +16,12 @@ namespace Dodo.Roles
 {
 	public class RoleRESTHandler : DodoRESTHandler<Role>
 	{
+		protected override string CreationPostfix => Role.ROOT + "/create";
+
 		public class CreationSchema : IRESTResourceSchema
 		{
 			public string Name = "";
 			public string Mandate = "";
-			public string GroupGUID = "";
-		}
-
-		[Route("Create a new role", "^newrole$", EHTTPRequestType.POST)]
-		public HttpResponse Register(HttpRequest request)
-		{
-			return CreateObject(request);
 		}
 
 		[Route("List all roles", "^roles$", EHTTPRequestType.GET)]
@@ -39,7 +34,7 @@ namespace Dodo.Roles
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema();
+			return new CreationSchema() { Name = "Test Working Group" };
 		}
 
 		protected override Role CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
@@ -50,14 +45,16 @@ namespace Dodo.Roles
 			{
 				throw HTTPException.LOGIN;
 			}
-			var groupGuid = Guid.Parse((string)info.GroupGUID);
-			var rm = ResourceUtility.GetManagerForResource(groupGuid);
-			var group = (GroupResource)rm.GetSingle(x => x.GUID == groupGuid);
+			var group = GetParentFromURL(request.Url);
 			if(group == null)
 			{
-				throw new HTTPException("Group doesn't exist with that GUID", 404);
+				throw new HTTPException("Valid parent doesn't exist at " + request.Url, 404);
 			}
 			var newRole = new Role(group, info.Name, info.Mandate);
+			if (URLIsCreation(newRole.ResourceURL))
+			{
+				throw new Exception("Reserved Resource URL");
+			}
 			DodoServer.ResourceManager<Role>().Add(newRole);
 			return newRole;
 		}

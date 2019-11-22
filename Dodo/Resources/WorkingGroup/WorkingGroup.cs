@@ -4,6 +4,7 @@ using Dodo.Roles;
 using Dodo.Users;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +16,13 @@ namespace Dodo.WorkingGroups
 	/// would take care of the wellbeing of rebels.
 	/// Working Groups can have child Working Groups. A Working Group can only have a single parent Working Group.
 	/// </summary>
-	public class WorkingGroup : RebellionResource
+	public class WorkingGroup : GroupResource
 	{
 		public const string ROOT = "wg";
 
-		public WorkingGroup(User creator, Rebellion owner, WorkingGroup parentGroup, string name) : base(creator, owner)
+		public WorkingGroup(User creator, GroupResource parent, WorkingGroupRESTHandler.CreationSchema schema) : base(creator, parent)
 		{
-			Name = name;
-			owner.WorkingGroups.Add(new ResourceReference<WorkingGroup>(this));
-			ParentGroup = new ResourceReference<WorkingGroup>(parentGroup);
+			Name = schema.Name;
 		}
 
 		/// <summary>
@@ -39,17 +38,8 @@ namespace Dodo.WorkingGroups
 		[View(EPermissionLevel.USER)]
 		public string Mandate = "";
 
-		public override string ResourceURL => $"{Rebellion.ResourceURL}/{ROOT}/{Name.StripForURL()}";
+		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
-		/// <summary>
-		/// An optional parent group that contains this working group
-		/// </summary>
-		[View(EPermissionLevel.USER)]
-		public ResourceReference<WorkingGroup> ParentGroup;
-
-		/// <summary>
-		/// Roles are linked to users and are
-		/// </summary>
 		[View(EPermissionLevel.USER)]
 		public List<Role> Roles
 		{
@@ -67,8 +57,23 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.ParentGroup.Value == this).ToList();
+				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.Parent.Value == this).ToList();
 			}
+		}
+
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
+		{
+			// TODO
+			return Parent.Value.IsAuthorised(requestOwner, request, out visibility);
+		}
+
+		public override bool CanContain(Type type)
+		{
+			if(type == typeof(WorkingGroup) || type == typeof(Role))
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 }

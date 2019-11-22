@@ -12,7 +12,7 @@ namespace SimpleHttpServer.REST
 	{
 		public virtual void AddRoutes(List<Route> routeList)
 		{
-			var allMethods = GetType().GetMethods();
+			/*var allMethods = GetType().GetMethods();
 			foreach(var method in allMethods)
 			{
 				var attr = method.GetCustomAttribute<RouteAttribute>();
@@ -32,7 +32,7 @@ namespace SimpleHttpServer.REST
 				routeList.Add(new Route(attr.Name, attr.RequestType, (url) => Regex.Match(url, attr.URLRegex).Success,
 					WrapRawCall((req) => method.Invoke(this, new[] { req }) as HttpResponse)));
 				Logger.Debug($"Added route for {attr.Name} @ {attr.URLRegex}");
-			}
+			}*/
 		}
 
 		protected Func<HttpRequest, HttpResponse> WrapRawCall(Func<HttpRequest, HttpResponse> call)

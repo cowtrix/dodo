@@ -1,12 +1,10 @@
 ﻿using Common;
-using Dodo.Resources;
-using Dodo.Users;
-using Newtonsoft.Json;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Dodo.Rebellions
 {
@@ -18,18 +16,27 @@ namespace Dodo.Rebellions
 			public GeoLocation Location = new GeoLocation();
 		}
 
-		[Route("Create a new rebellion", "newrebellion", EHTTPRequestType.POST)]
-		public HttpResponse Register(HttpRequest request)
+		protected override bool URLIsCreation(string url)
 		{
-			return CreateObject(request);
+			return url == Rebellion.ROOT + "/create";
 		}
 
-		[Route("List all rebellions", "^rebellions$", EHTTPRequestType.GET)]
-		public HttpResponse List(HttpRequest request)
+		public override void AddRoutes(List<Route> routeList)
 		{
-			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
-			return HttpBuilder.OK(DodoServer.ResourceManager<Rebellion>().Get(x => true).ToList()
-				.GenerateJsonView(EPermissionLevel.USER, owner, passphrase));
+			routeList.Add(new Route(
+				$"{GetType().Name} LIST",
+				EHTTPRequestType.GET,
+				URLIsList,
+				WrapRawCall((req) => HttpBuilder.OK(ResourceManager.Get(x => true)
+					.Select(x => x.GUID.ToString())
+					.ToList()))
+				));
+			base.AddRoutes(routeList);
+		}
+
+		protected bool URLIsList(string url)
+		{
+			return url == Rebellion.ROOT;
 		}
 
 		protected override IRESTResourceSchema GetCreationSchema()
@@ -49,8 +56,12 @@ namespace Dodo.Rebellions
 			{
 				throw new System.Exception(error);
 			}
-			var newRebellion = new Rebellion(user, info.Name, info.Location);
-			DodoServer.ResourceManager<Rebellion>().Add(newRebellion);
+			var newRebellion = new Rebellion(user, info);
+			if (URLIsCreation(newRebellion.ResourceURL))
+			{
+				throw new Exception("Reserved Resource URL");
+			}
+			ResourceManager.Add(newRebellion);
 			return newRebellion;
 		}
 	}

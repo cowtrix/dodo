@@ -11,7 +11,7 @@ namespace RESTTests
 	[TestClass]
 	public class RebellionTests : RESTTestBase<Rebellion>
 	{
-		public override string CreationURL => "newrebellion";
+		public override string CreationURL => Rebellion.ROOT + "/create";
 		public override object GetCreationSchema()
 		{
 			return new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion", Location = new GeoLocation(45, 97) };
@@ -49,6 +49,13 @@ namespace RESTTests
 					TelegramConfig = new RebellionBotConfiguration.TelegramConfiguration()
 				}
 			}, username, password), (e) => e.Message.Contains("Insufficient privileges"));
+		}
+
+		[TestMethod]
+		public void CannotCreateAtCreationURL()
+		{
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema { Name = "Create" }),
+				e => e.Message.Contains("Reserved Resource URL"));
 		}
 	}
 }

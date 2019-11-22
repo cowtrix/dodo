@@ -1,14 +1,11 @@
 ﻿using Common;
 using Dodo.Rebellions;
-using Dodo.Resources;
-using Dodo.Users;
-using Newtonsoft.Json;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Dodo.WorkingGroups
 {
@@ -16,28 +13,46 @@ namespace Dodo.WorkingGroups
 	{
 		public class CreationSchema : IRESTResourceSchema
 		{
-			public string WorkingGroupName = "";
-			public string ParentGroup = "";
-			public string RebellionGUID = "";
+			public CreationSchema(string name)
+			{
+				Name = name;
+			}
+			public string Name;
 		}
 
-		[Route("Create a new working group", "newworkinggroup", EHTTPRequestType.POST)]
-		public HttpResponse Create(HttpRequest request)
+		public override void AddRoutes(List<Route> routeList)
 		{
-			return CreateObject(request);
+			routeList.Add(new Route(
+				$"{GetType().Name} LIST",
+				EHTTPRequestType.GET,
+				URLIsList,
+				WrapRawCall((req) => HttpBuilder.OK(ResourceManager.Get(x => true)
+					.Select(x => x.GUID.ToString())
+					.ToList()))
+				));
+			base.AddRoutes(routeList);
 		}
 
-		[Route("List all working groups", "^workinggroups$", EHTTPRequestType.GET)]
-		public HttpResponse List(HttpRequest request)
+		protected bool URLIsList(string url)
 		{
-			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
-			return HttpBuilder.OK(DodoServer.ResourceManager<WorkingGroup>().Get(x => true).ToList()
-				.GenerateJsonView(EPermissionLevel.USER, owner, passphrase));
+			if (!url.EndsWith(WorkingGroup.ROOT))
+			{
+				return false;
+			}
+			url = url.Substring(0, url.Length - WorkingGroup.ROOT.Length);
+			GroupResource group = GetParentFromURL(url);
+			if(group == null)
+			{
+				return false;
+			}
+			return true;
 		}
+
+		protected override string CreationPostfix => $"/{WorkingGroup.ROOT}/create";
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema();
+			return new CreationSchema("");
 		}
 
 		protected override WorkingGroup CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
@@ -48,28 +63,21 @@ namespace Dodo.WorkingGroups
 			{
 				throw HTTPException.LOGIN;
 			}
-			var rebellion = DodoServer.ResourceManager<Rebellion>().GetSingle(x => x.GUID.ToString() == (string)info.RebellionGUID);
-			if(rebellion == null)
+			GroupResource group = GetParentFromURL(request.Url);
+			if (group == null)
 			{
-				throw new HTTPException("Rebellion doesn't exist with that GUID", 404);
+				throw new HTTPException("Valid parent doesn't exist at " + request.Url, 404);
 			}
-			string parentWGstring = info.ParentGroup.ToString();
-			ResourceReference<WorkingGroup> parentWG = default;
-			if (!string.IsNullOrEmpty(parentWGstring))
-			{
-				if(!Guid.TryParse(parentWGstring, out Guid guid))
-				{
-					throw new HTTPException($"Working Group with Guid {parentWGstring} not found", 404);
-				}
-				parentWG = rebellion.WorkingGroups.Single(x => x.Guid == guid);
-				parentWG.CheckValue();
-			}
-			if(!ValidationExtensions.NameIsValid(info.WorkingGroupName, out var error))
+			if (!ValidationExtensions.NameIsValid(info.Name, out var error))
 			{
 				throw new Exception(error);
 			}
-			var newWorkingGroup = new WorkingGroup(user, rebellion, parentWG.Value, info.WorkingGroupName.ToString());
-			DodoServer.ResourceManager<WorkingGroup>().Add(newWorkingGroup);
+			var newWorkingGroup = new WorkingGroup(user, group, info);
+			if (URLIsCreation(newWorkingGroup.ResourceURL))
+			{
+				throw new Exception("Reserved Resource URL");
+			}
+			ResourceManager.Add(newWorkingGroup);
 			return newWorkingGroup;
 		}
 	}

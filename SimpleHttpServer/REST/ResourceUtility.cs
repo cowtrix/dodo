@@ -33,6 +33,12 @@ namespace SimpleHttpServer.REST
 			return ResourceManagers.SingleOrDefault(x => x.Key.Get(resource => resource.GUID == guid).Any()).Key;
 		}
 
+		public static IRESTResource GetResourceByURL(string url)
+		{
+			return ResourceManagers.Select(rm => rm.Key.GetSingle(x => x.ResourceURL == url))
+				.SingleOrDefault(x => x != null);
+		}
+
 		public static IResourceManager GetManagerForResource(this Resource resource)
 		{
 			return GetManagerForResource(resource.GUID);

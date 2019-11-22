@@ -27,11 +27,7 @@ namespace SimpleHttpServer.Models
 			{
 				throw new InvalidCastException($"Invalid HTTP method " + method);
 			}
-			if(url.StartsWith("/"))
-			{
-				url = url.Substring(1);
-			}
-			Url = url;
+			Url = url.Trim('/');
 			Domain = Dns.GetHostEntry(Dns.GetHostName()).HostName;
 			Content = content;
 			Headers = headers;
