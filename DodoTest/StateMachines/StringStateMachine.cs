@@ -25,7 +25,6 @@ namespace StateMachines
 			thirdState.AddTransition(firstState, new TransitionInputEquals<string, string>("blah"));
 
 			var json = definition.ToJson();
-			File.WriteAllText("smjson.json", json);
 			return new StateMachine<string, string>(json);
 		}
 

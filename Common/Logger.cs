@@ -16,8 +16,17 @@ namespace Common
 		}
 
 		public static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
-		public static string LogPath = "dodoLog.log";
+		public static string LogPath = @"logs\log.log";
 		private static object m_fileLock = new object();
+
+		static Logger()
+		{
+			var logDir = Path.GetDirectoryName(LogPath);
+			if (!Directory.Exists(logDir))
+			{
+				Directory.CreateDirectory(logDir);
+			}
+		}
 
 		public static void Exception(Exception exception, string message = null, bool nolog = false)
 		{

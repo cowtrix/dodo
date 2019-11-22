@@ -8357,3 +8357,272 @@ Parameter name: length
    at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
    at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
    at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:58]	Failed to deserialise JSON: Reserved Resource URL
+ Expected:
+ {
+  "Name": "Test Working Group",
+  "Mandate": ""
+}
+[22/11/2019 18:45:58]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:58]	Invalid field names
+[22/11/2019 18:45:58]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 206
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:58]	Failed to deserialise JSON: Reserved Resource URL
+ Expected:
+ {
+  "Name": "",
+  "Location": {
+    "Latitude": 0.0,
+    "Longitude": 0.0
+  }
+}
+[22/11/2019 18:45:58]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Invalid field names
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 206
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: You need to login
+ Expected:
+ {
+  "Name": "",
+  "Location": {
+    "Latitude": 0.0,
+    "Longitude": 0.0
+  }
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Insufficient privileges
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 210
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Reserved Resource URL
+ Expected:
+ {
+  "Name": "",
+  "Location": {
+    "Latitude": 0.0,
+    "Longitude": 0.0
+  }
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Invalid field names
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 206
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Invalid email address
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Invalid email address
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Invalid email address
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Name length must be between 3 and 64 characters long
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Name length must be between 3 and 64 characters long
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Name contains reserved word: COORDINATOR
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Name contains reserved word: ADMIN
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Username must be at least 3 characters
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Username must be at least 3 characters
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Username can only contain alphanumeric characters and _
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Username can only contain alphanumeric characters and _
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Username was invalid, Expected: aaaaa Received: AAAAA
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Password should not be empty
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Password should be between 8 and 20 characters
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Password should be between 8 and 20 characters
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:45:59]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:45:59]	Failed to deserialise JSON: Password should contain at least one symbol
+ Expected:
+ {
+  "Username": "",
+  "Password": "",
+  "Name": "",
+  "Email": ""
+}
+[22/11/2019 18:46:00]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:46:00]	Name length must be between 3 and 64 characters long
+[22/11/2019 18:46:00]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 291
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:46:00]	Name length must be between 3 and 64 characters long
+[22/11/2019 18:46:00]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 291
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:46:00]	Invalid field names
+[22/11/2019 18:46:00]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 206
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:46:00]	Failed to deserialise JSON: Reserved Resource URL
+ Expected:
+ {
+  "Name": ""
+}
+[22/11/2019 18:46:00]	   at SimpleHttpServer.REST.ObjectRESTHandler`1.CreateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 89
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 18
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
+[22/11/2019 18:46:01]	Invalid field names
+[22/11/2019 18:46:01]	   at SimpleHttpServer.REST.JsonViewUtility.PatchObject[T](T targetObject, Dictionary`2 values, EPermissionLevel visibility, Object requester, String passphrase) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\JsonViewUtility.cs:line 206
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.UpdateObject(HttpRequest request) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 130
+   at SimpleHttpServer.REST.ObjectRESTHandler`1.<AddRoutes>b__0_2(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\ObjectRESTHandler.cs:line 30
+   at SimpleHttpServer.REST.RESTHandler.<>c__DisplayClass1_0.<WrapRawCall>b__0(HttpRequest req) in C:\Users\gbfinnes\github\dodo\SimpleHttpServer\REST\RESTHandler.cs:line 44
