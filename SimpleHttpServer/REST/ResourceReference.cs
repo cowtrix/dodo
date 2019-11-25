@@ -22,7 +22,7 @@ namespace SimpleHttpServer.REST
 			Guid = guid;
 		}
 		public static implicit operator T(ResourceReference<T> d) => d.Value;
-		public static explicit operator ResourceReference<T>(T b) => new ResourceReference<T>(b);
+		public static implicit operator ResourceReference<T>(T b) => new ResourceReference<T>(b);
 
 		public override bool Equals(object obj)
 		{

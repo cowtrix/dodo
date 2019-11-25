@@ -44,6 +44,10 @@ namespace SimpleHttpServer.REST
 
 		public ViewAttribute(EPermissionLevel viewPermission, EPermissionLevel editPermission = EPermissionLevel.ADMIN)
 		{
+			if(viewPermission == EPermissionLevel.OWNER)
+			{
+				editPermission = EPermissionLevel.OWNER;
+			}
 			ViewPermission = viewPermission;
 			EditPermission = editPermission;
 		}
@@ -105,6 +109,7 @@ namespace SimpleHttpServer.REST
 			foreach (var field in obj.GetType().GetFields())
 			{
 				var attr = field.GetCustomAttribute<ViewAttribute>();
+				var fieldName = field.Name;
 				if (attr == null || attr.ViewPermission > visibility)
 				{
 					continue;
@@ -122,7 +127,19 @@ namespace SimpleHttpServer.REST
 					{
 						continue;
 					}
-					vals.Add(field.Name, data.GenerateJsonView(visibility, requester, passPhrase));
+					if (data is IEnumerable)
+					{
+						var list = new List<object>();
+						foreach (var innerVal in (data as IEnumerable))
+						{
+							list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
+						}
+						vals.Add(field.Name, list);
+					}
+					else
+					{
+						vals.Add(field.Name, data.GenerateJsonView(visibility, requester, passPhrase));
+					}
 				}
 				else    // Object is a composite type (e.g. a struct or class) and so we recursively serialize it
 				{

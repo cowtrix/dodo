@@ -9,7 +9,7 @@ using System;
 namespace RESTTests
 {
 	[TestClass]
-	public class RebellionTests : RESTTestBase<Rebellion>
+	public class RebellionTests : GroupResourceTestBase<Rebellion>
 	{
 		public override string CreationURL => Rebellion.ROOT + "/create";
 		public override object GetCreationSchema()
@@ -41,7 +41,7 @@ namespace RESTTests
 		public void CannotPatchProtectedField()
 		{
 			var rebellion = CreateNewRebellion("Test rebellion", new GeoLocation());
-			var newUser = RegisterRandomUser(out var username, out _, out var password, out _);
+			var newUser = RegisterRandomUser(out var username, out _, out var password, out _, out _);
 			AssertX.Throws<Exception>(() => RequestJSON(rebellion.Value<string>("ResourceURL"), Method.PATCH, new
 			{
 				BotConfiguration = new RebellionBotConfiguration()

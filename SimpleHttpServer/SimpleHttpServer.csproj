@@ -84,6 +84,7 @@
     <Compile Include="Security\EncryptedStore.cs" />
     <Compile Include="Security\IDecryptable.cs" />
     <Compile Include="Security\MultiSigEncryptedStore.cs" />
+    <Compile Include="Security\MultiSigKeyStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

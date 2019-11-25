@@ -12,7 +12,7 @@ using System.Linq;
 namespace RESTTests
 {
 	[TestClass]
-	public class WorkingGroupTests : RESTTestBase<WorkingGroup>
+	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup>
 	{
 		public override string CreationURL => $"{Rebellion}/{WorkingGroup.ROOT}/create";
 

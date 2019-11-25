@@ -3,6 +3,7 @@ using Common.Security;
 using Newtonsoft.Json;
 using SimpleHttpServer.REST;
 using System;
+using System.Security.Cryptography;
 
 namespace Dodo.Users
 {
@@ -30,7 +31,11 @@ namespace Dodo.Users
 		{
 			Username = userName;
 			PasswordHash = SHA256Utility.SHA256(password);
-			PassPhrase = new EncryptedStore<string>(KeyGenerator.GetUniqueKey(256), password);
+			var passphrase = KeyGenerator.GetUniqueKey(128);
+			PassPhrase = new EncryptedStore<string>(passphrase, password);
+			AssymetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
+			PrivateKey = new EncryptedStore<string>(pv, passphrase);
+			PublicKey = pk;
 		}
 
 		/// <summary>
@@ -40,6 +45,9 @@ namespace Dodo.Users
 		[Username]
 		public string Username { get; private set; }
 
+		[View(EPermissionLevel.USER)]
+		public string PublicKey { get; private set; }
+
 		/// <summary>
 		/// Am MD5 hash of the user's password
 		/// </summary>
@@ -48,6 +56,7 @@ namespace Dodo.Users
 		public ResetToken PasswordResetToken;
 
 		public EncryptedStore<string> PassPhrase;
+		public EncryptedStore<string> PrivateKey;
 
 		public bool Challenge(string password, out string passphrase)
 		{

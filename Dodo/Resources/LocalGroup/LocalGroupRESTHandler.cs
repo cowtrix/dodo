@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace Dodo.LocalGroups
 {
-	public class LocalGroupRESTHandler : DodoRESTHandler<LocalGroup>
+	public class LocalGroupRESTHandler : GroupResourceRESTHandler<LocalGroup>
 	{
 		public class CreationSchema : IRESTResourceSchema
 		{
@@ -51,7 +51,7 @@ namespace Dodo.LocalGroups
 		protected override LocalGroup CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
 			var info = (CreationSchema)schema;
-			var user = DodoRESTServer.GetRequestOwner(request);
+			var user = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			if(user == null)
 			{
 				throw HTTPException.LOGIN;
@@ -60,7 +60,7 @@ namespace Dodo.LocalGroups
 			{
 				throw new Exception(error);
 			}
-			var localGroup = new LocalGroup(user, info);
+			var localGroup = new LocalGroup(user, passphrase, info);
 			if(URLIsCreation(localGroup.ResourceURL))
 			{
 				throw new Exception("Reserved Resource URL");

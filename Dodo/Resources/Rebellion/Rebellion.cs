@@ -39,7 +39,7 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.ADMIN)]
 		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
 
-		public Rebellion(User creator, RebellionRESTHandler.CreationSchema schema) : base(creator, null)
+		public Rebellion(User creator, string passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, null)
 		{
 			RebellionName = schema.Name;
 			Location = schema.Location;
@@ -53,14 +53,14 @@ namespace Dodo.Rebellions
 			}
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			if(requestOwner == Creator.Value)
 			{
-				visibility = EPermissionLevel.OWNER;
+				permissionLevel = EPermissionLevel.OWNER;
 				return true;
 			}
-			visibility = EPermissionLevel.USER;
+			permissionLevel = EPermissionLevel.USER;
 			return true;
 		}
 

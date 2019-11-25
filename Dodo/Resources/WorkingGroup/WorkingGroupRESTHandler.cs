@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Dodo.WorkingGroups
 {
-	public class WorkingGroupRESTHandler : DodoRESTHandler<WorkingGroup>
+	public class WorkingGroupRESTHandler : GroupResourceRESTHandler<WorkingGroup>
 	{
 		public class CreationSchema : IRESTResourceSchema
 		{
@@ -58,7 +58,7 @@ namespace Dodo.WorkingGroups
 		protected override WorkingGroup CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
 			var info = (CreationSchema)schema;
-			var user = DodoRESTServer.GetRequestOwner(request);
+			var user = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			if(user == null)
 			{
 				throw HTTPException.LOGIN;
@@ -72,7 +72,7 @@ namespace Dodo.WorkingGroups
 			{
 				throw new Exception(error);
 			}
-			var newWorkingGroup = new WorkingGroup(user, group, info);
+			var newWorkingGroup = new WorkingGroup(user, passphrase, group, info);
 			if (URLIsCreation(newWorkingGroup.ResourceURL))
 			{
 				throw new Exception("Reserved Resource URL");

@@ -46,6 +46,7 @@ namespace RESTTests
 		protected string DefaultName = "Test User";
 		protected string DefaultPassword = "x@asjdbasjdas";
 		protected string DefaultEmail = "test@web.com";
+		protected string DefaultGUID;
 
 		public TestBase()
 		{
@@ -109,16 +110,20 @@ namespace RESTTests
 			{
 				throw new Exception(response);
 			}
-			return JsonConvert.DeserializeObject<JObject>(response);
+			var jobj = JsonConvert.DeserializeObject<JObject>(response);
+			DefaultGUID = jobj.Value<string>("GUID");
+			return jobj;
 		}
 
-		protected JObject RegisterRandomUser(out string username, out string name, out string password, out string email)
+		protected JObject RegisterRandomUser(out string username, out string name, out string password, out string email, out string guid)
 		{
 			username = StringExtensions.RandomString(10).ToLower();
 			name = StringExtensions.RandomString(10).ToLower();
 			password = "@" + username;
 			email = $"{StringExtensions.RandomString(5).ToLower()}@{StringExtensions.RandomString(5).ToLower()}.com";
-			return RegisterUser(username, name, password, email);
+			var response = RegisterUser(username, name, password, email);
+			guid = response.Value<string>("GUID");
+			return response;
 		}
 
 		protected JObject CreateNewRebellion(string name, GeoLocation location)

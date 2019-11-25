@@ -67,7 +67,7 @@ namespace Dodo.Users
 			{
 				throw new Exception(error);
 			}
-			var newUser = new User(new WebPortalAuth(username, password), password);
+			var newUser = new User(new WebPortalAuth(username, password));
 			newUser.Email = email;
 			newUser.Name = info.Name.ToString();
 			if (URLIsCreation(newUser.ResourceURL))

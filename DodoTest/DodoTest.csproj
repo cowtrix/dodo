@@ -66,8 +66,10 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Framework\GroupResourceTestBase.cs" />
     <Compile Include="Framework\HttpUtility.cs" />
     <Compile Include="REST\RoleTests.cs" />
+    <Compile Include="Security\MultiKey.cs" />
     <Compile Include="Security\RawData.cs" />
     <Compile Include="REST\LocalGroupTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="REST\WorkingGroupTests.cs" />
     <Compile Include="Security\MultiSig.cs" />
     <Compile Include="Security\TestDataBase.cs" />
+    <Compile Include="Security\AssymetricEncryptionTests.cs" />
     <Compile Include="StateMachines\StringStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>

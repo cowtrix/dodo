@@ -4,8 +4,17 @@ using System.Text.RegularExpressions;
 
 namespace Common
 {
+
 	public static class StringExtensions
 	{
+		public static byte[] ToByteArray(this string str)
+		{
+			return System.Text.Encoding.ASCII.GetBytes(str);
+		}
+		public static string ByteArrayToString(this byte[] byteArray)
+		{
+			return System.Text.Encoding.UTF8.GetString(byteArray);
+		}
 		public static string Base64Decode(string base64EncodedData)
 		{
 			var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);

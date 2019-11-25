@@ -17,6 +17,11 @@ namespace Dodo
 
 		protected override T GetResource(string url)
 		{
+			var paramIndex = url.IndexOf("?");
+			if(paramIndex > 0)
+			{
+				url = url.Substring(0, paramIndex);
+			}
 			return ResourceManager.GetSingle(x => x.ResourceURL == url);
 		}
 
@@ -55,30 +60,28 @@ namespace Dodo
 			return resource;
 		}
 
-		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out string passphrase)
+		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel permissionLevel, out object context, out string passphrase)
 		{
 			var target = GetResource(request.Url);
 			if(target != null && !(target is T))
 			{
 				throw HTTPException.CONFLICT;
 			}
-			context = null;
-			passphrase = null;
-			if(target == null)
+			context = new ResourceReference<User>(DodoRESTServer.GetRequestOwner(request, out passphrase));
+			if (target == null)
 			{
 				// TODO
 				if (request.Method == EHTTPRequestType.POST)
 				{
-					visibility = EPermissionLevel.OWNER;
+					permissionLevel = EPermissionLevel.OWNER;
 				}
 				else
 				{
-					visibility = EPermissionLevel.PUBLIC;
+					permissionLevel = EPermissionLevel.PUBLIC;
 				}
 				return true;
 			}
-			context = DodoRESTServer.GetRequestOwner(request, out passphrase);
-			return ResourceManager.IsAuthorised(request, target, out visibility);
+			return ResourceManager.IsAuthorised(request, target, out permissionLevel);
 		}
 
 	}

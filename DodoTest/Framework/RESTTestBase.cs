@@ -6,6 +6,7 @@ using RestSharp;
 
 namespace RESTTests
 {
+
 	public abstract class RESTTestBase<T> : TestBase where T:DodoResource
 	{
 		public abstract string CreationURL { get; }

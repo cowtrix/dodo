@@ -101,13 +101,18 @@ namespace SimpleHttpServer.REST
 			InternalData = JsonConvert.DeserializeObject(json) as Data;
 		}
 
-		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility)
+		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel permission)
 		{
+			if(resource == null)
+			{
+				permission = EPermissionLevel.PUBLIC;
+				return true;
+			}
 			if(!(resource is T))
 			{
 				throw new Exception("Incorrect Resource Manager for " + resource);
 			}
-			return IsAuthorised(request, resource as T, out visibility);
+			return IsAuthorised(request, resource as T, out permission);
 		}
 
 		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility);

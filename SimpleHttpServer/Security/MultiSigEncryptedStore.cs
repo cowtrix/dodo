@@ -19,7 +19,7 @@ namespace Common.Security
 		/// be used to decrypt the data.
 		/// </summary>
 		[JsonProperty]
-		private ConcurrentDictionary<TKey, EncryptedStore<string>> m_keyStore = new ConcurrentDictionary<TKey, EncryptedStore<string>>();
+		private ConcurrentDictionary<string, EncryptedStore<string>> m_keyStore = new ConcurrentDictionary<string, EncryptedStore<string>>();
 		[JsonProperty]
 		private EncryptedStore<TVal> m_data;
 
@@ -28,13 +28,13 @@ namespace Common.Security
 		public MultiSigEncryptedStore(TVal data, TKey key, string password)
 		{
 			var passPhrase = SHA256Utility.SHA256(Guid.NewGuid().ToString() + key.GetHashCode().ToString() + data?.GetHashCode());	// Generate a passphrase
-			m_keyStore.TryAdd(key, new EncryptedStore<string>(passPhrase, password)); // Store the creating key and the passphrase with the given password
+			m_keyStore.TryAdd(GenerateID(key, password), new EncryptedStore<string>(passPhrase, password)); // Store the creating key and the passphrase with the given password
 			m_data = new EncryptedStore<TVal>(data, passPhrase);	// Encrypt the common data with the common passphrase
 		}
 
 		public TVal GetValue(TKey key, string password)
 		{
-			if(!m_keyStore.TryGetValue(key, out var unlockPhrase))
+			if(!m_keyStore.TryGetValue(GenerateID(key, password), out var unlockPhrase))
 			{
 				throw new Exception("You are not authorized to access this resource");
 			}
@@ -44,7 +44,7 @@ namespace Common.Security
 
 		public void SetValue(TVal data, TKey key, string password)
 		{
-			if (!m_keyStore.TryGetValue(key, out var unlockPhrase))
+			if (!m_keyStore.TryGetValue(GenerateID(key, password), out var unlockPhrase))
 			{
 				throw new Exception("You are not authorized to access this resource");
 			}
@@ -52,19 +52,23 @@ namespace Common.Security
 			m_data = new EncryptedStore<TVal>(data, passPhrase);
 		}
 
-		public bool IsAuthorised(TKey key)
+		public bool IsAuthorised(TKey key, string passphrase)
 		{
-			return m_keyStore.ContainsKey(key);
+			return m_keyStore.ContainsKey(GenerateID(key, passphrase));
 		}
 
 		public void AddPermission(TKey key, string ownerPass, TKey newKey, string newUserPass)
 		{
-			if (!m_keyStore.TryGetValue(key, out var unlockPhrase))
+			if (!m_keyStore.TryGetValue(GenerateID(key, ownerPass), out var unlockPhrase))
 			{
 				throw new Exception("You are not authorized to access this resource");
 			}
 			var passPhrase = unlockPhrase.GetValue(ownerPass);
-			m_keyStore.TryAdd(newKey, new EncryptedStore<string>(passPhrase, newUserPass));
+			if(key.Equals(newKey))
+			{
+				m_keyStore.TryRemove(GenerateID(key, ownerPass), out _);
+			}
+			m_keyStore[GenerateID(newKey, newUserPass)] = new EncryptedStore<string>(passPhrase, newUserPass);
 		}
 
 		public bool TryGetValue(object requester, string password, out object result)
@@ -94,6 +98,11 @@ namespace Common.Security
 			}
 			catch { }
 			SetValue((TVal)innerObject, (TKey)requester, passphrase);
+		}
+
+		private string GenerateID(TKey key, string passphrase)
+		{
+			return SHA256Utility.SHA256(key.GetHashCode() + passphrase);
 		}
 	}
 }

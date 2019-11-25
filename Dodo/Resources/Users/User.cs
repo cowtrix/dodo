@@ -1,4 +1,6 @@
-﻿using Common;
+﻿using System;
+using System.Collections.Generic;
+using Common;
 using Common.Security;
 using Dodo.LocalGroups;
 using SimpleHttpServer.Models;
@@ -27,22 +29,25 @@ namespace Dodo.Users
 		[View(EPermissionLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 
+		[View(EPermissionLevel.OWNER)]
+		public List<PushAction> PushActions = new List<PushAction>();
+
 		public User() : base(null)
 		{ }
 
-		public User(WebPortalAuth auth, string password) : base(null)
+		public User(WebPortalAuth auth) : base(null)
 		{
 			WebAuth = auth;
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel visibility)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			if(requestOwner == this)
 			{
-				visibility = EPermissionLevel.OWNER;
+				permissionLevel = EPermissionLevel.OWNER;
 				return true;
 			}
-			visibility = EPermissionLevel.PUBLIC;
+			permissionLevel = EPermissionLevel.PUBLIC;
 			return false;
 		}
 	}

@@ -64,6 +64,18 @@ namespace Security
 		}
 
 		[TestMethod]
+		public void CanChangeToken()
+		{
+			var key = Guid.NewGuid().ToString();
+			var password = Guid.NewGuid().ToString();
+			var data = KeyGenerator.GetUniqueKey(128);
+			var multiSig = new MultiSigEncryptedStore<string, string>(data, key, password);
+			var newPassword = Guid.NewGuid().ToString();
+			multiSig.AddPermission(key, password, key, newPassword);
+			Assert.AreEqual(data, multiSig.GetValue(key, newPassword));
+		}
+
+		[TestMethod]
 		public void CannotPatchWithInsufficientView()
 		{
 			var key = "user";
@@ -127,8 +139,8 @@ namespace Security
 			Assert.AreEqual(firstData, multisig.GetValue(secondKey, secondPassword));
 
 			// Make sure it breaks when it should
-			Assert.ThrowsException<CryptographicException>(() => multisig.GetValue(firstKey, secondPassword));
-			Assert.ThrowsException<CryptographicException>(() => multisig.GetValue(secondKey, "notthepassword"));
+			Assert.ThrowsException<Exception>(() => multisig.GetValue(firstKey, secondPassword));
+			Assert.ThrowsException<Exception>(() => multisig.GetValue(secondKey, "notthepassword"));
 			Assert.ThrowsException<Exception>(() => multisig.GetValue(default, firstPassword));
 
 			multisig.SetValue(secondData, secondKey, secondPassword);

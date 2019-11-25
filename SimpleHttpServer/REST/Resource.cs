@@ -27,6 +27,7 @@ namespace SimpleHttpServer.REST
 		[View(EPermissionLevel.USER)]
 		public abstract string ResourceURL { get; }
 
+
 		public Resource()
 		{
 			GUID = Guid.NewGuid();

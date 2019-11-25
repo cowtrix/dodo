@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Dodo.Rebellions
 {
-	public class RebellionRESTHandler : DodoRESTHandler<Rebellion>
+	public class RebellionRESTHandler : GroupResourceRESTHandler<Rebellion>
 	{
 		public class CreationSchema : IRESTResourceSchema
 		{
@@ -47,7 +47,7 @@ namespace Dodo.Rebellions
 		protected override Rebellion CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
 			var info = (CreationSchema)schema;
-			var user = DodoRESTServer.GetRequestOwner(request);
+			var user = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			if(user == null)
 			{
 				throw HTTPException.LOGIN;
@@ -56,7 +56,7 @@ namespace Dodo.Rebellions
 			{
 				throw new System.Exception(error);
 			}
-			var newRebellion = new Rebellion(user, info);
+			var newRebellion = new Rebellion(user, passphrase, info);
 			if (URLIsCreation(newRebellion.ResourceURL))
 			{
 				throw new Exception("Reserved Resource URL");

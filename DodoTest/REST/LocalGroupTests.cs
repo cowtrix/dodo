@@ -10,7 +10,7 @@ using System.Linq;
 namespace RESTTests
 {
 	[TestClass]
-	public class LocalGroupTests : RESTTestBase<LocalGroup>
+	public class LocalGroupTests : GroupResourceTestBase<LocalGroup>
 	{
 		public override string CreationURL => LocalGroup.ROOT + "/create";
 
