@@ -35,7 +35,6 @@ namespace SimpleHttpServer.REST
 				URLIsResource,
 				WrapRawCall((req) => DeleteObject(req))
 				));
-			base.AddRoutes(routeList);
 		}
 
 		protected bool URLIsResource(string url)
@@ -68,11 +67,11 @@ namespace SimpleHttpServer.REST
 		{
 			if(!IsAuthorised(request, out var view, out var context, out var password))
 			{
-				throw HTTPException.FORBIDDEN;
+				throw HttpException.FORBIDDEN;
 			}
 			if(GetResource(request.Url) != null)
 			{
-				throw HTTPException.CONFLICT;
+				throw HttpException.CONFLICT;
 			}
 			var schema = GetCreationSchema();
 			T createdObject = null;
@@ -116,16 +115,16 @@ namespace SimpleHttpServer.REST
 			var target = GetResource(request.Url);
 			if(target == null)
 			{
-				throw HTTPException.NOT_FOUND;
+				throw HttpException.NOT_FOUND;
 			}
 			if (!IsAuthorised(request, out var view, out var context, out var passphrase))
 			{
-				throw HTTPException.FORBIDDEN;
+				throw HttpException.FORBIDDEN;
 			}
 			var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.Content);
 			if(values == null)
 			{
-				throw new HTTPException("Invalid JSON body", 400);
+				throw new HttpException("Invalid JSON body", 400);
 			}
 			target.PatchObject(values, view, context, passphrase);
 			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
@@ -134,12 +133,12 @@ namespace SimpleHttpServer.REST
 		{
 			if (!IsAuthorised(request, out _, out _, out _))
 			{
-				throw HTTPException.FORBIDDEN;
+				throw HttpException.FORBIDDEN;
 			}
 			var target = GetResource(request.Url);
 			if (target == null)
 			{
-				throw HTTPException.NOT_FOUND;
+				throw HttpException.NOT_FOUND;
 			}
 			DeleteObjectInternal(target);
 			return HttpBuilder.Custom("Resource deleted", 204);
@@ -149,11 +148,11 @@ namespace SimpleHttpServer.REST
 			var target = GetResource(request.Url);
 			if (target == null)
 			{
-				throw HTTPException.NOT_FOUND;
+				throw HttpException.NOT_FOUND;
 			}
 			if (!IsAuthorised(request, out var view, out var context, out var passphrase))
 			{
-				throw HTTPException.FORBIDDEN;
+				throw HttpException.FORBIDDEN;
 			}
 			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 		}

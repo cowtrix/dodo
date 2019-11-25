@@ -15,6 +15,10 @@ namespace Common
 	{
 		public static string GetName(this Enum enumVal)
 		{
+			if(enumVal == null)
+			{
+				return null;
+			}
 			var type = enumVal.GetType();
 			var memInfo = type.GetMember(enumVal.ToString());
 			var attributes = memInfo[0].GetCustomAttributes(typeof(NameAttribute), false);

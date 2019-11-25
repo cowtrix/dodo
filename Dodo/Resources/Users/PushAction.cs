@@ -20,14 +20,14 @@ namespace Dodo.Users
 		public AddAdminAction(GroupResource resource, string temporaryPassword, string publicKey)
 		{
 			Resource = new ResourceReference<GroupResource>(resource);
-			Token = AssymetricSecurity.Encrypt(temporaryPassword, publicKey);
+			Token = AsymmetricSecurity.Encrypt(temporaryPassword, publicKey);
 		}
 
 		public override void Execute(User user, string passphrase)
 		{
 			Resource.CheckValue();
 			var privateKey = user.WebAuth.PrivateKey.GetValue(passphrase);
-			var tempPass = AssymetricSecurity.Decrypt<string>(Token, privateKey);
+			var tempPass = AsymmetricSecurity.Decrypt<string>(Token, privateKey);
 			Resource.Value.AddAdmin(user, tempPass, user, passphrase);
 		}
 	}

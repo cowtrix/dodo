@@ -59,7 +59,7 @@ namespace Common
 						var data = File.ReadAllText(path);
 						if (Encrypt.Value)
 						{
-							data = StringCipher.Decrypt(data, m_pass.ToString());
+							data = SymmetricSecurity.Decrypt<string>(data, m_pass.ToString());
 						}
 					}
 					await Task.Delay(TimeSpan.FromMinutes(BackupInterval.Value));
@@ -68,7 +68,7 @@ namespace Common
 						var data = target.Serialize();
 						if(Encrypt.Value)
 						{
-							data = StringCipher.Encrypt(data, m_pass.ToString());
+							data = SymmetricSecurity.Encrypt(data, m_pass.ToString());
 						}
 						File.WriteAllText(path, data);
 					}

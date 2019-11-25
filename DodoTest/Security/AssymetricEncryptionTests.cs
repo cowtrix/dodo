@@ -16,9 +16,9 @@ namespace Security
 
 		private void CanEncryptAndDecrypt<T>(T data)
 		{
-			AssymetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
-			var encryptedData = AssymetricSecurity.Encrypt(data, pk);
-			var decryptedData = AssymetricSecurity.Decrypt<T>(encryptedData, pv);
+			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
+			var encryptedData = AsymmetricSecurity.Encrypt(data, pk);
+			var decryptedData = AsymmetricSecurity.Decrypt<T>(encryptedData, pv);
 			Assert.AreEqual(data, decryptedData);
 		}
 	}

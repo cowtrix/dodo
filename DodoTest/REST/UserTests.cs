@@ -74,10 +74,10 @@ namespace RESTTests
 		public void CannotCreateUserWithInvalidUsername()
 		{
 			AssertX.Throws<Exception>(() => RegisterUser(""),
-				e => e.Message.Contains("Username must be at least 3 characters"));
+				e => e.Message.Contains("Name length must be between "));
 
 			AssertX.Throws<Exception>(() => RegisterUser("aa"),
-				e => e.Message.Contains("Username must be at least 3 characters"));
+				e => e.Message.Contains("Name length must be between "));
 
 			AssertX.Throws<Exception>(() => RegisterUser("invalid username"),
 				e => e.Message.Contains("Username can only contain alphanumeric characters and _"));

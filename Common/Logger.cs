@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Common
 {
+	internal struct ExceptionEntry
+	{
+		public string Message;
+		public DateTime TimeStamp;
+	}
+
 	public static class Logger
 	{
-		public struct ExceptionEntry
-		{
-			public string Message;
-			public DateTime TimeStamp;
-		}
-
-		public static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
+		internal static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
 		public static string LogPath = @"logs\log.log";
 		private static object m_fileLock = new object();
 
@@ -30,6 +30,10 @@ namespace Common
 
 		public static void Exception(Exception exception, string message = null, bool nolog = false)
 		{
+			if(exception == null)
+			{
+				return;
+			}
 			if(!string.IsNullOrEmpty(message))
 			{
 				Error(message, true);

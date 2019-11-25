@@ -64,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HttpExtensions.cs" />
+    <Compile Include="EHTTPRequestType.cs" />
+    <Compile Include="REST\EPermissionLevel.cs" />
+    <Compile Include="HTTPException.cs" />
     <Compile Include="REST\JsonViewUtility.cs" />
     <Compile Include="REST\ObjectRESTHandler.cs" />
     <Compile Include="REST\Resource.cs" />
@@ -72,7 +75,6 @@
     <Compile Include="REST\ResourceUtility.cs" />
     <Compile Include="REST\RESTHandler.cs" />
     <Compile Include="REST\RESTServer.cs" />
-    <Compile Include="REST\RouteAttribute.cs" />
     <Compile Include="HttpBuilder.cs" />
     <Compile Include="HttpProcessor.cs" />
     <Compile Include="Models\HttpRequest.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Models\Route.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="REST\ViewAttribute.cs" />
     <Compile Include="RouteHandlers\FileSystemRouteHandler.cs" />
     <Compile Include="Security\EncryptedStore.cs" />
     <Compile Include="Security\IDecryptable.cs" />

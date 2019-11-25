@@ -7,6 +7,10 @@ namespace Common.Security
 		TVal GetValue(TKey key, string password);
 	}
 
+	/// <summary>
+	/// Represents an object that can be decrypted by a valid combination
+	/// of both a key value and a passphrase
+	/// </summary>
 	public interface IKeyDecryptable : IDecryptable
 	{
 	}
@@ -16,6 +20,10 @@ namespace Common.Security
 		T GetValue(string password);
 	}
 
+	/// <summary>
+	/// Represents an object that can be decrypted with a passphrase to expose an underlying value
+	/// and have that value updated
+	/// </summary>
 	public interface IDecryptable
 	{
 		bool TryGetValue(object requester, string passphrase, out object result);

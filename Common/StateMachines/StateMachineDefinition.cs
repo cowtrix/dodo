@@ -7,8 +7,9 @@ namespace Common.StateMachines
 {
 	public class StateMachineDefinition<TInput, TOutput>
 	{
-		public string Name;
-		public List<State<TInput, TOutput>> States = new List<State<TInput, TOutput>>();
+		public string Name { get; set; }
+		[JsonProperty]
+		public List<State<TInput, TOutput>> States { get; private set; }
 		[JsonProperty]
 		public Guid RootState { get; private set; }
 
@@ -18,6 +19,7 @@ namespace Common.StateMachines
 		{
 			Name = name;
 			RootState = root.GUID;
+			States = new List<State<TInput, TOutput>>();
 			AddState(root);
 		}
 

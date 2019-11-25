@@ -11,48 +11,6 @@ using System.Runtime.CompilerServices;
 
 namespace SimpleHttpServer.REST
 {
-	public class HTTPException : Exception
-	{
-		public static HTTPException UNAUTHORIZED { get { return new HTTPException("Unauthorised", 401); } }
-		public static HTTPException FORBIDDEN { get { return new HTTPException("Forbidden", 403); } }
-		public static HTTPException NOT_FOUND { get { return new HTTPException("Resource not found", 404); } }
-		public static HTTPException CONFLICT { get { return new HTTPException("Conflict - resource may already exist", 409); } }
-		public static Exception LOGIN { get { return new HTTPException("You need to login", 302); } }
-
-		public readonly int ErrorCode;
-		public HTTPException(string message, int errorCode) : base(message)
-		{
-			ErrorCode = errorCode;
-		}
-	}
-
-	public enum EPermissionLevel : byte
-	{
-		PUBLIC = 0,	// Any requester
-		USER = 1,	// A valid, signed in user
-		ADMIN = 2,	// An administrator of the resource
-		OWNER = 3,	// An owner of the resource
-		SYSTEM = byte.MaxValue,
-	}
-
-	/// <summary>
-	/// Fields and properties with this attribute will be serialized in REST api queries.
-	/// </summary>
-	public class ViewAttribute : Attribute {
-		public EPermissionLevel ViewPermission { get; private set; }
-		public EPermissionLevel EditPermission { get; private set; }
-
-		public ViewAttribute(EPermissionLevel viewPermission, EPermissionLevel editPermission = EPermissionLevel.ADMIN)
-		{
-			if(viewPermission == EPermissionLevel.OWNER)
-			{
-				editPermission = EPermissionLevel.OWNER;
-			}
-			ViewPermission = viewPermission;
-			EditPermission = editPermission;
-		}
-	}
-
 	public static class JsonViewUtility
 	{
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
@@ -195,7 +153,7 @@ namespace SimpleHttpServer.REST
 				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values), targetType);
 				if(val is IVerifiable)
 				{
-					(val as IVerifiable).CheckValue();
+					(val as IVerifiable).Verify();
 				}
 				return (T)val;
 			}
@@ -208,6 +166,10 @@ namespace SimpleHttpServer.REST
 					return targetObject;
 				}
 				encryptedObject.PatchObject(values, visibility, requester, passphrase);
+				if (encryptedObject is IVerifiable)
+				{
+					(encryptedObject as IVerifiable).Verify();
+				}
 				decryptable.SetValue(encryptedObject, visibility, requester, passphrase);
 				return targetObject;
 			}
@@ -308,6 +270,10 @@ namespace SimpleHttpServer.REST
 					throw new Exception(error);
 				}
 				SetValue(targetMember, targetObject, valueToSet);
+			}
+			if (targetObject is IVerifiable)
+			{
+				(targetObject as IVerifiable).Verify();
 			}
 			return targetObject;
 		}

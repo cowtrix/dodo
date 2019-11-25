@@ -2,52 +2,96 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Common
 {
-
+	/// <summary>
+	/// Indicates that a type is able to verify and validate its state
+	/// </summary>
 	public interface IVerifiable
 	{
-		void CheckValue();
 	}
 
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public abstract class VerifyMemberBase : Attribute
 	{
-		public abstract bool Verify(object value, out string error);
+		public abstract bool Verify(object value, out string validationError);
 	}
 
 	public class EmailAttribute : VerifyMemberBase
 	{
-		public override bool Verify(object value, out string error)
+		public override bool Verify(object value, out string validationError)
 		{
-			error = "Invalid email";
+			validationError = "Invalid email";
 			return ValidationExtensions.EmailIsValid(value as string);
 		}
 	}
 
 	public class PhoneNumberAttribute : VerifyMemberBase
 	{
-		public override bool Verify(object value, out string error)
+		public override bool Verify(object value, out string validationError)
 		{
 			var ph = value as string;
-			if(!ValidationExtensions.ValidateNumber(ref ph))
+			if (!ValidationExtensions.ValidateNumber(ref ph))
 			{
-				error = "Invalid phone number";
+				validationError = "Invalid phone number";
 				return false;
 			}
-			error = null;
+			validationError = null;
 			return true;
+		}
+	}
+
+	public static class VerificationExtensions
+	{
+		/// <summary>
+		/// This extension method will go through fields and properties marked with verify attributes
+		/// The type of verify attribute tells it how to check the value
+		/// </summary>
+		/// <param name="objectToVerify"></param>
+		public static void Verify(this IVerifiable objectToVerify)
+		{
+			if(objectToVerify == null)
+			{
+				return;
+			}
+			var members = objectToVerify.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			foreach(var m in members)
+			{
+				var attr = m.GetCustomAttribute<VerifyMemberBase>();
+				if(attr == null)
+				{
+					continue;
+				}
+				object value = null;
+				if(m is FieldInfo)
+				{
+					value = (m as FieldInfo).GetValue(objectToVerify);
+				}
+				else if(m is PropertyInfo)
+				{
+					value = (m as PropertyInfo).GetValue(objectToVerify);
+				}
+				else
+				{
+					continue;
+				}
+				if(!attr.Verify(value, out var validationError))
+				{
+					throw new Exception(validationError);
+				}
+			}
 		}
 	}
 
 	public class UsernameAttribute : VerifyMemberBase
 	{
-		public override bool Verify(object value, out string error)
+		public override bool Verify(object value, out string validationError)
 		{
 			var str = value as string;
-			if (!ValidationExtensions.UsernameIsValid(str, out error))
+			if (!ValidationExtensions.UsernameIsValid(str, out validationError))
 			{
 				return false;
 			}
@@ -57,10 +101,10 @@ namespace Common
 
 	public class UserFriendlyNameAttribute : VerifyMemberBase
 	{
-		public override bool Verify(object value, out string error)
+		public override bool Verify(object value, out string validationError)
 		{
 			var str = value as string;
-			if (!ValidationExtensions.NameIsValid(str, out error))
+			if (!ValidationExtensions.NameIsValid(str, out validationError))
 			{
 				return false;
 			}
@@ -68,9 +112,10 @@ namespace Common
 		}
 	}
 
-
 	public static class ValidationExtensions
 	{
+		const int NAME_MIN_LENGTH = 3;
+		const int NAME_MAX_LENGTH = 64;
 		static Regex ValidEmailRegex = CreateValidEmailRegex();
 
 		/// <summary>
@@ -142,8 +187,7 @@ namespace Common
 		};
 		public static bool NameIsValid(string name, out string error)
 		{
-			const int NAME_MIN_LENGTH = 3;
-			const int NAME_MAX_LENGTH = 64;
+
 			if (string.IsNullOrEmpty(name) || name.Length < NAME_MIN_LENGTH || name.Length > NAME_MAX_LENGTH)
 			{
 				error = $"Name length must be between {NAME_MIN_LENGTH} and {NAME_MAX_LENGTH} characters long";
@@ -161,9 +205,9 @@ namespace Common
 
 		public static bool UsernameIsValid(string username, out string error)
 		{
-			if(username.Length < 3)
+			if (string.IsNullOrEmpty(username) || username.Length < NAME_MIN_LENGTH || username.Length > NAME_MAX_LENGTH)
 			{
-				error = "Username must be at least 3 characters";
+				error = $"Name length must be between {NAME_MIN_LENGTH} and {NAME_MAX_LENGTH} characters long";
 				return false;
 			}
 			var rgx = "^[a-zA-Z0-9_]*$";

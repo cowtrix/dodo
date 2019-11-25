@@ -8,13 +8,6 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-	/// <summary>
-	/// This signifies that a property or field cannot be updated via a PATCH REST command and must be updated
-	/// through some internal method
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-	public class NoPatchAttribute : Attribute { }
-
 	public static class ReflectionExtensions
 	{
 		public static IEnumerable<Type> GetChildClasses<T>() where T:class

@@ -10,6 +10,11 @@ namespace Common
 		internal static readonly char[] chars =
 			"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
 
+		/// <summary>
+		/// Generate a cryptographically secure random key of length 'size'
+		/// </summary>
+		/// <param name="size"></param>
+		/// <returns></returns>
 		public static string GetUniqueKey(int size)
 		{
 			byte[] data = new byte[4 * size];

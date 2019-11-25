@@ -215,9 +215,9 @@
     <Compile Include="NameAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensions.cs" />
-    <Compile Include="AssymetricSecurity.cs" />
+    <Compile Include="Security\AsymmetricSecurity.cs" />
     <Compile Include="Security\SHA256Utility.cs" />
-    <Compile Include="Security\StringCipher.cs" />
+    <Compile Include="Security\SymmetricSecurity.cs" />
     <Compile Include="StateMachines\State.cs" />
     <Compile Include="StateMachines\StateMachine.cs" />
     <Compile Include="StateMachines\StateMachineDefinition.cs" />

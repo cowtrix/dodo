@@ -27,10 +27,23 @@ namespace Common
 		}
 		public static string StripForURL(this string s)
 		{
+			if(string.IsNullOrEmpty(s))
+			{
+				return s;
+			}
 			return System.Net.WebUtility.UrlEncode(Regex.Replace(s.ToLower(), @"\s+", ""));
 		}
 
 		private static Random random = new Random();
+
+		/// <summary>
+		/// Generate a random string of the given length.
+		/// WARNING: This function is NOT cryptographically secure
+		/// If you are using this for any kind of secure purpose,
+		/// DON'T - use KeyGenerator.GetUniqueKey instead
+		/// </summary>
+		/// <param name="length"></param>
+		/// <returns></returns>
 		public static string RandomString(int length)
 		{
 			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

@@ -1,6 +1,7 @@
 ﻿using Common;
 using Dodo.Rebellions;
 using Dodo.Users;
+using Dodo.Utility;
 using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
@@ -8,6 +9,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RESTTests
 {
@@ -41,6 +43,12 @@ namespace RESTTests
 		{
 			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Create")),
 				e => e.Message.Contains("Reserved Resource URL"));
+		}
+
+		[TestMethod]
+		public async Task SendEmail()
+		{
+			await EmailHelper.Execute();
 		}
 
 		[TestMethod]

@@ -24,14 +24,6 @@ namespace Dodo.Roles
 			public string Mandate = "";
 		}
 
-		[Route("List all roles", "^roles$", EHTTPRequestType.GET)]
-		public static HttpResponse List(HttpRequest request)
-		{
-			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
-			return HttpBuilder.OK(DodoServer.ResourceManager<WorkingGroup>().Get(x => true).ToList()
-				.GenerateJsonView(EPermissionLevel.USER, owner, passphrase));
-		}
-
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
 			return new CreationSchema() { Name = "Test Working Group" };
@@ -43,12 +35,12 @@ namespace Dodo.Roles
 			var user = DodoRESTServer.GetRequestOwner(request);
 			if(user == null)
 			{
-				throw HTTPException.LOGIN;
+				throw HttpException.LOGIN;
 			}
 			var group = GetParentFromURL(request.Url);
 			if(group == null)
 			{
-				throw new HTTPException("Valid parent doesn't exist at " + request.Url, 404);
+				throw new HttpException("Valid parent doesn't exist at " + request.Url, 404);
 			}
 			var newRole = new Role(group, info.Name, info.Mandate);
 			if (URLIsCreation(newRole.ResourceURL))

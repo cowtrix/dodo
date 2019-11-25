@@ -6,6 +6,10 @@ using System.Collections.Generic;
 
 namespace Common.Security
 {
+	/// <summary>
+	/// Symmetrically stores an object of type T in an encrypted form of its JSON representation
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public class EncryptedStore<T> : IDecryptable<T>
 	{
 		[JsonProperty]
@@ -17,7 +21,7 @@ namespace Common.Security
 		{
 			if(value != default)
 			{
-				m_encryptedData = StringCipher.Encrypt(JsonConvert.SerializeObject(value), password);
+				m_encryptedData = SymmetricSecurity.Encrypt(value, password);
 			}
 		}
 
@@ -27,7 +31,7 @@ namespace Common.Security
 			{
 				return default;
 			}
-			return JsonConvert.DeserializeObject<T>(StringCipher.Decrypt(m_encryptedData, password));
+			return SymmetricSecurity.Decrypt<T>(m_encryptedData, password);
 		}
 
 		public void SetValue(T value, string password)
@@ -39,7 +43,7 @@ namespace Common.Security
 			}
 			else
 			{
-				m_encryptedData = StringCipher.Encrypt(JsonConvert.SerializeObject(value), password);
+				m_encryptedData = SymmetricSecurity.Encrypt(value, password);
 			}
 		}
 

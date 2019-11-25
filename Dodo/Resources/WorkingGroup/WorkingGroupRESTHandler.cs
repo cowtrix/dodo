@@ -61,12 +61,12 @@ namespace Dodo.WorkingGroups
 			var user = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			if(user == null)
 			{
-				throw HTTPException.LOGIN;
+				throw HttpException.LOGIN;
 			}
 			GroupResource group = GetParentFromURL(request.Url);
 			if (group == null)
 			{
-				throw new HTTPException("Valid parent doesn't exist at " + request.Url, 404);
+				throw new HttpException("Valid parent doesn't exist at " + request.Url, 404);
 			}
 			if (!ValidationExtensions.NameIsValid(info.Name, out var error))
 			{

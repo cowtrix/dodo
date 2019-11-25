@@ -6,6 +6,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
+// Q: If we did move to a database, would it be possible to keep the nice LINQ stuff here? - Sean
+
 namespace SimpleHttpServer.REST
 {
 	public interface IResourceManager : IBackup
@@ -28,6 +30,8 @@ namespace SimpleHttpServer.REST
 
 	/// <summary>
 	/// A ResourceManager keeps track of, deletes, creates and generally manages a class of object.
+	/// If we were going to transition to a database, this would be the thing that manages that.
+	/// But currently we just hold everything in JSON and write it out to a file.
 	/// </summary>
 	/// <typeparam name="T">The class to be managed</typeparam>
 	public abstract class ResourceManager<T> : IResourceManager<T>, IBackup where T: class, IRESTResource
@@ -51,7 +55,7 @@ namespace SimpleHttpServer.REST
 		{
 			if(ResourceUtility.GetResourceByGuid(newObject.GUID) != null || Get(x => x.ResourceURL == newObject.ResourceURL).Any())
 			{
-				throw HTTPException.CONFLICT;
+				throw HttpException.CONFLICT;
 			}
 			return InternalData.Entries.TryAdd(newObject.GUID, newObject);
 		}

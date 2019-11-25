@@ -65,7 +65,7 @@ namespace Dodo
 			var target = GetResource(request.Url);
 			if(target != null && !(target is T))
 			{
-				throw HTTPException.CONFLICT;
+				throw HttpException.CONFLICT;
 			}
 			context = new ResourceReference<User>(DodoRESTServer.GetRequestOwner(request, out passphrase));
 			if (target == null)

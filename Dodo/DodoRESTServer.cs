@@ -24,20 +24,20 @@ namespace Dodo
 		public static User GetRequestOwner(HttpRequest request, out string passphrase)
 		{
 			passphrase = null;
-			if (!request.Headers.TryGetValue(TOKEN_KEY, out var token))
+			if (!request.Headers.TryGetValue(AUTH_KEY, out var token))
 			{
 				return null;
 			}
 			var tokens = token.Trim().Split(' ');
 			if (tokens.Length != 2 || tokens[0] != "Basic")
 			{
-				throw HTTPException.UNAUTHORIZED;
+				throw HttpException.UNAUTHORIZED;
 			}
 			var decode = StringExtensions.Base64Decode(tokens[1]).Split(':');
 			var user = DodoServer.ResourceManager<User>().GetSingle(x => x.WebAuth.Username == decode[0]);
 			if (user != null && !user.WebAuth.Challenge(decode[1], out passphrase))
 			{
-				throw HTTPException.FORBIDDEN;
+				throw HttpException.FORBIDDEN;
 			}
 			return user;
 		}
@@ -52,16 +52,16 @@ namespace Dodo
 					{
 						if (!Guid.TryParse(request.Url.Substring("resources/".Length), out var guid))
 						{
-							throw HTTPException.NOT_FOUND;
+							throw HttpException.NOT_FOUND;
 						}
 						var resource = ResourceUtility.GetResourceByGuid(guid) as DodoResource;
 						if (resource == null)
 						{
-							throw HTTPException.NOT_FOUND;
+							throw HttpException.NOT_FOUND;
 						}
 						if (!ResourceUtility.IsAuthorized(request, resource, out var view))
 						{
-							throw HTTPException.FORBIDDEN;
+							throw HttpException.FORBIDDEN;
 						}
 						var owner = GetRequestOwner(request, out var passphrase);
 						return HttpBuilder.OK(resource.GenerateJsonView(view, owner, passphrase));
@@ -69,9 +69,9 @@ namespace Dodo
 					catch (Exception e)
 					{
 						Logger.Exception(e.InnerException);
-						if (e.InnerException is HTTPException)
+						if (e.InnerException is HttpException)
 						{
-							return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message, (e.InnerException as HTTPException).ErrorCode);
+							return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message, (e.InnerException as HttpException).ErrorCode);
 						}
 						return HttpBuilder.Error("Error processing request:\n" + e.InnerException.Message);
 					}

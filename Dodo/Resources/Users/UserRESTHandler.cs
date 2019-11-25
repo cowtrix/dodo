@@ -21,7 +21,6 @@ namespace Dodo.Users
 			public string Email = "";
 		}
 
-		[Route("Reset a password for an email", "^resetpassword$", EHTTPRequestType.POST)]
 		public HttpResponse ResetPassword(HttpRequest request)
 		{
 			throw new NotImplementedException();

@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace SimpleHttpServer
 {
-
-	public class HttpBuilder
+	/// <summary>
+	/// Generate common HTTP Responses
+	/// </summary>
+	public static class HttpBuilder
 	{
 		public static HttpResponse InternalServerError()
 		{

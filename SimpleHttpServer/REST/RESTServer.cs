@@ -7,17 +7,9 @@ using System.Threading;
 
 namespace SimpleHttpServer.REST
 {
-	public enum EHTTPRequestType
-	{
-		GET,
-		POST,
-		DELETE,
-		PATCH,
-	}
-
 	public class RESTServer
 	{
-		public const string TOKEN_KEY = "Authorization";
+		public const string AUTH_KEY = "Authorization";
 
 		public readonly int Port;
 		protected List<Route> Routes = new List<Route>();

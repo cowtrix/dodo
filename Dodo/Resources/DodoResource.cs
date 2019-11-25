@@ -18,7 +18,6 @@ namespace Dodo
 			Creator = new ResourceReference<User>(creator);
 		}
 		public ResourceReference<User> Creator { get; private set; }
-		public virtual ConcurrentBag<ResourceReference<User>> Administrators { get; }
 		public abstract bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel);
 	}
 }

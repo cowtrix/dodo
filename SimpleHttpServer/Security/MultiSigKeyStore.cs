@@ -7,7 +7,9 @@ using System.Collections.Generic;
 namespace Common.Security
 {
 	/// <summary>
-	/// This class allows multiple key/value pairs to validate themselves
+	/// This class allows multiple key/value pairs to prove that they have been added to this
+	/// collection when they provide a correct passphrase, without an external force being
+	/// able to prove their presence within it
 	/// </summary>
 	/// <typeparam name="TKey"></typeparam>
 	/// <typeparam name="TVal"></typeparam>

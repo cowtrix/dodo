@@ -8,6 +8,8 @@ namespace Common.Security
 {
 	/// <summary>
 	/// This class allows multiple key/password combinations to be able to decrypt a single piece of data.
+	/// An external force should not be able to prove which keys would be able to gain access to this data
+	/// without the corresponding passphrase
 	/// </summary>
 	/// <typeparam name="TKey"></typeparam>
 	/// <typeparam name="TVal"></typeparam>
@@ -16,7 +18,7 @@ namespace Common.Security
 		/// <summary>
 		/// Here we store keys to a common encrypted passphrase that can be used to decrypt the data.
 		/// A key, corresponding with a valid password, will give the common passphrase that can
-		/// be used to decrypt the data.
+		/// be used to decrypt/encrypt the data.
 		/// </summary>
 		[JsonProperty]
 		private ConcurrentDictionary<string, EncryptedStore<string>> m_keyStore = new ConcurrentDictionary<string, EncryptedStore<string>>();
@@ -100,6 +102,13 @@ namespace Common.Security
 			SetValue((TVal)innerObject, (TKey)requester, passphrase);
 		}
 
+		/// <summary>
+		/// It's important that we don't store the keys directly, so we instead create a one-way hash of the
+		/// key and passphrase. Note that then when we change a key's passphrase, we must remove the old hash.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="passphrase"></param>
+		/// <returns></returns>
 		private string GenerateID(TKey key, string passphrase)
 		{
 			return SHA256Utility.SHA256(key.GetHashCode() + passphrase);

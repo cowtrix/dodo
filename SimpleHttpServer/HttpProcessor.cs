@@ -18,22 +18,8 @@ namespace SimpleHttpServer
 {
 	public class HttpProcessor
 	{
-
-		#region Fields
-
 		private List<Route> Routes = new List<Route>();
 
-		#endregion
-
-		#region Constructors
-
-		public HttpProcessor()
-		{
-		}
-
-		#endregion
-
-		#region Public Methods
 		public void HandleClient(TcpClient client)
 		{
 			// A client has connected. Create the
@@ -69,14 +55,12 @@ namespace SimpleHttpServer
 				client.Close();
 			}
 		}
+
 		public void AddRoute(Route route)
 		{
-			this.Routes.Add(route);
+			Routes.Add(route);
 		}
 
-		#endregion
-
-		#region Private Methods
 		static char[] ReadFromSSlStream(SslStream sslStream, int totalSize = 1)
 		{
 			int chunkSize = 2048;
@@ -96,6 +80,11 @@ namespace SimpleHttpServer
 			return result.ToArray();
 		}
 
+		/// <summary>
+		/// Write the response back to the encrypted SSL stream
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <param name="response"></param>
 		private static void WriteResponse(Stream stream, HttpResponse response)
 		{
 			if (response.Content == null)
@@ -139,6 +128,11 @@ namespace SimpleHttpServer
 			stream.Write(bytes, 0, bytes.Length);
 		}
 
+		/// <summary>
+		/// Send a request to the best handler we can find, and then return the response given by that handler
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
 		protected virtual HttpResponse RouteRequest(HttpRequest request)
 		{
 			List<Route> routes = this.Routes.Where(x => x.UrlMatcher(request.Url)).ToList();
@@ -149,15 +143,14 @@ namespace SimpleHttpServer
 			Route route = routes.SingleOrDefault(x => x.Method == request.Method);
 
 			if (route == null)
+			{
 				return new HttpResponse()
 				{
 					ReasonPhrase = "Method Not Allowed",
 					StatusCode = "405",
-
 				};
-
+			}
 			request.Path = request.Url;
-
 			// trigger the route handler...
 			request.Route = route;
 			try {
@@ -168,6 +161,11 @@ namespace SimpleHttpServer
 			}
 		}
 
+		/// <summary>
+		/// Build an HTTPRequest object out of the encrypted SSL Stream
+		/// </summary>
+		/// <param name="sslStream"></param>
+		/// <returns></returns>
 		private static HttpRequest GetRequest(SslStream sslStream)
 		{
 			// Read the  message sent by the client.
@@ -222,6 +220,7 @@ namespace SimpleHttpServer
 					int totalBytes = Convert.ToInt32(headers["Content-Length"]);
 					int bytesLeft = totalBytes;
 					// TODO handle chunked requests better than the below does
+					// It works for now but maybe not forever
 					if (inputStream.Length < inputStream.Position + totalBytes)
 					{
 						content = new string(ReadFromSSlStream(sslStream, bytesLeft));
@@ -246,9 +245,5 @@ namespace SimpleHttpServer
 				return new HttpRequest(method, url, content, headers);
 			}
 		}
-
-		#endregion
-
-
 	}
 }

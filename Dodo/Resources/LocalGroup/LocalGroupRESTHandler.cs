@@ -54,7 +54,7 @@ namespace Dodo.LocalGroups
 			var user = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			if(user == null)
 			{
-				throw HTTPException.LOGIN;
+				throw HttpException.LOGIN;
 			}
 			if(!ValidationExtensions.NameIsValid(info.Name, out var error))
 			{

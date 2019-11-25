@@ -33,7 +33,7 @@ namespace Dodo.Users
 			PasswordHash = SHA256Utility.SHA256(password);
 			var passphrase = KeyGenerator.GetUniqueKey(128);
 			PassPhrase = new EncryptedStore<string>(passphrase, password);
-			AssymetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
+			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			PrivateKey = new EncryptedStore<string>(pv, passphrase);
 			PublicKey = pk;
 		}

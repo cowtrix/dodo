@@ -42,18 +42,18 @@ namespace Dodo
 		{
 			if (!IsAuthorised(request, out var permissionLevel, out var ownerObj, out var passphrase))
 			{
-				throw HTTPException.NOT_FOUND;
+				throw HttpException.NOT_FOUND;
 			}
 			if(permissionLevel < EPermissionLevel.ADMIN)
 			{
-				throw HTTPException.FORBIDDEN;
+				throw HttpException.FORBIDDEN;
 			}
 			var owner = ((ResourceReference<User>)ownerObj).Value;
 			var resourceUrl = request.Url.Substring(0, request.Url.Length - ADD_ADMIN.Length);
 			var resource = ResourceUtility.GetResourceByURL(resourceUrl) as GroupResource;
 			if(resource == null)
 			{
-				throw HTTPException.NOT_FOUND;
+				throw HttpException.NOT_FOUND;
 			}
 			var targetUserGUID = Guid.Parse(JsonConvert.DeserializeObject<string>(request.Content));
 			var targetUser = DodoServer.ResourceManager<User>().GetSingle(x => x.GUID == targetUserGUID);

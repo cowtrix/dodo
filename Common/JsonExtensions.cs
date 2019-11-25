@@ -7,8 +7,20 @@ using System.Reflection;
 
 namespace Common
 {
+	/// <summary>
+	/// This signifies that a property or field cannot be updated via a PATCH REST command and must be updated
+	/// through some internal method
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	public class NoPatchAttribute : Attribute { }
+
 	public static class JsonExtensions
 	{
+		/// <summary>
+		/// Verify the syntactic integrity of a JSON string
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
 		public static bool IsValidJson(this string value)
 		{
 			try
@@ -21,6 +33,7 @@ namespace Common
 				return false;
 			}
 		}
+
 		public static T DeserializeAnonymousType<T>(string json, T anonymousObj) where T : class
 		{
 			var newObj = JsonConvert.DeserializeAnonymousType(json, anonymousObj);

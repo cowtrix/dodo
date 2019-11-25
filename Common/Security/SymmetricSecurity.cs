@@ -3,10 +3,14 @@ using System.Text;
 using System.Security.Cryptography;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Common
 {
-	public static class StringCipher
+	/// <summary>
+	/// This class provides utilties to symmetrically encrypt information
+	/// </summary>
+	public static class SymmetricSecurity
 	{
 		// This constant is used to determine the keysize of the encryption algorithm in bits.
 		// We divide this by 8 within the code below to get the equivalent number of bytes.
@@ -15,8 +19,9 @@ namespace Common
 		// This constant determines the number of iterations for the password bytes generation function.
 		private const int DerivationIterations = 1000;
 
-		public static string Encrypt(string plainText, string passPhrase)
+		public static string Encrypt<T>(T objectToEncrypt, string passPhrase)
 		{
+			var plainText = JsonConvert.SerializeObject(objectToEncrypt);
 			// Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
 			// so that the same Salt and IV values can be used when decrypting.
 			var saltStringBytes = Generate256BitsOfRandomEntropy();
@@ -52,7 +57,7 @@ namespace Common
 			}
 		}
 
-		public static string Decrypt(string cipherText, string passPhrase)
+		public static T Decrypt<T>(string cipherText, string passPhrase)
 		{
 			// Get the complete stream of bytes that represent:
 			// [32 bytes of Salt] + [32 bytes of IV] + [n bytes of CipherText]
@@ -82,7 +87,8 @@ namespace Common
 								var decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
 								memoryStream.Close();
 								cryptoStream.Close();
-								return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
+								var plainText = Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
+								return JsonConvert.DeserializeObject<T>(plainText);
 							}
 						}
 					}

@@ -5,6 +5,11 @@ namespace Common
 {
 	public static class ConsoleExtensions
 	{
+		/// <summary>
+		/// Provides a console input that displays '*' instead of inputted characters
+		/// and stores the result in a memory secure location
+		/// </summary>
+		/// <returns></returns>
 		public static SecureString ReadPassword()
 		{
 			var pass = new SecureString();
