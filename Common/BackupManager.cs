@@ -14,16 +14,6 @@ namespace Common
 		void Deserialize(string json);
 	}
 
-	public struct ConfigVariable<T>
-	{
-		public T Value;
-		public string ConfigKey;
-		public ConfigVariable(string key, T defaultValue)
-		{
-			Value = defaultValue;
-			ConfigKey = key;
-		}
-	}
 
 	public class BackupManager
 	{

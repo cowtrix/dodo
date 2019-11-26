@@ -1,4 +1,5 @@
-﻿using SendGrid;
+﻿using Common;
+using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ namespace Dodo.Utility
 {
 	public static class EmailHelper
 	{
+		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
+
 		public static async Task Execute()
 		{
-			var client = new SendGridClient("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");
+			var client = new SendGridClient(m_sendGridAPIKey.Value);
 			var from = new EmailAddress("test@example.com", "Example User");
 			var subject = "Sending with Twilio SendGrid is Fun";
 			var to = new EmailAddress("seandgfinnegan@gmail.com", "Example User");

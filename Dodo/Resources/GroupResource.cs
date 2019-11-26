@@ -16,7 +16,7 @@ namespace Dodo
 		public ResourceReference<GroupResource> Parent { get; private set; }
 
 		[NoPatch]
-		[View(EPermissionLevel.ADMIN)]
+		[View(EUserPriviligeLevel.ADMIN)]
 		public UserMultiSigStore<List<ResourceReference<User>>> Administrators;
 
 		/// <summary>

@@ -44,7 +44,7 @@ namespace Dodo
 			{
 				throw HttpException.NOT_FOUND;
 			}
-			if(permissionLevel < EPermissionLevel.ADMIN)
+			if(permissionLevel < EUserPriviligeLevel.ADMIN)
 			{
 				throw HttpException.FORBIDDEN;
 			}

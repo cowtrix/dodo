@@ -60,7 +60,7 @@ namespace Dodo
 			return resource;
 		}
 
-		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel permissionLevel, out object context, out string passphrase)
+		protected override bool IsAuthorised(HttpRequest request, out EUserPriviligeLevel permissionLevel, out object context, out string passphrase)
 		{
 			var target = GetResource(request.Url);
 			if(target != null && !(target is T))
@@ -73,11 +73,11 @@ namespace Dodo
 				// TODO
 				if (request.Method == EHTTPRequestType.POST)
 				{
-					permissionLevel = EPermissionLevel.OWNER;
+					permissionLevel = EUserPriviligeLevel.OWNER;
 				}
 				else
 				{
-					permissionLevel = EPermissionLevel.PUBLIC;
+					permissionLevel = EUserPriviligeLevel.PUBLIC;
 				}
 				return true;
 			}

@@ -15,6 +15,9 @@ namespace Dodo
 {
 	public static class DodoServer
 	{
+		private static ConfigVariable<int> m_httpPort = new ConfigVariable<int>("HttpPort", 443);
+		private static ConfigVariable<string> m_sslCertPath = new ConfigVariable<string>("SSLCertificatePath", "server.pfx");
+
 		private static DodoRESTServer m_restServer;
 		private static BackupManager m_backupManager;
 		private static Dictionary<Type, IResourceManager> m_resourceManagers;
@@ -26,6 +29,7 @@ namespace Dodo
 
 		public static void Initialise()
 		{
+			// TODO automatically gather these?
 			m_resourceManagers = new Dictionary<Type, IResourceManager>
 			{
 				{ typeof(User), new UserManager() },
@@ -40,7 +44,7 @@ namespace Dodo
 			{
 				m_backupManager.RegisterBackup(rm.Value);
 			}*/
-			m_restServer = new DodoRESTServer(443, "server.pfx", "password");
+			m_restServer = new DodoRESTServer(m_httpPort.Value, m_sslCertPath.Value, "password");
 			m_restServer.Start();
 		}
 

@@ -46,12 +46,6 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async Task SendEmail()
-		{
-			await EmailHelper.Execute();
-		}
-
-		[TestMethod]
 		public void CanList()
 		{
 			var objects = new List<JObject>()

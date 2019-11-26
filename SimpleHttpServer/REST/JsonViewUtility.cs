@@ -26,7 +26,7 @@ namespace SimpleHttpServer.REST
 		/// An object is marked as viewable with the ViewAttribute
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
-		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
+		public static Dictionary<string, object> GenerateJsonView(this object obj, EUserPriviligeLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
 		{
 			if(obj == null)
 			{
@@ -128,7 +128,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <returns></returns>
 		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj,
-			EPermissionLevel visibility, object requester, string passPhrase)
+			EUserPriviligeLevel visibility, object requester, string passPhrase)
 		{
 			return obj.Select(x => x.GenerateJsonView(visibility, requester, passPhrase)).ToList();
 		}
@@ -141,7 +141,7 @@ namespace SimpleHttpServer.REST
 		/// <param name="targetObject"></param>
 		/// <param name="values"></param>
 		/// <returns></returns>
-		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel visibility,
+		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EUserPriviligeLevel visibility,
 			object requester, string passphrase)
 		{
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);

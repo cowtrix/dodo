@@ -44,7 +44,7 @@ namespace Common.Security
 			m_data.AddPermission(key, ownerPass, newKey, newUserPass);
 		}
 
-		public void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase)
+		public void SetValue(object innerObject, EUserPriviligeLevel view, object requester, string passphrase)
 		{
 			throw new NotImplementedException();
 		}

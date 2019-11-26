@@ -12,11 +12,11 @@ namespace Dodo.Roles
 	{
 		public const string ROOT = "roles";
 		[NoPatch]
-		[View(EPermissionLevel.ADMIN)]
+		[View(EUserPriviligeLevel.ADMIN)]
 		public ResourceReference<GroupResource> ParentGroup { get; set; }
-		[View(EPermissionLevel.USER)]
+		[View(EUserPriviligeLevel.USER)]
 		public string Name { get; set; }
-		[View(EPermissionLevel.USER)]
+		[View(EUserPriviligeLevel.USER)]
 		public string Mandate { get; set; }
 
 		public override string ResourceURL => $"{ParentGroup.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
@@ -28,7 +28,7 @@ namespace Dodo.Roles
 			Mandate = mandate;
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
 		{
 			return ParentGroup.Value.IsAuthorised(requestOwner, request, out permissionLevel);
 		}

@@ -47,7 +47,7 @@ namespace Common.Security
 			}
 		}
 
-		public void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase)
+		public void SetValue(object innerObject, EUserPriviligeLevel view, object requester, string passphrase)
 		{
 			var data = GetValue(passphrase);
 			try

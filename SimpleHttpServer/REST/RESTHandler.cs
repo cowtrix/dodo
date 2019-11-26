@@ -29,9 +29,9 @@ namespace SimpleHttpServer.REST
 					}
 					if (e is HttpException)
 					{
-						return HttpBuilder.Error("Error processing request:\n" + e.Message, (e as HttpException).ErrorCode);
+						return HttpBuilder.Custom("Error processing request:\n" + e.Message, (e as HttpException).ErrorCode);
 					}
-					return HttpBuilder.Error("Error processing request:\n" + e.Message);
+					return HttpBuilder.ServerError("Error processing request:\n" + e.Message);
 				}
 			};
 		}

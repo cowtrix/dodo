@@ -15,7 +15,7 @@ namespace SimpleHttpServer.REST
 		IRESTResource GetSingle(Func<IRESTResource, bool> selector);
 		IRESTResource GetFirst(Func<IRESTResource, bool> selector);
 		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector);
-		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility);
+		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EUserPriviligeLevel visibility);
 		void Clear();
 	}
 
@@ -105,11 +105,11 @@ namespace SimpleHttpServer.REST
 			InternalData = JsonConvert.DeserializeObject(json) as Data;
 		}
 
-		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel permission)
+		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EUserPriviligeLevel permission)
 		{
 			if(resource == null)
 			{
-				permission = EPermissionLevel.PUBLIC;
+				permission = EUserPriviligeLevel.PUBLIC;
 				return true;
 			}
 			if(!(resource is T))
@@ -119,7 +119,7 @@ namespace SimpleHttpServer.REST
 			return IsAuthorised(request, resource as T, out permission);
 		}
 
-		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility);
+		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EUserPriviligeLevel visibility);
 
 		public IRESTResource GetSingle(Func<IRESTResource, bool> selector)
 		{

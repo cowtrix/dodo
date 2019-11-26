@@ -157,7 +157,7 @@ namespace SimpleHttpServer
 				return route.Callable(request);
 			} catch(Exception ex) {
 				Logger.Exception(ex);
-				return HttpBuilder.InternalServerError();
+				return HttpBuilder.ServerError("An unhandled error occurred.");
 			}
 		}
 
