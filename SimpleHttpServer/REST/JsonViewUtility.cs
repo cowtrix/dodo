@@ -11,6 +11,9 @@ using System.Runtime.CompilerServices;
 
 namespace SimpleHttpServer.REST
 {
+	/// <summary>
+	/// This class will performs Resource specific JSON parsing tasks.
+	/// </summary>
 	public static class JsonViewUtility
 	{
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
@@ -22,8 +25,9 @@ namespace SimpleHttpServer.REST
 		};
 
 		/// <summary>
-		/// This will generate a JSON object that represents viewable (public facing) properties of this object.
-		/// An object is marked as viewable with the ViewAttribute
+		/// This will generate a JSON object that represents viewable properties of this object.
+		/// An object is marked as viewable with the ViewAttribute. Fields and properties
+		/// are filtered by the requester's EUserPriviligeLevel
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
 		public static Dictionary<string, object> GenerateJsonView(this object obj, EUserPriviligeLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
@@ -35,6 +39,7 @@ namespace SimpleHttpServer.REST
 			var vals = new Dictionary<string, object>();
 			if (memberName != "GenerateJsonView")
 			{
+				// If we're at the root of this call we say what level of visibility we're accessing it at
 				vals.Add("PERMISSION", visibility.GetName());
 			}
 			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
@@ -123,8 +128,7 @@ namespace SimpleHttpServer.REST
 		}
 
 		/// <summary>
-		/// This will generate a JSON object that represents viewable (public facing) properties of this object
-		/// An object is marked as viewable with the ViewAttribute
+		/// Generate a JSON view of an IEnumerable.
 		/// </summary>
 		/// <returns></returns>
 		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj,
@@ -135,13 +139,16 @@ namespace SimpleHttpServer.REST
 
 		/// <summary>
 		/// Given a string/object dictionary, where the string is the name of a field or property and the
-		/// object is the value to be set, patch the values of a target object
+		/// object is the value to be set, set the values of a target object to the given values.
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="targetObject"></param>
-		/// <param name="values"></param>
+		/// <typeparam name="T">The type of the object we are patching</typeparam>
+		/// <param name="targetObject">The object to patch</param>
+		/// <param name="values">The values to set</param>
+		/// <param name="permissionLevel">The permission level of the requester</param>
+		/// <param name="requester">The key for encrypting/decrypting objects</param>
+		/// <param name="passphrase">The passphrase for encrypting/decrypting objects</param>
 		/// <returns></returns>
-		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EUserPriviligeLevel visibility,
+		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EUserPriviligeLevel permissionLevel,
 			object requester, string passphrase)
 		{
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
@@ -165,12 +172,12 @@ namespace SimpleHttpServer.REST
 				{
 					return targetObject;
 				}
-				encryptedObject.PatchObject(values, visibility, requester, passphrase);
+				encryptedObject.PatchObject(values, permissionLevel, requester, passphrase);
 				if (encryptedObject is IVerifiable)
 				{
 					(encryptedObject as IVerifiable).Verify();
 				}
-				decryptable.SetValue(encryptedObject, visibility, requester, passphrase);
+				decryptable.SetValue(encryptedObject, permissionLevel, requester, passphrase);
 				return targetObject;
 			}
 
@@ -184,7 +191,7 @@ namespace SimpleHttpServer.REST
 			{
 				throw new Exception("Invalid field names");
 			}
-			if(validFields.Where(member => member.GetCustomAttribute<ViewAttribute>()?.EditPermission <= visibility).Count() != values.Count)
+			if(validFields.Where(member => member.GetCustomAttribute<ViewAttribute>()?.EditPermission <= permissionLevel).Count() != values.Count)
 			{
 				throw new Exception("Insufficient privileges");
 			}
@@ -236,7 +243,7 @@ namespace SimpleHttpServer.REST
 					throw new Exception($"Cannot patch field {targetMember.Name}: NoPatch");
 				}
 				var viewAttr = targetMember.GetCustomAttribute<ViewAttribute>();
-				if(viewAttr == null || viewAttr.EditPermission > visibility)
+				if(viewAttr == null || viewAttr.EditPermission > permissionLevel)
 				{
 					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
 				}
@@ -253,7 +260,7 @@ namespace SimpleHttpServer.REST
 				try
 				{
 					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString());
-					valueToSet = value.PatchObject(subValues, visibility, requester, passphrase);
+					valueToSet = value.PatchObject(subValues, permissionLevel, requester, passphrase);
 				}
 				catch
 				{
@@ -261,7 +268,7 @@ namespace SimpleHttpServer.REST
 				if (typeof(IDecryptable).IsAssignableFrom(GetMemberType(targetMember)))
 				{
 					var decryptable = fieldValue as IDecryptable;
-					decryptable.SetValue(valueToSet, visibility, requester, passphrase);
+					decryptable.SetValue(valueToSet, permissionLevel, requester, passphrase);
 					valueToSet = decryptable;
 				}
 				var checkAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();

@@ -7,6 +7,12 @@ using System.Collections.Generic;
 
 namespace SimpleHttpServer.REST
 {
+	/// <summary>
+	/// This class implements a basic REST handler that can create, get, update and delete a given object.
+	/// This class handles receiving HTTP requests, transforming those requests into corresponding
+	/// RESTful actions, and executing those actions on the objects.
+	/// </summary>
+	/// <typeparam name="T">The type of the resource</typeparam>
 	public abstract class ObjectRESTHandler<T> : RESTHandler where T: class, IRESTResource
 	{
 		public override void AddRoutes(List<Route> routeList)
@@ -37,11 +43,21 @@ namespace SimpleHttpServer.REST
 				));
 		}
 
+		/// <summary>
+		/// Determine if a given URL points to a resource of type T
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
 		protected bool URLIsResource(string url)
 		{
 			return GetResource(url) != null;
 		}
 
+		/// <summary>
+		/// Determine if a given URL is a link to create a resource of type T
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
 		protected abstract bool URLIsCreation(string url);
 
 		/// <summary>
@@ -129,6 +145,7 @@ namespace SimpleHttpServer.REST
 			target.PatchObject(values, view, context, passphrase);
 			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 		}
+
 		protected virtual HttpResponse DeleteObject(HttpRequest request)
 		{
 			if (!IsAuthorised(request, out _, out _, out _))
@@ -143,7 +160,8 @@ namespace SimpleHttpServer.REST
 			DeleteObjectInternal(target);
 			return HttpBuilder.Custom("Resource deleted", 204);
 		}
-		public HttpResponse GetObject(HttpRequest request)
+
+		protected HttpResponse GetObject(HttpRequest request)
 		{
 			var target = GetResource(request.Url);
 			if (target == null)
