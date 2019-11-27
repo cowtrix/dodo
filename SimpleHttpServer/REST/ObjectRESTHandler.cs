@@ -72,7 +72,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		protected abstract bool IsAuthorised(HttpRequest request, out EUserPriviligeLevel visibility, out object context, out string passphrase);
+		protected abstract bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out string passphrase);
 
 		/// <summary>
 		/// Create a new object, and return the resource url.

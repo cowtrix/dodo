@@ -41,11 +41,11 @@ namespace Dodo.Users
 		/// <summary>
 		/// The user's username
 		/// </summary>
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		[Username]
 		public string Username { get; private set; }
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string PublicKey { get; private set; }
 
 		/// <summary>

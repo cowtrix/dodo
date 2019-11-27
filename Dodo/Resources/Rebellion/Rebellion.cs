@@ -18,16 +18,16 @@ namespace Dodo.Rebellions
 		public const string ROOT = "rebellions";
 
 		[NoPatch]
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string RebellionName;
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public GeoLocation Location;
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string Description;
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public List<WorkingGroup> WorkingGroups
 		{
 			get
@@ -36,7 +36,7 @@ namespace Dodo.Rebellions
 			}
 		}
 
-		[View(EUserPriviligeLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN)]
 		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
 
 		public Rebellion(User creator, string passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, null)
@@ -53,14 +53,14 @@ namespace Dodo.Rebellions
 			}
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			if(requestOwner == Creator.Value)
 			{
-				permissionLevel = EUserPriviligeLevel.OWNER;
+				permissionLevel = EPermissionLevel.OWNER;
 				return true;
 			}
-			permissionLevel = EUserPriviligeLevel.USER;
+			permissionLevel = EPermissionLevel.USER;
 			return true;
 		}
 

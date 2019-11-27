@@ -21,12 +21,20 @@ namespace SimpleHttpServer.REST
 	/// </summary>
 	public abstract class Resource : IRESTResource
 	{
+		/// <summary>
+		/// The GUID of the resource is unique. You can get a resource
+		/// from it's guid by sending a GET request to /resources/{GUID}
+		/// which will give you its ResourceURL
+		/// </summary>
 		[NoPatch]
 		[View(EPermissionLevel.USER)]
 		public Guid GUID { get; private set; }
+
+		/// <summary>
+		/// The URI of this resource
+		/// </summary>
 		[View(EPermissionLevel.USER)]
 		public abstract string ResourceURL { get; }
-
 
 		public Resource()
 		{
@@ -49,6 +57,10 @@ namespace SimpleHttpServer.REST
 			return hashCode;
 		}
 
+		/// <summary>
+		/// This is where resources should clean up after themselves, e.g. removing references to themselves
+		/// from other resources and systems.
+		/// </summary>
 		public virtual void OnDestroy() { }
 	}
 }

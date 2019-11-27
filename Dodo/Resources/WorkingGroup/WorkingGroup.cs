@@ -29,19 +29,19 @@ namespace Dodo.WorkingGroups
 		/// <summary>
 		/// The name of this Working Group
 		/// </summary>
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		[NoPatch]
 		public string Name { get; private set; }
 
 		/// <summary>
 		/// The mandate of the working group - a description of its duties, what it's for
 		/// </summary>
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string Mandate = "";
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public List<Role> Roles
 		{
 			get
@@ -53,7 +53,7 @@ namespace Dodo.WorkingGroups
 		/// <summary>
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public List<WorkingGroup> SubGroups
 		{
 			get
@@ -62,7 +62,7 @@ namespace Dodo.WorkingGroups
 			}
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			// TODO
 			return Parent.Value.IsAuthorised(requestOwner, request, out permissionLevel);

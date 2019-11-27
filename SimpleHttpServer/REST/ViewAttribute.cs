@@ -6,14 +6,14 @@ namespace SimpleHttpServer.REST
 	/// Fields and properties with this attribute will be serialized in REST api queries.
 	/// </summary>
 	public class ViewAttribute : Attribute {
-		public EUserPriviligeLevel ViewPermission { get; private set; }
-		public EUserPriviligeLevel EditPermission { get; private set; }
+		public EPermissionLevel ViewPermission { get; private set; }
+		public EPermissionLevel EditPermission { get; private set; }
 
-		public ViewAttribute(EUserPriviligeLevel viewPermission, EUserPriviligeLevel editPermission = EUserPriviligeLevel.ADMIN)
+		public ViewAttribute(EPermissionLevel viewPermission, EPermissionLevel editPermission = EPermissionLevel.ADMIN)
 		{
-			if(viewPermission == EUserPriviligeLevel.OWNER)
+			if(viewPermission == EPermissionLevel.OWNER)
 			{
-				editPermission = EUserPriviligeLevel.OWNER;
+				editPermission = EPermissionLevel.OWNER;
 			}
 			ViewPermission = viewPermission;
 			EditPermission = editPermission;

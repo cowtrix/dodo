@@ -27,6 +27,6 @@ namespace Common.Security
 	public interface IDecryptable
 	{
 		bool TryGetValue(object requester, string passphrase, out object result);
-		void SetValue(object innerObject, EUserPriviligeLevel view, object requester, string passphrase);
+		void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase);
 	}
 }

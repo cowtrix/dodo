@@ -13,23 +13,23 @@ namespace Security
 		{
 			public class InnerClass
 			{
-				[View(EUserPriviligeLevel.USER, EUserPriviligeLevel.USER)]
+				[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 				public double DoubleProperty { get; set; }
 			}
 
 			public string StringValue = "This is a test string";
-			[View(EUserPriviligeLevel.USER, EUserPriviligeLevel.USER)]
+			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public string StringProperty { get; set; }
-			[View(EUserPriviligeLevel.USER, EUserPriviligeLevel.USER)]
+			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public int IntValue = 12345;
-			[View(EUserPriviligeLevel.OWNER)]
+			[View(EPermissionLevel.OWNER)]
 			public GeoLocation Location = new GeoLocation(43, 62);
 			public ResourceReference<User> UserReference = new ResourceReference<User>(Guid.NewGuid());
-			[View(EUserPriviligeLevel.USER, EUserPriviligeLevel.USER)]
+			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public EncryptedStore<string> EncryptedString;
-			[View(EUserPriviligeLevel.USER, EUserPriviligeLevel.USER)]
+			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public MultiSigEncryptedStore<string, InnerClass> EncryptedObject;
-			[View(EUserPriviligeLevel.USER, EUserPriviligeLevel.USER)]
+			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public MultiSigEncryptedStore<string, GeoLocation> EncryptedObjectProp { get; set; }
 		}
 	}

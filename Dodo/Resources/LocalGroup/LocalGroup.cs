@@ -18,29 +18,29 @@ namespace Dodo.LocalGroups
 			Location = schema.Location;
 		}
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		[NoPatch]
 		public string Name { get; private set; }
 
 		public override string ResourceURL => $"{ROOT}/{Name.StripForURL()}";
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public GeoLocation Location { get; private set; }
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			if (IsAdmin(requestOwner, passphrase))
 			{
-				permissionLevel = EUserPriviligeLevel.ADMIN;
+				permissionLevel = EPermissionLevel.ADMIN;
 				return true;
 			}
 			if(requestOwner == Creator.Value)
 			{
-				permissionLevel = EUserPriviligeLevel.OWNER;
+				permissionLevel = EPermissionLevel.OWNER;
 				return true;
 			}
-			permissionLevel = EUserPriviligeLevel.USER;
+			permissionLevel = EPermissionLevel.USER;
 			return true;
 		}
 

@@ -21,7 +21,7 @@ namespace Dodo.Tasks
 
 		public ResourceReference<User> Creator => throw new NotImplementedException();
 
-		public bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		public bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			throw new NotImplementedException();
 		}

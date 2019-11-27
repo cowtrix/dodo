@@ -27,10 +27,10 @@ namespace SimpleHttpServer.REST
 		/// <summary>
 		/// This will generate a JSON object that represents viewable properties of this object.
 		/// An object is marked as viewable with the ViewAttribute. Fields and properties
-		/// are filtered by the requester's EUserPriviligeLevel
+		/// are filtered by the requester's EPermissionLevel
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
-		public static Dictionary<string, object> GenerateJsonView(this object obj, EUserPriviligeLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
+		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
 		{
 			if(obj == null)
 			{
@@ -132,7 +132,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <returns></returns>
 		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj,
-			EUserPriviligeLevel visibility, object requester, string passPhrase)
+			EPermissionLevel visibility, object requester, string passPhrase)
 		{
 			return obj.Select(x => x.GenerateJsonView(visibility, requester, passPhrase)).ToList();
 		}
@@ -148,7 +148,7 @@ namespace SimpleHttpServer.REST
 		/// <param name="requester">The key for encrypting/decrypting objects</param>
 		/// <param name="passphrase">The passphrase for encrypting/decrypting objects</param>
 		/// <returns></returns>
-		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EUserPriviligeLevel permissionLevel,
+		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel permissionLevel,
 			object requester, string passphrase)
 		{
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
