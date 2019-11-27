@@ -28,11 +28,11 @@ namespace Dodo.Rebellions
 		public string Description;
 
 		[View(EPermissionLevel.USER)]
-		public List<WorkingGroup> WorkingGroups
+		public List<string> WorkingGroups
 		{
 			get
 			{
-				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).ToList();
+				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).Select(x => x.GUID.ToString()).ToList();
 			}
 		}
 

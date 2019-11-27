@@ -13,6 +13,7 @@ namespace Dodo
 	public abstract class GroupResource : DodoResource
 	{
 		[JsonProperty]
+		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; private set; }
 
 		[NoPatch]

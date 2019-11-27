@@ -50,19 +50,29 @@ namespace SimpleHttpServer.REST
 					continue;
 				}
 				// Simple case, property is a primitive type
+				var targetPropValue = prop.GetValue(obj);
 				if ((prop.PropertyType.IsValueType && prop.PropertyType.IsPrimitive)
 					|| m_explicitValueTypes.Any(t => prop.PropertyType.IsAssignableFrom(t)))
 				{
-					vals.Add(prop.Name, prop.GetValue(obj));
+					vals.Add(prop.Name, targetPropValue);
 				}
 				else if(typeof(IDecryptable).IsAssignableFrom(prop.PropertyType))
 				{
-					var decryptable = prop.GetValue(obj) as IDecryptable;
+					var decryptable = targetPropValue as IDecryptable;
 					if(!decryptable.TryGetValue(requester, passPhrase, out var data))
 					{
 						continue;
 					}
 					vals.Add(prop.Name, data.GenerateJsonView(visibility, requester, passPhrase));
+				}
+				else if (targetPropValue is IEnumerable)
+				{
+					var list = new List<object>();
+					foreach (var innerVal in (targetPropValue as IEnumerable))
+					{
+						list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
+					}
+					vals.Add(prop.Name, list);
 				}
 				else	// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
 				{

@@ -42,11 +42,12 @@ namespace Dodo.WorkingGroups
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
 		[View(EPermissionLevel.USER)]
-		public List<Role> Roles
+		public List<string> Roles
 		{
 			get
 			{
-				return DodoServer.ResourceManager<Role>().Get(role => role.ParentGroup.Value == this).ToList();
+				return DodoServer.ResourceManager<Role>().Get(role => role.ParentGroup.Value == this)
+					.Select(x => x.GUID.ToString()).ToList();
 			}
 		}
 
