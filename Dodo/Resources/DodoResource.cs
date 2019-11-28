@@ -8,7 +8,7 @@ namespace Dodo
 	public interface IDodoResource : IRESTResource
 	{
 		ResourceReference<User> Creator { get; }
-		bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel);
+		bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel);
 	}
 
 	public abstract class DodoResource : Resource, IDodoResource
@@ -18,6 +18,6 @@ namespace Dodo
 			Creator = new ResourceReference<User>(creator);
 		}
 		public ResourceReference<User> Creator { get; private set; }
-		public abstract bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel);
+		public abstract bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel);
 	}
 }

@@ -53,7 +53,6 @@ namespace Dodo.Rebellions
 			}
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
 		public override bool CanContain(Type type)
 		{
 			if(type == typeof(WorkingGroup))

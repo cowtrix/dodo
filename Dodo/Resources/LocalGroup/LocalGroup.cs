@@ -27,9 +27,8 @@ namespace Dodo.LocalGroups
 		[View(EPermissionLevel.USER)]
 		public GeoLocation Location { get; private set; }
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
-			DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			if (IsAdmin(requestOwner, passphrase))
 			{
 				permissionLevel = EPermissionLevel.ADMIN;

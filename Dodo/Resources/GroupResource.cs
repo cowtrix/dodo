@@ -68,19 +68,19 @@ namespace Dodo
 			Administrators.SetValue(adminList, newAdminRef, newAdminPassword);
 		}
 
-		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			if (requestOwner == Creator.Value)
 			{
-				permissionLevel = EUserPriviligeLevel.OWNER;
+				permissionLevel = EPermissionLevel.OWNER;
 				return true;
 			}
 			if (IsAdmin(requestOwner, passphrase))
 			{
-				permissionLevel = EUserPriviligeLevel.ADMIN;
+				permissionLevel = EPermissionLevel.ADMIN;
 				return true;
 			}
-			permissionLevel = EUserPriviligeLevel.USER;
+			permissionLevel = EPermissionLevel.USER;
 			return true;
 		}
 

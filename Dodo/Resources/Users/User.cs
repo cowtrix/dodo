@@ -40,7 +40,7 @@ namespace Dodo.Users
 			WebAuth = auth;
 		}
 
-		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			if(requestOwner == this)
 			{
