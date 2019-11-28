@@ -12,11 +12,11 @@ namespace Dodo.Roles
 	{
 		public const string ROOT = "roles";
 		[NoPatch]
-		[View(EUserPriviligeLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN)]
 		public ResourceReference<GroupResource> ParentGroup { get; set; }
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string Name { get; set; }
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string Mandate { get; set; }
 
 		public override string ResourceURL => $"{ParentGroup.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";

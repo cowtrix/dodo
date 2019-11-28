@@ -40,7 +40,7 @@ namespace Security
 					{ "DoubleProperty", 7.1 }
 				} },
 				{ "EncryptedObjectProp", new GeoLocation(4, 67) }
-			}, EUserPriviligeLevel.USER, key, password);
+			}, EPermissionLevel.USER, key, password);
 			data = multiSig.GetValue(key, password);
 			Assert.AreEqual(54321, data.IntValue);
 			Assert.AreEqual("test", data.StringProperty);
@@ -60,7 +60,7 @@ namespace Security
 			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
 			{
 				{ "StringValue", "this shouldn't succeed" },
-			}, EUserPriviligeLevel.USER, key, password), e => e.Message.Contains("Insufficient privileges"));
+			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Insufficient privileges"));
 		}
 
 		[TestMethod]
@@ -86,7 +86,7 @@ namespace Security
 			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
 			{
 				{ "Location", new GeoLocation() },
-			}, EUserPriviligeLevel.USER, key, password), e => e.Message.Contains("Insufficient privileges"));
+			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Insufficient privileges"));
 		}
 
 		[TestMethod]
@@ -99,7 +99,7 @@ namespace Security
 			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
 			{
 				{ "NonExistantField", new GeoLocation() },
-			}, EUserPriviligeLevel.USER, key, password), e => e.Message.Contains("Invalid field names"));
+			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Invalid field names"));
 		}
 
 		[TestMethod]

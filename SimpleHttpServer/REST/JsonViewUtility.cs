@@ -28,10 +28,10 @@ namespace SimpleHttpServer.REST
 		/// <summary>
 		/// This will generate a JSON object that represents viewable properties of this object.
 		/// An object is marked as viewable with the ViewAttribute. Fields and properties
-		/// are filtered by the requester's EUserPriviligeLevel
+		/// are filtered by the requester's EPermissionLevel
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
-		public static Dictionary<string, object> GenerateJsonView(this object obj, EUserPriviligeLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
+		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
 		{
 			if(obj == null)
 			{
@@ -51,19 +51,29 @@ namespace SimpleHttpServer.REST
 					continue;
 				}
 				// Simple case, property is a primitive type
+				var targetPropValue = prop.GetValue(obj);
 				if ((prop.PropertyType.IsValueType && prop.PropertyType.IsPrimitive)
 					|| m_explicitValueTypes.Any(t => prop.PropertyType.IsAssignableFrom(t)))
 				{
-					vals.Add(prop.Name, prop.GetValue(obj));
+					vals.Add(prop.Name, targetPropValue);
 				}
 				else if(typeof(IDecryptable).IsAssignableFrom(prop.PropertyType))
 				{
-					var decryptable = prop.GetValue(obj) as IDecryptable;
+					var decryptable = targetPropValue as IDecryptable;
 					if(!decryptable.TryGetValue(requester, passPhrase, out var data))
 					{
 						continue;
 					}
 					vals.Add(prop.Name, data.GenerateJsonView(visibility, requester, passPhrase));
+				}
+				else if (targetPropValue is IEnumerable)
+				{
+					var list = new List<object>();
+					foreach (var innerVal in (targetPropValue as IEnumerable))
+					{
+						list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
+					}
+					vals.Add(prop.Name, list);
 				}
 				else	// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
 				{
@@ -133,7 +143,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <returns></returns>
 		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj,
-			EUserPriviligeLevel visibility, object requester, string passPhrase)
+			EPermissionLevel visibility, object requester, string passPhrase)
 		{
 			return obj.Select(x => x.GenerateJsonView(visibility, requester, passPhrase)).ToList();
 		}
@@ -149,7 +159,7 @@ namespace SimpleHttpServer.REST
 		/// <param name="requester">The key for encrypting/decrypting objects</param>
 		/// <param name="passphrase">The passphrase for encrypting/decrypting objects</param>
 		/// <returns></returns>
-		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EUserPriviligeLevel permissionLevel,
+		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel permissionLevel,
 			object requester, string passphrase)
 		{
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);

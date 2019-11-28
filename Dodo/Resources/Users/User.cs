@@ -14,21 +14,22 @@ namespace Dodo.Users
 		public override string ResourceURL { get { return $"{ROOT}/{WebAuth.Username.StripForURL()}"; } }
 
 		[NoPatch]
-		[View(EUserPriviligeLevel.OWNER)]
+		[View(EPermissionLevel.OWNER)]
 		public WebPortalAuth WebAuth;
 
-		[View(EUserPriviligeLevel.OWNER)]
+		[View(EPermissionLevel.OWNER)]
 		[Email]
 		[NoPatch]
 		public string Email;
 
-		[View(EUserPriviligeLevel.OWNER)]
+		[View(EPermissionLevel.OWNER)]
 		[UserFriendlyName]
 		public string Name;
 
-		[View(EUserPriviligeLevel.OWNER)]
+		[View(EPermissionLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 
+		[View(EPermissionLevel.OWNER)]
 		public List<PushAction> PushActions = new List<PushAction>();
 
 		public User() : base(null)
@@ -43,10 +44,10 @@ namespace Dodo.Users
 		{
 			if(requestOwner == this)
 			{
-				permissionLevel = EUserPriviligeLevel.OWNER;
+				permissionLevel = EPermissionLevel.OWNER;
 				return true;
 			}
-			permissionLevel = EUserPriviligeLevel.PUBLIC;
+			permissionLevel = EPermissionLevel.PUBLIC;
 			return false;
 		}
 	}

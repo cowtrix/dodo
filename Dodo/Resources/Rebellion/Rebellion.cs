@@ -18,25 +18,25 @@ namespace Dodo.Rebellions
 		public const string ROOT = "rebellions";
 
 		[NoPatch]
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string RebellionName;
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public GeoLocation Location;
 
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string Description;
 
-		[View(EUserPriviligeLevel.USER)]
-		public List<WorkingGroup> WorkingGroups
+		[View(EPermissionLevel.USER)]
+		public List<string> WorkingGroups
 		{
 			get
 			{
-				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).ToList();
+				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).Select(x => x.GUID.ToString()).ToList();
 			}
 		}
 
-		[View(EUserPriviligeLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN)]
 		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
 
 		public Rebellion(User creator, string passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, null)
@@ -53,6 +53,7 @@ namespace Dodo.Rebellions
 			}
 		}
 
+		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EPermissionLevel permissionLevel)
 		public override bool CanContain(Type type)
 		{
 			if(type == typeof(WorkingGroup))

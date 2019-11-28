@@ -9,7 +9,7 @@ namespace SimpleHttpServer.REST
 
 	public struct ResourceReference<T> : IResourceReference where T : Resource
 	{
-		[View(EUserPriviligeLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN)]
 		public Guid Guid;
 		[JsonIgnore]
 		public T Value { get { return ResourceUtility.GetResourceByGuid<T>(Guid); } }

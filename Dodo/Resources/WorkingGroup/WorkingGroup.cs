@@ -29,31 +29,32 @@ namespace Dodo.WorkingGroups
 		/// <summary>
 		/// The name of this Working Group
 		/// </summary>
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		[NoPatch]
 		public string Name { get; private set; }
 
 		/// <summary>
 		/// The mandate of the working group - a description of its duties, what it's for
 		/// </summary>
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public string Mandate = "";
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
-		[View(EUserPriviligeLevel.USER)]
-		public List<Role> Roles
+		[View(EPermissionLevel.USER)]
+		public List<string> Roles
 		{
 			get
 			{
-				return DodoServer.ResourceManager<Role>().Get(role => role.ParentGroup.Value == this).ToList();
+				return DodoServer.ResourceManager<Role>().Get(role => role.ParentGroup.Value == this)
+					.Select(x => x.GUID.ToString()).ToList();
 			}
 		}
 
 		/// <summary>
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
-		[View(EUserPriviligeLevel.USER)]
+		[View(EPermissionLevel.USER)]
 		public List<WorkingGroup> SubGroups
 		{
 			get
