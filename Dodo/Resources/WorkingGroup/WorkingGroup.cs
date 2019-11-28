@@ -20,7 +20,7 @@ namespace Dodo.WorkingGroups
 	{
 		public const string ROOT = "wg";
 
-		public WorkingGroup(User creator, string passphrase, GroupResource parent, WorkingGroupRESTHandler.CreationSchema schema) 
+		public WorkingGroup(User creator, string passphrase, GroupResource parent, WorkingGroupRESTHandler.CreationSchema schema)
 			: base(creator, passphrase, parent)
 		{
 			Name = schema.Name;
@@ -60,12 +60,6 @@ namespace Dodo.WorkingGroups
 			{
 				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.Parent.Value == this).ToList();
 			}
-		}
-
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
-		{
-			// TODO
-			return Parent.Value.IsAuthorised(requestOwner, request, out permissionLevel);
 		}
 
 		public override bool CanContain(Type type)

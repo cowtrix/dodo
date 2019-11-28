@@ -14,17 +14,16 @@ using System.Threading;
 
 namespace SimpleHttpServer
 {
-
+	public delegate void MsgReceivedDelegate(HttpRequest request);
 	public class HttpServer
 	{
 		#region Fields
-
+		public MsgReceivedDelegate OnMsgReceived;
 		public static X509Certificate ServerCertificate = null;
 		public int Port { get; private set; }
 		private TcpListener Listener;
 		private HttpProcessor Processor;
 		public bool IsActive = true;
-
 		#endregion
 
 		#region Public Methods
@@ -32,7 +31,7 @@ namespace SimpleHttpServer
 		{
 			ServerCertificate = ServerCertificate ?? new X509Certificate2(certificate, certificatePassword);
 			Port = port;
-			Processor = new HttpProcessor();
+			Processor = new HttpProcessor(this);
 
 			foreach (var route in routes)
 			{

@@ -38,7 +38,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public void CannotPatchProtectedField()
+		public void CannotPatchWithoutAdminRights()
 		{
 			var rebellion = CreateNewRebellion("Test rebellion", new GeoLocation());
 			var newUser = RegisterRandomUser(out var username, out _, out var password, out _, out _);
@@ -48,7 +48,7 @@ namespace RESTTests
 				{
 					TelegramConfig = new RebellionBotConfiguration.TelegramConfiguration()
 				}
-			}, username, password), (e) => e.Message.Contains("Insufficient privileges"));
+			}, username, password), (e) => e.Message.Contains("You are not authorized to access this resource"));
 		}
 
 		[TestMethod]

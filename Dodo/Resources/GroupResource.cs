@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Common;
 using Dodo.Users;
 using Newtonsoft.Json;
+using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 
 namespace Dodo
@@ -64,6 +65,22 @@ namespace Dodo
 			}
 			adminList.Add(newAdminRef);
 			Administrators.SetValue(adminList, newAdminRef, newAdminPassword);
+		}
+
+		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		{
+			if (requestOwner == Creator.Value)
+			{
+				permissionLevel = EUserPriviligeLevel.OWNER;
+				return true;
+			}
+			if (IsAdmin(requestOwner, passphrase))
+			{
+				permissionLevel = EUserPriviligeLevel.ADMIN;
+				return true;
+			}
+			permissionLevel = EUserPriviligeLevel.USER;
+			return true;
 		}
 
 		public abstract bool CanContain(Type type);

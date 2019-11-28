@@ -11,38 +11,30 @@ namespace Dodo
 {
 	public class DodoRESTServer : RESTServer
 	{
-		/// <summary>
-		/// Get the user that made an HTTP request.
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns>The user that made this request</returns>
-		public static User GetRequestOwner(HttpRequest request)
-		{
-			return GetRequestOwner(request, out _);
-		}
-
-		public static User GetRequestOwner(HttpRequest request, out string passphrase)
-		{
-			passphrase = null;
-			if (!request.Headers.TryGetValue(AUTH_KEY, out var token))
-			{
-				return null;
-			}
-			var tokens = token.Trim().Split(' ');
-			if (tokens.Length != 2 || tokens[0] != "Basic")
-			{
-				throw HttpException.UNAUTHORIZED;
-			}
-			var decode = StringExtensions.Base64Decode(tokens[1]).Split(':');
-			var user = DodoServer.ResourceManager<User>().GetSingle(x => x.WebAuth.Username == decode[0]);
-			if (user != null && !user.WebAuth.Challenge(decode[1], out passphrase))
-			{
-				throw HttpException.FORBIDDEN;
-			}
-			return user;
-		}
-
 		public DodoRESTServer(int port, string certificate, string sslPassword) : base(port, certificate, sslPassword)
+		{
+			AddResourceLookupRoute();
+			OnMsgReceieved += ProcessPushActions;
+		}
+
+		private void ProcessPushActions(HttpRequest request)
+		{
+			var owner = GetRequestOwner(request, out var passphrase);
+			if(owner == null)
+			{
+				return;
+			}
+			lock(owner.PushActions)
+			{
+				foreach (var pushAction in owner.PushActions)
+				{
+					pushAction.Execute(owner, passphrase);
+				}
+				owner.PushActions.Clear();
+			}
+		}
+
+		private void AddResourceLookupRoute()
 		{
 			// Add resource lookup
 			Routes.Add(new Route("Resource lookup", EHTTPRequestType.GET, (url) => url.StartsWith("resources/"),
@@ -77,6 +69,37 @@ namespace Dodo
 					}
 				}
 			));
+		}
+
+		/// <summary>
+		/// Get the user that made an HTTP request.
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns>The user that made this request</returns>
+		public static User GetRequestOwner(HttpRequest request)
+		{
+			return GetRequestOwner(request, out _);
+		}
+
+		public static User GetRequestOwner(HttpRequest request, out string passphrase)
+		{
+			passphrase = null;
+			if (!request.Headers.TryGetValue(AUTH_KEY, out var token))
+			{
+				return null;
+			}
+			var tokens = token.Trim().Split(' ');
+			if (tokens.Length != 2 || tokens[0] != "Basic")
+			{
+				throw HttpException.UNAUTHORIZED;
+			}
+			var decode = StringExtensions.Base64Decode(tokens[1]).Split(':');
+			var user = DodoServer.ResourceManager<User>().GetSingle(x => x.WebAuth.Username == decode[0]);
+			if (user != null && !user.WebAuth.Challenge(decode[1], out passphrase))
+			{
+				throw HttpException.FORBIDDEN;
+			}
+			return user;
 		}
 	}
 }

@@ -13,8 +13,8 @@ namespace Dodo.Resources
 	{
 		protected override bool IsAuthorised(HttpRequest request, T resource, out EUserPriviligeLevel permissionLevel)
 		{
-			var requestOwner = DodoRESTServer.GetRequestOwner(request);
-			return resource.IsAuthorised(requestOwner, request, out permissionLevel);
+			var requestOwner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
+			return resource.IsAuthorised(requestOwner, passphrase, request, out permissionLevel);
 		}
 	}
 }

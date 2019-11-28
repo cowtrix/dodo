@@ -16,6 +16,7 @@ namespace SimpleHttpServer.REST
 	/// </summary>
 	public static class JsonViewUtility
 	{
+		public const string PERMISSION_KEY = "PERMISSION";
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
 			typeof(string),
@@ -40,7 +41,7 @@ namespace SimpleHttpServer.REST
 			if (memberName != "GenerateJsonView")
 			{
 				// If we're at the root of this call we say what level of visibility we're accessing it at
-				vals.Add("PERMISSION", visibility.GetName());
+				vals.Add(PERMISSION_KEY, visibility.GetName());
 			}
 			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
 			{

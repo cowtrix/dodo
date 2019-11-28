@@ -29,7 +29,6 @@ namespace Dodo.Users
 		[View(EUserPriviligeLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 
-		[View(EUserPriviligeLevel.OWNER)]
 		public List<PushAction> PushActions = new List<PushAction>();
 
 		public User() : base(null)
@@ -40,7 +39,7 @@ namespace Dodo.Users
 			WebAuth = auth;
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EUserPriviligeLevel permissionLevel)
 		{
 			if(requestOwner == this)
 			{

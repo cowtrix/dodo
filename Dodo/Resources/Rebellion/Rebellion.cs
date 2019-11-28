@@ -53,17 +53,6 @@ namespace Dodo.Rebellions
 			}
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
-		{
-			if(requestOwner == Creator.Value)
-			{
-				permissionLevel = EUserPriviligeLevel.OWNER;
-				return true;
-			}
-			permissionLevel = EUserPriviligeLevel.USER;
-			return true;
-		}
-
 		public override bool CanContain(Type type)
 		{
 			if(type == typeof(WorkingGroup))

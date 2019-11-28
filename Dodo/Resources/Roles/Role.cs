@@ -28,9 +28,9 @@ namespace Dodo.Roles
 			Mandate = mandate;
 		}
 
-		public override bool IsAuthorised(User requestOwner, HttpRequest request, out EUserPriviligeLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EUserPriviligeLevel permissionLevel)
 		{
-			return ParentGroup.Value.IsAuthorised(requestOwner, request, out permissionLevel);
+			return ParentGroup.Value.IsAuthorised(requestOwner, passphrase, request, out permissionLevel);
 		}
 	}
 }

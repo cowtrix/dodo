@@ -19,6 +19,12 @@ namespace SimpleHttpServer
 	public class HttpProcessor
 	{
 		private List<Route> Routes = new List<Route>();
+		private HttpServer m_server;
+
+		public HttpProcessor(HttpServer server)
+		{
+			m_server = server;
+		}
 
 		public void HandleClient(TcpClient client)
 		{
@@ -153,9 +159,13 @@ namespace SimpleHttpServer
 			request.Path = request.Url;
 			// trigger the route handler...
 			request.Route = route;
-			try {
+			try
+			{
+				m_server.OnMsgReceived?.Invoke(request);
 				return route.Callable(request);
-			} catch(Exception ex) {
+			}
+			catch (Exception ex)
+			{
 				Logger.Exception(ex);
 				return HttpBuilder.ServerError("An unhandled error occurred.");
 			}
