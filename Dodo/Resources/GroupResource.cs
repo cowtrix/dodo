@@ -45,7 +45,6 @@ namespace Dodo
 			Administrators = new UserMultiSigStore<List<ResourceReference<User>>>(
 				new List<ResourceReference<User>>() { new ResourceReference<User>(creator) },
 				creator, passphrase);
-
 		}
 
 		public bool IsAdmin(User user, string passphrase)

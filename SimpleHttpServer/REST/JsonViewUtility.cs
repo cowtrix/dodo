@@ -31,111 +31,90 @@ namespace SimpleHttpServer.REST
 		/// are filtered by the requester's EPermissionLevel
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
-		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility, object requester, string passPhrase, [CallerMemberName]string memberName = "")
+		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility,
+			object requester, string passPhrase, [CallerMemberName]string callingFunction = "")
 		{
 			if(obj == null)
 			{
 				return null;
 			}
 			var vals = new Dictionary<string, object>();
-			if (memberName != "GenerateJsonView")
+			if (callingFunction != "GenerateJsonView")
 			{
 				// If we're at the root of this call we say what level of visibility we're accessing it at
 				vals.Add(PERMISSION_KEY, visibility.GetName());
 			}
-			foreach (var prop in obj.GetType().GetProperties().Where(p => p.CanRead))
+
+			// Get fields and properties, filter to what we can view with our permission level
+			var targetType = obj.GetType();
+
+			// Handle composite/primitive object case
+			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
+			allMembers.AddRange(targetType.GetFields());
+			var filteredMembers = allMembers.Where(m =>
 			{
-				var attr = prop.GetCustomAttribute<ViewAttribute>();
+				var attr = m.GetCustomAttribute<ViewAttribute>();
 				if (attr == null || attr.ViewPermission > visibility)
 				{
-					continue;
+					return false;
 				}
-				// Simple case, property is a primitive type
-				var targetPropValue = prop.GetValue(obj);
-				if ((prop.PropertyType.IsValueType && prop.PropertyType.IsPrimitive)
-					|| m_explicitValueTypes.Any(t => prop.PropertyType.IsAssignableFrom(t)))
-				{
-					vals.Add(prop.Name, targetPropValue);
-				}
-				else if(typeof(IDecryptable).IsAssignableFrom(prop.PropertyType))
-				{
-					var decryptable = targetPropValue as IDecryptable;
-					if(!decryptable.TryGetValue(requester, passPhrase, out var data))
-					{
-						continue;
-					}
-					vals.Add(prop.Name, data.GenerateJsonView(visibility, requester, passPhrase));
-				}
-				else if (targetPropValue is IEnumerable)
-				{
-					var list = new List<object>();
-					foreach (var innerVal in (targetPropValue as IEnumerable))
-					{
-						list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
-					}
-					vals.Add(prop.Name, list);
-				}
-				else	// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
-				{
-					vals.Add(prop.Name, prop.GetValue(obj).GenerateJsonView(visibility, requester, passPhrase));
-				}
-			}
-			foreach (var field in obj.GetType().GetFields())
+				return true;
+			});
+
+			foreach (var member in filteredMembers)
 			{
-				var attr = field.GetCustomAttribute<ViewAttribute>();
-				var fieldName = field.Name;
-				if (attr == null || attr.ViewPermission > visibility)
+				var memberName = member.Name;
+				var targetPropValue = GetValue(member, obj);
+				var memberType = GetMemberType(member);
+				var finalObj = GetObject(targetPropValue, memberType, requester, visibility, passPhrase);
+				if(finalObj != null)
 				{
-					continue;
-				}
-				// Simple case, property is a primitive type
-				if ((field.FieldType.IsValueType && field.FieldType.IsPrimitive)
-					|| m_explicitValueTypes.Any(t => field.FieldType.IsAssignableFrom(t)))
-				{
-					vals.Add(field.Name, field.GetValue(obj));
-				}
-				else if (typeof(IDecryptable).IsAssignableFrom(field.FieldType))
-				{
-					var decryptable = field.GetValue(obj) as IDecryptable;
-					if (!decryptable.TryGetValue(requester, passPhrase, out var data))
-					{
-						continue;
-					}
-					if (data is IEnumerable)
-					{
-						var list = new List<object>();
-						foreach (var innerVal in (data as IEnumerable))
-						{
-							list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
-						}
-						vals.Add(field.Name, list);
-					}
-					else
-					{
-						vals.Add(field.Name, data.GenerateJsonView(visibility, requester, passPhrase));
-					}
-				}
-				else    // Object is a composite type (e.g. a struct or class) and so we recursively serialize it
-				{
-					var val = field.GetValue(obj);
-					object valueToStore;
-					if (val is IEnumerable)
-					{
-						var list = new List<object>();
-						foreach(var innerVal in (val as IEnumerable))
-						{
-							list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
-						}
-						valueToStore = list;
-					}
-					else
-					{
-						valueToStore = val.GenerateJsonView(visibility, requester, passPhrase);
-					}
-					vals.Add(field.Name, valueToStore);
+					vals.Add(memberName, finalObj);
 				}
 			}
 			return vals;
+		}
+
+		private static object GetObject(object targetPropValue, Type memberType, object requester, EPermissionLevel visibility, string passPhrase)
+		{
+			if(memberType == null || targetPropValue == null)
+			{
+				return null;
+			}
+			if (ShouldSerializeDirectly(memberType))
+			{
+				// Simple case, directly serialize object if it doesn't need any members filtered out
+				return targetPropValue;
+			}
+			else if (typeof(IDecryptable).IsAssignableFrom(memberType))
+			{
+				// Transparently handle encrypted objects
+				var decryptable = targetPropValue as IDecryptable;
+				if (!decryptable.TryGetValue(requester, passPhrase, out var data))
+				{
+					return null;
+				}
+				return GetObject(data, data.GetType(), requester, visibility, passPhrase);
+			}
+			else if (targetPropValue is IEnumerable)
+			{
+				// Build lists of enumerable data
+				var list = new List<object>();
+				foreach (var innerVal in (targetPropValue as IEnumerable))
+				{
+					if (ShouldSerializeDirectly(innerVal?.GetType()))
+					{
+						list.Add(innerVal);
+					}
+					else
+					{
+						list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
+					}
+				}
+				return list;
+			}
+			// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
+			return targetPropValue.GenerateJsonView(visibility, requester, passPhrase);
 		}
 
 		/// <summary>
@@ -165,8 +144,7 @@ namespace SimpleHttpServer.REST
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
 			// Firstly, if we hit a primitive type or a specially included type, we just convert the whole thing
 			// to an object of that type with Json
-			if ((targetType.IsValueType && targetType.IsPrimitive)
-					|| m_explicitValueTypes.Any(t => t.IsAssignableFrom(targetType)))
+			if (ShouldSerializeDirectly(targetType))
 			{
 				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values), targetType);
 				if(val is IVerifiable)
@@ -175,6 +153,7 @@ namespace SimpleHttpServer.REST
 				}
 				return (T)val;
 			}
+
 			// If the object is decryptable, we handle this transparently and redirect the data within
 			if (targetObject is IDecryptable)
 			{
@@ -196,6 +175,7 @@ namespace SimpleHttpServer.REST
 			var members = new List<MemberInfo>(targetObject.GetType().GetProperties());
 			members.AddRange(targetObject.GetType().GetFields());
 
+			// Validate that we are able to complete this operation
 			var validFields = values.Select(kvp => members.FirstOrDefault(x => x.Name == kvp.Key))
 				.Where(member => member != null);
 			if(validFields.Count() != values.Count)
@@ -206,40 +186,10 @@ namespace SimpleHttpServer.REST
 			{
 				throw new Exception("Insufficient privileges");
 			}
-
-			// Define common actions to handle properties and fields
-			Action<MemberInfo, object, object> SetValue = (member, target, val) =>
+			if(!validFields.Where(m => GetMemberType(m) is IDecryptable).Cast<IDecryptable>().All(decryptable => decryptable.IsAuthorised(requester, passphrase)))
 			{
-				if (member is PropertyInfo)
-					(member as PropertyInfo).SetValue(target, val);
-				else if (member is FieldInfo)
-				{
-					if (target.GetType().IsValueType)
-					{
-						(member as FieldInfo).SetValueDirect(__makeref(target), val);
-					}
-					else
-					{
-						(member as FieldInfo).SetValue(target, val);
-					}
-				}
-			};
-			Func<MemberInfo, object, object> GetValue = (member, target) =>
-			{
-				if (member is PropertyInfo)
-					return (member as PropertyInfo).GetValue(target);
-				else if (member is FieldInfo)
-					return (member as FieldInfo).GetValue(target);
-				throw new Exception("Unsupported MemberInfo type" + member.GetType());
-			};
-			Func<MemberInfo, Type> GetMemberType = (member) =>
-			{
-				if (member is PropertyInfo)
-					return (member as PropertyInfo).PropertyType;
-				else if (member is FieldInfo)
-					return (member as FieldInfo).FieldType;
-				throw new Exception("Unsupported MemberInfo type" + member.GetType());
-			};
+				throw new Exception("Authorisation failed");
+			}
 
 			// Go through the dictionary and set the values
 			foreach (var val in values)
@@ -265,8 +215,8 @@ namespace SimpleHttpServer.REST
 				if (typeof(IDecryptable).IsAssignableFrom(GetMemberType(targetMember)) &&
 					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
 				{
-					// Auth is incorrect
-					continue;
+					// Auth is incorrect, but that should have been picked up before
+					throw new Exception("Unexpected authorization failure on " + targetMember.Name);
 				}
 				try
 				{
@@ -294,6 +244,47 @@ namespace SimpleHttpServer.REST
 				(targetObject as IVerifiable).Verify();
 			}
 			return targetObject;
+		}
+
+		private static Type GetMemberType (MemberInfo member)
+		{
+			if (member is PropertyInfo)
+				return (member as PropertyInfo).PropertyType;
+			else if (member is FieldInfo)
+				return (member as FieldInfo).FieldType;
+			throw new Exception("Unsupported MemberInfo type" + member.GetType());
+		}
+
+		private static void SetValue (object member, object target, object val)
+		{
+			if (member is PropertyInfo)
+				(member as PropertyInfo).SetValue(target, val);
+			else if (member is FieldInfo)
+			{
+				if (target.GetType().IsValueType)
+				{
+					(member as FieldInfo).SetValueDirect(__makeref(target), val);
+				}
+				else
+				{
+					(member as FieldInfo).SetValue(target, val);
+				}
+			}
+		}
+
+		private static object GetValue (MemberInfo member, object target)
+		{
+			if (member is PropertyInfo)
+				return (member as PropertyInfo).GetValue(target);
+			else if (member is FieldInfo)
+				return (member as FieldInfo).GetValue(target);
+			throw new Exception("Unsupported MemberInfo type" + member.GetType());
+		}
+
+		private static bool ShouldSerializeDirectly(Type targetType)
+		{
+			return (targetType.IsValueType && targetType.IsPrimitive)
+					|| m_explicitValueTypes.Any(t => t.IsAssignableFrom(targetType));
 		}
 	}
 }

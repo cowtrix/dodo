@@ -26,30 +26,12 @@ namespace Common.Security
 			m_data = new MultiSigEncryptedStore<T, string>(m_key, key, passphrase);
 		}
 
-		public bool TryGetValue(object requester, string passphrase, out object result)
-		{
-			if(!m_data.TryGetValue(requester, passphrase, out var key))
-			{
-				result = false;
-			}
-			else
-			{
-				result = (key as string) == m_key;
-			}
-			return (bool)result;
-		}
-
 		public void AddPermission(T key, string ownerPass, T newKey, string newUserPass)
 		{
 			m_data.AddPermission(key, ownerPass, newKey, newUserPass);
 		}
 
-		public void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase)
-		{
-			throw new NotImplementedException();
-		}
-
-		public bool GetValue(T key, string password)
+		public bool IsAuthorised(T key, string password)
 		{
 			return m_data.GetValue(key, password) == m_key;
 		}

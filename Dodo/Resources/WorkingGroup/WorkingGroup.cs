@@ -46,7 +46,7 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return DodoServer.ResourceManager<Role>().Get(role => role.ParentGroup.Value == this)
+				return DodoServer.ResourceManager<Role>().Get(role => role.Parent.Value == this)
 					.Select(x => x.GUID.ToString()).ToList();
 			}
 		}
@@ -55,11 +55,12 @@ namespace Dodo.WorkingGroups
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
 		[View(EPermissionLevel.USER)]
-		public List<WorkingGroup> SubGroups
+		public List<string> SubGroups
 		{
 			get
 			{
-				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.Parent.Value == this).ToList();
+				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.Parent.Value.GUID == GUID)
+					.Select(wg => wg.GUID.ToString()).ToList();
 			}
 		}
 

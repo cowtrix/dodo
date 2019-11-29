@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Security.Cryptography;
 using Common;
 using Common.Security;
@@ -29,14 +30,14 @@ namespace Security
 			var secondUser = "test 2";
 			var secondPass = KeyGenerator.GetUniqueKey(64);
 			keystore.AddPermission(firstUser, firstPass, secondUser, secondPass);
-			Assert.IsTrue(keystore.GetValue(secondUser, secondPass));
-			Assert.ThrowsException<Exception>(() => keystore.GetValue("invalid", "invalid"));
+			Assert.IsTrue(keystore.IsAuthorised(secondUser, secondPass));
+			Assert.ThrowsException<AuthenticationException>(() => keystore.IsAuthorised("invalid", "invalid"));
 		}
 
 		public MultiSigKeyStore<T> CancCreateAndAccess<T>(T creator, string passphrase)
 		{
 			var multisig = new MultiSigKeyStore<T>(creator, passphrase);
-			Assert.IsTrue(multisig.GetValue(creator, passphrase));
+			Assert.IsTrue(multisig.IsAuthorised(creator, passphrase));
 			return multisig;
 		}
 	}

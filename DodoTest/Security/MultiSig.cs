@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using System.Security.Cryptography;
 using Common;
 using Common.Security;
@@ -139,9 +140,9 @@ namespace Security
 			Assert.AreEqual(firstData, multisig.GetValue(secondKey, secondPassword));
 
 			// Make sure it breaks when it should
-			Assert.ThrowsException<Exception>(() => multisig.GetValue(firstKey, secondPassword));
-			Assert.ThrowsException<Exception>(() => multisig.GetValue(secondKey, "notthepassword"));
-			Assert.ThrowsException<Exception>(() => multisig.GetValue(default, firstPassword));
+			Assert.ThrowsException<AuthenticationException>(() => multisig.GetValue(firstKey, secondPassword));
+			Assert.ThrowsException<AuthenticationException>(() => multisig.GetValue(secondKey, "notthepassword"));
+			Assert.ThrowsException<AuthenticationException>(() => multisig.GetValue(default, firstPassword));
 
 			multisig.SetValue(secondData, secondKey, secondPassword);
 			Assert.AreEqual(secondData, multisig.GetValue(firstKey, firstPassword));

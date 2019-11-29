@@ -28,5 +28,6 @@ namespace Common.Security
 	{
 		bool TryGetValue(object requester, string passphrase, out object result);
 		void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase);
+		bool IsAuthorised(object requester, string passphrase);
 	}
 }

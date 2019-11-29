@@ -3,6 +3,7 @@ using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Security.Authentication;
 
 namespace Common.Security
 {
@@ -14,6 +15,7 @@ namespace Common.Security
 	{
 		[JsonProperty]
 		private string m_encryptedData;
+		private string m_passHash;
 
 		public EncryptedStore() { }
 
@@ -21,7 +23,7 @@ namespace Common.Security
 		{
 			if(value != default)
 			{
-				m_encryptedData = SymmetricSecurity.Encrypt(value, password);
+				SetValue(value, password);
 			}
 		}
 
@@ -34,17 +36,26 @@ namespace Common.Security
 			return SymmetricSecurity.Decrypt<T>(m_encryptedData, password);
 		}
 
-		public void SetValue(T value, string password)
+		public bool IsAuthorised(object requester, string passphrase)
 		{
-			GetValue(password); // Will throw exception if incorrect password
+			return string.IsNullOrEmpty(m_passHash) || SHA256Utility.SHA256(passphrase) == m_passHash;
+		}
+
+		public void SetValue(T value, string passphrase)
+		{
+			if(!IsAuthorised(null, passphrase))
+			{
+				throw new AuthenticationException();
+			}
 			if(value == default)
 			{
 				m_encryptedData = null;
 			}
 			else
 			{
-				m_encryptedData = SymmetricSecurity.Encrypt(value, password);
+				m_encryptedData = SymmetricSecurity.Encrypt(value, passphrase);
 			}
+			m_passHash = SHA256Utility.SHA256(passphrase);
 		}
 
 		public void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase)

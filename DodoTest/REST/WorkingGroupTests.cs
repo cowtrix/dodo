@@ -24,7 +24,7 @@ namespace RESTTests
 		public void Setup()
 		{
 			RegisterUser(DefaultUsername, "Test User", DefaultPassword, "test@web.com");
-			Rebellion = RequestJSON("rebellions/create", Method.POST, 
+			Rebellion = RequestJSON("rebellions/create", Method.POST,
 				new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion", Location = new GeoLocation(45, 97) });
 		}
 
@@ -38,6 +38,11 @@ namespace RESTTests
 			return new { Mandate = "This is a test mandate" };
 		}
 
+		protected override void CheckPatchedObject(JObject obj)
+		{
+			Assert.AreEqual("This is a test mandate", obj.Value<string>("Mandate"));
+		}
+
 		protected override void CheckCreatedObject(JObject obj)
 		{
 			Assert.AreEqual(Rebellion.Value<string>("GUID"), obj.Value<JObject>("Parent").Value<string>("Guid"));
@@ -49,7 +54,11 @@ namespace RESTTests
 			var wg = RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group"));
 			var subwg = RequestJSON(wg.Value<string>("ResourceURL") + "/wg/create",
 				Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group"));
-			Assert.IsTrue(subwg.Value<JArray>("SubGroups").Values<string>().All(x => x == wg.Value<string>("GUID")));
+			Assert.AreEqual(wg.Value<string>("GUID"), subwg.Value<JObject>("Parent").Value<string>("Guid"));
+			wg = RequestJSON(wg.Value<string>("ResourceURL"), Method.GET);
+			var subGroups = wg.Value<JArray>("SubGroups").Values<string>();
+			Assert.IsTrue(subGroups.Count() == 1);
+			Assert.IsTrue(subGroups.All(x => x == subwg.Value<string>("GUID")));
 		}
 
 		[TestMethod]

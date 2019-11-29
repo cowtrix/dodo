@@ -3,6 +3,7 @@ using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Security.Authentication;
 
 namespace Common.Security
 {
@@ -38,7 +39,7 @@ namespace Common.Security
 		{
 			if(!m_keyStore.TryGetValue(GenerateID(key, password), out var unlockPhrase))
 			{
-				throw new Exception("You are not authorized to access this resource");
+				throw new AuthenticationException("You are not authorized to access this resource");
 			}
 			var passPhrase = unlockPhrase.GetValue(password);
 			return m_data.GetValue(passPhrase);
@@ -48,7 +49,7 @@ namespace Common.Security
 		{
 			if (!m_keyStore.TryGetValue(GenerateID(key, password), out var unlockPhrase))
 			{
-				throw new Exception("You are not authorized to access this resource");
+				throw new AuthenticationException("You are not authorized to access this resource");
 			}
 			var passPhrase = unlockPhrase.GetValue(password);
 			m_data = new EncryptedStore<TVal>(data, passPhrase);
@@ -63,7 +64,7 @@ namespace Common.Security
 		{
 			if (!m_keyStore.TryGetValue(GenerateID(key, ownerPass), out var unlockPhrase))
 			{
-				throw new Exception("You are not authorized to access this resource");
+				throw new AuthenticationException("You are not authorized to access this resource");
 			}
 			var passPhrase = unlockPhrase.GetValue(ownerPass);
 			if(key.Equals(newKey))
@@ -112,6 +113,11 @@ namespace Common.Security
 		private string GenerateID(TKey key, string passphrase)
 		{
 			return SHA256Utility.SHA256(key.GetHashCode() + passphrase);
+		}
+
+		public bool IsAuthorised(object requester, string passphrase)
+		{
+			return m_keyStore.TryGetValue(GenerateID((TKey)requester, passphrase), out _);
 		}
 	}
 }
