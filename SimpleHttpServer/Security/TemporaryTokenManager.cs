@@ -12,7 +12,13 @@ namespace Common.Security
 	/// </summary>
 	internal static class TemporaryTokenManager
 	{
-		private static ConcurrentDictionary<string, DateTime> m_tokens = new ConcurrentDictionary<string, DateTime>();
+		private struct InnerToken
+		{
+			public string Value;
+			public DateTime CreationDate;
+		}
+
+		private static ConcurrentDictionary<string, InnerToken> m_tokens = new ConcurrentDictionary<string, InnerToken>();
 		const byte TOKEN_TIMEOUT_MINUTES = 5;
 		const byte TOKEN_SIZE = 32;
 
@@ -24,7 +30,7 @@ namespace Common.Security
 				{
 					await Task.Delay(TimeSpan.FromMinutes(1));
 					var cutoff = DateTime.Now - TimeSpan.FromMinutes(TOKEN_TIMEOUT_MINUTES);
-					var toRemove = m_tokens.Keys.Where(key => m_tokens[key] < cutoff).ToList();
+					var toRemove = m_tokens.Keys.Where(key => m_tokens[key].CreationDate < cutoff).ToList();
 					foreach(var val in toRemove)
 					{
 						m_tokens.TryRemove(val, out _);
@@ -34,17 +40,27 @@ namespace Common.Security
 			tokenTask.Start();
 		}
 
-		public static string GetTemporaryToken()
+		public static void GetTemporaryToken(out string tokenKey, out string token)
 		{
-			var token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
-			m_tokens[SHA256Utility.SHA256(token)] = DateTime.Now;
-			return token;
+			tokenKey = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+			token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+			m_tokens[SHA256Utility.SHA256(tokenKey)] = new InnerToken()
+			{
+				CreationDate = DateTime.Now,
+				Value = token,
+			};
 		}
 
-		public static bool IsValidToken(string tokenKey)
+		public static bool IsValidToken(string tokenKey, out string token)
 		{
 			tokenKey = SHA256Utility.SHA256(tokenKey);
-			return m_tokens.ContainsKey(tokenKey);
+			if(!m_tokens.TryGetValue(tokenKey, out var innerToken))
+			{
+				token = null;
+				return false;
+			}
+			token = innerToken.Value;
+			return true;
 		}
 	}
 }
