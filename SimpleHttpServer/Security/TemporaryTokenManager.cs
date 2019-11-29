@@ -8,33 +8,27 @@ namespace Common.Security
 {
 	/// <summary>
 	/// This is a collection of tokens that are used to create temporary
-	/// expiring encrypted stores. Every minute a new token is added and
-	/// the most recent removed, and there are always 5 tokens.
-	/// That means if you encrypt an object with the newest token, it
-	/// will last for 5 minutes. The primary use of this is with the
-	/// Passphrase struct, to create temporary objects that can produce
-	/// the passphrase, without passing it around into methods in plaintext
+	/// expiring encrypted stores.
 	/// </summary>
 	internal static class TemporaryTokenManager
 	{
-		private static ConcurrentQueue<string> m_tokens = new ConcurrentQueue<string>();
-		const byte TOKEN_COUNT = 5;
-		const byte TOKEN_TIMEOUT_MINUTES = 1;
+		private static ConcurrentDictionary<string, DateTime> m_tokens = new ConcurrentDictionary<string, DateTime>();
+		const byte TOKEN_TIMEOUT_MINUTES = 5;
 		const byte TOKEN_SIZE = 32;
 
 		static TemporaryTokenManager()
 		{
-			while (m_tokens.Count <= TOKEN_COUNT)
-			{
-				m_tokens.Enqueue(KeyGenerator.GetUniqueKey(TOKEN_SIZE));
-			}
 			Task tokenTask = new Task(async () =>
 			{
 				while (true)
 				{
-					await Task.Delay(TimeSpan.FromMinutes(TOKEN_TIMEOUT_MINUTES));
-					m_tokens.TryDequeue(out _);
-					m_tokens.Enqueue(KeyGenerator.GetUniqueKey(TOKEN_SIZE));
+					await Task.Delay(TimeSpan.FromMinutes(1));
+					var cutoff = DateTime.Now - TimeSpan.FromMinutes(TOKEN_TIMEOUT_MINUTES);
+					var toRemove = m_tokens.Keys.Where(key => m_tokens[key] < cutoff).ToList();
+					foreach(var val in toRemove)
+					{
+						m_tokens.TryRemove(val, out _);
+					}
 				}
 			});
 			tokenTask.Start();
@@ -42,12 +36,15 @@ namespace Common.Security
 
 		public static string GetTemporaryToken()
 		{
-			return m_tokens.Last();
+			var token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+			m_tokens[SHA256Utility.SHA256(token)] = DateTime.Now;
+			return token;
 		}
 
-		public static bool IsValidToken(string token)
+		public static bool IsValidToken(string tokenKey)
 		{
-			return m_tokens.Contains(token);
+			tokenKey = SHA256Utility.SHA256(tokenKey);
+			return m_tokens.ContainsKey(tokenKey);
 		}
 	}
 }
