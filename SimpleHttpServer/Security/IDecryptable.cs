@@ -4,7 +4,7 @@ namespace Common.Security
 {
 	public interface IKeyDecryptable<TKey, TVal> : IDecryptable
 	{
-		TVal GetValue(TKey key, string password);
+		TVal GetValue(TKey key, Passphrase passphrase);
 	}
 
 	/// <summary>
@@ -17,7 +17,7 @@ namespace Common.Security
 
 	public interface IDecryptable<T> : IDecryptable
 	{
-		T GetValue(string password);
+		T GetValue(Passphrase passphrase);
 	}
 
 	/// <summary>
@@ -26,8 +26,8 @@ namespace Common.Security
 	/// </summary>
 	public interface IDecryptable
 	{
-		bool TryGetValue(object requester, string passphrase, out object result);
-		void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase);
-		bool IsAuthorised(object requester, string passphrase);
+		bool TryGetValue(object requester, Passphrase passphrase, out object result);
+		void SetValue(object innerObject, EPermissionLevel view, object requester, Passphrase passphrase);
+		bool IsAuthorised(object requester, Passphrase passphrase);
 	}
 }

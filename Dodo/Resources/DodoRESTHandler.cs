@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common;
+using Common.Security;
 using Dodo.Resources;
 using Dodo.Users;
 using SimpleHttpServer;
@@ -60,7 +61,7 @@ namespace Dodo
 			return resource;
 		}
 
-		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel permissionLevel, out object context, out string passphrase)
+		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel permissionLevel, out object context, out Passphrase passphrase)
 		{
 			var target = GetResource(request.Url);
 			if(target != null && !(target is T))

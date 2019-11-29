@@ -20,18 +20,18 @@ namespace Common.Security
 		[JsonProperty]
 		private MultiSigEncryptedStore<T, string> m_data;
 
-		public MultiSigKeyStore(T key, string passphrase)
+		public MultiSigKeyStore(T key, Passphrase passphrase)
 		{
 			m_key = KeyGenerator.GetUniqueKey(128);
 			m_data = new MultiSigEncryptedStore<T, string>(m_key, key, passphrase);
 		}
 
-		public void AddPermission(T key, string ownerPass, T newKey, string newUserPass)
+		public void AddPermission(T key, Passphrase ownerPass, T newKey, Passphrase newUserPass)
 		{
 			m_data.AddPermission(key, ownerPass, newKey, newUserPass);
 		}
 
-		public bool IsAuthorised(T key, string password)
+		public bool IsAuthorised(T key, Passphrase password)
 		{
 			return m_data.GetValue(key, password) == m_key;
 		}

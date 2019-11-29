@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Common;
 using Common.Extensions;
+using Common.Security;
 using Dodo.Users;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
@@ -22,6 +23,14 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN)]
 		public UserMultiSigStore<List<ResourceReference<User>>> Administrators;
 
+		public GroupResource(User creator, Passphrase passphrase, string name, GroupResource parent) : base(creator, name)
+		{
+			Parent = new ResourceReference<GroupResource>(parent);
+			Administrators = new UserMultiSigStore<List<ResourceReference<User>>>(
+				new List<ResourceReference<User>>() { new ResourceReference<User>(creator) },
+				creator, passphrase);
+		}
+
 		/// <summary>
 		/// Is this object a child of the target object
 		/// </summary>
@@ -40,21 +49,13 @@ namespace Dodo
 			return Parent.Value.IsChildOf(targetObject);
 		}
 
-		public GroupResource(User creator, string passphrase, GroupResource parent) : base(creator)
-		{
-			Parent = new ResourceReference<GroupResource>(parent);
-			Administrators = new UserMultiSigStore<List<ResourceReference<User>>>(
-				new List<ResourceReference<User>>() { new ResourceReference<User>(creator) },
-				creator, passphrase);
-		}
-
-		public bool IsAdmin(User user, string passphrase)
+		public bool IsAdmin(User user, Passphrase passphrase)
 		{
 			var userRef = new ResourceReference<User>(user);
 			return Administrators.GetValue(userRef, passphrase).Contains(userRef);
 		}
 
-		public void AddAdmin(User requester, string requesterPass, User newAdmin, string newAdminPassword)
+		public void AddAdmin(User requester, Passphrase requesterPass, User newAdmin, Passphrase newAdminPassword)
 		{
 			var userRef = new ResourceReference<User>(requester);
 			var newAdminRef = new ResourceReference<User>(newAdmin);
@@ -68,7 +69,7 @@ namespace Dodo
 			Administrators.SetValue(adminList, newAdminRef, newAdminPassword);
 		}
 
-		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			if (requestOwner == Creator.Value)
 			{

@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.Users;
@@ -21,18 +22,11 @@ namespace Dodo.WorkingGroups
 	{
 		public const string ROOT = "wg";
 
-		public WorkingGroup(User creator, string passphrase, GroupResource parent, WorkingGroupRESTHandler.CreationSchema schema)
-			: base(creator, passphrase, parent)
+		public WorkingGroup(User creator, Passphrase passphrase, GroupResource parent, WorkingGroupRESTHandler.CreationSchema schema)
+			: base(creator, passphrase, schema.Name, parent)
 		{
-			Name = schema.Name;
+			Mandate = schema.Mandate;
 		}
-
-		/// <summary>
-		/// The name of this Working Group
-		/// </summary>
-		[View(EPermissionLevel.USER)]
-		[NoPatch]
-		public string Name { get; private set; }
 
 		/// <summary>
 		/// The mandate of the working group - a description of its duties, what it's for

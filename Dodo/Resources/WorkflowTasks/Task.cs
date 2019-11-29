@@ -1,4 +1,5 @@
-﻿using Common.StateMachines;
+﻿using Common.Security;
+using Common.StateMachines;
 using Dodo.Users;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
@@ -21,7 +22,7 @@ namespace Dodo.Tasks
 
 		public ResourceReference<User> Creator => throw new NotImplementedException();
 
-		public bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
+		public bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			throw new NotImplementedException();
 		}

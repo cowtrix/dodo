@@ -17,7 +17,7 @@ namespace Security
 		public void CanCreateAndAccesString()
 		{
 			var firstUser = "test 1";
-			var firstPass = KeyGenerator.GetUniqueKey(64);
+			var firstPass = new Passphrase(KeyGenerator.GetUniqueKey(64));
 			CancCreateAndAccess<string>(firstUser, firstPass);
 		}
 
@@ -25,16 +25,16 @@ namespace Security
 		public void CanAddUserString()
 		{
 			var firstUser = "test 1";
-			var firstPass = KeyGenerator.GetUniqueKey(64);
+			var firstPass = new Passphrase(KeyGenerator.GetUniqueKey(64));
 			var keystore = CancCreateAndAccess<string>(firstUser, firstPass);
 			var secondUser = "test 2";
-			var secondPass = KeyGenerator.GetUniqueKey(64);
+			var secondPass = new Passphrase(KeyGenerator.GetUniqueKey(64));
 			keystore.AddPermission(firstUser, firstPass, secondUser, secondPass);
 			Assert.IsTrue(keystore.IsAuthorised(secondUser, secondPass));
-			Assert.ThrowsException<AuthenticationException>(() => keystore.IsAuthorised("invalid", "invalid"));
+			Assert.ThrowsException<AuthenticationException>(() => keystore.IsAuthorised("invalid", new Passphrase("invalid")));
 		}
 
-		public MultiSigKeyStore<T> CancCreateAndAccess<T>(T creator, string passphrase)
+		public MultiSigKeyStore<T> CancCreateAndAccess<T>(T creator, Passphrase passphrase)
 		{
 			var multisig = new MultiSigKeyStore<T>(creator, passphrase);
 			Assert.IsTrue(multisig.IsAuthorised(creator, passphrase));

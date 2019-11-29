@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Security;
 using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
@@ -72,7 +73,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		protected abstract bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out string passphrase);
+		protected abstract bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out Passphrase passphrase);
 
 		/// <summary>
 		/// Create a new object, and return the resource url.

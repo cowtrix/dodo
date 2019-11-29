@@ -28,16 +28,16 @@ namespace Common.Security
 
 		public MultiSigEncryptedStore() { }
 
-		public MultiSigEncryptedStore(TVal data, TKey key, string password)
+		public MultiSigEncryptedStore(TVal data, TKey key, Passphrase password)
 		{
-			var passPhrase = SHA256Utility.SHA256(Guid.NewGuid().ToString() + key.GetHashCode().ToString() + data?.GetHashCode());	// Generate a passphrase
-			m_keyStore.TryAdd(GenerateID(key, password), new EncryptedStore<string>(passPhrase, password)); // Store the creating key and the passphrase with the given password
-			m_data = new EncryptedStore<TVal>(data, passPhrase);	// Encrypt the common data with the common passphrase
+			var commonKey = new Passphrase(SHA256Utility.SHA256(Guid.NewGuid().ToString() + key.GetHashCode().ToString() + data?.GetHashCode()));	// Generate a passphrase
+			m_keyStore.TryAdd(SecurityExtensions.GenerateID(key, password), new EncryptedStore<string>(commonKey.Value, password)); // Store the creating key and the passphrase with the given password
+			m_data = new EncryptedStore<TVal>(data, commonKey);	// Encrypt the common data with the common passphrase
 		}
 
-		public TVal GetValue(TKey key, string password)
+		public TVal GetValue(TKey key, Passphrase password)
 		{
-			if(!m_keyStore.TryGetValue(GenerateID(key, password), out var unlockPhrase))
+			if(!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, password), out var unlockPhrase))
 			{
 				throw new AuthenticationException("You are not authorized to access this resource");
 			}
@@ -45,36 +45,36 @@ namespace Common.Security
 			return m_data.GetValue(passPhrase);
 		}
 
-		public void SetValue(TVal data, TKey key, string password)
+		public void SetValue(TVal data, TKey key, Passphrase password)
 		{
-			if (!m_keyStore.TryGetValue(GenerateID(key, password), out var unlockPhrase))
+			if (!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, password), out var unlockPhrase))
 			{
 				throw new AuthenticationException("You are not authorized to access this resource");
 			}
-			var passPhrase = unlockPhrase.GetValue(password);
+			var passPhrase = new Passphrase(unlockPhrase.GetValue(password));
 			m_data = new EncryptedStore<TVal>(data, passPhrase);
 		}
 
-		public bool IsAuthorised(TKey key, string passphrase)
+		public bool IsAuthorised(TKey key, Passphrase passphrase)
 		{
-			return m_keyStore.ContainsKey(GenerateID(key, passphrase));
+			return m_keyStore.ContainsKey(SecurityExtensions.GenerateID(key, passphrase));
 		}
 
-		public void AddPermission(TKey key, string ownerPass, TKey newKey, string newUserPass)
+		public void AddPermission(TKey key, Passphrase ownerPass, TKey newKey, Passphrase newUserPass)
 		{
-			if (!m_keyStore.TryGetValue(GenerateID(key, ownerPass), out var unlockPhrase))
+			if (!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, ownerPass), out var unlockPhrase))
 			{
 				throw new AuthenticationException("You are not authorized to access this resource");
 			}
 			var passPhrase = unlockPhrase.GetValue(ownerPass);
 			if(key.Equals(newKey))
 			{
-				m_keyStore.TryRemove(GenerateID(key, ownerPass), out _);
+				m_keyStore.TryRemove(SecurityExtensions.GenerateID(key, ownerPass), out _);
 			}
-			m_keyStore[GenerateID(newKey, newUserPass)] = new EncryptedStore<string>(passPhrase, newUserPass);
+			m_keyStore[SecurityExtensions.GenerateID(newKey, newUserPass)] = new EncryptedStore<string>(passPhrase, newUserPass);
 		}
 
-		public bool TryGetValue(object requester, string password, out object result)
+		public bool TryGetValue(object requester, Passphrase password, out object result)
 		{
 			try
 			{
@@ -86,7 +86,7 @@ namespace Common.Security
 			return false;
 		}
 
-		public void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase)
+		public void SetValue(object innerObject, EPermissionLevel view, object requester, Passphrase passphrase)
 		{
 			var data = GetValue((TKey)requester, passphrase);
 			try
@@ -103,21 +103,9 @@ namespace Common.Security
 			SetValue((TVal)innerObject, (TKey)requester, passphrase);
 		}
 
-		/// <summary>
-		/// It's important that we don't store the keys directly, so we instead create a one-way hash of the
-		/// key and passphrase. Note that then when we change a key's passphrase, we must remove the old hash.
-		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="passphrase"></param>
-		/// <returns></returns>
-		private string GenerateID(TKey key, string passphrase)
+		public bool IsAuthorised(object requester, Passphrase passphrase)
 		{
-			return SHA256Utility.SHA256(key.GetHashCode() + passphrase);
-		}
-
-		public bool IsAuthorised(object requester, string passphrase)
-		{
-			return m_keyStore.TryGetValue(GenerateID((TKey)requester, passphrase), out _);
+			return m_keyStore.TryGetValue(SecurityExtensions.GenerateID((TKey)requester, passphrase), out _);
 		}
 	}
 }

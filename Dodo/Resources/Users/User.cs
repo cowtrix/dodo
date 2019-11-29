@@ -24,24 +24,21 @@ namespace Dodo.Users
 		public string Email;
 
 		[View(EPermissionLevel.OWNER)]
-		[UserFriendlyName]
-		public string Name;
-
-		[View(EPermissionLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 
 		[View(EPermissionLevel.OWNER)]
 		public List<PushAction> PushActions = new List<PushAction>();
 
-		public User() : base(null)
+		public User() : base(null, null)
 		{ }
 
-		public User(WebPortalAuth auth) : base(null)
+		public User(UserRESTHandler.CreationSchema info) : base(null, info.Name)
 		{
-			WebAuth = auth;
+			WebAuth = new WebPortalAuth(info.Username, info.Password);
+			Email = info.Email;
 		}
 
-		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			if(requestOwner == this)
 			{

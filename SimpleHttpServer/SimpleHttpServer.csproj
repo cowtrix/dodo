@@ -88,6 +88,9 @@
     <Compile Include="Security\IDecryptable.cs" />
     <Compile Include="Security\MultiSigEncryptedStore.cs" />
     <Compile Include="Security\MultiSigKeyStore.cs" />
+    <Compile Include="Security\Passphrase.cs" />
+    <Compile Include="Security\SecurityExtensions.cs" />
+    <Compile Include="Security\TemporaryTokenManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

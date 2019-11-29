@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
 using Dodo.Resources;
 using Dodo.Users;
 using SimpleHttpServer;
@@ -73,7 +74,7 @@ namespace Dodo
 		}
 
 		/// <summary>
-		/// Get the user that made an HTTP request.
+		/// Get the user that made an HTTP request, and validate authentication,
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns>The user that made this request</returns>
@@ -82,9 +83,16 @@ namespace Dodo
 			return GetRequestOwner(request, out _);
 		}
 
-		public static User GetRequestOwner(HttpRequest request, out string passphrase)
+		/// <summary>
+		/// Get the user that made an HTTP request, validate authentication, and return the
+		/// unlocked passphrase. DO NOT store this passphrase anywhere except as a local
+		/// scope variable.
+		/// </summary>
+		/// <param name="request">The requ</param>
+		/// <param name="passphrase"></param>
+		/// <returns>The user that made this request</returns>
+		public static User GetRequestOwner(HttpRequest request, out Passphrase passphrase)
 		{
-			passphrase = null;
 			if (!request.Headers.TryGetValue(AUTH_KEY, out var token))
 			{
 				return null;

@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
 using Dodo.Gateways;
 using Dodo.LocalGroups;
 using Dodo.Users;
@@ -17,10 +18,6 @@ namespace Dodo.Rebellions
 	public class Rebellion : GroupResource
 	{
 		public const string ROOT = "rebellions";
-
-		[NoPatch]
-		[View(EPermissionLevel.USER)]
-		public string RebellionName;
 
 		[View(EPermissionLevel.USER)]
 		public GeoLocation Location;
@@ -40,9 +37,8 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.ADMIN)]
 		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
 
-		public Rebellion(User creator, string passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, null)
+		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, schema.Name, null)
 		{
-			RebellionName = schema.Name;
 			Location = schema.Location;
 		}
 
@@ -50,7 +46,7 @@ namespace Dodo.Rebellions
 		{
 			get
 			{
-				return $"{ROOT}/{RebellionName.StripForURL()}";
+				return $"{ROOT}/{Name.StripForURL()}";
 			}
 		}
 

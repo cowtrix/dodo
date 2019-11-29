@@ -62,6 +62,7 @@ namespace Dodo.Rebellions
 			{
 				throw new Exception("Reserved Resource URL");
 			}
+			newRebellion.Verify();
 			ResourceManager.Add(newRebellion);
 			return newRebellion;
 		}

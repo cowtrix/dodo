@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Dodo.Rebellions;
 using Dodo.Resources;
 using Dodo.Users;
@@ -42,11 +43,12 @@ namespace Dodo.Roles
 			{
 				throw new HttpException("Valid parent doesn't exist at " + request.Url, 404);
 			}
-			var newRole = new Role(group, info.Name, info.Mandate);
+			var newRole = new Role(group, info);
 			if (URLIsCreation(newRole.ResourceURL))
 			{
 				throw new Exception("Reserved Resource URL");
 			}
+			newRole.Verify();
 			DodoServer.ResourceManager<Role>().Add(newRole);
 			return newRole;
 		}

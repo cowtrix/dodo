@@ -23,7 +23,7 @@ namespace RESTTests
 			var rebellion = RequestJSON("rebellions/create", Method.POST,
 				new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion", Location = new GeoLocation(45, 97) });
 			WorkingGroup = RequestJSON(rebellion.Value<string>("ResourceURL") + "/wg/create", Method.POST,
-				new WorkingGroupRESTHandler.CreationSchema("Test Working Group"));
+				new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
 		}
 
 		public override object GetCreationSchema()

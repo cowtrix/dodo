@@ -46,13 +46,13 @@ namespace RESTTests
 		public void CannotCreateUserWithInvalidEmail()
 		{
 			AssertX.Throws<Exception>(() => RegisterUser(email: ""),
-				e => e.Message.Contains("Invalid email address"));
+				e => e.Message.Contains("Invalid email"));
 
 			AssertX.Throws<Exception>(() => RegisterUser(email: "not an email"),
-				e => e.Message.Contains("Invalid email address"));
+				e => e.Message.Contains("Invalid email"));
 
 			AssertX.Throws<Exception>(() => RegisterUser(email: "myemail @gmail.com"),
-				e => e.Message.Contains("Invalid email address"));
+				e => e.Message.Contains("Invalid email"));
 		}
 
 		[TestMethod]

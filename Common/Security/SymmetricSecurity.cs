@@ -19,7 +19,7 @@ namespace Common.Security
 		// This constant determines the number of iterations for the password bytes generation function.
 		private const int DerivationIterations = 1000;
 
-		public static string Encrypt<T>(T objectToEncrypt, string passPhrase)
+		public static string Encrypt<T>(T objectToEncrypt, string passphrase)
 		{
 			var plainText = JsonConvert.SerializeObject(objectToEncrypt);
 			// Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
@@ -27,7 +27,7 @@ namespace Common.Security
 			var saltStringBytes = Generate256BitsOfRandomEntropy();
 			var ivStringBytes = Generate256BitsOfRandomEntropy();
 			var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-			using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
+			using (var password = new Rfc2898DeriveBytes(passphrase, saltStringBytes, DerivationIterations))
 			{
 				var keyBytes = password.GetBytes(Keysize / 8);
 				using (var symmetricKey = new RijndaelManaged())
@@ -57,7 +57,7 @@ namespace Common.Security
 			}
 		}
 
-		public static T Decrypt<T>(string cipherText, string passPhrase)
+		public static T Decrypt<T>(string cipherText, string passphrase)
 		{
 			// Get the complete stream of bytes that represent:
 			// [32 bytes of Salt] + [32 bytes of IV] + [n bytes of CipherText]
@@ -69,7 +69,7 @@ namespace Common.Security
 			// Get the actual cipher text bytes by removing the first 64 bytes from the cipherText string.
 			var cipherTextBytes = cipherTextBytesWithSaltAndIv.Skip((Keysize / 8) * 2).Take(cipherTextBytesWithSaltAndIv.Length - ((Keysize / 8) * 2)).ToArray();
 
-			using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
+			using (var password = new Rfc2898DeriveBytes(passphrase, saltStringBytes, DerivationIterations))
 			{
 				var keyBytes = password.GetBytes(Keysize / 8);
 				using (var symmetricKey = new RijndaelManaged())

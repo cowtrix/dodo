@@ -15,7 +15,7 @@ namespace Security
 		public void CanPatch()
 		{
 			var key = "user";
-			var password = "password";
+			var password = new Passphrase("password");
 			var data = new TestEncryptedData()
 			{
 				EncryptedString = new EncryptedStore<string>("my encrypted value", password),
@@ -50,7 +50,7 @@ namespace Security
 		public void CannotPatchWithoutViewAttribute()
 		{
 			var key = "user";
-			var password = "password";
+			var password = new Passphrase("password");
 			var data = new TestEncryptedData();
 			AssertX.Throws<Exception>(() => data = data.PatchObject(new Dictionary<string, object>()
 			{
@@ -62,7 +62,7 @@ namespace Security
 		public void CannotPatchWithInsufficientView()
 		{
 			var key = "user";
-			var password = "password";
+			var password = new Passphrase("password");
 			var data = new TestEncryptedData();
 			AssertX.Throws<Exception>(() => data = data.PatchObject(new Dictionary<string, object>()
 			{
@@ -74,7 +74,7 @@ namespace Security
 		public void NonexistantFieldThrowsError()
 		{
 			var key = "user";
-			var password = "password";
+			var password = new Passphrase("password");
 			var data = new TestEncryptedData();
 			AssertX.Throws<Exception>(() => data = data.PatchObject(new Dictionary<string, object>()
 			{

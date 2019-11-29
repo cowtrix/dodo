@@ -14,11 +14,13 @@ namespace Dodo.WorkingGroups
 	{
 		public class CreationSchema : IRESTResourceSchema
 		{
-			public CreationSchema(string name)
+			public CreationSchema(string name, string mandate)
 			{
 				Name = name;
+				Mandate = mandate;
 			}
-			public string Name;
+			public string Name = "";
+			public string Mandate = "";
 		}
 
 		public override void AddRoutes(List<Route> routeList)
@@ -53,7 +55,7 @@ namespace Dodo.WorkingGroups
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema("");
+			return new CreationSchema("", "");
 		}
 
 		protected override WorkingGroup CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
@@ -78,6 +80,7 @@ namespace Dodo.WorkingGroups
 			{
 				throw new Exception("Reserved Resource URL");
 			}
+			newWorkingGroup.Verify();
 			ResourceManager.Add(newWorkingGroup);
 			return newWorkingGroup;
 		}

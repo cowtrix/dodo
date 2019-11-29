@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Dodo.WorkingGroups;
@@ -16,20 +17,17 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.ADMIN)]
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.USER)]
-		public string Name { get; set; }
-		[View(EPermissionLevel.USER)]
 		public string Mandate { get; set; }
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
-		public Role(GroupResource parent, string roleName, string mandate) : base(parent.Creator)
+		public Role(GroupResource parent, RoleRESTHandler.CreationSchema schema) : base(parent.Creator, schema.Name)
 		{
 			Parent = new ResourceReference<GroupResource>(parent);
-			Name = roleName;
-			Mandate = mandate;
+			Mandate = schema.Mandate;
 		}
 
-		public override bool IsAuthorised(User requestOwner, string passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			return Parent.Value.IsAuthorised(requestOwner, passphrase, request, out permissionLevel);
 		}

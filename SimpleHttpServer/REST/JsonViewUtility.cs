@@ -33,7 +33,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
 		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility,
-			object requester, string passPhrase, [CallerMemberName]string callingFunction = "")
+			object requester, Passphrase passphrase, [CallerMemberName]string callingFunction = "")
 		{
 			if(obj == null)
 			{
@@ -65,9 +65,9 @@ namespace SimpleHttpServer.REST
 			foreach (var member in filteredMembers)
 			{
 				var memberName = member.Name;
-				var targetPropValue = GetValue(member, obj);
-				var memberType = GetMemberType(member);
-				var finalObj = GetObject(targetPropValue, memberType, requester, visibility, passPhrase);
+				var targetPropValue = member.GetValue(obj);
+				var memberType = member.GetMemberType();
+				var finalObj = GetObject(targetPropValue, memberType, requester, visibility, passphrase);
 				if(finalObj != null)
 				{
 					vals.Add(memberName, finalObj);
@@ -81,9 +81,9 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <returns></returns>
 		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj,
-			EPermissionLevel visibility, object requester, string passPhrase)
+			EPermissionLevel visibility, object requester, Passphrase passphrase)
 		{
-			return obj.Select(x => x.GenerateJsonView(visibility, requester, passPhrase)).ToList();
+			return obj.Select(x => x.GenerateJsonView(visibility, requester, passphrase)).ToList();
 		}
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace SimpleHttpServer.REST
 		/// <param name="passphrase">The passphrase for encrypting/decrypting objects</param>
 		/// <returns></returns>
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel permissionLevel,
-			object requester, string passphrase)
+			object requester, Passphrase passphrase)
 		{
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
 			// Firstly, if we hit a primitive type or a specially included type, we just convert the whole thing
@@ -145,7 +145,7 @@ namespace SimpleHttpServer.REST
 			{
 				throw new Exception("Insufficient privileges");
 			}
-			if(!validFields.Where(m => GetMemberType(m) is IDecryptable).Cast<IDecryptable>().All(decryptable => decryptable.IsAuthorised(requester, passphrase)))
+			if(!validFields.Where(m => m.GetMemberType() is IDecryptable).Cast<IDecryptable>().All(decryptable => decryptable.IsAuthorised(requester, passphrase)))
 			{
 				throw new Exception("Authorisation failed");
 			}
@@ -168,10 +168,10 @@ namespace SimpleHttpServer.REST
 					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
 				}
 				object objToPatch = targetObject;
-				var value = GetValue(targetMember, targetObject);
+				var value = targetMember.GetValue(targetObject);
 				var fieldValue = value;
 				var valueToSet = val.Value;
-				if (typeof(IDecryptable).IsAssignableFrom(GetMemberType(targetMember)) &&
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.GetMemberType()) &&
 					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
 				{
 					// Auth is incorrect, but that should have been picked up before
@@ -185,7 +185,7 @@ namespace SimpleHttpServer.REST
 				catch
 				{
 				}
-				if (typeof(IDecryptable).IsAssignableFrom(GetMemberType(targetMember)))
+				if (typeof(IDecryptable).IsAssignableFrom(targetMember.GetMemberType()))
 				{
 					var decryptable = fieldValue as IDecryptable;
 					decryptable.SetValue(valueToSet, permissionLevel, requester, passphrase);
@@ -196,7 +196,7 @@ namespace SimpleHttpServer.REST
 				{
 					throw new Exception(error);
 				}
-				SetValue(targetMember, targetObject, valueToSet);
+				targetMember.SetValue(targetObject, valueToSet);
 			}
 			if (targetObject is IVerifiable)
 			{
@@ -205,7 +205,7 @@ namespace SimpleHttpServer.REST
 			return targetObject;
 		}
 
-		private static object GetObject(object targetPropValue, Type memberType, object requester, EPermissionLevel visibility, string passPhrase)
+		private static object GetObject(object targetPropValue, Type memberType, object requester, EPermissionLevel visibility, Passphrase passphrase)
 		{
 			if (memberType == null || targetPropValue == null)
 			{
@@ -220,11 +220,11 @@ namespace SimpleHttpServer.REST
 			{
 				// Transparently handle encrypted objects
 				var decryptable = targetPropValue as IDecryptable;
-				if (!decryptable.TryGetValue(requester, passPhrase, out var data))
+				if (!decryptable.TryGetValue(requester, passphrase, out var data))
 				{
 					return null;
 				}
-				return GetObject(data, data.GetType(), requester, visibility, passPhrase);
+				return GetObject(data, data.GetType(), requester, visibility, passphrase);
 			}
 			else if (targetPropValue is IEnumerable)
 			{
@@ -238,48 +238,13 @@ namespace SimpleHttpServer.REST
 					}
 					else
 					{
-						list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
+						list.Add(innerVal.GenerateJsonView(visibility, requester, passphrase));
 					}
 				}
 				return list;
 			}
 			// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
-			return targetPropValue.GenerateJsonView(visibility, requester, passPhrase);
-		}
-
-		private static Type GetMemberType (MemberInfo member)
-		{
-			if (member is PropertyInfo)
-				return (member as PropertyInfo).PropertyType;
-			else if (member is FieldInfo)
-				return (member as FieldInfo).FieldType;
-			throw new Exception("Unsupported MemberInfo type" + member.GetType());
-		}
-
-		private static void SetValue (object member, object target, object val)
-		{
-			if (member is PropertyInfo)
-				(member as PropertyInfo).SetValue(target, val);
-			else if (member is FieldInfo)
-			{
-				if (target.GetType().IsValueType)
-				{
-					(member as FieldInfo).SetValueDirect(__makeref(target), val);
-				}
-				else
-				{
-					(member as FieldInfo).SetValue(target, val);
-				}
-			}
-		}
-
-		private static object GetValue (MemberInfo member, object target)
-		{
-			if (member is PropertyInfo)
-				return (member as PropertyInfo).GetValue(target);
-			else if (member is FieldInfo)
-				return (member as FieldInfo).GetValue(target);
-			throw new Exception("Unsupported MemberInfo type" + member.GetType());
+			return targetPropValue.GenerateJsonView(visibility, requester, passphrase);
 		}
 
 		private static bool ShouldSerializeDirectly(Type targetType)

@@ -20,5 +20,40 @@ namespace Common.Extensions
 		{
 			return info.GetCustomAttribute(typeof(T)) as T;
 		}
+
+		public static Type GetMemberType(this MemberInfo member)
+		{
+			if (member is PropertyInfo)
+				return (member as PropertyInfo).PropertyType;
+			else if (member is FieldInfo)
+				return (member as FieldInfo).FieldType;
+			throw new Exception("Unsupported MemberInfo type" + member.GetType());
+		}
+
+		public static void SetValue(this MemberInfo member, object target, object val)
+		{
+			if (member is PropertyInfo)
+				(member as PropertyInfo).SetValue(target, val);
+			else if (member is FieldInfo)
+			{
+				if (target.GetType().IsValueType)
+				{
+					(member as FieldInfo).SetValueDirect(__makeref(target), val);
+				}
+				else
+				{
+					(member as FieldInfo).SetValue(target, val);
+				}
+			}
+		}
+
+		public static object GetValue(this MemberInfo member, object target)
+		{
+			if (member is PropertyInfo)
+				return (member as PropertyInfo).GetValue(target);
+			else if (member is FieldInfo)
+				return (member as FieldInfo).GetValue(target);
+			return null;
+		}
 	}
 }

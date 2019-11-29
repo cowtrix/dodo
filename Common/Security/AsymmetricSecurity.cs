@@ -4,7 +4,6 @@ using System.Security.Cryptography;
 
 namespace Common.Security
 {
-
 	/// <summary>
 	/// Wrapper for RSACryptoServiceProvider to handle asymmetrical encryption
 	/// </summary>

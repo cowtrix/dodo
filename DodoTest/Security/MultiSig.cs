@@ -17,7 +17,7 @@ namespace Security
 		public void CanPatch()
 		{
 			var key = "user";
-			var password = "password";
+			var password = new Passphrase("password");
 			var data = new TestEncryptedData()
 			{
 				EncryptedString = new EncryptedStore<string>("my encrypted value", password),
@@ -54,7 +54,7 @@ namespace Security
 		public void CannotPatchWithoutViewAttribute()
 		{
 			var key = "user";
-			var password = "password";
+			var password = new Passphrase("password");
 			var data = new TestEncryptedData();
 
 			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
@@ -68,10 +68,10 @@ namespace Security
 		public void CanChangeToken()
 		{
 			var key = Guid.NewGuid().ToString();
-			var password = Guid.NewGuid().ToString();
+			var password = new Passphrase(Guid.NewGuid().ToString());
 			var data = KeyGenerator.GetUniqueKey(128);
 			var multiSig = new MultiSigEncryptedStore<string, string>(data, key, password);
-			var newPassword = Guid.NewGuid().ToString();
+			var newPassword = new Passphrase(Guid.NewGuid().ToString());
 			multiSig.AddPermission(key, password, key, newPassword);
 			Assert.AreEqual(data, multiSig.GetValue(key, newPassword));
 		}
@@ -80,7 +80,7 @@ namespace Security
 		public void CannotPatchWithInsufficientView()
 		{
 			var key = "user";
-			var password = "password";
+			var password = new Passphrase("password");
 			var data = new TestEncryptedData();
 
 			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
@@ -94,7 +94,7 @@ namespace Security
 		public void NonexistantFieldThrowsError()
 		{
 			var key = "user";
-			var password = "password";
+			var password = new Passphrase("password");
 			var data = new TestEncryptedData();
 			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
 			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
@@ -131,17 +131,17 @@ namespace Security
 
 		public void DoMultiSigTest<TKey, TVal>(TVal firstData, TVal secondData, TKey firstKey, TKey secondKey)
 		{
-			var firstPassword = Guid.NewGuid().ToString();
+			var firstPassword = new Passphrase(Guid.NewGuid().ToString());
 			var multisig = new MultiSigEncryptedStore<TKey, TVal>(firstData, firstKey, firstPassword);
 			Assert.AreEqual(multisig.GetValue(firstKey, firstPassword), firstData);
 
-			var secondPassword = Guid.NewGuid().ToString();
+			var secondPassword = new Passphrase(Guid.NewGuid().ToString());
 			multisig.AddPermission(firstKey, firstPassword, secondKey, secondPassword);
 			Assert.AreEqual(firstData, multisig.GetValue(secondKey, secondPassword));
 
 			// Make sure it breaks when it should
 			Assert.ThrowsException<AuthenticationException>(() => multisig.GetValue(firstKey, secondPassword));
-			Assert.ThrowsException<AuthenticationException>(() => multisig.GetValue(secondKey, "notthepassword"));
+			Assert.ThrowsException<AuthenticationException>(() => multisig.GetValue(secondKey, new Passphrase("notthepassword")));
 			Assert.ThrowsException<AuthenticationException>(() => multisig.GetValue(default, firstPassword));
 
 			multisig.SetValue(secondData, secondKey, secondPassword);

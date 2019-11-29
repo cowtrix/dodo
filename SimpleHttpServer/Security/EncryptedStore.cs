@@ -7,6 +7,7 @@ using System.Security.Authentication;
 
 namespace Common.Security
 {
+
 	/// <summary>
 	/// Symmetrically stores an object of type T in an encrypted form of its JSON representation
 	/// </summary>
@@ -19,29 +20,38 @@ namespace Common.Security
 
 		public EncryptedStore() { }
 
-		public EncryptedStore(T value, string password)
+		public EncryptedStore(T value, Passphrase passphrase)
 		{
 			if(value != default)
 			{
-				SetValue(value, password);
+				SetValue(value, passphrase);
 			}
 		}
 
-		public T GetValue(string password)
+		public T GetValue(Passphrase passphrase)
 		{
 			if(string.IsNullOrEmpty(m_encryptedData))
 			{
 				return default;
 			}
-			return SymmetricSecurity.Decrypt<T>(m_encryptedData, password);
+			return SymmetricSecurity.Decrypt<T>(m_encryptedData, passphrase.Value);
 		}
 
-		public bool IsAuthorised(object requester, string passphrase)
+		public T GetValue(string passphrase)
 		{
-			return string.IsNullOrEmpty(m_passHash) || SHA256Utility.SHA256(passphrase) == m_passHash;
+			if (string.IsNullOrEmpty(m_encryptedData))
+			{
+				return default;
+			}
+			return SymmetricSecurity.Decrypt<T>(m_encryptedData, passphrase);
 		}
 
-		public void SetValue(T value, string passphrase)
+		public bool IsAuthorised(object requester, Passphrase passphrase)
+		{
+			return string.IsNullOrEmpty(m_passHash) || SHA256Utility.SHA256(passphrase.Value) == m_passHash;
+		}
+
+		public void SetValue(T value, Passphrase passphrase)
 		{
 			if(!IsAuthorised(null, passphrase))
 			{
@@ -53,12 +63,12 @@ namespace Common.Security
 			}
 			else
 			{
-				m_encryptedData = SymmetricSecurity.Encrypt(value, passphrase);
+				m_encryptedData = SymmetricSecurity.Encrypt(value, passphrase.Value);
 			}
-			m_passHash = SHA256Utility.SHA256(passphrase);
+			m_passHash = SHA256Utility.SHA256(passphrase.Value);
 		}
 
-		public void SetValue(object innerObject, EPermissionLevel view, object requester, string passphrase)
+		public void SetValue(object innerObject, EPermissionLevel view, object requester, Passphrase passphrase)
 		{
 			var data = GetValue(passphrase);
 			try
@@ -75,11 +85,11 @@ namespace Common.Security
 			SetValue((T)innerObject, passphrase);
 		}
 
-		public bool TryGetValue(object requester, string password, out object result)
+		public bool TryGetValue(object requester, Passphrase passphrase, out object result)
 		{
 			try
 			{
-				result = GetValue(password);
+				result = GetValue(passphrase);
 				return true;
 			}
 			catch { }

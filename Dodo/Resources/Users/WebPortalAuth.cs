@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 
 namespace Dodo.Users
 {
-	public struct WebPortalAuth
+	public struct WebPortalAuth : IVerifiable
 	{
 		public struct ResetToken
 		{
@@ -30,13 +30,19 @@ namespace Dodo.Users
 
 		public WebPortalAuth(string userName, string password) : this()
 		{
+			if(!ValidationExtensions.StrongPassword(password, out var error))
+			{
+				throw new Exception(error);
+			}
 			Username = userName;
-			PasswordHash = SHA256Utility.SHA256(password);
 			var passphrase = KeyGenerator.GetUniqueKey(128);
-			PassPhrase = new EncryptedStore<string>(passphrase, password);
+			PassPhrase = new EncryptedStore<string>(passphrase, new Passphrase(password));
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
-			PrivateKey = new EncryptedStore<string>(pv, passphrase);
+			PrivateKey = new EncryptedStore<string>(pv, new Passphrase(passphrase));
 			PublicKey = pk;
+
+			// Salt with public key
+			PasswordHash = SHA256Utility.SHA256(password + pk);
 		}
 
 		/// <summary>
@@ -44,14 +50,17 @@ namespace Dodo.Users
 		/// </summary>
 		[View(EPermissionLevel.USER)]
 		[Username]
+		[JsonProperty]
 		public string Username { get; private set; }
 
 		[View(EPermissionLevel.USER)]
+		[JsonProperty]
 		public string PublicKey { get; private set; }
 
 		/// <summary>
-		/// Am MD5 hash of the user's password
+		/// Am MD5 hash of the user's password which we can challenge against
 		/// </summary>
+		[JsonProperty]
 		public string PasswordHash { get; private set; }
 
 		public ResetToken PasswordResetToken;
@@ -59,14 +68,13 @@ namespace Dodo.Users
 		public EncryptedStore<string> PassPhrase;
 		public EncryptedStore<string> PrivateKey;
 
-		public bool Challenge(string password, out string passphrase)
+		public bool Challenge(string password, out Passphrase passphrase)
 		{
-			if(SHA256Utility.SHA256(password) != PasswordHash)
+			if(SHA256Utility.SHA256(password + PublicKey) != PasswordHash)
 			{
-				passphrase = null;
 				return false;
 			}
-			passphrase = PassPhrase.GetValue(password);
+			passphrase = new Passphrase(PassPhrase.GetValue(password));
 			return true;
 		}
 	}

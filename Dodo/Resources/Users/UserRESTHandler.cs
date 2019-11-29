@@ -48,32 +48,12 @@ namespace Dodo.Users
 		protected override User CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
 			var info = (CreationSchema)schema;
-			var password = info.Password.ToString();
-			if (!ValidationExtensions.StrongPassword(password, out string error))
-			{
-				throw new Exception(error);
-			}
-			var email = info.Email.ToString();
-			if (!ValidationExtensions.EmailIsValid(info.Email.ToString()))
-			{
-				throw new Exception("Invalid email address");
-			}
-			var username = info.Username.ToString();
-			if (!ValidationExtensions.UsernameIsValid(username, out error))
-			{
-				throw new Exception(error);
-			}
-			if(!ValidationExtensions.NameIsValid(info.Name, out error))
-			{
-				throw new Exception(error);
-			}
-			var newUser = new User(new WebPortalAuth(username, password));
-			newUser.Email = email;
-			newUser.Name = info.Name.ToString();
+			var newUser = new User(info);
 			if (URLIsCreation(newUser.ResourceURL))
 			{
 				throw new Exception("Reserved Resource URL");
 			}
+			newUser.Verify();
 			DodoServer.ResourceManager<User>().Add(newUser);
 			return newUser;
 		}
