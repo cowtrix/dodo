@@ -27,3 +27,6 @@
 /DodoLegacy/obj/
 /bin/Debug/logs/
 /bin/Debug/config.json
+/AutoWiki/bin/
+/AutoWiki/obj/
+/wiki/
