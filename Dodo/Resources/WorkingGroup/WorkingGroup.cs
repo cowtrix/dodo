@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.Users;
@@ -55,7 +56,7 @@ namespace Dodo.WorkingGroups
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
 		[View(EPermissionLevel.USER)]
-		public List<string> SubGroups
+		public List<string> WorkingGroups
 		{
 			get
 			{

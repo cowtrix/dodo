@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Common.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -73,48 +74,6 @@ namespace SimpleHttpServer.REST
 				}
 			}
 			return vals;
-		}
-
-		private static object GetObject(object targetPropValue, Type memberType, object requester, EPermissionLevel visibility, string passPhrase)
-		{
-			if(memberType == null || targetPropValue == null)
-			{
-				return null;
-			}
-			if (ShouldSerializeDirectly(memberType))
-			{
-				// Simple case, directly serialize object if it doesn't need any members filtered out
-				return targetPropValue;
-			}
-			else if (typeof(IDecryptable).IsAssignableFrom(memberType))
-			{
-				// Transparently handle encrypted objects
-				var decryptable = targetPropValue as IDecryptable;
-				if (!decryptable.TryGetValue(requester, passPhrase, out var data))
-				{
-					return null;
-				}
-				return GetObject(data, data.GetType(), requester, visibility, passPhrase);
-			}
-			else if (targetPropValue is IEnumerable)
-			{
-				// Build lists of enumerable data
-				var list = new List<object>();
-				foreach (var innerVal in (targetPropValue as IEnumerable))
-				{
-					if (ShouldSerializeDirectly(innerVal?.GetType()))
-					{
-						list.Add(innerVal);
-					}
-					else
-					{
-						list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
-					}
-				}
-				return list;
-			}
-			// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
-			return targetPropValue.GenerateJsonView(visibility, requester, passPhrase);
 		}
 
 		/// <summary>
@@ -244,6 +203,48 @@ namespace SimpleHttpServer.REST
 				(targetObject as IVerifiable).Verify();
 			}
 			return targetObject;
+		}
+
+		private static object GetObject(object targetPropValue, Type memberType, object requester, EPermissionLevel visibility, string passPhrase)
+		{
+			if (memberType == null || targetPropValue == null)
+			{
+				return null;
+			}
+			if (ShouldSerializeDirectly(memberType))
+			{
+				// Simple case, directly serialize object if it doesn't need any members filtered out
+				return targetPropValue;
+			}
+			else if (typeof(IDecryptable).IsAssignableFrom(memberType))
+			{
+				// Transparently handle encrypted objects
+				var decryptable = targetPropValue as IDecryptable;
+				if (!decryptable.TryGetValue(requester, passPhrase, out var data))
+				{
+					return null;
+				}
+				return GetObject(data, data.GetType(), requester, visibility, passPhrase);
+			}
+			else if (targetPropValue is IEnumerable)
+			{
+				// Build lists of enumerable data
+				var list = new List<object>();
+				foreach (var innerVal in (targetPropValue as IEnumerable))
+				{
+					if (ShouldSerializeDirectly(innerVal?.GetType()))
+					{
+						list.Add(innerVal);
+					}
+					else
+					{
+						list.Add(innerVal.GenerateJsonView(visibility, requester, passPhrase));
+					}
+				}
+				return list;
+			}
+			// Object is a composite type (e.g. a struct or class) and so we recursively serialize it
+			return targetPropValue.GenerateJsonView(visibility, requester, passPhrase);
 		}
 
 		private static Type GetMemberType (MemberInfo member)

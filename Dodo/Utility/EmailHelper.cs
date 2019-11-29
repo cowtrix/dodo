@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Config;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;

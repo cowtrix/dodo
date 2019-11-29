@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Common
+namespace Common.Config
 {
+	/// <summary>
+	/// This class will save and load configuration variables, which are stored by a string key.
+	/// To access a configuration variable, declare a ConfigurationVariable<T> for a given key.
+	/// To set a configuration variable, add it to the "config.json" file.
+	/// </summary>
 	public static class ConfigManager
 	{
+		static Dictionary<string, object> m_data = new Dictionary<string, object>();
+
 		static ConfigManager()
 		{
 			const string configPath = "config.json";
@@ -16,8 +23,6 @@ namespace Common
 			}
 			m_data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(configPath));
 		}
-
-		static Dictionary<string, object> m_data = new Dictionary<string, object>();
 
 		internal static bool GetValue<T>(ConfigVariable<T> configVariable, out T result)
 		{

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SimpleHttpServer.REST;
 using Common;
+using Common.Security;
 
 namespace Dodo.Users
 {

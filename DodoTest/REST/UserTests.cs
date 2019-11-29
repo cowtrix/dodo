@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Dodo.LocalGroups;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

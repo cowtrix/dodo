@@ -6,6 +6,7 @@ using SimpleHttpServer.REST;
 using System.Collections.Concurrent;
 using System;
 using Dodo.Roles;
+using Common.Extensions;
 
 namespace Dodo.LocalGroups
 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 
-namespace Common
+namespace Common.Extensions
 {
-	public static class Utility
+	public static class EnumerableExtensions
 	{
 		/// <summary>
 		/// Select a random element from a collection

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common
+namespace Common.Extensions
 {
 	public static class ReflectionExtensions
 	{

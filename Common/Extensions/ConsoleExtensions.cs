@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 
-namespace Common
+namespace Common.Extensions
 {
 	public static class ConsoleExtensions
 	{

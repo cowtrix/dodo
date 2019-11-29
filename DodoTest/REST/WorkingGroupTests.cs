@@ -56,7 +56,7 @@ namespace RESTTests
 				Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group"));
 			Assert.AreEqual(wg.Value<string>("GUID"), subwg.Value<JObject>("Parent").Value<string>("Guid"));
 			wg = RequestJSON(wg.Value<string>("ResourceURL"), Method.GET);
-			var subGroups = wg.Value<JArray>("SubGroups").Values<string>();
+			var subGroups = wg.Value<JArray>("WorkingGroups").Values<string>();
 			Assert.IsTrue(subGroups.Count() == 1);
 			Assert.IsTrue(subGroups.All(x => x == subwg.Value<string>("GUID")));
 		}

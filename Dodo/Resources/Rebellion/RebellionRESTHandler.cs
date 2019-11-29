@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;

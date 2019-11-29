@@ -1,5 +1,6 @@
 ﻿using System;
 using Common;
+using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Security

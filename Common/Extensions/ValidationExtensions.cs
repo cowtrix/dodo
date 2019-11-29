@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Common
+namespace Common.Extensions
 {
 	/// <summary>
 	/// Indicates that a type is able to verify and validate its state

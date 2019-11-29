@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Config;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Roles;

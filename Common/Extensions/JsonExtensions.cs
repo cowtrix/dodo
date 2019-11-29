@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Common
+namespace Common.Extensions
 {
 	/// <summary>
 	/// This signifies that a property or field cannot be updated via a PATCH REST command and must be updated

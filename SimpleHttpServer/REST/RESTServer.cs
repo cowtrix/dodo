@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;

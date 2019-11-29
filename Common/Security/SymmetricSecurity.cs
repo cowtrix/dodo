@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace Common
+namespace Common.Security
 {
 	/// <summary>
 	/// This class provides utilties to symmetrically encrypt information

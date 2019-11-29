@@ -1,7 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Extensions;
+using Newtonsoft.Json;
 using System.Security.Cryptography;
 
-namespace Common
+namespace Common.Security
 {
 
 	/// <summary>

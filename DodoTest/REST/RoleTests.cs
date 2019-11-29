@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
+using System.Linq;
 
 namespace RESTTests
 {
@@ -42,7 +43,11 @@ namespace RESTTests
 
 		protected override void CheckCreatedObject(JObject obj)
 		{
-			Assert.AreEqual(WorkingGroup.Value<string>("GUID"), obj.Value<JObject>("Parent").Value<string>("Guid"));
+			var workingGroupGUID = WorkingGroup.Value<string>("GUID");
+			var workingGroupGUIDFromObj = obj.Value<JObject>("Parent").Value<string>("Guid");
+			Assert.AreEqual(workingGroupGUID, workingGroupGUIDFromObj);
+			var parent = RequestJSON(WorkingGroup.Value<string>("ResourceURL"), Method.GET);
+			Assert.IsTrue(parent.Value<JArray>("Roles").Values<string>().Contains(obj.Value<string>("GUID")));
 		}
 
 		[TestMethod]
