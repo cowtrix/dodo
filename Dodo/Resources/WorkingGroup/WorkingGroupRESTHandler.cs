@@ -81,7 +81,6 @@ namespace Dodo.WorkingGroups
 				throw new Exception("Reserved Resource URL");
 			}
 			newWorkingGroup.Verify();
-			ResourceManager.Add(newWorkingGroup);
 			return newWorkingGroup;
 		}
 	}

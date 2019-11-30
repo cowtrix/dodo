@@ -27,11 +27,12 @@ namespace SimpleHttpServer.REST
 					{
 						e = e.InnerException;
 					}
+					var msg = Uri.EscapeDataString(e.Message);
 					if (e is HttpException)
 					{
-						return HttpBuilder.Custom("Error processing request:\n" + e.Message, (e as HttpException).ErrorCode);
+						return HttpBuilder.Custom("Error processing request:\n" + msg, (e as HttpException).ErrorCode);
 					}
-					return HttpBuilder.ServerError("Error processing request:\n" + e.Message);
+					return HttpBuilder.ServerError("Error processing request:\n" + msg);
 				}
 			};
 		}

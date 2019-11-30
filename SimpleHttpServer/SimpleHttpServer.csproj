@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="HttpExtensions.cs" />
     <Compile Include="EHTTPRequestType.cs" />
+    <Compile Include="ResourceURLAttribute.cs" />
     <Compile Include="REST\EPermissionLevel.cs" />
     <Compile Include="HTTPException.cs" />
     <Compile Include="REST\JsonViewUtility.cs" />

@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 
 namespace Dodo.Users
 {
-	public struct WebPortalAuth : IVerifiable
+	public class WebPortalAuth : IVerifiable
 	{
 		public struct ResetToken
 		{
@@ -28,7 +28,9 @@ namespace Dodo.Users
 			}
 		}
 
-		public WebPortalAuth(string userName, string password) : this()
+		public WebPortalAuth() { }
+
+		public WebPortalAuth(string userName, string password)
 		{
 			if(!ValidationExtensions.StrongPassword(password, out var error))
 			{
@@ -65,7 +67,9 @@ namespace Dodo.Users
 
 		public ResetToken PasswordResetToken;
 
+		[JsonProperty]
 		public EncryptedStore<string> PassPhrase;
+		[JsonProperty]
 		public EncryptedStore<string> PrivateKey;
 
 		public bool Challenge(string password, out Passphrase passphrase)

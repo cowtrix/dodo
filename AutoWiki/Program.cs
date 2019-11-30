@@ -37,8 +37,15 @@ namespace AutoWiki
 			m_config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText(args[0]));
 			m_restClient = new RestClient(m_config.RepositoryURL);
 			m_restClient.AddDefaultHeader("Private-Token", m_config.APIToken);
+
+			var pgs = GetAllPages();
+			foreach(var pg in pgs)
+			{
+				DeletePage(pg.Value<string>("slug"));
+			}
+
 			// Build the markdown
-			Console.WriteLine(ExecuteConsoleCommand("dotnet tool install -g loxsmoke.mddox", false));
+			Console.WriteLine(ExecuteConsoleCommand("dotnet tool install -g loxsmoke.mddox", true));
 			var fullOutput = Path.GetFullPath(m_config.Output);
 			if(!Directory.Exists(fullOutput))
 			{
@@ -53,16 +60,9 @@ namespace AutoWiki
 				}
 				var friendlyName = Path.GetFileNameWithoutExtension(fullAssembly);
 				var output = $"{fullOutput}\\{friendlyName}.md";
-				Console.WriteLine(ExecuteConsoleCommand($@"mddox {fullAssembly} --output {output}", true));
-				CreateWikiPage(friendlyName, File.ReadAllText(output));
+				Console.WriteLine(ExecuteConsoleCommand("mddox \"{0}\" --output \"{1}\"", true, fullAssembly, output));
+				CreateWikiPage("API: " + friendlyName, File.ReadAllText(output));
 			}
-
-			// Get project
-			var createRequest = new RestRequest($"{ProjectURI}/wikis", Method.GET);
-			var response = m_restClient.Execute(createRequest);
-			var responseJSON = JsonConvert.DeserializeObject<JsonArray>(response.Content)
-				.Cast<JObject>();
-
 		}
 
 		private static string ProjectURI
@@ -71,6 +71,22 @@ namespace AutoWiki
 			{
 				return $"api/v4/projects/{Uri.EscapeDataString(m_config.ProjectName)}";
 			}
+		}
+
+		private static List<JObject> GetAllPages()
+		{
+			var createRequest = new RestRequest($"{ProjectURI}/wikis", Method.GET);
+			var response = m_restClient.Execute(createRequest);
+			Console.WriteLine(response.ResponseStatus);
+			return JsonConvert.DeserializeObject<JArray>(response.Content).Values<JObject>().ToList();
+		}
+
+		private static void DeletePage(string slug)
+		{
+			// 
+			var createRequest = new RestRequest($"{ProjectURI}/wikis/{slug}", Method.DELETE);
+			var response = m_restClient.Execute(createRequest);
+			Console.WriteLine(response.ResponseStatus);
 		}
 
 		private static void CreateWikiPage(string title, string content)
@@ -87,12 +103,12 @@ namespace AutoWiki
 		{
 			var cmdParams = new ProcessStartInfo()
 			{
-				FileName = "cmd.exe",
+				FileName = "CMD.exe",
 				RedirectStandardInput = true,
 				RedirectStandardOutput = true,
 				RedirectStandardError = true,
 				UseShellExecute = false,
-				Arguments = "/c"
+				Arguments = "/C"
 			};
 			var cmdProcess = Process.Start(cmdParams);
 			while (cmdProcess.StandardOutput.Peek() > -1)

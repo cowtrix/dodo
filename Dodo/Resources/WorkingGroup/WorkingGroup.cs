@@ -22,6 +22,8 @@ namespace Dodo.WorkingGroups
 	{
 		public const string ROOT = "wg";
 
+		public WorkingGroup() : base() { }
+
 		public WorkingGroup(User creator, Passphrase passphrase, GroupResource parent, WorkingGroupRESTHandler.CreationSchema schema)
 			: base(creator, passphrase, schema.Name, parent)
 		{
@@ -41,7 +43,7 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return DodoServer.ResourceManager<Role>().Get(role => role.Parent.Value == this)
+				return ResourceUtility.GetManager<Role>().Get(role => role.Parent.Value == this)
 					.Select(x => x.GUID.ToString()).ToList();
 			}
 		}
@@ -54,7 +56,7 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.Parent.Value.GUID == GUID)
+				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.Parent.Value.GUID == GUID)
 					.Select(wg => wg.GUID.ToString()).ToList();
 			}
 		}

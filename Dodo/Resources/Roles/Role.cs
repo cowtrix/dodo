@@ -21,6 +21,8 @@ namespace Dodo.Roles
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
+		public Role() : base() { }
+
 		public Role(GroupResource parent, RoleRESTHandler.CreationSchema schema) : base(parent.Creator, schema.Name)
 		{
 			Parent = new ResourceReference<GroupResource>(parent);

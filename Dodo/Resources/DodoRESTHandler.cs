@@ -14,7 +14,7 @@ namespace Dodo
 	{
 		protected virtual string CreationPostfix { get; }
 
-		protected IResourceManager<T> ResourceManager { get { return DodoServer.ResourceManager<T>(); } }
+		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
 		protected override T GetResource(string url)
 		{
@@ -33,6 +33,10 @@ namespace Dodo
 
 		protected override bool URLIsCreation(string url)
 		{
+			if(!url.EndsWith(CreationPostfix))
+			{
+				return false;
+			}
 			return GetParentFromURL(url) != null;
 		}
 

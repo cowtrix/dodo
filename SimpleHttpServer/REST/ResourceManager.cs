@@ -17,6 +17,8 @@ namespace SimpleHttpServer.REST
 		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector);
 		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility);
 		void Clear();
+		bool Add(IRESTResource newObject);
+		void Set(Guid gUID, IRESTResource resource);
 	}
 
 	public interface IResourceManager<T> : IResourceManager
@@ -48,7 +50,6 @@ namespace SimpleHttpServer.REST
 		public ResourceManager()
 		{
 			InternalData = InternalData ?? new Data();	// This is to support custom child class implementations of this::Data
-			ResourceUtility.Register(this);
 		}
 
 		public virtual bool Add(T newObject)
@@ -129,6 +130,16 @@ namespace SimpleHttpServer.REST
 		public IRESTResource GetFirst(Func<IRESTResource, bool> selector)
 		{
 			return InternalData.Entries.FirstOrDefault(kvp => selector(kvp.Value)).Value;
+		}
+
+		public bool Add(IRESTResource newObject)
+		{
+			return Add((T)newObject);
+		}
+
+		public void Set(Guid guid, IRESTResource resource)
+		{
+			InternalData.Entries[guid] = (T)resource;
 		}
 	}
 }

@@ -14,6 +14,9 @@ namespace Dodo.LocalGroups
 	public class LocalGroup : GroupResource
 	{
 		public const string ROOT = "localgroups";
+
+		public LocalGroup() : base() { }
+
 		public LocalGroup(User owner, Passphrase passphrase, LocalGroupRESTHandler.CreationSchema schema) : base(owner, passphrase, schema.Name, null)
 		{
 			Location = schema.Location;

@@ -12,6 +12,10 @@ namespace Common.Security
 		/// <returns></returns>
 		public static string SHA256(string plaintext)
 		{
+			if(string.IsNullOrEmpty(plaintext))
+			{
+				return plaintext;
+			}
 			byte[] data = Encoding.ASCII.GetBytes(plaintext);
 			using (var sha256 = new SHA256Managed())
 			{

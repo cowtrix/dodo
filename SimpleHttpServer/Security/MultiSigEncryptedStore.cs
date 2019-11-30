@@ -16,13 +16,19 @@ namespace Common.Security
 	/// <typeparam name="TVal"></typeparam>
 	public class MultiSigEncryptedStore<TKey, TVal> : IKeyDecryptable<TKey,TVal>
 	{
+		private class Keystore : ConcurrentDictionary<string, EncryptedStore<string>>
+		{
+			[JsonConstructor]
+			public Keystore() : base() { }
+		}
+
 		/// <summary>
 		/// Here we store keys to a common encrypted passphrase that can be used to decrypt the data.
 		/// A key, corresponding with a valid password, will give the common passphrase that can
 		/// be used to decrypt/encrypt the data.
 		/// </summary>
 		[JsonProperty]
-		private ConcurrentDictionary<string, EncryptedStore<string>> m_keyStore = new ConcurrentDictionary<string, EncryptedStore<string>>();
+		private Keystore m_keyStore = new Keystore();
 		[JsonProperty]
 		private EncryptedStore<TVal> m_data;
 

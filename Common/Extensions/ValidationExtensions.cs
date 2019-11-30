@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 
 namespace Common.Extensions
@@ -41,6 +42,17 @@ namespace Common.Extensions
 			}
 			validationError = null;
 			return true;
+		}
+	}
+
+	public class MemberVerificationException : Exception
+	{
+		public MemberVerificationException(string message) : base(message)
+		{
+		}
+
+		public MemberVerificationException(string message, Exception innerException) : base(message, innerException)
+		{
 		}
 	}
 
@@ -87,7 +99,7 @@ namespace Common.Extensions
 				}
 				if(!attr.Verify(value, out var validationError))
 				{
-					throw new Exception(validationError);
+					throw new MemberVerificationException(validationError);
 				}
 			}
 		}

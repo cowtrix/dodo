@@ -14,6 +14,7 @@ namespace Dodo
 
 	public abstract class DodoResource : Resource, IDodoResource
 	{
+		public DodoResource() : base() { }
 		public DodoResource(User creator, string name) : base(name)
 		{
 			Creator = new ResourceReference<User>(creator);

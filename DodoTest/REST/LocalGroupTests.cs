@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Dodo.LocalGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
@@ -20,9 +21,18 @@ namespace RESTTests
 			RegisterUser(DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 		}
 
-		public override object GetCreationSchema()
+		public override object GetCreationSchema(bool unique)
 		{
-			return new LocalGroupRESTHandler.CreationSchema { Name = "Test Local Group", Location = new GeoLocation(87, 14) };
+			if (!unique)
+			{
+				return new LocalGroupRESTHandler.CreationSchema
+				{
+					Name = "Test Local Group ",
+					Location = new GeoLocation(87, 14)
+				};
+			}
+			return new LocalGroupRESTHandler.CreationSchema { Name = "Test Local Group " + StringExtensions.RandomString(6),
+				Location = new GeoLocation(87, 14) };
 		}
 
 		public override object GetPatchSchema()

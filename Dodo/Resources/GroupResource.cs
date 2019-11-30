@@ -23,6 +23,8 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN)]
 		public UserMultiSigStore<List<ResourceReference<User>>> Administrators;
 
+		public GroupResource() : base() { }
+
 		public GroupResource(User creator, Passphrase passphrase, string name, GroupResource parent) : base(creator, name)
 		{
 			Parent = new ResourceReference<GroupResource>(parent);

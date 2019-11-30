@@ -1,6 +1,6 @@
 ﻿namespace SimpleHttpServer.REST
 {
-	public enum EPermissionLevel : byte
+	public enum EPermissionLevel
 	{
 		PUBLIC = 0,	// Any requester
 		USER = 1,	// A valid, signed in user

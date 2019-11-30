@@ -177,7 +177,7 @@ namespace RESTTests
 			var content = response.Content;
 			if (!content.IsValidJson())
 			{
-				throw new Exception(content);
+				throw new Exception($"{response.StatusCode} | {response.ResponseStatus} | {Uri.UnescapeDataString(response.Content)}");
 			}
 			return JsonConvert.DeserializeObject<JObject>(content);
 		}

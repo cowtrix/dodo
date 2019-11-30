@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Dodo.Gateways;
 using Dodo.Rebellions;
 using Dodo.Users;
@@ -12,9 +13,18 @@ namespace RESTTests
 	public class RebellionTests : GroupResourceTestBase<Rebellion>
 	{
 		public override string CreationURL => Rebellion.ROOT + "/create";
-		public override object GetCreationSchema()
+		public override object GetCreationSchema(bool unique = false)
 		{
-			return new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion", Location = new GeoLocation(45, 97) };
+			if(!unique)
+			{
+				return new RebellionRESTHandler.CreationSchema
+				{
+					Name = "Test Rebellion ",
+					Location = new GeoLocation(45, 97)
+				};
+			}
+			return new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion " + StringExtensions.RandomString(6), 
+				Location = new GeoLocation(45, 97) };
 		}
 
 		public override object GetPatchSchema()

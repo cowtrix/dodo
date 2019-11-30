@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Dodo.Utility;
@@ -28,9 +29,15 @@ namespace RESTTests
 				new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion", Location = new GeoLocation(45, 97) });
 		}
 
-		public override object GetCreationSchema()
+		public override object GetCreationSchema(bool unique)
 		{
-			return new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate");
+			if(unique)
+			{
+				return new WorkingGroupRESTHandler.CreationSchema("Test Working Group " + StringExtensions.RandomString(6),
+				"Test mandate");
+			}
+			return new WorkingGroupRESTHandler.CreationSchema("Test Working Group ", 
+				"Test mandate");
 		}
 
 		public override object GetPatchSchema()

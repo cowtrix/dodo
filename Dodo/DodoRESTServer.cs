@@ -103,7 +103,7 @@ namespace Dodo
 				throw HttpException.UNAUTHORIZED;
 			}
 			var decode = StringExtensions.Base64Decode(tokens[1]).Split(':');
-			var user = DodoServer.ResourceManager<User>().GetSingle(x => x.WebAuth.Username == decode[0]);
+			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.WebAuth.Username == decode[0]);
 			if (user != null && !user.WebAuth.Challenge(decode[1], out passphrase))
 			{
 				throw HttpException.FORBIDDEN;

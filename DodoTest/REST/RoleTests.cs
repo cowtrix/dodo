@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.WorkingGroups;
@@ -26,9 +27,18 @@ namespace RESTTests
 				new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
 		}
 
-		public override object GetCreationSchema()
+		public override object GetCreationSchema(bool unique)
 		{
-			return new RoleRESTHandler.CreationSchema { Name = "Test Role", Mandate = "Test mandate" };
+			if(!unique)
+			{
+				return new RoleRESTHandler.CreationSchema
+				{
+					Name = "Test Role ",
+					Mandate = "Test mandate"
+				};
+			}
+			return new RoleRESTHandler.CreationSchema { Name = "Test Role " + StringExtensions.RandomString(6), 
+				Mandate = "Test mandate" };
 		}
 
 		public override object GetPatchSchema()

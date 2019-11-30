@@ -15,14 +15,37 @@ namespace RESTTests
 	{
 		public override string CreationURL => "register";
 
-		public override object GetCreationSchema()
+		public override object GetCreationSchema(bool unique)
 		{
-			return new UserRESTHandler.CreationSchema { Username = DefaultUsername, Name = DefaultName, Password = DefaultPassword, Email = DefaultEmail };
+			if(unique)
+			{
+				return new UserRESTHandler.CreationSchema
+				{
+					Username = DefaultUsername + StringExtensions.RandomString(6).ToLowerInvariant(),
+					Name = DefaultName,
+					Password = DefaultPassword,
+					Email = DefaultEmail
+				};
+			}
+			return new UserRESTHandler.CreationSchema { Username = DefaultUsername, 
+				Name = DefaultName, Password = DefaultPassword, Email = DefaultEmail };
 		}
 
 		public override object GetPatchSchema()
 		{
 			return new { Name = "John Doe" };
+		}
+
+		[TestMethod]
+		public override void CannotPatchDuplicate()
+		{
+			var firstObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema(false));
+			var secondObj = RegisterRandomUser(out var username, out var originalName, out var password, out _, out _); 
+			AssertX.Throws<Exception>(() =>
+				RequestJSON(secondObj.Value<string>("ResourceURL"), Method.PATCH, 
+				new { WebAuth = new { Username = firstObj.Value<JObject>("WebAuth").Value<string>("Username") } }, username, password),
+				e => e.Message.Contains("Duplicate ResourceURL"));
+			RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET, null, username, password);
 		}
 
 		protected override void CheckCreatedObject(JObject obj)
@@ -84,7 +107,7 @@ namespace RESTTests
 				e => e.Message.Contains("Username can only contain alphanumeric characters and _"));
 
 			AssertX.Throws<Exception>(() => RegisterUser("@@@@"),
-				e => e.Message.Contains("Username can only contain alphanumeric characters and _"));
+				e => e.Message.Contains("String was not escaped."));
 
 			AssertX.Throws<Exception>(() => RegisterUser("AAAAA"),
 				e => e.Message.Contains("Username was invalid, Expected: "));

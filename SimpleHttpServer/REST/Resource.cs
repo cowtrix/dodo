@@ -1,4 +1,6 @@
 ﻿using Common;
+using Common.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -19,7 +21,7 @@ namespace SimpleHttpServer.REST
 	/// It has a location on the server (given by ResourceURL) that MUST be unique
 	/// It also has a UUID, which can be an alternate accessor using resources/uuid
 	/// </summary>
-	public abstract class Resource : IRESTResource
+	public abstract class Resource : IRESTResource, IVerifiable
 	{
 		/// <summary>
 		/// The GUID of the resource is unique. You can get a resource
@@ -28,16 +30,26 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		[NoPatch]
 		[View(EPermissionLevel.USER)]
+		[JsonProperty]
 		public Guid GUID { get; private set; }
 
 		/// <summary>
 		/// The URI of this resource
 		/// </summary>
 		[View(EPermissionLevel.USER)]
+		[ResourceURL]
 		public abstract string ResourceURL { get; }
 
-		public Resource()
+		[View(EPermissionLevel.PUBLIC)]
+		[JsonProperty]
+		[UserFriendlyName]
+		public string Name { get; set; }
+
+		public Resource() { }
+
+		public Resource(string name)
 		{
+			Name = name;
 			GUID = Guid.NewGuid();
 		}
 

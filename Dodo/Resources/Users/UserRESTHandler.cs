@@ -30,7 +30,7 @@ namespace Dodo.Users
 				return HttpBuilder.Forbidden();
 			}
 			var email = JsonExtensions.DeserializeAnonymousType(request.Content, new { Email = "" }).Email;
-			var userWithEmail = DodoServer.ResourceManager<User>().GetSingle(x => x.Email == email);
+			var userWithEmail = ResourceUtility.GetManager<User>().GetSingle(x => x.Email == email);
 			if(userWithEmail == null)
 			{
 				return HttpBuilder.NotFound();
@@ -54,7 +54,6 @@ namespace Dodo.Users
 				throw new Exception("Reserved Resource URL");
 			}
 			newUser.Verify();
-			DodoServer.ResourceManager<User>().Add(newUser);
 			return newUser;
 		}
 

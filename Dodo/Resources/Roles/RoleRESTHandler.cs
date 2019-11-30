@@ -49,7 +49,6 @@ namespace Dodo.Roles
 				throw new Exception("Reserved Resource URL");
 			}
 			newRole.Verify();
-			DodoServer.ResourceManager<Role>().Add(newRole);
 			return newRole;
 		}
 	}

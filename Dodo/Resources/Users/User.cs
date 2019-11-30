@@ -14,7 +14,6 @@ namespace Dodo.Users
 		public const string ROOT = "u";
 		public override string ResourceURL { get { return $"{ROOT}/{WebAuth.Username.StripForURL()}"; } }
 
-		[NoPatch]
 		[View(EPermissionLevel.OWNER)]
 		public WebPortalAuth WebAuth;
 
@@ -29,7 +28,7 @@ namespace Dodo.Users
 		[View(EPermissionLevel.OWNER)]
 		public List<PushAction> PushActions = new List<PushAction>();
 
-		public User() : base(null, null)
+		public User() : base()
 		{ }
 
 		public User(UserRESTHandler.CreationSchema info) : base(null, info.Name)
@@ -40,7 +39,7 @@ namespace Dodo.Users
 
 		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
-			if(requestOwner == this)
+			if(requestOwner.GUID == GUID)
 			{
 				permissionLevel = EPermissionLevel.OWNER;
 				return true;

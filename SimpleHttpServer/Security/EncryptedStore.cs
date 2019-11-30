@@ -16,6 +16,7 @@ namespace Common.Security
 	{
 		[JsonProperty]
 		private string m_encryptedData;
+		[JsonProperty]
 		private string m_passHash;
 
 		public EncryptedStore() { }

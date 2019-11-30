@@ -57,7 +57,7 @@ namespace Dodo
 				throw HttpException.NOT_FOUND;
 			}
 			var targetUserGUID = Guid.Parse(JsonConvert.DeserializeObject<string>(request.Content));
-			var targetUser = DodoServer.ResourceManager<User>().GetSingle(x => x.GUID == targetUserGUID);
+			var targetUser = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID == targetUserGUID);
 			var temporaryPassword = new Passphrase(KeyGenerator.GetUniqueKey(64));
 			resource.AddAdmin(owner, passphrase, targetUser, temporaryPassword);
 			targetUser.PushActions.Add(new AddAdminAction(resource, temporaryPassword, targetUser.WebAuth.PublicKey));

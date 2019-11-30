@@ -182,6 +182,10 @@ namespace SimpleHttpServer.REST
 					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString());
 					valueToSet = value.PatchObject(subValues, permissionLevel, requester, passphrase);
 				}
+				catch(MemberVerificationException)
+				{
+					throw;
+				}
 				catch
 				{
 				}
@@ -196,6 +200,13 @@ namespace SimpleHttpServer.REST
 				{
 					throw new Exception(error);
 				}
+
+				var verifyAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
+				if(verifyAttr != null && !verifyAttr.Verify(valueToSet, out var verificationError))
+				{
+					throw new MemberVerificationException(verificationError);
+				}
+
 				targetMember.SetValue(targetObject, valueToSet);
 			}
 			if (targetObject is IVerifiable)

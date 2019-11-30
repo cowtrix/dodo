@@ -86,10 +86,6 @@ namespace SimpleHttpServer.REST
 			{
 				throw HttpException.FORBIDDEN;
 			}
-			if(GetResource(request.Url) != null)
-			{
-				throw HttpException.CONFLICT;
-			}
 			var schema = GetCreationSchema();
 			T createdObject = null;
 			try
@@ -99,6 +95,7 @@ namespace SimpleHttpServer.REST
 					CheckAdditionalContent = true,
 				});
 				createdObject = CreateFromSchema(request, (IRESTResourceSchema)creationInfo);
+				ResourceUtility.Register(createdObject);
 			}
 			catch(Exception e)
 			{
@@ -143,7 +140,21 @@ namespace SimpleHttpServer.REST
 			{
 				throw new HttpException("Invalid JSON body", 400);
 			}
-			target.PatchObject(values, view, context, passphrase);
+			var jsonSettings = new JsonSerializerSettings()
+			{
+				TypeNameHandling = TypeNameHandling.All
+			};
+			var prev = JsonConvert.SerializeObject(target, jsonSettings);
+			try
+			{
+				target.PatchObject(values, view, context, passphrase);
+			}
+			catch
+			{
+				var rm = ResourceUtility.GetManagerForResource(target);
+				rm.Set(target.GUID, JsonConvert.DeserializeObject<T>(prev, jsonSettings));
+				throw;
+			}
 			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 		}
 

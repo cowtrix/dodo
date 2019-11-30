@@ -67,7 +67,6 @@ namespace Dodo.LocalGroups
 				throw new Exception("Reserved Resource URL");
 			}
 			localGroup.Verify();
-			DodoServer.ResourceManager<LocalGroup>().Add(localGroup);
 			return localGroup;
 		}
 	}

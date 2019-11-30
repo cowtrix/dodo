@@ -10,7 +10,7 @@ namespace RESTTests
 	public abstract class RESTTestBase<T> : TestBase where T:DodoResource
 	{
 		public abstract string CreationURL { get; }
-		public abstract object GetCreationSchema();
+		public abstract object GetCreationSchema(bool unique = false);
 
 		[TestMethod]
 		public virtual void CanCreate()
@@ -18,6 +18,25 @@ namespace RESTTests
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			Assert.IsNotNull(createdObj.Value<string>("GUID"));
 			CheckCreatedObject(createdObj);
+		}
+
+		[TestMethod]
+		public virtual void CannotCreateDuplicate()
+		{
+			RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, GetCreationSchema()),
+				e => e.Message.Contains("Conflict - resource may already exist"));
+		}
+
+		[TestMethod]
+		public virtual void CannotPatchDuplicate()
+		{
+			var firstObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var secondObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema(true));
+			AssertX.Throws<Exception>(() =>
+				RequestJSON(secondObj.Value<string>("ResourceURL"), Method.PATCH, new { Name = firstObj.Value<string>("Name") }),
+				e => e.Message.Contains("Duplicate ResourceURL"));
+			RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET);
 		}
 
 		protected virtual void CheckCreatedObject(JObject obj) { }

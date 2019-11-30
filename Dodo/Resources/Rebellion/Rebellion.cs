@@ -30,12 +30,14 @@ namespace Dodo.Rebellions
 		{
 			get
 			{
-				return DodoServer.ResourceManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).Select(x => x.GUID.ToString()).ToList();
+				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).Select(x => x.GUID.ToString()).ToList();
 			}
 		}
 
 		[View(EPermissionLevel.ADMIN)]
 		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
+
+		public Rebellion() : base() { }
 
 		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, schema.Name, null)
 		{
