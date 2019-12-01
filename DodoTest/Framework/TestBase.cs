@@ -97,22 +97,20 @@ namespace RESTTests
 			DodoServer.CleanAllData();
 		}
 
-		protected JObject RegisterUser(string username = null, string name = null, string password = null, string email = null)
+		protected JObject RegisterUser(out string guid, string username = null, string name = null, string password = null, string email = null)
 		{
 			username = username ?? DefaultUsername;
 			name = name ?? DefaultName;
 			password = password ?? DefaultPassword;
 			email = email ?? DefaultEmail;
-
-			var request = new RestRequest("register", Method.POST);
-			request.AddJsonBody(new { Username = username, Name = name, Password = password, Email = email });
-			var response = RestClient.Execute(request).Content;
-			if (!response.IsValidJson())
+			var jobj = RequestJSON("register", Method.POST, new UserRESTHandler.CreationSchema()
 			{
-				throw new Exception(response);
-			}
-			var jobj = JsonConvert.DeserializeObject<JObject>(response);
-			DefaultGUID = jobj.Value<string>("GUID");
+				Username = username,
+				Name = name,
+				Password = password,
+				Email = email,
+			});
+			guid = jobj.Value<string>("GUID");
 			return jobj;
 		}
 
@@ -122,9 +120,7 @@ namespace RESTTests
 			name = StringExtensions.RandomString(10).ToLower();
 			password = "@" + username;
 			email = $"{StringExtensions.RandomString(5).ToLower()}@{StringExtensions.RandomString(5).ToLower()}.com";
-			var response = RegisterUser(username, name, password, email);
-			guid = response.Value<string>("GUID");
-			return response;
+			return RegisterUser(out guid, username, name, password, email);
 		}
 
 		protected JObject CreateNewRebellion(string name, GeoLocation location)

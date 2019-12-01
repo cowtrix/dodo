@@ -68,71 +68,71 @@ namespace RESTTests
 		[TestMethod]
 		public void CannotCreateUserWithInvalidEmail()
 		{
-			AssertX.Throws<Exception>(() => RegisterUser(email: ""),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, email: ""),
 				e => e.Message.Contains("Invalid email"));
 
-			AssertX.Throws<Exception>(() => RegisterUser(email: "not an email"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, email: "not an email"),
 				e => e.Message.Contains("Invalid email"));
 
-			AssertX.Throws<Exception>(() => RegisterUser(email: "myemail @gmail.com"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, email: "myemail @gmail.com"),
 				e => e.Message.Contains("Invalid email"));
 		}
 
 		[TestMethod]
 		public void CannotCreateWithInvalidName()
 		{
-			AssertX.Throws<Exception>(() => RegisterUser(name: ""),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, name: ""),
 				e => e.Message.Contains("Name length must be between "));
 
-			AssertX.Throws<Exception>(() => RegisterUser(name: StringExtensions.RandomString(256)),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, name: StringExtensions.RandomString(256)),
 				e => e.Message.Contains("Name length must be between "));
 
-			AssertX.Throws<Exception>(() => RegisterUser(name: "I'm a coordinator"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, name: "I'm a coordinator"),
 				e => e.Message.Contains("Name contains reserved word: COORDINATOR"));
 
-			AssertX.Throws<Exception>(() => RegisterUser(name: "System Administrator"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, name: "System Administrator"),
 				e => e.Message.Contains("Name contains reserved word: ADMIN"));
 		}
 
 		[TestMethod]
 		public void CannotCreateUserWithInvalidUsername()
 		{
-			AssertX.Throws<Exception>(() => RegisterUser(""),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, ""),
 				e => e.Message.Contains("Name length must be between "));
 
-			AssertX.Throws<Exception>(() => RegisterUser("aa"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "aa"),
 				e => e.Message.Contains("Name length must be between "));
 
-			AssertX.Throws<Exception>(() => RegisterUser("invalid username"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "invalid username"),
 				e => e.Message.Contains("Username can only contain alphanumeric characters and _"));
 
-			AssertX.Throws<Exception>(() => RegisterUser("@@@@"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "@@@@"),
 				e => e.Message.Contains("String was not escaped."));
 
-			AssertX.Throws<Exception>(() => RegisterUser("AAAAA"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "AAAAA"),
 				e => e.Message.Contains("Username was invalid, Expected: "));
 		}
 
 		[TestMethod]
 		public void CannotCreateUserWithWeakPassword()
 		{
-			AssertX.Throws<Exception>(() => RegisterUser(password: ""),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, password: ""),
 				e => e.Message.Contains("Password should not be empty"));
 
-			AssertX.Throws<Exception>(() => RegisterUser(password: "a@c"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, password: "a@c"),
 				e => e.Message.Contains("Password should be between"));
 
-			AssertX.Throws<Exception>(() => RegisterUser(password: "#" + StringExtensions.RandomString(256)),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, password: "#" + StringExtensions.RandomString(256)),
 				e => e.Message.Contains("Password should be between"));
 
-			AssertX.Throws<Exception>(() => RegisterUser(password: "password"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, password: "password"),
 				e => e.Message.Contains("Password should contain at least one symbol"));
 		}
 
 		[TestMethod]
 		public void CannotPatchUserWithInvalidName()
 		{
-			var obj = RegisterUser();
+			var obj = RegisterUser(out _);
 
 			AssertX.Throws<Exception>(() => RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, new { Name = "" }),
 				e => e.Message.Contains("Name length must be between "));

@@ -3,6 +3,7 @@ using Common.Extensions;
 using Common.Security;
 using Dodo.Gateways;
 using Dodo.LocalGroups;
+using Dodo.Sites;
 using Dodo.Users;
 using Dodo.WorkingGroups;
 using SimpleHttpServer.Models;
@@ -54,7 +55,7 @@ namespace Dodo.Rebellions
 
 		public override bool CanContain(Type type)
 		{
-			if(type == typeof(WorkingGroup))
+			if(type == typeof(WorkingGroup) || type == typeof(Site))
 			{
 				return true;
 			}

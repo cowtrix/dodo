@@ -96,7 +96,14 @@
     <Compile Include="Gateways\RebellionBotConfiguration.cs" />
     <Compile Include="Resources\GroupResource.cs" />
     <Compile Include="Resources\GroupResourceRESTHandler.cs" />
+    <Compile Include="Resources\Site\ActionSite.cs" />
+    <Compile Include="Resources\Site\March.cs" />
+    <Compile Include="Resources\Site\OccupationalSite.cs" />
+    <Compile Include="Resources\Site\Sanctuary.cs" />
     <Compile Include="Resources\Users\PushAction.cs" />
+    <Compile Include="Resources\Site\Site.cs" />
+    <Compile Include="Resources\Site\SiteManager.cs" />
+    <Compile Include="Resources\Site\SiteRESTHandler.cs" />
     <Compile Include="Utility\EmailHelper.cs" />
     <Compile Include="Utility\SecureUserStore.cs" />
     <Compile Include="Resources\WorkflowTasks\Task.cs" />

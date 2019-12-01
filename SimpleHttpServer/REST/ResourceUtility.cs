@@ -48,7 +48,7 @@ namespace SimpleHttpServer.REST
 
 		public static IResourceManager GetManagerForResource(this IRESTResource resource)
 		{
-			return ResourceManagers.SingleOrDefault(x => resource.GetType().IsAssignableFrom(x.Key)).Value;
+			return ResourceManagers.SingleOrDefault(x => x.Key.IsAssignableFrom(resource.GetType())).Value;
 		}
 
 		public static IResourceManager GetManagerForResource(this Guid guid)
