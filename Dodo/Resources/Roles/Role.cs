@@ -31,7 +31,28 @@ namespace Dodo.Roles
 
 		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
-			return Parent.Value.IsAuthorised(requestOwner, passphrase, request, out permissionLevel);
+			if (request.Method != SimpleHttpServer.EHTTPRequestType.GET)
+			{
+				if (Creator.Guid == requestOwner.GUID)
+				{
+					permissionLevel = EPermissionLevel.OWNER;
+					return true;
+				}
+				if (Parent.Value.IsAdmin(requestOwner, passphrase))
+				{
+					permissionLevel = EPermissionLevel.ADMIN;
+					return true;
+				}
+				permissionLevel = EPermissionLevel.PUBLIC;
+				return false;
+			}
+			if (requestOwner != null)
+			{
+				permissionLevel = EPermissionLevel.USER;
+				return true;
+			}
+			permissionLevel = EPermissionLevel.PUBLIC;
+			return true;
 		}
 	}
 }

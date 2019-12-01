@@ -18,7 +18,8 @@ namespace RESTTests
 		[TestInitialize]
 		public void Setup()
 		{
-			RegisterUser(out _, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
+			RegisterUser(out var defaultGuid, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
+			DefaultGUID = defaultGuid;
 		}
 
 		public override object GetCreationSchema(bool unique)
