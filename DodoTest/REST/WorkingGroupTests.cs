@@ -24,7 +24,8 @@ namespace RESTTests
 		[TestInitialize]
 		public void Setup()
 		{
-			RegisterUser(out _, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
+			RegisterUser(out var defaultGuid, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
+			DefaultGUID = defaultGuid;
 			Rebellion = RequestJSON("rebellions/create", Method.POST,
 				new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion", Location = new GeoLocation(45, 97) });
 		}
