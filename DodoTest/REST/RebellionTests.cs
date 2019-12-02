@@ -23,7 +23,7 @@ namespace RESTTests
 					Location = new GeoLocation(45, 97)
 				};
 			}
-			return new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion " + StringExtensions.RandomString(6), 
+			return new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion " + StringExtensions.RandomString(6),
 				Location = new GeoLocation(45, 97) };
 		}
 
@@ -59,7 +59,7 @@ namespace RESTTests
 				{
 					TelegramConfig = new RebellionBotConfiguration.TelegramConfiguration()
 				}
-			}, username, password), (e) => e.Message.Contains("You are not authorized to access this resource"));
+			}, username, password), (e) => e.Message.Contains("Forbidden"));
 		}
 
 		[TestMethod]

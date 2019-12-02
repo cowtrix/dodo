@@ -73,6 +73,11 @@ namespace Dodo
 			));
 		}
 
+		public string GetURL()
+		{
+			return System.Net.Dns.GetHostName();
+		}
+
 		/// <summary>
 		/// Get the user that made an HTTP request, and validate authentication,
 		/// </summary>

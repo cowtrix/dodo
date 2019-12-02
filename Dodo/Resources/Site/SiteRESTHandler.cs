@@ -14,7 +14,7 @@ namespace Dodo.Sites
 	{
 		public class CreationSchema : IRESTResourceSchema
 		{
-			public CreationSchema(string name, string type, GeoLocation location)
+			public CreationSchema(string name, string type, GeoLocation location, string description)
 			{
 				Name = name;
 				Type = type;
@@ -22,6 +22,7 @@ namespace Dodo.Sites
 			}
 			public string Name = "";
 			public string Type = "";
+			public string Description = "";
 			public GeoLocation Location = new GeoLocation();
 		}
 
@@ -57,7 +58,9 @@ namespace Dodo.Sites
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema("", "", new GeoLocation());
+			return new CreationSchema("The name of the site",
+				$"The type of site: {typeof(OccupationalSite).FullName}, {typeof(Sanctuary).FullName}, {typeof(March).FullName}, {typeof(ActionSite).FullName}",
+				new GeoLocation(), "A public description of this site");
 		}
 
 		protected override Site CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)

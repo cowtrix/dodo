@@ -32,7 +32,7 @@ namespace Dodo.Users
 
 		public WebPortalAuth(string userName, string password)
 		{
-			if(!ValidationExtensions.StrongPassword(password, out var error))
+			if(!ValidationExtensions.IsStrongPassword(password, out var error))
 			{
 				throw new Exception(error);
 			}

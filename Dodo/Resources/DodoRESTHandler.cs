@@ -72,11 +72,12 @@ namespace Dodo
 			{
 				throw HttpException.CONFLICT;
 			}
-			context = new ResourceReference<User>(DodoRESTServer.GetRequestOwner(request, out passphrase));
+			var userRef = new ResourceReference<User>(DodoRESTServer.GetRequestOwner(request, out passphrase));
+			context = userRef;
 			if (target == null)
 			{
 				// TODO
-				if (request.Method == EHTTPRequestType.POST)
+				if (context != null && request.Method == EHTTPRequestType.POST)
 				{
 					permissionLevel = EPermissionLevel.OWNER;
 				}

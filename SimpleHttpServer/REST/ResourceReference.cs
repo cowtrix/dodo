@@ -14,6 +14,8 @@ namespace SimpleHttpServer.REST
 		public Guid Guid;
 		[JsonIgnore]
 		public T Value { get { return ResourceUtility.GetResourceByGuid<T>(Guid); } }
+		[JsonIgnore]
+		public bool HasValue { get { return Value != null; } }
 		public ResourceReference(T resource)
 		{
 			Guid = resource != null ? resource.GUID : default;

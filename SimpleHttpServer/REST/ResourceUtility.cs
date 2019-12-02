@@ -22,7 +22,7 @@ namespace SimpleHttpServer.REST
 				Register(newManager);
 			}
 		}
-  
+
 		private static void Register(IResourceManager manager)
 		{
 			var typeArg = manager.GetType().BaseType.GetGenericArguments().First();

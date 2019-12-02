@@ -26,6 +26,11 @@ namespace Dodo.Sites
 		[View(EPermissionLevel.USER)]
 		public GeoLocation Location { get; private set; }
 
+		[JsonProperty]
+		[View(EPermissionLevel.USER)]
+		public string Description { get; private set; }
+
+		[View(EPermissionLevel.USER)]
 		public string Type { get { return GetType().FullName; } }
 
 		public Site() : base() { }
@@ -35,8 +40,9 @@ namespace Dodo.Sites
 		{
 			Rebellion = new ResourceReference<Rebellion>(rebellion);
 			Location = schema.Location;
+			Description = schema.Description;
 		}
-		
+
 		public override string ResourceURL => $"{Rebellion.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
 		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)

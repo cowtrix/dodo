@@ -12,7 +12,7 @@ namespace Dodo.Users
 {
 	public class UserRESTHandler : DodoRESTHandler<User>
 	{
-		public const string CREATION_URL = "^register$";
+		public const string CREATION_URL = "register";
 
 		public class CreationSchema : IRESTResourceSchema
 		{
@@ -20,6 +20,14 @@ namespace Dodo.Users
 			public string Password = "";
 			public string Name = "";
 			public string Email = "";
+
+			public CreationSchema(string username, string password, string name, string email)
+			{
+				Username = username;
+				Password = password;
+				Name = name;
+				Email = email;
+			}
 		}
 
 		public HttpResponse ResetPassword(HttpRequest request)

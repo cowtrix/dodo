@@ -26,6 +26,10 @@ namespace Common.Security
 		{
 			get
 			{
+				if(string.IsNullOrEmpty(m_tokenKey))
+				{
+					return null;
+				}
 				if(!TemporaryTokenManager.IsValidToken(m_tokenKey, out var token))
 				{
 					throw new AuthenticationException("Token Expired or Invalid");

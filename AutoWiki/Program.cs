@@ -83,7 +83,7 @@ namespace AutoWiki
 
 		private static void DeletePage(string slug)
 		{
-			// 
+			//
 			var createRequest = new RestRequest($"{ProjectURI}/wikis/{slug}", Method.DELETE);
 			var response = m_restClient.Execute(createRequest);
 			Console.WriteLine(response.ResponseStatus);

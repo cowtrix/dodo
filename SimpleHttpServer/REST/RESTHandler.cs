@@ -30,9 +30,9 @@ namespace SimpleHttpServer.REST
 					var msg = Uri.EscapeDataString(e.Message);
 					if (e is HttpException)
 					{
-						return HttpBuilder.Custom("Error processing request:\n" + msg, (e as HttpException).ErrorCode);
+						return HttpBuilder.Custom(msg, (e as HttpException).ErrorCode);
 					}
-					return HttpBuilder.ServerError("Error processing request:\n" + msg);
+					return HttpBuilder.ServerError(msg);
 				}
 			};
 		}

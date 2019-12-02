@@ -33,7 +33,7 @@ namespace Dodo.Roles
 		protected override Role CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
 		{
 			var info = (CreationSchema)schema;
-			var user = DodoRESTServer.GetRequestOwner(request);
+			var user = DodoRESTServer.GetRequestOwner(request, out var passphrase);
 			if(user == null)
 			{
 				throw HttpException.LOGIN;
@@ -43,7 +43,7 @@ namespace Dodo.Roles
 			{
 				throw new HttpException("Valid parent doesn't exist at " + request.Url, 404);
 			}
-			var newRole = new Role(group, info);
+			var newRole = new Role(user, passphrase, group, info);
 			if (URLIsCreation(newRole.ResourceURL))
 			{
 				throw new Exception("Reserved Resource URL");

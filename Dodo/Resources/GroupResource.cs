@@ -54,6 +54,10 @@ namespace Dodo
 		public bool IsAdmin(User user, Passphrase passphrase)
 		{
 			var userRef = new ResourceReference<User>(user);
+			if(!Administrators.IsAuthorised(userRef, passphrase))
+			{
+				return false;
+			}
 			return Administrators.GetValue(userRef, passphrase).Contains(userRef);
 		}
 
@@ -83,8 +87,21 @@ namespace Dodo
 				permissionLevel = EPermissionLevel.ADMIN;
 				return true;
 			}
-			permissionLevel = EPermissionLevel.USER;
-			return true;
+			if(request.Method != SimpleHttpServer.EHTTPRequestType.GET)
+			{
+				permissionLevel = EPermissionLevel.PUBLIC;
+				return false;
+			}
+			if(requestOwner != null)
+			{
+				permissionLevel = EPermissionLevel.USER;
+				return true;
+			}
+			else
+			{
+				permissionLevel = EPermissionLevel.PUBLIC;
+				return true;
+			}
 		}
 
 		public abstract bool CanContain(Type type);

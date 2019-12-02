@@ -4,6 +4,7 @@ using Common;
 using Common.Extensions;
 using Common.Security;
 using Dodo.LocalGroups;
+using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 
@@ -29,7 +30,8 @@ namespace Dodo.Users
 		public List<PushAction> PushActions = new List<PushAction>();
 
 		public User() : base()
-		{ }
+		{
+		}
 
 		public User(UserRESTHandler.CreationSchema info) : base(null, info.Name)
 		{

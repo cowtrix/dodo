@@ -37,5 +37,10 @@ namespace Dodo
 		{
 			ResourceUtility.Clear();
 		}
+
+		public static string GetURL()
+		{
+			return m_restServer.GetURL();
+		}
 	}
 }

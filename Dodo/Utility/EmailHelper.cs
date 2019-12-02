@@ -12,18 +12,27 @@ namespace Dodo.Utility
 {
 	public static class EmailHelper
 	{
+		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", "noreply@dodo.earth");
+		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", "Dodo SysAdmin");
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
+		static SendGridClient m_client;
 
-		public static async Task Execute()
+		static EmailHelper()
 		{
-			var client = new SendGridClient(m_sendGridAPIKey.Value);
-			var from = new EmailAddress("test@example.com", "Example User");
-			var subject = "Sending with Twilio SendGrid is Fun";
-			var to = new EmailAddress("seandgfinnegan@gmail.com", "Example User");
-			var plainTextContent = "and easy to do anywhere, even with C#";
-			var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
-			var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-			var response = await client.SendEmailAsync(msg);
+			m_client = new SendGridClient(m_sendGridAPIKey.Value);
+		}
+
+		public static void SendEmail(string targetEmail, string targetName, string subject, string content)
+		{
+			var from = new EmailAddress(m_emailFrom.Value, m_nameFrom.Value);
+			var to = new EmailAddress(targetEmail, targetName);
+			SendAsync(MailHelper.CreateSingleEmail(from, to, subject, content, content));
+		}
+
+		private static void SendAsync(SendGridMessage msg)
+		{
+			var t = new Task(async () => await m_client.SendEmailAsync(msg));
+			t.Start();
 		}
 	}
 }

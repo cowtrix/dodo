@@ -34,10 +34,10 @@ namespace RESTTests
 		{
 			if(unique)
 			{
-				return new SiteRESTHandler.CreationSchema("Test Site " + StringExtensions.RandomString(6), 
-					typeof(OccupationalSite).FullName, new GeoLocation(27, 79));
+				return new SiteRESTHandler.CreationSchema("Test Site " + StringExtensions.RandomString(6),
+					typeof(OccupationalSite).FullName, new GeoLocation(27, 79), "Test description");
 			}
-			return new SiteRESTHandler.CreationSchema("Test Site", typeof(OccupationalSite).FullName, new GeoLocation(27, 79));
+			return new SiteRESTHandler.CreationSchema("Test Site", typeof(OccupationalSite).FullName, new GeoLocation(27, 79), "Test description");
 		}
 
 		public override object GetPatchSchema()
@@ -58,30 +58,30 @@ namespace RESTTests
 		[TestMethod]
 		public void CannotCreateAtCreationURL()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, 
-				new SiteRESTHandler.CreationSchema("Create", typeof(OccupationalSite).FullName, new GeoLocation(27, 79))),
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST,
+				new SiteRESTHandler.CreationSchema("Create", typeof(OccupationalSite).FullName, new GeoLocation(27, 79), "Test description")),
 				e => e.Message.Contains("Reserved Resource URL"));
 		}
 
 		[TestMethod]
 		public void CanCreateActionSite()
 		{
-			CheckCreatedObject(RequestJSON(CreationURL, Method.POST, 
-				new SiteRESTHandler.CreationSchema("Test1", typeof(ActionSite).FullName, new GeoLocation(27, 79))));
+			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
+				new SiteRESTHandler.CreationSchema("Test1", typeof(ActionSite).FullName, new GeoLocation(27, 79), "Test description")));
 		}
 
 		[TestMethod]
 		public void CanCreateSanctuarySite()
 		{
 			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
-				new SiteRESTHandler.CreationSchema("Test1", typeof(Sanctuary).FullName, new GeoLocation(27, 79))));
+				new SiteRESTHandler.CreationSchema("Test1", typeof(Sanctuary).FullName, new GeoLocation(27, 79), "Test description")));
 		}
 
 		[TestMethod]
 		public void CanCreateMarchSite()
 		{
 			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
-				new SiteRESTHandler.CreationSchema("Test1", typeof(March).FullName, new GeoLocation(27, 79))));
+				new SiteRESTHandler.CreationSchema("Test1", typeof(March).FullName, new GeoLocation(27, 79), "Test description")));
 		}
 
 		[TestMethod]
@@ -89,10 +89,10 @@ namespace RESTTests
 		{
 			var objects = new List<JObject>()
 			{
-				RequestJSON(CreationURL, Method.POST, new SiteRESTHandler.CreationSchema("Test1", typeof(OccupationalSite).FullName, new GeoLocation(27, 79))),
-				RequestJSON(CreationURL, Method.POST, new SiteRESTHandler.CreationSchema("Test2", typeof(ActionSite).FullName, new GeoLocation(27, 79))),
-				RequestJSON(CreationURL, Method.POST, new SiteRESTHandler.CreationSchema("Test3", typeof(March).FullName, new GeoLocation(27, 79))),
-				RequestJSON(CreationURL, Method.POST, new SiteRESTHandler.CreationSchema("Test4", typeof(Sanctuary).FullName, new GeoLocation(27, 79))),
+				RequestJSON(CreationURL, Method.POST, new SiteRESTHandler.CreationSchema("Test1", typeof(OccupationalSite).FullName, new GeoLocation(27, 79.2), "Test description")),
+				RequestJSON(CreationURL, Method.POST, new SiteRESTHandler.CreationSchema("Test2", typeof(ActionSite).FullName, new GeoLocation(26.9, 79), "Test description")),
+				RequestJSON(CreationURL, Method.POST, new SiteRESTHandler.CreationSchema("Test3", typeof(March).FullName, new GeoLocation(27.2, 79.1), "Test description")),
+				RequestJSON(CreationURL, Method.POST, new SiteRESTHandler.CreationSchema("Test4", typeof(Sanctuary).FullName, new GeoLocation(26.4, 78.7), "Test description")),
 			};
 			var guids = objects.Select(x => x.Value<string>("GUID"));
 			var list = Request($"{Rebellion.Value<string>("ResourceURL")}/{Site.ROOT}/", Method.GET);

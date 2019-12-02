@@ -11,7 +11,7 @@ namespace RESTTests
 	public abstract class GroupResourceTestBase<T> : RESTTestBase<T> where T:GroupResource
 	{
 		[TestMethod]
-		public void CanAddAdmin()
+		public void CanAddAdminFromExistingUser()
 		{
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			var resourceURL = createdObj.Value<string>("ResourceURL");
@@ -26,6 +26,45 @@ namespace RESTTests
 			Assert.AreEqual("ADMIN", updatedObj.Value<string>(JsonViewUtility.PERMISSION_KEY));
 			var adminAfter = updatedObj.Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
 			Assert.IsNotNull(adminAfter.SingleOrDefault(x => x == guid));
+		}
+
+		[TestMethod]
+		public void CanAddAdminFromNewUser()
+		{
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var resourceURL = createdObj.Value<string>("ResourceURL");
+			createdObj = RequestJSON(resourceURL, Method.GET);
+
+			var addAdminResponse = Request(resourceURL + GroupResourceRESTHandler<T>.ADD_ADMIN, Method.POST, "seandgfinnegan@gmail.com");
+			Assert.IsTrue(addAdminResponse.StatusCode == System.Net.HttpStatusCode.OK);
+
+		}
+
+		[TestMethod]
+		public void CannotEditIfNotAdmin()
+		{
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var resourceURL = createdObj.Value<string>("ResourceURL");
+
+			RegisterRandomUser(out var username1, out _, out var password, out _, out var guid);
+
+			AssertX.Throws<Exception>(() => RequestJSON(resourceURL, Method.PATCH, GetPatchSchema(), username1, password),
+				e => e.Message.Contains("Forbidden"));
+
+			AssertX.Throws<Exception>(() => RequestJSON(resourceURL, Method.DELETE, GetPatchSchema(), username1, password),
+				e => e.Message.Contains("Forbidden"));
+		}
+
+		[TestMethod]
+		public void CanGetIfNotAdmin()
+		{
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var resourceURL = createdObj.Value<string>("ResourceURL");
+
+			var response = RequestJSON(resourceURL, Method.GET, null, "", "");
+
+			RegisterRandomUser(out var username1, out _, out var password, out _, out var guid);
+			response = RequestJSON(resourceURL, Method.GET, null, username1, password);
 		}
 	}
 }

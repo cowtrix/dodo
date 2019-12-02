@@ -94,13 +94,15 @@
     <Compile Include="Gateways\IMessageGateway.cs" />
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Gateways\RebellionBotConfiguration.cs" />
+    <Compile Include="PushActions\AddAdminAction.cs" />
+    <Compile Include="PushActions\TemporaryUserAction.cs" />
     <Compile Include="Resources\GroupResource.cs" />
     <Compile Include="Resources\GroupResourceRESTHandler.cs" />
     <Compile Include="Resources\Site\ActionSite.cs" />
     <Compile Include="Resources\Site\March.cs" />
     <Compile Include="Resources\Site\OccupationalSite.cs" />
     <Compile Include="Resources\Site\Sanctuary.cs" />
-    <Compile Include="Resources\Users\PushAction.cs" />
+    <Compile Include="PushActions\PushAction.cs" />
     <Compile Include="Resources\Site\Site.cs" />
     <Compile Include="Resources\Site\SiteManager.cs" />
     <Compile Include="Resources\Site\SiteRESTHandler.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Resources\Users\User.cs" />
     <Compile Include="Resources\Users\UserManager.cs" />
     <Compile Include="Resources\Users\UserRESTHandler.cs" />
+    <Compile Include="Utility\UserCollection.cs" />
     <Compile Include="Utility\UserMultiSigStore.cs" />
   </ItemGroup>
   <ItemGroup>

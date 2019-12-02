@@ -13,19 +13,19 @@ namespace Common
 
 	public static class NameAttributeExtensions
 	{
-		public static string GetName(this Enum enumVal)
+		public static string GetName(this object obj)
 		{
-			if(enumVal == null)
+			if(obj == null)
 			{
 				return null;
 			}
-			var type = enumVal.GetType();
-			var memInfo = type.GetMember(enumVal.ToString());
+			var type = obj.GetType();
+			var memInfo = type.GetMember(obj.ToString());
 			var attributes = memInfo[0].GetCustomAttributes(typeof(NameAttribute), false);
 			var nameAttr = (attributes.Length > 0) ? (NameAttribute)attributes[0] : null;
 			if (nameAttr == null)
 			{
-				return enumVal.ToString();
+				return obj.ToString();
 			}
 			return nameAttr.Name;
 		}

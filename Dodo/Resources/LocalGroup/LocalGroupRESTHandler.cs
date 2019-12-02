@@ -19,6 +19,14 @@ namespace Dodo.LocalGroups
 		{
 			public string Name = "";
 			public GeoLocation Location = new GeoLocation();
+			public string Description = "";
+
+			public CreationSchema(string name, GeoLocation location, string description)
+			{
+				Name = name;
+				Location = location;
+				Description = description;
+			}
 		}
 
 		public override void AddRoutes(List<Route> routeList)
@@ -46,7 +54,7 @@ namespace Dodo.LocalGroups
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema();
+			return new CreationSchema("Name of local group", new GeoLocation(), "Public description of local group");
 		}
 
 		protected override LocalGroup CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
