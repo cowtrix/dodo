@@ -23,6 +23,8 @@ namespace Dodo.Users
 		[NoPatch]
 		public string Email;
 
+		public bool EmailVerified { get; set; }
+
 		[View(EPermissionLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 

@@ -43,7 +43,7 @@ namespace Dodo.Roles
 					permissionLevel = EPermissionLevel.OWNER;
 					return true;
 				}
-				if (Parent.Value.IsAdmin(requestOwner, passphrase))
+				if (Parent.Value.IsAdmin(requestOwner, requestOwner, passphrase))
 				{
 					permissionLevel = EPermissionLevel.ADMIN;
 					return true;

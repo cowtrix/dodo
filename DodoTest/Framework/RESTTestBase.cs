@@ -25,7 +25,7 @@ namespace RESTTests
 		{
 			RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, GetCreationSchema()),
-				e => e.Message.Contains("Conflict - resource may already exist"));
+				e => e.Message.Contains("Conflict"));
 		}
 
 		[TestMethod]

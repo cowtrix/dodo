@@ -31,7 +31,12 @@ namespace Dodo.Utility
 
 		private static void SendAsync(SendGridMessage msg)
 		{
-			var t = new Task(async () => await m_client.SendEmailAsync(msg));
+			var t = new Task(async () =>
+			{
+				await m_client.SendEmailAsync(msg);
+				Console.WriteLine("OK");
+			});
+			
 			t.Start();
 		}
 	}

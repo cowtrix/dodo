@@ -19,16 +19,19 @@ namespace RESTTests
 		{
 			if(unique)
 			{
-				return new UserRESTHandler.CreationSchema
-				{
-					Username = DefaultUsername + StringExtensions.RandomString(6).ToLowerInvariant(),
-					Name = DefaultName,
-					Password = DefaultPassword,
-					Email = DefaultEmail
-				};
+				return new UserRESTHandler.CreationSchema(
+					DefaultUsername + StringExtensions.RandomString(6).ToLowerInvariant(),
+					DefaultPassword,
+					DefaultName,
+					DefaultEmail
+				);
 			}
-			return new UserRESTHandler.CreationSchema { Username = DefaultUsername, 
-				Name = DefaultName, Password = DefaultPassword, Email = DefaultEmail };
+			return new UserRESTHandler.CreationSchema(
+					DefaultUsername,
+					DefaultPassword,
+					DefaultName,
+					DefaultEmail
+				);
 		}
 
 		public override object GetPatchSchema()

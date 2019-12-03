@@ -14,6 +14,8 @@ namespace Dodo.Users
 
 		public override string Message => $"You have been added as an Administrator to {Resource.Value.Name}";
 
+		public override bool AutoFire => true;
+
 		public AddAdminAction(GroupResource resource, Passphrase temporaryPassword, string publicKey)
 		{
 			Resource = new ResourceReference<GroupResource>(resource);

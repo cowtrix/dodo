@@ -1,4 +1,5 @@
-﻿using Dodo;
+﻿using Common.Extensions;
+using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -33,11 +34,16 @@ namespace RESTTests
 		{
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			var resourceURL = createdObj.Value<string>("ResourceURL");
-			createdObj = RequestJSON(resourceURL, Method.GET);
 
-			var addAdminResponse = Request(resourceURL + GroupResourceRESTHandler<T>.ADD_ADMIN, Method.POST, "seandgfinnegan@gmail.com");
+			var secondEmail = "test@blahnotawebsite.com.ul";
+			var addAdminResponse = Request(resourceURL + GroupResourceRESTHandler<T>.ADD_ADMIN, Method.POST, secondEmail);
 			Assert.IsTrue(addAdminResponse.StatusCode == System.Net.HttpStatusCode.OK);
 
+			var secondPass = ValidationExtensions.GenerateStrongPassword();
+			var secondUser = RegisterUser(out var guid, username: "seconduser", email: secondEmail, password: secondPass);
+			createdObj = RequestJSON(resourceURL, Method.GET);
+			var admin = createdObj.Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
+			Assert.IsNotNull(admin.SingleOrDefault(x => x == guid));
 		}
 
 		[TestMethod]

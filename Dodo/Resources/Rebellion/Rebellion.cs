@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 
 namespace Dodo.Rebellions
 {
+	[Name("Rebellion")]
 	public class Rebellion : GroupResource
 	{
 		public const string ROOT = "rebellions";

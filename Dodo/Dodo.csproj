@@ -136,9 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="server.pfx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

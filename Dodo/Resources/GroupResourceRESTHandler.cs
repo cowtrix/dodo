@@ -65,6 +65,10 @@ namespace Dodo
 			}
 			var target = JsonConvert.DeserializeObject<string>(request.Content);
 			var targetUser = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID.ToString() == target || x.Email == target);
+			if(targetUser != null && resource.IsAdmin(targetUser, owner, passphrase))
+			{
+				return HttpBuilder.OK();
+			}
 			if(targetUser == null && ValidationExtensions.EmailIsValid(target))
 			{
 				// This is an email invite for an unregistered user

@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace Dodo.LocalGroups
 {
+	[Name("Local Group")]
 	public class LocalGroup : GroupResource
 	{
 		public const string ROOT = "localgroups";

@@ -18,6 +18,7 @@ namespace Dodo.WorkingGroups
 	/// would take care of the wellbeing of rebels.
 	/// Working Groups can have child Working Groups. A Working Group can only have a single parent Working Group.
 	/// </summary>
+	[Name("Working Group")]
 	public class WorkingGroup : GroupResource
 	{
 		public const string ROOT = "wg";

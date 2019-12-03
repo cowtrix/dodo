@@ -7,24 +7,19 @@ namespace Dodo.Users
 	public class TemporaryUserAction : PushAction
 	{
 		[JsonProperty]
-		public ResourceReference<GroupResource> Resource { get; private set; }
-
-		[JsonProperty]
-		public byte[] Token { get; private set; }
+		public string TemporaryToken;
 
 		public override string Message => "";
 
+		public override bool AutoFire => false;
+
 		public TemporaryUserAction(Passphrase temporaryPassword, string publicKey)
 		{
-			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
+			TemporaryToken = temporaryPassword.Value;
 		}
 
 		public override void Execute(User user, Passphrase passphrase)
 		{
-			Resource.CheckValue();
-			var privateKey = user.WebAuth.PrivateKey.GetValue(passphrase);
-			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
-			Resource.Value.AddAdmin(user, tempPass, user, passphrase);
 		}
 	}
 }

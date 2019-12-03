@@ -2,6 +2,7 @@
 using Common.Extensions;
 using Common.Security;
 using Newtonsoft.Json;
+using SimpleHttpServer;
 using SimpleHttpServer.REST;
 using System;
 using System.Security.Cryptography;
@@ -80,6 +81,16 @@ namespace Dodo.Users
 			}
 			passphrase = new Passphrase(PassPhrase.GetValue(password));
 			return true;
+		}
+
+		public void ChangePassword(Passphrase oldValue, Passphrase newValue)
+		{
+			if(!Challenge(oldValue.Value, out var passphrase))
+			{
+				throw HttpException.FORBIDDEN;
+			}
+			PassPhrase = new EncryptedStore<string>(newValue.Value, passphrase);
+			PasswordHash = PasswordHash = SHA256Utility.SHA256(newValue.Value + PublicKey);
 		}
 	}
 }

@@ -10,6 +10,7 @@ using RestSharp;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -103,15 +104,18 @@ namespace RESTTests
 			name = name ?? DefaultName;
 			password = password ?? DefaultPassword;
 			email = email ?? DefaultEmail;
-			var jobj = RequestJSON("register", Method.POST, new UserRESTHandler.CreationSchema()
-			{
-				Username = username,
-				Name = name,
-				Password = password,
-				Email = email,
-			});
+			var jobj = RequestJSON("register", Method.POST, new UserRESTHandler.CreationSchema(username, password, name, email));
 			guid = jobj.Value<string>("GUID");
+			VerifyUser(guid, username, password, email);
 			return jobj;
+		}
+
+		protected IRestResponse VerifyUser(string guid, string username, string password, string email)
+		{
+			var response = Request($"verify", Method.POST, null, username, password);
+			var verifyAction = ResourceUtility.GetManager<User>().GetSingle(u => u.WebAuth.Username == username)
+				.PushActions.First(pa => pa is VerifyEmailAction) as VerifyEmailAction;
+			return Request($"verify?token={verifyAction.Token}", Method.POST, null, username, password);
 		}
 
 		protected JObject RegisterRandomUser(out string username, out string name, out string password, out string email, out string guid)
@@ -178,10 +182,10 @@ namespace RESTTests
 			return JsonConvert.DeserializeObject<JObject>(content);
 		}
 
-		protected IRestResponse Request(string url, Method method, object data = null)
+		protected IRestResponse Request(string url, Method method, object data = null, string username = null, string password = null)
 		{
 			var request = new RestRequest(url, method);
-			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
+			AuthoriseRequest(request, username ?? DefaultUsername, password ?? DefaultPassword);
 			if (data != null)
 			{
 				request.AddJsonBody(data);

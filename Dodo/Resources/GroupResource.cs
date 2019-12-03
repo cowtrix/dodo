@@ -51,14 +51,14 @@ namespace Dodo
 			return Parent.Value.IsChildOf(targetObject);
 		}
 
-		public bool IsAdmin(User user, Passphrase passphrase)
+		public bool IsAdmin(User target, User requester, Passphrase passphrase)
 		{
-			var userRef = new ResourceReference<User>(user);
+			var userRef = new ResourceReference<User>(requester);
 			if(!Administrators.IsAuthorised(userRef, passphrase))
 			{
 				return false;
 			}
-			return Administrators.GetValue(userRef, passphrase).Contains(userRef);
+			return Administrators.GetValue(userRef, passphrase).Contains(target);
 		}
 
 		public void AddAdmin(User requester, Passphrase requesterPass, User newAdmin, Passphrase newAdminPassword)
@@ -82,7 +82,7 @@ namespace Dodo
 				permissionLevel = EPermissionLevel.OWNER;
 				return true;
 			}
-			if (IsAdmin(requestOwner, passphrase))
+			if (IsAdmin(requestOwner, requestOwner, passphrase))
 			{
 				permissionLevel = EPermissionLevel.ADMIN;
 				return true;

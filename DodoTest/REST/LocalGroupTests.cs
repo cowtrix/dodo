@@ -18,7 +18,7 @@ namespace RESTTests
 		[TestInitialize]
 		public void Setup()
 		{
-			RegisterUser(out var defaultGuid, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
+			RegisterUser(out var defaultGuid, DefaultUsername, DefaultName, DefaultPassword, DefaultEmail);
 			DefaultGUID = defaultGuid;
 		}
 

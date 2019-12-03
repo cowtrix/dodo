@@ -8,6 +8,7 @@ using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Dodo
 {
@@ -28,7 +29,7 @@ namespace Dodo
 			}
 			lock(owner.PushActions)
 			{
-				foreach (var pushAction in owner.PushActions)
+				foreach (var pushAction in owner.PushActions.Where(pa => pa.AutoFire))
 				{
 					pushAction.Execute(owner, passphrase);
 				}

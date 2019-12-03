@@ -54,7 +54,7 @@ namespace Dodo.Sites
 					permissionLevel = EPermissionLevel.OWNER;
 					return true;
 				}
-				if (Rebellion.Value.IsAdmin(requestOwner, passphrase))
+				if (Rebellion.Value.IsAdmin(requestOwner, requestOwner, passphrase))
 				{
 					permissionLevel = EPermissionLevel.ADMIN;
 					return true;
