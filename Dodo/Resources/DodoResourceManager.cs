@@ -14,6 +14,11 @@ namespace Dodo.Resources
 		protected override bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility)
 		{
 			var requestOwner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
+			if(requestOwner != null && !requestOwner.EmailVerified && request.Method != SimpleHttpServer.EHTTPRequestType.GET)
+			{
+				visibility = EPermissionLevel.PUBLIC;
+				return false;
+			}
 			return resource.IsAuthorised(requestOwner, passphrase, request, out visibility);
 		}
 	}

@@ -60,6 +60,34 @@ namespace RESTTests
 			VerifyUser(obj.Value<string>("GUID"), DefaultUsername, DefaultPassword, DefaultEmail);
 		}
 
+		[TestMethod]
+		public override void CanDestroy()
+		{
+			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema(false));
+			VerifyUser(obj.Value<string>("GUID"), DefaultUsername, DefaultPassword, DefaultEmail);
+			var response = Request(obj.Value<string>("ResourceURL"), Method.DELETE);
+			Assert.IsTrue(response.StatusDescription.Contains("Resource deleted"));
+		}
+
+		[TestMethod]
+		public override void CanPatch()
+		{
+			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema(false));
+			VerifyUser(obj.Value<string>("GUID"), DefaultUsername, DefaultPassword, DefaultEmail);
+			var patch = RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, GetPatchSchema());
+			Assert.AreNotEqual(obj.ToString(), patch.ToString());
+			CheckPatchedObject(patch);
+		}
+
+		[TestMethod]
+		public override void CannotPatchInvalid()
+		{
+			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema(false));
+			VerifyUser(obj.Value<string>("GUID"), DefaultUsername, DefaultPassword, DefaultEmail);
+			AssertX.Throws<Exception>(() => RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, new { FakeField = "Not a field" }),
+				x => x.Message.Contains("Invalid field names"));
+		}
+
 		protected override void CheckGetObject(JObject obj)
 		{
 			CheckCreatedObject(obj);
