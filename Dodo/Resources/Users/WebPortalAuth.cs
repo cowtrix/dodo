@@ -54,7 +54,7 @@ namespace Dodo.Users
 		[View(EPermissionLevel.USER)]
 		[Username]
 		[JsonProperty]
-		public string Username { get; private set; }
+		public string Username { get; set; }
 
 		[View(EPermissionLevel.USER)]
 		[JsonProperty]
@@ -79,6 +79,10 @@ namespace Dodo.Users
 			{
 				return false;
 			}
+			if(!PassPhrase.IsAuthorised(null, new Passphrase(password)))
+			{
+				return false;
+			}
 			passphrase = new Passphrase(PassPhrase.GetValue(password));
 			return true;
 		}
@@ -89,8 +93,12 @@ namespace Dodo.Users
 			{
 				throw HttpException.FORBIDDEN;
 			}
-			PassPhrase = new EncryptedStore<string>(newValue.Value, passphrase);
-			PasswordHash = PasswordHash = SHA256Utility.SHA256(newValue.Value + PublicKey);
+			PassPhrase = new EncryptedStore<string>(passphrase.Value, newValue);
+			PasswordHash = SHA256Utility.SHA256(newValue.Value + PublicKey);
+			if(!Challenge(newValue.Value, out _))
+			{
+				throw new Exception("Failed to change password");
+			}
 		}
 	}
 }

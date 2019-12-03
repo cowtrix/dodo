@@ -43,9 +43,9 @@ namespace RESTTests
 		public override void CannotPatchDuplicate()
 		{
 			var firstObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema(false));
-			var secondObj = RegisterRandomUser(out var username, out var originalName, out var password, out _, out _); 
+			var secondObj = RegisterRandomUser(out var username, out var originalName, out var password, out _, out _);
 			AssertX.Throws<Exception>(() =>
-				RequestJSON(secondObj.Value<string>("ResourceURL"), Method.PATCH, 
+				RequestJSON(secondObj.Value<string>("ResourceURL"), Method.PATCH,
 				new { WebAuth = new { Username = firstObj.Value<JObject>("WebAuth").Value<string>("Username") } }, username, password),
 				e => e.Message.Contains("Duplicate ResourceURL"));
 			RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET, null, username, password);
@@ -56,6 +56,8 @@ namespace RESTTests
 			Assert.IsTrue(obj.GetValue("WebAuth").Value<string>("Username") == DefaultUsername);
 			Assert.IsTrue(obj.Value<string>("Email") == DefaultEmail);
 			Assert.IsTrue(obj.Value<string>("Name") == DefaultName);
+
+			VerifyUser(obj.Value<string>("GUID"), DefaultUsername, DefaultPassword, DefaultEmail);
 		}
 
 		protected override void CheckGetObject(JObject obj)

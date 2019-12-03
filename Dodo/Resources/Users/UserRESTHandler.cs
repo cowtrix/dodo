@@ -18,6 +18,8 @@ namespace Dodo.Users
 		public const string CREATION_URL = "register";
 		public const string VERIFY_PARAM = "verify";
 
+		protected override string CreationPostfix => CREATION_URL;
+
 		public class CreationSchema : IRESTResourceSchema
 		{
 			public string Username = "";
@@ -47,7 +49,7 @@ namespace Dodo.Users
 
 		private bool IsEmailVerifyURL(string url)
 		{
-			return url == VERIFY_PARAM;
+			return url.StartsWith(VERIFY_PARAM);
 		}
 
 		public HttpResponse ResetPassword(HttpRequest request)
@@ -91,10 +93,11 @@ namespace Dodo.Users
 				(ResourceManager as UserManager).SendEmailVerification(owner);
 				return HttpBuilder.OK("Email Verification Sent");
 			}
-			if(verifyToken == verification.Token)
+			if(verifyToken != verification.Token)
 			{
-				owner.EmailVerified = true;
+				throw new HttpException("Incorrect verification code", 500);
 			}
+			owner.EmailVerified = true;
 			return HttpBuilder.OK("Email verified");
 		}
 
@@ -108,8 +111,9 @@ namespace Dodo.Users
 				if (tempPushAction != null)
 				{
 					// This is a temp user
-					(ResourceManager as UserManager).SendEmailVerification(user);
-					return HttpBuilder.OK(user.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
+					user.WebAuth.ChangePassword(new Passphrase(tempPushAction.TemporaryToken), new Passphrase(schema.Password));
+					user.WebAuth.Username = schema.Username;
+					return HttpBuilder.OK(user.GenerateJsonView(EPermissionLevel.USER, null, default));
 				}
 				else
 				{

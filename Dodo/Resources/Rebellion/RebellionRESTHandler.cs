@@ -1,5 +1,7 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
+using Dodo.Users;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
@@ -64,6 +66,11 @@ namespace Dodo.Rebellions
 			}
 			newRebellion.Verify();
 			return newRebellion;
+		}
+
+		protected override bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url)
+		{
+			return requestOwner.HasValue && requestOwner.Value.EmailVerified;
 		}
 	}
 }

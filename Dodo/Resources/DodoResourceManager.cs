@@ -11,10 +11,10 @@ namespace Dodo.Resources
 {
 	public abstract class DodoResourceManager<T> : ResourceManager<T> where T : class, IDodoResource
 	{
-		protected override bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel permissionLevel)
+		protected override bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility)
 		{
 			var requestOwner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
-			return resource.IsAuthorised(requestOwner, passphrase, request, out permissionLevel);
+			return resource.IsAuthorised(requestOwner, passphrase, request, out visibility);
 		}
 	}
 }

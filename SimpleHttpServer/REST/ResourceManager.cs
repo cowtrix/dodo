@@ -108,12 +108,7 @@ namespace SimpleHttpServer.REST
 
 		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel permission)
 		{
-			if(resource == null)
-			{
-				permission = EPermissionLevel.PUBLIC;
-				return true;
-			}
-			if(!(resource is T))
+			if(resource != null && !(resource is T))
 			{
 				throw new Exception("Incorrect Resource Manager for " + resource);
 			}

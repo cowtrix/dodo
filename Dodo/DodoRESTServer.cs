@@ -22,18 +22,17 @@ namespace Dodo
 
 		private void ProcessPushActions(HttpRequest request)
 		{
-			var owner = GetRequestOwner(request, out var passphrase);
-			if(owner == null)
+			var owner = TryGetRequestOwner(request, out var passphrase);
+			if (owner == null)
 			{
 				return;
 			}
-			lock(owner.PushActions)
+			lock (owner.PushActions)
 			{
 				foreach (var pushAction in owner.PushActions.Where(pa => pa.AutoFire))
 				{
 					pushAction.Execute(owner, passphrase);
 				}
-				owner.PushActions.Clear();
 			}
 		}
 
@@ -87,6 +86,17 @@ namespace Dodo
 		public static User GetRequestOwner(HttpRequest request)
 		{
 			return GetRequestOwner(request, out _);
+		}
+
+		public static User TryGetRequestOwner(HttpRequest request, out Passphrase passphrase)
+		{
+			try
+			{
+				return GetRequestOwner(request, out passphrase);
+			}
+			catch (HttpException)
+			{ }
+			return null;
 		}
 
 		/// <summary>

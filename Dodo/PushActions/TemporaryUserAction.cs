@@ -11,15 +11,12 @@ namespace Dodo.Users
 
 		public override string Message => "";
 
-		public override bool AutoFire => false;
+		public override bool AutoFire => true;
 
 		public TemporaryUserAction(Passphrase temporaryPassword, string publicKey)
 		{
 			TemporaryToken = temporaryPassword.Value;
 		}
 
-		public override void Execute(User user, Passphrase passphrase)
-		{
-		}
 	}
 }

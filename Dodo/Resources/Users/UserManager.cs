@@ -15,16 +15,13 @@ namespace Dodo.Users
 	{
 		public override string BackupPath => "users";
 
-		public User CreateTemporaryUser(string email)
+		public User CreateTemporaryUser(string email, out Passphrase temporaryPassword)
 		{
-			var password = new Passphrase(ValidationExtensions.GenerateStrongPassword());
-			var schema = new UserRESTHandler.CreationSchema(Guid.NewGuid().ToString(), password.Value, "TEMPORARY", email);
-
+			temporaryPassword = new Passphrase(ValidationExtensions.GenerateStrongPassword());
+			var schema = new UserRESTHandler.CreationSchema(Guid.NewGuid().ToString(), temporaryPassword.Value, "TEMPORARY", email);
 			var newUser = new User(schema);
 			Add(newUser);
-
-			newUser.PushActions.Add(new TemporaryUserAction(password, newUser.WebAuth.PublicKey));
-
+			newUser.PushActions.Add(new TemporaryUserAction(temporaryPassword, newUser.WebAuth.PublicKey));
 			return newUser;
 		}
 

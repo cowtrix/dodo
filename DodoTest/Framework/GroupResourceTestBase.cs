@@ -47,6 +47,32 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		public void CannotCreateWhenNotVerified()
+		{
+			var unverifiedUser = RegisterRandomUser(out var username, out _, out var pass, out _, out _, false);
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, GetCreationSchema(), username, pass),
+				e => e.Message.Contains("Forbidden"));
+		}
+
+		[TestMethod]
+		public void CannotPatchWhenNotVerified()
+		{
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var unverifiedUser = RegisterRandomUser(out var username, out _, out var pass, out _, out _, false);
+			AssertX.Throws<Exception>(() => RequestJSON(createdObj.Value<string>("ResourceURL"), Method.PATCH, GetPatchSchema(), username, pass),
+				e => e.Message.Contains("Forbidden"));
+		}
+
+		[TestMethod]
+		public void CannotDeleteWhenNotVerified()
+		{
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var unverifiedUser = RegisterRandomUser(out var username, out _, out var pass, out _, out _, false);
+			AssertX.Throws<Exception>(() => RequestJSON(createdObj.Value<string>("ResourceURL"), Method.PATCH, GetPatchSchema(), username, pass),
+				e => e.Message.Contains("Forbidden"));
+		}
+
+		[TestMethod]
 		public void CannotEditIfNotAdmin()
 		{
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());

@@ -98,15 +98,16 @@ namespace RESTTests
 			DodoServer.CleanAllData();
 		}
 
-		protected JObject RegisterUser(out string guid, string username = null, string name = null, string password = null, string email = null)
+		protected JObject RegisterUser(out string guid, string username = null, string name = null, string password = null, string email = null, bool verifyEmail = true)
 		{
 			username = username ?? DefaultUsername;
 			name = name ?? DefaultName;
 			password = password ?? DefaultPassword;
 			email = email ?? DefaultEmail;
-			var jobj = RequestJSON("register", Method.POST, new UserRESTHandler.CreationSchema(username, password, name, email));
+			var jobj = RequestJSON("register", Method.POST, new UserRESTHandler.CreationSchema(username, password, name, email), "", "");
 			guid = jobj.Value<string>("GUID");
-			VerifyUser(guid, username, password, email);
+			if(verifyEmail)
+				VerifyUser(guid, username, password, email);
 			return jobj;
 		}
 
@@ -115,16 +116,18 @@ namespace RESTTests
 			var response = Request($"verify", Method.POST, null, username, password);
 			var verifyAction = ResourceUtility.GetManager<User>().GetSingle(u => u.WebAuth.Username == username)
 				.PushActions.First(pa => pa is VerifyEmailAction) as VerifyEmailAction;
-			return Request($"verify?token={verifyAction.Token}", Method.POST, null, username, password);
+			response = Request($"verify?token={verifyAction.Token}", Method.POST, null, username, password);
+			Assert.IsTrue(response.Content.Contains("Email verified"), response.Content);
+			return response;
 		}
 
-		protected JObject RegisterRandomUser(out string username, out string name, out string password, out string email, out string guid)
+		protected JObject RegisterRandomUser(out string username, out string name, out string password, out string email, out string guid, bool verifyEmail = true)
 		{
 			username = StringExtensions.RandomString(10).ToLower();
 			name = StringExtensions.RandomString(10).ToLower();
 			password = "@" + username;
 			email = $"{StringExtensions.RandomString(5).ToLower()}@{StringExtensions.RandomString(5).ToLower()}.com";
-			return RegisterUser(out guid, username, name, password, email);
+			return RegisterUser(out guid, username, name, password, email, verifyEmail);
 		}
 
 		protected JObject CreateNewRebellion(string name, GeoLocation location)

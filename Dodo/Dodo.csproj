@@ -96,6 +96,7 @@
     <Compile Include="Gateways\RebellionBotConfiguration.cs" />
     <Compile Include="PushActions\AddAdminAction.cs" />
     <Compile Include="PushActions\TemporaryUserAction.cs" />
+    <Compile Include="PushActions\VerifyEmailAction.cs" />
     <Compile Include="Resources\GroupResource.cs" />
     <Compile Include="Resources\GroupResourceRESTHandler.cs" />
     <Compile Include="Resources\Site\ActionSite.cs" />

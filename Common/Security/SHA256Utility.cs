@@ -21,7 +21,7 @@ namespace Common.Security
 			{
 				data = sha256.ComputeHash(data);
 			}
-			return Encoding.ASCII.GetString(data);
+			return Encoding.UTF8.GetString(data);
 		}
 	}
 }

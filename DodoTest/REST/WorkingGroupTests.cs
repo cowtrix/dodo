@@ -37,7 +37,7 @@ namespace RESTTests
 				return new WorkingGroupRESTHandler.CreationSchema("Test Working Group " + StringExtensions.RandomString(6),
 				"Test mandate");
 			}
-			return new WorkingGroupRESTHandler.CreationSchema("Test Working Group ", 
+			return new WorkingGroupRESTHandler.CreationSchema("Test Working Group ",
 				"Test mandate");
 		}
 
@@ -74,6 +74,19 @@ namespace RESTTests
 		{
 			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Create", "Test mandate")),
 				e => e.Message.Contains("Reserved Resource URL"));
+		}
+
+		[TestMethod]
+		public void CannotCreateForInvalidParent()
+		{
+			AssertX.Throws<Exception>(() => RequestJSON($"rebellions/nonexistantrebellion/wg/create",
+				Method.POST, GetCreationSchema(false)),
+				e => e.Message.Contains("NotFound"));
+
+			var wg = RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
+			AssertX.Throws<Exception>(() => RequestJSON(wg.Value<string>("ResourceURL") + "invalidatingstring" + "/wg/create",
+				Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate")),
+				e => e.Message.Contains("NotFound"));
 		}
 
 		[TestMethod]

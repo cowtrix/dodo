@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
 using Dodo.Resources;
 using Dodo.Users;
 using Newtonsoft.Json;
@@ -76,6 +77,11 @@ namespace Dodo.LocalGroups
 			}
 			localGroup.Verify();
 			return localGroup;
+		}
+
+		protected override bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url)
+		{
+			return requestOwner.HasValue && requestOwner.Value.EmailVerified;
 		}
 	}
 }

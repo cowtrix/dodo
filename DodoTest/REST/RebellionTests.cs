@@ -45,7 +45,7 @@ namespace RESTTests
 			AssertX.Throws<Exception>(() =>
 			{
 				RequestJSON(CreationURL, Method.POST, GetCreationSchema(), "", "");
-			}, e => e.Message.Contains("You need to login"));
+			}, e => e.Message.Contains("Forbidden"));
 		}
 
 		[TestMethod]

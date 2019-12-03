@@ -22,7 +22,7 @@ namespace Dodo.Users
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
 		}
 
-		public override void Execute(User user, Passphrase passphrase)
+		protected override void ExecuteInternal(User user, Passphrase passphrase)
 		{
 			Resource.CheckValue();
 			var privateKey = user.WebAuth.PrivateKey.GetValue(passphrase);
