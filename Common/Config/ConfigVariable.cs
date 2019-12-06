@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace Common.Config
 {
+	/// <summary>
+	/// This is a variable that can be overriden in the configuration JSON file.
+	/// Each ConfigurationVariable has a string key. Non-default values can be
+	/// specified in a `config.json` file in the root directory, which should
+	/// be formatted as a JSON string/object dictionary
+	/// </summary>
+	/// <typeparam name="T">The type of the value to be stored</typeparam>
 	public struct ConfigVariable<T>
 	{
 		public T Value

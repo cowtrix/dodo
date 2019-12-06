@@ -36,9 +36,6 @@ namespace Dodo.Rebellions
 			}
 		}
 
-		[View(EPermissionLevel.ADMIN)]
-		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
-
 		public Rebellion() : base() { }
 
 		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, schema.Name, null)

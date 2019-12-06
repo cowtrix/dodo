@@ -11,24 +11,6 @@ namespace Dodo.Users
 {
 	public class WebPortalAuth : IVerifiable
 	{
-		public struct ResetToken
-		{
-			const int TimeoutMinutes = 15;
-			[JsonProperty]
-			private string m_token;
-			[JsonProperty]
-			private DateTime m_timestamp;
-
-			public static ResetToken Generate()
-			{
-				return new ResetToken()
-				{
-					m_token = KeyGenerator.GetUniqueKey(64),
-					m_timestamp = DateTime.Now,
-				};
-			}
-		}
-
 		public WebPortalAuth() { }
 
 		public WebPortalAuth(string userName, string password)
@@ -61,12 +43,10 @@ namespace Dodo.Users
 		public string PublicKey { get; private set; }
 
 		/// <summary>
-		/// Am MD5 hash of the user's password which we can challenge against
+		/// Am SHA hash of the user's password which we can challenge against
 		/// </summary>
 		[JsonProperty]
 		public string PasswordHash { get; private set; }
-
-		public ResetToken PasswordResetToken;
 
 		[JsonProperty]
 		public EncryptedStore<string> PassPhrase;

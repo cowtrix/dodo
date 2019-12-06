@@ -17,14 +17,9 @@ namespace RESTTests
 		{
 			if(!unique)
 			{
-				return new RebellionRESTHandler.CreationSchema
-				{
-					Name = "Test Rebellion ",
-					Location = new GeoLocation(45, 97)
-				};
+				return new RebellionRESTHandler.CreationSchema("Test Rebellion ", new GeoLocation(45, 97));
 			}
-			return new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion " + StringExtensions.RandomString(6),
-				Location = new GeoLocation(45, 97) };
+			return new RebellionRESTHandler.CreationSchema("Test Rebellion " + StringExtensions.RandomString(6), new GeoLocation(45, 97));
 		}
 
 		public override object GetPatchSchema()
@@ -48,7 +43,7 @@ namespace RESTTests
 			}, e => e.Message.Contains("Forbidden"));
 		}
 
-		[TestMethod]
+		/*[TestMethod]
 		public void CannotPatchWithoutAdminRights()
 		{
 			var rebellion = CreateNewRebellion("Test rebellion", new GeoLocation());
@@ -60,12 +55,12 @@ namespace RESTTests
 					TelegramConfig = new RebellionBotConfiguration.TelegramConfiguration()
 				}
 			}, username, password), (e) => e.Message.Contains("Forbidden"));
-		}
+		}*/
 
 		[TestMethod]
 		public void CannotCreateAtCreationURL()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema { Name = "Create" }),
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Create", new GeoLocation())),
 				e => e.Message.Contains("Reserved Resource URL"));
 		}
 	}

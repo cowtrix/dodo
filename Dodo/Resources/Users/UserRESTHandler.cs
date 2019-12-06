@@ -88,7 +88,7 @@ namespace Dodo.Users
 			}
 			request.QueryParams.TryGetValue("token", out var verifyToken);
 			var verification = owner.PushActions.FirstOrDefault(pa => pa is VerifyEmailAction) as VerifyEmailAction;
-			if (string.IsNullOrEmpty(verifyToken) || verifyToken == VERIFY_PARAM || verification == null)
+			if ((string.IsNullOrEmpty(verifyToken) || verifyToken == VERIFY_PARAM) && verification == null)
 			{
 				(ResourceManager as UserManager).SendEmailVerification(owner);
 				return HttpBuilder.OK("Email Verification Sent");

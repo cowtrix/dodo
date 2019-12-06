@@ -77,7 +77,7 @@ namespace Dodo
 				// with a one-off token
 				var userManager = ResourceUtility.GetManager<User>() as UserManager;
 				targetUser = userManager.CreateTemporaryUser(target, out temporaryPassword);
-				EmailHelper.SendEmail(target, null, $"Dodo: You have been invited to administrate " + resource.Name,
+				EmailHelper.SendEmail(target, null, $"{DodoServer.PRODUCT_NAME}: You have been invited to administrate " + resource.Name,
 					$"You have been invited to administrate the {resource.Name} {resource.GetType().GetName()}.\n" +
 					$"To accept this invitation, register your account at {DodoServer.GetURL()}/{UserRESTHandler.CREATION_URL}");
 			}

@@ -33,7 +33,7 @@ namespace Dodo.Users
 			}
 			var emailVerifyPushAction = new VerifyEmailAction(user);
 			user.PushActions.Add(emailVerifyPushAction);
-			EmailHelper.SendEmail(user.Email, user.Name, $"Please verify your email",
+			EmailHelper.SendEmail(user.Email, user.Name, $"{DodoServer.PRODUCT_NAME}: Please verify your email",
 				"To verify your email, click the following link:\n" +
 				$"{DodoServer.GetURL()}/{user.ResourceURL}?verify={emailVerifyPushAction.Token}");
 		}

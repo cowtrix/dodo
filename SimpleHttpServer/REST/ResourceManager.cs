@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Extensions;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using System;
@@ -95,10 +96,7 @@ namespace SimpleHttpServer.REST
 
 		public string Serialize()
 		{
-			return JsonConvert.SerializeObject(InternalData, Formatting.Indented, new JsonSerializerSettings
-			{
-				TypeNameHandling = TypeNameHandling.Auto
-			});
+			return JsonConvert.SerializeObject(InternalData, Formatting.Indented, JsonExtensions.DefaultSettings);
 		}
 
 		public void Deserialize(string json)

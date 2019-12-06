@@ -114,6 +114,7 @@ namespace RESTTests
 		protected IRestResponse VerifyUser(string guid, string username, string password, string email)
 		{
 			var response = Request($"verify", Method.POST, null, username, password);
+			Assert.IsTrue(response.Content.Contains("Email Verification Sent"), response.Content);
 			var verifyAction = ResourceUtility.GetManager<User>().GetSingle(u => u.WebAuth.Username == username)
 				.PushActions.First(pa => pa is VerifyEmailAction) as VerifyEmailAction;
 			response = Request($"verify?token={verifyAction.Token}", Method.POST, null, username, password);
@@ -134,7 +135,7 @@ namespace RESTTests
 		{
 			var request = new RestRequest("rebellions/create", Method.POST);
 			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
-			request.AddJsonBody(new RebellionRESTHandler.CreationSchema { Name = name, Location = new GeoLocation(66, 66) });
+			request.AddJsonBody(new RebellionRESTHandler.CreationSchema(name, new GeoLocation(66, 66)));
 			var response = RestClient.Execute(request).Content;
 			if(!response.IsValidJson())
 			{

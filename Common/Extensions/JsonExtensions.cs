@@ -16,6 +16,9 @@ namespace Common.Extensions
 
 	public static class JsonExtensions
 	{
+
+		public static JsonSerializerSettings DefaultSettings { get { return new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto, CheckAdditionalContent = true, }; } }
+
 		/// <summary>
 		/// Verify the syntactic integrity of a JSON string
 		/// </summary>

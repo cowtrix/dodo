@@ -27,7 +27,7 @@ namespace SimpleHttpServer.REST
 					{
 						e = e.InnerException;
 					}
-					var msg = Uri.EscapeDataString(e.Message);
+					var msg = e.Message;
 					if (e is HttpException)
 					{
 						return HttpBuilder.Custom(msg, (e as HttpException).ErrorCode);

@@ -16,6 +16,7 @@ namespace Dodo
 {
 	public static class DodoServer
 	{
+		public const string PRODUCT_NAME = "Dodo";
 		private static ConfigVariable<int> m_httpPort = new ConfigVariable<int>("HttpPort", 443);
 		private static ConfigVariable<string> m_sslCertPath = new ConfigVariable<string>("SSLCertificatePath", "server.pfx");
 

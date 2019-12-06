@@ -12,8 +12,8 @@ namespace Dodo.Utility
 {
 	public static class EmailHelper
 	{
-		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", "noreply@dodo.earth");
-		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", "Dodo SysAdmin");
+		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", $"noreply@{DodoServer.GetURL()}");
+		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", $"{DodoServer.PRODUCT_NAME} SysAdmin");
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
 		static SendGridClient m_client;
 
@@ -36,7 +36,7 @@ namespace Dodo.Utility
 				await m_client.SendEmailAsync(msg);
 				Console.WriteLine("OK");
 			});
-			
+
 			t.Start();
 		}
 	}

@@ -17,6 +17,12 @@ namespace Dodo.Rebellions
 		{
 			public string Name = "";
 			public GeoLocation Location = new GeoLocation();
+
+			public CreationSchema(string name, GeoLocation location)
+			{
+				Name = name;
+				Location = location;
+			}
 		}
 
 		protected override bool URLIsCreation(string url)
@@ -44,7 +50,7 @@ namespace Dodo.Rebellions
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema();
+			return new CreationSchema("", default);
 		}
 
 		protected override Rebellion CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
