@@ -1,8 +1,10 @@
 ﻿using Common;
 using Common.Extensions;
+using Dodo;
 using Dodo.LocalGroups;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using SimpleHttpServer.REST;
@@ -49,6 +51,20 @@ namespace RESTTests
 				new { WebAuth = new { Username = firstObj.Value<JObject>("WebAuth").Value<string>("Username") } }, username, password),
 				e => e.Message.Contains("Duplicate ResourceURL"));
 			RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET, null, username, password);
+		}
+
+		[TestMethod]
+		public void CanResetPassword()
+		{
+			var user = RegisterUser(out var guid);
+			var request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, DefaultEmail, "", "");
+			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a passwrod reset email has been sent"));
+			var newPassword = ValidationExtensions.GenerateStrongPassword();
+			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid)) as User)
+				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, newPassword, "", "");
+			Assert.IsTrue(request.Content.Contains("You've succesfully changed your password."));
+			RequestJSON(user.Value<string>("ResourceURL"), Method.GET, null, DefaultUsername, newPassword);
 		}
 
 		protected override void CheckCreatedObject(JObject obj)

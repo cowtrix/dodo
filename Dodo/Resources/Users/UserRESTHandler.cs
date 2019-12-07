@@ -17,6 +17,7 @@ namespace Dodo.Users
 	{
 		public const string CREATION_URL = "register";
 		public const string VERIFY_PARAM = "verify";
+		public const string RESETPASS_URL = "resetpassword";
 
 		protected override string CreationPostfix => CREATION_URL;
 
@@ -41,33 +42,54 @@ namespace Dodo.Users
 			routeList.Add(new Route(
 				$"User Email Verification",
 				EHTTPRequestType.POST,
-				IsEmailVerifyURL,
+				url => url.StartsWith(VERIFY_PARAM),
 				WrapRawCall((req) => VerifyEmail(req))
+				));
+			routeList.Add(new Route(
+				$"User Password Reset",
+				EHTTPRequestType.POST,
+				url => url.StartsWith(RESETPASS_URL),
+				WrapRawCall((req) => ResetPassword(req))
 				));
 			base.AddRoutes(routeList);
 		}
 
-		private bool IsEmailVerifyURL(string url)
-		{
-			return url.StartsWith(VERIFY_PARAM);
-		}
-
 		public HttpResponse ResetPassword(HttpRequest request)
 		{
-			throw new NotImplementedException();
-			if(DodoRESTServer.GetRequestOwner(request) != null)
+			if(request.QueryParams.TryGetValue("token", out var token))
 			{
-				return HttpBuilder.Forbidden();
+				var user = ResourceManager.
+					GetSingle(u =>
+					{
+						var attr = u.PushActions.GetSinglePushAction<ResetPasswordAction>();
+						if(attr == null)
+						{
+							return false;
+						}
+						return attr.TemporaryToken.Value == token;
+					});
+				if(user == null)
+				{
+					throw HttpException.NOT_FOUND;
+				}
+				var newPass = JsonConvert.DeserializeObject<string>(request.Content);
+				user.WebAuth = new WebPortalAuth(user.WebAuth.Username, newPass);
+				return HttpBuilder.OK("You've succesfully changed your password.");
 			}
-			var email = JsonExtensions.DeserializeAnonymousType(request.Content, new { Email = "" }).Email;
-			var userWithEmail = ResourceUtility.GetManager<User>().GetSingle(x => x.Email == email);
-			if(userWithEmail == null)
+			else
 			{
-				return HttpBuilder.NotFound();
+				var email = JsonConvert.DeserializeObject<string>(request.Content);
+				if(!ValidationExtensions.EmailIsValid(email))
+				{
+					throw new HttpException("Invalid email address", 500);
+				}
+				var user = ResourceManager.GetSingle(u => u.EmailVerified && u.Email == email);
+				if(user != null)
+				{
+					user.PushActions.Add(new ResetPasswordAction(user));
+				}
+				return HttpBuilder.OK("If an account with that email exists, a passwrod reset email has been sent");
 			}
-			userWithEmail.WebAuth.PasswordResetToken = WebPortalAuth.ResetToken.Generate();
-			// TODO send an email with the auth link
-			return HttpBuilder.OK();
 		}
 
 		protected override IRESTResourceSchema GetCreationSchema()
@@ -77,7 +99,7 @@ namespace Dodo.Users
 
 		protected HttpResponse VerifyEmail(HttpRequest request)
 		{
-			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
+			var owner = DodoRESTServer.TryGetRequestOwner(request, out var passphrase);
 			if (owner == null)
 			{
 				throw HttpException.LOGIN;
@@ -87,7 +109,7 @@ namespace Dodo.Users
 				throw new HttpException("User email already verified", 200);
 			}
 			request.QueryParams.TryGetValue("token", out var verifyToken);
-			var verification = owner.PushActions.FirstOrDefault(pa => pa is VerifyEmailAction) as VerifyEmailAction;
+			var verification = owner.PushActions.GetSinglePushAction<VerifyEmailAction>();
 			if ((string.IsNullOrEmpty(verifyToken) || verifyToken == VERIFY_PARAM) && verification == null)
 			{
 				(ResourceManager as UserManager).SendEmailVerification(owner);
@@ -107,7 +129,7 @@ namespace Dodo.Users
 			var user = ResourceManager.GetSingle(u => u.Email == schema.Email);
 			if(user != null)
 			{
-				var tempPushAction = user.PushActions.FirstOrDefault(pa => pa is TemporaryUserAction) as TemporaryUserAction;
+				var tempPushAction = user.PushActions.GetSinglePushAction<TemporaryUserAction>();
 				if (tempPushAction != null)
 				{
 					// This is a temp user

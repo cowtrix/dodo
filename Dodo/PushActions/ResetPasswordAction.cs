@@ -9,7 +9,8 @@ namespace Dodo.Users
 	{
 		const int TOKEN_SIZE = 32;
 		const int TOKEN_TIMEOUT = 20;
-		public override string Message => "You've requested your password to be reset. Check your email and click the link there. If this wasn't you, change your password immediately.";
+		public override string Message => "You've requested your password to be reset. " +
+			"Check your email and click the link there. If this wasn't you, change your password immediately.";
 
 		public override bool AutoFire => false;
 

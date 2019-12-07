@@ -29,7 +29,7 @@ namespace Dodo
 			}
 			lock (owner.PushActions)
 			{
-				foreach (var pushAction in owner.PushActions.Where(pa => pa.AutoFire))
+				foreach (var pushAction in owner.PushActions.AllActions.Where(pa => pa.AutoFire))
 				{
 					pushAction.Execute(owner, passphrase);
 				}

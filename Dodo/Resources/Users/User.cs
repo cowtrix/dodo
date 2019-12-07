@@ -29,7 +29,7 @@ namespace Dodo.Users
 		public ResourceReference<LocalGroup> LocalGroup;
 
 		[View(EPermissionLevel.OWNER)]
-		public List<PushAction> PushActions = new List<PushAction>();
+		public PushActionCollection PushActions = new PushActionCollection();
 
 		public User() : base()
 		{
