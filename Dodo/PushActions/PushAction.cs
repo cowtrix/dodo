@@ -12,6 +12,13 @@ namespace Dodo.Users
 	{
 	}
 
+	public class PushActionDuplicateException : Exception
+	{
+		public PushActionDuplicateException(string message) : base(message)
+		{
+		}
+	}
+
 	public class PushActionCollection
 	{
 		[JsonProperty]
@@ -25,7 +32,7 @@ namespace Dodo.Users
 			var isSingleton = type.GetCustomAttribute<SingletonPushActionAttribute>();
 			if (isSingleton != null && m_actions.Any(action => action.GetType() == type))
 			{
-				throw new Exception($"Cannot have multiple {type} PushActions");
+				throw new PushActionDuplicateException($"Cannot have multiple {type} PushActions");
 			}
 			m_actions.Add(pa);
 		}

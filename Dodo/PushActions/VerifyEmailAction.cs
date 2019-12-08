@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 
 namespace Dodo.Users
 {
+	[SingletonPushAction]
 	public class VerifyEmailAction : PushAction
 	{
 		public override string Message => "You should check your email and verify your email address with us.";

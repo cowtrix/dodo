@@ -5,6 +5,7 @@ using System;
 
 namespace Dodo.Users
 {
+	[SingletonPushAction]
 	public class ResetPasswordAction : PushAction
 	{
 		const int TOKEN_SIZE = 32;

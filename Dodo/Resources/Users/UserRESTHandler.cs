@@ -58,6 +58,7 @@ namespace Dodo.Users
 		{
 			if(request.QueryParams.TryGetValue("token", out var token))
 			{
+				var owner = DodoRESTServer.TryGetRequestOwner(request, out _);
 				var user = ResourceManager.
 					GetSingle(u =>
 					{
@@ -70,7 +71,13 @@ namespace Dodo.Users
 					});
 				if(user == null)
 				{
-					throw HttpException.NOT_FOUND;
+					throw HttpException.FORBIDDEN;
+				}
+				if (owner != null && user != owner)
+				{
+					// A different user is trying to use someone else's reset token
+					Logger.Error($"User {owner.GUID} used user {user.GUID} password reset token");
+					throw HttpException.FORBIDDEN;
 				}
 				var newPass = JsonConvert.DeserializeObject<string>(request.Content);
 				user.WebAuth = new WebPortalAuth(user.WebAuth.Username, newPass);
@@ -83,12 +90,18 @@ namespace Dodo.Users
 				{
 					throw new HttpException("Invalid email address", 500);
 				}
-				var user = ResourceManager.GetSingle(u => u.EmailVerified && u.Email == email);
+				var user = ResourceManager.GetSingle(u => u.Email == email);
 				if(user != null)
 				{
-					user.PushActions.Add(new ResetPasswordAction(user));
+					try
+					{
+						user.PushActions.Add(new ResetPasswordAction(user));
+					}
+					catch (PushActionDuplicateException)
+					{
+					}
 				}
-				return HttpBuilder.OK("If an account with that email exists, a passwrod reset email has been sent");
+				return HttpBuilder.OK("If an account with that email exists, a password reset email has been sent");
 			}
 		}
 

@@ -58,13 +58,60 @@ namespace RESTTests
 		{
 			var user = RegisterUser(out var guid);
 			var request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, DefaultEmail, "", "");
-			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a passwrod reset email has been sent"));
+			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid)) as User)
 				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
 			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, newPassword, "", "");
 			Assert.IsTrue(request.Content.Contains("You've succesfully changed your password."));
 			RequestJSON(user.Value<string>("ResourceURL"), Method.GET, null, DefaultUsername, newPassword);
+		}
+
+		[TestMethod]
+		public void ResetPasswordBadActorScenario()
+		{
+			//User signs up
+			var user1 = RegisterRandomUser(out var username1, out _, out var password1, out var email1, out var guid1);
+			// User requests reset token
+			var request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, email1, "", "");
+			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
+			var newPassword = ValidationExtensions.GenerateStrongPassword();
+			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid1)) as User)
+				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
+			// Register a second user
+			var user2 = RegisterRandomUser(out var username2, out _, out var password2, out _, out var guid2);
+			// Second user attempts to use the token - should be forbidden
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" +
+				token.Value, Method.POST, newPassword, username2, password2);
+			Assert.AreEqual(System.Net.HttpStatusCode.Forbidden, request.StatusCode);
+		}
+
+		[TestMethod]
+		public void ResetPasswordBadBehaviourScenario()
+		{
+			// Sending invalid emai should result in error
+			var request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, "not an email", "", "");
+			Assert.AreEqual("Invalid email address", request.StatusDescription);
+
+			// User signs up
+			var user1 = RegisterRandomUser(out var username1, out _, out var password1, out var email1, out var guid1);
+			// User requests reset token
+			request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, email1, "", "");
+			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
+
+			// User requests another token
+			request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, email1, "", "");
+			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
+
+			var newPassword = ValidationExtensions.GenerateStrongPassword();
+			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid1)) as User)
+				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
+			// Register a second user
+			var user2 = RegisterRandomUser(out var username2, out _, out var password2, out _, out var guid2);
+			// Second user attempts to use the token - should be forbidden
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" +
+				token.Value, Method.POST, newPassword, username2, password2);
+			Assert.AreEqual(System.Net.HttpStatusCode.Forbidden, request.StatusCode);
 		}
 
 		protected override void CheckCreatedObject(JObject obj)

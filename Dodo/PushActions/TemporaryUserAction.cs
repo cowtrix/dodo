@@ -4,6 +4,7 @@ using Common.Security;
 
 namespace Dodo.Users
 {
+	[SingletonPushAction]
 	public class TemporaryUserAction : PushAction
 	{
 		[JsonProperty]
