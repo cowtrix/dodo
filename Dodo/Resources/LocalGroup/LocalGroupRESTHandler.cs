@@ -78,10 +78,5 @@ namespace Dodo.LocalGroups
 			localGroup.Verify();
 			return localGroup;
 		}
-
-		protected override bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url)
-		{
-			return requestOwner.HasValue && requestOwner.Value.EmailVerified;
-		}
 	}
 }

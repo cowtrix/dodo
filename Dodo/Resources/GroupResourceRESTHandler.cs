@@ -133,5 +133,21 @@ namespace Dodo
 			target.Leave(owner, passphrase);
 			return HttpBuilder.OK();
 		}
+
+		protected override bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url, out string error)
+		{
+			if (!requestOwner.HasValue)
+			{
+				error = "You need to login";
+				return false;
+			}
+			if (!requestOwner.Value.EmailVerified)
+			{
+				error = "You need to verify your email";
+				return false;
+			}
+			error = null;
+			return true;
+		}
 	}
 }

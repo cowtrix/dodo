@@ -25,6 +25,10 @@ namespace Dodo.Users
 			EmailHelper.SendEmail(targetUser.Email, targetUser.Name, $"{DodoServer.PRODUCT_NAME}: Reset your password",
 				$"You've requested a password reset for your account on {DodoServer.GetURL()}." +
 				$"To reset your password, visit the following link: {DodoServer.GetURL()}/resetpassword?token={TemporaryToken.Value}");
+
+#if DEBUG
+			Console.WriteLine(TemporaryToken.Value);
+#endif
 		}
 	}
 

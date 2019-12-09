@@ -108,7 +108,11 @@ namespace Dodo
 				else if (request.Method == SimpleHttpServer.EHTTPRequestType.POST)
 				{
 					permissionLevel = EPermissionLevel.OWNER;
-					return CanCreateAtUrl(requestOwner, passphrase, request.Url);
+					if(!CanCreateAtUrl(requestOwner, passphrase, request.Url, out var error))
+					{
+						throw new HttpException(error, 5000);
+					}
+					return true;
 				}
 				permissionLevel = EPermissionLevel.PUBLIC;
 				return true;
@@ -116,17 +120,25 @@ namespace Dodo
 			return ResourceManager.IsAuthorised(request, target, out permissionLevel);
 		}
 
-		protected virtual bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url)
+		protected virtual bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url, out string error)
 		{
 			var parent = GetParentFromURL(url);
 			if (parent == null)
 			{
+				error = "Resource not found";
 				return false;
 			}
-			if(!requestOwner.Value.EmailVerified)
+			if (!requestOwner.HasValue)
 			{
+				error = "You need to login";
 				return false;
 			}
+			if (!requestOwner.Value.EmailVerified)
+			{
+				error = "You need to verify your email";
+				return false;
+			}
+			error = null;
 			return parent.IsAdmin(requestOwner, requestOwner, passphrase);
 		}
 	}

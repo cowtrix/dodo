@@ -73,10 +73,5 @@ namespace Dodo.Rebellions
 			newRebellion.Verify();
 			return newRebellion;
 		}
-
-		protected override bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url)
-		{
-			return requestOwner.HasValue && requestOwner.Value.EmailVerified;
-		}
 	}
 }

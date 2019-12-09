@@ -1,6 +1,7 @@
 ﻿using Common.Extensions;
 using Common.Security;
 using Newtonsoft.Json;
+using System;
 
 namespace Dodo.Users
 {
@@ -17,6 +18,9 @@ namespace Dodo.Users
 		public VerifyEmailAction(User user)
 		{
 			Token = StringExtensions.RandomString(64);
+#if DEBUG
+			Console.WriteLine(Token);
+#endif
 		}
 	}
 }
