@@ -95,6 +95,7 @@
     <Compile Include="Gateways\Message.cs" />
     <Compile Include="Gateways\RebellionBotConfiguration.cs" />
     <Compile Include="PushActions\AddAdminAction.cs" />
+    <Compile Include="PushActions\PushActionCollection.cs" />
     <Compile Include="PushActions\ResetPasswordAction.cs" />
     <Compile Include="PushActions\TemporaryUserAction.cs" />
     <Compile Include="PushActions\VerifyEmailAction.cs" />

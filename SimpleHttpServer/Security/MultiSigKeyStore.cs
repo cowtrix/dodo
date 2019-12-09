@@ -16,24 +16,28 @@ namespace Common.Security
 	public class MultiSigKeyStore<T>
 	{
 		[JsonProperty]
-		private string m_key;
-		[JsonProperty]
-		private MultiSigEncryptedStore<T, string> m_data;
+		private ConcurrentDictionary<string, string> m_data = new ConcurrentDictionary<string, string>();
 
-		public MultiSigKeyStore(T key, Passphrase passphrase)
+		public void Add(T key, Passphrase ownerPass)
 		{
-			m_key = KeyGenerator.GetUniqueKey(128);
-			m_data = new MultiSigEncryptedStore<T, string>(m_key, key, passphrase);
+			var id = SecurityExtensions.GenerateID(key, ownerPass);
+			m_data[id] = SymmetricSecurity.Encrypt(m_data, ownerPass.Value);
 		}
 
-		public void AddPermission(T key, Passphrase ownerPass, T newKey, Passphrase newUserPass)
+		public bool Remove(T key, Passphrase ownerPass)
 		{
-			m_data.AddPermission(key, ownerPass, newKey, newUserPass);
+			var id = SecurityExtensions.GenerateID(key, ownerPass);
+			return m_data.TryRemove(id, out _);
 		}
 
-		public bool IsAuthorised(T key, Passphrase password)
+		public bool IsAuthorised(T key, Passphrase ownerPass)
 		{
-			return m_data.GetValue(key, password) == m_key;
+			if(key == default || string.IsNullOrEmpty(ownerPass.Value))
+			{
+				return false;
+			}
+			var id = SecurityExtensions.GenerateID(key, ownerPass);
+			return m_data.ContainsKey(id);
 		}
 	}
 }

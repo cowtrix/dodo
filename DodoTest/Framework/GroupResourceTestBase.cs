@@ -98,5 +98,20 @@ namespace RESTTests
 			RegisterRandomUser(out var username1, out _, out var password, out _, out var guid);
 			response = RequestJSON(resourceURL, Method.GET, null, username1, password);
 		}
+
+		[TestMethod]
+		public void CanJoin()
+		{
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var resourceURL = createdObj.Value<string>("ResourceURL");
+			var newUser = RegisterRandomUser(out var username, out _, out var password, out _, out _);
+			createdObj = RequestJSON(CreationURL, Method.GET, user: username, password:password);
+			Assert.AreEqual("false", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
+			var response = Request(resourceURL + GroupResourceRESTHandler<T>.JOIN_GROUP, Method.POST
+				, username: username, password: password);
+
+			createdObj = RequestJSON(CreationURL, Method.GET, user: username, password: password);
+			Assert.AreEqual("true", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
+		}
 	}
 }

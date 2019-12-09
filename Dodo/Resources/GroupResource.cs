@@ -15,22 +15,42 @@ namespace Dodo
 	/// </summary>
 	public abstract class GroupResource : DodoResource
 	{
+		public const string IS_MEMBER_AUX_TOKEN = "IS_MEMBER";
+		public class AdminData
+		{
+			public List<ResourceReference<User>> Administrators = new List<ResourceReference<User>>();
+			public string GroupPrivateKey { get; private set; }
+
+			public AdminData(User firstAdmin, string privateKey)
+			{
+				Administrators.Add(firstAdmin);
+				GroupPrivateKey = privateKey;
+			}
+		}
+
 		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; private set; }
 
 		[NoPatch]
 		[View(EPermissionLevel.ADMIN)]
-		public UserMultiSigStore<List<ResourceReference<User>>> Administrators;
+		public UserMultiSigStore<AdminData> AdministratorData;
+
+		public PushActionCollection SharedActions = new PushActionCollection();
+
+		public SecureUserStore Members = new SecureUserStore();
+
+		[JsonProperty]
+		public string GroupPublicKey { get; private set; }
 
 		public GroupResource() : base() { }
 
 		public GroupResource(User creator, Passphrase passphrase, string name, GroupResource parent) : base(creator, name)
 		{
 			Parent = new ResourceReference<GroupResource>(parent);
-			Administrators = new UserMultiSigStore<List<ResourceReference<User>>>(
-				new List<ResourceReference<User>>() { new ResourceReference<User>(creator) },
-				creator, passphrase);
+			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
+			GroupPublicKey = pk;
+			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(creator, pv), creator, passphrase);
 		}
 
 		/// <summary>
@@ -54,25 +74,36 @@ namespace Dodo
 		public bool IsAdmin(User target, User requester, Passphrase passphrase)
 		{
 			var userRef = new ResourceReference<User>(requester);
-			if(!Administrators.IsAuthorised(userRef, passphrase))
+			if(!AdministratorData.IsAuthorised(userRef, passphrase))
 			{
 				return false;
 			}
-			return Administrators.GetValue(userRef, passphrase).Contains(target);
+			return AdministratorData.GetValue(userRef, passphrase).Administrators.Contains(target);
 		}
 
 		public void AddAdmin(User requester, Passphrase requesterPass, User newAdmin, Passphrase newAdminPassword)
 		{
 			var userRef = new ResourceReference<User>(requester);
 			var newAdminRef = new ResourceReference<User>(newAdmin);
-			Administrators.AddPermission(userRef, requesterPass, newAdminRef, newAdminPassword);
-			var adminList = Administrators.GetValue(newAdminRef, newAdminPassword);
+			AdministratorData.AddPermission(userRef, requesterPass, newAdminRef, newAdminPassword);
+			var adminData = AdministratorData.GetValue(newAdminRef, newAdminPassword);
+			var adminList = adminData.Administrators;
 			if(adminList.Contains(newAdminRef))
 			{
 				return;
 			}
 			adminList.Add(newAdminRef);
-			Administrators.SetValue(adminList, newAdminRef, newAdminPassword);
+			AdministratorData.SetValue(adminData, newAdminRef, newAdminPassword);
+		}
+
+		public void Join(User user, Passphrase passphrase)
+		{
+			Members.Add(user, passphrase);
+		}
+
+		public void Leave(User user, Passphrase passphrase)
+		{
+			Members.Add(user, passphrase);
 		}
 
 		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
@@ -105,5 +136,12 @@ namespace Dodo
 		}
 
 		public abstract bool CanContain(Type type);
+
+		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, 
+			object requester, Passphrase passphrase)
+		{
+			var isMember = Members.IsAuthorised(requester as User, passphrase);
+			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
+		}
 	}
 }

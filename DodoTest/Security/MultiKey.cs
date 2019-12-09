@@ -29,14 +29,15 @@ namespace Security
 			var keystore = CancCreateAndAccess<string>(firstUser, firstPass);
 			var secondUser = "test 2";
 			var secondPass = new Passphrase(KeyGenerator.GetUniqueKey(64));
-			keystore.AddPermission(firstUser, firstPass, secondUser, secondPass);
+			keystore.Add(firstUser, firstPass);
 			Assert.IsTrue(keystore.IsAuthorised(secondUser, secondPass));
 			Assert.ThrowsException<AuthenticationException>(() => keystore.IsAuthorised("invalid", new Passphrase("invalid")));
 		}
 
 		public MultiSigKeyStore<T> CancCreateAndAccess<T>(T creator, Passphrase passphrase)
 		{
-			var multisig = new MultiSigKeyStore<T>(creator, passphrase);
+			var multisig = new MultiSigKeyStore<T>();
+			multisig.Add(creator, passphrase);
 			Assert.IsTrue(multisig.IsAuthorised(creator, passphrase));
 			return multisig;
 		}

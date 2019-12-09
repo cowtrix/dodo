@@ -15,20 +15,34 @@ namespace Dodo
 	public abstract class GroupResourceRESTHandler<T> : DodoRESTHandler<T> where T:GroupResource
 	{
 		public const string ADD_ADMIN = "?addadmin";
+		public const string JOIN_GROUP = "?join";
+		public const string LEAVE_GROUP = "?leave";
 		public override void AddRoutes(List<Route> routeList)
 		{
 			routeList.Add(new Route(
 				$"{GetType().Name} ADD ADMIN",
 				EHTTPRequestType.POST,
-				IsAddAdminURL,
+				url => IsResourceActionUrl(url, ADD_ADMIN),
 				WrapRawCall((req) => AddAdmin(req))
+				));
+			routeList.Add(new Route(
+				$"{GetType().Name} JOIN",
+				EHTTPRequestType.POST,
+				url => IsResourceActionUrl(url, JOIN_GROUP),
+				WrapRawCall((req) => JoinGroup(req))
+				));
+			routeList.Add(new Route(
+				$"{GetType().Name} LEAVE",
+				EHTTPRequestType.POST,
+				url => IsResourceActionUrl(url, LEAVE_GROUP),
+				WrapRawCall((req) => LeaveGroup(req))
 				));
 			base.AddRoutes(routeList);
 		}
 
-		private bool IsAddAdminURL(string url)
+		private bool IsResourceActionUrl(string url, string postfix)
 		{
-			if(!url.EndsWith(ADD_ADMIN))
+			if(!url.EndsWith(postfix))
 			{
 				return false;
 			}
@@ -91,6 +105,32 @@ namespace Dodo
 			// real one the next time the user logs in
 			resource.AddAdmin(owner, passphrase, targetUser, temporaryPassword);
 			targetUser.PushActions.Add(new AddAdminAction(resource, temporaryPassword, targetUser.WebAuth.PublicKey));
+			return HttpBuilder.OK();
+		}
+
+		HttpResponse JoinGroup(HttpRequest request)
+		{
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
+			var resourceURL = request.Url.Substring(0, request.Url.Length - JOIN_GROUP.Length);
+			var target = GetResource(resourceURL) as GroupResource;
+			if(target == null)
+			{
+				throw HttpException.NOT_FOUND;
+			}
+			target.Join(owner, passphrase);
+			return HttpBuilder.OK();
+		}
+
+		HttpResponse LeaveGroup(HttpRequest request)
+		{
+			var owner = DodoRESTServer.GetRequestOwner(request, out var passphrase);
+			var resourceURL = request.Url.Substring(0, request.Url.Length - JOIN_GROUP.Length);
+			var target = GetResource(resourceURL) as GroupResource;
+			if (target == null)
+			{
+				throw HttpException.NOT_FOUND;
+			}
+			target.Leave(owner, passphrase);
 			return HttpBuilder.OK();
 		}
 	}

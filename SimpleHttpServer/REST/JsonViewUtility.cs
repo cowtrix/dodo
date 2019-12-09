@@ -73,6 +73,10 @@ namespace SimpleHttpServer.REST
 					vals.Add(memberName, finalObj);
 				}
 			}
+			if(obj is Resource)
+			{
+				(obj as Resource).AppendAuxilaryData(vals, visibility, requester, passphrase);
+			}
 			return vals;
 		}
 

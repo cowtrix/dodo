@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System;
+using System.Collections.Generic;
 
 namespace Dodo.Tasks
 {
@@ -21,6 +22,11 @@ namespace Dodo.Tasks
 		public string ResourceURL => $"tasks/{Definition.Name}";
 
 		public ResourceReference<User> Creator => throw new NotImplementedException();
+
+		public void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
+		{
+			throw new NotImplementedException();
+		}
 
 		public bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
