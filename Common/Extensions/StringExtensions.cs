@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Common.Extensions
@@ -7,13 +8,13 @@ namespace Common.Extensions
 
 	public static class StringExtensions
 	{
-		public static byte[] ToByteArray(this string str)
+		public static byte[] AsciiToByteArray(this string str)
 		{
 			return System.Text.Encoding.ASCII.GetBytes(str);
 		}
-		public static string ByteArrayToString(this byte[] byteArray)
+		public static string ByteArrayToAsciiString(this byte[] byteArray)
 		{
-			return System.Text.Encoding.UTF8.GetString(byteArray);
+			return Encoding.ASCII.GetString(byteArray);
 		}
 		public static string Base64Decode(string base64EncodedData)
 		{

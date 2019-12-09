@@ -62,12 +62,16 @@ namespace Dodo
 					}
 					catch (Exception e)
 					{
-						Logger.Exception(e.InnerException);
-						if (e.InnerException is HttpException)
+						if(e.InnerException != null)
 						{
-							return HttpBuilder.Custom("Error processing request:\n" + e.InnerException.Message, (e.InnerException as HttpException).ErrorCode);
+							e = e.InnerException;
 						}
-						return HttpBuilder.ServerError("Error processing request:\n" + e.InnerException.Message);
+						Logger.Exception(e);
+						if (e is HttpException)
+						{
+							return HttpBuilder.Custom("Error processing request:\n" + e.Message, (e as HttpException).ErrorCode);
+						}
+						return HttpBuilder.ServerError("Error processing request:\n" + e.Message);
 					}
 				}
 			));

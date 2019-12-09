@@ -18,6 +18,7 @@ namespace Dodo
 		public const string IS_MEMBER_AUX_TOKEN = "IS_MEMBER";
 		public class AdminData
 		{
+			[View(EPermissionLevel.ADMIN)]
 			public List<ResourceReference<User>> Administrators = new List<ResourceReference<User>>();
 			public string GroupPrivateKey { get; private set; }
 
@@ -103,7 +104,7 @@ namespace Dodo
 
 		public void Leave(User user, Passphrase passphrase)
 		{
-			Members.Add(user, passphrase);
+			Members.Remove(user, passphrase);
 		}
 
 		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
@@ -140,7 +141,8 @@ namespace Dodo
 		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, 
 			object requester, Passphrase passphrase)
 		{
-			var isMember = Members.IsAuthorised(requester as User, passphrase);
+			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).Value : requester as User;
+			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
 		}
 	}

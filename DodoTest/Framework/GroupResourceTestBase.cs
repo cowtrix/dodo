@@ -17,7 +17,7 @@ namespace RESTTests
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			var resourceURL = createdObj.Value<string>("ResourceURL");
 			createdObj = RequestJSON(resourceURL, Method.GET);
-			var adminBefore = createdObj.Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
+			var adminBefore = createdObj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
 			Assert.IsTrue(adminBefore.All(x => x == DefaultGUID));
 			RegisterRandomUser(out var username1, out _, out var password, out _, out var guid);
 			var addAdminResponse = Request(resourceURL + GroupResourceRESTHandler<T>.ADD_ADMIN, Method.POST, guid);
@@ -25,7 +25,7 @@ namespace RESTTests
 
 			var updatedObj = RequestJSON(resourceURL, Method.GET, user: username1, password:password);
 			Assert.AreEqual("ADMIN", updatedObj.Value<string>(JsonViewUtility.PERMISSION_KEY));
-			var adminAfter = updatedObj.Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
+			var adminAfter = updatedObj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
 			Assert.IsNotNull(adminAfter.SingleOrDefault(x => x == guid));
 		}
 
@@ -42,7 +42,7 @@ namespace RESTTests
 			var secondPass = ValidationExtensions.GenerateStrongPassword();
 			var secondUser = RegisterUser(out var guid, username: "seconduser", email: secondEmail, password: secondPass);
 			createdObj = RequestJSON(resourceURL, Method.GET);
-			var admin = createdObj.Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
+			var admin = createdObj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
 			Assert.IsNotNull(admin.SingleOrDefault(x => x == guid));
 		}
 
@@ -100,18 +100,21 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public void CanJoin()
+		public void CanJoinAndLeave()
 		{
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			var resourceURL = createdObj.Value<string>("ResourceURL");
 			var newUser = RegisterRandomUser(out var username, out _, out var password, out _, out _);
-			createdObj = RequestJSON(CreationURL, Method.GET, user: username, password:password);
+			createdObj = RequestJSON(resourceURL, Method.GET, user: username, password:password);
 			Assert.AreEqual("false", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
-			var response = Request(resourceURL + GroupResourceRESTHandler<T>.JOIN_GROUP, Method.POST
-				, username: username, password: password);
-
-			createdObj = RequestJSON(CreationURL, Method.GET, user: username, password: password);
+			Request(resourceURL + GroupResourceRESTHandler<T>.JOIN_GROUP, Method.POST,
+				username: username, password: password);
+			createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
 			Assert.AreEqual("true", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
+			Request(resourceURL + GroupResourceRESTHandler<T>.LEAVE_GROUP, Method.POST,
+				username: username, password: password);
+			createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
+			Assert.AreEqual("false", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
 		}
 	}
 }

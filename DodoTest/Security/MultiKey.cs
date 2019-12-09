@@ -29,9 +29,9 @@ namespace Security
 			var keystore = CancCreateAndAccess<string>(firstUser, firstPass);
 			var secondUser = "test 2";
 			var secondPass = new Passphrase(KeyGenerator.GetUniqueKey(64));
-			keystore.Add(firstUser, firstPass);
+			keystore.Add(secondUser, secondPass);
 			Assert.IsTrue(keystore.IsAuthorised(secondUser, secondPass));
-			Assert.ThrowsException<AuthenticationException>(() => keystore.IsAuthorised("invalid", new Passphrase("invalid")));
+			Assert.IsFalse(keystore.IsAuthorised("invalid", new Passphrase("invalid")));
 		}
 
 		public MultiSigKeyStore<T> CancCreateAndAccess<T>(T creator, Passphrase passphrase)

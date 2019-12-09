@@ -46,7 +46,7 @@ namespace Dodo
 			{
 				return false;
 			}
-			url = url.Substring(0, url.Length - ADD_ADMIN.Length);
+			url = url.Substring(0, url.Length - postfix.Length);
 			var resource = ResourceUtility.GetResourceByURL(url) as GroupResource;
 			if(resource == null)
 			{
