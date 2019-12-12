@@ -51,7 +51,7 @@ namespace RESTTests
 		{
 			var unverifiedUser = RegisterRandomUser(out var username, out _, out var pass, out _, out _, false);
 			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, GetCreationSchema(), username, pass),
-				e => e.Message.Contains("Forbidden"));
+				e => e.Message.Contains("You need to verify your email"));
 		}
 
 		[TestMethod]

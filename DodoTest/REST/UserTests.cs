@@ -103,14 +103,21 @@ namespace RESTTests
 			request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, email1, "", "");
 			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
 
-			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid1)) as User)
 				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
+			// Try to change to a bad password
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, "badpass", "", "");
+			Assert.IsTrue(request.Content.Contains("Password should be between 8 and 20 characters"));
+
+			// Try to change to the same pass
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, password1, "", "");
+			Assert.IsTrue(request.Content.Contains("Cannot use same password."));
+
+			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			// Register a second user
 			var user2 = RegisterRandomUser(out var username2, out _, out var password2, out _, out var guid2);
 			// Second user attempts to use the token - should be forbidden
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" +
-				token.Value, Method.POST, newPassword, username2, password2);
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, newPassword, username2, password2);
 			Assert.AreEqual(System.Net.HttpStatusCode.Forbidden, request.StatusCode);
 		}
 

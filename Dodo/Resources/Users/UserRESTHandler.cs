@@ -80,6 +80,12 @@ namespace Dodo.Users
 					throw HttpException.FORBIDDEN;
 				}
 				var newPass = JsonConvert.DeserializeObject<string>(request.Content);
+
+				if(user.WebAuth.Challenge(newPass, out _))
+				{
+					return HttpBuilder.ServerError("Cannot use same password.");
+				}
+
 				user.WebAuth = new WebPortalAuth(user.WebAuth.Username, newPass);
 				return HttpBuilder.OK("You've succesfully changed your password.");
 			}

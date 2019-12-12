@@ -110,7 +110,7 @@ namespace Dodo
 					permissionLevel = EPermissionLevel.OWNER;
 					if(!CanCreateAtUrl(requestOwner, passphrase, request.Url, out var error))
 					{
-						throw new HttpException(error, 5000);
+						throw new HttpException(error, 500);
 					}
 					return true;
 				}
