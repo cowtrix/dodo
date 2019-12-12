@@ -26,10 +26,10 @@ namespace RESTTests
 		{
 			if (!unique)
 			{
-				return new LocalGroupRESTHandler.CreationSchema("Test Local Group ", new GeoLocation(87, 14), "Test description"); ;
+				return new LocalGroupRESTHandler.CreationSchema("Test Local Group ", "Test description", new GeoLocation(87, 14)); ;
 			}
 			return new LocalGroupRESTHandler.CreationSchema ("Test Local Group " + StringExtensions.RandomString(6),
-				new GeoLocation(87, 14), "Test description");
+				"Test description", new GeoLocation(87, 14));
 		}
 
 		public override object GetPatchSchema()
@@ -40,7 +40,7 @@ namespace RESTTests
 		[TestMethod]
 		public void CannotCreateAtCreationURL()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Create", new GeoLocation(87, 14), "Test description")),
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Create", "Test description", new GeoLocation(87, 14))),
 				e => e.Message.Contains("Reserved Resource URL"));
 		}
 
@@ -49,10 +49,10 @@ namespace RESTTests
 		{
 			var objects = new List<JObject>()
 			{
-				RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Test1", new GeoLocation(87, 14), "Test description")),
-				RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Test2", new GeoLocation(87, 14), "Test description")),
-				RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Test3", new GeoLocation(87, 14), "Test description")),
-				RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Test4", new GeoLocation(87, 14), "Test description")),
+				RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Test1", "Test description", new GeoLocation(87, 14))),
+				RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Test2", "Test description", new GeoLocation(87, 14))),
+				RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Test3", "Test description", new GeoLocation(87, 14))),
+				RequestJSON(CreationURL, Method.POST, new LocalGroupRESTHandler.CreationSchema("Test4", "Test description", new GeoLocation(87, 14))),
 			};
 			var guids = objects.Select(x => x.Value<string>("GUID"));
 			var list = Request("localgroups", Method.GET);

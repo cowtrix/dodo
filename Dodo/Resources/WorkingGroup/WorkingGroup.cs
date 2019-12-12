@@ -26,16 +26,9 @@ namespace Dodo.WorkingGroups
 		public WorkingGroup() : base() { }
 
 		public WorkingGroup(User creator, Passphrase passphrase, GroupResource parent, WorkingGroupRESTHandler.CreationSchema schema)
-			: base(creator, passphrase, schema.Name, parent)
+			: base(creator, passphrase, schema.Name, schema.Description, parent)
 		{
-			Mandate = schema.Mandate;
 		}
-
-		/// <summary>
-		/// The mandate of the working group - a description of its duties, what it's for
-		/// </summary>
-		[View(EPermissionLevel.USER)]
-		public string Mandate = "";
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 

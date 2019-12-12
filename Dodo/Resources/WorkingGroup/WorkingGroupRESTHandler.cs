@@ -12,15 +12,11 @@ namespace Dodo.WorkingGroups
 {
 	public class WorkingGroupRESTHandler : GroupResourceRESTHandler<WorkingGroup>
 	{
-		public class CreationSchema : IRESTResourceSchema
+		public class CreationSchema : GroupResourceCreationSchema
 		{
-			public CreationSchema(string name, string mandate)
+			public CreationSchema(string name, string desc) : base(name, desc)
 			{
-				Name = name;
-				Mandate = mandate;
 			}
-			public string Name = "";
-			public string Mandate = "";
 		}
 
 		public override void AddRoutes(List<Route> routeList)

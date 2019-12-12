@@ -18,6 +18,11 @@ namespace Common.Security
 		[JsonProperty]
 		private ConcurrentDictionary<string, string> m_data = new ConcurrentDictionary<string, string>();
 
+		public int Count
+		{
+			get { return m_data.Count; }
+		}
+
 		public void Add(T key, Passphrase ownerPass)
 		{
 			var id = SecurityExtensions.GenerateID(key, ownerPass);

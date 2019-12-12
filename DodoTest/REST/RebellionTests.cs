@@ -17,9 +17,9 @@ namespace RESTTests
 		{
 			if(!unique)
 			{
-				return new RebellionRESTHandler.CreationSchema("Test Rebellion ", new GeoLocation(45, 97));
+				return new RebellionRESTHandler.CreationSchema("Test Rebellion", "Test description", new GeoLocation(45, 97));
 			}
-			return new RebellionRESTHandler.CreationSchema("Test Rebellion " + StringExtensions.RandomString(6), new GeoLocation(45, 97));
+			return new RebellionRESTHandler.CreationSchema("Test Rebellion " + StringExtensions.RandomString(6), "Test description", new GeoLocation(45, 97));
 		}
 
 		public override object GetPatchSchema()
@@ -60,7 +60,7 @@ namespace RESTTests
 		[TestMethod]
 		public void CannotCreateAtCreationURL()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Create", new GeoLocation())),
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Create", "Test description", new GeoLocation())),
 				e => e.Message.Contains("Reserved Resource URL"));
 		}
 	}

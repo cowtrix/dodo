@@ -19,7 +19,8 @@ namespace Dodo.LocalGroups
 
 		public LocalGroup() : base() { }
 
-		public LocalGroup(User owner, Passphrase passphrase, LocalGroupRESTHandler.CreationSchema schema) : base(owner, passphrase, schema.Name, null)
+		public LocalGroup(User owner, Passphrase passphrase, LocalGroupRESTHandler.CreationSchema schema)
+			: base(owner, passphrase, schema.Name, schema.Description, null)
 		{
 			Location = schema.Location;
 			Description = schema.Description;

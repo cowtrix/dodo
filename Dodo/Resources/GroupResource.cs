@@ -11,7 +11,9 @@ using SimpleHttpServer.REST;
 namespace Dodo
 {
 	/// <summary>
-	/// A group resource is either a Rebellion, Working Group or a Local Group
+	/// A group resource is either a Rebellion, Working Group or a Local Group.
+	/// It can have administrators, which are authorised to edit it.
+	/// It can have members and a public description.
 	/// </summary>
 	public abstract class GroupResource : DodoResource
 	{
@@ -33,6 +35,12 @@ namespace Dodo
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; private set; }
 
+		/// <summary>
+		/// This is a MarkDown formatted, public facing description of this resource
+		/// </summary>
+		[View(EPermissionLevel.PUBLIC)]
+		public string Description { get; set; }
+
 		[NoPatch]
 		[View(EPermissionLevel.ADMIN)]
 		public UserMultiSigStore<AdminData> AdministratorData;
@@ -41,17 +49,21 @@ namespace Dodo
 
 		public SecureUserStore Members = new SecureUserStore();
 
+		[View(EPermissionLevel.PUBLIC)]
+		public int MemberCount { get { return Members.Count; } }
+
 		[JsonProperty]
 		public string GroupPublicKey { get; private set; }
 
 		public GroupResource() : base() { }
 
-		public GroupResource(User creator, Passphrase passphrase, string name, GroupResource parent) : base(creator, name)
+		public GroupResource(User creator, Passphrase passphrase, string name, string description, GroupResource parent) : base(creator, name)
 		{
 			Parent = new ResourceReference<GroupResource>(parent);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			GroupPublicKey = pk;
 			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(creator, pv), creator, passphrase);
+			Description = description;
 		}
 
 		/// <summary>
@@ -138,7 +150,7 @@ namespace Dodo
 
 		public abstract bool CanContain(Type type);
 
-		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, 
+		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).Value : requester as User;

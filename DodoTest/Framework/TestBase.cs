@@ -135,7 +135,7 @@ namespace RESTTests
 		{
 			var request = new RestRequest("rebellions/create", Method.POST);
 			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
-			request.AddJsonBody(new RebellionRESTHandler.CreationSchema(name, new GeoLocation(66, 66)));
+			request.AddJsonBody(new RebellionRESTHandler.CreationSchema(name, "test description", new GeoLocation(66, 66)));
 			var response = RestClient.Execute(request).Content;
 			if(!response.IsValidJson())
 			{

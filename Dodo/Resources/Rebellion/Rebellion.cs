@@ -25,9 +25,6 @@ namespace Dodo.Rebellions
 		public GeoLocation Location;
 
 		[View(EPermissionLevel.USER)]
-		public string Description;
-
-		[View(EPermissionLevel.USER)]
 		public List<string> WorkingGroups
 		{
 			get
@@ -38,7 +35,8 @@ namespace Dodo.Rebellions
 
 		public Rebellion() : base() { }
 
-		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, schema.Name, null)
+		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema)
+			: base(creator, passphrase, schema.Name, schema.Description, null)
 		{
 			Location = schema.Location;
 		}

@@ -23,6 +23,7 @@ namespace Dodo.Users
 		[NoPatch]
 		public string Email;
 
+		[View(EPermissionLevel.OWNER)]
 		public bool EmailVerified { get; set; }
 
 		[View(EPermissionLevel.OWNER)]

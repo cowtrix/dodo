@@ -22,7 +22,7 @@ namespace RESTTests
 		{
 			RegisterUser(out _, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 			var rebellion = RequestJSON("rebellions/create", Method.POST,
-				new RebellionRESTHandler.CreationSchema("Test Rebellion", new GeoLocation(45, 97)));
+				new RebellionRESTHandler.CreationSchema("Test Rebellion", "Test description", new GeoLocation(45, 97)));
 			WorkingGroup = RequestJSON(rebellion.Value<string>("ResourceURL") + "/wg/create", Method.POST,
 				new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
 		}

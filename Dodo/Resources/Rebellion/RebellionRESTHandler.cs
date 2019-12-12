@@ -13,14 +13,12 @@ namespace Dodo.Rebellions
 {
 	public class RebellionRESTHandler : GroupResourceRESTHandler<Rebellion>
 	{
-		public class CreationSchema : IRESTResourceSchema
+		public class CreationSchema : GroupResourceCreationSchema
 		{
-			public string Name = "";
 			public GeoLocation Location = new GeoLocation();
 
-			public CreationSchema(string name, GeoLocation location)
+			public CreationSchema(string name, string desc, GeoLocation location) : base(name, desc)
 			{
-				Name = name;
 				Location = location;
 			}
 		}
@@ -50,7 +48,7 @@ namespace Dodo.Rebellions
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema("", default);
+			return new CreationSchema("", "", default);
 		}
 
 		protected override Rebellion CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)

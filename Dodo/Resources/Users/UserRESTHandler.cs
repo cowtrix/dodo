@@ -54,7 +54,17 @@ namespace Dodo.Users
 			base.AddRoutes(routeList);
 		}
 
-		public HttpResponse ResetPassword(HttpRequest request)
+		/// <summary>
+		/// This handles resetting a user's password.
+		/// If the request is passed without parameters, it expects an email to be provided.
+		/// If a user with that email exists, they will receive an email with a password
+		/// reset link (which is back to this handler, but with a token parameter).
+		/// If they pass this page a valid token, then they are able to provide a new
+		/// password in the request content.
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		protected HttpResponse ResetPassword(HttpRequest request)
 		{
 			if(request.QueryParams.TryGetValue("token", out var token))
 			{
@@ -182,7 +192,7 @@ namespace Dodo.Users
 
 		protected override bool URLIsCreation(string url)
 		{
-			return url == "register";
+			return url == CREATION_URL;
 		}
 	}
 }
