@@ -8,6 +8,7 @@ using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Dodo
 {
@@ -21,18 +22,17 @@ namespace Dodo
 
 		private void ProcessPushActions(HttpRequest request)
 		{
-			var owner = GetRequestOwner(request, out var passphrase);
-			if(owner == null)
+			var owner = TryGetRequestOwner(request, out var passphrase);
+			if (owner == null)
 			{
 				return;
 			}
-			lock(owner.PushActions)
+			lock (owner.PushActions)
 			{
-				foreach (var pushAction in owner.PushActions)
+				foreach (var pushAction in owner.PushActions.AllActions.Where(pa => pa.AutoFire))
 				{
 					pushAction.Execute(owner, passphrase);
 				}
-				owner.PushActions.Clear();
 			}
 		}
 
@@ -62,15 +62,24 @@ namespace Dodo
 					}
 					catch (Exception e)
 					{
-						Logger.Exception(e.InnerException);
-						if (e.InnerException is HttpException)
+						if(e.InnerException != null)
 						{
-							return HttpBuilder.Custom("Error processing request:\n" + e.InnerException.Message, (e.InnerException as HttpException).ErrorCode);
+							e = e.InnerException;
 						}
-						return HttpBuilder.ServerError("Error processing request:\n" + e.InnerException.Message);
+						Logger.Exception(e);
+						if (e is HttpException)
+						{
+							return HttpBuilder.Custom("Error processing request:\n" + e.Message, (e as HttpException).ErrorCode);
+						}
+						return HttpBuilder.ServerError("Error processing request:\n" + e.Message);
 					}
 				}
 			));
+		}
+
+		public string GetURL()
+		{
+			return System.Net.Dns.GetHostName();
 		}
 
 		/// <summary>
@@ -81,6 +90,17 @@ namespace Dodo
 		public static User GetRequestOwner(HttpRequest request)
 		{
 			return GetRequestOwner(request, out _);
+		}
+
+		public static User TryGetRequestOwner(HttpRequest request, out Passphrase passphrase)
+		{
+			try
+			{
+				return GetRequestOwner(request, out passphrase);
+			}
+			catch (HttpException)
+			{ }
+			return null;
 		}
 
 		/// <summary>
@@ -102,9 +122,21 @@ namespace Dodo
 			{
 				throw HttpException.UNAUTHORIZED;
 			}
-			var decode = StringExtensions.Base64Decode(tokens[1]).Split(':');
-			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.WebAuth.Username == decode[0]);
-			if (user != null && !user.WebAuth.Challenge(decode[1], out passphrase))
+			var decodeRaw = StringExtensions.Base64Decode(tokens[1]);
+			var firstColonIndex = decodeRaw.IndexOf(':');
+			if(firstColonIndex == 0)
+			{
+				// No auth but header existed
+				return null;
+			}
+			if(firstColonIndex < 0)
+			{
+				throw new HttpException("Bad Auth Header Format", 500);
+			}
+			var username = decodeRaw.Substring(0, firstColonIndex);
+			var password = decodeRaw.Substring(firstColonIndex + 1);
+			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.WebAuth.Username == username);
+			if (user != null && !user.WebAuth.Challenge(password, out passphrase))
 			{
 				throw HttpException.FORBIDDEN;
 			}

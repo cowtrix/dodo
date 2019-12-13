@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
 using Dodo.Resources;
 using Dodo.Users;
 using Newtonsoft.Json;
@@ -15,10 +16,14 @@ namespace Dodo.LocalGroups
 {
 	public class LocalGroupRESTHandler : GroupResourceRESTHandler<LocalGroup>
 	{
-		public class CreationSchema : IRESTResourceSchema
+		public class CreationSchema : GroupResourceCreationSchema
 		{
-			public string Name = "";
 			public GeoLocation Location = new GeoLocation();
+
+			public CreationSchema(string name, string desc, GeoLocation location) : base(name, desc)
+			{
+				Location = location;
+			}
 		}
 
 		public override void AddRoutes(List<Route> routeList)
@@ -46,7 +51,7 @@ namespace Dodo.LocalGroups
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema();
+			return new CreationSchema("Name of local group", "Public description of local group", new GeoLocation());
 		}
 
 		protected override LocalGroup CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)

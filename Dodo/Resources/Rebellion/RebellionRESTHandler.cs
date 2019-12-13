@@ -1,5 +1,7 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
+using Dodo.Users;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
@@ -11,10 +13,14 @@ namespace Dodo.Rebellions
 {
 	public class RebellionRESTHandler : GroupResourceRESTHandler<Rebellion>
 	{
-		public class CreationSchema : IRESTResourceSchema
+		public class CreationSchema : GroupResourceCreationSchema
 		{
-			public string Name = "";
 			public GeoLocation Location = new GeoLocation();
+
+			public CreationSchema(string name, string desc, GeoLocation location) : base(name, desc)
+			{
+				Location = location;
+			}
 		}
 
 		protected override bool URLIsCreation(string url)
@@ -42,7 +48,7 @@ namespace Dodo.Rebellions
 
 		protected override IRESTResourceSchema GetCreationSchema()
 		{
-			return new CreationSchema();
+			return new CreationSchema("", "", default);
 		}
 
 		protected override Rebellion CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)

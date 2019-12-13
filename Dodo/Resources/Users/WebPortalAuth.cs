@@ -2,6 +2,7 @@
 using Common.Extensions;
 using Common.Security;
 using Newtonsoft.Json;
+using SimpleHttpServer;
 using SimpleHttpServer.REST;
 using System;
 using System.Security.Cryptography;
@@ -10,29 +11,11 @@ namespace Dodo.Users
 {
 	public class WebPortalAuth : IVerifiable
 	{
-		public struct ResetToken
-		{
-			const int TimeoutMinutes = 15;
-			[JsonProperty]
-			private string m_token;
-			[JsonProperty]
-			private DateTime m_timestamp;
-
-			public static ResetToken Generate()
-			{
-				return new ResetToken()
-				{
-					m_token = KeyGenerator.GetUniqueKey(64),
-					m_timestamp = DateTime.Now,
-				};
-			}
-		}
-
 		public WebPortalAuth() { }
 
 		public WebPortalAuth(string userName, string password)
 		{
-			if(!ValidationExtensions.StrongPassword(password, out var error))
+			if(!ValidationExtensions.IsStrongPassword(password, out var error))
 			{
 				throw new Exception(error);
 			}
@@ -53,19 +36,17 @@ namespace Dodo.Users
 		[View(EPermissionLevel.USER)]
 		[Username]
 		[JsonProperty]
-		public string Username { get; private set; }
+		public string Username { get; set; }
 
 		[View(EPermissionLevel.USER)]
 		[JsonProperty]
 		public string PublicKey { get; private set; }
 
 		/// <summary>
-		/// Am MD5 hash of the user's password which we can challenge against
+		/// Am SHA hash of the user's password which we can challenge against
 		/// </summary>
 		[JsonProperty]
 		public string PasswordHash { get; private set; }
-
-		public ResetToken PasswordResetToken;
 
 		[JsonProperty]
 		public EncryptedStore<string> PassPhrase;
@@ -78,8 +59,26 @@ namespace Dodo.Users
 			{
 				return false;
 			}
+			if(!PassPhrase.IsAuthorised(null, new Passphrase(password)))
+			{
+				return false;
+			}
 			passphrase = new Passphrase(PassPhrase.GetValue(password));
 			return true;
+		}
+
+		public void ChangePassword(Passphrase oldValue, Passphrase newValue)
+		{
+			if(!Challenge(oldValue.Value, out var passphrase))
+			{
+				throw HttpException.FORBIDDEN;
+			}
+			PassPhrase = new EncryptedStore<string>(passphrase.Value, newValue);
+			PasswordHash = SHA256Utility.SHA256(newValue.Value + PublicKey);
+			if(!Challenge(newValue.Value, out _))
+			{
+				throw new Exception("Failed to change password");
+			}
 		}
 	}
 }

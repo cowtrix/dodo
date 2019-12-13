@@ -1,4 +1,5 @@
 ﻿using SimpleHttpServer.REST;
+using System;
 using System.Security.Authentication;
 
 namespace Common.Security
@@ -15,9 +16,9 @@ namespace Common.Security
 		private string m_tokenKey;
 		private string m_data;
 
-		public Passphrase(string value)
+		public Passphrase(string value, TimeSpan? timeout = null)
 		{
-			TemporaryTokenManager.GetTemporaryToken(out var tokenKey, out var token);
+			TemporaryTokenManager.GetTemporaryToken(out var tokenKey, out var token, timeout);
 			m_tokenKey = tokenKey;
 			m_data = SymmetricSecurity.Encrypt(value, token);
 		}
@@ -26,6 +27,10 @@ namespace Common.Security
 		{
 			get
 			{
+				if(string.IsNullOrEmpty(m_tokenKey))
+				{
+					return null;
+				}
 				if(!TemporaryTokenManager.IsValidToken(m_tokenKey, out var token))
 				{
 					throw new AuthenticationException("Token Expired or Invalid");

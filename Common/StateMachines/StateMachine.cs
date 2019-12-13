@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,11 +16,7 @@ namespace Common.StateMachines
 
 		public StateMachine(string definition)
 		{
-			Definition = JsonConvert.DeserializeObject<StateMachineDefinition<TInput, TOutput>>(definition, new JsonSerializerSettings()
-			{
-				//PreserveReferencesHandling = PreserveReferencesHandling.All,
-				TypeNameHandling = TypeNameHandling.Auto,
-			});
+			Definition = JsonConvert.DeserializeObject<StateMachineDefinition<TInput, TOutput>>(definition, JsonExtensions.DefaultSettings);
 			CurrentState = Definition.RootState;
 		}
 

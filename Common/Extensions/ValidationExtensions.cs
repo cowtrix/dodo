@@ -244,7 +244,18 @@ namespace Common.Extensions
 			return true;
 		}
 
-		public static bool StrongPassword(string input, out string error)
+		public static string GenerateStrongPassword()
+		{
+			string result = "";
+			do
+			{
+				result = System.Web.Security.Membership.GeneratePassword(20, 5);
+			}
+			while (!IsStrongPassword(result, out _));
+			return result;
+		}
+
+		public static bool IsStrongPassword(string input, out string error)
 		{
 			error = string.Empty;
 

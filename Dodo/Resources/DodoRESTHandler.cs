@@ -45,8 +45,12 @@ namespace Dodo
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		protected GroupResource GetParentFromURL(string url)
+		public GroupResource GetParentFromURL(string url)
 		{
+			if(string.IsNullOrEmpty(url))
+			{
+				return null;
+			}
 			if(url.EndsWith(CreationPostfix))
 			{
 				// Strip creation postfix
@@ -72,22 +76,70 @@ namespace Dodo
 			{
 				throw HttpException.CONFLICT;
 			}
-			context = new ResourceReference<User>(DodoRESTServer.GetRequestOwner(request, out passphrase));
+			var requestOwner = new ResourceReference<User>(DodoRESTServer.GetRequestOwner(request, out passphrase));
+			context = requestOwner;
+			if (target != null && requestOwner == null)
+			{
+				permissionLevel = EPermissionLevel.PUBLIC;
+				if (request.Method != EHTTPRequestType.GET)
+				{
+					return false; // Deny if not logged in and trying to do more than just fetch
+				}
+				return true; // If it's just GET then return a public view
+			}
 			if (target == null)
 			{
-				// TODO
-				if (request.Method == EHTTPRequestType.POST)
+				if (!requestOwner.HasValue)
+				{
+					if (typeof(T) == typeof(User) && request.Method == SimpleHttpServer.EHTTPRequestType.POST)
+					{
+						// Special case, unregistered requesters can create new users
+						permissionLevel = EPermissionLevel.OWNER;  // User is
+						return true;
+					}
+					else if (request.Method != SimpleHttpServer.EHTTPRequestType.GET)
+					{
+						permissionLevel = EPermissionLevel.PUBLIC;  // Requester not logged in, they can't make or patch stuff
+						return false;
+					}
+					permissionLevel = EPermissionLevel.PUBLIC;
+					return true;
+				}
+				else if (request.Method == SimpleHttpServer.EHTTPRequestType.POST)
 				{
 					permissionLevel = EPermissionLevel.OWNER;
+					if(!CanCreateAtUrl(requestOwner, passphrase, request.Url, out var error))
+					{
+						throw new HttpException(error, 500);
+					}
+					return true;
 				}
-				else
-				{
-					permissionLevel = EPermissionLevel.PUBLIC;
-				}
+				permissionLevel = EPermissionLevel.PUBLIC;
 				return true;
 			}
 			return ResourceManager.IsAuthorised(request, target, out permissionLevel);
 		}
 
+		protected virtual bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url, out string error)
+		{
+			var parent = GetParentFromURL(url);
+			if (parent == null)
+			{
+				error = "Resource not found";
+				return false;
+			}
+			if (!requestOwner.HasValue)
+			{
+				error = "You need to login";
+				return false;
+			}
+			if (!requestOwner.Value.EmailVerified)
+			{
+				error = "You need to verify your email";
+				return false;
+			}
+			error = null;
+			return parent.IsAdmin(requestOwner, requestOwner, passphrase);
+		}
 	}
 }

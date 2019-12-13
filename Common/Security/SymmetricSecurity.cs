@@ -22,6 +22,7 @@ namespace Common.Security
 		public static string Encrypt<T>(T objectToEncrypt, string passphrase)
 		{
 			var plainText = JsonConvert.SerializeObject(objectToEncrypt);
+			plainText = Uri.EscapeDataString(plainText);
 			// Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
 			// so that the same Salt and IV values can be used when decrypting.
 			var saltStringBytes = Generate256BitsOfRandomEntropy();
@@ -88,7 +89,7 @@ namespace Common.Security
 								memoryStream.Close();
 								cryptoStream.Close();
 								var plainText = Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
-								return JsonConvert.DeserializeObject<T>(plainText);
+								return JsonConvert.DeserializeObject<T>(Uri.UnescapeDataString(plainText));
 							}
 						}
 					}

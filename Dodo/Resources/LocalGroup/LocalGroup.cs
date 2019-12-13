@@ -8,40 +8,32 @@ using System;
 using Dodo.Roles;
 using Common.Extensions;
 using Common.Security;
+using Newtonsoft.Json;
 
 namespace Dodo.LocalGroups
 {
+	[Name("Local Group")]
 	public class LocalGroup : GroupResource
 	{
 		public const string ROOT = "localgroups";
 
 		public LocalGroup() : base() { }
 
-		public LocalGroup(User owner, Passphrase passphrase, LocalGroupRESTHandler.CreationSchema schema) : base(owner, passphrase, schema.Name, null)
+		public LocalGroup(User owner, Passphrase passphrase, LocalGroupRESTHandler.CreationSchema schema)
+			: base(owner, passphrase, schema.Name, schema.Description, null)
 		{
 			Location = schema.Location;
+			Description = schema.Description;
 		}
 
 		public override string ResourceURL => $"{ROOT}/{Name.StripForURL()}";
 
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; private set; }
 
-		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
-		{
-			if (IsAdmin(requestOwner, passphrase))
-			{
-				permissionLevel = EPermissionLevel.ADMIN;
-				return true;
-			}
-			if(requestOwner == Creator.Value)
-			{
-				permissionLevel = EPermissionLevel.OWNER;
-				return true;
-			}
-			permissionLevel = EPermissionLevel.USER;
-			return true;
-		}
+		[View(EPermissionLevel.PUBLIC)]
+		[JsonProperty]
+		public string Description { get; private set; }
 
 		public override bool CanContain(Type type)
 		{

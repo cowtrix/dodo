@@ -27,7 +27,7 @@ namespace RESTTests
 			RegisterUser(out var defaultGuid, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 			DefaultGUID = defaultGuid;
 			Rebellion = RequestJSON("rebellions/create", Method.POST,
-				new RebellionRESTHandler.CreationSchema { Name = "Test Rebellion", Location = new GeoLocation(45, 97) });
+				new RebellionRESTHandler.CreationSchema("Test Rebellion", "Test description", new GeoLocation(45, 97)));
 		}
 
 		public override object GetCreationSchema(bool unique)
@@ -37,18 +37,18 @@ namespace RESTTests
 				return new WorkingGroupRESTHandler.CreationSchema("Test Working Group " + StringExtensions.RandomString(6),
 				"Test mandate");
 			}
-			return new WorkingGroupRESTHandler.CreationSchema("Test Working Group ", 
+			return new WorkingGroupRESTHandler.CreationSchema("Test Working Group ",
 				"Test mandate");
 		}
 
 		public override object GetPatchSchema()
 		{
-			return new { Mandate = "This is a test mandate" };
+			return new { Description = "This is a test description" };
 		}
 
 		protected override void CheckPatchedObject(JObject obj)
 		{
-			Assert.AreEqual("This is a test mandate", obj.Value<string>("Mandate"));
+			Assert.AreEqual("This is a test description", obj.Value<string>("Description"));
 		}
 
 		protected override void CheckCreatedObject(JObject obj)
@@ -74,6 +74,19 @@ namespace RESTTests
 		{
 			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Create", "Test mandate")),
 				e => e.Message.Contains("Reserved Resource URL"));
+		}
+
+		[TestMethod]
+		public void CannotCreateForInvalidParent()
+		{
+			AssertX.Throws<Exception>(() => RequestJSON($"rebellions/nonexistantrebellion/wg/create",
+				Method.POST, GetCreationSchema(false)),
+				e => e.Message.Contains("NotFound"));
+
+			var wg = RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
+			AssertX.Throws<Exception>(() => RequestJSON(wg.Value<string>("ResourceURL") + "invalidatingstring" + "/wg/create",
+				Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate")),
+				e => e.Message.Contains("NotFound"));
 		}
 
 		[TestMethod]

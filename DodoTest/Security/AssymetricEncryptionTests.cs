@@ -15,6 +15,27 @@ namespace Security
 			CanEncryptAndDecrypt<string>(data);
 		}
 
+		[TestMethod]
+		public void CanEncryptAndDecryptLong()
+		{
+			var data = 6536516874321;
+			CanEncryptAndDecrypt<long>(data);
+		}
+
+		[TestMethod]
+		public void CanEncryptAndDecryptInt()
+		{
+			var data = 1234;
+			CanEncryptAndDecrypt<long>(data);
+		}
+
+		[TestMethod]
+		public void CanEncryptAndDecryptObject()
+		{
+			var data = new GeoLocation(42, 67);
+			CanEncryptAndDecrypt<GeoLocation>(data);
+		}
+
 		private void CanEncryptAndDecrypt<T>(T data)
 		{
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);

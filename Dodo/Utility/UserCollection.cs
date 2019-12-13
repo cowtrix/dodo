@@ -1,0 +1,22 @@
+﻿using Common.Security;
+using Dodo.Users;
+using SimpleHttpServer.REST;
+using System.Collections.Generic;
+
+namespace Dodo
+{
+	public class UserCollection : UserMultiSigStore<List<ResourceReference<User>>>
+	{
+		public UserCollection()
+		{
+		}
+
+		public UserCollection(List<ResourceReference<User>> data, ResourceReference<User> key, Passphrase passphrase) : base(data, key, passphrase)
+		{
+		}
+
+		public UserCollection(List<ResourceReference<User>> data, User key, Passphrase passphrase) : base(data, key, passphrase)
+		{
+		}
+	}
+}

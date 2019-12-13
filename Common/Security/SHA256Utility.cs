@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using System.Security.Cryptography;
+using Common.Extensions;
+using System;
 
 namespace Common.Security
 {
@@ -14,14 +16,14 @@ namespace Common.Security
 		{
 			if(string.IsNullOrEmpty(plaintext))
 			{
-				return plaintext;
+				return null;
 			}
 			byte[] data = Encoding.ASCII.GetBytes(plaintext);
 			using (var sha256 = new SHA256Managed())
 			{
-				data = sha256.ComputeHash(data);
+				var rawBytes = sha256.ComputeHash(data);
+				return BitConverter.ToString(rawBytes);
 			}
-			return Encoding.ASCII.GetString(data);
 		}
 	}
 }

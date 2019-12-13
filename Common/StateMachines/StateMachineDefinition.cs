@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Extensions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,11 +48,7 @@ namespace Common.StateMachines
 
 		public string ToJson()
 		{
-			return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings()
-			{
-				//PreserveReferencesHandling = PreserveReferencesHandling.All,
-				TypeNameHandling = TypeNameHandling.Auto,
-			});
+			return JsonConvert.SerializeObject(this, Formatting.Indented, JsonExtensions.DefaultSettings);
 		}
 	}
 }

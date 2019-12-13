@@ -16,15 +16,13 @@ using System.Text.RegularExpressions;
 
 namespace Dodo.Rebellions
 {
+	[Name("Rebellion")]
 	public class Rebellion : GroupResource
 	{
 		public const string ROOT = "rebellions";
 
 		[View(EPermissionLevel.USER)]
 		public GeoLocation Location;
-
-		[View(EPermissionLevel.USER)]
-		public string Description;
 
 		[View(EPermissionLevel.USER)]
 		public List<string> WorkingGroups
@@ -35,12 +33,10 @@ namespace Dodo.Rebellions
 			}
 		}
 
-		[View(EPermissionLevel.ADMIN)]
-		public RebellionBotConfiguration BotConfiguration = new RebellionBotConfiguration();
-
 		public Rebellion() : base() { }
 
-		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema) : base(creator, passphrase, schema.Name, null)
+		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema)
+			: base(creator, passphrase, schema.Name, schema.Description, null)
 		{
 			Location = schema.Location;
 		}

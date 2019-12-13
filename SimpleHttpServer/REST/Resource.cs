@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Common.Security;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace SimpleHttpServer.REST
 		Guid GUID { get; }
 		string ResourceURL { get; }
 		void OnDestroy();
+		void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
 	}
 
 	public interface IRESTResourceSchema
@@ -74,5 +76,10 @@ namespace SimpleHttpServer.REST
 		/// from other resources and systems.
 		/// </summary>
 		public virtual void OnDestroy() { }
+
+		public virtual void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, 
+			object requester, Passphrase passphrase )
+		{
+		}
 	}
 }

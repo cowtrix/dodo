@@ -36,7 +36,7 @@ namespace Common.Security
 			using (var rsa = new RSACryptoServiceProvider())
 			{
 				rsa.FromXmlString(publicKey);
-				return rsa.Encrypt(json.ToByteArray(), false);
+				return rsa.Encrypt(json.AsciiToByteArray(), false);
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace Common.Security
 			using (var rsa = new RSACryptoServiceProvider())
 			{
 				rsa.FromXmlString(privateKey);
-				var json = rsa.Decrypt(data, false).ByteArrayToString();
+				var json = rsa.Decrypt(data, false).ByteArrayToAsciiString();
 				return JsonConvert.DeserializeObject<T>(json);
 			}
 		}

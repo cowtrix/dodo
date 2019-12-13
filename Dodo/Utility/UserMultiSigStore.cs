@@ -13,7 +13,7 @@ namespace Dodo
 		{
 		}
 
-		public UserMultiSigStore(T data, User key, Passphrase passphrase) : base(data, new ResourceReference<User>(key), passphrase)
+		public UserMultiSigStore(T data, User key, Passphrase passphrase) : base(data, key, passphrase)
 		{
 		}
 	}

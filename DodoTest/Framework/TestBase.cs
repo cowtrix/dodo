@@ -10,6 +10,7 @@ using RestSharp;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
@@ -97,37 +98,44 @@ namespace RESTTests
 			DodoServer.CleanAllData();
 		}
 
-		protected JObject RegisterUser(out string guid, string username = null, string name = null, string password = null, string email = null)
+		protected JObject RegisterUser(out string guid, string username = null, string name = null, string password = null, string email = null, bool verifyEmail = true)
 		{
 			username = username ?? DefaultUsername;
 			name = name ?? DefaultName;
 			password = password ?? DefaultPassword;
 			email = email ?? DefaultEmail;
-			var jobj = RequestJSON("register", Method.POST, new UserRESTHandler.CreationSchema()
-			{
-				Username = username,
-				Name = name,
-				Password = password,
-				Email = email,
-			});
+			var jobj = RequestJSON("register", Method.POST, new UserRESTHandler.CreationSchema(username, password, name, email), "", "");
 			guid = jobj.Value<string>("GUID");
+			if(verifyEmail)
+				VerifyUser(guid, username, password, email);
 			return jobj;
 		}
 
-		protected JObject RegisterRandomUser(out string username, out string name, out string password, out string email, out string guid)
+		protected IRestResponse VerifyUser(string guid, string username, string password, string email)
+		{
+			var response = Request($"verify", Method.POST, null, username, password);
+			Assert.IsTrue(response.Content.Contains("Email Verification Sent"), $"{response.StatusCode}|{response.Content}");
+			var verifyAction = ResourceUtility.GetManager<User>().GetSingle(u => u.WebAuth.Username == username)
+				.PushActions.GetSinglePushAction<VerifyEmailAction>();
+			response = Request($"verify?token={verifyAction.Token}", Method.POST, null, username, password);
+			Assert.IsTrue(response.Content.Contains("Email verified"), response + response.Content);
+			return response;
+		}
+
+		protected JObject RegisterRandomUser(out string username, out string name, out string password, out string email, out string guid, bool verifyEmail = true)
 		{
 			username = StringExtensions.RandomString(10).ToLower();
 			name = StringExtensions.RandomString(10).ToLower();
 			password = "@" + username;
 			email = $"{StringExtensions.RandomString(5).ToLower()}@{StringExtensions.RandomString(5).ToLower()}.com";
-			return RegisterUser(out guid, username, name, password, email);
+			return RegisterUser(out guid, username, name, password, email, verifyEmail);
 		}
 
 		protected JObject CreateNewRebellion(string name, GeoLocation location)
 		{
 			var request = new RestRequest("rebellions/create", Method.POST);
 			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
-			request.AddJsonBody(new RebellionRESTHandler.CreationSchema { Name = name, Location = new GeoLocation(66, 66) });
+			request.AddJsonBody(new RebellionRESTHandler.CreationSchema(name, "test description", new GeoLocation(66, 66)));
 			var response = RestClient.Execute(request).Content;
 			if(!response.IsValidJson())
 			{
@@ -173,15 +181,15 @@ namespace RESTTests
 			var content = response.Content;
 			if (!content.IsValidJson())
 			{
-				throw new Exception($"{response.StatusCode} | {response.ResponseStatus} | {Uri.UnescapeDataString(response.Content)}");
+				throw new Exception($"{response.StatusCode} | {response.StatusDescription} | {response.ResponseStatus} | {response.Content}");
 			}
 			return JsonConvert.DeserializeObject<JObject>(content);
 		}
 
-		protected IRestResponse Request(string url, Method method, object data = null)
+		protected IRestResponse Request(string url, Method method, object data = null, string username = null, string password = null)
 		{
 			var request = new RestRequest(url, method);
-			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
+			AuthoriseRequest(request, username ?? DefaultUsername, password ?? DefaultPassword);
 			if (data != null)
 			{
 				request.AddJsonBody(data);

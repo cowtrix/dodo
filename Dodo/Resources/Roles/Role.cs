@@ -7,6 +7,7 @@ using Dodo.WorkingGroups;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 using System;
+using System.Collections.Generic;
 
 namespace Dodo.Roles
 {
@@ -21,12 +22,16 @@ namespace Dodo.Roles
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
+		[View(EPermissionLevel.USER)]
+		public UserCollection RoleHolders;
+
 		public Role() : base() { }
 
-		public Role(GroupResource parent, RoleRESTHandler.CreationSchema schema) : base(parent.Creator, schema.Name)
+		public Role(User creator, Passphrase passphrase, GroupResource parent, RoleRESTHandler.CreationSchema schema) : base(parent.Creator, schema.Name)
 		{
 			Parent = new ResourceReference<GroupResource>(parent);
 			Mandate = schema.Mandate;
+			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), creator, passphrase);
 		}
 
 		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
@@ -38,7 +43,7 @@ namespace Dodo.Roles
 					permissionLevel = EPermissionLevel.OWNER;
 					return true;
 				}
-				if (Parent.Value.IsAdmin(requestOwner, passphrase))
+				if (Parent.Value.IsAdmin(requestOwner, requestOwner, passphrase))
 				{
 					permissionLevel = EPermissionLevel.ADMIN;
 					return true;

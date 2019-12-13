@@ -4,6 +4,7 @@ using Common;
 using Common.Extensions;
 using Common.Security;
 using Dodo.LocalGroups;
+using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
 
@@ -23,13 +24,17 @@ namespace Dodo.Users
 		public string Email;
 
 		[View(EPermissionLevel.OWNER)]
+		public bool EmailVerified { get; set; }
+
+		[View(EPermissionLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 
 		[View(EPermissionLevel.OWNER)]
-		public List<PushAction> PushActions = new List<PushAction>();
+		public PushActionCollection PushActions = new PushActionCollection();
 
 		public User() : base()
-		{ }
+		{
+		}
 
 		public User(UserRESTHandler.CreationSchema info) : base(null, info.Name)
 		{
