@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Extensions;
+using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
@@ -82,7 +83,7 @@ namespace SimpleHttpServer
 			{
 				ReasonPhrase = "OK",
 				StatusCode = "200",
-				ContentAsUTF8 = JsonConvert.SerializeObject(result, Formatting.Indented)
+				ContentAsUTF8 = JsonConvert.SerializeObject(result, JsonExtensions.DefaultSettings)
 			};
 		}
 

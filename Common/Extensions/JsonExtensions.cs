@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,32 @@ namespace Common.Extensions
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class NoPatchAttribute : Attribute { }
 
+
 	public static class JsonExtensions
 	{
+		public static JsonSerializerSettings DefaultSettings 
+		{ 
+			get 
+			{ 
+				var settings = new JsonSerializerSettings() {
+					CheckAdditionalContent = true,
+				};
+				settings.Converters.Add(new StringEnumConverter());
+				return settings;
+			}
+		}
 
-		public static JsonSerializerSettings DefaultSettings { get { return new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto, CheckAdditionalContent = true, }; } }
+		public static JsonSerializerSettings DatabaseSettings
+		{
+			get
+			{
+				var settings = new JsonSerializerSettings()
+				{
+					TypeNameHandling = TypeNameHandling.Auto,
+				};
+				return settings;
+			}
+		}
 
 		/// <summary>
 		/// Verify the syntactic integrity of a JSON string

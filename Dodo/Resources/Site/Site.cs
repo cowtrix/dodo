@@ -14,23 +14,70 @@ using System.Linq;
 
 namespace Dodo.Sites
 {
+	public enum EArrestRisk
+	{
+		High,
+		Medium,
+		Low,
+		None,
+	}
+
+	public enum EAccessType
+	{
+		None,
+		Free,
+		Paid,
+	}
+
+	[ViewClass]
+	public struct SiteFacilities
+	{
+		public EAccessType Toilets;
+		public EAccessType Bathrooms;
+		public EAccessType Food;
+		public bool Kitchen;
+		public bool DisabledAccess;
+		public EAccessType OutdoorCamping;
+		public EAccessType IndoorCamping;
+		public EAccessType Accomodation;
+		public bool Inductions;
+		public bool TalksAndTraining;
+		public bool Welfare;
+		public bool AffinityGroupFormation;
+		public bool VolunteersNeeded;
+		public bool FamilyFriendly;
+		public EAccessType Internet;
+		public EAccessType Electricity;
+	}
+
 	public abstract class Site : DodoResource
 	{
 		public const string ROOT = "sites";
 
+		[View(EPermissionLevel.PUBLIC)]
+		[JsonProperty]
+		public ResourceReference<Rebellion> Rebellion { get; set; }
+
 		[View(EPermissionLevel.USER)]
 		[JsonProperty]
-		public ResourceReference<Rebellion> Rebellion { get; private set; }
+		public EArrestRisk ArrestRisk { get; set; }
+
+		[View(EPermissionLevel.USER)]
+		[JsonProperty]
+		public SiteFacilities Facilities { get; set; }
 
 		[JsonProperty]
-		[View(EPermissionLevel.USER)]
-		public GeoLocation Location { get; private set; }
+		[View(EPermissionLevel.PUBLIC)]
+		public GeoLocation Location { get; set; }
 
+		/// <summary>
+		/// Markdown formatted description of the site
+		/// </summary>
 		[JsonProperty]
 		[View(EPermissionLevel.USER)]
 		public string Description { get; private set; }
 
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.PUBLIC)]
 		public string Type { get { return GetType().FullName; } }
 
 		public Site() : base() { }

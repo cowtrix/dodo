@@ -156,6 +156,7 @@ namespace Dodo
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).Value : requester as User;
 			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
+			base.AppendAuxilaryData(view, permissionLevel, requester, passphrase);
 		}
 	}
 }

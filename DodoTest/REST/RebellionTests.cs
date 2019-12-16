@@ -4,6 +4,7 @@ using Dodo.Gateways;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 
@@ -24,7 +25,16 @@ namespace RESTTests
 
 		public override object GetPatchSchema()
 		{
-			return new { Location = new GeoLocation(62, 41) };
+			return new { Location = new GeoLocation(62, 41), StartDate = new DateTime(2019, 10, 7), 
+				EndDate = new DateTime(2019, 10, 14) };
+		}
+
+		protected override void CheckPatchedObject(JObject obj)
+		{
+			Assert.AreEqual(new GeoLocation(62, 41), obj.Value<JObject>("Location").ToObject<GeoLocation>());
+			Assert.AreEqual(new DateTime(2019, 10, 7), obj.Value<DateTime>("StartDate"));
+			Assert.AreEqual(new DateTime(2019, 10, 14), obj.Value<DateTime>("StartDate"));
+			base.CheckPatchedObject(obj);
 		}
 
 		[TestInitialize]

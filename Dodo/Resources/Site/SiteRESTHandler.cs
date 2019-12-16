@@ -81,6 +81,10 @@ namespace Dodo.Sites
 				throw new Exception(error);
 			}
 			var type = Type.GetType(info.Type);
+			if(!typeof(Site).IsAssignableFrom(type))
+			{
+				throw new HttpException("Bad Request", 400);
+			}
 			var newSite = Activator.CreateInstance(type, user, passphrase, rebellion, info) as Site;
 			if (URLIsCreation(newSite.ResourceURL))
 			{

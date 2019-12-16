@@ -48,7 +48,7 @@ namespace Common.StateMachines
 
 		public string ToJson()
 		{
-			return JsonConvert.SerializeObject(this, Formatting.Indented, JsonExtensions.DefaultSettings);
+			return JsonConvert.SerializeObject(this, Formatting.Indented, JsonExtensions.DatabaseSettings);
 		}
 	}
 }

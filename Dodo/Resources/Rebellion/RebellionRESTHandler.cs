@@ -16,6 +16,8 @@ namespace Dodo.Rebellions
 		public class CreationSchema : GroupResourceCreationSchema
 		{
 			public GeoLocation Location = new GeoLocation();
+			public DateTime StartDate;
+			public DateTime EndDate;
 
 			public CreationSchema(string name, string desc, GeoLocation location) : base(name, desc)
 			{

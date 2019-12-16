@@ -16,7 +16,8 @@ namespace Common.StateMachines
 
 		public StateMachine(string definition)
 		{
-			Definition = JsonConvert.DeserializeObject<StateMachineDefinition<TInput, TOutput>>(definition, JsonExtensions.DefaultSettings);
+			Definition = JsonConvert.DeserializeObject<StateMachineDefinition<TInput, TOutput>>(definition, 
+				JsonExtensions.DatabaseSettings);
 			CurrentState = Definition.RootState;
 		}
 

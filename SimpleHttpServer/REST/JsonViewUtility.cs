@@ -12,18 +12,22 @@ using System.Runtime.CompilerServices;
 
 namespace SimpleHttpServer.REST
 {
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+	public class ViewClassAttribute : Attribute { }
+
 	/// <summary>
 	/// This class will performs Resource specific JSON parsing tasks.
 	/// </summary>
 	public static class JsonViewUtility
 	{
-		public const string PERMISSION_KEY = "PERMISSION";
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
 			typeof(string),
 			typeof(Guid),
+			typeof(Enum),
 			typeof(GeoLocation),
-			typeof(IResourceReference)
+			typeof(IResourceReference),
+			typeof(DateTime),
 		};
 
 		/// <summary>
@@ -33,18 +37,13 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		/// <returns>A string/object dictionary where the string value is the name of a field and the object is its value</returns>
 		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility,
-			object requester, Passphrase passphrase, [CallerMemberName]string callingFunction = "")
+			object requester, Passphrase passphrase)
 		{
 			if(obj == null)
 			{
 				return null;
 			}
 			var vals = new Dictionary<string, object>();
-			if (callingFunction != "GenerateJsonView")
-			{
-				// If we're at the root of this call we say what level of visibility we're accessing it at
-				vals.Add(PERMISSION_KEY, visibility.GetName());
-			}
 
 			// Get fields and properties, filter to what we can view with our permission level
 			var targetType = obj.GetType();
@@ -109,7 +108,7 @@ namespace SimpleHttpServer.REST
 			// to an object of that type with Json
 			if (ShouldSerializeDirectly(targetType))
 			{
-				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values), targetType);
+				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values, JsonExtensions.DefaultSettings), targetType, JsonExtensions.DefaultSettings);
 				if(val is IVerifiable)
 				{
 					(val as IVerifiable).Verify();
@@ -183,7 +182,7 @@ namespace SimpleHttpServer.REST
 				}
 				try
 				{
-					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString());
+					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString(), JsonExtensions.DefaultSettings);
 					valueToSet = value.PatchObject(subValues, permissionLevel, requester, passphrase);
 				}
 				catch(MemberVerificationException)
@@ -264,6 +263,11 @@ namespace SimpleHttpServer.REST
 
 		private static bool ShouldSerializeDirectly(Type targetType)
 		{
+			var viewAttr = targetType.GetCustomAttribute<ViewClassAttribute>();
+			if(viewAttr != null)
+			{
+				return true;
+			}
 			return (targetType.IsValueType && targetType.IsPrimitive)
 					|| m_explicitValueTypes.Any(t => t.IsAssignableFrom(targetType));
 		}

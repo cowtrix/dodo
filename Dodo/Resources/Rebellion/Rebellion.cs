@@ -33,12 +33,20 @@ namespace Dodo.Rebellions
 			}
 		}
 
+		[View(EPermissionLevel.PUBLIC)]
+		public DateTime StartDate { get; set; }
+
+		[View(EPermissionLevel.PUBLIC)]
+		public DateTime EndDate { get; set; }
+
 		public Rebellion() : base() { }
 
 		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema)
 			: base(creator, passphrase, schema.Name, schema.Description, null)
 		{
 			Location = schema.Location;
+			StartDate = schema.StartDate;
+			EndDate = schema.EndDate;
 		}
 
 		public override string ResourceURL

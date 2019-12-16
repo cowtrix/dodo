@@ -24,7 +24,7 @@ namespace RESTTests
 			Assert.IsTrue(addAdminResponse.StatusCode == System.Net.HttpStatusCode.OK);
 
 			var updatedObj = RequestJSON(resourceURL, Method.GET, user: username1, password:password);
-			Assert.AreEqual("ADMIN", updatedObj.Value<string>(JsonViewUtility.PERMISSION_KEY));
+			Assert.AreEqual("ADMIN", updatedObj.Value<string>("PERMISSION"));
 			var adminAfter = updatedObj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
 			Assert.IsNotNull(adminAfter.SingleOrDefault(x => x == guid));
 		}

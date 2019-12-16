@@ -80,6 +80,7 @@ namespace SimpleHttpServer.REST
 		public virtual void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, 
 			object requester, Passphrase passphrase )
 		{
+			view.Add("PERMISSION", permissionLevel.GetName());
 		}
 	}
 }

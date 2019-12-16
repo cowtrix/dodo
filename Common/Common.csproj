@@ -214,6 +214,8 @@
     <Compile Include="Extensions\ConsoleExtensions.cs" />
     <Compile Include="GeoLocation.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
+    <Compile Include="Localisation\LocalisationManager.cs" />
+    <Compile Include="Localisation\LocalisedString.cs" />
     <Compile Include="Security\KeyGenerator.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="NameAttribute.cs" />

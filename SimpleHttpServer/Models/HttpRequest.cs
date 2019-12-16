@@ -20,6 +20,7 @@ namespace SimpleHttpServer.Models
 		public Route Route { get; set; }
 		public readonly Dictionary<string, string> Headers;
 		public readonly Dictionary<string, string> QueryParams;
+		public readonly string LanguageCode;
 
 		public HttpRequest(string method, string url, string content, Dictionary<string, string> headers)
 		{
@@ -27,6 +28,7 @@ namespace SimpleHttpServer.Models
 			{
 				throw new InvalidCastException($"Invalid HTTP method " + method);
 			}
+			headers.TryGetValue("Accept-Language", out LanguageCode);
 			Url = url.Trim('/');
 			Domain = Dns.GetHostEntry(Dns.GetHostName()).HostName;
 			Content = content;

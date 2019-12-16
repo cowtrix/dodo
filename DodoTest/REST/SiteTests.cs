@@ -42,12 +42,14 @@ namespace RESTTests
 
 		public override object GetPatchSchema()
 		{
-			return new { Name = "New site name" };
+			return new { Name = "New site name", Facilities = new { Toilets = "Free", TalksAndTraining = true } };
 		}
 
 		protected override void CheckPatchedObject(JObject obj)
 		{
 			Assert.AreEqual("New site name", obj.Value<string>("Name"));
+			Assert.AreEqual("Free", obj.Value<JObject>("Facilities").Value<string>("Toilets"));
+			Assert.AreEqual(true, obj.Value<JObject>("Facilities").Value<bool>("TalksAndTraining"));
 		}
 
 		protected override void CheckCreatedObject(JObject obj)
@@ -68,6 +70,13 @@ namespace RESTTests
 		{
 			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
 				new SiteRESTHandler.CreationSchema("Test1", typeof(ActionSite).FullName, new GeoLocation(27, 79), "Test description")));
+		}
+
+		[TestMethod]
+		public void CanCreateEventSite()
+		{
+			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
+				new SiteRESTHandler.CreationSchema("Test1", typeof(Event).FullName, new GeoLocation(27, 79), "Test description")));
 		}
 
 		[TestMethod]
