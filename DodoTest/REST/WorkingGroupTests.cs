@@ -49,11 +49,19 @@ namespace RESTTests
 		protected override void CheckPatchedObject(JObject obj)
 		{
 			Assert.AreEqual("This is a test description", obj.Value<string>("Description"));
+			m_postman.UpdateExampleJSON(obj.ToString(), "Working Groups", "Update a Working Group");
 		}
 
 		protected override void CheckCreatedObject(JObject obj)
 		{
 			Assert.AreEqual(Rebellion.Value<string>("GUID"), obj.Value<JObject>("Parent").Value<string>("Guid"));
+			m_postman.UpdateExampleJSON(obj.ToString(), "Working Groups", "Create a new Working Group");
+		}
+
+		protected override void CheckGetObject(JObject obj)
+		{
+			base.CheckGetObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Working Groups", "Get a Working Group");
 		}
 
 		[TestMethod]
@@ -67,6 +75,7 @@ namespace RESTTests
 			var subGroups = wg.Value<JArray>("WorkingGroups").Values<string>();
 			Assert.IsTrue(subGroups.Count() == 1);
 			Assert.IsTrue(subGroups.All(x => x == subwg.Value<string>("GUID")));
+			m_postman.UpdateExampleJSON(subwg.ToString(), "Working Groups", "Create a sub Working Group");
 		}
 
 		[TestMethod]
@@ -102,6 +111,7 @@ namespace RESTTests
 			var guids = objects.Select(x => x.Value<string>("GUID"));
 			var list = Request($"{Rebellion.Value<string>("ResourceURL")}/{WorkingGroup.ROOT}/", Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
+			m_postman.UpdateExampleJSON(list.Content, "Working Groups", "List all Working Groups");
 		}
 	}
 }

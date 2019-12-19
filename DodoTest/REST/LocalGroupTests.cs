@@ -57,6 +57,25 @@ namespace RESTTests
 			var guids = objects.Select(x => x.Value<string>("GUID"));
 			var list = Request("localgroups", Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
+			m_postman.UpdateExampleJSON(list.Content, "Local Groups", "List all Local Groups");
+		}
+
+		protected override void CheckCreatedObject(JObject obj)
+		{
+			base.CheckCreatedObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Local Groups", "Create a new Local Group");
+		}
+
+		protected override void CheckGetObject(JObject obj)
+		{
+			base.CheckGetObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Local Groups", "Get a Local Group");
+		}
+
+		protected override void CheckPatchedObject(JObject obj)
+		{
+			base.CheckPatchedObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Local Groups", "Update a Local Group");
 		}
 	}
 }

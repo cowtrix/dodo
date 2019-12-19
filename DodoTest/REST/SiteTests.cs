@@ -50,11 +50,18 @@ namespace RESTTests
 			Assert.AreEqual("New site name", obj.Value<string>("Name"));
 			Assert.AreEqual("Free", obj.Value<JObject>("Facilities").Value<string>("Toilets"));
 			Assert.AreEqual(true, obj.Value<JObject>("Facilities").Value<bool>("TalksAndTraining"));
+			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Update a Site");
 		}
 
 		protected override void CheckCreatedObject(JObject obj)
 		{
 			Assert.AreEqual(Rebellion.Value<string>("GUID"), obj.Value<JObject>("Rebellion").Value<string>("Guid"));
+		}
+
+		protected override void CheckGetObject(JObject obj)
+		{
+			base.CheckGetObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Get a Site");
 		}
 
 		[TestMethod]
@@ -68,29 +75,37 @@ namespace RESTTests
 		[TestMethod]
 		public void CanCreateActionSite()
 		{
-			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
-				new SiteRESTHandler.CreationSchema("Test1", typeof(ActionSite).FullName, new GeoLocation(27, 79), "Test description")));
+			var obj = RequestJSON(CreationURL, Method.POST,
+				new SiteRESTHandler.CreationSchema("Test1", typeof(ActionSite).FullName, new GeoLocation(27, 79), "Test description"));
+			CheckCreatedObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Create a new Action Site");
 		}
 
 		[TestMethod]
 		public void CanCreateEventSite()
 		{
-			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
-				new SiteRESTHandler.CreationSchema("Test1", typeof(Event).FullName, new GeoLocation(27, 79), "Test description")));
+			var obj = RequestJSON(CreationURL, Method.POST,
+				new SiteRESTHandler.CreationSchema("Test1", typeof(Event).FullName, new GeoLocation(27, 79), "Test description"));
+			CheckCreatedObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Create a new Event Site");
 		}
 
 		[TestMethod]
 		public void CanCreateSanctuarySite()
 		{
-			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
-				new SiteRESTHandler.CreationSchema("Test1", typeof(Sanctuary).FullName, new GeoLocation(27, 79), "Test description")));
+			var obj = RequestJSON(CreationURL, Method.POST,
+				new SiteRESTHandler.CreationSchema("Test1", typeof(Sanctuary).FullName, new GeoLocation(27, 79), "Test description"));
+			CheckCreatedObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Create a new Sanctuary Site");
 		}
 
 		[TestMethod]
 		public void CanCreateMarchSite()
 		{
-			CheckCreatedObject(RequestJSON(CreationURL, Method.POST,
-				new SiteRESTHandler.CreationSchema("Test1", typeof(March).FullName, new GeoLocation(27, 79), "Test description")));
+			var obj = RequestJSON(CreationURL, Method.POST,
+				new SiteRESTHandler.CreationSchema("Test1", typeof(March).FullName, new GeoLocation(27, 79), "Test description"));
+			CheckCreatedObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Create a new March");
 		}
 
 		[TestMethod]
@@ -106,6 +121,7 @@ namespace RESTTests
 			var guids = objects.Select(x => x.Value<string>("GUID"));
 			var list = Request($"{Rebellion.Value<string>("ResourceURL")}/{Site.ROOT}/", Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
+			m_postman.UpdateExampleJSON(list.Content, "Sites", "List all Sites");
 		}
 	}
 }

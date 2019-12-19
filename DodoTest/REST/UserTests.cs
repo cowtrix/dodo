@@ -128,6 +128,8 @@ namespace RESTTests
 			Assert.IsTrue(obj.Value<string>("Name") == DefaultName);
 
 			VerifyUser(obj.Value<string>("GUID"), DefaultUsername, DefaultPassword, DefaultEmail);
+
+			m_postman.UpdateExampleJSON(obj.ToString(), "Users", "Register a new user");
 		}
 
 		[TestMethod]
@@ -160,12 +162,15 @@ namespace RESTTests
 
 		protected override void CheckGetObject(JObject obj)
 		{
-			CheckCreatedObject(obj);
+			base.CheckGetObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Users", "Get a user's profile");
 		}
 
 		protected override void CheckPatchedObject(JObject obj)
 		{
+			base.CheckPatchedObject(obj);
 			Assert.IsTrue(obj.Value<string>("Name") == "John Doe");
+			m_postman.UpdateExampleJSON(obj.ToString(), "Users", "Update a user's details");
 		}
 
 		[TestMethod]

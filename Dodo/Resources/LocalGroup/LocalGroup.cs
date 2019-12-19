@@ -31,10 +31,6 @@ namespace Dodo.LocalGroups
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; private set; }
 
-		[View(EPermissionLevel.PUBLIC)]
-		[JsonProperty]
-		public string Description { get; private set; }
-
 		public override bool CanContain(Type type)
 		{
 			if (type == typeof(Role))

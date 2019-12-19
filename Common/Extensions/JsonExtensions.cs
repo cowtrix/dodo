@@ -18,12 +18,16 @@ namespace Common.Extensions
 
 	public static class JsonExtensions
 	{
-		public static JsonSerializerSettings DefaultSettings 
-		{ 
-			get 
-			{ 
-				var settings = new JsonSerializerSettings() {
+		public static JsonSerializerSettings DefaultSettings
+		{
+			get
+			{
+				var settings = new JsonSerializerSettings()
+				{
 					CheckAdditionalContent = true,
+					DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
+					DateParseHandling = DateParseHandling.DateTimeOffset,
+					Formatting = Formatting.Indented,
 				};
 				settings.Converters.Add(new StringEnumConverter());
 				return settings;
@@ -63,7 +67,7 @@ namespace Common.Extensions
 		public static T DeserializeAnonymousType<T>(string json, T anonymousObj) where T : class
 		{
 			var newObj = JsonConvert.DeserializeAnonymousType(json, anonymousObj);
-			if(newObj == null)
+			if (newObj == null)
 			{
 				throw new NullReferenceException();
 			}

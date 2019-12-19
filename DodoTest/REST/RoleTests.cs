@@ -49,6 +49,7 @@ namespace RESTTests
 		protected override void CheckPatchedObject(JObject obj)
 		{
 			Assert.AreEqual("New mandate", obj.Value<string>("Mandate"));
+			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Update a Role");
 		}
 
 		protected override void CheckCreatedObject(JObject obj)
@@ -58,6 +59,13 @@ namespace RESTTests
 			Assert.AreEqual(workingGroupGUID, workingGroupGUIDFromObj);
 			var parent = RequestJSON(WorkingGroup.Value<string>("ResourceURL"), Method.GET);
 			Assert.IsTrue(parent.Value<JArray>("Roles").Values<string>().Contains(obj.Value<string>("GUID")));
+			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Create a new Role");
+		}
+
+		protected override void CheckGetObject(JObject obj)
+		{
+			base.CheckGetObject(obj);
+			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Get a Role");
 		}
 
 		[TestMethod]

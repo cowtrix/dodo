@@ -73,6 +73,7 @@
     <Compile Include="Framework\CompareHelper.cs" />
     <Compile Include="Framework\GroupResourceTestBase.cs" />
     <Compile Include="Framework\HttpUtility.cs" />
+    <Compile Include="Framework\Postman\PostmanTools.cs" />
     <Compile Include="REST\RoleTests.cs" />
     <Compile Include="REST\SiteTests.cs" />
     <Compile Include="Security\MultiKey.cs" />

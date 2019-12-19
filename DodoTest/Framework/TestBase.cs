@@ -3,6 +3,7 @@ using Common.Extensions;
 using Dodo;
 using Dodo.Rebellions;
 using Dodo.Users;
+using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -43,6 +44,7 @@ namespace RESTTests
 		private TestContext testContextInstance;
 		private Random m_random = new Random();
 		protected RestClient RestClient = new RestClient("https://localhost:443");
+		protected static PostmanCollection m_postman = new PostmanCollection("8888079-57fb4f3e-b2ad-4afe-a429-47a38866c5cd");
 
 		protected string DefaultUsername = "test_user";
 		protected string DefaultName = "Test User";
@@ -96,6 +98,12 @@ namespace RESTTests
 		public void Clean()
 		{
 			DodoServer.CleanAllData();
+		}
+
+		[AssemblyCleanup]
+		public static void Finalise()
+		{
+			m_postman.Update();
 		}
 
 		protected JObject RegisterUser(out string guid, string username = null, string name = null, string password = null, string email = null, bool verifyEmail = true)
