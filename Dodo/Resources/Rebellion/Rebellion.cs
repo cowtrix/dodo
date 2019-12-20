@@ -8,6 +8,7 @@ using Dodo.Users;
 using Dodo.WorkingGroups;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using SimpleHttpServer.REST.Serializers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ using System.Text.RegularExpressions;
 
 namespace Dodo.Rebellions
 {
+	public class RebellionSerializer : ResourceReferenceSerializer<Rebellion> { }
+
+
 	[Name("Rebellion")]
 	public class Rebellion : GroupResource
 	{

@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using MongoDB.Driver;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Concurrent;
@@ -12,9 +13,11 @@ namespace SimpleHttpServer.REST
 	public static class ResourceUtility
 	{
 		private static ConcurrentDictionary<Type, IResourceManager> ResourceManagers = new ConcurrentDictionary<Type, IResourceManager>();
+		public static MongoClient MongoDB { get; private set; }
 
 		static ResourceUtility()
 		{
+			MongoDB = new MongoClient();
 			var types = ReflectionExtensions.GetChildClasses<IResourceManager>();
 			foreach(var t in types)
 			{

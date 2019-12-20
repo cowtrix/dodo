@@ -7,9 +7,12 @@ using Dodo.Users;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using SimpleHttpServer.REST.Serializers;
 
 namespace Dodo
 {
+	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
+
 	/// <summary>
 	/// A group resource is either a Rebellion, Working Group or a Local Group.
 	/// It can have administrators, which are authorised to edit it.

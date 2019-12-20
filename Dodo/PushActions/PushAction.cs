@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Security;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Dodo.Users
 		}
 	}
 
+	[BsonDiscriminator(RootClass = true)]
 	public abstract class PushAction
 	{
 		public abstract string Message { get; }

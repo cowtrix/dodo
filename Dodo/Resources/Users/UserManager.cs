@@ -13,7 +13,6 @@ namespace Dodo.Users
 {
 	public class UserManager : DodoResourceManager<User>
 	{
-		public override string BackupPath => "users";
 
 		public User CreateTemporaryUser(string email, out Passphrase temporaryPassword)
 		{
@@ -22,6 +21,7 @@ namespace Dodo.Users
 			var newUser = new User(schema);
 			Add(newUser);
 			newUser.PushActions.Add(new TemporaryUserAction(temporaryPassword, newUser.WebAuth.PublicKey));
+			Update(newUser);
 			return newUser;
 		}
 
@@ -36,6 +36,7 @@ namespace Dodo.Users
 			EmailHelper.SendEmail(user.Email, user.Name, $"{DodoServer.PRODUCT_NAME}: Please verify your email",
 				"To verify your email, click the following link:\n" +
 				$"{DodoServer.GetURL()}/{user.ResourceURL}?verify={emailVerifyPushAction.Token}");
+			Update(user);
 		}
 	}
 }

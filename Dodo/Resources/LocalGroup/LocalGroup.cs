@@ -9,9 +9,12 @@ using Dodo.Roles;
 using Common.Extensions;
 using Common.Security;
 using Newtonsoft.Json;
+using SimpleHttpServer.REST.Serializers;
 
 namespace Dodo.LocalGroups
 {
+	public class LocalGroupSerializer : ResourceReferenceSerializer<LocalGroup> { }
+
 	[Name("Local Group")]
 	public class LocalGroup : GroupResource
 	{

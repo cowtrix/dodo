@@ -12,6 +12,5 @@ namespace Dodo.Sites
 {
 	public class SiteManager : DodoResourceManager<Site>
 	{
-		public override string BackupPath => "sites";
 	}
 }

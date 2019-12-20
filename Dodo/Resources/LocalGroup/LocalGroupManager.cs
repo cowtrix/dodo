@@ -11,6 +11,5 @@ namespace Dodo.LocalGroups
 {
 	public class LocalGroupManager : DodoResourceManager<LocalGroup>
 	{
-		public override string BackupPath => "localgroups";
 	}
 }

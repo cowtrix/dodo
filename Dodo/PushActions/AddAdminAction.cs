@@ -28,6 +28,7 @@ namespace Dodo.Users
 			var privateKey = user.WebAuth.PrivateKey.GetValue(passphrase);
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
 			Resource.Value.AddAdmin(user, tempPass, user, passphrase);
+			ResourceUtility.GetManagerForResource(Resource).Update(Resource.Value);
 		}
 	}
 }

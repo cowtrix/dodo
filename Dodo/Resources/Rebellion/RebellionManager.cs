@@ -11,6 +11,5 @@ namespace Dodo.Rebellions
 {
 	public class RebellionManager : DodoResourceManager<Rebellion>
 	{
-		public override string BackupPath => "rebellions";
 	}
 }

@@ -1,31 +1,40 @@
 ﻿using Newtonsoft.Json;
+using SimpleHttpServer.REST;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace Dodo.Users
 {
+	/// <summary>
+	/// This collection enforces some restrictions on push actions, e.g. there can only be
+	/// one instance of some actions in a list
+	/// </summary>
 	public class PushActionCollection
 	{
 		[JsonProperty]
-		private List<PushAction> m_actions = new List<PushAction>();
+		[View(EPermissionLevel.PUBLIC)]
+		public List<PushAction> Actions { get; private set; }
 
-		public IEnumerable<PushAction> AllActions { get { return m_actions; } }
+		public PushActionCollection()
+		{
+			Actions = new List<PushAction>();
+		}
 
 		public void Add(PushAction pa)
 		{
 			var type = pa.GetType();
 			var isSingleton = type.GetCustomAttribute<SingletonPushActionAttribute>();
-			if (isSingleton != null && m_actions.Any(action => action.GetType() == type))
+			if (isSingleton != null && Actions.Any(action => action.GetType() == type))
 			{
 				throw new PushActionDuplicateException($"Cannot have multiple {type} PushActions");
 			}
-			m_actions.Add(pa);
+			Actions.Add(pa);
 		}
 
 		public T GetSinglePushAction<T>() where T:PushAction
 		{
-			return m_actions.SingleOrDefault(pa => pa is T) as T;
+			return Actions.SingleOrDefault(pa => pa is T) as T;
 		}
 	}
 

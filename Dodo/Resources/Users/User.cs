@@ -7,9 +7,12 @@ using Dodo.LocalGroups;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using SimpleHttpServer.REST.Serializers;
 
 namespace Dodo.Users
 {
+	public class UserSerializer : ResourceReferenceSerializer<User> { }
+
 	public class User : DodoResource
 	{
 		public const string ROOT = "u";

@@ -12,6 +12,5 @@ namespace Dodo.WorkingGroups
 {
 	public class WorkingGroupManager : DodoResourceManager<WorkingGroup>
 	{
-		public override string BackupPath => "workinggroups";
 	}
 }

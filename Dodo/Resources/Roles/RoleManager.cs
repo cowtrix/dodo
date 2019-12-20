@@ -12,6 +12,5 @@ namespace Dodo.Roles
 {
 	public class RoleManager : DodoResourceManager<Role>
 	{
-		public override string BackupPath => "roles";
 	}
 }

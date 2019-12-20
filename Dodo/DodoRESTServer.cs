@@ -29,7 +29,7 @@ namespace Dodo
 			}
 			lock (owner.PushActions)
 			{
-				foreach (var pushAction in owner.PushActions.AllActions.Where(pa => pa.AutoFire))
+				foreach (var pushAction in owner.PushActions.Actions.Where(pa => pa.AutoFire))
 				{
 					pushAction.Execute(owner, passphrase);
 				}
@@ -100,6 +100,7 @@ namespace Dodo
 			}
 			catch (HttpException)
 			{ }
+			passphrase = default;
 			return null;
 		}
 
@@ -113,6 +114,7 @@ namespace Dodo
 		/// <returns>The user that made this request</returns>
 		public static User GetRequestOwner(HttpRequest request, out Passphrase passphrase)
 		{
+			passphrase = default;
 			if (!request.Headers.TryGetValue(AUTH_KEY, out var token))
 			{
 				return null;

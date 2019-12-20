@@ -55,7 +55,8 @@ namespace Dodo.Users
 
 		public bool Challenge(string password, out Passphrase passphrase)
 		{
-			if(SHA256Utility.SHA256(password + PublicKey) != PasswordHash)
+			passphrase = default;
+			if (SHA256Utility.SHA256(password + PublicKey) != PasswordHash)
 			{
 				return false;
 			}

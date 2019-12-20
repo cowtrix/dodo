@@ -77,7 +77,7 @@ namespace Dodo.Users
 						{
 							return false;
 						}
-						return attr.TemporaryToken.Value == token;
+						return attr.TemporaryToken == token;
 					});
 				if(user == null)
 				{
@@ -100,6 +100,7 @@ namespace Dodo.Users
 					return HttpBuilder.ServerError(error);
 				}
 				user.WebAuth = new WebPortalAuth(user.WebAuth.Username, newPass);
+				ResourceManager.Update(user);
 				return HttpBuilder.OK("You've succesfully changed your password.");
 			}
 			else
@@ -115,6 +116,7 @@ namespace Dodo.Users
 					try
 					{
 						user.PushActions.Add(new ResetPasswordAction(user));
+						ResourceManager.Update(user);
 					}
 					catch (PushActionDuplicateException)
 					{
@@ -152,6 +154,7 @@ namespace Dodo.Users
 				throw new HttpException("Incorrect verification code", 500);
 			}
 			owner.EmailVerified = true;
+			ResourceManager.Update(owner);
 			return HttpBuilder.OK("Email verified");
 		}
 

@@ -13,29 +13,35 @@ namespace Common.Security
 	/// </summary>
 	public struct Passphrase
 	{
-		private string m_tokenKey;
-		private string m_data;
+		public readonly string TokenKey;
+		public readonly string Data;
 
 		public Passphrase(string value, TimeSpan? timeout = null)
 		{
 			TemporaryTokenManager.GetTemporaryToken(out var tokenKey, out var token, timeout);
-			m_tokenKey = tokenKey;
-			m_data = SymmetricSecurity.Encrypt(value, token);
+			TokenKey = tokenKey;
+			Data = SymmetricSecurity.Encrypt(value, token);
+		}
+
+		internal Passphrase(string tokenKey, string data)
+		{
+			TokenKey = tokenKey;
+			Data = data;
 		}
 
 		public string Value
 		{
 			get
 			{
-				if(string.IsNullOrEmpty(m_tokenKey))
+				if(string.IsNullOrEmpty(TokenKey))
 				{
 					return null;
 				}
-				if(!TemporaryTokenManager.IsValidToken(m_tokenKey, out var token))
+				if(!TemporaryTokenManager.IsValidToken(TokenKey, out var token))
 				{
 					throw new AuthenticationException("Token Expired or Invalid");
 				}
-				return SymmetricSecurity.Decrypt<string>(m_data, token);
+				return SymmetricSecurity.Decrypt<string>(Data, token);
 			}
 		}
 	}

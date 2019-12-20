@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using System;
@@ -11,21 +12,22 @@ using System.Linq;
 
 namespace SimpleHttpServer.REST
 {
-	public interface IResourceManager : IBackup
+	public interface IResourceManager
 	{
+		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility);
+		void Clear();
+		void Add(IRESTResource newObject);
+		void Update(IRESTResource objToUpdate);
 		IRESTResource GetSingle(Func<IRESTResource, bool> selector);
 		IRESTResource GetFirst(Func<IRESTResource, bool> selector);
 		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector);
-		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility);
-		void Clear();
-		bool Add(IRESTResource newObject);
-		void Set(Guid gUID, IRESTResource resource);
 	}
 
 	public interface IResourceManager<T> : IResourceManager
 	{
-		bool Add(T newObject);
-		bool Delete(T objToDelete);
+		void Add(T newObject);
+		void Delete(T objToDelete);
+		void Update(T objToUpdate);
 		T GetSingle(Func<T, bool> selector);
 		T GetFirst(Func<T, bool> selector);
 		IEnumerable<T> Get(Func<T, bool> selector);
@@ -37,71 +39,53 @@ namespace SimpleHttpServer.REST
 	/// But currently we just hold everything in JSON and write it out to a file.
 	/// </summary>
 	/// <typeparam name="T">The class to be managed</typeparam>
-	public abstract class ResourceManager<T> : IResourceManager<T>, IBackup where T: class, IRESTResource
+	public abstract class ResourceManager<T> : IResourceManager<T> where T: class, IRESTResource
 	{
-		public class Data
-		{
-			public ConcurrentDictionary<Guid, T> Entries = new ConcurrentDictionary<Guid, T>();
-			public ConcurrentDictionary<Guid, T> Archive = new ConcurrentDictionary<Guid, T>();
-		}
-		protected Data InternalData;
-
-		public abstract string BackupPath { get; }
-
+		private IMongoCollection<T> m_db;
 		public ResourceManager()
 		{
-			InternalData = InternalData ?? new Data();	// This is to support custom child class implementations of this::Data
+			var database = ResourceUtility.MongoDB.GetDatabase("Dodo");
+			m_db = database.GetCollection<T>(typeof(T).Name);
 		}
 
-		public virtual bool Add(T newObject)
+		public virtual void Add(T newObject)
 		{
 			if(ResourceUtility.GetResourceByGuid(newObject.GUID) != null || Get(x => x.ResourceURL == newObject.ResourceURL).Any())
 			{
 				throw HttpException.CONFLICT;
 			}
-			return InternalData.Entries.TryAdd(newObject.GUID, newObject);
+			m_db.InsertOne(newObject);
 		}
 
-		public virtual bool Delete(T objToDelete)
+		public virtual void Delete(T objToDelete)
 		{
 			objToDelete.OnDestroy();
-			return InternalData.Entries.TryRemove(objToDelete.GUID, out var deletedEntry)
-				&& InternalData.Archive.TryAdd(deletedEntry.GUID, deletedEntry);
+			m_db.DeleteOne(x => x.GUID == objToDelete.GUID);
+		}
+
+		public virtual void Update(T objToUpdate)
+		{
+			m_db.ReplaceOne(x => x.GUID == objToUpdate.GUID, objToUpdate);
 		}
 
 		public virtual T GetSingle(Func<T, bool> selector)
 		{
-			return InternalData.Entries.SingleOrDefault(kvp => selector(kvp.Value)).Value;
+			return m_db.AsQueryable().SingleOrDefault(selector);
 		}
 
 		public virtual T GetFirst(Func<T, bool> selector)
 		{
-			return InternalData.Entries.FirstOrDefault(kvp => selector(kvp.Value)).Value;
+			return m_db.AsQueryable().FirstOrDefault(selector);
 		}
 
 		public virtual IEnumerable<T> Get(Func<T, bool> selector)
 		{
-			return InternalData.Entries.Where(kvp => selector(kvp.Value)).Select(kvp => kvp.Value);
-		}
-
-		public virtual IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector)
-		{
-			return InternalData.Entries.Where(kvp => selector(kvp.Value)).Select(kvp => (IRESTResource)kvp.Value);
+			return m_db.AsQueryable().Where(selector);
 		}
 
 		public virtual void Clear()
 		{
-			InternalData = new Data();
-		}
-
-		public string Serialize()
-		{
-			return JsonConvert.SerializeObject(InternalData, Formatting.Indented, JsonExtensions.DefaultSettings);
-		}
-
-		public void Deserialize(string json)
-		{
-			InternalData = JsonConvert.DeserializeObject(json) as Data;
+			m_db.Database.DropCollection(typeof(T).Name);
 		}
 
 		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel permission)
@@ -115,24 +99,29 @@ namespace SimpleHttpServer.REST
 
 		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility);
 
-		public IRESTResource GetSingle(Func<IRESTResource, bool> selector)
+		void IResourceManager.Add(IRESTResource newObject)
 		{
-			return InternalData.Entries.SingleOrDefault(kvp => selector(kvp.Value)).Value;
+			Add((T)newObject);
 		}
 
-		public IRESTResource GetFirst(Func<IRESTResource, bool> selector)
+		void IResourceManager.Update(IRESTResource newObject)
 		{
-			return InternalData.Entries.FirstOrDefault(kvp => selector(kvp.Value)).Value;
+			Update((T)newObject);
 		}
 
-		public bool Add(IRESTResource newObject)
+		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector)
 		{
-			return Add((T)newObject);
+			return m_db.AsQueryable().SingleOrDefault(selector);
 		}
 
-		public void Set(Guid guid, IRESTResource resource)
+		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector)
 		{
-			InternalData.Entries[guid] = (T)resource;
+			return m_db.AsQueryable().FirstOrDefault(selector);
+		}
+
+		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector)
+		{
+			return m_db.AsQueryable().Where(selector);
 		}
 	}
 }

@@ -62,7 +62,7 @@ namespace RESTTests
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid)) as User)
 				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, newPassword, "", "");
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token, Method.POST, newPassword, "", "");
 			Assert.IsTrue(request.Content.Contains("You've succesfully changed your password."));
 			RequestJSON(user.Value<string>("ResourceURL"), Method.GET, null, DefaultUsername, newPassword);
 		}
@@ -82,7 +82,7 @@ namespace RESTTests
 			var user2 = RegisterRandomUser(out var username2, out _, out var password2, out _, out var guid2);
 			// Second user attempts to use the token - should be forbidden
 			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" +
-				token.Value, Method.POST, newPassword, username2, password2);
+				token, Method.POST, newPassword, username2, password2);
 			Assert.AreEqual(System.Net.HttpStatusCode.Forbidden, request.StatusCode);
 		}
 
@@ -106,18 +106,18 @@ namespace RESTTests
 			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid1)) as User)
 				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
 			// Try to change to a bad password
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, "badpass", "", "");
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token, Method.POST, "badpass", "", "");
 			Assert.IsTrue(request.Content.Contains("Password should be between 8 and 20 characters"));
 
 			// Try to change to the same pass
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, password1, "", "");
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token, Method.POST, password1, "", "");
 			Assert.IsTrue(request.Content.Contains("Cannot use same password."));
 
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			// Register a second user
 			var user2 = RegisterRandomUser(out var username2, out _, out var password2, out _, out var guid2);
 			// Second user attempts to use the token - should be forbidden
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token.Value, Method.POST, newPassword, username2, password2);
+			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token, Method.POST, newPassword, username2, password2);
 			Assert.AreEqual(System.Net.HttpStatusCode.Forbidden, request.StatusCode);
 		}
 

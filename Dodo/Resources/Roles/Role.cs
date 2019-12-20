@@ -6,11 +6,14 @@ using Dodo.Users;
 using Dodo.WorkingGroups;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using SimpleHttpServer.REST.Serializers;
 using System;
 using System.Collections.Generic;
 
 namespace Dodo.Roles
 {
+	public class RoleSerializer : ResourceReferenceSerializer<Role> { }
+
 	public class Role : DodoResource
 	{
 		public const string ROOT = "roles";

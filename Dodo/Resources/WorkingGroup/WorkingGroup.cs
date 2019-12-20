@@ -6,6 +6,7 @@ using Dodo.Roles;
 using Dodo.Users;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
+using SimpleHttpServer.REST.Serializers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ using System.Linq;
 
 namespace Dodo.WorkingGroups
 {
+	public class WorkingGroupSerializer : ResourceReferenceSerializer<WorkingGroup> { }
+
 	/// <summary>
 	/// A Working Group is a group of people who share a common purpose. For instance, the "Wellbeing" Working Group
 	/// would take care of the wellbeing of rebels.

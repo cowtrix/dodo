@@ -11,6 +11,5 @@ namespace Dodo.Tasks
 {
 	public class WorkflowTaskManager : DodoResourceManager<WorkflowTask>
 	{
-		public override string BackupPath => "tasks";
 	}
 }

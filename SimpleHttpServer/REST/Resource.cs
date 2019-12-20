@@ -1,7 +1,9 @@
 ﻿using Common;
 using Common.Extensions;
 using Common.Security;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using SimpleHttpServer.REST.Serializers;
 using System;
 using System.Collections.Generic;
 
@@ -23,6 +25,7 @@ namespace SimpleHttpServer.REST
 	/// It has a location on the server (given by ResourceURL) that MUST be unique
 	/// It also has a UUID, which can be an alternate accessor using resources/uuid
 	/// </summary>
+	[BsonIgnoreExtraElements(Inherited = true)]
 	public abstract class Resource : IRESTResource, IVerifiable
 	{
 		/// <summary>
@@ -77,7 +80,7 @@ namespace SimpleHttpServer.REST
 		/// </summary>
 		public virtual void OnDestroy() { }
 
-		public virtual void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, 
+		public virtual void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase )
 		{
 			view.Add("PERMISSION", permissionLevel.GetName());

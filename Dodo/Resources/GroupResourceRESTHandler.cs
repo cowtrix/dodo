@@ -118,6 +118,7 @@ namespace Dodo
 			// real one the next time the user logs in
 			resource.AddAdmin(owner, passphrase, targetUser, temporaryPassword);
 			targetUser.PushActions.Add(new AddAdminAction(resource, temporaryPassword, targetUser.WebAuth.PublicKey));
+			ResourceUtility.GetManager<User>().Update(targetUser);
 			return HttpBuilder.OK();
 		}
 

@@ -1,7 +1,9 @@
 ﻿using Common;
 using Common.Extensions;
 using Common.Security;
+using MongoDB.Bson.Serialization;
 using SimpleHttpServer.Models;
+using SimpleHttpServer.REST.Serializers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,6 +27,17 @@ namespace SimpleHttpServer.REST
 
 		public RESTServer(int port, string certificate, string sslPassword)
 		{
+			var customSerializers = ReflectionExtensions.GetChildClasses<ICustomBsonSerializer>();
+			foreach(var customSer in customSerializers)
+			{
+				var newSerializer = Activator.CreateInstance(customSer) as IBsonSerializer;
+				try
+				{
+					BsonSerializer.RegisterSerializer(newSerializer.ValueType, newSerializer);
+				}
+				catch { }	// TODO: catch these failures better, they happen when testing
+			}
+
 			if (m_server != null)
 			{
 				return;

@@ -14,7 +14,6 @@ namespace Dodo
 	{
 		protected virtual string CreationPostfix { get; }
 
-		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
 		protected override T GetResource(string url)
 		{
@@ -23,7 +22,7 @@ namespace Dodo
 			{
 				url = url.Substring(0, paramIndex);
 			}
-			return ResourceManager.GetSingle(x => x.ResourceURL == url);
+			return ResourceManager.GetSingle(x => x.ResourceURL.Equals(url));
 		}
 
 		protected override void DeleteObjectInternal(T target)

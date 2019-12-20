@@ -6,12 +6,17 @@ using System.Collections.Generic;
 
 namespace SimpleHttpServer.REST
 {
-	public interface IResourceReference : IVerifiable { }
 
-	public struct ResourceReference<T> : IResourceReference where T : Resource
+	public interface IResourceReference : IVerifiable
+	{
+		Guid Guid { get; }
+	}
+
+	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
 	{
 		[View(EPermissionLevel.ADMIN)]
-		public Guid Guid;
+		[JsonProperty]
+		public Guid Guid { get; private set; }
 		[JsonIgnore]
 		public T Value { get { return ResourceUtility.GetResourceByGuid<T>(Guid); } }
 		[JsonIgnore]

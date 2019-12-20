@@ -16,6 +16,8 @@ namespace SimpleHttpServer.REST
 	/// <typeparam name="T">The type of the resource</typeparam>
 	public abstract class ObjectRESTHandler<T> : RESTHandler where T: class, IRESTResource
 	{
+		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
+
 		public override void AddRoutes(List<Route> routeList)
 		{
 			routeList.Add(new Route(
@@ -145,16 +147,8 @@ namespace SimpleHttpServer.REST
 				TypeNameHandling = TypeNameHandling.All
 			};
 			var prev = JsonConvert.SerializeObject(target, jsonSettings);
-			try
-			{
-				target.PatchObject(values, view, context, passphrase);
-			}
-			catch
-			{
-				var rm = ResourceUtility.GetManagerForResource(target);
-				rm.Set(target.GUID, JsonConvert.DeserializeObject<T>(prev, jsonSettings));
-				throw;
-			}
+			target.PatchObject(values, view, context, passphrase);
+			ResourceManager.Update(target);
 			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 		}
 

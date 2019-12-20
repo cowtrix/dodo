@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
@@ -14,9 +15,9 @@ namespace Common.Security
 	/// <typeparam name="T"></typeparam>
 	public class EncryptedStore<T> : IDecryptable<T>
 	{
-		[JsonProperty]
+		[BsonElement]
 		private string m_encryptedData;
-		[JsonProperty]
+		[BsonElement]
 		private string m_passHash;
 
 		public EncryptedStore() { }
