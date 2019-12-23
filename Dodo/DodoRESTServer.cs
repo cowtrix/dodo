@@ -27,11 +27,12 @@ namespace Dodo
 			{
 				return;
 			}
-			lock (owner.PushActions)
+			using (var locker = new ResourceLock(owner))
 			{
 				foreach (var pushAction in owner.PushActions.Actions.Where(pa => pa.AutoFire))
 				{
 					pushAction.Execute(owner, passphrase);
+					ResourceUtility.GetManager<User>().Update(owner, locker);
 				}
 			}
 		}

@@ -8,7 +8,7 @@ namespace Dodo.Users
 	public class TemporaryUserAction : PushAction
 	{
 		[JsonProperty]
-		public string TemporaryToken;
+		public string TemporaryToken { get; private set; }
 
 		public override string Message => "";
 

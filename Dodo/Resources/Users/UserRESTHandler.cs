@@ -2,6 +2,7 @@
 using Common.Extensions;
 using Common.Security;
 using Dodo.Resources;
+using Dodo.Utility;
 using Newtonsoft.Json;
 using SimpleHttpServer;
 using SimpleHttpServer.Models;
@@ -83,25 +84,28 @@ namespace Dodo.Users
 				{
 					throw HttpException.FORBIDDEN;
 				}
-				if (owner != null && user != owner)
+				using (var rscLock = new ResourceLock(user))
 				{
-					// A different user is trying to use someone else's reset token
-					Logger.Error($"User {owner.GUID} used user {user.GUID} password reset token");
-					throw HttpException.FORBIDDEN;
+					if (owner != null && user != owner)
+					{
+						// A different user is trying to use someone else's reset token
+						Logger.Error($"User {owner.GUID} used user {user.GUID} password reset token");
+						throw HttpException.FORBIDDEN;
+					}
+					var newPass = JsonConvert.DeserializeObject<string>(request.Content);
+					if (user.WebAuth.Challenge(newPass, out _))
+					{
+						return HttpBuilder.ServerError("Cannot use same password.");
+					}
+					if (!ValidationExtensions.IsStrongPassword(newPass, out var error))
+					{
+						// Password does not meet requirements
+						return HttpBuilder.ServerError(error);
+					}
+					user.WebAuth = new WebPortalAuth(user.WebAuth.Username, newPass);
+					ResourceManager.Update(user, rscLock);
+					return HttpBuilder.OK("You've succesfully changed your password.");
 				}
-				var newPass = JsonConvert.DeserializeObject<string>(request.Content);
-				if(user.WebAuth.Challenge(newPass, out _))
-				{
-					return HttpBuilder.ServerError("Cannot use same password.");
-				}
-				if(!ValidationExtensions.IsStrongPassword(newPass, out var error))
-				{
-					// Password does not meet requirements
-					return HttpBuilder.ServerError(error);
-				}
-				user.WebAuth = new WebPortalAuth(user.WebAuth.Username, newPass);
-				ResourceManager.Update(user);
-				return HttpBuilder.OK("You've succesfully changed your password.");
 			}
 			else
 			{
@@ -111,12 +115,15 @@ namespace Dodo.Users
 					throw new HttpException("Invalid email address", 500);
 				}
 				var user = ResourceManager.GetSingle(u => u.Email == email);
-				if(user != null)
+				if (user != null)
 				{
 					try
 					{
-						user.PushActions.Add(new ResetPasswordAction(user));
-						ResourceManager.Update(user);
+						using (var rscLock = new ResourceLock(user))
+						{
+							user.PushActions.Add(new ResetPasswordAction(user));
+							ResourceManager.Update(user, rscLock);
+						}
 					}
 					catch (PushActionDuplicateException)
 					{
@@ -138,47 +145,63 @@ namespace Dodo.Users
 			{
 				throw HttpException.LOGIN;
 			}
-			if (owner.EmailVerified)
+			using (var rscLock = new ResourceLock(owner))
 			{
-				throw new HttpException("User email already verified", 200);
+				if (owner.EmailVerified)
+				{
+					throw new HttpException("User email already verified", 200);
+				}
+				request.QueryParams.TryGetValue("token", out var verifyToken);
+				var verification = owner.PushActions.GetSinglePushAction<VerifyEmailAction>();
+				if ((string.IsNullOrEmpty(verifyToken) || verifyToken == VERIFY_PARAM) && verification == null)
+				{
+					if (owner.EmailVerified)
+					{
+						throw new HttpException("User email already verified", 200);
+					}
+					var emailVerifyPushAction = new VerifyEmailAction(owner);
+					owner.PushActions.Add(emailVerifyPushAction);
+					EmailHelper.SendEmail(owner.Email, owner.Name, $"{DodoServer.PRODUCT_NAME}: Please verify your email",
+						"To verify your email, click the following link:\n" +
+						$"{DodoServer.GetURL()}/{owner.ResourceURL}?verify={emailVerifyPushAction.Token}");
+					ResourceManager.Update(owner, rscLock);
+					return HttpBuilder.OK("Email Verification Sent");
+				}
+				if (verifyToken != verification.Token)
+				{
+					throw new HttpException("Incorrect verification code", 500);
+				}
+				owner.EmailVerified = true;
+				ResourceManager.Update(owner, rscLock);
+				return HttpBuilder.OK("Email verified");
 			}
-			request.QueryParams.TryGetValue("token", out var verifyToken);
-			var verification = owner.PushActions.GetSinglePushAction<VerifyEmailAction>();
-			if ((string.IsNullOrEmpty(verifyToken) || verifyToken == VERIFY_PARAM) && verification == null)
-			{
-				(ResourceManager as UserManager).SendEmailVerification(owner);
-				return HttpBuilder.OK("Email Verification Sent");
-			}
-			if(verifyToken != verification.Token)
-			{
-				throw new HttpException("Incorrect verification code", 500);
-			}
-			owner.EmailVerified = true;
-			ResourceManager.Update(owner);
-			return HttpBuilder.OK("Email verified");
 		}
 
 		protected override HttpResponse CreateObject(HttpRequest request)
 		{
 			var schema = JsonConvert.DeserializeObject<CreationSchema>(request.Content);
 			var user = ResourceManager.GetSingle(u => u.Email == schema.Email);
-			if(user != null)
+			using (var rscLock = new ResourceLock(user))
 			{
-				var tempPushAction = user.PushActions.GetSinglePushAction<TemporaryUserAction>();
-				if (tempPushAction != null)
+				if (user != null)
 				{
-					// This is a temp user
-					user.WebAuth.ChangePassword(new Passphrase(tempPushAction.TemporaryToken), new Passphrase(schema.Password));
-					user.WebAuth.Username = schema.Username;
-					return HttpBuilder.OK(user.GenerateJsonView(EPermissionLevel.USER, null, default));
+					var tempPushAction = user.PushActions.GetSinglePushAction<TemporaryUserAction>();
+					if (tempPushAction != null)
+					{
+						// This is a temp user
+						user.WebAuth.ChangePassword(new Passphrase(tempPushAction.TemporaryToken), new Passphrase(schema.Password));
+						user.WebAuth.Username = schema.Username;
+						ResourceManager.Update(user, rscLock);
+						return HttpBuilder.OK(user.GenerateJsonView(EPermissionLevel.USER, null, default));
+					}
+					else
+					{
+						// User is already registered with this email
+						throw HttpException.CONFLICT;
+					}
 				}
-				else
-				{
-					// User is already registered with this email
-					throw HttpException.CONFLICT;
-				}
+				return base.CreateObject(request);
 			}
-			return base.CreateObject(request);
 		}
 
 		protected override User CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)

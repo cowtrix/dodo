@@ -40,7 +40,7 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return ResourceUtility.GetManager<Role>().Get(role => role.Parent.Value == this)
+				return ResourceUtility.GetManager<Role>().Get(role => role.Parent.Guid == GUID)
 					.Select(x => x.GUID.ToString()).ToList();
 			}
 		}

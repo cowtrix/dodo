@@ -6,6 +6,7 @@ using SimpleHttpServer.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 // Q: If we did move to a database, would it be possible to keep the nice LINQ stuff here? - Sean
@@ -17,7 +18,7 @@ namespace SimpleHttpServer.REST
 		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility);
 		void Clear();
 		void Add(IRESTResource newObject);
-		void Update(IRESTResource objToUpdate);
+		void Update(IRESTResource objToUpdate, ResourceLock locker);
 		IRESTResource GetSingle(Func<IRESTResource, bool> selector);
 		IRESTResource GetFirst(Func<IRESTResource, bool> selector);
 		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector);
@@ -27,7 +28,7 @@ namespace SimpleHttpServer.REST
 	{
 		void Add(T newObject);
 		void Delete(T objToDelete);
-		void Update(T objToUpdate);
+		void Update(T objToUpdate, ResourceLock locker);
 		T GetSingle(Func<T, bool> selector);
 		T GetFirst(Func<T, bool> selector);
 		IEnumerable<T> Get(Func<T, bool> selector);
@@ -63,24 +64,52 @@ namespace SimpleHttpServer.REST
 			m_db.DeleteOne(x => x.GUID == objToDelete.GUID);
 		}
 
-		public virtual void Update(T objToUpdate)
+		public virtual void Update(T objToUpdate, ResourceLock locker)
 		{
+			if(locker.Guid != objToUpdate.GUID)
+			{
+				throw new Exception("Locker GUID mismatch");
+			}
 			m_db.ReplaceOne(x => x.GUID == objToUpdate.GUID, objToUpdate);
+		}
+
+		IEnumerable<T2> WaitForAllUnlocked<T2>(IEnumerable<T2> enumerable) where T2: IRESTResource
+		{
+			foreach(var rsc in enumerable)
+			{
+				WaitForUnlocked(rsc);
+			}
+			return enumerable;
+		}
+
+		T2 WaitForUnlocked<T2>(T2 resource) where T2 : IRESTResource
+		{
+			const int timeoutSeconds = 5;
+			var sw = new Stopwatch();
+			sw.Start();
+			while (ResourceLock.IsLocked(resource))
+			{
+				if(sw.Elapsed.TotalSeconds > timeoutSeconds)
+				{
+					throw new Exception("Resource Locked");
+				}
+			}
+			return resource;
 		}
 
 		public virtual T GetSingle(Func<T, bool> selector)
 		{
-			return m_db.AsQueryable().SingleOrDefault(selector);
+			return WaitForUnlocked(m_db.AsQueryable().SingleOrDefault(selector));
 		}
 
 		public virtual T GetFirst(Func<T, bool> selector)
 		{
-			return m_db.AsQueryable().FirstOrDefault(selector);
+			return WaitForUnlocked(m_db.AsQueryable().FirstOrDefault(selector));
 		}
 
 		public virtual IEnumerable<T> Get(Func<T, bool> selector)
 		{
-			return m_db.AsQueryable().Where(selector);
+			return WaitForAllUnlocked(m_db.AsQueryable().Where(selector));
 		}
 
 		public virtual void Clear()
@@ -104,9 +133,9 @@ namespace SimpleHttpServer.REST
 			Add((T)newObject);
 		}
 
-		void IResourceManager.Update(IRESTResource newObject)
+		void IResourceManager.Update(IRESTResource newObject, ResourceLock locker)
 		{
-			Update((T)newObject);
+			Update((T)newObject, locker);
 		}
 
 		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector)

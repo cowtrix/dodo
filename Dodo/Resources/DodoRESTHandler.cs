@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Common;
 using Common.Security;
 using Dodo.Resources;
@@ -14,15 +16,19 @@ namespace Dodo
 	{
 		protected virtual string CreationPostfix { get; }
 
-
 		protected override T GetResource(string url)
 		{
+			return ResourceManager.GetSingle(x => x.ResourceURL.Equals(GetResourceURL(url)));
+		}
+
+		protected override string GetResourceURL(string url)
+		{
 			var paramIndex = url.IndexOf("?");
-			if(paramIndex > 0)
+			if (paramIndex > 0)
 			{
 				url = url.Substring(0, paramIndex);
 			}
-			return ResourceManager.GetSingle(x => x.ResourceURL.Equals(url));
+			return url;
 		}
 
 		protected override void DeleteObjectInternal(T target)

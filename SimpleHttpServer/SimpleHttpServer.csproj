@@ -109,6 +109,7 @@
     <Compile Include="REST\JsonViewUtility.cs" />
     <Compile Include="REST\ObjectRESTHandler.cs" />
     <Compile Include="REST\Resource.cs" />
+    <Compile Include="REST\ResourceLock.cs" />
     <Compile Include="REST\ResourceManager.cs" />
     <Compile Include="REST\ResourceReference.cs" />
     <Compile Include="REST\Serializers\GeoLocationSerializer.cs" />

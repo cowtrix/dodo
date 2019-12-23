@@ -58,6 +58,7 @@ namespace RESTTests
 			DodoServer.CleanAllData();
 			ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 			RestClient.PreAuthenticate = true;
+			RestClient.Timeout = 500 * 1000;
 		}
 
 		public bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)

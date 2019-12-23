@@ -6,6 +6,7 @@ using RestSharp;
 using SimpleHttpServer.REST;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RESTTests
 {
@@ -115,6 +116,31 @@ namespace RESTTests
 				username: username, password: password);
 			createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
 			Assert.AreEqual("false", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
+		}
+
+		[TestMethod]
+		public void CanJoinMultithread()
+		{
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var resourceURL = createdObj.Value<string>("ResourceURL");
+			var joinAction = new Action(() =>
+			{
+				var newUser = RegisterRandomUser(out var username, out _, out var password, out _, out _);
+				createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
+				Assert.AreEqual("false", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
+				Request(resourceURL + GroupResourceRESTHandler<T>.JOIN_GROUP, Method.POST,
+					username: username, password: password);
+				Assert.AreEqual("true", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
+			});
+			const int taskCount = 100;
+			var tasks = new Task[taskCount];
+			for(var i = 0; i < taskCount; ++i)
+			{
+				tasks[i] = new Task(joinAction);
+				tasks[i].Start();
+			}
+			Task.WaitAll(tasks);
+
 		}
 	}
 }

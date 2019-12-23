@@ -70,6 +70,8 @@ namespace SimpleHttpServer.REST
 		/// <returns>Null if the resource url is invalid or does not exist, or the given object of type T</returns>
 		protected abstract T GetResource(string url);
 
+		protected abstract string GetResourceURL(string url);
+
 		/// <summary>
 		/// Determine if the given request is authorized
 		/// </summary>
@@ -128,28 +130,31 @@ namespace SimpleHttpServer.REST
 		/// <returns>The view of the object that has been updated.</returns>
 		protected virtual HttpResponse UpdateObject(HttpRequest request)
 		{
-			var target = GetResource(request.Url);
-			if(target == null)
-			{
-				throw HttpException.NOT_FOUND;
-			}
 			if (!IsAuthorised(request, out var view, out var context, out var passphrase))
 			{
 				throw HttpException.FORBIDDEN;
 			}
-			var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.Content);
-			if(values == null)
+			using (var resourceLock = new ResourceLock(GetResourceURL(request.Url)))
 			{
-				throw new HttpException("Invalid JSON body", 400);
+				var target = resourceLock.Value;
+				if (target == null)
+				{
+					throw HttpException.NOT_FOUND;
+				}
+				var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(request.Content);
+				if (values == null)
+				{
+					throw new HttpException("Invalid JSON body", 400);
+				}
+				var jsonSettings = new JsonSerializerSettings()
+				{
+					TypeNameHandling = TypeNameHandling.All
+				};
+				var prev = JsonConvert.SerializeObject(target, jsonSettings);
+				target.PatchObject(values, view, context, passphrase);
+				ResourceManager.Update(target, resourceLock);
+				return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 			}
-			var jsonSettings = new JsonSerializerSettings()
-			{
-				TypeNameHandling = TypeNameHandling.All
-			};
-			var prev = JsonConvert.SerializeObject(target, jsonSettings);
-			target.PatchObject(values, view, context, passphrase);
-			ResourceManager.Update(target);
-			return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 		}
 
 		protected virtual HttpResponse DeleteObject(HttpRequest request)
