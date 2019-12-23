@@ -111,6 +111,7 @@
     <Compile Include="REST\Resource.cs" />
     <Compile Include="REST\ResourceManager.cs" />
     <Compile Include="REST\ResourceReference.cs" />
+    <Compile Include="REST\Serializers\GeoLocationSerializer.cs" />
     <Compile Include="REST\Serializers\ICustomBsonSerializer.cs" />
     <Compile Include="REST\Serializers\PassphraseSerializer.cs" />
     <Compile Include="REST\Serializers\ResourceReferenceSerializer.cs" />

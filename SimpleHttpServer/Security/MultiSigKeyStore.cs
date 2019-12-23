@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
@@ -16,6 +17,7 @@ namespace Common.Security
 	public class MultiSigKeyStore<T>
 	{
 		[JsonProperty]
+		[BsonElement]
 		private ConcurrentDictionary<string, string> m_data = new ConcurrentDictionary<string, string>();
 
 		public int Count

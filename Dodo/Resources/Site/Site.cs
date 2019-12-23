@@ -30,7 +30,7 @@ namespace Dodo.Sites
 	}
 
 	[ViewClass]
-	public struct SiteFacilities
+	public class SiteFacilities
 	{
 		public EAccessType Toilets;
 		public EAccessType Bathrooms;

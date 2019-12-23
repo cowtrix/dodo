@@ -55,6 +55,7 @@ namespace RESTTests
 		public TestBase()
 		{
 			DodoServer.Initialise();
+			DodoServer.CleanAllData();
 			ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 			RestClient.PreAuthenticate = true;
 		}

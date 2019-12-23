@@ -52,6 +52,10 @@ namespace SimpleHttpServer
 				client.Close();
 				return;
 			}
+			catch(Exception e)
+			{
+				Logger.Exception(e);
+			}
 			finally
 			{
 				// The client stream will be closed with the sslStream

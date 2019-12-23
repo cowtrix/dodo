@@ -15,9 +15,11 @@ namespace Common.Security
 	/// <typeparam name="T"></typeparam>
 	public class EncryptedStore<T> : IDecryptable<T>
 	{
+		[JsonProperty]
 		[BsonElement]
 		private string m_encryptedData;
 		[BsonElement]
+		[JsonProperty]
 		private string m_passHash;
 
 		public EncryptedStore() { }

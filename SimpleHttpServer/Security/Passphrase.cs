@@ -1,4 +1,6 @@
-﻿using SimpleHttpServer.REST;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
+using SimpleHttpServer.REST;
 using System;
 using System.Security.Authentication;
 
@@ -13,8 +15,12 @@ namespace Common.Security
 	/// </summary>
 	public struct Passphrase
 	{
-		public readonly string TokenKey;
-		public readonly string Data;
+		[JsonProperty]
+		[BsonElement]
+		public string TokenKey { get; private set; }
+		[JsonProperty]
+		[BsonElement]
+		public string Data { get; private set; }
 
 		public Passphrase(string value, TimeSpan? timeout = null)
 		{

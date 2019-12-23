@@ -203,13 +203,11 @@ namespace SimpleHttpServer.REST
 				{
 					throw new Exception(error);
 				}
-
 				var verifyAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
 				if(verifyAttr != null && !verifyAttr.Verify(valueToSet, out var verificationError))
 				{
 					throw new MemberVerificationException(verificationError);
 				}
-
 				targetMember.SetValue(targetObject, valueToSet);
 			}
 			if (targetObject is IVerifiable)

@@ -117,6 +117,7 @@ namespace Dodo
 			// We then add a PushAction which will replace the temp password with the
 			// real one the next time the user logs in
 			resource.AddAdmin(owner, passphrase, targetUser, temporaryPassword);
+			ResourceManager.Update(resource);
 			targetUser.PushActions.Add(new AddAdminAction(resource, temporaryPassword, targetUser.WebAuth.PublicKey));
 			ResourceUtility.GetManager<User>().Update(targetUser);
 			return HttpBuilder.OK();
@@ -132,6 +133,7 @@ namespace Dodo
 				throw HttpException.NOT_FOUND;
 			}
 			target.Join(owner, passphrase);
+			ResourceManager.Update(target);
 			return HttpBuilder.OK();
 		}
 
@@ -145,6 +147,7 @@ namespace Dodo
 				throw HttpException.NOT_FOUND;
 			}
 			target.Leave(owner, passphrase);
+			ResourceManager.Update(target);
 			return HttpBuilder.OK();
 		}
 

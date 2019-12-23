@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using SimpleHttpServer.REST;
 using System;
 using System.Collections.Concurrent;
@@ -28,8 +29,10 @@ namespace Common.Security
 		/// be used to decrypt/encrypt the data.
 		/// </summary>
 		[JsonProperty]
+		[BsonElement]
 		private Keystore m_keyStore = new Keystore();
 		[JsonProperty]
+		[BsonElement]
 		private EncryptedStore<TVal> m_data;
 
 		public MultiSigEncryptedStore() { }

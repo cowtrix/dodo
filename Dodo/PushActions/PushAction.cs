@@ -19,6 +19,12 @@ namespace Dodo.Users
 	}
 
 	[BsonDiscriminator(RootClass = true)]
+	[BsonKnownTypes(
+		typeof(ResetPasswordAction),
+		typeof(AddAdminAction),
+		typeof(ResetPasswordAction),
+		typeof(TemporaryUserAction),
+		typeof(VerifyEmailAction))]
 	public abstract class PushAction
 	{
 		public abstract string Message { get; }
