@@ -18,7 +18,7 @@ namespace Common.Security
 	{
 		[JsonProperty]
 		[BsonElement]
-		private ConcurrentDictionary<string, string> m_data = new ConcurrentDictionary<string, string>();
+		private ConcurrentDictionary<string, byte> m_data = new ConcurrentDictionary<string, byte>();
 
 		public int Count
 		{
@@ -28,7 +28,7 @@ namespace Common.Security
 		public void Add(T key, Passphrase ownerPass)
 		{
 			var id = SecurityExtensions.GenerateID(key, ownerPass);
-			m_data[id] = SymmetricSecurity.Encrypt(m_data, ownerPass.Value);
+			m_data[id] = 0;
 		}
 
 		public bool Remove(T key, Passphrase ownerPass)

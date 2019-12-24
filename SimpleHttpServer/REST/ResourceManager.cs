@@ -47,6 +47,11 @@ namespace SimpleHttpServer.REST
 		{
 			var database = ResourceUtility.MongoDB.GetDatabase("Dodo");
 			m_db = database.GetCollection<T>(typeof(T).Name);
+			var indexOptions = new CreateIndexOptions();
+			var indexKeys = Builders<T>.IndexKeys//.Ascending(rsc => rsc.ResourceURL)
+				.Ascending(rsc => rsc.GUID);
+			var indexModel = new CreateIndexModel<T>(indexKeys, indexOptions);
+			m_db.Indexes.CreateOne(indexModel);
 		}
 
 		public virtual void Add(T newObject)

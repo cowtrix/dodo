@@ -73,12 +73,6 @@ namespace Common.Extensions
 			foreach(var m in members)
 			{
 				var memberName = m.Name;
-				var val = m.GetValue(objectToVerify) as IVerifiable;
-				if (val != null)
-				{
-					val.Verify();
-				}
-
 				var attr = m.GetCustomAttribute<VerifyMemberBase>();
 				if(attr == null)
 				{

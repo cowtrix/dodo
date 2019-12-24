@@ -13,7 +13,6 @@ namespace Dodo.Users
 {
 	public class UserManager : DodoResourceManager<User>
 	{
-
 		public User CreateTemporaryUser(string email, out Passphrase temporaryPassword)
 		{
 			temporaryPassword = new Passphrase(ValidationExtensions.GenerateStrongPassword());

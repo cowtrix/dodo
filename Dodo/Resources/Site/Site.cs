@@ -88,6 +88,7 @@ namespace Dodo.Sites
 			Rebellion = new ResourceReference<Rebellion>(rebellion);
 			Location = schema.Location;
 			Description = schema.Description;
+			Facilities = new SiteFacilities();
 		}
 
 		public override string ResourceURL => $"{Rebellion.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";

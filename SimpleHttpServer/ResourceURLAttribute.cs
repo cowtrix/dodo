@@ -23,15 +23,6 @@ namespace Common.Extensions
 				validationError = "String was not escaped. Expected: " + Uri.EscapeUriString(str);
 				return false;
 			}
-			try
-			{
-				ResourceUtility.GetResourceByURL(str);
-			}
-			catch (Exception e)
-			{
-				validationError = "Duplicate ResourceURL";
-				return false;
-			}
 			validationError = null;
 			return true;
 		}

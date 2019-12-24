@@ -128,9 +128,11 @@ namespace RESTTests
 				var newUser = RegisterRandomUser(out var username, out _, out var password, out _, out _);
 				createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
 				Assert.AreEqual("false", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
-				Request(resourceURL + GroupResourceRESTHandler<T>.JOIN_GROUP, Method.POST,
+				var response = Request(resourceURL + GroupResourceRESTHandler<T>.JOIN_GROUP, Method.POST,
 					username: username, password: password);
-				Assert.AreEqual("true", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
+				createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
+				var isMember = createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN);
+				Assert.AreEqual("true", isMember);
 			});
 			const int taskCount = 100;
 			var tasks = new Task[taskCount];

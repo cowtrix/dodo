@@ -92,30 +92,32 @@ namespace Dodo
 				{
 					throw HttpException.NOT_FOUND;
 				}
-				var target = JsonConvert.DeserializeObject<string>(request.Content);
-				var targetUser = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID.ToString() == target || x.Email == target);
+				var targetEmail = JsonConvert.DeserializeObject<string>(request.Content);
+				var userManager = ResourceUtility.GetManager<User>() as UserManager;
+				var temporaryPassword = default(Passphrase);
+				var targetUser = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID.ToString() == targetEmail || x.Email == targetEmail);
+				if (targetUser != null && resource.IsAdmin(targetUser, owner, passphrase))
+				{
+					return HttpBuilder.OK();
+				}
+
+				if (targetUser == null && ValidationExtensions.EmailIsValid(targetEmail))
+				{
+					// This is an email invite for an unregistered user
+					// so we create a temporary user, and send an email to the address
+					// with a one-off token
+					EmailHelper.SendEmail(targetEmail, null, $"{DodoServer.PRODUCT_NAME}: You have been invited to administrate " + resource.Name,
+						$"You have been invited to administrate the {resource.Name} {resource.GetType().GetName()}.\n" +
+						$"To accept this invitation, register your account at {DodoServer.GetURL()}/{UserRESTHandler.CREATION_URL}");
+					targetUser = userManager.CreateTemporaryUser(targetEmail, out temporaryPassword);
+				}
+				else
+				{
+					temporaryPassword = new Passphrase(KeyGenerator.GetUniqueKey(64));
+				}
+
 				using (var userLock = new ResourceLock(targetUser))
 				{
-					if (targetUser != null && resource.IsAdmin(targetUser, owner, passphrase))
-					{
-						return HttpBuilder.OK();
-					}
-					var temporaryPassword = default(Passphrase);
-					if (targetUser == null && ValidationExtensions.EmailIsValid(target))
-					{
-						// This is an email invite for an unregistered user
-						// so we create a temporary user, and send an email to the address
-						// with a one-off token
-						var userManager = ResourceUtility.GetManager<User>() as UserManager;
-						targetUser = userManager.CreateTemporaryUser(target, out temporaryPassword);
-						EmailHelper.SendEmail(target, null, $"{DodoServer.PRODUCT_NAME}: You have been invited to administrate " + resource.Name,
-							$"You have been invited to administrate the {resource.Name} {resource.GetType().GetName()}.\n" +
-							$"To accept this invitation, register your account at {DodoServer.GetURL()}/{UserRESTHandler.CREATION_URL}");
-					}
-					else
-					{
-						temporaryPassword = new Passphrase(KeyGenerator.GetUniqueKey(64));
-					}
 					// Now we grant access to the resource with a temporary password, and then
 					// encrypt that temporary password with the user's public key.
 					// We then add a PushAction which will replace the temp password with the

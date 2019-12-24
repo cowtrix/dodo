@@ -44,12 +44,11 @@ namespace SimpleHttpServer.REST
 			{
 				return;
 			}
-			while (m_locks.ContainsKey(resource.GUID))
+			while (IsLocked(resource.GUID) || !m_locks.TryAdd(resource.GUID, resource.ResourceURL))
 			{
 			}
 			Guid = resource.GUID;
-			m_locks[Guid] = resource.ResourceURL;
-			Value = resource;
+			Value = ResourceUtility.GetResourceByGuid(Guid);
 		}
 
 		#region IDisposable Support
