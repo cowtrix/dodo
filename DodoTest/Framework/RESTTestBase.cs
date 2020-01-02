@@ -35,7 +35,7 @@ namespace RESTTests
 			var secondObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema(true));
 			AssertX.Throws<Exception>(() =>
 				RequestJSON(secondObj.Value<string>("ResourceURL"), Method.PATCH, new { Name = firstObj.Value<string>("Name") }),
-				e => e.Message.Contains("Duplicate ResourceURL"));
+				e => e.Message.Contains("Conflict - resource may already exist"));
 			RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET);
 		}
 

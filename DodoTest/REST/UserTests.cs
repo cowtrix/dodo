@@ -49,7 +49,7 @@ namespace RESTTests
 			AssertX.Throws<Exception>(() =>
 				RequestJSON(secondObj.Value<string>("ResourceURL"), Method.PATCH,
 				new { WebAuth = new { Username = firstObj.Value<JObject>("WebAuth").Value<string>("Username") } }, username, password),
-				e => e.Message.Contains("Duplicate ResourceURL"));
+				e => e.Message.Contains("Conflict - resource may already exist"));
 			RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET, null, username, password);
 		}
 
@@ -205,19 +205,19 @@ namespace RESTTests
 		[TestMethod]
 		public void CannotCreateUserWithInvalidUsername()
 		{
-			AssertX.Throws<Exception>(() => RegisterUser(out _, ""),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "", verifyEmail:false),
 				e => e.Message.Contains("Name length must be between "));
 
-			AssertX.Throws<Exception>(() => RegisterUser(out _, "aa"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "aa", verifyEmail: false),
 				e => e.Message.Contains("Name length must be between "));
 
-			AssertX.Throws<Exception>(() => RegisterUser(out _, "invalid username"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "invalid username", verifyEmail: false),
 				e => e.Message.Contains("Username can only contain alphanumeric characters and _"));
 
-			AssertX.Throws<Exception>(() => RegisterUser(out _, "@@@@"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "@@@@", verifyEmail: false),
 				e => e.Message.Contains("String was not escaped."));
 
-			AssertX.Throws<Exception>(() => RegisterUser(out _, "AAAAA"),
+			AssertX.Throws<Exception>(() => RegisterUser(out _, "AAAAA", verifyEmail: false),
 				e => e.Message.Contains("Username was invalid, Expected: "));
 		}
 

@@ -13,6 +13,7 @@ namespace Common.Extensions
 	/// </summary>
 	public interface IVerifiable
 	{
+		bool CanVerify();
 	}
 
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
@@ -27,6 +28,29 @@ namespace Common.Extensions
 		{
 			validationError = "Invalid email";
 			return ValidationExtensions.EmailIsValid(value as string);
+		}
+	}
+
+	public class VerifyObjectAttribute : VerifyMemberBase
+	{
+		public override bool Verify(object value, out string validationError)
+		{
+			var verifiable = value as IVerifiable;
+			validationError = null;
+			if (verifiable == null || !verifiable.CanVerify())
+			{
+				return true;
+			}
+			try
+			{
+				verifiable.Verify();
+			}
+			catch (Exception e)
+			{
+				validationError = e.Message;
+				return false;
+			}
+			return true;
 		}
 	}
 
@@ -95,6 +119,7 @@ namespace Common.Extensions
 				{
 					throw new MemberVerificationException(validationError);
 				}
+
 			}
 		}
 	}

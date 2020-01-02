@@ -155,15 +155,12 @@ namespace Dodo.Users
 				var verification = owner.PushActions.GetSinglePushAction<VerifyEmailAction>();
 				if ((string.IsNullOrEmpty(verifyToken) || verifyToken == VERIFY_PARAM) && verification == null)
 				{
+					// We need to resend a verification email
 					if (owner.EmailVerified)
 					{
 						throw new HttpException("User email already verified", 200);
 					}
-					var emailVerifyPushAction = new VerifyEmailAction(owner);
-					owner.PushActions.Add(emailVerifyPushAction);
-					EmailHelper.SendEmail(owner.Email, owner.Name, $"{DodoServer.PRODUCT_NAME}: Please verify your email",
-						"To verify your email, click the following link:\n" +
-						$"{DodoServer.GetURL()}/{owner.ResourceURL}?verify={emailVerifyPushAction.Token}");
+					SendEmailVerificationEmail(owner);
 					ResourceManager.Update(owner, rscLock);
 					return HttpBuilder.OK("Email Verification Sent");
 				}
@@ -191,6 +188,7 @@ namespace Dodo.Users
 						// This is a temp user
 						user.WebAuth.ChangePassword(new Passphrase(tempPushAction.TemporaryToken), new Passphrase(schema.Password));
 						user.WebAuth.Username = schema.Username;
+						SendEmailVerificationEmail(user);
 						ResourceManager.Update(user, rscLock);
 						return HttpBuilder.OK(user.GenerateJsonView(EPermissionLevel.USER, null, default));
 					}
@@ -200,8 +198,8 @@ namespace Dodo.Users
 						throw HttpException.CONFLICT;
 					}
 				}
-				return base.CreateObject(request);
 			}
+			return base.CreateObject(request);
 		}
 
 		protected override User CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
@@ -213,7 +211,17 @@ namespace Dodo.Users
 				throw new Exception("Reserved Resource URL");
 			}
 			newUser.Verify();
+			SendEmailVerificationEmail(newUser);
 			return newUser;
+		}
+
+		void SendEmailVerificationEmail(User newUser)
+		{
+			var emailVerifyPushAction = new VerifyEmailAction(newUser);
+			newUser.PushActions.Add(emailVerifyPushAction);
+			EmailHelper.SendEmail(newUser.Email, newUser.Name, $"{DodoServer.PRODUCT_NAME}: Please verify your email",
+				"To verify your email, click the following link:\n" +
+				$"{DodoServer.GetURL()}/{newUser.ResourceURL}?verify={emailVerifyPushAction.Token}");
 		}
 
 		protected override bool URLIsCreation(string url)

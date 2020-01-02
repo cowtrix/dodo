@@ -19,6 +19,7 @@ namespace Dodo.Users
 		public override string ResourceURL { get { return $"{ROOT}/{WebAuth.Username.StripForURL()}"; } }
 
 		[View(EPermissionLevel.OWNER)]
+		[VerifyObject]
 		public WebPortalAuth WebAuth;
 
 		[View(EPermissionLevel.OWNER)]

@@ -1,10 +1,12 @@
 ﻿using Common;
+using Common.Extensions;
 using Common.Security;
 using Microsoft.CSharp.RuntimeBinder;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleHttpServer.REST
 {
@@ -99,6 +101,7 @@ namespace SimpleHttpServer.REST
 					CheckAdditionalContent = true,
 				});
 				createdObject = CreateFromSchema(request, (IRESTResourceSchema)creationInfo);
+				createdObject.Verify();
 				ResourceUtility.Register(createdObject);
 			}
 			catch(Exception e)
@@ -152,6 +155,10 @@ namespace SimpleHttpServer.REST
 				};
 				var prev = JsonConvert.SerializeObject(target, jsonSettings);
 				target.PatchObject(values, view, context, passphrase);
+				if(ResourceManager.Get(x => x.ResourceURL == target.ResourceURL && x.GUID != target.GUID).Any())
+				{
+					throw HttpException.CONFLICT;
+				}
 				ResourceManager.Update(target, resourceLock);
 				return HttpBuilder.OK(target.GenerateJsonView(view, context, passphrase));
 			}

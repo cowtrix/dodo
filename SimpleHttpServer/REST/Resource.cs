@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace SimpleHttpServer.REST
 {
-	public interface IRESTResource
+	public interface IRESTResource : IVerifiable
 	{
 		Guid GUID { get; }
 		string ResourceURL { get; }
@@ -26,7 +26,7 @@ namespace SimpleHttpServer.REST
 	/// It also has a UUID, which can be an alternate accessor using resources/uuid
 	/// </summary>
 	[BsonIgnoreExtraElements(Inherited = true)]
-	public abstract class Resource : IRESTResource, IVerifiable
+	public abstract class Resource : IRESTResource
 	{
 		/// <summary>
 		/// The GUID of the resource is unique. You can get a resource
@@ -84,6 +84,11 @@ namespace SimpleHttpServer.REST
 			object requester, Passphrase passphrase )
 		{
 			view.Add("PERMISSION", permissionLevel.GetName());
+		}
+
+		public bool CanVerify()
+		{
+			return false;
 		}
 	}
 }

@@ -60,5 +60,10 @@ namespace SimpleHttpServer.REST
 		{
 			return !(left == right);
 		}
+
+		public bool CanVerify()
+		{
+			return !ResourceLock.IsLocked(Guid);
+		}
 	}
 }

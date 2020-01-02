@@ -81,5 +81,10 @@ namespace Dodo.Users
 				throw new Exception("Failed to change password");
 			}
 		}
+
+		public bool CanVerify()
+		{
+			return true;
+		}
 	}
 }
