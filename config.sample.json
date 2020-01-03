@@ -1,0 +1,13 @@
+{
+  "LogLevel": 3,
+  "PostmanAPIKey": "",
+  "HttpPort": 443,
+  "SSLCertificatePath": "server.pfx",
+  "CmdOutput": "cmdIn.data",
+  "CmdInput": "cmdOut.data",
+  "MongoDBServerURL": "",
+  "ResourceLockTimeout": 10000,
+  "Email_FromEmail": "noreply@GBFINNES-VM",
+  "Email_FromName": "Dodo SysAdmin",
+  "SendGrid_APIKey": ""
+}
