@@ -22,7 +22,6 @@ namespace Dodo.Users
 	[BsonKnownTypes(
 		typeof(ResetPasswordAction),
 		typeof(AddAdminAction),
-		typeof(ResetPasswordAction),
 		typeof(TemporaryUserAction),
 		typeof(VerifyEmailAction))]
 	public abstract class PushAction

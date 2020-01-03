@@ -1,8 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
-using Dodo.Gateways;
 using Dodo.Rebellions;
-using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -67,6 +65,14 @@ namespace RESTTests
 		{
 			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Create", "Test description", new GeoLocation())),
 				e => e.Message.Contains("Reserved Resource URL"));
+		}
+
+		[TestMethod]
+		public void CannotCreateWithBigName()
+		{
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema(
+				StringExtensions.RandomString(512), "Test description", new GeoLocation())),
+				e => e.Message.Contains("Name length must be between 3 and 64 characters long"));
 		}
 
 		[TestMethod]

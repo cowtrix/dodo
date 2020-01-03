@@ -21,7 +21,7 @@ namespace Dodo
 		private static ConfigVariable<string> m_sslCertPath = new ConfigVariable<string>("SSLCertificatePath", "server.pfx");
 
 		private static DodoRESTServer m_restServer;
-		private static BackupManager m_backupManager;
+		private static CommandReader m_commandReader = new CommandReader();
 
 		static void Main(string[] args)
 		{

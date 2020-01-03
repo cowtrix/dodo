@@ -36,6 +36,8 @@ namespace Dodo.Users
 		[View(EPermissionLevel.OWNER)]
 		public PushActionCollection PushActions = new PushActionCollection();
 
+		public bool IsAdmin { get { return PushActions.GetSinglePushAction<AdminToken>() != null; } }
+
 		public User() : base()
 		{
 		}

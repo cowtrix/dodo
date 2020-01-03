@@ -18,15 +18,18 @@ namespace Common.Config
 			{
 				if(ConfigManager.GetValue(this, out var obj))
 					return obj;
-				return m_default;
+				return DefaultValue;
 			}
 		}
-		private T m_default;
+		public T DefaultValue { get; private set; }
 		public string ConfigKey { get; private set; }
 		public ConfigVariable(string key, T defaultValue)
 		{
-			m_default = defaultValue;
+			DefaultValue = defaultValue;
 			ConfigKey = key;
+#if DEBUG
+			ConfigManager.Register(this);
+#endif
 		}
 
 		public override bool Equals(object obj)

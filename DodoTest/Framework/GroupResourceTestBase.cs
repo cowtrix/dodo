@@ -119,20 +119,38 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public void CanJoinMultithread()
+		public void CanJoinAndLeaveMultithread()
 		{
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			var resourceURL = createdObj.Value<string>("ResourceURL");
+			int joinCounter = 0;
+			object counterLock = new object();
 			var joinAction = new Action(() =>
 			{
 				var newUser = RegisterRandomUser(out var username, out _, out var password, out _, out _);
 				createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
-				Assert.AreEqual("false", createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN));
-				var response = Request(resourceURL + GroupResourceRESTHandler<T>.JOIN_GROUP, Method.POST,
+				var isMember = createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN);
+				Assert.AreEqual("false", isMember);
+				// Join
+				Request(resourceURL + GroupResourceRESTHandler<T>.JOIN_GROUP, Method.POST,
 					username: username, password: password);
 				createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
-				var isMember = createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN);
+				isMember = createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN);
 				Assert.AreEqual("true", isMember);
+				lock(counterLock)
+				{
+					joinCounter++;
+				}
+				// Leave
+				Request(resourceURL + GroupResourceRESTHandler<T>.LEAVE_GROUP, Method.POST,
+					username: username, password: password);
+				lock (counterLock)
+				{
+					joinCounter--;
+				}
+				createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
+				isMember = createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN);
+				Assert.AreEqual("false", isMember);
 			});
 			const int taskCount = 100;
 			var tasks = new Task[taskCount];
@@ -142,7 +160,7 @@ namespace RESTTests
 				tasks[i].Start();
 			}
 			Task.WaitAll(tasks);
-
+			Assert.AreEqual(0, joinCounter);
 		}
 	}
 }

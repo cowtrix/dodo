@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Config;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,14 @@ using System.Threading.Tasks;
 
 namespace Common
 {
+	public enum ELogLevel
+	{
+		Info,
+		Warn,
+		Error,
+		Debug,
+	}
+
 	internal struct ExceptionEntry
 	{
 		public string Message;
@@ -15,6 +24,7 @@ namespace Common
 
 	public static class Logger
 	{
+		private static ConfigVariable<ELogLevel> m_logLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Debug);
 		internal static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
 		public static string LogPath = @"logs\log.log";
 		private static object m_fileLock = new object();
@@ -54,15 +64,20 @@ namespace Common
 			}
 		}
 
-		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black, bool writeToLog = true)
+		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black, bool writeToLog = true, ELogLevel lvl = ELogLevel.Info)
 		{
+			if(lvl > m_logLevel.Value)
+			{
+				return;
+			}
 			try
 			{
 				message = $"{(writeToLog ? "" : "~")}[{DateTime.Now.ToString()}]\t{message}";
 				Console.ForegroundColor = foreground;
 				Console.BackgroundColor = background;
 				Console.WriteLine(message);
-				if(writeToLog)
+				System.Diagnostics.Debug.WriteLine(message, lvl.GetName());
+				if (writeToLog)
 				{
 					lock (m_fileLock)
 					{
@@ -86,12 +101,12 @@ namespace Common
 					TimeStamp = DateTime.Now,
 				});
 			}
-			Debug(message, ConsoleColor.Red);
+			Debug(message, ConsoleColor.Red, lvl:ELogLevel.Error);
 		}
 
 		public static void Warning(string message)
 		{
-			Debug(message, ConsoleColor.Yellow);
+			Debug(message, ConsoleColor.Yellow, lvl: ELogLevel.Warn);
 		}
 
 		public static void Alert(string message)
@@ -101,7 +116,7 @@ namespace Common
 				Message = message,
 				TimeStamp = DateTime.Now,
 			});
-			Debug(message, ConsoleColor.Cyan);
+			Debug(message, ConsoleColor.Cyan, lvl: ELogLevel.Info);
 		}
 	}
 }

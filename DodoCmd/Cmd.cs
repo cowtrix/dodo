@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Config;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -11,8 +12,10 @@ namespace DodoCmd
 {
 	public class Cmd
 	{
-		public static string InputPath = "cmdOut.data";
-		public static string OutputPath = "cmdIn.data";
+		private static ConfigVariable<string> OutputPath = new ConfigVariable<string>("CmdOutput", "cmdIn.data");
+
+		private static ConfigVariable<string> InputPath = new ConfigVariable<string>("CmdInput", "cmdOut.data");
+
 		static void Main(string[] args)
 		{
 			Task outputReader = new Task(async () =>
@@ -21,14 +24,14 @@ namespace DodoCmd
 				{
 					try
 					{
-						if (File.Exists(OutputPath))
+						if (File.Exists(OutputPath.Value))
 						{
-							using (var stream = GetReadStream(OutputPath, 5 * 1000))
+							using (var stream = GetReadStream(OutputPath.Value, 5 * 1000))
 							{
 								using (var reader = new StreamReader(stream))
 									Console.WriteLine(reader.ReadToEnd());
 							}
-							File.Delete(OutputPath);
+							File.Delete(OutputPath.Value);
 						}
 					}
 					catch (Exception e)
@@ -42,7 +45,7 @@ namespace DodoCmd
 			while(true)
 			{
 				var cmd = Console.ReadLine();
-				using (var stream = GetWriteStream(InputPath, 5 * 1000))
+				using (var stream = GetWriteStream(InputPath.Value, 5 * 1000))
 				{
 					using (var writer = new StreamWriter(stream))
 						writer.WriteLine(cmd);

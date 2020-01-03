@@ -14,6 +14,36 @@ namespace Dodo
 {
 	public abstract class DodoRESTHandler<T> : ObjectRESTHandler<T> where T: DodoResource, IRESTResource
 	{
+		/// <summary>
+		/// Get the parent resource from a ResourceURL
+		/// E.g. /rebellions/myrebellion/wg/myworkinggroup will return the Rebellion "myrebellion"
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns>The Group Resource that contains the given URL</returns>
+		public GroupResource GetParentFromURL(string url)
+		{
+			if (string.IsNullOrEmpty(url))
+			{
+				return null;
+			}
+			if (url.EndsWith(CreationPostfix))
+			{
+				// Strip creation postfix
+				url = url.Substring(0, url.Length - CreationPostfix.Length);
+			}
+			url = url.TrimEnd('/');
+			var resource = ResourceUtility.GetResourceByURL(url) as GroupResource;
+			if (resource == null)
+			{
+				return null;
+			}
+			if (!resource.CanContain(typeof(T)))
+			{
+				return null;
+			}
+			return resource;
+		}
+
 		protected virtual string CreationPostfix { get; }
 
 		protected override T GetResource(string url)
@@ -43,35 +73,6 @@ namespace Dodo
 				return false;
 			}
 			return GetParentFromURL(url) != null;
-		}
-
-		/// <summary>
-		/// Is this url a valid creation link?
-		/// </summary>
-		/// <param name="url"></param>
-		/// <returns></returns>
-		public GroupResource GetParentFromURL(string url)
-		{
-			if(string.IsNullOrEmpty(url))
-			{
-				return null;
-			}
-			if(url.EndsWith(CreationPostfix))
-			{
-				// Strip creation postfix
-				url = url.Substring(0, url.Length - CreationPostfix.Length);
-			}
-			url = url.TrimEnd('/');
-			var resource = ResourceUtility.GetResourceByURL(url) as GroupResource;
-			if (resource == null)
-			{
-				return null;
-			}
-			if(!resource.CanContain(typeof(T)))
-			{
-				return null;
-			}
-			return resource;
 		}
 
 		protected override bool IsAuthorised(HttpRequest request, out EPermissionLevel permissionLevel, out object context, out Passphrase passphrase)

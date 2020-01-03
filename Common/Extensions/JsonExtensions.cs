@@ -41,6 +41,7 @@ namespace Common.Extensions
 				var settings = new JsonSerializerSettings()
 				{
 					TypeNameHandling = TypeNameHandling.Auto,
+					Formatting = Formatting.Indented,
 				};
 				return settings;
 			}

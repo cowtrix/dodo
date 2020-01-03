@@ -88,9 +88,6 @@
     <Compile Include="Security\MultiSig.cs" />
     <Compile Include="Security\TestDataBase.cs" />
     <Compile Include="Security\AssymetricEncryptionTests.cs" />
-    <Compile Include="Serialization\SerializationTestBase.cs" />
-    <Compile Include="Serialization\UserSerializationTests.cs" />
-    <Compile Include="StateMachines\StringStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

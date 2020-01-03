@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Config;
 using Common.Extensions;
 using MongoDB.Driver;
 using Newtonsoft.Json;
@@ -42,6 +43,7 @@ namespace SimpleHttpServer.REST
 	/// <typeparam name="T">The class to be managed</typeparam>
 	public abstract class ResourceManager<T> : IResourceManager<T> where T: class, IRESTResource
 	{
+		private ConfigVariable<int> m_resourceLockTimeoutMs = new ConfigVariable<int>("ResourceLockTimeout", 10 * 1000);
 		private IMongoCollection<T> m_db;
 		public ResourceManager()
 		{
@@ -89,12 +91,11 @@ namespace SimpleHttpServer.REST
 
 		T2 WaitForUnlocked<T2>(T2 resource) where T2 : IRESTResource
 		{
-			const int timeoutSeconds = 5;
 			var sw = new Stopwatch();
 			sw.Start();
 			while (ResourceLock.IsLocked(resource))
 			{
-				if(sw.Elapsed.TotalSeconds > timeoutSeconds)
+				if(sw.Elapsed.TotalMilliseconds > m_resourceLockTimeoutMs.Value)
 				{
 					throw new Exception("Resource Locked");
 				}

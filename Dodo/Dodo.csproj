@@ -131,10 +131,8 @@
   <ItemGroup>
     <Compile Include="DodoRESTServer.cs" />
     <Compile Include="DodoServer.cs" />
-    <Compile Include="Gateways\IMessageGateway.cs" />
-    <Compile Include="Gateways\Message.cs" />
-    <Compile Include="Gateways\RebellionBotConfiguration.cs" />
     <Compile Include="PushActions\AddAdminAction.cs" />
+    <Compile Include="PushActions\AdminToken.cs" />
     <Compile Include="PushActions\PushActionCollection.cs" />
     <Compile Include="PushActions\ResetPasswordAction.cs" />
     <Compile Include="PushActions\TemporaryUserAction.cs" />
@@ -152,7 +150,6 @@
     <Compile Include="Resources\Site\SiteRESTHandler.cs" />
     <Compile Include="Utility\EmailHelper.cs" />
     <Compile Include="Utility\SecureUserStore.cs" />
-    <Compile Include="Gateways\TelegramGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\DodoResource.cs" />
     <Compile Include="Resources\DodoResourceManager.cs" />

@@ -210,7 +210,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackupManager.cs" />
+    <Compile Include="Commands\CommandReader.cs" />
+    <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Config\ConfigManager.cs" />
     <Compile Include="Config\ConfigVariable.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
@@ -227,11 +228,6 @@
     <Compile Include="Security\AsymmetricSecurity.cs" />
     <Compile Include="Security\SHA256Utility.cs" />
     <Compile Include="Security\SymmetricSecurity.cs" />
-    <Compile Include="StateMachines\State.cs" />
-    <Compile Include="StateMachines\StateMachine.cs" />
-    <Compile Include="StateMachines\StateMachineDefinition.cs" />
-    <Compile Include="StateMachines\StringStateMachine.cs" />
-    <Compile Include="StateMachines\Transition.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\ValidationExtensions.cs" />
   </ItemGroup>
@@ -249,6 +245,7 @@
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

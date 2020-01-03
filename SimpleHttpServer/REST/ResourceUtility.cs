@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Config;
 using Common.Extensions;
 using MongoDB.Driver;
 using SimpleHttpServer.Models;
@@ -12,12 +13,21 @@ namespace SimpleHttpServer.REST
 
 	public static class ResourceUtility
 	{
+		private static ConfigVariable<string> m_databasePath = new ConfigVariable<string>("MongoDBServerURL", "");
 		private static ConcurrentDictionary<Type, IResourceManager> ResourceManagers = new ConcurrentDictionary<Type, IResourceManager>();
 		public static MongoClient MongoDB { get; private set; }
 
 		static ResourceUtility()
 		{
-			MongoDB = new MongoClient();
+			var mongoDbURL = m_databasePath.Value;
+			if(string.IsNullOrEmpty(mongoDbURL))
+			{
+				MongoDB = new MongoClient();
+			}
+			else
+			{
+				MongoDB = new MongoClient(mongoDbURL);
+			}
 			var types = ReflectionExtensions.GetChildClasses<IResourceManager>();
 			foreach(var t in types)
 			{
