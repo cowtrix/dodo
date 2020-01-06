@@ -8,15 +8,12 @@ namespace Dodo.Users
 	{
 		[JsonProperty]
 		public ResourceReference<GroupResource> Resource { get; private set; }
-
 		[JsonProperty]
 		public byte[] Token { get; private set; }
-
-		public override string Message => $"You have been added as an Administrator to {Resource.Value.Name}";
-
 		public override bool AutoFire => true;
+		public override bool CanRemove => true;
 
-		public AddAdminAction(GroupResource resource, Passphrase temporaryPassword, string publicKey)
+		public AddAdminAction(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
 		{
 			Resource = new ResourceReference<GroupResource>(resource);
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
@@ -33,6 +30,11 @@ namespace Dodo.Users
 				resource.AddAdmin(user, tempPass, user, passphrase);
 				ResourceUtility.GetManagerForResource(resource).Update(resource, rscLocker);
 			}
+		}
+
+		public override string GetNotificationMessage()
+		{
+			return $"You have been added as an Administrator to {Resource.Value.Name}";
 		}
 	}
 }

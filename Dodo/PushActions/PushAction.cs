@@ -23,15 +23,23 @@ namespace Dodo.Users
 		typeof(ResetPasswordAction),
 		typeof(AddAdminAction),
 		typeof(TemporaryUserAction),
-		typeof(VerifyEmailAction))]
+		typeof(VerifyEmailAction),
+		typeof(AdminToken)
+		)]
 	public abstract class PushAction
 	{
-		public abstract string Message { get; }
-		public abstract bool AutoFire { get; }
+		public Guid GUID { get; private set; }
+		public virtual bool AutoFire { get { return false; } }
 		[JsonProperty]
 		public bool HasExecuted { get; private set; }
+		[JsonProperty]
+		public virtual bool CanRemove { get { return false; } }
 
-		protected virtual void ExecuteInternal(User user, Passphrase passphrase) { }
+		public PushAction()
+		{
+			GUID = Guid.NewGuid();
+		}
+
 		public void Execute(User user, Passphrase passphrase)
 		{
 			if(HasExecuted)
@@ -41,6 +49,20 @@ namespace Dodo.Users
 			ExecuteInternal(user, passphrase);
 			HasExecuted = true;
 		}
-	}
 
+		protected virtual void ExecuteInternal(User user, Passphrase passphrase) { }
+
+		public virtual void OnAdd()
+		{
+		}
+
+		public virtual void OnRemove()
+		{
+		}
+
+		public virtual string GetNotificationMessage()
+		{
+			return null;
+		}
+	}
 }

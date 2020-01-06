@@ -10,14 +10,11 @@ namespace Dodo.Users
 		[JsonProperty]
 		public string TemporaryToken { get; private set; }
 
-		public override string Message => "";
-
 		public override bool AutoFire => true;
 
-		public TemporaryUserAction(Passphrase temporaryPassword, string publicKey)
+		public TemporaryUserAction(Passphrase temporaryPassword)
 		{
 			TemporaryToken = temporaryPassword.Value;
 		}
-
 	}
 }

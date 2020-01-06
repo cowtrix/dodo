@@ -8,19 +8,20 @@ namespace Dodo.Users
 	[SingletonPushAction]
 	public class VerifyEmailAction : PushAction
 	{
-		public override string Message => "You should check your email and verify your email address with us.";
-
-		public override bool AutoFire => false;
-
 		[JsonProperty]
 		public string Token { get; private set; }
 
-		public VerifyEmailAction(User user)
+		public VerifyEmailAction()
 		{
 			Token = StringExtensions.RandomString(64);
 #if DEBUG
 			Console.WriteLine(Token);
 #endif
+		}
+
+		public override string GetNotificationMessage()
+		{
+			return "You should check your email and verify your email address with us.";
 		}
 	}
 }

@@ -19,6 +19,12 @@ namespace Dodo.Users
 
 	public class User : DodoResource
 	{
+		public struct Notification
+		{
+			public string Message;
+			public Guid GUID;
+		}
+
 		public const string ADMIN_OF_KEY = "ADMIN_OF";
 		public const string ROLES_HELD_KEY = "ROLES";
 
@@ -46,7 +52,14 @@ namespace Dodo.Users
 		public bool IsAdmin { get { return PushActions.GetSinglePushAction<AdminToken>() != null; } }
 
 		[View(EPermissionLevel.OWNER)]
-		public List<string> Notifications { get { return PushActions.Actions.Select(x => x.Message).Where(x => !string.IsNullOrEmpty(x)).ToList(); } }
+		public List<Notification> Notifications
+		{
+			get
+			{
+				return PushActions.Actions.Select(x => new Notification { Message = x.GetNotificationMessage(), GUID = x.GUID })
+					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
+			}
+		}
 
 		public User() : base()
 		{

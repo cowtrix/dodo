@@ -237,7 +237,7 @@ namespace Dodo.Users
 
 		void SendEmailVerificationEmail(User newUser)
 		{
-			var emailVerifyPushAction = new VerifyEmailAction(newUser);
+			var emailVerifyPushAction = new VerifyEmailAction();
 			newUser.PushActions.Add(emailVerifyPushAction);
 			EmailHelper.SendEmail(newUser.Email, newUser.Name, $"{DodoServer.PRODUCT_NAME}: Please verify your email",
 				"To verify your email, click the following link:\n" +

@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Security;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using SimpleHttpServer.REST;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +14,12 @@ namespace Dodo.Users
 	/// </summary>
 	public class PushActionCollection
 	{
-		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
-		public List<PushAction> Actions { get; private set; }
+		public IEnumerable<PushAction> Actions { get { return m_actions; } }
 
-		public PushActionCollection()
-		{
-			Actions = new List<PushAction>();
-		}
+		[JsonProperty]
+		[BsonElement]
+		private List<PushAction> m_actions = new List<PushAction>();
 
 		public void Add(PushAction pa)
 		{
@@ -29,7 +29,18 @@ namespace Dodo.Users
 			{
 				throw new PushActionDuplicateException($"Cannot have multiple {type} PushActions");
 			}
-			Actions.Add(pa);
+			m_actions.Add(pa);
+			pa.OnAdd();
+		}
+
+		public void Remove(PushAction pa)
+		{
+			if(!pa.CanRemove)
+			{
+				throw new System.Exception("This PushAction cannot be dismissed");
+			}
+			pa.OnRemove();
+			m_actions.Remove(pa);
 		}
 
 		public T GetSinglePushAction<T>() where T:PushAction
