@@ -142,7 +142,7 @@ namespace Dodo
 				{
 					throw HttpException.NOT_FOUND;
 				}
-				target.Join(owner, passphrase);
+				target.Members.Add(owner, passphrase);
 				ResourceManager.Update(target, resourceLock);
 				return HttpBuilder.OK();
 			}
@@ -159,7 +159,7 @@ namespace Dodo
 				{
 					throw HttpException.NOT_FOUND;
 				}
-				target.Leave(owner, passphrase);
+				target.Members.Remove(owner, passphrase);
 				ResourceManager.Update(target, resourceLock);
 				return HttpBuilder.OK();
 			}

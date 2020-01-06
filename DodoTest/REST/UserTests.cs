@@ -68,6 +68,15 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		public void CanChangePassword()
+		{
+			var user = RegisterUser(out var guid);
+			var newPassword = ValidationExtensions.GenerateStrongPassword();
+			var request = Request(UserRESTHandler.CHANGEPASS_URL, Method.POST, newPassword, DefaultUsername, DefaultPassword);
+			RequestJSON(user.Value<string>("ResourceURL"), Method.GET, null, DefaultUsername, newPassword);
+		}
+
+		[TestMethod]
 		public void ResetPasswordBadActorScenario()
 		{
 			//User signs up

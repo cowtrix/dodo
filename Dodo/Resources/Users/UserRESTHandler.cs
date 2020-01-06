@@ -19,6 +19,7 @@ namespace Dodo.Users
 		public const string CREATION_URL = "register";
 		public const string VERIFY_PARAM = "verify";
 		public const string RESETPASS_URL = "resetpassword";
+		public const string CHANGEPASS_URL = "changepassword";
 
 		protected override string CreationPostfix => CREATION_URL;
 
@@ -51,6 +52,12 @@ namespace Dodo.Users
 				EHTTPRequestType.POST,
 				url => url.StartsWith(RESETPASS_URL),
 				WrapRawCall((req) => ResetPassword(req))
+				));
+			routeList.Add(new Route(
+				$"User Password Reset",
+				EHTTPRequestType.POST,
+				url => url.StartsWith(CHANGEPASS_URL),
+				WrapRawCall((req) => ChangePassword(req))
 				));
 			base.AddRoutes(routeList);
 		}
@@ -130,6 +137,19 @@ namespace Dodo.Users
 					}
 				}
 				return HttpBuilder.OK("If an account with that email exists, a password reset email has been sent");
+			}
+		}
+
+		protected HttpResponse ChangePassword(HttpRequest request)
+		{
+			DodoRESTServer.GetAuth(request, out _, out var passRaw);
+			var owner = DodoRESTServer.GetRequestOwner(request);
+			using (var rscLock = new ResourceLock(owner))
+			{
+				var newPass = JsonConvert.DeserializeObject<string>(request.Content);
+				owner.WebAuth.ChangePassword(new Passphrase(passRaw), new Passphrase(newPass));
+				ResourceManager.Update(owner, rscLock);
+				return HttpBuilder.OK();
 			}
 		}
 

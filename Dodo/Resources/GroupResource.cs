@@ -112,16 +112,6 @@ namespace Dodo
 			AdministratorData.SetValue(adminData, newAdminRef, newAdminPassword);
 		}
 
-		public void Join(User user, Passphrase passphrase)
-		{
-			Members.Add(user, passphrase);
-		}
-
-		public void Leave(User user, Passphrase passphrase)
-		{
-			Members.Remove(user, passphrase);
-		}
-
 		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
 			if (requestOwner == Creator.Value)

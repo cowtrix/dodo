@@ -20,6 +20,7 @@ namespace Dodo.Roles
 	{
 		protected override string CreationPostfix => Role.ROOT + "/create";
 
+
 		public class CreationSchema : IRESTResourceSchema
 		{
 			public string Name = "";

@@ -18,9 +18,9 @@ namespace Dodo.Roles
 	{
 		public const string ROOT = "roles";
 		[NoPatch]
-		[View(EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.PUBLIC)]
 		public string Mandate { get; set; }
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";

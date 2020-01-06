@@ -116,9 +116,26 @@ namespace Dodo
 		public static User GetRequestOwner(HttpRequest request, out Passphrase passphrase)
 		{
 			passphrase = default;
-			if (!request.Headers.TryGetValue(AUTH_KEY, out var token))
+			GetAuth(request, out var username, out var password);
+			if(username == null || password == null)
 			{
 				return null;
+			}
+			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.WebAuth.Username == username);
+			if (user != null && !user.WebAuth.Challenge(password, out passphrase))
+			{
+				throw HttpException.FORBIDDEN;
+			}
+			return user;
+		}
+
+		public static void GetAuth(HttpRequest request, out string username, out string password)
+		{
+			username = null;
+			password = null;
+			if (!request.Headers.TryGetValue(AUTH_KEY, out var token))
+			{
+				return;
 			}
 			var tokens = token.Trim().Split(' ');
 			if (tokens.Length != 2 || tokens[0] != "Basic")
@@ -127,23 +144,17 @@ namespace Dodo
 			}
 			var decodeRaw = StringExtensions.Base64Decode(tokens[1]);
 			var firstColonIndex = decodeRaw.IndexOf(':');
-			if(firstColonIndex == 0)
+			if (firstColonIndex == 0)
 			{
 				// No auth but header existed
-				return null;
+				return;
 			}
-			if(firstColonIndex < 0)
+			if (firstColonIndex < 0)
 			{
 				throw new HttpException("Bad Auth Header Format", 500);
 			}
-			var username = decodeRaw.Substring(0, firstColonIndex);
-			var password = decodeRaw.Substring(firstColonIndex + 1);
-			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.WebAuth.Username == username);
-			if (user != null && !user.WebAuth.Challenge(password, out passphrase))
-			{
-				throw HttpException.FORBIDDEN;
-			}
-			return user;
+			username = decodeRaw.Substring(0, firstColonIndex);
+			password = decodeRaw.Substring(firstColonIndex + 1);
 		}
 	}
 }

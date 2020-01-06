@@ -4,6 +4,7 @@ using Common;
 using Common.Extensions;
 using Common.Security;
 using Dodo.LocalGroups;
+using Dodo.WorkingGroups;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using SimpleHttpServer.REST;
@@ -36,6 +37,7 @@ namespace Dodo.Users
 		[View(EPermissionLevel.OWNER)]
 		public PushActionCollection PushActions = new PushActionCollection();
 
+		[View(EPermissionLevel.OWNER)]
 		public bool IsAdmin { get { return PushActions.GetSinglePushAction<AdminToken>() != null; } }
 
 		public User() : base()
@@ -57,6 +59,11 @@ namespace Dodo.Users
 			}
 			permissionLevel = EPermissionLevel.PUBLIC;
 			return false;
+		}
+
+		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
+		{
+			base.AppendAuxilaryData(view, permissionLevel, requester, passphrase);
 		}
 	}
 }
