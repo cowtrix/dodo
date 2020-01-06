@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Common;
 using Common.Extensions;
 using Common.Security;
 using Dodo.LocalGroups;
+using Dodo.Rebellions;
+using Dodo.Roles;
 using Dodo.WorkingGroups;
 using Newtonsoft.Json;
 using SimpleHttpServer.Models;
@@ -16,10 +19,13 @@ namespace Dodo.Users
 
 	public class User : DodoResource
 	{
+		public const string ADMIN_OF_KEY = "ADMIN_OF";
+		public const string ROLES_HELD_KEY = "ROLES";
+
 		public const string ROOT = "u";
 		public override string ResourceURL { get { return $"{ROOT}/{WebAuth.Username.StripForURL()}"; } }
 
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.USER)]
 		[VerifyObject]
 		public WebPortalAuth WebAuth;
 
@@ -28,17 +34,19 @@ namespace Dodo.Users
 		[NoPatch]
 		public string Email;
 
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public bool EmailVerified { get; set; }
 
 		[View(EPermissionLevel.OWNER)]
 		public ResourceReference<LocalGroup> LocalGroup;
 
-		[View(EPermissionLevel.OWNER)]
 		public PushActionCollection PushActions = new PushActionCollection();
 
 		[View(EPermissionLevel.OWNER)]
 		public bool IsAdmin { get { return PushActions.GetSinglePushAction<AdminToken>() != null; } }
+
+		[View(EPermissionLevel.OWNER)]
+		public List<string> Notifications { get { return PushActions.Actions.Select(x => x.Message).Where(x => !string.IsNullOrEmpty(x)).ToList(); } }
 
 		public User() : base()
 		{
@@ -63,6 +71,17 @@ namespace Dodo.Users
 
 		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
+			var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).Value : (User)requester;
+			if(permissionLevel >= EPermissionLevel.ADMIN)
+			{
+				view.Add(ADMIN_OF_KEY, new
+				{
+					Rebellions = ResourceUtility.GetManager<Rebellion>().Get(r => r.IsAdmin(this, requesterUser, passphrase)).Select(r => r.GUID),
+					WorkingGroups = ResourceUtility.GetManager<WorkingGroup>().Get(r => r.IsAdmin(this, requesterUser, passphrase)).Select(r => r.GUID),
+					LocalGroups = ResourceUtility.GetManager<LocalGroup>().Get(r => r.IsAdmin(this, requesterUser, passphrase)).Select(r => r.GUID),
+				});
+				view.Add(ROLES_HELD_KEY, ResourceUtility.GetManager<Role>().Get(r => r.RoleHolders.IsAuthorised(this, passphrase)).Select(r => r.GUID));
+			}
 			base.AppendAuxilaryData(view, permissionLevel, requester, passphrase);
 		}
 	}

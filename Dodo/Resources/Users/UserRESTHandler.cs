@@ -54,7 +54,7 @@ namespace Dodo.Users
 				WrapRawCall((req) => ResetPassword(req))
 				));
 			routeList.Add(new Route(
-				$"User Password Reset",
+				$"User Password Change",
 				EHTTPRequestType.POST,
 				url => url.StartsWith(CHANGEPASS_URL),
 				WrapRawCall((req) => ChangePassword(req))

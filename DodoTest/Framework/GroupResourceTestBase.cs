@@ -48,6 +48,20 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		public void AdminsCanSeeOtherAdmins()
+		{
+			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var resourceURL = createdObj.Value<string>("ResourceURL");
+
+			RegisterRandomUser(out var username1, out _, out var password, out _, out var guid);
+			Request(resourceURL + GroupResourceRESTHandler<T>.ADD_ADMIN, Method.POST, guid);
+
+			var updatedObj = RequestJSON(resourceURL, Method.GET);
+			var admin = updatedObj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
+			Assert.IsNotNull(admin.SingleOrDefault(x => x == guid));
+		}
+
+		[TestMethod]
 		public void CannotCreateWhenNotVerified()
 		{
 			var unverifiedUser = RegisterRandomUser(out var username, out _, out var pass, out _, out _, false);
