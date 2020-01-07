@@ -170,8 +170,7 @@ namespace RESTTests
 			var tasks = new Task[taskCount];
 			for(var i = 0; i < taskCount; ++i)
 			{
-				tasks[i] = new Task(joinAction);
-				tasks[i].Start();
+				tasks[i] = Task.Factory.StartNew(joinAction);
 			}
 			Task.WaitAll(tasks);
 			Assert.AreEqual(0, joinCounter);

@@ -9,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 
 // Q: If we did move to a database, would it be possible to keep the nice LINQ stuff here? - Sean
 
@@ -99,6 +100,7 @@ namespace SimpleHttpServer.REST
 				{
 					throw new Exception("Resource Locked");
 				}
+				Thread.Sleep(20);
 			}
 			return resource;
 		}

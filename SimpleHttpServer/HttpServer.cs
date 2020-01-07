@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SimpleHttpServer
 {
@@ -52,7 +53,7 @@ namespace SimpleHttpServer
 			throw new Exception("No network adapters with an IPv4 address in the system!");
 		}
 
-		public void Listen()
+		public async Task Listen()
 		{
 			Console.WriteLine($"Started HTTP server at {GetLocalIPAddress()}:{Port}");
 
@@ -60,7 +61,7 @@ namespace SimpleHttpServer
 			Listener.Start();
 			while (IsActive)
 			{
-				TcpClient s = this.Listener.AcceptTcpClient();
+				TcpClient s = await this.Listener.AcceptTcpClientAsync();
 				Thread thread = new Thread(() =>
 				{
 					try
@@ -73,7 +74,6 @@ namespace SimpleHttpServer
 					}
 				});
 				thread.Start();
-				Thread.Sleep(1);
 			}
 		}
 

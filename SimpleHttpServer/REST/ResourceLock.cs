@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
@@ -7,6 +8,7 @@ namespace SimpleHttpServer.REST
 	public class ResourceLock : IDisposable
 	{
 		private static ConcurrentDictionary<Guid, string> m_locks = new ConcurrentDictionary<Guid, string>();
+
 		public IRESTResource Value { get; private set; }
 
 		public static bool IsLocked(Guid resource)

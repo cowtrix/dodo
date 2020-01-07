@@ -20,7 +20,6 @@ namespace SimpleHttpServer.REST
 		protected List<Route> Routes = new List<Route>();
 		protected MsgReceivedDelegate OnMsgReceieved;
 		private static HttpServer m_server;
-		private Thread m_serverThread;
 		private List<RESTHandler> m_handlers = new List<RESTHandler>();
 		private string m_certificatePath;
 		private string m_sslPassword;
@@ -62,8 +61,8 @@ namespace SimpleHttpServer.REST
 		public void Start()
 		{
 			m_server = new HttpServer(Port, Routes, m_certificatePath, m_sslPassword);
-			m_serverThread = new Thread(new ThreadStart(m_server.Listen));
-			m_serverThread.Start();
+			var listenTask = new Task(async ()=> await m_server.Listen(), TaskCreationOptions.LongRunning);
+			listenTask.Start();
 			m_server.OnMsgReceived += OnMsgReceieved;
 		}
 

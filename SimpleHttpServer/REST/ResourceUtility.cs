@@ -49,8 +49,16 @@ namespace SimpleHttpServer.REST
 
 		public static T GetResourceByGuid<T>(this Guid guid) where T : class, IRESTResource
 		{
-			var rm = GetManagerForResource(guid);
-			return (T)rm?.GetSingle(resource => resource.GUID == guid);
+			T result;
+			foreach(var rm in ResourceManagers)
+			{
+				result = (T)rm.Value.GetSingle(x => x.GUID == guid);
+				if(result != null)
+				{
+					return result;
+				}
+			}
+			return null;
 		}
 
 		public static IRESTResource GetResourceByGuid(this Guid guid)

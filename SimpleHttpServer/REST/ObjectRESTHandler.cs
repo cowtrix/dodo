@@ -20,6 +20,8 @@ namespace SimpleHttpServer.REST
 	{
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
+		private HashSet<string> m_resourceURLCache = new HashSet<string>();
+
 		public override void AddRoutes(List<Route> routeList)
 		{
 			routeList.Add(new Route(
@@ -55,7 +57,23 @@ namespace SimpleHttpServer.REST
 		/// <returns></returns>
 		protected bool URLIsResource(string url)
 		{
-			return GetResource(url) != null;
+			lock (m_resourceURLCache)
+			{
+				if(m_resourceURLCache.Contains(url))
+				{
+					return true;
+				}
+			}
+			var rsc = GetResource(url);
+			if(rsc == null)
+			{
+				return false;
+			}
+			lock(m_resourceURLCache)
+			{
+				m_resourceURLCache.Add(url);
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -176,6 +194,10 @@ namespace SimpleHttpServer.REST
 				throw HttpException.NOT_FOUND;
 			}
 			DeleteObjectInternal(target);
+			lock(m_resourceURLCache)
+			{
+				m_resourceURLCache.Remove(target.ResourceURL);
+			}
 			return HttpBuilder.Custom("Resource deleted", 204);
 		}
 
