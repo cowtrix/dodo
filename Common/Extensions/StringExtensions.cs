@@ -48,7 +48,7 @@ namespace Common.Extensions
 		public static string RandomString(int length)
 		{
 			const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-			lock(random)
+			lock(random)	// Random is not thread sage
 			{
 				return new string(Enumerable.Repeat(chars, length)
 					.Select(s => s[random.Next(s.Length)]).ToArray());

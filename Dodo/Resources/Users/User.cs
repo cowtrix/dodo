@@ -19,6 +19,7 @@ namespace Dodo.Users
 
 	public class User : DodoResource
 	{
+		[ViewClass]
 		public struct Notification
 		{
 			public string Message;
