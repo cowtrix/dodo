@@ -113,6 +113,25 @@ namespace SimpleHttpServer.REST
 			}
 		}
 
+		public static IEnumerable<T> Search<T>(string query) where T : class, IRESTResource
+		{
+			if (Guid.TryParse(query, out var guid))
+			{
+				return new[] { GetResourceByGuid<T>(guid) };
+			}
+			var result = new List<T>();
+			foreach(var rm in ResourceManagers)
+			{
+				if(!typeof(T).IsAssignableFrom(rm.Key))
+				{
+					continue;
+				}
+				result.AddRange(rm.Value.Get(x => JsonConvert.SerializeObject(x).Contains(query)).Cast<T>());
+			}
+			return result;
+		}
+
+		#region Commands
 		const string SEARCH_CMD_REGEX = @"^resource\ssearch\s(.*)";
 		[Command(SEARCH_CMD_REGEX, "resource search", "Search for a resource")]
 		public static void SearchCommand(string cmd)
@@ -121,14 +140,6 @@ namespace SimpleHttpServer.REST
 			var query = rgx.Groups[1].Value;
 			Logger.Debug(JsonConvert.SerializeObject(Search<IRESTResource>(cmd), JsonExtensions.DatabaseSettings));
 		}
-
-		public static IEnumerable<T> Search<T>(string query) where T : class, IRESTResource
-		{
-			if (Guid.TryParse(query, out var guid))
-			{
-				return new[] { GetResourceByGuid<T>(guid) };
-			}
-			return null;
-		}
+		#endregion
 	}
 }

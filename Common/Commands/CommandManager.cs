@@ -33,11 +33,16 @@ namespace Common
 		private static Dictionary<Regex, CommandData> m_commands = new Dictionary<Regex, CommandData>();
 		static CommandManager()
 		{
+			LoadCommands();
+		}
+
+		private static void LoadCommands()
+		{
 			var allMethods = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetTypes()).ConcatenateCollection()
 				.Select(x => x.GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null)).ConcatenateCollection();
-			foreach(var method in allMethods)
+			foreach (var method in allMethods)
 			{
-				if(!method.IsStatic)
+				if (!method.IsStatic)
 				{
 					throw new Exception("Cannot hook command for non-static function");
 				}

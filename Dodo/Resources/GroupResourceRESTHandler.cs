@@ -36,7 +36,7 @@ namespace Dodo
 				$"{GetType().Name} ADD ADMIN",
 				EHTTPRequestType.POST,
 				url => IsResourceActionUrl(url, ADD_ADMIN),
-				WrapRawCall((req) => AddAdmin(req))
+				WrapRawCall((req) => AddAdministrator(req))
 				));
 			routeList.Add(new Route(
 				$"{GetType().Name} JOIN",
@@ -68,12 +68,7 @@ namespace Dodo
 			return resource is T;
 		}
 
-		/// <summary>
-		/// This will add an adminstrator to this resource
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns></returns>
-		HttpResponse AddAdmin(HttpRequest request)
+		HttpResponse AddAdministrator(HttpRequest request)
 		{
 			if (!IsAuthorised(request, out var permissionLevel, out var ownerObj, out var passphrase))
 			{
