@@ -2,9 +2,11 @@
 using Common.Config;
 using Common.Extensions;
 using MongoDB.Driver;
+using Newtonsoft.Json;
 using SimpleHttpServer.Models;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -109,6 +111,24 @@ namespace SimpleHttpServer.REST
 			{
 				rm.Value.Clear();
 			}
+		}
+
+		const string SEARCH_CMD_REGEX = @"^resource\ssearch\s(.*)";
+		[Command(SEARCH_CMD_REGEX, "resource search", "Search for a resource")]
+		public static void SearchCommand(string cmd)
+		{
+			var rgx = Regex.Match(cmd, SEARCH_CMD_REGEX);
+			var query = rgx.Groups[1].Value;
+			Logger.Debug(JsonConvert.SerializeObject(Search<IRESTResource>(cmd), JsonExtensions.DatabaseSettings));
+		}
+
+		public static IEnumerable<T> Search<T>(string query) where T : class, IRESTResource
+		{
+			if (Guid.TryParse(query, out var guid))
+			{
+				return new[] { GetResourceByGuid<T>(guid) };
+			}
+			return null;
 		}
 	}
 }

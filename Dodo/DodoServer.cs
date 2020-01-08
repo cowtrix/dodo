@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Dodo
@@ -26,6 +27,7 @@ namespace Dodo
 		static void Main(string[] args)
 		{
 			Initialise();
+			Thread.Sleep(-1);
 		}
 
 		public static void Initialise()

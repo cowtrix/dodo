@@ -21,7 +21,7 @@ namespace Common.Config
 			LoadFromFile();
 		}
 
-		[Command("^config load$", "Load configuration from file")]
+		[Command("^config load$", "config load", "Load configuration from file")]
 		public static void LoadFromFile(string args = null)
 		{
 			if (!File.Exists(m_configPath))
@@ -33,7 +33,7 @@ namespace Common.Config
 			Logger.Debug($"Loaded configuration data from {m_configPath}");
 		}
 
-		[Command("^config save", "Save configuration to file")]
+		[Command("^config save", "config save", "Save configuration to file")]
 		public static void SaveToFile(string args = null)
 		{
 			File.WriteAllText(m_configPath, JsonConvert.SerializeObject(m_data, JsonExtensions.DatabaseSettings));
@@ -56,8 +56,8 @@ namespace Common.Config
 		static Dictionary<string, object> m_sampleData = new Dictionary<string, object>();
 		internal static void Register<T>(ConfigVariable<T> configVariable)
 		{
-			m_sampleData[configVariable.ConfigKey] = configVariable.DefaultValue;
-			File.WriteAllText(m_sampleConfigPath, JsonConvert.SerializeObject(m_sampleData, JsonExtensions.DatabaseSettings));
+			//m_sampleData[configVariable.ConfigKey] = configVariable.DefaultValue;
+			//File.WriteAllText(m_sampleConfigPath, JsonConvert.SerializeObject(m_sampleData, JsonExtensions.DatabaseSettings));
 		}
 #endif
 	}

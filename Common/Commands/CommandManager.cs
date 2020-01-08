@@ -14,16 +14,23 @@ namespace Common
 	{
 		public readonly string CommandRegex;
 		public readonly string Description;
-		public CommandAttribute(string regex, string description)
+		public readonly string FriendlyName;
+		public CommandAttribute(string regex, string friendlyname, string description)
 		{
 			CommandRegex = regex;
 			Description = description;
+			FriendlyName = friendlyname;
 		}
 	}
 
 	public static class CommandManager
 	{
-		private static Dictionary<Regex, MethodInfo> m_commands = new Dictionary<Regex, MethodInfo>();
+		private struct CommandData
+		{
+			public MethodInfo Method;
+			public CommandAttribute Attribute;
+		}
+		private static Dictionary<Regex, CommandData> m_commands = new Dictionary<Regex, CommandData>();
 		static CommandManager()
 		{
 			var allMethods = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetTypes()).ConcatenateCollection()
@@ -40,7 +47,11 @@ namespace Common
 					throw new Exception($"Method {method.DeclaringType.Name}:{method.Name} parameter must be a single string variable");
 				}
 				var attr = method.GetCustomAttribute<CommandAttribute>();
-				m_commands.Add(new Regex(attr.CommandRegex), method);
+				m_commands.Add(new Regex(attr.CommandRegex), new CommandData
+				{
+					Attribute = attr,
+					Method = method,
+				});
 			}
 		}
 
@@ -57,7 +68,16 @@ namespace Common
 				throw new Exception("Command not found");
 			}
 			var cmd = cmds.Single();
-			cmd.Value.Invoke(null, new[] { line });
+			cmd.Value.Method.Invoke(null, new[] { line });
+		}
+
+		[Command(@"^help$", "help", "List all commands")]
+		public static void Help(string args)
+		{
+			foreach(var cmd in m_commands.OrderBy(x => x.Value.Attribute.FriendlyName))
+			{
+				Console.WriteLine($"  {cmd.Value.Attribute.FriendlyName,-20}\t\t{cmd.Value.Attribute.Description, 10}");
+			}
 		}
 	}
 }
