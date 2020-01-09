@@ -5,10 +5,22 @@ using System.Linq;
 
 namespace SimpleHttpServer.REST
 {
+	/// <summary>
+	/// <para>A ResourceLock will prevent a Resource from being altered while it is being edited. It is
+	/// meant to handle concurrent edit requests from clients by blocking requests until the
+	/// last lock is released.</para>
+	/// <para>When an update request is submitted, or a resource is being altered, a ResourceLock
+	/// should be placed upon it. You cannot submit the resource for updating back into the database
+	/// without a ResourceLock for that resource.</para>
+	/// </summary>
 	public class ResourceLock : IDisposable
 	{
 		private static ConcurrentDictionary<Guid, string> m_locks = new ConcurrentDictionary<Guid, string>();
 
+		/// <summary>
+		/// When using a ResourceLock, always get the value from here. This is guaranteed to be the most
+		/// up to date version of the object.
+		/// </summary>
 		public IRESTResource Value { get; private set; }
 
 		public static bool IsLocked(Guid resource)
@@ -64,7 +76,7 @@ namespace SimpleHttpServer.REST
 				{
 					// TODO: dispose managed state (managed objects).
 				}
-				m_locks.TryRemove(Guid, out _);
+				m_locks.TryRemove(Guid, out _);	// Remove the lock
 				disposedValue = true;
 			}
 		}
@@ -79,8 +91,6 @@ namespace SimpleHttpServer.REST
 		{
 			// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
 			Dispose(true);
-			// TODO: uncomment the following line if the finalizer is overridden above.
-			// GC.SuppressFinalize(this);
 		}
 		#endregion
 

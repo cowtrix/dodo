@@ -20,10 +20,14 @@ namespace Dodo.Roles
 		[NoPatch]
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
-		[View(EPermissionLevel.PUBLIC)]
-		public string Mandate { get; set; }
-
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
+
+		[View(EPermissionLevel.PUBLIC)]
+		public string PublicDescription { get; set; }
+		[View(EPermissionLevel.USER)]
+		public string MemberDescription { get; set; }
+		[View(EPermissionLevel.ADMIN)]
+		public string AdminDescription { get; set; }
 
 		[View(EPermissionLevel.USER)]
 		public UserCollection RoleHolders;
@@ -33,7 +37,7 @@ namespace Dodo.Roles
 		public Role(User creator, Passphrase passphrase, GroupResource parent, RoleRESTHandler.CreationSchema schema) : base(parent.Creator, schema.Name)
 		{
 			Parent = new ResourceReference<GroupResource>(parent);
-			Mandate = schema.Mandate;
+			PublicDescription = schema.PublicDescription;
 			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), creator, passphrase);
 		}
 

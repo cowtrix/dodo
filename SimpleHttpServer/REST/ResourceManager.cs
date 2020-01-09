@@ -11,8 +11,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-// Q: If we did move to a database, would it be possible to keep the nice LINQ stuff here? - Sean
-
 namespace SimpleHttpServer.REST
 {
 	public interface IResourceManager
@@ -37,19 +35,27 @@ namespace SimpleHttpServer.REST
 	}
 
 	/// <summary>
-	/// A ResourceManager keeps track of, deletes, creates and generally manages a class of object.
-	/// If we were going to transition to a database, this would be the thing that manages that.
-	/// But currently we just hold everything in JSON and write it out to a file.
+	/// A ResourceManager keeps track of, deletes, creates, updates and generally manages a type of resource.
 	/// </summary>
 	/// <typeparam name="T">The class to be managed</typeparam>
 	public abstract class ResourceManager<T> : IResourceManager<T> where T: class, IRESTResource
 	{
+		/// <summary>
+		/// How long a request will wait to get access to a resource before giving up, in miliseconds.
+		/// See: WaitForUnlocked
+		/// </summary>
 		private ConfigVariable<int> m_resourceLockTimeoutMs = new ConfigVariable<int>("ResourceLockTimeout", 10 * 1000);
 		private IMongoCollection<T> m_db;
+
 		public ResourceManager()
 		{
-			var database = ResourceUtility.MongoDB.GetDatabase("Dodo");
-			m_db = database.GetCollection<T>(typeof(T).Name);
+			// Connect to the database
+			var database = ResourceUtility.MongoDB.GetDatabase(MongoDBDatabaseName);
+			// Get the collection (which is the name of this type by default)
+			m_db = database.GetCollection<T>(MongoDBCollectionName);
+			// Create an index of the GUID
+			// TODO investigate ResourceURL commented out bit - ResourceURL not currently serialized so can't be used
+			// TODO investigate if we need to do this every time or if it will create a new index every time
 			var indexOptions = new CreateIndexOptions();
 			var indexKeys = Builders<T>.IndexKeys//.Ascending(rsc => rsc.ResourceURL)
 				.Ascending(rsc => rsc.GUID);
@@ -57,6 +63,13 @@ namespace SimpleHttpServer.REST
 			m_db.Indexes.CreateOne(indexModel);
 		}
 
+		protected abstract string MongoDBDatabaseName { get; }
+		protected virtual string MongoDBCollectionName { get { return typeof(T).Name; } }
+
+		/// <summary>
+		/// Add a new Resource to the database.
+		/// </summary>
+		/// <param name="newObject"></param>
 		public virtual void Add(T newObject)
 		{
 			if(ResourceUtility.GetResourceByGuid(newObject.GUID) != null || Get(x => x.ResourceURL == newObject.ResourceURL).Any())
@@ -66,65 +79,77 @@ namespace SimpleHttpServer.REST
 			m_db.InsertOne(newObject);
 		}
 
+		/// <summary>
+		/// Delete a Resource from the database.
+		/// </summary>
+		/// <param name="objToDelete"></param>
 		public virtual void Delete(T objToDelete)
 		{
 			objToDelete.OnDestroy();
 			m_db.DeleteOne(x => x.GUID == objToDelete.GUID);
 		}
 
+		/// <summary>
+		/// Update a Resource in the database.
+		/// </summary>
+		/// <param name="objToUpdate">The object to update.</param>
+		/// <param name="locker">The ResourceLock of the object (to guarantee someone else isn't editing it)</param>
 		public virtual void Update(T objToUpdate, ResourceLock locker)
 		{
 			if(locker.Guid != objToUpdate.GUID)
 			{
+				// This should never, ever happen in normal execution of the program
 				throw new Exception("Locker GUID mismatch");
 			}
 			m_db.ReplaceOne(x => x.GUID == objToUpdate.GUID, objToUpdate);
 		}
 
-		IEnumerable<T2> WaitForAllUnlocked<T2>(IEnumerable<T2> enumerable) where T2: IRESTResource
-		{
-			foreach(var rsc in enumerable)
-			{
-				WaitForUnlocked(rsc);
-			}
-			return enumerable;
-		}
-
-		T2 WaitForUnlocked<T2>(T2 resource) where T2 : IRESTResource
-		{
-			var sw = new Stopwatch();
-			sw.Start();
-			while (ResourceLock.IsLocked(resource))
-			{
-				if(sw.Elapsed.TotalMilliseconds > m_resourceLockTimeoutMs.Value)
-				{
-					throw new Exception("Resource Locked");
-				}
-				Thread.Sleep(20);
-			}
-			return resource;
-		}
-
+		/// <summary>
+		/// Get a single resource with the given selector.
+		/// This will throw an exception if more than one resource is found.
+		/// </summary>
+		/// <param name="selector">A lambda function to search with.</param>
+		/// <returns>A resource of type T that satisfies the selector</returns>
 		public virtual T GetSingle(Func<T, bool> selector)
 		{
 			return WaitForUnlocked(m_db.AsQueryable().SingleOrDefault(selector));
 		}
 
+		/// <summary>
+		/// Get the first resource with the given selector.
+		/// </summary>
+		/// <param name="selector">A lambda function to search with.</param>
+		/// <returns>A resource of type T that satisfies the selector</returns>
 		public virtual T GetFirst(Func<T, bool> selector)
 		{
 			return WaitForUnlocked(m_db.AsQueryable().FirstOrDefault(selector));
 		}
 
+		/// <summary>
+		/// Get all resources that match a given selector.
+		/// </summary>
+		/// <param name="selector">A lambda function to search with.</param>
+		/// <returns>An enumerable of resources that satisfy the selector</returns>
 		public virtual IEnumerable<T> Get(Func<T, bool> selector)
 		{
 			return WaitForAllUnlocked(m_db.AsQueryable().Where(selector));
 		}
 
+		/// <summary>
+		/// Clear all data from the database. USE WITH CAUTION - this will permanently delete data from the database.
+		/// </summary>
 		public virtual void Clear()
 		{
 			m_db.Database.DropCollection(typeof(T).Name);
 		}
 
+		/// <summary>
+		/// Determine if a request is authorised, and with which permission level.
+		/// </summary>
+		/// <param name="request">The request to be evaluated</param>
+		/// <param name="resource">The resource that is being interacted with</param>
+		/// <param name="permission">The permission level that this request has</param>
+		/// <returns>Whether this request is authorised (a value of false should result in a HttpException.FORBIDDEN exception being thrown)</returns>
 		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel permission)
 		{
 			if(resource != null && !(resource is T))
@@ -159,6 +184,30 @@ namespace SimpleHttpServer.REST
 		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector)
 		{
 			return m_db.AsQueryable().Where(selector);
+		}
+
+		IEnumerable<T> WaitForAllUnlocked(IEnumerable<T> enumerable)
+		{
+			foreach (var rsc in enumerable)
+			{
+				WaitForUnlocked(rsc);
+			}
+			return enumerable;
+		}
+
+		T WaitForUnlocked(T resource)
+		{
+			var sw = new Stopwatch();
+			sw.Start();
+			while (ResourceLock.IsLocked(resource))
+			{
+				if (sw.Elapsed.TotalMilliseconds > m_resourceLockTimeoutMs.Value)
+				{
+					throw new Exception("Resource Locked");
+				}
+				Thread.Sleep(20);
+			}
+			return resource;
 		}
 	}
 }

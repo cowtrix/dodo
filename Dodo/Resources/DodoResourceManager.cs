@@ -21,5 +21,7 @@ namespace Dodo.Resources
 			}
 			return resource.IsAuthorised(requestOwner, passphrase, request, out visibility);
 		}
+
+		protected override string MongoDBDatabaseName => DodoServer.PRODUCT_NAME;
 	}
 }

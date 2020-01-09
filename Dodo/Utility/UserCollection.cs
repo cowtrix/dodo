@@ -18,5 +18,9 @@ namespace Dodo
 		public UserCollection(List<ResourceReference<User>> data, User key, Passphrase passphrase) : base(data, key, passphrase)
 		{
 		}
+
+		public UserCollection(User key, Passphrase passphrase) : base(new List<ResourceReference<User>>() { key }, key, passphrase)
+		{
+		}
 	}
 }
