@@ -1,9 +1,8 @@
-﻿using RestSharp;
+﻿using Ryadel.Components.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 
 namespace Common.Extensions
@@ -268,7 +267,7 @@ namespace Common.Extensions
 			string result = "";
 			do
 			{
-				result = System.Web.Security.Membership.GeneratePassword(20, 5);
+				result = PasswordGenerator.Generate();
 			}
 			while (!IsStrongPassword(result, out _));
 			return result;

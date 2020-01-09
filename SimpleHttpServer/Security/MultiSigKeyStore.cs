@@ -39,7 +39,7 @@ namespace Common.Security
 
 		public bool IsAuthorised(T key, Passphrase ownerPass)
 		{
-			if(key == default || string.IsNullOrEmpty(ownerPass.Value))
+			if(key.Equals(default) || string.IsNullOrEmpty(ownerPass.Value))
 			{
 				return false;
 			}

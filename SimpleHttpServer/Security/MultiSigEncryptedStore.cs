@@ -100,7 +100,7 @@ namespace Common.Security
 			var data = GetValue((TKey)requester, passphrase);
 			try
 			{
-				if (data == default)
+				if (data.Equals(default))
 				{
 					data = Activator.CreateInstance<TVal>();
 				}

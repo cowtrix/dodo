@@ -26,7 +26,7 @@ namespace Common.Security
 
 		public EncryptedStore(T value, Passphrase passphrase)
 		{
-			if(value != default)
+			if(!value.Equals(default))
 			{
 				SetValue(value, passphrase);
 			}
@@ -61,7 +61,7 @@ namespace Common.Security
 			{
 				throw new AuthenticationException();
 			}
-			if(value == default)
+			if(value.Equals(default))
 			{
 				m_encryptedData = null;
 			}
@@ -77,7 +77,7 @@ namespace Common.Security
 			var data = GetValue(passphrase);
 			try
 			{
-				if (data == default)
+				if (data.Equals(default))
 				{
 					data = Activator.CreateInstance<T>();
 				}

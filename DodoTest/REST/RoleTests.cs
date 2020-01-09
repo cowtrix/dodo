@@ -34,11 +34,11 @@ namespace RESTTests
 				return new RoleRESTHandler.CreationSchema
 				{
 					Name = "Test Role ",
-					Mandate = "Test mandate"
+					PublicDescription = "Test mandate"
 				};
 			}
 			return new RoleRESTHandler.CreationSchema { Name = "Test Role " + StringExtensions.RandomString(6),
-				Mandate = "Test mandate" };
+				PublicDescription = "Test mandate" };
 		}
 
 		public override object GetPatchSchema()
@@ -71,7 +71,7 @@ namespace RESTTests
 		[TestMethod]
 		public void CannotCreateAtCreationURL()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RoleRESTHandler.CreationSchema { Name = "Create", Mandate = "Test mandate" }),
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RoleRESTHandler.CreationSchema { Name = "Create", PublicDescription = "Test mandate" }),
 				e => e.Message.Contains("Reserved Resource URL"));
 		}
 	}

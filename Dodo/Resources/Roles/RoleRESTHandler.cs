@@ -24,7 +24,7 @@ namespace Dodo.Roles
 		public class CreationSchema : IRESTResourceSchema
 		{
 			public string Name = "";
-			public string Mandate = "";
+			public string PublicDescription = "";
 		}
 
 		protected override IRESTResourceSchema GetCreationSchema()
