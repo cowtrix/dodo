@@ -41,9 +41,11 @@ namespace RESTTests
 	[TestClass]
 	public abstract class TestBase
 	{
-		private TestContext testContextInstance;
+		protected static TestContext Context;
+		protected static RestClient RestClient = new RestClient("https://localhost:443");
+
 		private Random m_random = new Random();
-		protected RestClient RestClient = new RestClient("https://localhost:443");
+		
 		protected static PostmanCollection m_postman = new PostmanCollection("8888079-57fb4f3e-b2ad-4afe-a429-47a38866c5cd");
 
 		protected string DefaultUsername = "test_user";
@@ -52,38 +54,26 @@ namespace RESTTests
 		protected string DefaultEmail = "test@web.com";
 		protected string DefaultGUID;
 
-		public TestBase()
+		[AssemblyInitialize]
+		public static void SetupTests(TestContext testContext)
 		{
 			DodoServer.Initialise();
 			DodoServer.CleanAllData();
 			ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 			RestClient.PreAuthenticate = true;
 			RestClient.Timeout = 500 * 1000;
+			Context = testContext;
+			Logger.OnLog += OnLog;
 		}
 
-		public bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+		private static void OnLog(string message, ELogLevel logLevel)
 		{
-			bool isOk = true;
-			// If there are errors in the certificate chain, look at each error to determine the cause.
-			/*if (sslPolicyErrors != SslPolicyErrors.None)
-			{
-				for (int i = 0; i < chain.ChainStatus.Length; i++)
-				{
-					if (chain.ChainStatus[i].Status != X509ChainStatusFlags.RevocationStatusUnknown)
-					{
-						chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
-						chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-						chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 1, 0);
-						chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-						bool chainIsValid = chain.Build((X509Certificate2)certificate);
-						if (!chainIsValid)
-						{
-							isOk = false;
-						}
-					}
-				}
-			}*/
-			return isOk;
+			Context.WriteLine(message);
+		}
+
+		public static bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+		{
+			return true;
 		}
 
 		/// <summary>
@@ -92,8 +82,8 @@ namespace RESTTests
 		///</summary>
 		public TestContext TestContext
 		{
-			get { return testContextInstance; }
-			set { testContextInstance = value; }
+			get { return Context; }
+			set { Context = value; }
 		}
 
 		[TestCleanup]
@@ -123,8 +113,6 @@ namespace RESTTests
 
 		protected IRestResponse VerifyUser(string guid, string username, string password, string email)
 		{
-			//var response = Request($"verify", Method.POST, null, username, password);
-			//Assert.IsTrue(response.Content.Contains("Email Verification Sent"), $"{response.StatusCode}|{response.Content}");
 			var verifyAction = ResourceUtility.GetManager<User>().GetSingle(u => u.WebAuth.Username == username)
 				.PushActions.GetSinglePushAction<VerifyEmailAction>();
 			var response = Request($"verify?token={verifyAction.Token}", Method.POST, null, username, password);

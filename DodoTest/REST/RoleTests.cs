@@ -43,12 +43,12 @@ namespace RESTTests
 
 		public override object GetPatchSchema()
 		{
-			return new { Mandate = "New mandate" };
+			return new { PublicDescription = "New description" };
 		}
 
 		protected override void CheckPatchedObject(JObject obj)
 		{
-			Assert.AreEqual("New mandate", obj.Value<string>("Mandate"));
+			Assert.AreEqual("New description", obj.Value<string>("PublicDescription"));
 			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Update a Role");
 		}
 

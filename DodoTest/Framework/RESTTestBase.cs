@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
@@ -15,9 +16,12 @@ namespace RESTTests
 		[TestMethod]
 		public virtual void CanCreate()
 		{
+			var sw = new Stopwatch();
+			sw.Start();
 			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			Assert.IsNotNull(createdObj.Value<string>("GUID"));
 			CheckCreatedObject(createdObj);
+			Context.WriteLine($"Test took {sw.Elapsed}");
 		}
 
 		[TestMethod]

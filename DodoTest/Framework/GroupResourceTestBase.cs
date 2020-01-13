@@ -6,6 +6,7 @@ using RestSharp;
 using SimpleHttpServer.REST;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RESTTests
@@ -139,7 +140,7 @@ namespace RESTTests
 			var resourceURL = createdObj.Value<string>("ResourceURL");
 			int joinCounter = 0;
 			object counterLock = new object();
-			var joinAction = new Action(() =>
+			var joinAction = new Action<EventWaitHandle>(handle =>
 			{
 				var newUser = RegisterRandomUser(out var username, out _, out var password, out _, out _);
 				createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
@@ -165,14 +166,18 @@ namespace RESTTests
 				createdObj = RequestJSON(resourceURL, Method.GET, user: username, password: password);
 				isMember = createdObj.Value<string>(GroupResource.IS_MEMBER_AUX_TOKEN);
 				Assert.AreEqual("false", isMember);
+				handle.Set();
 			});
-			const int taskCount = 100;
-			var tasks = new Task[taskCount];
+			const int taskCount = 64;
+			var waitHandles = new WaitHandle[taskCount];
 			for(var i = 0; i < taskCount; ++i)
 			{
-				tasks[i] = Task.Factory.StartNew(joinAction);
+				var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
+				var thread = new Thread(() => joinAction(handle));
+				waitHandles[i] = handle;
+				thread.Start();
 			}
-			Task.WaitAll(tasks);
+			WaitHandle.WaitAll(waitHandles);
 			Assert.AreEqual(0, joinCounter);
 		}
 	}

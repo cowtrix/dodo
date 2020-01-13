@@ -2,11 +2,12 @@
 using Common;
 using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Ryadel.Components.Security;
 
 namespace Security
 {
 	[TestClass]
-	public class AsymmetricEncryptionTests
+	public class SymmetricEncryptionTests
 	{
 		[TestMethod]
 		public void CanEncryptAndDecryptString()
@@ -38,10 +39,18 @@ namespace Security
 
 		private void CanEncryptAndDecrypt<T>(T data)
 		{
-			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
-			var encryptedData = AsymmetricSecurity.Encrypt(data, pk);
-			var decryptedData = AsymmetricSecurity.Decrypt<T>(encryptedData, pv);
-			Assert.AreEqual(data, decryptedData);
+			var pass = new Passphrase(PasswordGenerator.Generate());
+			var encrypted = new EncryptedStore<T>(data, pass);
+			var unencrypted = encrypted.GetValue(pass);
+			Assert.AreEqual(data, unencrypted);
+		}
+
+		[TestMethod]
+		public void CanCreatePassphrase()
+		{
+			var password = PasswordGenerator.Generate();
+			var passphrase = new Passphrase(password);
+			Assert.AreEqual(password, passphrase.Value);
 		}
 	}
 }

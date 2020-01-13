@@ -239,6 +239,9 @@ namespace Dodo.Users
 		{
 			var emailVerifyPushAction = new VerifyEmailAction();
 			newUser.PushActions.Add(emailVerifyPushAction);
+#if DEBUG
+			Console.WriteLine($"Added a new VerifyEmailAction for user {newUser.WebAuth.Username}: {emailVerifyPushAction.Token}");
+#endif
 			EmailHelper.SendEmail(newUser.Email, newUser.Name, $"{DodoServer.PRODUCT_NAME}: Please verify your email",
 				"To verify your email, click the following link:\n" +
 				$"{DodoServer.GetURL()}/{newUser.ResourceURL}?verify={emailVerifyPushAction.Token}");

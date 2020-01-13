@@ -18,7 +18,7 @@ namespace Dodo.Users
 			TargetUser = targetUser;
 			TemporaryToken = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 #if DEBUG
-			Console.WriteLine(TemporaryToken);
+			Console.WriteLine($"Reset password action added for user {targetUser.WebAuth.Username}: {TemporaryToken}");
 #endif
 		}
 

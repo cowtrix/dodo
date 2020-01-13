@@ -22,12 +22,10 @@ namespace SimpleHttpServer
 		/// <returns>An HttpResponse object with this response code</returns>
 		public static HttpResponse NotFound()
 		{
-			string content = File.ReadAllText("Resources/Pages/404.html");
 			return new HttpResponse()
 			{
 				ReasonPhrase = "NotFound",
 				StatusCode = "404",
-				ContentAsUTF8 = content
 			};
 		}
 

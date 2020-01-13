@@ -34,7 +34,7 @@ namespace SimpleHttpServer
 			// Authenticate the server but don't require the client to authenticate.
 			try
 			{
-				sslStream.AuthenticateAsServer(HttpServer.ServerCertificate, clientCertificateRequired: false, checkCertificateRevocation: true);
+				sslStream.AuthenticateAsServer(HttpServer.ServerCertificate);
 				// Set timeouts for the read and write to 5 seconds.
 				sslStream.ReadTimeout = 500000;			// TODO set to sane values
 				sslStream.WriteTimeout = 500000;

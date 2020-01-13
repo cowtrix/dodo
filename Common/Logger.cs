@@ -22,8 +22,11 @@ namespace Common
 		public DateTime TimeStamp;
 	}
 
+	public delegate void LogEvent(string message, ELogLevel logLevel);
+
 	public static class Logger
 	{
+		public static LogEvent OnLog;
 		private static ConfigVariable<ELogLevel> m_logLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Debug);
 		internal static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
 		public static string LogPath = @"logs\log.log";
@@ -76,7 +79,7 @@ namespace Common
 				Console.ForegroundColor = foreground;
 				Console.BackgroundColor = background;
 				Console.WriteLine(message);
-				System.Diagnostics.Debug.WriteLine(message, lvl.GetName());
+				OnLog?.Invoke(message, lvl);
 				if (writeToLog)
 				{
 					lock (m_fileLock)

@@ -12,7 +12,9 @@ namespace Common.Extensions
 	{
 		public static IEnumerable<Type> GetChildClasses<T>() where T:class
 		{
-			return AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetTypes()).ConcatenateCollection()
+			return AppDomain.CurrentDomain.GetAssemblies()
+				.Where(ass => !ass.GetName().FullName.Contains("Microsoft"))  // TODO https://developercommunity.visualstudio.com/content/problem/738856/could-not-load-file-or-assembly-microsoftintellitr.html
+				.Select(assembly => assembly.GetTypes()).ConcatenateCollection()
 				.Where(t => typeof(T).IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface);
 		}
 
