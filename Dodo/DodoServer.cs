@@ -30,7 +30,7 @@ namespace Dodo
 			Thread.Sleep(-1);
 		}
 
-		public static void Initialise()
+		public static void Initialise(string[] args = null)
 		{
 			m_restServer = new DodoRESTServer(m_httpPort.Value, m_sslCertPath.Value, "password");
 			m_restServer.Start();
