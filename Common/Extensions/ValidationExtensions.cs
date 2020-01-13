@@ -207,7 +207,8 @@ namespace Common.Extensions
 			}
 			try
 			{
-				PhoneNumbers.PhoneNumberUtil.GetInstance().Parse(number, null);
+				// TODO
+				//PhoneNumbers.PhoneNumberUtil.GetInstance().Parse(number, null);
 			}
 			catch
 			{
