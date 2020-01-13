@@ -32,3 +32,5 @@
 /wiki/
 /bin/
 *.user
+/Common/bin/
+*.log

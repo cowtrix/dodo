@@ -29,7 +29,7 @@ namespace Common
 		public static LogEvent OnLog;
 		private static ConfigVariable<ELogLevel> m_logLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Debug);
 		internal static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
-		public static string LogPath = @"logs\log.log";
+		public static string LogPath => Path.GetFullPath(Path.Combine("logs", "log.log"));
 		private static object m_fileLock = new object();
 
 		static Logger()
