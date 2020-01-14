@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy $(SolutionDir)\server.pfx $(TargetDir)" />
+    <Exec Command="copy $(SolutionDir)server.pfx $(TargetDir)" />
   </Target>
 
 </Project>
