@@ -19,6 +19,16 @@ information about the status of the Rebellion.
 
 # Getting Started
 
+## Building From Source 
+
+Dodo is built on .NET Core 3.0. To build from source, you must install the SDK from [here](https://dotnet.microsoft.com/download/dotnet-core/3.0).
+
+From the root directory, run `dotnet build`. The project will be output in the `/bin/` directory.
+
+## System Requirements
+
+Dodo is compatible with Linux and Windows. It requires the .NET Core 3.0 runtime, which you can install for your operating system from [here](https://dotnet.microsoft.com/download/dotnet-core/3.0). 
+
 ## Configuring Your Server
 
 Configuration variables are read from a file called `config.json`, which should be formatted as a JSON dictionary. You can find a sample config file within the project called `config.sample.json` which also serves as a list of all variables that you can set. This file needs to be in the root directory of the application. At various points in this setup, you'll need to open up this file and set a variable to the given value.
@@ -32,6 +42,10 @@ If you are locally hosting the MongoDB server, move to the next step. If not, yo
 ### 2 - Set up a SendGrid account
 
 Dodo uses [SendGrid](https://sendgrid.com/) to manage and send emails. To link your server to a SendGrid account, you will need to get an API key from the SendGrid website, and set the `SendGrid_APIKey` configuration value to this key. Without this, users will not receive emails from your server. Additionally, you may wish to customize the `Email_FromEmail` and `Email_FromName` fields, which will change how emails are displayed when received by users.
+
+### 3 - Set up your SSL Certificate
+
+Dodo expects to load a `.pfx` file containing the SSL certificate it will use to validate HTTPS connections. The relative path to this certificate is defined with the `SSLCertificatePath` configuration variable.
 
 ### 3 - Launch the server
 
