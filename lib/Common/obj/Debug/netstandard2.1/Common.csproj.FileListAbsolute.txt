@@ -1,0 +1,8 @@
+C:\Users\localadmin\Documents\git\dodo\Common\bin\Debug\netstandard2.1\Common.deps.json
+C:\Users\localadmin\Documents\git\dodo\Common\bin\Debug\netstandard2.1\Common.dll
+C:\Users\localadmin\Documents\git\dodo\Common\bin\Debug\netstandard2.1\Common.pdb
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.1\Common.AssemblyInfoInputs.cache
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.1\Common.AssemblyInfo.cs
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.1\Common.dll
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.1\Common.pdb
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.1\Common.csprojAssemblyReference.cache

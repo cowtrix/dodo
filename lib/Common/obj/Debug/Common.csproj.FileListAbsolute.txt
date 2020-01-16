@@ -1,0 +1,7 @@
+C:\Users\localadmin\Documents\git\dodo\bin\Debug\Common.dll
+C:\Users\localadmin\Documents\git\dodo\bin\Debug\Common.pdb
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\Common.csproj.CopyComplete
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\Common.dll
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\Common.pdb
+C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\Common.csprojAssemblyReference.cache

@@ -1,0 +1,16 @@
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\Dodo.exe
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\DodoTest.deps.json
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\DodoTest.runtimeconfig.json
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\DodoTest.runtimeconfig.dev.json
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\DodoTest.dll
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\DodoTest.pdb
+C:\Users\localadmin\Documents\git\dodo\DodoTest\obj\Debug\netcoreapp3.0\DodoTest.csprojAssemblyReference.cache
+C:\Users\localadmin\Documents\git\dodo\DodoTest\obj\Debug\netcoreapp3.0\DodoTest.AssemblyInfoInputs.cache
+C:\Users\localadmin\Documents\git\dodo\DodoTest\obj\Debug\netcoreapp3.0\DodoTest.AssemblyInfo.cs
+C:\Users\localadmin\Documents\git\dodo\DodoTest\obj\Debug\netcoreapp3.0\DodoTest.csproj.CopyComplete
+C:\Users\localadmin\Documents\git\dodo\DodoTest\obj\Debug\netcoreapp3.0\DodoTest.dll
+C:\Users\localadmin\Documents\git\dodo\DodoTest\obj\Debug\netcoreapp3.0\DodoTest.pdb
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.0\server.pfx

@@ -1,0 +1,9 @@
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\bin\Debug\netcoreapp3.1\appsettings.Development.json
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\bin\Debug\netcoreapp3.1\appsettings.json
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\obj\Debug\netcoreapp3.1\DodoKubernetes.csprojAssemblyReference.cache
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\obj\Debug\netcoreapp3.1\staticwebassets\DodoKubernetes.StaticWebAssets.Manifest.cache
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\obj\Debug\netcoreapp3.1\staticwebassets\DodoKubernetes.StaticWebAssets.xml
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\obj\Debug\netcoreapp3.1\DodoKubernetes.AssemblyInfoInputs.cache
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\obj\Debug\netcoreapp3.1\DodoKubernetes.AssemblyInfo.cs
+C:\Users\localadmin\Documents\git\dodo\DodoKubernetes\obj\Debug\netcoreapp3.1\DodoKubernetes.RazorTargetAssemblyInfo.cache

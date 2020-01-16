@@ -1,0 +1,13 @@
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.1\DodoCmd.exe
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.1\DodoCmd.dll.config
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.1\DodoCmd.deps.json
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.1\DodoCmd.runtimeconfig.json
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.1\DodoCmd.runtimeconfig.dev.json
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.1\DodoCmd.dll
+C:\Users\localadmin\Documents\git\dodo\bin\netcoreapp3.1\DodoCmd.pdb
+C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp3.1\DodoCmd.csprojAssemblyReference.cache
+C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp3.1\DodoCmd.AssemblyInfoInputs.cache
+C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp3.1\DodoCmd.AssemblyInfo.cs
+C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp3.1\DodoCmd.csproj.CopyComplete
+C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp3.1\DodoCmd.dll
+C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp3.1\DodoCmd.pdb
