@@ -8,11 +8,7 @@ namespace Dodo
 	{
 		public UserMultiSigStore() : base() { }
 
-		public UserMultiSigStore(T data, ResourceReference<User> key, Passphrase passphrase) : base(data, key, passphrase)
-		{
-		}
-
-		public UserMultiSigStore(T data, User key, Passphrase passphrase) : base(data, key, passphrase)
+		public UserMultiSigStore(T data, AccessContext context) : base(data, context.User, context.Passphrase)
 		{
 		}
 	}

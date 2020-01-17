@@ -11,15 +11,11 @@ namespace Dodo
 		{
 		}
 
-		public UserCollection(List<ResourceReference<User>> data, ResourceReference<User> key, Passphrase passphrase) : base(data, key, passphrase)
+		public UserCollection(List<ResourceReference<User>> data, AccessContext context) : base(data, context)
 		{
 		}
 
-		public UserCollection(List<ResourceReference<User>> data, User key, Passphrase passphrase) : base(data, key, passphrase)
-		{
-		}
-
-		public UserCollection(User key, Passphrase passphrase) : base(new List<ResourceReference<User>>() { key }, key, passphrase)
+		public UserCollection(AccessContext context) : base(new List<ResourceReference<User>>() { context.User }, context)
 		{
 		}
 	}

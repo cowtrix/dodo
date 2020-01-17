@@ -7,7 +7,7 @@ using Dodo.Utility;
 
 namespace Dodo
 {
-	public abstract class DodoRESTHandler<T> : ObjectRESTHandler<T> where T: DodoResource, IRESTResource
+	public abstract class DodoRESTHandler<T> : ObjectRESTController<T> where T: DodoResource, IRESTResource
 	{
 		/// <summary>
 		/// Get the parent resource from a ResourceURL
@@ -121,7 +121,7 @@ namespace Dodo
 			return ResourceManager.IsAuthorised(request, target, out permissionLevel);
 		}
 
-		protected virtual bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url, out string error)
+		protected virtual bool CanCreateAtUrl(AccessContext context, string url, out string error)
 		{
 			var parent = GetParentFromURL(url);
 			if (parent == null)
@@ -129,18 +129,18 @@ namespace Dodo
 				error = "Resource not found";
 				return false;
 			}
-			if (!requestOwner.HasValue)
+			if (context.User == null)
 			{
 				error = "You need to login";
 				return false;
 			}
-			if (!requestOwner.Value.EmailVerified)
+			if (context.User.EmailVerified)
 			{
 				error = "You need to verify your email";
 				return false;
 			}
 			error = null;
-			return parent.IsAdmin(requestOwner, requestOwner, passphrase);
+			return parent.IsAdmin(context.User, context);
 		}
 	}
 }

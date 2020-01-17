@@ -8,45 +8,46 @@ using System.Collections.Generic;
 
 namespace Dodo.Roles
 {
-	public class RoleSerializer : ResourceReferenceSerializer<Role> { }
 
 	public class Role : DodoResource
 	{
 		public const string ROOT = "roles";
+
 		[NoPatch]
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
-
 		[View(EPermissionLevel.PUBLIC)]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.USER)]
 		public string MemberDescription { get; set; }
 		[View(EPermissionLevel.ADMIN)]
 		public string AdminDescription { get; set; }
-
 		[View(EPermissionLevel.USER)]
 		public UserCollection RoleHolders;
 
-		public Role() : base() { }
-
-		public Role(User creator, Passphrase passphrase, GroupResource parent, RoleRESTHandler.CreationSchema schema) : base(parent.Creator, schema.Name)
+		public Role(RoleSchema schema) : base(schema)
 		{
-			Parent = new ResourceReference<GroupResource>(parent);
+			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			PublicDescription = schema.PublicDescription;
-			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), creator, passphrase);
+			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), schema.Context);
 		}
 
-		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(AccessContext context, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
+			if (context.User == null)
+			{
+				permissionLevel = EPermissionLevel.PUBLIC;
+				return true;
+			}
 			if (request.MethodEnum() != EHTTPRequestType.GET)
 			{
-				if (Creator.Guid == requestOwner.GUID)
+				if (Creator.Guid == context.User.GUID)
 				{
 					permissionLevel = EPermissionLevel.OWNER;
 					return true;
 				}
-				if (Parent.Value.IsAdmin(requestOwner, requestOwner, passphrase))
+				if (Parent.Value.IsAdmin(context.User, context))
 				{
 					permissionLevel = EPermissionLevel.ADMIN;
 					return true;
@@ -54,13 +55,9 @@ namespace Dodo.Roles
 				permissionLevel = EPermissionLevel.PUBLIC;
 				return false;
 			}
-			if (requestOwner != null)
-			{
-				permissionLevel = EPermissionLevel.USER;
-				return true;
-			}
-			permissionLevel = EPermissionLevel.PUBLIC;
+			permissionLevel = EPermissionLevel.USER;
 			return true;
 		}
+
 	}
 }

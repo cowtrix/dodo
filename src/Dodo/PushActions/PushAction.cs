@@ -40,17 +40,17 @@ namespace Dodo.Users
 			GUID = Guid.NewGuid();
 		}
 
-		public void Execute(User user, Passphrase passphrase)
+		public void Execute(AccessContext context)
 		{
 			if(HasExecuted)
 			{
 				return;
 			}
-			ExecuteInternal(user, passphrase);
+			ExecuteInternal(context);
 			HasExecuted = true;
 		}
 
-		protected virtual void ExecuteInternal(User user, Passphrase passphrase) { }
+		protected virtual void ExecuteInternal(AccessContext context) { }
 
 		public virtual void OnAdd()
 		{

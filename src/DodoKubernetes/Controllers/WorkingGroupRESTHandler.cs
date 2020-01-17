@@ -10,13 +10,6 @@ namespace Dodo.WorkingGroups
 {
 	public class WorkingGroupRESTHandler : GroupResourceRESTHandler<WorkingGroup>
 	{
-		public class CreationSchema : GroupResourceCreationSchema
-		{
-			public CreationSchema(string name, string desc) : base(name, desc)
-			{
-			}
-		}
-
 		public override void AddRoutes(List<Route> routeList)
 		{
 			routeList.Add(new Route(

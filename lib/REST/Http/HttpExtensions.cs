@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Common;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +21,31 @@ namespace REST
 		public static EHTTPRequestType MethodEnum (this HttpRequest request)
 		{
 			return (EHTTPRequestType)Enum.Parse(typeof(EHTTPRequestType), request.Method);
+		}
+
+		public static Func<T, IActionResult> WrapCall<T>(Func<T, IActionResult> call)
+		{
+			return (req) =>
+			{
+				try
+				{
+					return call(req);
+				}
+				catch (Exception e)
+				{
+					Logger.Exception(e);
+					if (e.InnerException != null)
+					{
+						e = e.InnerException;
+					}
+					var msg = e.Message;
+					if (e is HttpException)
+					{
+						return HttpBuilder.Custom(msg, (e as HttpException).ErrorCode);
+					}
+					return HttpBuilder.ServerError(msg);
+				}
+			};
 		}
 	}
 }

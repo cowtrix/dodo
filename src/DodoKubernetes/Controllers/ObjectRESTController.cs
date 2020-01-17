@@ -18,100 +18,20 @@ namespace REST
 	/// RESTful actions, and executing those actions on the objects.
 	/// </summary>
 	/// <typeparam name="T">The type of the resource</typeparam>
-	public abstract class ObjectRESTHandler<T> : RESTHandler where T: class, IRESTResource
+	public abstract class ObjectRESTController<T> : Controller where T: class, IRESTResource
 	{
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
-		private HashSet<string> m_resourceURLCache = new HashSet<string>();
-
-		public override void AddRoutes(List<Route> routeList)
-		{
-			routeList.Add(new Route(
-				$"{GetType().Name} POST",
-				EHTTPRequestType.POST,
-				URLIsCreation,
-				WrapRawCall((req) => CreateObject(req))
-				));
-			routeList.Add(new Route(
-				$"{GetType().Name} GET",
-				EHTTPRequestType.GET,
-				URLIsResource,
-				WrapRawCall((req) => GetObject(req))
-				));
-			routeList.Add(new Route(
-				$"{GetType().Name} PATCH",
-				EHTTPRequestType.PATCH,
-				URLIsResource,
-				WrapRawCall((req) => UpdateObject(req))
-				));
-			routeList.Add(new Route(
-				$"{GetType().Name} DELETE",
-				EHTTPRequestType.DELETE,
-				URLIsResource,
-				WrapRawCall((req) => DeleteObject(req))
-				));
-		}
-
-		/// <summary>
-		/// Determine if a given URL points to a resource of type T
-		/// </summary>
-		/// <param name="url"></param>
-		/// <returns></returns>
-		protected bool URLIsResource(string url)
-		{
-			lock (m_resourceURLCache)
-			{
-				if(m_resourceURLCache.Contains(url))
-				{
-					return true;
-				}
-			}
-			var rsc = GetResource(url);
-			if(rsc == null)
-			{
-				return false;
-			}
-			lock(m_resourceURLCache)
-			{
-				m_resourceURLCache.Add(url);
-			}
-			return true;
-		}
-
-		/// <summary>
-		/// Determine if a given URL is a link to create a resource of type T
-		/// </summary>
-		/// <param name="url"></param>
-		/// <returns></returns>
-		protected abstract bool URLIsCreation(string url);
-
-		/// <summary>
-		/// Get the resource of this type given a url.
-		/// </summary>
-		/// <param name="url"></param>
-		/// <returns>Null if the resource url is invalid or does not exist, or the given object of type T</returns>
-		protected abstract T GetResource(string url);
-
-		protected abstract string GetResourceURL(string url);
-
-		/// <summary>
-		/// Determine if the given request is authorized
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns></returns>
 		protected abstract bool IsAuthorised(HttpRequest request, out EPermissionLevel visibility, out object context, out Passphrase passphrase);
 
-		/// <summary>
-		/// Create a new object, and return the resource url.
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns>If the creation schema is not correct, an example schema. If it is correct, the view of the object and it's new resource url.</returns>
+		[HttpPost]
 		protected virtual IActionResult CreateObject(HttpRequest request)
 		{
 			if(!IsAuthorised(request, out var view, out var context, out var password))
 			{
 				throw HttpException.FORBIDDEN;
 			}
+			var factory = ResourceUtility.GetFactory<T>();
 			var schema = GetCreationSchema();
 			T createdObject = null;
 			try
@@ -131,33 +51,14 @@ namespace REST
 			return HttpBuilder.OK(createdObject.GenerateJsonView(view, context, password));
 		}
 
-		/// <summary>
-		/// Return an anonymous type representing the necessary information in the creation of this object
-		/// </summary>
-		/// <returns>An type with default values that specifies the schema type</returns>
-		protected abstract IRESTResourceSchema GetCreationSchema();
-
-		/// <summary>
-		/// Create a new object of type T given the schema specified in this.GetCreationSchema()
-		/// </summary>
-		/// <param name="schema">The schema to use</param>
-		/// <returns>An object of type T created with the given schema</returns>
-		protected abstract T CreateFromSchema(HttpRequest request, IRESTResourceSchema schema);
-
-		/// <summary>
-		/// Update an object with a string->object dictionary, where the string is the name of the field
-		/// and the object is the value to be set. For nested classes, the object should be deserialized
-		/// as nested dictionaries.
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns>The view of the object that has been updated.</returns>
+		[HttpPatch]
 		protected virtual IActionResult UpdateObject(HttpRequest request)
 		{
 			if (!IsAuthorised(request, out var view, out var context, out var passphrase))
 			{
 				throw HttpException.FORBIDDEN;
 			}
-			using (var resourceLock = new ResourceLock(GetResourceURL(request.Path)))
+			using (var resourceLock = new ResourceLock(ResourceUtility.GetResourceURL(request.Path)))
 			{
 				var target = resourceLock.Value;
 				if (target == null)
@@ -184,6 +85,7 @@ namespace REST
 			}
 		}
 
+		[HttpDelete]
 		protected virtual IActionResult DeleteObject(HttpRequest request)
 		{
 			if (!IsAuthorised(request, out _, out _, out _))
@@ -203,6 +105,7 @@ namespace REST
 			return HttpBuilder.Custom("Resource deleted", System.Net.HttpStatusCode.OK);
 		}
 
+		[HttpGet]
 		protected IActionResult GetObject(HttpRequest request)
 		{
 			var target = GetResource(request.Path);

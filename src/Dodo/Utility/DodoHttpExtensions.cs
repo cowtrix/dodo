@@ -3,9 +3,6 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Http;
 using REST;
 using REST.Security;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dodo.Utility
 {
@@ -13,26 +10,15 @@ namespace Dodo.Utility
 	{
 		private const string AUTH_KEY = "Authorization";
 
-		/// <summary>
-		/// Get the user that made an HTTP request, and validate authentication,
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns>The user that made this request</returns>
-		public static User GetRequestOwner(this HttpRequest request)
-		{
-			return GetRequestOwner(request, out _);
-		}
-
-		public static User TryGetRequestOwner(this HttpRequest request, out Passphrase passphrase)
+		public static AccessContext TryGetRequestOwner(this HttpRequest request)
 		{
 			try
 			{
-				return GetRequestOwner(request, out passphrase);
+				return GetRequestOwner(request);
 			}
 			catch (HttpException)
 			{ }
-			passphrase = default;
-			return null;
+			return default;
 		}
 
 		/// <summary>
@@ -41,22 +27,20 @@ namespace Dodo.Utility
 		/// scope variable.
 		/// </summary>
 		/// <param name="request">The requ</param>
-		/// <param name="passphrase"></param>
-		/// <returns>The user that made this request</returns>
-		public static User GetRequestOwner(this HttpRequest request, out Passphrase passphrase)
+		/// <returns>The user context that made this request</returns>
+		public static AccessContext GetRequestOwner(this HttpRequest request)
 		{
-			passphrase = default;
 			GetAuth(request, out var username, out var password);
 			if (username == null || password == null)
 			{
-				return null;
+				return default;
 			}
 			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.WebAuth.Username == username);
-			if (user != null && !user.WebAuth.Challenge(password, out passphrase))
+			if (user != null && !user.WebAuth.Challenge(password, out var passphrase))
 			{
 				throw HttpException.FORBIDDEN;
 			}
-			return user;
+			return new AccessContext(user, passphrase);
 		}
 
 		public static void GetAuth(this HttpRequest request, out string username, out string password)

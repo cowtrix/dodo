@@ -13,20 +13,6 @@ namespace Dodo.Sites
 {
 	public class SiteRESTHandler : DodoRESTHandler<Site>
 	{
-		public class CreationSchema : IRESTResourceSchema
-		{
-			public CreationSchema(string name, string type, GeoLocation location, string description)
-			{
-				Name = name;
-				Type = type;
-				Location = location;
-			}
-			public string Name = "";
-			public string Type = "";
-			public string Description = "";
-			public GeoLocation Location = new GeoLocation();
-		}
-
 		public override void AddRoutes(List<Route> routeList)
 		{
 			routeList.Add(new Route(

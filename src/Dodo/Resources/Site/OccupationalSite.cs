@@ -1,16 +1,13 @@
 ﻿using REST.Security;
 using Dodo.Rebellions;
 using Dodo.Users;
+using Common;
 
 namespace Dodo.Sites
 {
 	public class OccupationalSite : Site
 	{
-		public OccupationalSite()
-		{
-		}
-
-		public OccupationalSite(User creator, Passphrase passphrase, Rebellion rebellion, SiteRESTHandler.CreationSchema schema) : base(creator, passphrase, rebellion, schema)
+		public OccupationalSite(SiteSchema schema) : base(schema)
 		{
 		}
 	}

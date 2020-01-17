@@ -13,6 +13,18 @@ namespace Dodo
 {
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
+	public abstract class GroupResourceSchemaBase : DodoResourceSchemaBase 
+	{
+		public string PublicDescription { get; private set; }
+		public GroupResource Parent { get; private set; }
+		public GroupResourceSchemaBase(AccessContext context, string name, string publicDescription, GroupResource parent) 
+			: base(context, name)
+		{
+			PublicDescription = publicDescription;
+			Parent = parent;
+		}
+	}
+
 	/// <summary>
 	/// A group resource is either a Rebellion, Working Group or a Local Group.
 	/// It can have administrators, which are authorised to edit it.
@@ -42,7 +54,7 @@ namespace Dodo
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC)]
-		public string Description { get; set; }
+		public string PublicDescription { get; set; }
 
 		[NoPatch]
 		[View(EPermissionLevel.ADMIN)]
@@ -58,15 +70,13 @@ namespace Dodo
 		[JsonProperty]
 		public string GroupPublicKey { get; private set; }
 
-		public GroupResource() : base() { }
-
-		public GroupResource(User creator, Passphrase passphrase, string name, string description, GroupResource parent) : base(creator, name)
+		public GroupResource(GroupResourceSchemaBase schema) : base(schema)
 		{
-			Parent = new ResourceReference<GroupResource>(parent);
+			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			GroupPublicKey = pk;
-			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(creator, pv), creator, passphrase);
-			Description = description;
+			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(schema.Context.User, pv), schema.Context);
+			PublicDescription = schema.PublicDescription;
 		}
 
 		/// <summary>
@@ -87,21 +97,21 @@ namespace Dodo
 			return Parent.Value.IsChildOf(targetObject);
 		}
 
-		public bool IsAdmin(User target, User requester, Passphrase passphrase)
+		public bool IsAdmin(User target, AccessContext requesterContext)
 		{
-			var userRef = new ResourceReference<User>(requester);
-			if(!AdministratorData.IsAuthorised(userRef, passphrase))
+			var userRef = new ResourceReference<User>(requesterContext.User);
+			if(!AdministratorData.IsAuthorised(userRef, requesterContext.Passphrase))
 			{
 				return false;
 			}
-			return AdministratorData.GetValue(userRef, passphrase).Administrators.Contains(target);
+			return AdministratorData.GetValue(userRef, requesterContext.Passphrase).Administrators.Contains(target);
 		}
 
-		public void AddAdmin(User requester, Passphrase requesterPass, User newAdmin, Passphrase newAdminPassword)
+		public void AddAdmin(AccessContext context, User newAdmin, Passphrase newAdminPassword)
 		{
-			var userRef = new ResourceReference<User>(requester);
+			var userRef = new ResourceReference<User>(context.User);
 			var newAdminRef = new ResourceReference<User>(newAdmin);
-			AdministratorData.AddPermission(userRef, requesterPass, newAdminRef, newAdminPassword);
+			AdministratorData.AddPermission(userRef, context.Passphrase, newAdminRef, newAdminPassword);
 			var adminData = AdministratorData.GetValue(newAdminRef, newAdminPassword);
 			var adminList = adminData.Administrators;
 			if(adminList.Contains(newAdminRef))
@@ -112,25 +122,25 @@ namespace Dodo
 			AdministratorData.SetValue(adminData, newAdminRef, newAdminPassword);
 		}
 
-		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(AccessContext context, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
-			if (requestOwner == Creator.Value)
+			if(context.User != null)
 			{
-				permissionLevel = EPermissionLevel.OWNER;
-				return true;
-			}
-			if (IsAdmin(requestOwner, requestOwner, passphrase))
-			{
-				permissionLevel = EPermissionLevel.ADMIN;
-				return true;
-			}
-			if(request.MethodEnum() != EHTTPRequestType.GET)
-			{
-				permissionLevel = EPermissionLevel.PUBLIC;
-				return false;
-			}
-			if(requestOwner != null)
-			{
+				if (context.User.GUID == Creator.Value.GUID)
+				{
+					permissionLevel = EPermissionLevel.OWNER;
+					return true;
+				}
+				if (IsAdmin(context.User, context))
+				{
+					permissionLevel = EPermissionLevel.ADMIN;
+					return true;
+				}
+				if (request.MethodEnum() != EHTTPRequestType.GET)
+				{
+					permissionLevel = EPermissionLevel.PUBLIC;
+					return false;
+				}
 				permissionLevel = EPermissionLevel.USER;
 				return true;
 			}

@@ -8,13 +8,13 @@ namespace Dodo.Resources
 	{
 		protected override bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility)
 		{
-			var requestOwner = request.GetRequestOwner(out var passphrase);
-			if(requestOwner != null && !requestOwner.EmailVerified && request.MethodEnum() != EHTTPRequestType.GET)
+			var context = request.GetRequestOwner();
+			if(context.User != null && !context.User.EmailVerified && request.MethodEnum() != EHTTPRequestType.GET)
 			{
 				visibility = EPermissionLevel.PUBLIC;
 				return false;
 			}
-			return resource.IsAuthorised(requestOwner, passphrase, request, out visibility);
+			return resource.IsAuthorised(context, request, out visibility);
 		}
 
 		protected override string MongoDBDatabaseName => Dodo.PRODUCT_NAME;

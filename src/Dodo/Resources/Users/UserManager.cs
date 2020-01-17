@@ -11,7 +11,7 @@ namespace Dodo.Users
 		public User CreateTemporaryUser(string email, out Passphrase temporaryPassword)
 		{
 			temporaryPassword = new Passphrase(ValidationExtensions.GenerateStrongPassword());
-			var schema = new UserRESTHandler.CreationSchema(Guid.NewGuid().ToString(), temporaryPassword.Value, "TEMPORARY", email);
+			var schema = new UserSchema(default, Guid.NewGuid().ToString(), "TEMPORARY", temporaryPassword.Value, email);
 			var newUser = new User(schema);
 			using (var rscLock = new ResourceLock(newUser))
 			{

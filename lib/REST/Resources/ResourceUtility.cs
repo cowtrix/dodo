@@ -65,8 +65,7 @@ namespace REST
 
 		public static IRESTResource GetResourceByGuid(this Guid guid)
 		{
-			var rm = GetManagerForResource(guid);
-			return rm?.GetSingle(resource => resource.GUID == guid);
+			return GetResourceByGuid<IRESTResource>(guid);
 		}
 
 		public static IResourceManager GetManagerForResource(this IRESTResource resource)
@@ -79,10 +78,23 @@ namespace REST
 			return ResourceManagers.SingleOrDefault(x => x.Value.Get(resource => resource.GUID == guid).Any()).Value;
 		}
 
+		public static T GetResourceByURL<T>(string url) where T : class, IRESTResource
+		{
+			T result;
+			foreach (var rm in ResourceManagers)
+			{
+				result = (T)rm.Value.GetSingle(x => x.ResourceURL == url);
+				if (result != null)
+				{
+					return result;
+				}
+			}
+			return null;
+		}
+
 		public static IRESTResource GetResourceByURL(string url)
 		{
-			return ResourceManagers.Select(rm => rm.Value.GetSingle(x => x.ResourceURL == url))
-				.SingleOrDefault(x => x != null);
+			return GetResourceByURL<IRESTResource>(url);
 		}
 
 		public static IResourceManager GetManagerForResource(this Resource resource)
@@ -93,16 +105,6 @@ namespace REST
 		public static IResourceManager<T> GetManager<T>() where T:IRESTResource
 		{
 			return ResourceManagers[typeof(T)] as IResourceManager<T>;
-		}
-
-		public static bool IsAuthorized<T>(HttpRequest request, T resource, out EPermissionLevel visibility) where T:Resource
-		{
-			var rm = GetManagerForResource(resource.GUID);
-			if(rm == null)
-			{
-				throw new Exception($"Orphan resource {resource} with guid {resource.GUID}");
-			}
-			return rm.IsAuthorised(request, resource, out visibility);
 		}
 
 		public static void Clear()
@@ -130,16 +132,18 @@ namespace REST
 			}
 			return result;
 		}
+	}
 
-		#region Commands
+	public static class ResourceCommands
+	{
 		const string SEARCH_CMD_REGEX = @"^resource\ssearch\s(.*)";
 		[Command(SEARCH_CMD_REGEX, "resource search", "Search for a resource")]
 		public static void SearchCommand(string cmd)
 		{
 			var rgx = Regex.Match(cmd, SEARCH_CMD_REGEX);
 			var query = rgx.Groups[1].Value;
-			Logger.Debug(JsonConvert.SerializeObject(Search<IRESTResource>(cmd), JsonExtensions.DatabaseSettings));
+			Logger.Debug(JsonConvert.SerializeObject(ResourceUtility.Search<IRESTResource>(cmd), JsonExtensions.DatabaseSettings));
 		}
-		#endregion
 	}
+
 }

@@ -14,8 +14,6 @@ using System.Linq;
 
 namespace Dodo.WorkingGroups
 {
-	public class WorkingGroupSerializer : ResourceReferenceSerializer<WorkingGroup> { }
-
 	/// <summary>
 	/// A Working Group is a group of people who share a common purpose. For instance, the "Wellbeing" Working Group
 	/// would take care of the wellbeing of rebels.
@@ -26,11 +24,9 @@ namespace Dodo.WorkingGroups
 	{
 		public const string ROOT = "wg";
 
-		public WorkingGroup() : base() { }
-
-		public WorkingGroup(User creator, Passphrase passphrase, GroupResource parent, WorkingGroupRESTHandler.CreationSchema schema)
-			: base(creator, passphrase, schema.Name, schema.Description, parent)
+		public WorkingGroup(WorkingGroupSchema schema) : base(schema)
 		{
+
 		}
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";

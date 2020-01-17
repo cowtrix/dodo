@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace Dodo.Rebellions
 {
-	public class RebellionSerializer : ResourceReferenceSerializer<Rebellion> { }
+	
 
 
 	[Name("Rebellion")]
@@ -38,10 +38,7 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.PUBLIC)]
 		public DateTime EndDate { get; set; }
 
-		public Rebellion() : base() { }
-
-		public Rebellion(User creator, Passphrase passphrase, RebellionRESTHandler.CreationSchema schema)
-			: base(creator, passphrase, schema.Name, schema.Description, null)
+		public Rebellion(RebellionSchema schema) : base(schema)
 		{
 			Location = schema.Location;
 			StartDate = schema.StartDate;

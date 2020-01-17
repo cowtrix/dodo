@@ -19,18 +19,6 @@ namespace Dodo
 		public const string JOIN_GROUP = "?join";
 		public const string LEAVE_GROUP = "?leave";
 
-		public class GroupResourceCreationSchema : IRESTResourceSchema
-		{
-			public string Name = "";
-			public string Description = "";
-
-			public GroupResourceCreationSchema(string name, string desc)
-			{
-				Name = name;
-				Description = desc;
-			}
-		}
-
 		public override void AddRoutes(List<Route> routeList)
 		{
 			routeList.Add(new Route(

@@ -21,22 +21,6 @@ namespace Dodo.Users
 
 		protected override string CreationPostfix => CREATION_URL;
 
-		public class CreationSchema : IRESTResourceSchema
-		{
-			public string Username = "";
-			public string Password = "";
-			public string Name = "";
-			public string Email = "";
-
-			public CreationSchema(string username, string password, string name, string email)
-			{
-				Username = username;
-				Password = password;
-				Name = name;
-				Email = email;
-			}
-		}
-
 		public override void AddRoutes(List<Route> routeList)
 		{
 			routeList.Add(new Route(

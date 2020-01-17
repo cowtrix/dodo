@@ -15,8 +15,6 @@ using REST.Serializers;
 
 namespace Dodo.Users
 {
-	public class UserSerializer : ResourceReferenceSerializer<User> { }
-
 	public class User : DodoResource
 	{
 		[ViewClass]
@@ -62,19 +60,15 @@ namespace Dodo.Users
 			}
 		}
 
-		public User() : base()
+		public User(UserSchema schema) : base(schema)
 		{
+			WebAuth = new WebPortalAuth(schema.Username, schema.Password);
+			Email = schema.Email;
 		}
 
-		public User(UserRESTHandler.CreationSchema info) : base(null, info.Name)
+		public override bool IsAuthorised(AccessContext context, HttpRequest request, out EPermissionLevel permissionLevel)
 		{
-			WebAuth = new WebPortalAuth(info.Username, info.Password);
-			Email = info.Email;
-		}
-
-		public override bool IsAuthorised(User requestOwner, Passphrase passphrase, HttpRequest request, out EPermissionLevel permissionLevel)
-		{
-			if(requestOwner.GUID == GUID)
+			if(context.User.GUID == GUID)
 			{
 				permissionLevel = EPermissionLevel.OWNER;
 				return true;
@@ -88,11 +82,12 @@ namespace Dodo.Users
 			var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).Value : (User)requester;
 			if(permissionLevel >= EPermissionLevel.ADMIN)
 			{
+				var accessContext = new AccessContext(requesterUser, passphrase);
 				view.Add(ADMIN_OF_KEY, new
 				{
-					Rebellions = ResourceUtility.GetManager<Rebellion>().Get(r => r.IsAdmin(this, requesterUser, passphrase)).Select(r => r.GUID),
-					WorkingGroups = ResourceUtility.GetManager<WorkingGroup>().Get(r => r.IsAdmin(this, requesterUser, passphrase)).Select(r => r.GUID),
-					LocalGroups = ResourceUtility.GetManager<LocalGroup>().Get(r => r.IsAdmin(this, requesterUser, passphrase)).Select(r => r.GUID),
+					Rebellions = ResourceUtility.GetManager<Rebellion>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.GUID),
+					WorkingGroups = ResourceUtility.GetManager<WorkingGroup>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.GUID),
+					LocalGroups = ResourceUtility.GetManager<LocalGroup>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.GUID),
 				});
 				view.Add(ROLES_HELD_KEY, ResourceUtility.GetManager<Role>().Get(r => r.RoleHolders.IsAuthorised(this, passphrase)).Select(r => r.GUID));
 			}

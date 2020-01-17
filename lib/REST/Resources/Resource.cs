@@ -17,8 +17,15 @@ namespace REST
 		void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
 	}
 
-	public interface IRESTResourceSchema
-	{ }
+	public class ResourceSchemaBase
+	{
+		public string Name { get; private set; }
+
+		public ResourceSchemaBase(string name)
+		{
+			Name = name;
+		}
+	}
 
 	/// <summary>
 	/// A resource is a component that can be interacted with through REST API calls
@@ -50,11 +57,9 @@ namespace REST
 		[UserFriendlyName]
 		public string Name { get; set; }
 
-		public Resource() { }
-
-		public Resource(string name)
+		public Resource(ResourceSchemaBase schema)
 		{
-			Name = name;
+			Name = schema.Name;
 			GUID = Guid.NewGuid();
 		}
 

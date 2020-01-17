@@ -20,15 +20,16 @@ namespace Dodo.Users
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
 		}
 
-		protected override void ExecuteInternal(User user, Passphrase passphrase)
+		protected override void ExecuteInternal(AccessContext context)
 		{
 			Resource.CheckValue();
-			var privateKey = user.WebAuth.PrivateKey.GetValue(passphrase);
+			var privateKey = context.User.WebAuth.PrivateKey.GetValue(context.Passphrase);
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
 			using (var rscLocker = new ResourceLock(Resource.Value))
 			{
 				var resource = rscLocker.Value as GroupResource;
-				resource.AddAdmin(user, tempPass, user, passphrase);
+				// Change the admin access from temp us
+				resource.AddAdmin(new AccessContext(context.User, tempPass), context.User, context.Passphrase);
 				ResourceUtility.GetManagerForResource(resource).Update(resource, rscLocker);
 			}
 		}

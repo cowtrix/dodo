@@ -9,20 +9,14 @@ using REST.Serializers;
 
 namespace Dodo.LocalGroups
 {
-	public class LocalGroupSerializer : ResourceReferenceSerializer<LocalGroup> { }
-
 	[Name("Local Group")]
 	public class LocalGroup : GroupResource
 	{
 		public const string ROOT = "localgroups";
 
-		public LocalGroup() : base() { }
-
-		public LocalGroup(User owner, Passphrase passphrase, LocalGroupRESTHandler.CreationSchema schema)
-			: base(owner, passphrase, schema.Name, schema.Description, null)
+		public LocalGroup(LocalGroupSchema schema) : base(schema)
 		{
 			Location = schema.Location;
-			Description = schema.Description;
 		}
 
 		public override string ResourceURL => $"{ROOT}/{Name.StripForURL()}";
