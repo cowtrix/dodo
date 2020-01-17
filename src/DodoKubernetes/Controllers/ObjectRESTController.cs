@@ -32,21 +32,18 @@ namespace REST
 				throw HttpException.FORBIDDEN;
 			}
 			var factory = ResourceUtility.GetFactory<T>();
-			var schema = GetCreationSchema();
 			T createdObject = null;
 			try
 			{
-				var creationInfo = JsonConvert.DeserializeObject(request.ReadBody(), schema.GetType(), new JsonSerializerSettings()
+				var schema = JsonConvert.DeserializeObject(request.ReadBody(), factory.SchemaType, new JsonSerializerSettings()
 				{
 					CheckAdditionalContent = true,
-				});
-				createdObject = CreateFromSchema(request, (IRESTResourceSchema)creationInfo);
-				createdObject.Verify();
-				ResourceUtility.Register(createdObject);
+				}) as ResourceSchemaBase;
+				createdObject = factory.CreateObject(schema);
 			}
 			catch(Exception e)
 			{
-				throw new Exception($"Failed to deserialise JSON: {e.Message}\n Expected:\n {JsonConvert.SerializeObject(schema, Formatting.Indented)}");
+				throw new Exception($"Failed to deserialise JSON: {e.Message}");
 			}
 			return HttpBuilder.OK(createdObject.GenerateJsonView(view, context, password));
 		}

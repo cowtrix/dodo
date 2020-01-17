@@ -1,5 +1,4 @@
-﻿using Common;
-using Common.Config;
+﻿using Common.Config;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace REST
 {
@@ -17,6 +15,7 @@ namespace REST
 	{
 		private static ConfigVariable<string> m_databasePath = new ConfigVariable<string>("MongoDBServerURL", "");
 		private static ConcurrentDictionary<Type, IResourceManager> ResourceManagers = new ConcurrentDictionary<Type, IResourceManager>();
+		private static ConcurrentDictionary<Type, IResourceFactory> Factories = new ConcurrentDictionary<Type, IResourceFactory>();
 		public static MongoClient MongoDB { get; private set; }
 
 		static ResourceUtility()
@@ -30,20 +29,25 @@ namespace REST
 			{
 				MongoDB = new MongoClient(mongoDbURL);
 			}
+
 			var types = ReflectionExtensions.GetChildClasses<IResourceManager>();
 			foreach(var t in types)
 			{
 				var newManager = Activator.CreateInstance(t) as IResourceManager;
-				Register(newManager);
+				var typeArg = newManager.GetType().BaseType.GetGenericArguments().First();
+				ResourceManagers[typeArg] = newManager;
+			}
+
+			types = ReflectionExtensions.GetChildClasses<IResourceFactory>();
+			foreach (var t in types)
+			{
+				var newFactory = Activator.CreateInstance(t) as IResourceFactory;
+				var typeArg = newFactory.GetType().BaseType.GetGenericArguments().First();
+				Factories[typeArg] = newFactory;
 			}
 		}
 
-		private static void Register(IResourceManager manager)
-		{
-			var typeArg = manager.GetType().BaseType.GetGenericArguments().First();
-			ResourceManagers[typeArg] = manager;
-		}
-
+		#region Resources
 		public static void Register(IRESTResource resource)
 		{
 			GetManagerForResource(resource).Add(resource);
@@ -68,16 +72,6 @@ namespace REST
 			return GetResourceByGuid<IRESTResource>(guid);
 		}
 
-		public static IResourceManager GetManagerForResource(this IRESTResource resource)
-		{
-			return ResourceManagers.SingleOrDefault(x => x.Key.IsAssignableFrom(resource.GetType())).Value;
-		}
-
-		public static IResourceManager GetManagerForResource(this Guid guid)
-		{
-			return ResourceManagers.SingleOrDefault(x => x.Value.Get(resource => resource.GUID == guid).Any()).Value;
-		}
-
 		public static T GetResourceByURL<T>(string url) where T : class, IRESTResource
 		{
 			T result;
@@ -97,24 +91,6 @@ namespace REST
 			return GetResourceByURL<IRESTResource>(url);
 		}
 
-		public static IResourceManager GetManagerForResource(this Resource resource)
-		{
-			return GetManagerForResource(resource.GUID);
-		}
-
-		public static IResourceManager<T> GetManager<T>() where T:IRESTResource
-		{
-			return ResourceManagers[typeof(T)] as IResourceManager<T>;
-		}
-
-		public static void Clear()
-		{
-			foreach(var rm in ResourceManagers)
-			{
-				rm.Value.Clear();
-			}
-		}
-
 		public static IEnumerable<T> Search<T>(string query) where T : class, IRESTResource
 		{
 			if (Guid.TryParse(query, out var guid))
@@ -122,9 +98,9 @@ namespace REST
 				return new[] { GetResourceByGuid<T>(guid) };
 			}
 			var result = new List<T>();
-			foreach(var rm in ResourceManagers)
+			foreach (var rm in ResourceManagers)
 			{
-				if(!typeof(T).IsAssignableFrom(rm.Key))
+				if (!typeof(T).IsAssignableFrom(rm.Key))
 				{
 					continue;
 				}
@@ -132,18 +108,42 @@ namespace REST
 			}
 			return result;
 		}
-	}
-
-	public static class ResourceCommands
-	{
-		const string SEARCH_CMD_REGEX = @"^resource\ssearch\s(.*)";
-		[Command(SEARCH_CMD_REGEX, "resource search", "Search for a resource")]
-		public static void SearchCommand(string cmd)
+		#endregion
+		#region Managers
+		public static void ClearAllManagers()
 		{
-			var rgx = Regex.Match(cmd, SEARCH_CMD_REGEX);
-			var query = rgx.Groups[1].Value;
-			Logger.Debug(JsonConvert.SerializeObject(ResourceUtility.Search<IRESTResource>(cmd), JsonExtensions.DatabaseSettings));
+			foreach(var rm in ResourceManagers)
+			{
+				rm.Value.Clear();
+			}
 		}
+
+		public static IResourceManager GetManagerForResource(this IRESTResource resource)
+		{
+			return ResourceManagers.SingleOrDefault(x => x.Key.IsAssignableFrom(resource.GetType())).Value;
+		}
+
+		public static IResourceManager GetManagerForResource(this Guid guid)
+		{
+			return ResourceManagers.SingleOrDefault(x => x.Value.Get(resource => resource.GUID == guid).Any()).Value;
+		}
+
+		public static IResourceManager GetManagerForResource(this Resource resource)
+		{
+			return GetManagerForResource(resource.GUID);
+		}
+
+		public static IResourceManager<T> GetManager<T>() where T : IRESTResource
+		{
+			return ResourceManagers[typeof(T)] as IResourceManager<T>;
+		}
+		#endregion
+		#region Factories
+		public static IResourceFactory<T> GetFactory<T>() where T : IRESTResource
+		{
+			return Factories[typeof(T)] as IResourceFactory<T>;
+		}
+		#endregion
 	}
 
 }

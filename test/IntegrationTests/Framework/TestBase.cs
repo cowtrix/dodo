@@ -58,7 +58,7 @@ namespace RESTTests
 		public static void SetupTests(TestContext testContext)
 		{
 			Dodo.Dodo.Initialise();
-			ResourceUtility.Clear();
+			ResourceUtility.ClearAllManagers();
 			ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 			RestClient.PreAuthenticate = true;
 			RestClient.Timeout = 500 * 1000;
@@ -89,7 +89,7 @@ namespace RESTTests
 		[TestCleanup]
 		public void Clean()
 		{
-			ResourceUtility.Clear();
+			ResourceUtility.ClearAllManagers();
 		}
 
 		[AssemblyCleanup]

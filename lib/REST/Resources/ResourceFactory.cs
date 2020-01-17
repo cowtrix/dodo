@@ -3,7 +3,16 @@ using System;
 
 namespace REST
 {
+	public interface IResourceFactory<T> : IResourceFactory
+	{
+		Type SchemaType { get; }
+		T CreateObject(ResourceSchemaBase schema);
+	}
+
+	public interface IResourceFactory { }
+
 	public abstract class ResourceFactory<TResult, TSchema> 
+		: IResourceFactory<TResult>
 		where TResult : class, IRESTResource
 		where TSchema : ResourceSchemaBase
 	{
@@ -15,6 +24,7 @@ namespace REST
 			}
 			var newResource = CreateObjectInternal(schema);
 			newResource.Verify();
+			ResourceUtility.Register(newResource);
 			return newResource;
 		}
 
@@ -27,6 +37,11 @@ namespace REST
 		{
 			error = null;
 			return true;
+		}
+
+		public TResult CreateObject(ResourceSchemaBase schema)
+		{
+			return CreateObject((TSchema)schema);
 		}
 
 		public Type SchemaType => typeof(TSchema);
