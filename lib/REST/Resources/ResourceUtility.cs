@@ -1,8 +1,10 @@
 ﻿using Common.Config;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using REST.Serializers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -20,6 +22,17 @@ namespace REST
 
 		static ResourceUtility()
 		{
+			var customSerializers = ReflectionExtensions.GetChildClasses<ICustomBsonSerializer>();
+			foreach (var customSer in customSerializers)
+			{
+				var newSerializer = Activator.CreateInstance(customSer) as IBsonSerializer;
+				try
+				{
+					BsonSerializer.RegisterSerializer(newSerializer.ValueType, newSerializer);
+				}
+				catch { }   // TODO: catch these failures better, they happen when testing
+			}
+
 			var mongoDbURL = m_databasePath.Value;
 			if(string.IsNullOrEmpty(mongoDbURL))
 			{

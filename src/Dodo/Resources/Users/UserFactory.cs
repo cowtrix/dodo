@@ -1,4 +1,5 @@
-﻿using REST;
+﻿using Dodo.Resources;
+using REST;
 using REST.Serializers;
 
 namespace Dodo.Users
@@ -18,7 +19,7 @@ namespace Dodo.Users
 		}
 	}
 
-	public class UserFactory : ResourceFactory<User, UserSchema>
+	public class UserFactory : DodoResourceFactory<User, UserSchema>
 	{
 	}
 }

@@ -12,37 +12,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dodo.Users
 {
-	public class UserRESTHandler : DodoRESTHandler<User>
+	public class UserRESTHandler : ObjectRESTController<User>
 	{
 		public const string CREATION_URL = "register";
 		public const string VERIFY_PARAM = "verify";
 		public const string RESETPASS_URL = "resetpassword";
 		public const string CHANGEPASS_URL = "changepassword";
-
-		protected override string CreationPostfix => CREATION_URL;
-
-		public override void AddRoutes(List<Route> routeList)
-		{
-			routeList.Add(new Route(
-				$"User Email Verification",
-				EHTTPRequestType.POST,
-				url => url.StartsWith(VERIFY_PARAM),
-				WrapRawCall((req) => VerifyEmail(req))
-				));
-			routeList.Add(new Route(
-				$"User Password Reset",
-				EHTTPRequestType.POST,
-				url => url.StartsWith(RESETPASS_URL),
-				WrapRawCall((req) => ResetPassword(req))
-				));
-			routeList.Add(new Route(
-				$"User Password Change",
-				EHTTPRequestType.POST,
-				url => url.StartsWith(CHANGEPASS_URL),
-				WrapRawCall((req) => ChangePassword(req))
-				));
-			base.AddRoutes(routeList);
-		}
 
 		/// <summary>
 		/// This handles resetting a user's password.
@@ -54,11 +29,11 @@ namespace Dodo.Users
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		protected IActionResult ResetPassword(HttpRequest request)
+		protected IActionResult ResetPassword()
 		{
-			if(request.Query.TryGetValue("token", out var token))
+			if(Request.Query.TryGetValue("token", out var token))
 			{
-				var owner = request.TryGetRequestOwner(out _);
+				var context = Request.TryGetRequestOwner();
 				var user = ResourceManager.
 					GetSingle(u =>
 					{
@@ -75,13 +50,13 @@ namespace Dodo.Users
 				}
 				using (var rscLock = new ResourceLock(user))
 				{
-					if (owner != null && user != owner)
+					if (context.User != null && user != context.User)
 					{
 						// A different user is trying to use someone else's reset token
-						Logger.Error($"User {owner.GUID} used user {user.GUID} password reset token");
+						Logger.Error($"User {context.User.GUID} used user {user.GUID} password reset token");
 						throw HttpException.FORBIDDEN;
 					}
-					var newPass = JsonConvert.DeserializeObject<string>(request.ReadBody());
+					var newPass = JsonConvert.DeserializeObject<string>(Request.ReadBody());
 					if (user.WebAuth.Challenge(newPass, out _))
 					{
 						return HttpBuilder.ServerError("Cannot use same password.");
@@ -98,7 +73,7 @@ namespace Dodo.Users
 			}
 			else
 			{
-				var email = JsonConvert.DeserializeObject<string>(request.ReadBody());
+				var email = JsonConvert.DeserializeObject<string>(Request.ReadBody());
 				if(!ValidationExtensions.EmailIsValid(email))
 				{
 					throw new HttpException("Invalid email address", HttpStatusCode.BadRequest);
@@ -122,63 +97,60 @@ namespace Dodo.Users
 			}
 		}
 
-		protected IActionResult ChangePassword(HttpRequest request)
+		protected IActionResult ChangePassword()
 		{
-			request.GetAuth(out _, out var passRaw);
-			var owner = request.GetRequestOwner();
-			using (var rscLock = new ResourceLock(owner))
+			Request.GetAuth(out _, out var passRaw);
+			var owner = Request.GetRequestOwner();
+			using (var rscLock = new ResourceLock(owner.User))
 			{
-				var newPass = JsonConvert.DeserializeObject<string>(request.ReadBody());
-				owner.WebAuth.ChangePassword(new Passphrase(passRaw), new Passphrase(newPass));
-				ResourceManager.Update(owner, rscLock);
+				var newPass = JsonConvert.DeserializeObject<string>(Request.ReadBody());
+				var user = rscLock.Value as User;
+				user.WebAuth.ChangePassword(new Passphrase(passRaw), new Passphrase(newPass));
+				ResourceManager.Update(user, rscLock);
 				return HttpBuilder.OK();
 			}
 		}
 
-		protected override IRESTResourceSchema GetCreationSchema()
+		protected IActionResult VerifyEmail()
 		{
-			return new CreationSchema("", "", "", "");
-		}
-
-		protected IActionResult VerifyEmail(HttpRequest request)
-		{
-			var owner = request.TryGetRequestOwner(out var passphrase);
-			if (owner == null)
+			var context = Request.TryGetRequestOwner();
+			if (context.User == null)
 			{
-				throw HttpException.LOGIN;
+				return Unauthorized();
 			}
-			using (var rscLock = new ResourceLock(owner))
+			using (var rscLock = new ResourceLock(context.User))
 			{
-				if (owner.EmailVerified)
+				var user = rscLock.Value as User;
+				if (user.EmailVerified)
 				{
-					throw new HttpException("User email already verified", HttpStatusCode.OK);
+					return BadRequest("User email already verified");
 				}
-				request.Query.TryGetValue("token", out var verifyToken);
-				var verification = owner.PushActions.GetSinglePushAction<VerifyEmailAction>();
+				Request.Query.TryGetValue("token", out var verifyToken);
+				var verification = user.PushActions.GetSinglePushAction<VerifyEmailAction>();
 				if ((string.IsNullOrEmpty(verifyToken) || verifyToken == VERIFY_PARAM) && verification == null)
 				{
 					// We need to resend a verification email
-					if (owner.EmailVerified)
+					if (user.EmailVerified)
 					{
-						throw new HttpException("User email already verified", HttpStatusCode.OK);
+						return BadRequest("User email already verified");
 					}
-					SendEmailVerificationEmail(owner);
-					ResourceManager.Update(owner, rscLock);
-					return HttpBuilder.OK("Email Verification Sent");
+					SendEmailVerificationEmail(user);
+					ResourceManager.Update(user, rscLock);
+					return Ok("Email Verification Sent");
 				}
 				if (verifyToken != verification.Token)
 				{
-					throw new HttpException("Incorrect verification code", HttpStatusCode.Unauthorized);
+					return BadRequest();
 				}
-				owner.EmailVerified = true;
-				ResourceManager.Update(owner, rscLock);
-				return HttpBuilder.OK("Email verified");
+				user.EmailVerified = true;
+				ResourceManager.Update(user, rscLock);
+				return Ok("Email verified");
 			}
 		}
 
-		protected override IActionResult CreateObject(HttpRequest request)
+		protected override IActionResult CreateObject()
 		{
-			var schema = JsonConvert.DeserializeObject<CreationSchema>(request.ReadBody());
+			var schema = JsonConvert.DeserializeObject<UserSchema>(Request.ReadBody());
 			var user = ResourceManager.GetSingle(u => u.Email == schema.Email);
 			using (var rscLock = new ResourceLock(user))
 			{
@@ -201,20 +173,12 @@ namespace Dodo.Users
 					}
 				}
 			}
-			return base.CreateObject(request);
+			return base.CreateObject();
 		}
 
-		protected override User CreateFromSchema(HttpRequest request, IRESTResourceSchema schema)
+		protected override void OnCreation(AccessContext context, User user)
 		{
-			var info = (CreationSchema)schema;
-			var newUser = new User(info);
-			if (URLIsCreation(newUser.ResourceURL))
-			{
-				throw new Exception("Reserved Resource URL");
-			}
-			newUser.Verify();
-			SendEmailVerificationEmail(newUser);
-			return newUser;
+			SendEmailVerificationEmail(user);
 		}
 
 		void SendEmailVerificationEmail(User newUser)
@@ -227,11 +191,6 @@ namespace Dodo.Users
 			EmailHelper.SendEmail(newUser.Email, newUser.Name, $"{Dodo.PRODUCT_NAME}: Please verify your email",
 				"To verify your email, click the following link:\n" +
 				$"{Dns.GetHostName()}/{newUser.ResourceURL}?verify={emailVerifyPushAction.Token}");
-		}
-
-		protected override bool URLIsCreation(string url)
-		{
-			return url == CREATION_URL;
 		}
 	}
 }

@@ -1,8 +1,0 @@
-C:\Users\localadmin\Documents\git\dodo\Common\bin\Debug\netstandard2.0\linux-x64\Common.deps.json
-C:\Users\localadmin\Documents\git\dodo\Common\bin\Debug\netstandard2.0\linux-x64\Common.dll
-C:\Users\localadmin\Documents\git\dodo\Common\bin\Debug\netstandard2.0\linux-x64\Common.pdb
-C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.0\linux-x64\Common.csprojAssemblyReference.cache
-C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.0\linux-x64\Common.AssemblyInfoInputs.cache
-C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.0\linux-x64\Common.AssemblyInfo.cs
-C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.0\linux-x64\Common.dll
-C:\Users\localadmin\Documents\git\dodo\Common\obj\Debug\netstandard2.0\linux-x64\Common.pdb

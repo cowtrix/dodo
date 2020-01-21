@@ -20,5 +20,9 @@
     <ProjectReference Include="..\Dodo\Dodo.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Base\" />
+  </ItemGroup>
+
 
 </Project>

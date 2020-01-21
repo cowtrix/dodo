@@ -1,3 +1,0 @@
-C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp2.1\DodoCmd.csprojAssemblyReference.cache
-C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp2.1\DodoCmd.AssemblyInfoInputs.cache
-C:\Users\localadmin\Documents\git\dodo\DodoCmd\obj\Debug\netcoreapp2.1\DodoCmd.AssemblyInfo.cs

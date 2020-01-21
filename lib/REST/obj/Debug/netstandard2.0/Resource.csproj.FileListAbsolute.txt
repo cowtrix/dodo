@@ -1,4 +1,0 @@
-C:\Users\localadmin\Documents\git\dodo\lib\Resource\bin\Debug\netstandard2.0\Resource.deps.json
-C:\Users\localadmin\Documents\git\dodo\lib\Resource\bin\Debug\netstandard2.0\Resource.dll
-C:\Users\localadmin\Documents\git\dodo\lib\Resource\obj\Debug\netstandard2.0\Resource.AssemblyInfoInputs.cache
-C:\Users\localadmin\Documents\git\dodo\lib\Resource\obj\Debug\netstandard2.0\Resource.AssemblyInfo.cs

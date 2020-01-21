@@ -15,7 +15,6 @@ namespace REST
 {
 	public interface IResourceManager
 	{
-		bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel visibility);
 		void Clear();
 		void Add(IRESTResource newObject);
 		void Update(IRESTResource objToUpdate, ResourceLock locker);
@@ -158,8 +157,6 @@ namespace REST
 			}
 			return IsAuthorised(request, resource as T, out permission);
 		}
-
-		protected abstract bool IsAuthorised(HttpRequest request, T resource, out EPermissionLevel visibility);
 
 		void IResourceManager.Add(IRESTResource newObject)
 		{

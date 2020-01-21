@@ -3,6 +3,7 @@ using System;
 using Common.Extensions;
 using Common;
 using REST.Serializers;
+using Dodo.Resources;
 
 namespace Dodo.LocalGroups
 {
@@ -19,7 +20,7 @@ namespace Dodo.LocalGroups
 		}
 	}
 
-	public class LocalGroupFactory : ResourceFactory<LocalGroup, LocalGroupSchema>
+	public class LocalGroupFactory : DodoResourceFactory<LocalGroup, LocalGroupSchema>
 	{
 	}
 }

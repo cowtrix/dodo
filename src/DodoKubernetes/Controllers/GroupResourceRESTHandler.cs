@@ -13,34 +13,11 @@ using System.Net;
 
 namespace Dodo
 {
-	public abstract class GroupResourceRESTHandler<T> : DodoRESTHandler<T> where T : GroupResource
+	public abstract class GroupResourceRESTHandler<T> : ObjectRESTController<T> where T : GroupResource
 	{
 		public const string ADD_ADMIN = "?addadmin";
 		public const string JOIN_GROUP = "?join";
 		public const string LEAVE_GROUP = "?leave";
-
-		public override void AddRoutes(List<Route> routeList)
-		{
-			routeList.Add(new Route(
-				$"{GetType().Name} ADD ADMIN",
-				EHTTPRequestType.POST,
-				url => IsResourceActionUrl(url, ADD_ADMIN),
-				WrapRawCall((req) => AddAdministrator(req))
-				));
-			routeList.Add(new Route(
-				$"{GetType().Name} JOIN",
-				EHTTPRequestType.POST,
-				url => IsResourceActionUrl(url, JOIN_GROUP),
-				WrapRawCall((req) => JoinGroup(req))
-				));
-			routeList.Add(new Route(
-				$"{GetType().Name} LEAVE",
-				EHTTPRequestType.POST,
-				url => IsResourceActionUrl(url, LEAVE_GROUP),
-				WrapRawCall((req) => LeaveGroup(req))
-				));
-			base.AddRoutes(routeList);
-		}
 
 		private bool IsResourceActionUrl(string url, string postfix)
 		{
@@ -57,30 +34,35 @@ namespace Dodo
 			return resource is T;
 		}
 
-		IActionResult AddAdministrator(HttpRequest request)
+		IActionResult AddAdministrator()
 		{
-			if (!IsAuthorised(request, out var permissionLevel, out var ownerObj, out var passphrase))
+			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
+			if (target == null)
 			{
-				throw HttpException.NOT_FOUND;
+				return NotFound();
+			}
+			var context = Request.GetRequestOwner();
+			if (!IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
+			{
+				return Forbid();
 			}
 			if (permissionLevel < EPermissionLevel.ADMIN)
 			{
 				throw HttpException.FORBIDDEN;
 			}
-			var owner = ((ResourceReference<User>)ownerObj).Value;
-			var resourceUrl = request.Path.Value?.Substring(0, request.Path.Value.Length - ADD_ADMIN.Length);
+			var resourceUrl = Request.Path.Value?.Substring(0, Request.Path.Value.Length - ADD_ADMIN.Length);
 			var resource = ResourceUtility.GetResourceByURL(resourceUrl) as GroupResource;
 			using (var rscLock = new ResourceLock(resource))
 			{
 				if (resource == null)
 				{
-					throw HttpException.NOT_FOUND;
+					return NotFound();
 				}
-				var targetEmail = JsonConvert.DeserializeObject<string>(request.ReadBody());
+				var targetEmail = JsonConvert.DeserializeObject<string>(Request.ReadBody());
 				var userManager = ResourceUtility.GetManager<User>() as UserManager;
 				var temporaryPassword = default(Passphrase);
 				var targetUser = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID.ToString() == targetEmail || x.Email == targetEmail);
-				if (targetUser != null && resource.IsAdmin(targetUser, owner, passphrase))
+				if (targetUser != null && resource.IsAdmin(targetUser, context))
 				{
 					return HttpBuilder.OK();
 				}
@@ -99,14 +81,13 @@ namespace Dodo
 				{
 					temporaryPassword = new Passphrase(KeyGenerator.GetUniqueKey(64));
 				}
-
 				using (var userLock = new ResourceLock(targetUser))
 				{
 					// Now we grant access to the resource with a temporary password, and then
 					// encrypt that temporary password with the user's public key.
 					// We then add a PushAction which will replace the temp password with the
 					// real one the next time the user logs in
-					resource.AddAdmin(owner, passphrase, targetUser, temporaryPassword);
+					resource.AddAdmin(context, targetUser, temporaryPassword);
 					ResourceManager.Update(resource, rscLock);
 					targetUser.PushActions.Add(new AddAdminAction(resource, temporaryPassword, targetUser.WebAuth.PublicKey));
 					ResourceUtility.GetManager<User>().Update(targetUser, userLock);
@@ -115,48 +96,46 @@ namespace Dodo
 			}
 		}
 
-		IActionResult JoinGroup(HttpRequest request)
+		IActionResult JoinGroup()
 		{
-			var owner = request.GetRequestOwner(out var passphrase);
-			var resourceURL = GetResourceURL(request.Path);
-			using (var resourceLock = new ResourceLock(resourceURL))
+			var context = Request.GetRequestOwner();
+			using (var resourceLock = new ResourceLock(Request.Path))
 			{
 				var target = resourceLock.Value as GroupResource;
 				if (target == null)
 				{
-					throw HttpException.NOT_FOUND;
+					return NotFound();
 				}
-				target.Members.Add(owner, passphrase);
+				target.Members.Add(context.User, context.Passphrase);
+				ResourceManager.Update(target, resourceLock);
+				return Ok();
+			}
+		}
+
+		IActionResult LeaveGroup()
+		{
+			var context = Request.GetRequestOwner();
+			using (var resourceLock = new ResourceLock(Request.Path))
+			{
+				var target = resourceLock.Value as GroupResource;
+				if (target == null)
+				{
+					return NotFound();
+				}
+				target.Members.Remove(context.User, context.Passphrase);
 				ResourceManager.Update(target, resourceLock);
 				return HttpBuilder.OK();
 			}
 		}
 
-		IActionResult LeaveGroup(HttpRequest request)
+		protected override bool CanCreateAtUrl(AccessContext context, string url, out string error)
 		{
-			var owner = request.GetRequestOwner(out var passphrase);
-			var resourceURL = GetResourceURL(request.Path);
-			using (var resourceLock = new ResourceLock(resourceURL))
-			{
-				var target = resourceLock.Value as GroupResource;
-				if (target == null)
-				{
-					throw HttpException.NOT_FOUND;
-				}
-				target.Members.Remove(owner, passphrase);
-				ResourceManager.Update(target, resourceLock);
-				return HttpBuilder.OK();
-			}
-		}
-
-		protected override bool CanCreateAtUrl(ResourceReference<User> requestOwner, Passphrase passphrase, string url, out string error)
-		{
-			if (!requestOwner.HasValue)
+			if (context.User == null)
 			{
 				error = "You need to login";
 				return false;
 			}
-			if (!requestOwner.Value.EmailVerified)
+			if (context.User.EmailVerified)
 			{
 				error = "You need to verify your email";
 				return false;

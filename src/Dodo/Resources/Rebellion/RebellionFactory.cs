@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Dodo.Resources;
 using REST;
 using REST.Serializers;
 using System;
@@ -23,7 +24,7 @@ namespace Dodo.Rebellions
 		}
 	}
 
-	public class RebellionFactory : ResourceFactory<Rebellion, RebellionSchema>
+	public class RebellionFactory : DodoResourceFactory<Rebellion, RebellionSchema>
 	{
 	}
 }

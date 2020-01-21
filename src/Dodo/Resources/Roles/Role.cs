@@ -33,14 +33,14 @@ namespace Dodo.Roles
 			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), schema.Context);
 		}
 
-		public override bool IsAuthorised(AccessContext context, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
 			if (context.User == null)
 			{
 				permissionLevel = EPermissionLevel.PUBLIC;
 				return true;
 			}
-			if (request.MethodEnum() != EHTTPRequestType.GET)
+			if (requestType != EHTTPRequestType.GET)
 			{
 				if (Creator.Guid == context.User.GUID)
 				{

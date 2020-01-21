@@ -17,7 +17,7 @@ namespace REST
 		void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
 	}
 
-	public class ResourceSchemaBase
+	public abstract class ResourceSchemaBase
 	{
 		public string Name { get; private set; }
 

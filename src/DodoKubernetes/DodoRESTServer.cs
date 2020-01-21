@@ -8,16 +8,11 @@ using System.Linq;
 namespace Dodo
 {
 	[Obsolete]
-	public class DodoRESTManager : RESTManager
+	public class DodoRESTManager
 	{
-		public DodoRESTManager() : base()
-		{
-			AddResourceLookupRoute();
-			OnMsgReceieved += ProcessPushActions;
-		}
-
 		private void ProcessPushActions(HttpRequest request)
 		{
+			// TODO
 			var context = request.TryGetRequestOwner();
 			if (context.User == null)
 			{

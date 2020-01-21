@@ -12,9 +12,6 @@ using System.Linq;
 
 namespace Dodo.Rebellions
 {
-	
-
-
 	[Name("Rebellion")]
 	public class Rebellion : GroupResource
 	{

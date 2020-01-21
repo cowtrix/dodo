@@ -1,4 +1,5 @@
-﻿using REST;
+﻿using Dodo.Resources;
+using REST;
 using REST.Serializers;
 
 namespace Dodo.WorkingGroups
@@ -13,7 +14,11 @@ namespace Dodo.WorkingGroups
 		}
 	}
 
-	public class WorkingGroupFactory : ResourceFactory<WorkingGroup, WorkingGroupSchema>
+	public class WorkingGroupFactory : DodoResourceFactory<WorkingGroup, WorkingGroupSchema>
 	{
+		protected override bool ValidateSchema(WorkingGroupSchema schema, out string error)
+		{
+			return base.ValidateSchema(schema, out error);
+		}
 	}
 }

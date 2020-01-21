@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Dodo.Resources;
 using REST;
 using System;
 
@@ -22,7 +23,7 @@ namespace Dodo.Sites
 		}
 	}
 
-	public class SiteFactory : ResourceFactory<Site, SiteSchema> 
+	public class SiteFactory : DodoResourceFactory<Site, SiteSchema> 
 	{
 		protected override Site CreateObjectInternal(SiteSchema schema)
 		{

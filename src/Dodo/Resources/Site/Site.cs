@@ -85,9 +85,9 @@ namespace Dodo.Sites
 
 		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
-		public override bool IsAuthorised(AccessContext context, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
-			return Parent.Value.IsAuthorised(context, request, out permissionLevel);
+			return Parent.Value.IsAuthorised(context, requestType, out permissionLevel);
 		}
 	}
 }

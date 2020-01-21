@@ -1,4 +1,5 @@
 ﻿using Common.Extensions;
+using Dodo.Resources;
 using REST;
 using REST.Serializers;
 
@@ -17,7 +18,7 @@ namespace Dodo.Roles
 		}
 	}
 
-	public class RoleFactory : ResourceFactory<Role, RoleSchema>
+	public class RoleFactory : DodoResourceFactory<Role, RoleSchema>
 	{
 	}
 }

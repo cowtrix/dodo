@@ -122,7 +122,7 @@ namespace Dodo
 			AdministratorData.SetValue(adminData, newAdminRef, newAdminPassword);
 		}
 
-		public override bool IsAuthorised(AccessContext context, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
 			if(context.User != null)
 			{
@@ -136,7 +136,7 @@ namespace Dodo
 					permissionLevel = EPermissionLevel.ADMIN;
 					return true;
 				}
-				if (request.MethodEnum() != EHTTPRequestType.GET)
+				if (requestType != EHTTPRequestType.GET)
 				{
 					permissionLevel = EPermissionLevel.PUBLIC;
 					return false;

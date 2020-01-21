@@ -66,7 +66,7 @@ namespace Dodo.Users
 			Email = schema.Email;
 		}
 
-		public override bool IsAuthorised(AccessContext context, HttpRequest request, out EPermissionLevel permissionLevel)
+		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
 			if(context.User.GUID == GUID)
 			{
