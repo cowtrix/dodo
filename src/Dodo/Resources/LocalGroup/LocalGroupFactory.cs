@@ -18,6 +18,10 @@ namespace Dodo.LocalGroups
 		{
 			Location = location;
 		}
+
+		public LocalGroupSchema()
+		{
+		}
 	}
 
 	public class LocalGroupFactory : DodoResourceFactory<LocalGroup, LocalGroupSchema>

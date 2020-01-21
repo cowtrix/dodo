@@ -18,6 +18,8 @@ namespace Dodo
 		{
 			Context = context;
 		}
+
+		public DodoResourceSchemaBase() : base() { }
 	}
 
 	public abstract class DodoResource : Resource, IDodoResource

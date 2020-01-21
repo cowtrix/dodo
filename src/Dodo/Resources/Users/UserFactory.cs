@@ -17,6 +17,10 @@ namespace Dodo.Users
 			Password = password;
 			Email = email;
 		}
+
+		public UserSchema()
+		{
+		}
 	}
 
 	public class UserFactory : DodoResourceFactory<User, UserSchema>

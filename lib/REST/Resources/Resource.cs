@@ -25,6 +25,8 @@ namespace REST
 		{
 			Name = name;
 		}
+
+		public ResourceSchemaBase() { }
 	}
 
 	/// <summary>

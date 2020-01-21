@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dodo.Users
 {
-	public class UserController : ObjectRESTController<User>
+	public class UserController : ObjectRESTController<User, UserSchema>
 	{
 		public const string CREATION_URL = "register";
 		public const string VERIFY_PARAM = "verify";
@@ -31,20 +31,20 @@ namespace Dodo.Users
 		/// <returns></returns>
 		protected IActionResult ResetPassword()
 		{
-			if(Request.Query.TryGetValue("token", out var token))
+			if (Request.Query.TryGetValue("token", out var token))
 			{
 				var context = Request.TryGetRequestOwner();
 				var user = ResourceManager.
 					GetSingle(u =>
 					{
 						var attr = u.PushActions.GetSinglePushAction<ResetPasswordAction>();
-						if(attr == null)
+						if (attr == null)
 						{
 							return false;
 						}
 						return attr.TemporaryToken == token;
 					});
-				if(user == null)
+				if (user == null)
 				{
 					throw HttpException.FORBIDDEN;
 				}
@@ -74,7 +74,7 @@ namespace Dodo.Users
 			else
 			{
 				var email = JsonConvert.DeserializeObject<string>(Request.ReadBody());
-				if(!ValidationExtensions.EmailIsValid(email))
+				if (!ValidationExtensions.EmailIsValid(email))
 				{
 					throw new HttpException("Invalid email address", HttpStatusCode.BadRequest);
 				}
@@ -148,9 +148,11 @@ namespace Dodo.Users
 			}
 		}
 
-		public override IActionResult Create(UserSchema schema)
+		public override IActionResult Create([FromBody]UserSchema generalSchema)
 		{
-			var user = ResourceManager.GetSingle(u => u.Email == schema.Email);
+			//var schema = JsonConvert.DeserializeObject<UserSchema>(Request.ReadBody());
+			var schema = generalSchema as UserSchema;
+			var user = ResourceManager.GetSingle(u => u.Email == schema?.Email);
 			using (var rscLock = new ResourceLock(user))
 			{
 				if (user != null)

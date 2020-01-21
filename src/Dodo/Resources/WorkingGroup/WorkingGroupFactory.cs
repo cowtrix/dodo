@@ -8,6 +8,10 @@ namespace Dodo.WorkingGroups
 
 	public class WorkingGroupSchema : GroupResourceSchemaBase
 	{
+		public WorkingGroupSchema()
+		{
+		}
+
 		public WorkingGroupSchema(AccessContext context, string name, string publicDescription, GroupResource parent) 
 			: base(context, name, publicDescription, parent)
 		{

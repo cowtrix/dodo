@@ -16,6 +16,10 @@ namespace Dodo.Roles
 			PublicDescription = publicDescription;
 			Parent = parent;
 		}
+
+		public RoleSchema()
+		{
+		}
 	}
 
 	public class RoleFactory : DodoResourceFactory<Role, RoleSchema>

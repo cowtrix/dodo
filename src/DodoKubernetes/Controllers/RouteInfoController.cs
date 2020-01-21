@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using System.Net;
 using System.Text;
 
 namespace REST
@@ -30,8 +31,7 @@ namespace REST
 					Controller = ad.RouteValues["controller"],
 					Values = ad.RouteValues
 				});
-
-				sb.AppendLine(action).AppendLine().AppendLine();
+				sb.AppendLine($"{ad.DisplayName}:\t{ad.AttributeRouteInfo.Template}\t{action}").AppendLine();
 			}
 
 			return Ok(sb.ToString());

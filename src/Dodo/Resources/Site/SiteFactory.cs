@@ -21,6 +21,10 @@ namespace Dodo.Sites
 			Location = location;
 			PublicDescription = publicDescription;
 		}
+
+		public SiteSchema()
+		{
+		}
 	}
 
 	public class SiteFactory : DodoResourceFactory<Site, SiteSchema> 

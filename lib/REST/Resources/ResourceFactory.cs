@@ -41,6 +41,10 @@ namespace REST
 
 		public TResult CreateObject(ResourceSchemaBase schema)
 		{
+			if(!(schema is TSchema))
+			{
+				return default;
+			}
 			return CreateObject((TSchema)schema);
 		}
 

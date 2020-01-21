@@ -23,12 +23,14 @@ namespace REST
 	/// <typeparam name="T">The type of the resource</typeparam>
 	[ApiController]
 	[Route("api/[controller]s")]
-	public abstract class ObjectRESTController<T> : Controller where T: class, IDodoResource
+	public abstract class ObjectRESTController<T, TSchema> : Controller
+		where T : class, IDodoResource
+		where TSchema : DodoResourceSchemaBase
 	{
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 		private HashSet<string> m_resourceURLCache = new HashSet<string>();
 
-		protected bool IsAuthorised(AccessContext context, T target, 
+		protected bool IsAuthorised(AccessContext context, T target,
 			EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
 			if (target != null && !(target is T))
@@ -79,10 +81,10 @@ namespace REST
 		}
 
 		[HttpPost]
-		public virtual IActionResult Create(UserSchema schema)
+		public virtual IActionResult Create([FromBody]TSchema schema)
 		{
-			schema.Context = Request.GetRequestOwner();
-			if (!IsAuthorised(schema.Context, null, Request.MethodEnum(), out var permissionLevel))
+			var context = Request.GetRequestOwner();
+			if (!IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
@@ -95,13 +97,13 @@ namespace REST
 					CheckAdditionalContent = true,
 				}) as ResourceSchemaBase;*/
 				createdObject = factory.CreateObject(schema);
-				OnCreation(schema.Context, createdObject);
+				OnCreation(context, createdObject);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				return BadRequest($"Failed to deserialise JSON: {e.Message}");
 			}
-			return Ok(createdObject.GenerateJsonView(permissionLevel, schema.Context.User, schema.Context.Passphrase));
+			return Ok(createdObject.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
 		}
 
 		[HttpPatch]
@@ -135,7 +137,7 @@ namespace REST
 				};
 				var prev = JsonConvert.SerializeObject(target, jsonSettings);
 				target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
-				if(ResourceManager.Get(x => x.ResourceURL == target.ResourceURL && x.GUID != target.GUID).Any())
+				if (ResourceManager.Get(x => x.ResourceURL == target.ResourceURL && x.GUID != target.GUID).Any())
 				{
 					return Conflict();
 				}
@@ -158,15 +160,31 @@ namespace REST
 				return Forbid();
 			}
 			ResourceManager.Delete(target);
-			lock(m_resourceURLCache)
+			lock (m_resourceURLCache)
 			{
 				m_resourceURLCache.Remove(target.ResourceURL);
 			}
 			return HttpBuilder.Custom("Resource deleted", System.Net.HttpStatusCode.OK);
 		}
 
-		[HttpGet("{resourceUrl}")]
-		public IActionResult Get()
+		[HttpGet("{guid}")]
+		public IActionResult GetByGuid(Guid guid)
+		{
+			var target = ResourceUtility.GetResourceByGuid(guid) as T;
+			if (target == null)
+			{
+				return NotFound();
+			}
+			var context = Request.GetRequestOwner();
+			if (!IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
+			{
+				return Forbid();
+			}
+			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
+		}
+
+		[HttpGet("*")]
+		public IActionResult GetByUri()
 		{
 			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
 			if (target == null)

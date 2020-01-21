@@ -23,6 +23,8 @@ namespace Dodo
 			PublicDescription = publicDescription;
 			Parent = parent;
 		}
+
+		public GroupResourceSchemaBase() : base() { }
 	}
 
 	/// <summary>

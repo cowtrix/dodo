@@ -28,14 +28,14 @@ namespace Dodo.SharedTest
 		{
 			{ typeof(User), GetRandomUser },
 			{ typeof(Rebellion), GetRandomRebellion },
-			{ typeof(WorkingGroup), GetRandomWorkinGroup },
-			{ typeof(Site), GetRandomSite },
-			{ typeof(Role), GetRandomRole },
+			{ typeof(WorkingGroup), wg => GetRandomWorkinGroup(wg) },
+			{ typeof(Site), s => GetRandomSite(s) },
+			{ typeof(Role), r => GetRandomRole(r) },
 		};
 
-		private static RoleSchema GetRandomRole(AccessContext context)
+		public static RoleSchema GetRandomRole(AccessContext context, WorkingGroup wg = null)
 		{
-			var wg = ResourceUtility.GetFactory<WorkingGroup>().CreateObject(
+			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateObject(
 				GetRandomWorkinGroup(context));
 			return new RoleSchema(context,
 				StringExtensions.RandomString(32),
@@ -43,9 +43,9 @@ namespace Dodo.SharedTest
 				wg);
 		}
 
-		private static SiteSchema GetRandomSite(AccessContext context)
+		public static SiteSchema GetRandomSite(AccessContext context, WorkingGroup wg = null)
 		{
-			var wg = ResourceUtility.GetFactory<WorkingGroup>().CreateObject(
+			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateObject(
 				GetRandomWorkinGroup(context));
 			return new SiteSchema(context,
 				StringExtensions.RandomString(32),
@@ -55,7 +55,7 @@ namespace Dodo.SharedTest
 				SAMPLE_MARKDOWN);
 		}
 
-		private static UserSchema GetRandomUser(AccessContext context)
+		public static UserSchema GetRandomUser(AccessContext context)
 		{
 			return new UserSchema(
 				context,
@@ -66,7 +66,7 @@ namespace Dodo.SharedTest
 			);
 		}
 
-		private static RebellionSchema GetRandomRebellion(AccessContext context)
+		public static RebellionSchema GetRandomRebellion(AccessContext context)
 		{
 			var startDate = RandomDate;
 			return new RebellionSchema(
@@ -80,15 +80,15 @@ namespace Dodo.SharedTest
 			);
 		}
 
-		private static WorkingGroupSchema GetRandomWorkinGroup(AccessContext context)
+		public static WorkingGroupSchema GetRandomWorkinGroup(AccessContext context, GroupResource rsc = null)
 		{
-			var rebellion = ResourceUtility.GetFactory<Rebellion>().CreateObject(
+			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateObject(
 				GetRandomRebellion(context));
 			return new WorkingGroupSchema(
 				context,
 				StringExtensions.RandomString(32),
 				SAMPLE_MARKDOWN,
-				rebellion
+				rsc
 			);
 		}
 	}

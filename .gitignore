@@ -21,3 +21,6 @@
 /packages/
 /test/bin/
 *.user
+/src/DodoKubernetes/logs/
+/test/GenerateSampleData/bin/
+/test/GenerateSampleData/obj/

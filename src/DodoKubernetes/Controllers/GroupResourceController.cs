@@ -14,7 +14,9 @@ using System.Linq;
 
 namespace Dodo
 {
-	public abstract class GroupResourceController<T> : ObjectRESTController<T> where T : GroupResource
+	public abstract class GroupResourceController<T, TSchema> : ObjectRESTController<T, TSchema> 
+		where T : GroupResource
+		where TSchema : DodoResourceSchemaBase
 	{
 		public const string ADD_ADMIN = "?addadmin";
 		public const string JOIN_GROUP = "?join";

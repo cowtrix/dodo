@@ -22,6 +22,10 @@ namespace Dodo.Rebellions
 			StartDate = startDate;
 			EndDate = EndDate;
 		}
+
+		public RebellionSchema()
+		{
+		}
 	}
 
 	public class RebellionFactory : DodoResourceFactory<Rebellion, RebellionSchema>
