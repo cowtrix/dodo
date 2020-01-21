@@ -8,7 +8,7 @@ using Dodo.Utility;
 
 namespace Dodo.WorkingGroups
 {
-	public class WorkingGroupRESTHandler : GroupResourceRESTHandler<WorkingGroup>
+	public class WorkingGroupController : GroupResourceController<WorkingGroup>
 	{
 	}
 }

@@ -7,6 +7,7 @@ using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using SharedTest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace RESTTests
 			RegisterUser(out var defaultGuid, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 			DefaultGUID = defaultGuid;
 			Rebellion = RequestJSON("rebellions/create", Method.POST,
-				new RebellionRESTHandler.CreationSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
+				new RebellionSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
 		}
 
 		public override object GetCreationSchema(bool unique)

@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using REST;
 using System;
+using SharedTest;
 
 namespace RESTTests
 {
@@ -21,14 +22,14 @@ namespace RESTTests
 		{
 			if(unique)
 			{
-				return new UserRESTHandler.CreationSchema(
+				return new UserSchema(
 					DefaultUsername + StringExtensions.RandomString(6).ToLowerInvariant(),
 					DefaultPassword,
 					DefaultName,
 					DefaultEmail
 				);
 			}
-			return new UserRESTHandler.CreationSchema(
+			return new UserSchema(
 					DefaultUsername,
 					DefaultPassword,
 					DefaultName,

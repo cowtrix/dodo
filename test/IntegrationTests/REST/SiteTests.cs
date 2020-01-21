@@ -27,7 +27,7 @@ namespace RESTTests
 		{
 			RegisterUser(out _, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
 			Rebellion = RequestJSON("rebellions/create", Method.POST,
-				new RebellionRESTHandler.CreationSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
+				new RebellionSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
 		}
 
 		public override object GetCreationSchema(bool unique)

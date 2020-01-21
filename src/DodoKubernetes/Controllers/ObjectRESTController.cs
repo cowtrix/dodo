@@ -21,6 +21,8 @@ namespace REST
 	/// RESTful actions, and executing those actions on the objects.
 	/// </summary>
 	/// <typeparam name="T">The type of the resource</typeparam>
+	[ApiController]
+	[Route("api/[controller]s")]
 	public abstract class ObjectRESTController<T> : Controller where T: class, IDodoResource
 	{
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
@@ -77,10 +79,10 @@ namespace REST
 		}
 
 		[HttpPost]
-		protected virtual IActionResult CreateObject()
+		public virtual IActionResult Create(UserSchema schema)
 		{
-			var context = Request.GetRequestOwner();
-			if (!IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
+			schema.Context = Request.GetRequestOwner();
+			if (!IsAuthorised(schema.Context, null, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
@@ -88,22 +90,22 @@ namespace REST
 			T createdObject;
 			try
 			{
-				var schema = JsonConvert.DeserializeObject(Request.ReadBody(), factory.SchemaType, new JsonSerializerSettings()
+				/*var schema = JsonConvert.DeserializeObject(Request.ReadBody(), factory.SchemaType, new JsonSerializerSettings()
 				{
 					CheckAdditionalContent = true,
-				}) as ResourceSchemaBase;
+				}) as ResourceSchemaBase;*/
 				createdObject = factory.CreateObject(schema);
-				OnCreation(context, createdObject);
+				OnCreation(schema.Context, createdObject);
 			}
 			catch(Exception e)
 			{
 				return BadRequest($"Failed to deserialise JSON: {e.Message}");
 			}
-			return Ok(createdObject.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
+			return Ok(createdObject.GenerateJsonView(permissionLevel, schema.Context.User, schema.Context.Passphrase));
 		}
 
 		[HttpPatch]
-		protected virtual IActionResult UpdateObject()
+		public virtual IActionResult Update(Dictionary<string, object> values)
 		{
 			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
 			if (target == null)
@@ -122,7 +124,7 @@ namespace REST
 				{
 					return NotFound();
 				}
-				var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(Request.ReadBody());
+				//var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(Request.ReadBody());
 				if (values == null)
 				{
 					throw new HttpException("Invalid JSON body", HttpStatusCode.BadRequest);
@@ -143,7 +145,7 @@ namespace REST
 		}
 
 		[HttpDelete]
-		protected virtual IActionResult DeleteObject()
+		public virtual IActionResult Delete()
 		{
 			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
 			if (target == null)
@@ -163,8 +165,8 @@ namespace REST
 			return HttpBuilder.Custom("Resource deleted", System.Net.HttpStatusCode.OK);
 		}
 
-		[HttpGet]
-		protected IActionResult GetObject()
+		[HttpGet("{resourceUrl}")]
+		public IActionResult Get()
 		{
 			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
 			if (target == null)

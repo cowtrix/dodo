@@ -13,7 +13,7 @@ namespace Dodo
 
 	public class DodoResourceSchemaBase : ResourceSchemaBase
 	{
-		public AccessContext Context { get; private set; }
+		public AccessContext Context { get; set; }
 		public DodoResourceSchemaBase(AccessContext context, string name) : base(name)
 		{
 			Context = context;

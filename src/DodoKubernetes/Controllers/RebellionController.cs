@@ -9,7 +9,7 @@ using Dodo.Utility;
 
 namespace Dodo.Rebellions
 {
-	public class RebellionRESTHandler : GroupResourceRESTHandler<Rebellion>
+	public class RebellionController : GroupResourceController<Rebellion>
 	{
 	}
 }

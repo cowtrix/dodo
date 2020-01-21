@@ -6,8 +6,11 @@ using System.Security.Cryptography.X509Certificates;
 using Common;
 using Common.Extensions;
 using Dodo;
+using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using REST;
 using RestSharp;
 using SharedTest;
 
@@ -118,7 +121,7 @@ namespace RESTTests
 			name = name ?? DefaultName;
 			password = password ?? DefaultPassword;
 			email = email ?? DefaultEmail;
-			var jobj = RequestJSON("register", Method.POST, new UserRESTHandler.CreationSchema(username, password, name, email), "", "");
+			var jobj = RequestJSON("register", Method.POST, new UserSchema(default, username, password, name, email), "", "");
 			guid = jobj.Value<string>("GUID");
 			if (verifyEmail)
 				VerifyUser(guid, username, password, email);
@@ -147,7 +150,7 @@ namespace RESTTests
 		{
 			var request = new RestRequest("rebellions/create", Method.POST);
 			AuthoriseRequest(request, DefaultUsername, DefaultPassword);
-			request.AddJsonBody(new RebellionRESTHandler.CreationSchema(name, "test description", new GeoLocation(66, 66), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
+			request.AddJsonBody(new RebellionSchema(name, "test description", new GeoLocation(66, 66), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
 			var response = RestClient.Execute(request).Content;
 			if (!response.IsValidJson())
 			{

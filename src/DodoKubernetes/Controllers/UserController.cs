@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dodo.Users
 {
-	public class UserRESTHandler : ObjectRESTController<User>
+	public class UserController : ObjectRESTController<User>
 	{
 		public const string CREATION_URL = "register";
 		public const string VERIFY_PARAM = "verify";
@@ -148,9 +148,8 @@ namespace Dodo.Users
 			}
 		}
 
-		protected override IActionResult CreateObject()
+		public override IActionResult Create(UserSchema schema)
 		{
-			var schema = JsonConvert.DeserializeObject<UserSchema>(Request.ReadBody());
 			var user = ResourceManager.GetSingle(u => u.Email == schema.Email);
 			using (var rscLock = new ResourceLock(user))
 			{
@@ -173,7 +172,7 @@ namespace Dodo.Users
 					}
 				}
 			}
-			return base.CreateObject();
+			return base.Create(schema);
 		}
 
 		protected override void OnCreation(AccessContext context, User user)

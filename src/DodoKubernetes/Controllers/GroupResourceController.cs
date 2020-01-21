@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Common.Security;
 using System.Net;
+using System.Linq;
 
 namespace Dodo
 {
-	public abstract class GroupResourceRESTHandler<T> : ObjectRESTController<T> where T : GroupResource
+	public abstract class GroupResourceController<T> : ObjectRESTController<T> where T : GroupResource
 	{
 		public const string ADD_ADMIN = "?addadmin";
 		public const string JOIN_GROUP = "?join";
@@ -74,7 +75,7 @@ namespace Dodo
 					// with a one-off token
 					EmailHelper.SendEmail(targetEmail, null, $"{Dodo.PRODUCT_NAME}: You have been invited to administrate " + resource.Name,
 						$"You have been invited to administrate the {resource.Name} {resource.GetType().GetName()}.\n" +
-						$"To accept this invitation, register your account at {Dns.GetHostName()}/{UserRESTHandler.CREATION_URL}");
+						$"To accept this invitation, register your account at {Dns.GetHostName()}/{UserController.CREATION_URL}");
 					targetUser = userManager.CreateTemporaryUser(targetEmail, out temporaryPassword);
 				}
 				else
@@ -126,6 +127,12 @@ namespace Dodo
 				ResourceManager.Update(target, resourceLock);
 				return HttpBuilder.OK();
 			}
+		}
+
+		[HttpGet]
+		public IActionResult Index()
+		{
+			return Ok(ResourceManager.Get(x => true).Select(rsc => rsc.GUID));
 		}
 
 		protected override bool CanCreateAtUrl(AccessContext context, string url, out string error)

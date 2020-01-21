@@ -4,6 +4,7 @@ using Dodo.Rebellions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using SharedTest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +22,9 @@ namespace RESTTests
 		{
 			if(!unique)
 			{
-				return new RebellionRESTHandler.CreationSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), DefaultStart, DefaultEnd);
+				return new RebellionSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), DefaultStart, DefaultEnd);
 			}
-			return new RebellionRESTHandler.CreationSchema("Test Rebellion " + StringExtensions.RandomString(6), "Test description", new GeoLocation(45, 97), DefaultStart, DefaultEnd);
+			return new RebellionSchema("Test Rebellion " + StringExtensions.RandomString(6), "Test description", new GeoLocation(45, 97), DefaultStart, DefaultEnd);
 		}
 
 		public override object GetPatchSchema()
@@ -66,14 +67,14 @@ namespace RESTTests
 		[TestMethod]
 		public void CannotCreateAtCreationURL()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Create", "Test description", new GeoLocation(), DefaultStart, DefaultEnd)),
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionSchema("Create", "Test description", new GeoLocation(), DefaultStart, DefaultEnd)),
 				e => e.Message.Contains("Reserved Resource URL"));
 		}
 
 		[TestMethod]
 		public void CannotCreateWithBigName()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema(
+			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RebellionSchema(
 				StringExtensions.RandomString(512), "Test description", new GeoLocation(), DefaultStart, DefaultEnd)),
 				e => e.Message.Contains("Name length must be between 3 and 64 characters long"));
 		}
@@ -83,10 +84,10 @@ namespace RESTTests
 		{
 			var objects = new List<JObject>()
 			{
-				RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Test1", "Test description", new GeoLocation(27, 79.2), DefaultStart, DefaultEnd)),
-				RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Test2", "Test description", new GeoLocation(26.9, 79), DefaultStart, DefaultEnd)),
-				RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Test3", "Test description", new GeoLocation(27.2, 79.1), DefaultStart, DefaultEnd)),
-				RequestJSON(CreationURL, Method.POST, new RebellionRESTHandler.CreationSchema("Test4", "Test description", new GeoLocation(26.4, 78.7), DefaultStart, DefaultEnd)),
+				RequestJSON(CreationURL, Method.POST, new RebellionSchema("Test1", "Test description", new GeoLocation(27, 79.2), DefaultStart, DefaultEnd)),
+				RequestJSON(CreationURL, Method.POST, new RebellionSchema("Test2", "Test description", new GeoLocation(26.9, 79), DefaultStart, DefaultEnd)),
+				RequestJSON(CreationURL, Method.POST, new RebellionSchema("Test3", "Test description", new GeoLocation(27.2, 79.1), DefaultStart, DefaultEnd)),
+				RequestJSON(CreationURL, Method.POST, new RebellionSchema("Test4", "Test description", new GeoLocation(26.4, 78.7), DefaultStart, DefaultEnd)),
 			};
 			var guids = objects.Select(x => x.Value<string>("GUID"));
 			var list = Request("rebellions", Method.GET);

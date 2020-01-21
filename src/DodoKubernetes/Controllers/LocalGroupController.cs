@@ -9,7 +9,7 @@ using Dodo.Utility;
 
 namespace Dodo.LocalGroups
 {
-	public class LocalGroupRESTHandler : GroupResourceRESTHandler<LocalGroup>
+	public class LocalGroupController : GroupResourceController<LocalGroup>
 	{
 	}
 }

@@ -7,7 +7,7 @@ using System.Net;
 
 namespace Dodo.Roles
 {
-	public class RoleRESTHandler : ObjectRESTController<Role>
+	public class RoleController : ObjectRESTController<Role>
 	{
 	}
 }
