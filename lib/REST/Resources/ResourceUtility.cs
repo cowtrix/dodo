@@ -48,7 +48,7 @@ namespace REST
 			{
 				var newManager = Activator.CreateInstance(t) as IResourceManager;
 				var typeArg = newManager.GetType().BaseType.GetGenericArguments().First();
-				ResourceManagers[typeArg] = newManager;
+				Register(typeArg, newManager);
 			}
 
 			types = ReflectionExtensions.GetChildClasses<IResourceFactory>();
@@ -56,8 +56,18 @@ namespace REST
 			{
 				var newFactory = Activator.CreateInstance(t) as IResourceFactory;
 				var typeArg = newFactory.GetType().BaseType.GetGenericArguments().First();
-				Factories[typeArg] = newFactory;
+				Register(typeArg, newFactory);
 			}
+		}
+
+		public static void Register(Type type, IResourceManager resourceManager)
+		{
+			ResourceManagers[type] = resourceManager;
+		}
+
+		public static void Register(Type type, IResourceFactory factory)
+		{
+			Factories[type] = factory;
 		}
 
 		#region Resources

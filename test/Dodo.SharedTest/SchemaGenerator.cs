@@ -8,6 +8,7 @@ using Dodo.WorkingGroups;
 using REST;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Dodo.SharedTest
@@ -20,7 +21,7 @@ namespace Dodo.SharedTest
 		}
 
 		private static Random m_random = new Random();
-		private const string SAMPLE_MARKDOWN = "This is a block of text formatted in markdown.";
+		public static string SampleMarkdown => File.ReadAllText("SampleMarkdown.md");
 		private static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
 		private static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
 		private static Dictionary<Type, Func<AccessContext, ResourceSchemaBase>> m_mappings =
@@ -39,7 +40,7 @@ namespace Dodo.SharedTest
 				GetRandomWorkinGroup(context));
 			return new RoleSchema(context,
 				StringExtensions.RandomString(32),
-				SAMPLE_MARKDOWN,
+				SampleMarkdown,
 				wg);
 		}
 
@@ -52,7 +53,7 @@ namespace Dodo.SharedTest
 				ReflectionExtensions.GetChildClasses<Site>().Random().FullName,
 				wg,
 				RandomLocation,
-				SAMPLE_MARKDOWN);
+				SampleMarkdown);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context)
@@ -73,7 +74,7 @@ namespace Dodo.SharedTest
 				context,
 				StringExtensions.RandomString(32),
 				RandomLocation,
-				SAMPLE_MARKDOWN,
+				SampleMarkdown,
 				null,
 				startDate,
 				startDate + TimeSpan.FromDays(m_random.NextDouble() * 14)
@@ -87,7 +88,7 @@ namespace Dodo.SharedTest
 			return new WorkingGroupSchema(
 				context,
 				StringExtensions.RandomString(32),
-				SAMPLE_MARKDOWN,
+				SampleMarkdown,
 				rsc
 			);
 		}

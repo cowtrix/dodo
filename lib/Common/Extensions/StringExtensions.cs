@@ -32,7 +32,7 @@ namespace Common.Extensions
 			{
 				return s;
 			}
-			return System.Net.WebUtility.UrlEncode(Regex.Replace(s.ToLower(), @"\s+", ""));
+			return System.Net.WebUtility.UrlEncode(Regex.Replace(s.ToLower(), @"[^a-zA-Z\d\s:]", ""));
 		}
 
 		private static Random random = new Random();
