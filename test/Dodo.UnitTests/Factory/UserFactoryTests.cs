@@ -17,5 +17,10 @@ namespace Factory
 		protected override void VerifyCreatedObject(User obj, UserSchema schema)
 		{
 		}
+
+		[Ignore]
+		public override void CannotCreateWithBadAuth()
+		{
+		}
 	}
 }

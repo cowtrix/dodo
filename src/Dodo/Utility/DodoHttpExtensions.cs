@@ -36,7 +36,7 @@ namespace Dodo.Utility
 				return default;
 			}
 			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.WebAuth.Username == username);
-			if (user != null && !user.WebAuth.Challenge(password, out var passphrase))
+			if (user != null && !user.WebAuth.ChallengePassword(password, out var passphrase))
 			{
 				throw HttpException.FORBIDDEN;
 			}

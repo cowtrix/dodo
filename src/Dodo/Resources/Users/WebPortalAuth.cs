@@ -19,6 +19,7 @@ namespace Dodo.Users
 			}
 			Username = userName;
 			var passphrase = KeyGenerator.GetUniqueKey(128);
+			PassphraseHash = SHA256Utility.SHA256(passphrase);
 			PassPhrase = new EncryptedStore<string>(passphrase, new Passphrase(password));
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			PrivateKey = new EncryptedStore<string>(pv, new Passphrase(passphrase));
@@ -45,13 +46,13 @@ namespace Dodo.Users
 		/// </summary>
 		[JsonProperty]
 		public string PasswordHash { get; private set; }
-
+		public string PassphraseHash { get; private set; }
 		[JsonProperty]
 		public EncryptedStore<string> PassPhrase;
 		[JsonProperty]
 		public EncryptedStore<string> PrivateKey;
 
-		public bool Challenge(string password, out Passphrase passphrase)
+		public bool ChallengePassword(string password, out Passphrase passphrase)
 		{
 			passphrase = default;
 			if (SHA256Utility.SHA256(password + PublicKey) != PasswordHash)
@@ -68,13 +69,13 @@ namespace Dodo.Users
 
 		public void ChangePassword(Passphrase oldValue, Passphrase newValue)
 		{
-			if(!Challenge(oldValue.Value, out var passphrase))
+			if(!ChallengePassword(oldValue.Value, out var passphrase))
 			{
 				throw HttpException.FORBIDDEN;
 			}
 			PassPhrase = new EncryptedStore<string>(passphrase.Value, newValue);
 			PasswordHash = SHA256Utility.SHA256(newValue.Value + PublicKey);
-			if(!Challenge(newValue.Value, out _))
+			if(!ChallengePassword(newValue.Value, out _))
 			{
 				throw new Exception("Failed to change password");
 			}

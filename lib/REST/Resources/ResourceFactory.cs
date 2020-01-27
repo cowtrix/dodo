@@ -33,17 +33,25 @@ namespace REST
 			return (TResult)Activator.CreateInstance(typeof(TResult), schema);
 		}
 
-		protected virtual bool ValidateSchema(TSchema schema, out string error)
+		protected virtual bool ValidateSchema(ResourceSchemaBase schema, out string error)
 		{
+			if (schema == null)
+			{
+				throw new NullReferenceException("Schema cannot be null");
+			}
+			if (!(schema is TSchema))
+			{
+				throw new InvalidCastException($"Incorrect schema type. Expected: {typeof(TSchema).FullName}\t Actual: {schema.GetType().FullName}");
+			}
 			error = null;
 			return true;
 		}
 
 		public TResult CreateObject(ResourceSchemaBase schema)
 		{
-			if(!(schema is TSchema))
+			if(!ValidateSchema(schema, out var error))
 			{
-				return default;
+				throw new Exception(error);
 			}
 			return CreateObject((TSchema)schema);
 		}

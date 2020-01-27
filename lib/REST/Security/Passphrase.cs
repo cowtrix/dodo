@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using REST;
 using System;
+using System.Collections.Generic;
 using System.Security.Authentication;
 
 namespace REST.Security
@@ -50,6 +51,21 @@ namespace REST.Security
 				}
 				return SymmetricSecurity.Decrypt<string>(Data, token);
 			}
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is Passphrase passphrase &&
+				   TokenKey == passphrase.TokenKey &&
+				   Data == passphrase.Data;
+		}
+
+		public override int GetHashCode()
+		{
+			var hashCode = 1853675142;
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(TokenKey);
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Data);
+			return hashCode;
 		}
 	}
 }

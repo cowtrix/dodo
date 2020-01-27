@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using Common;
 using Common.Extensions;
 using Dodo;
+using Dodo.Rebellions;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;

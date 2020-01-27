@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using REST;
+using REST.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,13 @@ namespace SharedTest
 			result = (result << 32);
 			result = result | (long)m_random.Next((Int32)min, (Int32)max);
 			return result;
+		}
+
+		protected static User GenerateUser(UserSchema schema, out AccessContext context)
+		{
+			var user = ResourceUtility.GetFactory<User>().CreateObject(schema);
+			context = new AccessContext(user, new Passphrase(user.WebAuth.PassPhrase.GetValue(new Passphrase(schema?.Password))));
+			return user;
 		}
 	}
 }

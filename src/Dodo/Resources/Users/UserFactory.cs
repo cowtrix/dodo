@@ -1,6 +1,7 @@
 ﻿using Dodo.Resources;
 using REST;
 using REST.Serializers;
+using System;
 
 namespace Dodo.Users
 {
@@ -25,5 +26,18 @@ namespace Dodo.Users
 
 	public class UserFactory : DodoResourceFactory<User, UserSchema>
 	{
+		protected override bool ValidateSchema(ResourceSchemaBase schema, out string error)
+		{
+			if (schema == null)
+			{
+				throw new NullReferenceException("Schema cannot be null");
+			}
+			if (!(schema is UserSchema))
+			{
+				throw new InvalidCastException($"Incorrect schema type. Expected: {typeof(UserSchema).FullName}\t Actual: {schema.GetType().FullName}");
+			}
+			error = null;
+			return true;
+		}
 	}
 }

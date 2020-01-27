@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.Sites;
@@ -30,6 +31,7 @@ namespace Dodo.SharedTest
 			{ typeof(User), GetRandomUser },
 			{ typeof(Rebellion), GetRandomRebellion },
 			{ typeof(WorkingGroup), wg => GetRandomWorkinGroup(wg) },
+			{ typeof(LocalGroup), lg => GetRandomLocalGroup(lg) },
 			{ typeof(Site), s => GetRandomSite(s) },
 			{ typeof(Role), r => GetRandomRole(r) },
 		};
@@ -88,6 +90,19 @@ namespace Dodo.SharedTest
 			return new WorkingGroupSchema(
 				context,
 				StringExtensions.RandomString(32),
+				SampleMarkdown,
+				rsc
+			);
+		}
+
+		public static LocalGroupSchema GetRandomLocalGroup(AccessContext context, GroupResource rsc = null)
+		{
+			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateObject(
+				GetRandomRebellion(context));
+			return new LocalGroupSchema(
+				context,
+				StringExtensions.RandomString(32),
+				RandomLocation,
 				SampleMarkdown,
 				rsc
 			);

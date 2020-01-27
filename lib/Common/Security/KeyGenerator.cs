@@ -8,7 +8,7 @@ namespace Common.Security
 	public static class KeyGenerator
 	{
 		internal static readonly char[] chars =
-			"ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
+			"abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
 
 		/// <summary>
 		/// Generate a cryptographically secure random key of length 'size'

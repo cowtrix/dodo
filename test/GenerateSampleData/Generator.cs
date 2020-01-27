@@ -37,7 +37,7 @@ namespace GenerateSampleData
 				SchemaGenerator.SampleMarkdown, rebelRiders));
 
 			var admin2 = GenerateUser(new UserSchema(default, "Action Support Dave", "dave", UNIVERSAL_PASS, "admin2@web.com"), out var admin2context);
-			actionSupport.AddAdmin(admin1context, admin2, admin2context.Passphrase);
+			actionSupport.AddOrUpdateAdmin(admin1context, admin2, admin2context.Passphrase);
 
 			var deescalation = WorkingGroupFactory.CreateObject(new WorkingGroupSchema(admin1context, "Non-Violence & De-escalation",
 				SchemaGenerator.SampleMarkdown, actionSupport));
@@ -95,7 +95,7 @@ namespace GenerateSampleData
 		private static User GenerateUser(UserSchema schema, out AccessContext context)
 		{
 			var user = UserFactory.CreateObject(schema);
-			context = new AccessContext(user, new Passphrase(schema.Password));
+			context = new AccessContext(user, new Passphrase(user.WebAuth.PassPhrase.GetValue(new Passphrase(schema.Password))));
 			return user;
 		}
 	}

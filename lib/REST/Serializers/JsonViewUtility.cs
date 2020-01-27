@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 namespace REST
 {
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+	[AttributeUsage(AttributeTargets.Struct)]
 	public class ViewClassAttribute : Attribute { }
 
 	/// <summary>
@@ -37,7 +37,7 @@ namespace REST
 		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility,
 			object requester, Passphrase passphrase)
 		{
-			if(obj == null)
+			if (obj == null)
 			{
 				return null;
 			}
@@ -65,12 +65,12 @@ namespace REST
 				var targetPropValue = member.GetValue(obj);
 				var memberType = member.GetMemberType();
 				var finalObj = GetObject(targetPropValue, memberType, requester, visibility, passphrase);
-				if(finalObj != null)
+				if (finalObj != null)
 				{
 					vals.Add(memberName, finalObj);
 				}
 			}
-			if(obj is Resource)
+			if (obj is Resource)
 			{
 				(obj as Resource).AppendAuxilaryData(vals, visibility, requester, passphrase);
 			}
@@ -85,6 +85,11 @@ namespace REST
 			EPermissionLevel visibility, object requester, Passphrase passphrase)
 		{
 			return obj.Select(x => x.GenerateJsonView(visibility, requester, passphrase)).ToList();
+		}
+
+		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values)
+		{
+			return PatchObject(targetObject, values, EPermissionLevel.OWNER, null, default);
 		}
 
 		/// <summary>
@@ -107,11 +112,16 @@ namespace REST
 			if (ShouldSerializeDirectly(targetType))
 			{
 				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values, JsonExtensions.DefaultSettings), targetType, JsonExtensions.DefaultSettings);
-				if(val is IVerifiable)
+				if (val is IVerifiable)
 				{
 					(val as IVerifiable).Verify();
 				}
 				return (T)val;
+			}
+
+			if(targetType.IsValueType)
+			{
+				throw new Exception("Cannot patch immutable struct - you must pass the full object. Add the [ViewClass] attribute to your struct.");
 			}
 
 			// If the object is decryptable, we handle this transparently and redirect the data within
@@ -138,15 +148,15 @@ namespace REST
 			// Validate that we are able to complete this operation
 			var validFields = values.Select(kvp => members.FirstOrDefault(x => x.Name == kvp.Key))
 				.Where(member => member != null);
-			if(validFields.Count() != values.Count)
+			if (validFields.Count() != values.Count)
 			{
 				throw new Exception("Invalid field names");
 			}
-			if(validFields.Where(member => member.GetCustomAttribute<ViewAttribute>()?.EditPermission <= permissionLevel).Count() != values.Count)
+			if (validFields.Where(member => member.GetCustomAttribute<ViewAttribute>()?.EditPermission <= permissionLevel).Count() != values.Count)
 			{
 				throw new Exception("Insufficient privileges");
 			}
-			if(!validFields.Where(m => m.GetMemberType() is IDecryptable).Cast<IDecryptable>().All(decryptable => decryptable.IsAuthorised(requester, passphrase)))
+			if (!validFields.Where(m => m.GetMemberType() is IDecryptable).Cast<IDecryptable>().All(decryptable => decryptable.IsAuthorised(requester, passphrase)))
 			{
 				throw new Exception("Authorisation failed");
 			}
@@ -164,7 +174,7 @@ namespace REST
 					throw new Exception($"Cannot patch field {targetMember.Name}: NoPatch");
 				}
 				var viewAttr = targetMember.GetCustomAttribute<ViewAttribute>();
-				if(viewAttr == null || viewAttr.EditPermission > permissionLevel)
+				if (viewAttr == null || viewAttr.EditPermission > permissionLevel)
 				{
 					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
 				}
@@ -178,17 +188,20 @@ namespace REST
 					// Auth is incorrect, but that should have been picked up before
 					throw new Exception("Unexpected authorization failure on " + targetMember.Name);
 				}
-				try
+				if(!string.IsNullOrEmpty(val.Value.ToString()))
 				{
-					var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString(), JsonExtensions.DefaultSettings);
-					valueToSet = value.PatchObject(subValues, permissionLevel, requester, passphrase);
-				}
-				catch(MemberVerificationException)
-				{
-					throw;
-				}
-				catch
-				{
+					try
+					{
+						var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString(), JsonExtensions.DefaultSettings);
+						valueToSet = value.PatchObject(subValues, permissionLevel, requester, passphrase);
+					}
+					catch (MemberVerificationException)
+					{
+						throw;
+					}
+					catch
+					{
+					}
 				}
 				if (typeof(IDecryptable).IsAssignableFrom(targetMember.GetMemberType()))
 				{
@@ -197,12 +210,12 @@ namespace REST
 					valueToSet = decryptable;
 				}
 				var checkAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
-				if(checkAttr != null && !checkAttr.Verify(valueToSet, out var error))
+				if (checkAttr != null && !checkAttr.Verify(valueToSet, out var error))
 				{
 					throw new Exception(error);
 				}
 				var verifyAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
-				if(verifyAttr != null && !verifyAttr.Verify(valueToSet, out var verificationError))
+				if (verifyAttr != null && !verifyAttr.Verify(valueToSet, out var verificationError))
 				{
 					throw new MemberVerificationException(verificationError);
 				}
@@ -260,7 +273,7 @@ namespace REST
 		private static bool ShouldSerializeDirectly(Type targetType)
 		{
 			var viewAttr = targetType.GetCustomAttribute<ViewClassAttribute>();
-			if(viewAttr != null)
+			if (viewAttr != null)
 			{
 				return true;
 			}

@@ -48,6 +48,8 @@ namespace Dodo
 			}
 		}
 
+		protected IResourceManager ResourceManager => ResourceUtility.GetManagerForResource(this);
+
 		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; private set; }
@@ -81,6 +83,8 @@ namespace Dodo
 			PublicDescription = schema.PublicDescription;
 		}
 
+		
+
 		/// <summary>
 		/// Is this object a child of the target object
 		/// </summary>
@@ -109,20 +113,48 @@ namespace Dodo
 			return AdministratorData.GetValue(userRef, requesterContext.Passphrase).Administrators.Contains(target);
 		}
 
-		public void AddAdmin(AccessContext context, User newAdmin, Passphrase newAdminPassword)
+		public bool AddAdmin(AccessContext context, User newAdmin)
 		{
-			var userRef = new ResourceReference<User>(context.User);
-			var newAdminRef = new ResourceReference<User>(newAdmin);
-			AdministratorData.AddPermission(userRef, context.Passphrase, newAdminRef, newAdminPassword);
-			var adminData = AdministratorData.GetValue(newAdminRef, newAdminPassword);
-			var adminList = adminData.Administrators;
-			if(adminList.Contains(newAdminRef))
+			var temporaryPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
+			if(!AddOrUpdateAdmin(context, newAdmin, temporaryPass))
 			{
-				return;
+				return false;
 			}
-			adminList.Add(newAdminRef);
-			AdministratorData.SetValue(adminData, newAdminRef, newAdminPassword);
+			using (var userLock = new ResourceLock(newAdmin))
+			{
+				newAdmin.PushActions.Add(new AddAdminAction(this, temporaryPass, newAdmin.WebAuth.PublicKey));
+				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
+			}
+			return true;
 		}
+
+		public bool AddOrUpdateAdmin(AccessContext context, User newAdmin, Passphrase newPass)
+		{
+			if (newAdmin == null)
+			{
+				return false;
+			}
+			if (IsAdmin(newAdmin, context))
+			{
+				return true;
+			}
+			using (var rscLock = new ResourceLock(this))
+			{
+				var group = rscLock.Value as GroupResource;
+				group.AdministratorData.AddPermission(context.User, context.Passphrase, newAdmin, newPass);
+				var adminData = group.AdministratorData.GetValue(context.User, context.Passphrase);
+				var adminList = adminData.Administrators;
+				if (adminList.Contains(newAdmin))
+				{
+					return true;
+				}
+				adminList.Add(newAdmin);
+				group.AdministratorData.SetValue(adminData, newAdmin, newPass);
+				ResourceUtility.GetManagerForResource(group).Update(group, rscLock);
+				return true;
+			}
+		}
+
 
 		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{

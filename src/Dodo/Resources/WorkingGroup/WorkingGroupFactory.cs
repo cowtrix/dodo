@@ -20,9 +20,5 @@ namespace Dodo.WorkingGroups
 
 	public class WorkingGroupFactory : DodoResourceFactory<WorkingGroup, WorkingGroupSchema>
 	{
-		protected override bool ValidateSchema(WorkingGroupSchema schema, out string error)
-		{
-			return base.ValidateSchema(schema, out error);
-		}
 	}
 }

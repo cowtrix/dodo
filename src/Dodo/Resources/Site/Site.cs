@@ -29,24 +29,39 @@ namespace Dodo.Sites
 		Paid,
 	}
 
-	[ViewClass]
 	public class SiteFacilities
 	{
+		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType Toilets;
+		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType Bathrooms;
+		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType Food;
+		[View(EPermissionLevel.PUBLIC)]
 		public bool Kitchen;
+		[View(EPermissionLevel.PUBLIC)]
 		public bool DisabledAccess;
+		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType OutdoorCamping;
+		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType IndoorCamping;
+		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType Accomodation;
+		[View(EPermissionLevel.PUBLIC)]
 		public bool Inductions;
+		[View(EPermissionLevel.PUBLIC)]
 		public bool TalksAndTraining;
+		[View(EPermissionLevel.PUBLIC)]
 		public bool Welfare;
+		[View(EPermissionLevel.PUBLIC)]
 		public bool AffinityGroupFormation;
+		[View(EPermissionLevel.PUBLIC)]
 		public bool VolunteersNeeded;
+		[View(EPermissionLevel.PUBLIC)]
 		public bool FamilyFriendly;
+		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType Internet;
+		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType Electricity;
 	}
 

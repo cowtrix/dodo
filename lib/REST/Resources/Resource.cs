@@ -19,7 +19,7 @@ namespace REST
 
 	public abstract class ResourceSchemaBase
 	{
-		public string Name { get; private set; }
+		public string Name { get; set; }
 
 		public ResourceSchemaBase(string name)
 		{

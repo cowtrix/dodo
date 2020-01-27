@@ -29,7 +29,7 @@ namespace Dodo.Users
 			{
 				var resource = rscLocker.Value as GroupResource;
 				// Change the admin access from temp us
-				resource.AddAdmin(new AccessContext(context.User, tempPass), context.User, context.Passphrase);
+				resource.AddOrUpdateAdmin(new AccessContext(context.User, tempPass), context.User, context.Passphrase);
 				ResourceUtility.GetManagerForResource(resource).Update(resource, rscLocker);
 			}
 		}

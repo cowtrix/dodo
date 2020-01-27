@@ -55,48 +55,17 @@ namespace Dodo
 			}
 			var resourceUrl = Request.Path.Value?.Substring(0, Request.Path.Value.Length - ADD_ADMIN.Length);
 			var resource = ResourceUtility.GetResourceByURL(resourceUrl) as GroupResource;
-			using (var rscLock = new ResourceLock(resource))
+			if (resource == null)
 			{
-				if (resource == null)
-				{
-					return NotFound();
-				}
-				var targetEmail = JsonConvert.DeserializeObject<string>(Request.ReadBody());
-				var userManager = ResourceUtility.GetManager<User>() as UserManager;
-				var temporaryPassword = default(Passphrase);
-				var targetUser = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID.ToString() == targetEmail || x.Email == targetEmail);
-				if (targetUser != null && resource.IsAdmin(targetUser, context))
-				{
-					return HttpBuilder.OK();
-				}
-
-				if (targetUser == null && ValidationExtensions.EmailIsValid(targetEmail))
-				{
-					// This is an email invite for an unregistered user
-					// so we create a temporary user, and send an email to the address
-					// with a one-off token
-					EmailHelper.SendEmail(targetEmail, null, $"{Dodo.PRODUCT_NAME}: You have been invited to administrate " + resource.Name,
-						$"You have been invited to administrate the {resource.Name} {resource.GetType().GetName()}.\n" +
-						$"To accept this invitation, register your account at {Dns.GetHostName()}/{UserController.CREATION_URL}");
-					targetUser = userManager.CreateTemporaryUser(targetEmail, out temporaryPassword);
-				}
-				else
-				{
-					temporaryPassword = new Passphrase(KeyGenerator.GetUniqueKey(64));
-				}
-				using (var userLock = new ResourceLock(targetUser))
-				{
-					// Now we grant access to the resource with a temporary password, and then
-					// encrypt that temporary password with the user's public key.
-					// We then add a PushAction which will replace the temp password with the
-					// real one the next time the user logs in
-					resource.AddAdmin(context, targetUser, temporaryPassword);
-					ResourceManager.Update(resource, rscLock);
-					targetUser.PushActions.Add(new AddAdminAction(resource, temporaryPassword, targetUser.WebAuth.PublicKey));
-					ResourceUtility.GetManager<User>().Update(targetUser, userLock);
-					return HttpBuilder.OK();
-				}
+				return NotFound();
 			}
+			var targetEmail = JsonConvert.DeserializeObject<string>(Request.ReadBody());
+			var targetUser = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID.ToString() == targetEmail || x.Email == targetEmail);
+			if(resource.AddAdmin(context, targetUser))
+			{
+				return Ok();
+			}
+			return BadRequest();
 		}
 
 		IActionResult JoinGroup()

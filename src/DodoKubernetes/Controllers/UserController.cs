@@ -57,7 +57,7 @@ namespace Dodo.Users
 						throw HttpException.FORBIDDEN;
 					}
 					var newPass = JsonConvert.DeserializeObject<string>(Request.ReadBody());
-					if (user.WebAuth.Challenge(newPass, out _))
+					if (user.WebAuth.ChallengePassword(newPass, out _))
 					{
 						return HttpBuilder.ServerError("Cannot use same password.");
 					}

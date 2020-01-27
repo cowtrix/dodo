@@ -8,7 +8,21 @@ namespace Dodo.Resources
 	public abstract class DodoResourceFactory<TResult, TSchema>
 		: ResourceFactory<TResult, TSchema>
 		where TResult : class, IRESTResource
-		where TSchema : ResourceSchemaBase
+		where TSchema : DodoResourceSchemaBase
 	{
+		protected override bool ValidateSchema(ResourceSchemaBase schemaBase, out string error)
+		{
+			if(!base.ValidateSchema(schemaBase, out error))
+			{
+				return false;
+			}
+			var schema = (TSchema)schemaBase;
+			if(schema == null || !schema.Context.Challenge())
+			{
+				error = "Bad Context";
+				return false;
+			}
+			return true;
+		}
 	}
 }

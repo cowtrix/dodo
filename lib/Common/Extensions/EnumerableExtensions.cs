@@ -30,6 +30,16 @@ namespace Common.Extensions
 			return list.Count == 0 ? default : list[r.Next(0, list.Count)];
 		}
 
+		public static IEnumerable<IEnumerable<T>> ChunkRandom<T>(this IEnumerable<T> source, int chunksize)
+		{
+			var r = new Random();
+			while (source.OrderBy(_ => r.Next()).Any())
+			{
+				yield return source.Take(chunksize);
+				source = source.Skip(chunksize);
+			}
+		}
+
 		public static IEnumerable<T> ConcatenateCollection<T>(this IEnumerable<IEnumerable<T>> sequences)
 		{
 			return sequences.SelectMany(x => x);
