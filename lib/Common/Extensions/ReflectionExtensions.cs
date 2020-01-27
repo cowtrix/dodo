@@ -44,7 +44,7 @@ namespace Common.Extensions
 				}
 				else
 				{
-					(member as FieldInfo).SetValue(target, val);
+					(member as FieldInfo).SetValue(target, Convert.ChangeType(val, member.GetMemberType()));
 				}
 			}
 		}
