@@ -2,6 +2,7 @@
 using Dodo.Resources;
 using REST;
 using REST.Serializers;
+using System;
 
 namespace Dodo.Roles
 {
@@ -9,16 +10,21 @@ namespace Dodo.Roles
 
 	public class RoleSchema : DodoResourceSchemaBase
 	{
-		public GroupResource Parent { get; private set; }
-		public string PublicDescription { get; private set; }
+		public Guid Parent { get; set; }
+		public string PublicDescription { get; set; }
 		public RoleSchema(AccessContext context, string name, string publicDescription, GroupResource parent) : base(context, name)
 		{
 			PublicDescription = publicDescription;
-			Parent = parent;
+			if(parent != null)
+			{
+				Parent = parent.GUID;
+			}
 		}
 
-		public RoleSchema()
+		public RoleSchema(string name, string publicDescription, Guid parent) : base(name)
 		{
+			PublicDescription = publicDescription;
+			Parent = parent;
 		}
 	}
 

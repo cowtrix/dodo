@@ -106,10 +106,10 @@ namespace REST
 			return Ok(createdObject.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
 		}
 
-		[HttpPatch]
-		public virtual IActionResult Update(Dictionary<string, object> values)
+		[HttpPatch("{id}")]
+		public virtual IActionResult Update(Guid id, [FromBody]Dictionary<string, object> values)
 		{
-			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
+			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
 			{
 				return NotFound();
@@ -119,37 +119,35 @@ namespace REST
 			{
 				return Forbid();
 			}
-			using (var resourceLock = new ResourceLock(target))
+			using var resourceLock = new ResourceLock(target);
+			target = resourceLock.Value as T;
+			if (target == null)
 			{
-				target = resourceLock.Value as T;
-				if (target == null)
-				{
-					return NotFound();
-				}
-				//var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(Request.ReadBody());
-				if (values == null)
-				{
-					throw new HttpException("Invalid JSON body", HttpStatusCode.BadRequest);
-				}
-				var jsonSettings = new JsonSerializerSettings()
-				{
-					TypeNameHandling = TypeNameHandling.All
-				};
-				var prev = JsonConvert.SerializeObject(target, jsonSettings);
-				target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
-				if (ResourceManager.Get(x => x.ResourceURL == target.ResourceURL && x.GUID != target.GUID).Any())
-				{
-					return Conflict();
-				}
-				ResourceManager.Update(target, resourceLock);
-				return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
+				return NotFound();
 			}
+			//var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(Request.ReadBody());
+			if (values == null)
+			{
+				throw new HttpException("Invalid JSON body", HttpStatusCode.BadRequest);
+			}
+			var jsonSettings = new JsonSerializerSettings()
+			{
+				TypeNameHandling = TypeNameHandling.All
+			};
+			var prev = JsonConvert.SerializeObject(target, jsonSettings);
+			target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
+			if (ResourceManager.Get(x => x.ResourceURL == target.ResourceURL && x.GUID != target.GUID).Any())
+			{
+				return Conflict();
+			}
+			ResourceManager.Update(target, resourceLock);
+			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
 		}
 
-		[HttpDelete]
-		public virtual IActionResult Delete()
+		[HttpDelete("{id}")]
+		public virtual IActionResult Delete(Guid id)
 		{
-			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
+			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
 			{
 				return NotFound();
@@ -167,26 +165,10 @@ namespace REST
 			return HttpBuilder.Custom("Resource deleted", System.Net.HttpStatusCode.OK);
 		}
 
-		[HttpGet("{guid}")]
-		public IActionResult GetByGuid(Guid guid)
+		[HttpGet("{id}")]
+		public IActionResult Get(Guid id)
 		{
-			var target = ResourceUtility.GetResourceByGuid(guid) as T;
-			if (target == null)
-			{
-				return NotFound();
-			}
-			var context = Request.GetRequestOwner();
-			if (!IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
-			{
-				return Forbid();
-			}
-			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
-		}
-
-		[HttpGet("*")]
-		public IActionResult GetByUri()
-		{
-			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
+			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
 			{
 				return NotFound();
@@ -211,8 +193,7 @@ namespace REST
 		/// <returns>The Group Resource that contains the given URL</returns>
 		public ResourceReference<GroupResource> GetParentFromURL(string url)
 		{
-			var resource = ResourceUtility.GetResourceByURL(url) as GroupResource;
-			if (resource == null)
+			if (!(ResourceUtility.GetResourceByURL(url) is GroupResource resource))
 			{
 				return null;
 			}

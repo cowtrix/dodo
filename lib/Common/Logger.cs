@@ -27,7 +27,7 @@ namespace Common
 	public static class Logger
 	{
 		public static LogEvent OnLog;
-		private static ConfigVariable<ELogLevel> m_logLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Debug);
+		private static ELogLevel m_logLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Debug).Value;
 		internal static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
 		public static string LogPath => Path.GetFullPath(Path.Combine("logs", "log.log"));
 		private static object m_fileLock = new object();
@@ -69,7 +69,7 @@ namespace Common
 
 		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black, bool writeToLog = true, ELogLevel lvl = ELogLevel.Info)
 		{
-			if(lvl > m_logLevel.Value)
+			if(lvl > m_logLevel)
 			{
 				return;
 			}

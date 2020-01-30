@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common.Commands;
+using Common.Extensions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -47,7 +48,14 @@ namespace Common.Config
 				result = default;
 				return false;
 			}
-			result = (T)Convert.ChangeType(obj, typeof(T));
+			if (typeof(Enum).IsAssignableFrom(typeof(T)))
+			{
+				result = (T)Enum.Parse(typeof(T), obj.ToString());
+			}
+			else
+			{
+				result = (T)Convert.ChangeType(obj, typeof(T));
+			}
 			return true;
 		}
 

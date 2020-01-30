@@ -26,7 +26,7 @@ namespace GenerateSampleData
 			ResourceUtility.ClearAllManagers();
 			var admin1 = GenerateUser(new UserSchema(default, "Rebellion Tom", "tom", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
 			var currentRebellion = RebellionFactory.CreateObject(new RebellionSchema(admin1context, "Amsterdam Rebllion", 
-				new GeoLocation(52.373455, 4.898259), SchemaGenerator.SampleMarkdown, null, 
+				new GeoLocation(52.373455, 4.898259), SchemaGenerator.SampleMarkdown,
 				DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
 
 			var actionSupport = WorkingGroupFactory.CreateObject(new WorkingGroupSchema(admin1context, "Action Support",

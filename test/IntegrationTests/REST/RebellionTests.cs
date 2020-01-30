@@ -16,8 +16,6 @@ namespace RESTTests
 	{
 		public static DateTime DefaultStart => new DateTime(2019, 10, 7, 0, 0, 0, DateTimeKind.Utc);
 		public static DateTime DefaultEnd => new DateTime(2019, 10, 14, 0, 0, 0, DateTimeKind.Utc);
-
-		public override string CreationURL => Rebellion.ROOT + "/create";
 		public override object GetCreationSchema(bool unique = false)
 		{
 			if(!unique)

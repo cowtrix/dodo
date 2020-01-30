@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Security;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Common;
 using Common.Extensions;
 using Dodo;
 using Dodo.Rebellions;
 using Dodo.Users;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,14 +27,21 @@ namespace RESTTests
 	{
 		public abstract string CreationURL { get; }
 		public abstract object GetCreationSchema(bool unique = false);
-		protected static RestClient RestClient = new RestClient("https://localhost:443");
+		protected static RestClient RestClient;
+		private readonly TestServer _server;
+		private readonly HttpClient _client;
 
-		[AssemblyInitialize]
-		public static void SetupTests(TestContext testContext)
+		public RESTTestBase()
 		{
+			ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
+
+			_server = new TestServer(new WebHostBuilder()
+				.UseStartup<DodoKubernetes.Startup>());
+			_client = _server.CreateClient();
+
+			RestClient = new RestClient(_client.BaseAddress);
 			RestClient.PreAuthenticate = true;
 			RestClient.Timeout = 500 * 1000;
-			ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 		}
 
 		public static bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)

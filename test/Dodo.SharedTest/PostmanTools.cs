@@ -28,7 +28,7 @@ namespace DodoTest.Framework.Postman
 
 		public void UpdateExampleJSON(string response, string category, string requestName, string exampleName = null)
 		{
-			if (m_postmanAPIKey.Value == "")
+			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
 			var items = m_collection.Value<JObject>("collection").Value<JArray>("item");
 			var cat = items.First(x => x.Value<string>("name") == category).Value<JArray>("item");
@@ -38,7 +38,7 @@ namespace DodoTest.Framework.Postman
 
 		public void Update()
 		{
-			if (m_postmanAPIKey.Value == "")
+			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
 			var req = new RestRequest($"collections/{m_guid}", Method.PUT);
 			req.AddParameter("text/json", m_collection.ToString(), ParameterType.RequestBody);

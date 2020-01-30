@@ -18,26 +18,12 @@ namespace Dodo
 		where T : GroupResource
 		where TSchema : DodoResourceSchemaBase
 	{
-		public const string ADD_ADMIN = "?addadmin";
-		public const string JOIN_GROUP = "?join";
-		public const string LEAVE_GROUP = "?leave";
+		public const string ADD_ADMIN = "addadmin";
+		public const string JOIN_GROUP = "join";
+		public const string LEAVE_GROUP = "leave";
 
-		private bool IsResourceActionUrl(string url, string postfix)
-		{
-			if (!url.EndsWith(postfix))
-			{
-				return false;
-			}
-			url = url.Substring(0, url.Length - postfix.Length);
-			var resource = ResourceUtility.GetResourceByURL(url) as GroupResource;
-			if (resource == null)
-			{
-				return false;
-			}
-			return resource is T;
-		}
-
-		IActionResult AddAdministrator()
+		[HttpPost(ADD_ADMIN)]
+		public IActionResult AddAdministrator()
 		{
 			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
 			if (target == null)
@@ -54,8 +40,7 @@ namespace Dodo
 				throw HttpException.FORBIDDEN;
 			}
 			var resourceUrl = Request.Path.Value?.Substring(0, Request.Path.Value.Length - ADD_ADMIN.Length);
-			var resource = ResourceUtility.GetResourceByURL(resourceUrl) as GroupResource;
-			if (resource == null)
+			if (!(ResourceUtility.GetResourceByURL(resourceUrl) is GroupResource resource))
 			{
 				return NotFound();
 			}
@@ -68,7 +53,8 @@ namespace Dodo
 			return BadRequest();
 		}
 
-		IActionResult JoinGroup()
+		[HttpPost(JOIN_GROUP)]
+		public IActionResult JoinGroup()
 		{
 			var context = Request.GetRequestOwner();
 			using (var resourceLock = new ResourceLock(Request.Path))
@@ -84,20 +70,19 @@ namespace Dodo
 			}
 		}
 
-		IActionResult LeaveGroup()
+		[HttpPost(LEAVE_GROUP)]
+		public IActionResult LeaveGroup()
 		{
 			var context = Request.GetRequestOwner();
-			using (var resourceLock = new ResourceLock(Request.Path))
+			using var resourceLock = new ResourceLock(Request.Path);
+			var target = resourceLock.Value as GroupResource;
+			if (target == null)
 			{
-				var target = resourceLock.Value as GroupResource;
-				if (target == null)
-				{
-					return NotFound();
-				}
-				target.Members.Remove(context.User, context.Passphrase);
-				ResourceManager.Update(target, resourceLock);
-				return HttpBuilder.OK();
+				return NotFound();
 			}
+			target.Members.Remove(context.User, context.Passphrase);
+			ResourceManager.Update(target, resourceLock);
+			return HttpBuilder.OK();
 		}
 
 		[HttpGet]

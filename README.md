@@ -45,6 +45,7 @@ Dodo uses [SendGrid](https://sendgrid.com/) to manage and send emails. To link y
 
 ### 3 - Set up your SSL Certificate
 
+// TODO: rewrite after ASP.NET
 Dodo expects to load a `.pfx` file containing the SSL certificate it will use to validate HTTPS connections. The relative path to this certificate is defined with the `SSLCertificatePath` configuration variable.
 
 ### 3 - Launch the server

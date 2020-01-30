@@ -22,14 +22,10 @@ namespace Dodo.WorkingGroups
 	[Name("Working Group")]
 	public class WorkingGroup : GroupResource
 	{
-		public const string ROOT = "wg";
-
 		public WorkingGroup(WorkingGroupSchema schema) : base(schema)
 		{
 
 		}
-
-		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
 		[View(EPermissionLevel.USER)]
 		public List<string> Roles

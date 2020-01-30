@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using REST.Serializers;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace REST
 {
@@ -52,7 +53,7 @@ namespace REST
 		/// </summary>
 		[View(EPermissionLevel.USER)]
 		[ResourceURL]
-		public abstract string ResourceURL { get; }
+		public virtual string ResourceURL => $"{GetType().Name.ToLowerInvariant()}s/{GUID}";
 
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]

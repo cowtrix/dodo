@@ -27,9 +27,6 @@ namespace Dodo.Users
 		public const string ADMIN_OF_KEY = "ADMIN_OF";
 		public const string ROLES_HELD_KEY = "ROLES";
 
-		public const string ROOT = "u";
-		public override string ResourceURL { get { return $"{ROOT}/{WebAuth.Username.StripForURL()}"; } }
-
 		[View(EPermissionLevel.USER)]
 		[VerifyObject]
 		public WebPortalAuth WebAuth;

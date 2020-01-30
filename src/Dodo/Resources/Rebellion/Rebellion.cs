@@ -42,14 +42,6 @@ namespace Dodo.Rebellions
 			EndDate = schema.EndDate;
 		}
 
-		public override string ResourceURL
-		{
-			get
-			{
-				return $"{ROOT}/{Name.StripForURL()}";
-			}
-		}
-
 		public override bool CanContain(Type type)
 		{
 			if(type == typeof(WorkingGroup) || type == typeof(Site))

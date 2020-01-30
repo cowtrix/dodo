@@ -67,8 +67,6 @@ namespace Dodo.Sites
 
 	public abstract class Site : DodoResource
 	{
-		public const string ROOT = "sites";
-
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		public ResourceReference<GroupResource> Parent { get; set; }
@@ -97,8 +95,6 @@ namespace Dodo.Sites
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();
 		}
-
-		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 
 		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{

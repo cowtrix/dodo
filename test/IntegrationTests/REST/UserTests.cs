@@ -16,13 +16,12 @@ namespace RESTTests
 	[TestClass]
 	public class UserTests : RESTTestBase<User>
 	{
-		public override string CreationURL => "register";
-
 		public override object GetCreationSchema(bool unique)
 		{
 			if(unique)
 			{
 				return new UserSchema(
+					default,
 					DefaultUsername + StringExtensions.RandomString(6).ToLowerInvariant(),
 					DefaultPassword,
 					DefaultName,
@@ -30,6 +29,7 @@ namespace RESTTests
 				);
 			}
 			return new UserSchema(
+					default,
 					DefaultUsername,
 					DefaultPassword,
 					DefaultName,
@@ -58,12 +58,12 @@ namespace RESTTests
 		public void CanResetPassword()
 		{
 			var user = RegisterUser(out var guid);
-			var request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, DefaultEmail, "", "");
+			var request = Request(UserController.RESETPASS_URL, Method.POST, DefaultEmail, "", "");
 			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid)) as User)
 				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token, Method.POST, newPassword, "", "");
+			request = Request(UserController.RESETPASS_URL + "?token=" + token, Method.POST, newPassword, "", "");
 			Assert.IsTrue(request.Content.Contains("You've succesfully changed your password."));
 			RequestJSON(user.Value<string>("ResourceURL"), Method.GET, null, DefaultUsername, newPassword);
 		}
@@ -73,7 +73,7 @@ namespace RESTTests
 		{
 			var user = RegisterUser(out var guid);
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
-			var request = Request(UserRESTHandler.CHANGEPASS_URL, Method.POST, newPassword, DefaultUsername, DefaultPassword);
+			var request = Request(UserController.CHANGEPASS_URL, Method.POST, newPassword, DefaultUsername, DefaultPassword);
 			RequestJSON(user.Value<string>("ResourceURL"), Method.GET, null, DefaultUsername, newPassword);
 		}
 
@@ -83,7 +83,7 @@ namespace RESTTests
 			//User signs up
 			var user1 = RegisterRandomUser(out var username1, out _, out var password1, out var email1, out var guid1);
 			// User requests reset token
-			var request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, email1, "", "");
+			var request = Request(UserController.RESETPASS_URL, Method.POST, email1, "", "");
 			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid1)) as User)
@@ -91,7 +91,7 @@ namespace RESTTests
 			// Register a second user
 			var user2 = RegisterRandomUser(out var username2, out _, out var password2, out _, out var guid2);
 			// Second user attempts to use the token - should be forbidden
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" +
+			request = Request(UserController.RESETPASS_URL + "?token=" +
 				token, Method.POST, newPassword, username2, password2);
 			Assert.AreEqual(System.Net.HttpStatusCode.Forbidden, request.StatusCode);
 		}
@@ -100,34 +100,34 @@ namespace RESTTests
 		public void ResetPasswordBadBehaviourScenario()
 		{
 			// Sending invalid emai should result in error
-			var request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, "not an email", "", "");
+			var request = Request(UserController.RESETPASS_URL, Method.POST, "not an email", "", "");
 			Assert.AreEqual("Invalid email address", request.StatusDescription);
 
 			// User signs up
 			var user1 = RegisterRandomUser(out var username1, out _, out var password1, out var email1, out var guid1);
 			// User requests reset token
-			request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, email1, "", "");
+			request = Request(UserController.RESETPASS_URL, Method.POST, email1, "", "");
 			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
 
 			// User requests another token
-			request = Request(UserRESTHandler.RESETPASS_URL, Method.POST, email1, "", "");
+			request = Request(UserController.RESETPASS_URL, Method.POST, email1, "", "");
 			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
 
 			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid1)) as User)
 				.PushActions.GetSinglePushAction<ResetPasswordAction>().TemporaryToken;
 			// Try to change to a bad password
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token, Method.POST, "badpass", "", "");
+			request = Request(UserController.RESETPASS_URL + "?token=" + token, Method.POST, "badpass", "", "");
 			Assert.IsTrue(request.Content.Contains("Password should be between 8 and 20 characters"));
 
 			// Try to change to the same pass
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token, Method.POST, password1, "", "");
+			request = Request(UserController.RESETPASS_URL + "?token=" + token, Method.POST, password1, "", "");
 			Assert.IsTrue(request.Content.Contains("Cannot use same password."));
 
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			// Register a second user
 			var user2 = RegisterRandomUser(out var username2, out _, out var password2, out _, out var guid2);
 			// Second user attempts to use the token - should be forbidden
-			request = Request(UserRESTHandler.RESETPASS_URL + "?token=" + token, Method.POST, newPassword, username2, password2);
+			request = Request(UserController.RESETPASS_URL + "?token=" + token, Method.POST, newPassword, username2, password2);
 			Assert.AreEqual(System.Net.HttpStatusCode.Forbidden, request.StatusCode);
 		}
 
@@ -139,7 +139,7 @@ namespace RESTTests
 
 			VerifyUser(obj.Value<string>("GUID"), DefaultUsername, DefaultPassword, DefaultEmail);
 
-			m_postman.UpdateExampleJSON(obj.ToString(), "Users", "Register a new user");
+			m_postman.UpdateExampleJSON(obj.ToString(),  "Users", "Register a new user");
 		}
 
 		[TestMethod]

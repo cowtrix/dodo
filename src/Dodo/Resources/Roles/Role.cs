@@ -11,12 +11,10 @@ namespace Dodo.Roles
 
 	public class Role : DodoResource
 	{
-		public const string ROOT = "roles";
 
 		[NoPatch]
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
-		public override string ResourceURL => $"{Parent.Value.ResourceURL}/{ROOT}/{Name.StripForURL()}";
 		[View(EPermissionLevel.PUBLIC)]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.USER)]

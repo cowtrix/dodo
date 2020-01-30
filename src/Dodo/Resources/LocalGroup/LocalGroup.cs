@@ -19,8 +19,6 @@ namespace Dodo.LocalGroups
 			Location = schema.Location;
 		}
 
-		public override string ResourceURL => $"{ROOT}/{Name.StripForURL()}";
-
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; private set; }
 

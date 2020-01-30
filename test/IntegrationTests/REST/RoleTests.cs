@@ -6,6 +6,7 @@ using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RestSharp;
+using SharedTest;
 using System;
 using System.Linq;
 
@@ -14,7 +15,6 @@ namespace RESTTests
 	[TestClass]
 	public class RoleTests : RESTTestBase<Role>
 	{
-		public override string CreationURL => $"{WorkingGroup.Value<string>("ResourceURL")}/{Role.ROOT}/create";
 		private JObject WorkingGroup { get; set; }
 
 		[TestInitialize]
@@ -24,21 +24,16 @@ namespace RESTTests
 			var rebellion = RequestJSON("rebellions/create", Method.POST,
 				new RebellionSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
 			WorkingGroup = RequestJSON(rebellion.Value<string>("ResourceURL") + "/wg/create", Method.POST,
-				new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
+				new WorkingGroupSchema("Test Working Group", "Test mandate", rebellion.Value<Guid>("GUID")));
 		}
 
 		public override object GetCreationSchema(bool unique)
 		{
 			if(!unique)
 			{
-				return new RoleRESTHandler.CreationSchema
-				{
-					Name = "Test Role ",
-					PublicDescription = "Test mandate"
-				};
+				return new RoleSchema("Test Role ", "Test mandate", WorkingGroup.Value<Guid>("GUID"));
 			}
-			return new RoleRESTHandler.CreationSchema { Name = "Test Role " + StringExtensions.RandomString(6),
-				PublicDescription = "Test mandate" };
+			return new RoleSchema("Test Role " + StringExtensions.RandomString(6), "Test mandate", WorkingGroup.Value<Guid>("GUID"));
 		}
 
 		public override object GetPatchSchema()
@@ -66,13 +61,6 @@ namespace RESTTests
 		{
 			base.CheckGetObject(obj);
 			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Get a Role");
-		}
-
-		[TestMethod]
-		public void CannotCreateAtCreationURL()
-		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new RoleRESTHandler.CreationSchema { Name = "Create", PublicDescription = "Test mandate" }),
-				e => e.Message.Contains("Reserved Resource URL"));
 		}
 	}
 }

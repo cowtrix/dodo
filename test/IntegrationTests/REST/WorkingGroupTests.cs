@@ -1,6 +1,7 @@
 ﻿using Common;
 using Common.Extensions;
 using Dodo.Rebellions;
+using Dodo.SharedTest;
 using Dodo.Users;
 using Dodo.Utility;
 using Dodo.WorkingGroups;
@@ -18,9 +19,9 @@ namespace RESTTests
 	[TestClass]
 	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup>
 	{
-		public override string CreationURL => $"{Rebellion.Value<string>("ResourceURL")}/{WorkingGroup.ROOT}/create";
-
 		private JObject Rebellion { get; set; }
+
+		string TestMandate => SchemaGenerator.SampleMarkdown;
 
 		[TestInitialize]
 		public void Setup()
@@ -35,11 +36,9 @@ namespace RESTTests
 		{
 			if(unique)
 			{
-				return new WorkingGroupRESTHandler.CreationSchema("Test Working Group " + StringExtensions.RandomString(6),
-				"Test mandate");
+				return new WorkingGroupSchema("Test Working Group " + StringExtensions.RandomString(6),	TestMandate, Rebellion.Value<Guid>("GUID"));
 			}
-			return new WorkingGroupRESTHandler.CreationSchema("Test Working Group ",
-				"Test mandate");
+			return new WorkingGroupSchema("Test Working Group",	TestMandate, Rebellion.Value<Guid>("GUID"));
 		}
 
 		public override object GetPatchSchema()
@@ -68,9 +67,9 @@ namespace RESTTests
 		[TestMethod]
 		public void CanCreateSubWorkingGroup()
 		{
-			var wg = RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
+			var wg = RequestJSON(CreationURL, Method.POST, new WorkingGroupSchema("Test Working Group", TestMandate, Rebellion.Value<Guid>("GUID")));
 			var subwg = RequestJSON(wg.Value<string>("ResourceURL") + "/wg/create",
-				Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
+				Method.POST, new WorkingGroupSchema("Test Working Group", TestMandate, wg.Value<Guid>("GUID")));
 			Assert.AreEqual(wg.Value<string>("GUID"), subwg.Value<JObject>("Parent").Value<string>("Guid"));
 			wg = RequestJSON(wg.Value<string>("ResourceURL"), Method.GET);
 			var subGroups = wg.Value<JArray>("WorkingGroups").Values<string>();
@@ -80,22 +79,14 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public void CannotCreateAtCreationURL()
-		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Create", "Test mandate")),
-				e => e.Message.Contains("Reserved Resource URL"));
-		}
-
-		[TestMethod]
 		public void CannotCreateForInvalidParent()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON($"rebellions/nonexistantrebellion/wg/create",
+			AssertX.Throws<Exception>(() => RequestJSON($"rebellions/{Guid.NewGuid()}",
 				Method.POST, GetCreationSchema(false)),
 				e => e.Message.Contains("NotFound"));
 
-			var wg = RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate"));
-			AssertX.Throws<Exception>(() => RequestJSON(wg.Value<string>("ResourceURL") + "invalidatingstring" + "/wg/create",
-				Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test Working Group", "Test mandate")),
+			AssertX.Throws<Exception>(() => RequestJSON($"workinggroups/{Guid.NewGuid()}",
+				Method.POST, GetCreationSchema(false)),
 				e => e.Message.Contains("NotFound"));
 		}
 
@@ -104,13 +95,13 @@ namespace RESTTests
 		{
 			var objects = new List<JObject>()
 			{
-				RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test1", "Test mandate")),
-				RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test2", "Test mandate")),
-				RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test3", "Test mandate")),
-				RequestJSON(CreationURL, Method.POST, new WorkingGroupRESTHandler.CreationSchema("Test4", "Test mandate")),
+				RequestJSON(CreationURL, Method.POST, new WorkingGroupSchema("Test1", TestMandate, Rebellion.Value<Guid>("GUID"))),
+				RequestJSON(CreationURL, Method.POST, new WorkingGroupSchema("Test2", TestMandate, Rebellion.Value<Guid>("GUID"))),
+				RequestJSON(CreationURL, Method.POST, new WorkingGroupSchema("Test3", TestMandate, Rebellion.Value<Guid>("GUID"))),
+				RequestJSON(CreationURL, Method.POST, new WorkingGroupSchema("Test4", TestMandate, Rebellion.Value<Guid>("GUID"))),
 			};
 			var guids = objects.Select(x => x.Value<string>("GUID"));
-			var list = Request($"{Rebellion.Value<string>("ResourceURL")}/{WorkingGroup.ROOT}/", Method.GET);
+			var list = Request($"{Rebellion.Value<string>("ResourceURL")}/{WorkingGroup.RootURL}/", Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
 			m_postman.UpdateExampleJSON(list.Content, "Working Groups", "List all Working Groups");
 		}

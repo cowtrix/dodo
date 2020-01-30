@@ -15,10 +15,21 @@ namespace Dodo
 
 	public abstract class GroupResourceSchemaBase : DodoResourceSchemaBase 
 	{
-		public string PublicDescription { get; private set; }
-		public GroupResource Parent { get; private set; }
-		public GroupResourceSchemaBase(AccessContext context, string name, string publicDescription, GroupResource parent) 
+		public string PublicDescription { get; set; }
+		public Guid Parent { get; set; }
+
+		internal GroupResourceSchemaBase(AccessContext context, string name, string publicDescription, GroupResource parent) 
 			: base(context, name)
+		{
+			PublicDescription = publicDescription;
+			if(parent != null)
+			{
+				Parent = parent.GUID;
+			}
+		}
+
+		public GroupResourceSchemaBase(string name, string publicDescription, Guid parent)
+			: base(name)
 		{
 			PublicDescription = publicDescription;
 			Parent = parent;

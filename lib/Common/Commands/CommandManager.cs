@@ -3,11 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace Common
+namespace Common.Commands
 {
 	[AttributeUsage(AttributeTargets.Method)]
 	public class CommandAttribute : Attribute
@@ -38,8 +36,8 @@ namespace Common
 
 		private static void LoadCommands()
 		{
-			var allMethods = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetTypes()).ConcatenateCollection()
-				.Select(x => x.GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null)).ConcatenateCollection();
+			var allTypes = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetTypes()).ConcatenateCollection();
+			var allMethods = allTypes.Select(x => x.GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null)).ConcatenateCollection();
 			foreach (var method in allMethods)
 			{
 				if (!method.IsStatic)
@@ -47,9 +45,9 @@ namespace Common
 					throw new Exception("Cannot hook command for non-static function");
 				}
 				var par = method.GetParameters();
-				if (par.Length != 1 || par.Single().ParameterType != typeof(string))
+				if (par.Length != 1 || par.Single().ParameterType != typeof(CommandArguments))
 				{
-					throw new Exception($"Method {method.DeclaringType.Name}:{method.Name} parameter must be a single string variable");
+					throw new Exception($"Method {method.DeclaringType.Name}:{method.Name} parameter must be a single CommandArguments variable");
 				}
 				var attr = method.GetCustomAttribute<CommandAttribute>();
 				m_commands.Add(new Regex(attr.CommandRegex), new CommandData
@@ -60,28 +58,28 @@ namespace Common
 			}
 		}
 
-		internal static void Execute(string line)
+		public static void Execute(string line)
 		{
 			var cmds = m_commands.Where(x => x.Key.IsMatch(line));
 			var cmdCount = cmds.Count();
-			if(cmdCount > 1)
+			if (cmdCount > 1)
 			{
 				throw new Exception("Ambigious command");
 			}
-			if(cmdCount == 0)
+			if (cmdCount == 0)
 			{
 				throw new Exception("Command not found");
 			}
 			var cmd = cmds.Single();
-			cmd.Value.Method.Invoke(null, new[] { line });
+			cmd.Value.Method.Invoke(null, new object[] { new CommandArguments(line) });
 		}
 
 		[Command(@"^help$", "help", "List all commands")]
-		public static void Help(string args)
+		public static void Help(CommandArguments args)
 		{
-			foreach(var cmd in m_commands.OrderBy(x => x.Value.Attribute.FriendlyName))
+			foreach (var cmd in m_commands.OrderBy(x => x.Value.Attribute.FriendlyName))
 			{
-				Console.WriteLine($"  {cmd.Value.Attribute.FriendlyName,-20}\t\t{cmd.Value.Attribute.Description, 10}");
+				Console.WriteLine($"  {cmd.Value.Attribute.FriendlyName,-20}\t\t{cmd.Value.Attribute.Description,10}");
 			}
 		}
 	}

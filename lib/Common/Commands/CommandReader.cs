@@ -10,7 +10,7 @@ using System.Text;
 using Common;
 using Common.Config;
 
-namespace Common
+namespace Common.Commands
 {
 	public class CommandReader
 	{

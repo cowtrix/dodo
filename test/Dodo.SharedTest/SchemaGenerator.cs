@@ -77,7 +77,6 @@ namespace Dodo.SharedTest
 				StringExtensions.RandomString(32),
 				RandomLocation,
 				SampleMarkdown,
-				null,
 				startDate,
 				startDate + TimeSpan.FromDays(m_random.NextDouble() * 14)
 			);
@@ -102,9 +101,8 @@ namespace Dodo.SharedTest
 			return new LocalGroupSchema(
 				context,
 				StringExtensions.RandomString(32),
-				RandomLocation,
 				SampleMarkdown,
-				rsc
+				RandomLocation
 			);
 		}
 	}

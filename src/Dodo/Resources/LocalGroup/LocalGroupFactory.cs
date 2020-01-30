@@ -13,14 +13,20 @@ namespace Dodo.LocalGroups
 	{
 		public GeoLocation Location { get; private set; }
 
-		public LocalGroupSchema(AccessContext context, string name, GeoLocation location, string publicDescription, GroupResource parent) 
-			: base(context, name, publicDescription, parent)
+		public LocalGroupSchema(AccessContext context, string name, string description, GeoLocation location) 
+			: base(context, name, description, default)
 		{
 			Location = location;
 		}
 
 		public LocalGroupSchema()
 		{
+		}
+
+		public LocalGroupSchema(string name, string description, GeoLocation location) 
+			: base(name, description, default)
+		{
+			Location = location;
 		}
 	}
 
