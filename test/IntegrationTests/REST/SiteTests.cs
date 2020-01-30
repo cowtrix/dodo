@@ -19,11 +19,9 @@ namespace RESTTests
 	[TestClass]
 	public class SiteTests : RESTTestBase<Site>
 	{
-		private JObject Rebellion { get; set; }
+		public override string ResourceRoot => SiteController.RootURL;
 
-		public override string CreationURL => SiteController.RootURL;
-
-		[TestInitialize]
+		/*[TestInitialize]
 		public void Setup()
 		{
 			RegisterUser(out _, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
@@ -123,6 +121,6 @@ namespace RESTTests
 			var list = Request(SiteController.RootURL, Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
 			m_postman.UpdateExampleJSON(list.Content, "Sites", "List all Sites");
-		}
+		}*/
 	}
 }

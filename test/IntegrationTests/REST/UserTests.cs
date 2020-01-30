@@ -16,9 +16,9 @@ namespace RESTTests
 	[TestClass]
 	public class UserTests : RESTTestBase<User>
 	{
-		public override string CreationURL => UserController.RootURL;
+		public override string ResourceRoot => UserController.RootURL;
 
-		public override object GetCreationSchema(bool unique)
+		/*public override object GetCreationSchema(bool unique)
 		{
 			if(unique)
 			{
@@ -259,6 +259,6 @@ namespace RESTTests
 
 			AssertX.Throws<Exception>(() => RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, new { Name = StringExtensions.RandomString(256) }),
 				e => e.Message.Contains("Name length must be between "));
-		}
+		}*/
 	}
 }

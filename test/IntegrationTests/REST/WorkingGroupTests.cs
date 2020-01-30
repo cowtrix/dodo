@@ -19,13 +19,9 @@ namespace RESTTests
 	[TestClass]
 	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup>
 	{
-		private JObject Rebellion { get; set; }
+		public override string ResourceRoot => WorkingGroupController.RootURL;
 
-		string TestMandate => SchemaGenerator.SampleMarkdown;
-
-		public override string CreationURL => WorkingGroupController.RootURL;
-
-		[TestInitialize]
+		/*[TestInitialize]
 		public void Setup()
 		{
 			RegisterUser(out var defaultGuid, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
@@ -106,6 +102,6 @@ namespace RESTTests
 			var list = Request(WorkingGroupController.RootURL, Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
 			m_postman.UpdateExampleJSON(list.Content, "Working Groups", "List all Working Groups");
-		}
+		}*/
 	}
 }

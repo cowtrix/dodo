@@ -19,6 +19,13 @@ namespace Dodo.Users
 			Email = email;
 		}
 
+		public UserSchema(string name, string username, string password, string email) : base(name)
+		{
+			Username = username;
+			Password = password;
+			Email = email;
+		}
+
 		public UserSchema()
 		{
 		}

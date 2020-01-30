@@ -58,7 +58,7 @@ namespace Dodo.SharedTest
 				SampleMarkdown);
 		}
 
-		public static UserSchema GetRandomUser(AccessContext context)
+		public static UserSchema GetRandomUser(AccessContext context = default)
 		{
 			return new UserSchema(
 				context,

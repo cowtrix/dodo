@@ -6,10 +6,12 @@ using System.Net.Http;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Common;
 using Common.Extensions;
 using Dodo;
 using Dodo.Rebellions;
+using Dodo.SharedTest;
 using Dodo.Users;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -25,8 +27,7 @@ namespace RESTTests
 
 	public abstract class RESTTestBase<T> : TestBase where T:DodoResource
 	{
-		public abstract string CreationURL { get; }
-		public abstract object GetCreationSchema(bool unique = false);
+		public abstract string ResourceRoot { get; }
 		protected static RestClient RestClient;
 		private readonly TestServer _server;
 		private readonly HttpClient _client;
@@ -38,10 +39,6 @@ namespace RESTTests
 			_server = new TestServer(new WebHostBuilder()
 				.UseStartup<DodoKubernetes.Startup>());
 			_client = _server.CreateClient();
-
-			RestClient = new RestClient(_client.BaseAddress);
-			RestClient.PreAuthenticate = true;
-			RestClient.Timeout = 500 * 1000;
 		}
 
 		public static bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
@@ -50,91 +47,95 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public virtual void CanCreate()
+		public async virtual Task CanGetAnonymously()
+		{
+			GetRandomUser(out _, out var context);
+			var resource = ResourceUtility.GetFactory<T>().CreateObject(SchemaGenerator.GetRandomSchema<T>(context));
+			var resourceObj = await RequestJSON($"{ResourceRoot}/{resource.GUID.ToString()}", Method.GET);
+			Assert.IsNotNull(resourceObj.Value<string>("GUID"));
+		}
+
+
+		/*[TestMethod]
+		public async virtual void CanCreate()
 		{
 			var sw = new Stopwatch();
 			sw.Start();
-			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var createdObj = await RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			Assert.IsNotNull(createdObj.Value<string>("GUID"));
 			CheckCreatedObject(createdObj);
 			Context.WriteLine($"Test took {sw.Elapsed}");
 		}
 
 		[TestMethod]
-		public virtual void CannotCreateDuplicate()
+		public async virtual void CannotCreateDuplicate()
 		{
-			RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST, GetCreationSchema()),
+			await RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			AssertX.Throws<Exception>(() => await RequestJSON(CreationURL, Method.POST, GetCreationSchema()),
 				e => e.Message.Contains("Conflict"));
 		}
 
 		[TestMethod]
-		public virtual void CannotPatchDuplicate()
+		public async virtual void CannotPatchDuplicate()
 		{
-			var firstObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			var secondObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema(true));
-			AssertX.Throws<Exception>(() =>
-				RequestJSON(secondObj.Value<string>("ResourceURL"), Method.PATCH, new { Name = firstObj.Value<string>("Name") }),
+			var firstObj = await RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var secondObj = await RequestJSON(CreationURL, Method.POST, GetCreationSchema(true));
+			AssertX.Throws<Exception>(async () =>
+				await await RequestJSON(secondObj.Value<string>("ResourceURL"), Method.PATCH, new { Name = firstObj.Value<string>("Name") }),
 				e => e.Message.Contains("Conflict - resource may already exist"));
-			RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET);
+			await RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET);
 		}
 
 		protected virtual void CheckCreatedObject(JObject obj) { }
 
-		[TestMethod]
-		public virtual void CanGet()
-		{
-			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			var resourceObj = RequestJSON(obj.Value<string>("ResourceURL"), Method.GET);
-			Assert.IsNotNull(resourceObj.Value<string>("GUID"));
-			CheckGetObject(resourceObj);
-		}
+		
 
 		protected virtual void CheckGetObject(JObject obj) { }
 
 		[TestMethod]
-		public virtual void CanDestroy()
+		public async virtual void CanDestroy()
 		{
-			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var obj = await RequestJSON(CreationURL, Method.POST, GetCreationSchema());
 			var response = Request(obj.Value<string>("ResourceURL"), Method.DELETE);
 			Assert.IsTrue(response.StatusDescription.Contains("Resource deleted"));
 		}
 
 		[TestMethod]
-		public virtual void CanGetByResource()
+		public async virtual void CanGetByResource()
 		{
-			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			var resourceObj = RequestJSON("resources/" + obj.Value<string>("GUID"), Method.GET);
+			var obj = await RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var resourceObj = await RequestJSON("resources/" + obj.Value<string>("GUID"), Method.GET);
 			Assert.AreEqual(resourceObj.Value<string>("GUID"), obj.Value<string>("GUID"));
 		}
 
 		public abstract object GetPatchSchema();
+
 		[TestMethod]
-		public virtual void CanPatch()
+		public async virtual void CanPatch()
 		{
-			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			var patch = RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, GetPatchSchema());
+			var obj = await RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			var patch = await RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, GetPatchSchema());
 			Assert.AreNotEqual(obj.ToString(), patch.ToString());
 			CheckPatchedObject(patch);
 		}
 		protected virtual void CheckPatchedObject(JObject obj) { }
 
 		[TestMethod]
-		public virtual void CannotPatchInvalid()
+		public async virtual void CannotPatchInvalid()
 		{
-			var obj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			AssertX.Throws<Exception>(() => RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, new { FakeField = "Not a field" }),
+			var obj = await RequestJSON(CreationURL, Method.POST, GetCreationSchema());
+			AssertX.Throws<Exception>(async () => await RequestJSON(obj.Value<string>("ResourceURL"), Method.PATCH, new { FakeField = "Not a field" }),
 				x => x.Message.Contains("Invalid field names"));
 		}
 
 
-		protected JObject RegisterUser(out string guid, string username = null, string name = null, string password = null, string email = null, bool verifyEmail = true)
+		protected async Task<JObject> RegisterUser(out string guid, string username = null, string name = null, string password = null, string email = null, bool verifyEmail = true)
 		{
 			username = username ?? DefaultUsername;
 			name = name ?? DefaultName;
 			password = password ?? DefaultPassword;
 			email = email ?? DefaultEmail;
-			var jobj = RequestJSON("register", Method.POST, new UserSchema(default, username, password, name, email), "", "");
+			var jobj = await RequestJSON("register", Method.POST, new UserSchema(default, username, password, name, email), "", "");
 			guid = jobj.Value<string>("GUID");
 			if (verifyEmail)
 				VerifyUser(guid, username, password, email);
@@ -195,29 +196,31 @@ namespace RESTTests
 				throw new Exception(response);
 			}
 			return JsonConvert.DeserializeObject<JObject>(response);
-		}
+		}*/
 
-		protected JObject RequestJSON(string url, Method method, object data = null, string user = null, string password = null)
+		protected async Task<JObject> RequestJSON(string url, Method method, object data = null, string user = null, string password = null)
 		{
-			var request = new RestRequest(url, method);
-			AuthoriseRequest(request, user ?? DefaultUsername, password ?? DefaultPassword);
-			if (data != null)
+			HttpResponseMessage response;
+			switch (method)
 			{
-				request.AddJsonBody(data);
+				case Method.GET:
+					response = await _client.GetAsync(url);
+					break;
+				case Method.POST:
+					response = await _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data)));
+					break;
+				default:
+					throw new Exception("Unsupported method " + method);
 			}
-			var response = RestClient.Execute(request);
-			var content = response.Content;
-			if (!content.IsValidJson())
-			{
-				throw new Exception($"{response.StatusCode} | {response.StatusDescription} | {response.ResponseStatus} | {response.Content}");
-			}
+			var content = await response.Content.ReadAsStringAsync();
+			Assert.IsTrue(content.IsValidJson(), 
+				$"Invalid JSON: {response.StatusCode} | {response.ReasonPhrase} | {content}");
 			return JsonConvert.DeserializeObject<JObject>(content);
 		}
 
 		protected IRestResponse Request(string url, Method method, object data = null, string username = null, string password = null)
 		{
 			var request = new RestRequest(url, method);
-			AuthoriseRequest(request, username ?? DefaultUsername, password ?? DefaultPassword);
 			if (data != null)
 			{
 				request.AddJsonBody(data);
@@ -225,9 +228,9 @@ namespace RESTTests
 			return RestClient.Execute(request);
 		}
 
-		protected static void AuthoriseRequest(RestRequest request, string user, string password)
+		/*protected static void AuthoriseRequest(RestRequest request, string user, string password)
 		{
 			request.AddHeader("Authorization", "Basic " + StringExtensions.Base64Encode($"{user}:{password}"));
-		}
+		}*/
 	}
 }

@@ -11,6 +11,12 @@ namespace Dodo
 		public readonly User User;
 		public readonly Passphrase Passphrase;
 
+		public AccessContext(User user, string password)
+		{
+			User = user;
+			Passphrase = new Passphrase(User.WebAuth.PassPhrase.GetValue(new Passphrase(password)));
+		}
+
 		public AccessContext(User user, Passphrase passphrase)
 		{
 			User = user;

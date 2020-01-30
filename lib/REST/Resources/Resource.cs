@@ -43,7 +43,7 @@ namespace REST
 		/// which will give you its ResourceURL
 		/// </summary>
 		[NoPatch]
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		public Guid GUID { get; private set; }
 

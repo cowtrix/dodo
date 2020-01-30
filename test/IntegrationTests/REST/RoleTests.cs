@@ -15,11 +15,9 @@ namespace RESTTests
 	[TestClass]
 	public class RoleTests : RESTTestBase<Role>
 	{
-		private JObject WorkingGroup { get; set; }
+		public override string ResourceRoot => RoleController.RootURL;
 
-		public override string CreationURL => RoleController.RootURL;
-
-		[TestInitialize]
+		/*[TestInitialize]
 		public void Setup()
 		{
 			RegisterUser(out _, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
@@ -63,6 +61,6 @@ namespace RESTTests
 		{
 			base.CheckGetObject(obj);
 			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Get a Role");
-		}
+		}*/
 	}
 }

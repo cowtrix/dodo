@@ -14,9 +14,10 @@ namespace RESTTests
 	[TestClass]
 	public class LocalGroupTests : GroupResourceTestBase<LocalGroup>
 	{
-		public override string CreationURL => LocalGroupController.RootURL;
+		
+		public override string ResourceRoot => LocalGroupController.RootURL;
 
-		[TestInitialize]
+		/*[TestInitialize]
 		public void Setup()
 		{
 			RegisterUser(out var defaultGuid, DefaultUsername, DefaultName, DefaultPassword, DefaultEmail);
@@ -77,6 +78,6 @@ namespace RESTTests
 		{
 			base.CheckPatchedObject(obj);
 			m_postman.UpdateExampleJSON(obj.ToString(), "Local Groups", "Update a Local Group");
-		}
+		}*/
 	}
 }

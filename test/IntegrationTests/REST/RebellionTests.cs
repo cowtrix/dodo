@@ -1,8 +1,11 @@
 ﻿using Common;
 using Common.Extensions;
 using Dodo.Rebellions;
+using Dodo.SharedTest;
+using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using REST;
 using RestSharp;
 using SharedTest;
 using System;
@@ -16,15 +19,15 @@ namespace RESTTests
 	{
 		public static DateTime DefaultStart => new DateTime(2019, 10, 7, 0, 0, 0, DateTimeKind.Utc);
 		public static DateTime DefaultEnd => new DateTime(2019, 10, 14, 0, 0, 0, DateTimeKind.Utc);
-		public override string CreationURL => RebellionController.RootURL;
+		public override string ResourceRoot => RebellionController.RootURL;
 
-		public override object GetCreationSchema(bool unique = false)
+		/*public override object GetCreationSchema(bool unique = false)
 		{
 			if(!unique)
 			{
-				return new RebellionSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), DefaultStart, DefaultEnd);
+				return new RebellionSchema("Test Rebellion", SchemaGenerator.SampleMarkdown, new GeoLocation(45, 97), DefaultStart, DefaultEnd);
 			}
-			return new RebellionSchema("Test Rebellion " + StringExtensions.RandomString(6), "Test description", new GeoLocation(45, 97), DefaultStart, DefaultEnd);
+			return new RebellionSchema("Test Rebellion " + StringExtensions.RandomString(6), SchemaGenerator.SampleMarkdown, new GeoLocation(45, 97), DefaultStart, DefaultEnd);
 		}
 
 		public override object GetPatchSchema()
@@ -51,8 +54,8 @@ namespace RESTTests
 		[TestInitialize]
 		public void Setup()
 		{
-			RegisterUser(out var defaultGuid, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
-			DefaultGUID = defaultGuid;
+			var newUser = ResourceUtility.GetFactory<User>().CreateObject(new UserSchema(DefaultName, DefaultUsername, DefaultPassword, DefaultEmail));
+			DefaultGUID = newUser.GUID.ToString();
 		}
 
 		[TestMethod]
@@ -93,6 +96,6 @@ namespace RESTTests
 			var list = Request("rebellions", Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
 			m_postman.UpdateExampleJSON(list.Content, "Rebellions", "List all rebellions");
-		}
+		}*/
 	}
 }

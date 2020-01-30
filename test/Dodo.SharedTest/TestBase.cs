@@ -2,6 +2,7 @@
 using Common.Extensions;
 using Dodo;
 using Dodo.Rebellions;
+using Dodo.SharedTest;
 using Dodo.Users;
 using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -66,7 +67,14 @@ namespace SharedTest
 			m_postman.Update();
 		}
 
-
+		protected User GetRandomUser(out string password, out AccessContext context)
+		{
+			var schema = (UserSchema)SchemaGenerator.GetRandomSchema<User>(default);
+			password = schema.Password;
+			var user = ResourceUtility.GetFactory<User>().CreateObject(schema);
+			context = new AccessContext(user, password);
+			return user;
+		}
 		long LongRandom(long min, long max)
 		{
 			long result = m_random.Next((Int32)(min >> 32), (Int32)(max >> 32));
