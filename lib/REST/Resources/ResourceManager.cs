@@ -71,7 +71,7 @@ namespace REST
 		/// <param name="newObject"></param>
 		public virtual void Add(T newObject)
 		{
-			if(ResourceUtility.GetResourceByGuid(newObject.GUID) != null || Get(x => x.ResourceURL == newObject.ResourceURL).Any())
+			if(ResourceUtility.GetResourceByGuid(newObject.GUID) != null)
 			{
 				throw HttpException.CONFLICT;
 			}

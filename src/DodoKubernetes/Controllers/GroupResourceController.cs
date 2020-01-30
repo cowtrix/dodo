@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Common.Security;
 using System.Net;
 using System.Linq;
+using System;
 
 namespace Dodo
 {
@@ -22,16 +23,16 @@ namespace Dodo
 		public const string JOIN_GROUP = "join";
 		public const string LEAVE_GROUP = "leave";
 
-		[HttpPost(ADD_ADMIN)]
-		public IActionResult AddAdministrator()
+		[HttpPost("{id}/" + ADD_ADMIN)]
+		public IActionResult AddAdministrator(Guid resourceID, [FromBody]string newAdminIdentifier)
 		{
-			var target = ResourceUtility.GetResourceByURL(Request.Path) as T;
-			if (target == null)
+			var resource = ResourceManager.GetSingle(x => x.GUID == resourceID);
+			if (resource == null)
 			{
 				return NotFound();
 			}
 			var context = Request.GetRequestOwner();
-			if (!IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
+			if (!IsAuthorised(context, resource, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
@@ -39,13 +40,16 @@ namespace Dodo
 			{
 				throw HttpException.FORBIDDEN;
 			}
-			var resourceUrl = Request.Path.Value?.Substring(0, Request.Path.Value.Length - ADD_ADMIN.Length);
-			if (!(ResourceUtility.GetResourceByURL(resourceUrl) is GroupResource resource))
+			var userManager = ResourceUtility.GetManager<User>();
+			User targetUser = null;
+			if(Guid.TryParse(newAdminIdentifier, out var newAdminGuid))
 			{
-				return NotFound();
+				targetUser = userManager.GetSingle(x => x.GUID == newAdminGuid);
 			}
-			var targetEmail = JsonConvert.DeserializeObject<string>(Request.ReadBody());
-			var targetUser = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID.ToString() == targetEmail || x.Email == targetEmail);
+			else if(ValidationExtensions.EmailIsValid(newAdminIdentifier))
+			{
+				targetUser = userManager.GetSingle(x => x.Email == newAdminIdentifier);
+			}
 			if(resource.AddAdmin(context, targetUser))
 			{
 				return Ok();
@@ -53,28 +57,26 @@ namespace Dodo
 			return BadRequest();
 		}
 
-		[HttpPost(JOIN_GROUP)]
-		public IActionResult JoinGroup()
+		[HttpPost("{id}/" + JOIN_GROUP)]
+		public IActionResult JoinGroup(Guid id)
 		{
 			var context = Request.GetRequestOwner();
-			using (var resourceLock = new ResourceLock(Request.Path))
+			using var resourceLock = new ResourceLock(id);
+			var target = resourceLock.Value as GroupResource;
+			if (target == null)
 			{
-				var target = resourceLock.Value as GroupResource;
-				if (target == null)
-				{
-					return NotFound();
-				}
-				target.Members.Add(context.User, context.Passphrase);
-				ResourceManager.Update(target, resourceLock);
-				return Ok();
+				return NotFound();
 			}
+			target.Members.Add(context.User, context.Passphrase);
+			ResourceManager.Update(target, resourceLock);
+			return Ok();
 		}
 
-		[HttpPost(LEAVE_GROUP)]
-		public IActionResult LeaveGroup()
+		[HttpPost("{id}/" + LEAVE_GROUP)]
+		public IActionResult LeaveGroup(Guid id)
 		{
 			var context = Request.GetRequestOwner();
-			using var resourceLock = new ResourceLock(Request.Path);
+			using var resourceLock = new ResourceLock(id);
 			var target = resourceLock.Value as GroupResource;
 			if (target == null)
 			{
@@ -89,22 +91,6 @@ namespace Dodo
 		public IActionResult Index()
 		{
 			return Ok(ResourceManager.Get(x => true).Select(rsc => rsc.GUID));
-		}
-
-		protected override bool CanCreateAtUrl(AccessContext context, string url, out string error)
-		{
-			if (context.User == null)
-			{
-				error = "You need to login";
-				return false;
-			}
-			if (context.User.EmailVerified)
-			{
-				error = "You need to verify your email";
-				return false;
-			}
-			error = null;
-			return true;
 		}
 	}
 }

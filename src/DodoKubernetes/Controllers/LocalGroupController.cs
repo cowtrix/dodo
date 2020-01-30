@@ -1,15 +1,11 @@
-﻿using Common;
-using Common.Extensions;
-using REST;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Dodo.Utility;
+﻿using REST;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Dodo.LocalGroups
 {
+	[Route(RootURL)]
 	public class LocalGroupController : GroupResourceController<LocalGroup, LocalGroupSchema>
 	{
+		public const string RootURL = "api/localgroups";
 	}
 }

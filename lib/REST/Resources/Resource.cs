@@ -13,7 +13,6 @@ namespace REST
 	public interface IRESTResource : IVerifiable
 	{
 		Guid GUID { get; }
-		string ResourceURL { get; }
 		void OnDestroy();
 		void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
 	}
@@ -48,13 +47,6 @@ namespace REST
 		[JsonProperty]
 		public Guid GUID { get; private set; }
 
-		/// <summary>
-		/// The URI of this resource
-		/// </summary>
-		[View(EPermissionLevel.USER)]
-		[ResourceURL]
-		public virtual string ResourceURL => $"{GetType().Name.ToLowerInvariant()}s/{GUID}";
-
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		[UserFriendlyName]
@@ -70,15 +62,13 @@ namespace REST
 		{
 			var resource = obj as Resource;
 			return resource != null &&
-				   GUID.Equals(resource.GUID) &&
-				   ResourceURL == resource.ResourceURL;
+				   GUID.Equals(resource.GUID);
 		}
 
 		public override int GetHashCode()
 		{
 			var hashCode = 1286416240;
 			hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(GUID);
-			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ResourceURL);
 			return hashCode;
 		}
 

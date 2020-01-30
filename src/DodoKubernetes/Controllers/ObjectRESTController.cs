@@ -22,13 +22,11 @@ namespace REST
 	/// </summary>
 	/// <typeparam name="T">The type of the resource</typeparam>
 	[ApiController]
-	[Route("api/[controller]s")]
 	public abstract class ObjectRESTController<T, TSchema> : Controller
 		where T : class, IDodoResource
 		where TSchema : DodoResourceSchemaBase
 	{
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
-		private HashSet<string> m_resourceURLCache = new HashSet<string>();
 
 		protected bool IsAuthorised(AccessContext context, T target,
 			EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
@@ -68,10 +66,6 @@ namespace REST
 				else if (requestType == EHTTPRequestType.POST)
 				{
 					permissionLevel = EPermissionLevel.OWNER;
-					if (!CanCreateAtUrl(context, Request.Path, out var error))
-					{
-						return false;
-					}
 					return true;
 				}
 				permissionLevel = EPermissionLevel.PUBLIC;
@@ -136,10 +130,6 @@ namespace REST
 			};
 			var prev = JsonConvert.SerializeObject(target, jsonSettings);
 			target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
-			if (ResourceManager.Get(x => x.ResourceURL == target.ResourceURL && x.GUID != target.GUID).Any())
-			{
-				return Conflict();
-			}
 			ResourceManager.Update(target, resourceLock);
 			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
 		}
@@ -158,10 +148,6 @@ namespace REST
 				return Forbid();
 			}
 			ResourceManager.Delete(target);
-			lock (m_resourceURLCache)
-			{
-				m_resourceURLCache.Remove(target.ResourceURL);
-			}
 			return HttpBuilder.Custom("Resource deleted", System.Net.HttpStatusCode.OK);
 		}
 
@@ -183,43 +169,6 @@ namespace REST
 
 		protected virtual void OnCreation(AccessContext context, T user)
 		{
-		}
-
-		/// <summary>
-		/// Get the parent resource from a ResourceURL
-		/// E.g. /rebellions/myrebellion/wg/myworkinggroup will return the Rebellion "myrebellion"
-		/// </summary>
-		/// <param name="url"></param>
-		/// <returns>The Group Resource that contains the given URL</returns>
-		public ResourceReference<GroupResource> GetParentFromURL(string url)
-		{
-			if (!(ResourceUtility.GetResourceByURL(url) is GroupResource resource))
-			{
-				return null;
-			}
-			return resource.Parent;
-		}
-
-		protected virtual bool CanCreateAtUrl(AccessContext context, string url, out string error)
-		{
-			var parent = GetParentFromURL(url);
-			if (parent == null)
-			{
-				error = "Resource not found";
-				return false;
-			}
-			if (context.User == null)
-			{
-				error = "You need to login";
-				return false;
-			}
-			if (context.User.EmailVerified)
-			{
-				error = "You need to verify your email";
-				return false;
-			}
-			error = null;
-			return parent.Value.IsAdmin(context.User, context);
 		}
 	}
 }

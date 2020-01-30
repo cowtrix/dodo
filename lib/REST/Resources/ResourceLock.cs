@@ -15,7 +15,7 @@ namespace REST
 	/// </summary>
 	public class ResourceLock : IDisposable
 	{
-		private static ConcurrentDictionary<Guid, string> m_locks = new ConcurrentDictionary<Guid, string>();
+		private static ConcurrentDictionary<Guid, bool> m_locks = new ConcurrentDictionary<Guid, bool>();
 
 		/// <summary>
 		/// When using a ResourceLock, always get the value from here. This is guaranteed to be the most
@@ -34,21 +34,12 @@ namespace REST
 			{
 				return false;
 			}
-			return IsLocked(resource.GUID) || IsLocked(resource.ResourceURL);
-		}
-
-		public static bool IsLocked(string resourceURL)
-		{
-			return m_locks.Values.Any(x => x == resourceURL);
+			return IsLocked(resource.GUID);
 		}
 
 		public Guid Guid { get; private set; }
 
 		public ResourceLock(Guid resource) : this(ResourceUtility.GetResourceByGuid(resource))
-		{
-		}
-
-		public ResourceLock(string resourceURL) : this(ResourceUtility.GetResourceByURL(resourceURL))
 		{
 		}
 
@@ -58,7 +49,7 @@ namespace REST
 			{
 				return;
 			}
-			while (IsLocked(resource.GUID) || !m_locks.TryAdd(resource.GUID, resource.ResourceURL))
+			while (IsLocked(resource.GUID) || !m_locks.TryAdd(resource.GUID, default))
 			{
 			}
 			Guid = resource.GUID;

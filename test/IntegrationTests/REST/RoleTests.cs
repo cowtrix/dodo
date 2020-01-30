@@ -17,6 +17,8 @@ namespace RESTTests
 	{
 		private JObject WorkingGroup { get; set; }
 
+		public override string CreationURL => RoleController.RootURL;
+
 		[TestInitialize]
 		public void Setup()
 		{

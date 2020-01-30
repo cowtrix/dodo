@@ -23,6 +23,8 @@ namespace RESTTests
 
 		string TestMandate => SchemaGenerator.SampleMarkdown;
 
+		public override string CreationURL => WorkingGroupController.RootURL;
+
 		[TestInitialize]
 		public void Setup()
 		{
@@ -101,7 +103,7 @@ namespace RESTTests
 				RequestJSON(CreationURL, Method.POST, new WorkingGroupSchema("Test4", TestMandate, Rebellion.Value<Guid>("GUID"))),
 			};
 			var guids = objects.Select(x => x.Value<string>("GUID"));
-			var list = Request($"{Rebellion.Value<string>("ResourceURL")}/{WorkingGroup.RootURL}/", Method.GET);
+			var list = Request(WorkingGroupController.RootURL, Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
 			m_postman.UpdateExampleJSON(list.Content, "Working Groups", "List all Working Groups");
 		}

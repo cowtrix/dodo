@@ -21,6 +21,8 @@ namespace RESTTests
 	{
 		private JObject Rebellion { get; set; }
 
+		public override string CreationURL => SiteController.RootURL;
+
 		[TestInitialize]
 		public void Setup()
 		{
@@ -118,7 +120,7 @@ namespace RESTTests
 				RequestJSON(CreationURL, Method.POST, new SiteSchema("Test4", typeof(Sanctuary).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(26.4, 78.7), "Test description")),
 			};
 			var guids = objects.Select(x => x.Value<string>("GUID"));
-			var list = Request($"{Rebellion.Value<string>("ResourceURL")}/{Site.RootURL}/", Method.GET);
+			var list = Request(SiteController.RootURL, Method.GET);
 			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
 			m_postman.UpdateExampleJSON(list.Content, "Sites", "List all Sites");
 		}

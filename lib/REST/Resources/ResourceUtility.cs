@@ -95,25 +95,6 @@ namespace REST
 			return GetResourceByGuid<IRESTResource>(guid);
 		}
 
-		public static T GetResourceByURL<T>(string url) where T : class, IRESTResource
-		{
-			T result;
-			foreach (var rm in ResourceManagers)
-			{
-				result = (T)rm.Value.GetSingle(x => x.ResourceURL == url);
-				if (result != null)
-				{
-					return result;
-				}
-			}
-			return null;
-		}
-
-		public static IRESTResource GetResourceByURL(string url)
-		{
-			return GetResourceByURL<IRESTResource>(url);
-		}
-
 		public static IEnumerable<T> Search<T>(string query) where T : class, IRESTResource
 		{
 			if (Guid.TryParse(query, out var guid))

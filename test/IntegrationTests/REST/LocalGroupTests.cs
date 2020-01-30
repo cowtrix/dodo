@@ -14,7 +14,7 @@ namespace RESTTests
 	[TestClass]
 	public class LocalGroupTests : GroupResourceTestBase<LocalGroup>
 	{
-		public override string CreationURL => LocalGroup.RootURL;
+		public override string CreationURL => LocalGroupController.RootURL;
 
 		[TestInitialize]
 		public void Setup()

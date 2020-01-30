@@ -12,8 +12,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dodo.Users
 {
+	[Route(RootURL)]
 	public class UserController : ObjectRESTController<User, UserSchema>
 	{
+		public const string RootURL = "api/users";
 		public const string CREATION_URL = "register";
 		public const string VERIFY_PARAM = "verify";
 		public const string RESETPASS_URL = "resetpassword";
@@ -191,7 +193,7 @@ namespace Dodo.Users
 #endif
 			EmailHelper.SendEmail(newUser.Email, newUser.Name, $"{Dodo.PRODUCT_NAME}: Please verify your email",
 				"To verify your email, click the following link:\n" +
-				$"{Dns.GetHostName()}/{newUser.ResourceURL}?verify={emailVerifyPushAction.Token}");
+				$"{Dns.GetHostName()}/{VERIFY_PARAM}/{emailVerifyPushAction.Token}");
 		}
 	}
 }

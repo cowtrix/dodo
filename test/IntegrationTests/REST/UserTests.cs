@@ -16,6 +16,8 @@ namespace RESTTests
 	[TestClass]
 	public class UserTests : RESTTestBase<User>
 	{
+		public override string CreationURL => UserController.RootURL;
+
 		public override object GetCreationSchema(bool unique)
 		{
 			if(unique)
