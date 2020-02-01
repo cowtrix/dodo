@@ -8,6 +8,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Common;
+
 namespace REST
 {
 	[AttributeUsage(AttributeTargets.Struct)]
@@ -24,8 +26,8 @@ namespace REST
 			typeof(Guid),
 			typeof(Enum),
 			typeof(GeoLocation),
-			typeof(IResourceReference),
 			typeof(DateTime),
+			typeof(IResourceReference)
 		};
 
 		/// <summary>

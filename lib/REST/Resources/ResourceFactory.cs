@@ -1,4 +1,5 @@
-﻿using Common.Extensions;
+﻿using Common;
+using Common.Extensions;
 using System;
 
 namespace REST
@@ -25,6 +26,7 @@ namespace REST
 			var newResource = CreateObjectInternal(schema);
 			newResource.Verify();
 			ResourceUtility.Register(newResource);
+			Logger.Debug($"Created new resource {newResource.GetType().Name}: {newResource.GUID}");
 			return newResource;
 		}
 
@@ -49,10 +51,6 @@ namespace REST
 
 		public TResult CreateObject(ResourceSchemaBase schema)
 		{
-			if(!ValidateSchema(schema, out var error))
-			{
-				throw new Exception(error);
-			}
 			return CreateObject((TSchema)schema);
 		}
 

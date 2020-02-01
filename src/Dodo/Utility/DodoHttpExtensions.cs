@@ -45,30 +45,8 @@ namespace Dodo.Utility
 
 		public static void GetAuth(this HttpRequest request, out string username, out string password)
 		{
-			username = null;
-			password = null;
-			if (!request.Headers.TryGetValue(AUTH_KEY, out var token))
-			{
-				return;
-			}
-			var tokens = token.ToString().Trim().Split(' ');
-			if (tokens.Length != 2 || tokens[0] != "Basic")
-			{
-				throw HttpException.UNAUTHORIZED;
-			}
-			var decodeRaw = StringExtensions.Base64Decode(tokens[1]);
-			var firstColonIndex = decodeRaw.IndexOf(':');
-			if (firstColonIndex == 0)
-			{
-				// No auth but header existed
-				return;
-			}
-			if (firstColonIndex < 0)
-			{
-				throw new HttpException("Bad Auth Header Format", System.Net.HttpStatusCode.BadRequest);
-			}
-			username = decodeRaw.Substring(0, firstColonIndex);
-			password = decodeRaw.Substring(firstColonIndex + 1);
+			username = request.HttpContext.User.Identity.Name;
+			password = (string)request.HttpContext.Items["Passphrase"];
 		}
 	}
 }

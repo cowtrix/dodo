@@ -23,7 +23,7 @@ namespace Dodo.SharedTest
 
 		private static Random m_random = new Random();
 		public static string SampleMarkdown => File.ReadAllText("SampleMarkdown.md");
-		private static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
+		public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
 		private static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
 		private static Dictionary<Type, Func<AccessContext, ResourceSchemaBase>> m_mappings =
 			new Dictionary<Type, Func<AccessContext, ResourceSchemaBase>>()
@@ -52,7 +52,7 @@ namespace Dodo.SharedTest
 				GetRandomWorkinGroup(context));
 			return new SiteSchema(context,
 				StringExtensions.RandomString(32),
-				ReflectionExtensions.GetChildClasses<Site>().Random().FullName,
+				ReflectionExtensions.GetConcreteClasses<Site>().Random().FullName,
 				wg,
 				RandomLocation,
 				SampleMarkdown);

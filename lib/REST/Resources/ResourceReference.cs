@@ -1,5 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,15 @@ namespace REST
 		[View(EPermissionLevel.ADMIN)]
 		[JsonProperty]
 		public Guid Guid { get; private set; }
+
+		public T GetValue()
+		{
+			return ResourceUtility.GetResourceByGuid<T>(Guid);
+		}
+
 		[JsonIgnore]
-		public T Value { get { return ResourceUtility.GetResourceByGuid<T>(Guid); } }
-		[JsonIgnore]
-		public bool HasValue { get { return Value != null; } }
+		public bool HasValue { get { return GetValue() != null; } }
+
 		public ResourceReference(T resource)
 		{
 			Guid = resource != null ? resource.GUID : default;
@@ -29,7 +35,7 @@ namespace REST
 		{
 			Guid = guid;
 		}
-		public static implicit operator T(ResourceReference<T> d) => d.Value;
+		public static implicit operator T(ResourceReference<T> d) => d.GetValue();
 		public static implicit operator ResourceReference<T>(T b) => new ResourceReference<T>(b);
 
 		public override bool Equals(object obj)
@@ -45,7 +51,7 @@ namespace REST
 
 		public void CheckValue()
 		{
-			if(Value == null)
+			if (GetValue() == null)
 			{
 				throw new Exception("Resource not found with GUID " + Guid);
 			}

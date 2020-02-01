@@ -20,12 +20,21 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.USER)]
 		public GeoLocation Location;
 
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.PUBLIC)]
 		public List<string> WorkingGroups
 		{
 			get
 			{
 				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).Select(x => x.GUID.ToString()).ToList();
+			}
+		}
+
+		[View(EPermissionLevel.PUBLIC)]
+		public List<string> Sites
+		{
+			get
+			{
+				return ResourceUtility.GetManager<Site>().Get(wg => wg.Parent.Guid == GUID).Select(x => x.GUID.ToString()).ToList();
 			}
 		}
 

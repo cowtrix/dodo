@@ -103,15 +103,7 @@ namespace Dodo
 		/// <returns></returns>
 		public bool IsChildOf(GroupResource targetObject)
 		{
-			if(Parent.Value == null)
-			{
-				return false;
-			}
-			if(Parent.Value == targetObject)
-			{
-				return true;
-			}
-			return Parent.Value.IsChildOf(targetObject);
+			return Parent.GetValue().GUID == targetObject.GUID;
 		}
 
 		public bool IsAdmin(User target, AccessContext requesterContext)
@@ -171,7 +163,7 @@ namespace Dodo
 		{
 			if(context.User != null)
 			{
-				if (context.User.GUID == Creator.Value.GUID)
+				if (context.User.GUID == Creator.GetValue().GUID)
 				{
 					permissionLevel = EPermissionLevel.OWNER;
 					return true;
@@ -201,7 +193,7 @@ namespace Dodo
 		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
-			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).Value : requester as User;
+			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
 			base.AppendAuxilaryData(view, permissionLevel, requester, passphrase);

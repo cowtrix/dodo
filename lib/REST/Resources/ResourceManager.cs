@@ -2,6 +2,7 @@
 using Common.Config;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
@@ -37,7 +38,7 @@ namespace REST
 	/// A ResourceManager keeps track of, deletes, creates, updates and generally manages a type of resource.
 	/// </summary>
 	/// <typeparam name="T">The class to be managed</typeparam>
-	public abstract class ResourceManager<T> : IResourceManager<T> where T: class, IRESTResource
+	public abstract class ResourceManager<T> : IResourceManager<T> where T : class, IRESTResource
 	{
 		/// <summary>
 		/// How long a request will wait to get access to a resource before giving up, in miliseconds.
@@ -52,6 +53,12 @@ namespace REST
 			var database = ResourceUtility.MongoDB.GetDatabase(MongoDBDatabaseName);
 			// Get the collection (which is the name of this type by default)
 			m_db = database.GetCollection<T>(MongoDBCollectionName);
+
+			foreach (var type in ReflectionExtensions.GetConcreteClasses<T>())
+			{
+				RegisterMapIfNeeded(type);
+			}
+
 			// Create an index of the GUID
 			// TODO investigate ResourceURL commented out bit - ResourceURL not currently serialized so can't be used
 			// TODO investigate if we need to do this every time or if it will create a new index every time
@@ -60,6 +67,14 @@ namespace REST
 				.Ascending(rsc => rsc.GUID);
 			var indexModel = new CreateIndexModel<T>(indexKeys, indexOptions);
 			m_db.Indexes.CreateOne(indexModel);
+		}
+
+		// Check to see if map is registered before registering class map
+		// This is for the sake of the polymorphic types that we are using so Mongo knows how to deserialize
+		private void RegisterMapIfNeeded(Type t)
+		{
+			if (!BsonClassMap.IsClassMapRegistered(t))
+				BsonClassMap.RegisterClassMap(new BsonClassMap(t));
 		}
 
 		protected abstract string MongoDBDatabaseName { get; }
@@ -71,7 +86,7 @@ namespace REST
 		/// <param name="newObject"></param>
 		public virtual void Add(T newObject)
 		{
-			if(ResourceUtility.GetResourceByGuid(newObject.GUID) != null)
+			if (ResourceUtility.GetResourceByGuid(newObject.GUID) != null)
 			{
 				throw HttpException.CONFLICT;
 			}
@@ -95,7 +110,7 @@ namespace REST
 		/// <param name="locker">The ResourceLock of the object (to guarantee someone else isn't editing it)</param>
 		public virtual void Update(T objToUpdate, ResourceLock locker)
 		{
-			if(locker.Guid != objToUpdate.GUID)
+			if (locker.Guid != objToUpdate.GUID)
 			{
 				// This should never, ever happen in normal execution of the program
 				throw new Exception("Locker GUID mismatch");
@@ -151,7 +166,7 @@ namespace REST
 		/// <returns>Whether this request is authorised (a value of false should result in a HttpException.FORBIDDEN exception being thrown)</returns>
 		public bool IsAuthorised(HttpRequest request, IRESTResource resource, out EPermissionLevel permission)
 		{
-			if(resource != null && !(resource is T))
+			if (resource != null && !(resource is T))
 			{
 				throw new Exception("Incorrect Resource Manager for " + resource);
 			}

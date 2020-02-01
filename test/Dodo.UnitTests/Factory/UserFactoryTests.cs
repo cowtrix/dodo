@@ -9,11 +9,6 @@ namespace Factory
 	[TestClass]
 	public class UserFactoryTests : FactoryTestBase<User, UserSchema>
 	{
-		protected override AccessContext GetCreationContext()
-		{
-			return default;
-		}
-
 		protected override void VerifyCreatedObject(User obj, UserSchema schema)
 		{
 		}

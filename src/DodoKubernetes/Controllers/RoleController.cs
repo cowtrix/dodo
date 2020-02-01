@@ -12,5 +12,11 @@ namespace Dodo.Roles
 	public class RoleController : ObjectRESTController<Role, RoleSchema>
 	{
 		public const string RootURL = "api/roles";
+
+		[HttpPost]
+		public override IActionResult Create([FromBody] RoleSchema schema)
+		{
+			return CreateInternal(schema);
+		}
 	}
 }

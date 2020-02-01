@@ -27,7 +27,7 @@ namespace Dodo.WorkingGroups
 
 		}
 
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.PUBLIC)]
 		public List<string> Roles
 		{
 			get
@@ -40,12 +40,12 @@ namespace Dodo.WorkingGroups
 		/// <summary>
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.PUBLIC)]
 		public List<string> WorkingGroups
 		{
 			get
 			{
-				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.Parent.Value.GUID == GUID)
+				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.Parent.GetValue().GUID == GUID)
 					.Select(wg => wg.GUID.ToString()).ToList();
 			}
 		}

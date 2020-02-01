@@ -25,7 +25,7 @@ namespace Dodo.Users
 			Resource.CheckValue();
 			var privateKey = context.User.WebAuth.PrivateKey.GetValue(context.Passphrase);
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
-			using (var rscLocker = new ResourceLock(Resource.Value))
+			using (var rscLocker = new ResourceLock(Resource.GetValue()))
 			{
 				var resource = rscLocker.Value as GroupResource;
 				// Change the admin access from temp us
@@ -36,7 +36,7 @@ namespace Dodo.Users
 
 		public override string GetNotificationMessage()
 		{
-			return $"You have been added as an Administrator to {Resource.Value.Name}";
+			return $"You have been added as an Administrator to {Resource.GetValue().Name}";
 		}
 	}
 }

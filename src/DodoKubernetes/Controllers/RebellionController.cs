@@ -14,5 +14,11 @@ namespace Dodo.Rebellions
 	public class RebellionController : GroupResourceController<Rebellion, RebellionSchema>
 	{
 		public const string RootURL = "api/rebellions";
+
+		[HttpPost]
+		public override IActionResult Create([FromBody] RebellionSchema schema)
+		{
+			return CreateInternal(schema);
+		}
 	}
 }

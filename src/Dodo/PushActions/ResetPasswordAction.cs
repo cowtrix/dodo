@@ -26,7 +26,8 @@ namespace Dodo.Users
 
 		public override void OnAdd()
 		{
-			EmailHelper.SendEmail(TargetUser.Value.Email, TargetUser.Value.Name, $"{Dodo.PRODUCT_NAME}: Reset your password",
+			var user = TargetUser.GetValue();
+			EmailHelper.SendEmail(user.Email, user.Name, $"{Dodo.PRODUCT_NAME}: Reset your password",
 				$"You've requested a password reset for your account on {Dns.GetHostName()}." +
 				$"To reset your password, visit the following link: {Dns.GetHostName()}/resetpassword?token={TemporaryToken}");
 		}

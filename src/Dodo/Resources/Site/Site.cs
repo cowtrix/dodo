@@ -98,7 +98,7 @@ namespace Dodo.Sites
 
 		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
-			return Parent.Value.IsAuthorised(context, requestType, out permissionLevel);
+			return Parent.GetValue().IsAuthorised(context, requestType, out permissionLevel);
 		}
 	}
 }

@@ -22,7 +22,7 @@ namespace REST
 
 		static ResourceUtility()
 		{
-			var customSerializers = ReflectionExtensions.GetChildClasses<ICustomBsonSerializer>();
+			var customSerializers = ReflectionExtensions.GetConcreteClasses<ICustomBsonSerializer>();
 			foreach (var customSer in customSerializers)
 			{
 				var newSerializer = Activator.CreateInstance(customSer) as IBsonSerializer;
@@ -43,7 +43,7 @@ namespace REST
 				MongoDB = new MongoClient(mongoDbURL);
 			}
 
-			var types = ReflectionExtensions.GetChildClasses<IResourceManager>();
+			var types = ReflectionExtensions.GetConcreteClasses<IResourceManager>();
 			foreach(var t in types)
 			{
 				var newManager = Activator.CreateInstance(t) as IResourceManager;
@@ -51,7 +51,7 @@ namespace REST
 				Register(typeArg, newManager);
 			}
 
-			types = ReflectionExtensions.GetChildClasses<IResourceFactory>();
+			types = ReflectionExtensions.GetConcreteClasses<IResourceFactory>();
 			foreach (var t in types)
 			{
 				var newFactory = Activator.CreateInstance(t) as IResourceFactory;

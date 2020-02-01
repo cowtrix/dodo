@@ -13,5 +13,11 @@ namespace Dodo.WorkingGroups
 	public class WorkingGroupController : GroupResourceController<WorkingGroup, WorkingGroupSchema>
 	{
 		public const string RootURL = "api/workinggroups";
+
+		[HttpPost]
+		public override IActionResult Create([FromBody] WorkingGroupSchema schema)
+		{
+			return CreateInternal(schema);
+		}
 	}
 }

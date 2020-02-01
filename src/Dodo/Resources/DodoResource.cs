@@ -30,6 +30,7 @@ namespace Dodo
 		{
 			Creator = new ResourceReference<User>(schema?.Context.User);
 		}
+		[View(EPermissionLevel.ADMIN)]
 		public ResourceReference<User> Creator { get; private set; }
 		public abstract bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel);
 	}

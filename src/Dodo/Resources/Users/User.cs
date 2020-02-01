@@ -76,7 +76,7 @@ namespace Dodo.Users
 
 		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
-			var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).Value : (User)requester;
+			var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : (User)requester;
 			if(permissionLevel >= EPermissionLevel.ADMIN)
 			{
 				var accessContext = new AccessContext(requesterUser, passphrase);

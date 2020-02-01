@@ -4,6 +4,7 @@ using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.SharedTest;
+using Dodo.Sites;
 using Dodo.Users;
 using Dodo.WorkingGroups;
 using REST;
@@ -20,15 +21,26 @@ namespace GenerateSampleData
 		static WorkingGroupFactory WorkingGroupFactory = new WorkingGroupFactory();
 		static LocalGroupFactory LocalGroupFactory = new LocalGroupFactory();
 		static RoleFactory RoleFactory = new RoleFactory();
+		static SiteFactory SiteFactory = new SiteFactory();
 
 		static void Main(string[] args)
 		{
 			ResourceUtility.ClearAllManagers();
 			var admin1 = GenerateUser(new UserSchema(default, "Rebellion Tom", "tom", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
-			var currentRebellion = RebellionFactory.CreateObject(new RebellionSchema(admin1context, "Amsterdam Rebllion", 
-				new GeoLocation(52.373455, 4.898259), SchemaGenerator.SampleMarkdown,
-				DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
 
+			var localGroup1 = LocalGroupFactory.CreateObject(new LocalGroupSchema(admin1context, "East Randomplace", SchemaGenerator.SampleMarkdown, SchemaGenerator.RandomLocation));
+			var localGroup2 = LocalGroupFactory.CreateObject(new LocalGroupSchema(admin1context, "Random City", SchemaGenerator.SampleMarkdown, SchemaGenerator.RandomLocation));
+
+
+			var amstLocation = new GeoLocation(52.373455, 4.898259);
+			var currentRebellion = RebellionFactory.CreateObject(new RebellionSchema(admin1context, "Amsterdam Rebllion",
+				amstLocation, SchemaGenerator.SampleMarkdown,
+				DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
+			var siteOccupation = SiteFactory.CreateObject(new SiteSchema(admin1context, "Occupationsal Site", typeof(OccupationalSite).FullName, currentRebellion, amstLocation, SchemaGenerator.SampleMarkdown));
+			var actionOccupation = SiteFactory.CreateObject(new SiteSchema(admin1context, "Action Site", typeof(ActionSite).FullName, currentRebellion, new GeoLocation(amstLocation.Latitude + 0.05, amstLocation.Longitude + 0.05), SchemaGenerator.SampleMarkdown));
+			var march = SiteFactory.CreateObject(new SiteSchema(admin1context, "March", typeof(March).FullName, currentRebellion, new GeoLocation(amstLocation.Latitude - 0.05, amstLocation.Longitude + 0.05), SchemaGenerator.SampleMarkdown));
+			var sanctuary = SiteFactory.CreateObject(new SiteSchema(admin1context, "Sanctuary Site", typeof(Sanctuary).FullName, currentRebellion, new GeoLocation(amstLocation.Latitude - 0.05, amstLocation.Longitude - 0.05), SchemaGenerator.SampleMarkdown));
+			
 			var actionSupport = WorkingGroupFactory.CreateObject(new WorkingGroupSchema(admin1context, "Action Support",
 				SchemaGenerator.SampleMarkdown, currentRebellion));
 			var rebelRiders = WorkingGroupFactory.CreateObject(new WorkingGroupSchema(admin1context, "Rebel Riders",

@@ -10,8 +10,12 @@ namespace Common.Extensions
 {
 	public static class ReflectionExtensions
 	{
-		public static IEnumerable<Type> GetChildClasses<T>() where T:class
+		public static IEnumerable<Type> GetConcreteClasses<T>() where T:class
 		{
+			if(!typeof(T).IsAbstract && !typeof(T).IsInterface)
+			{
+				return new[] { typeof(T) };
+			}
 			return AppDomain.CurrentDomain.GetAssemblies()
 				.Where(ass => !ass.GetName().FullName.Contains("Microsoft"))  // TODO https://developercommunity.visualstudio.com/content/problem/738856/could-not-load-file-or-assembly-microsoftintellitr.html
 				.Select(assembly => assembly.GetTypes()).ConcatenateCollection()

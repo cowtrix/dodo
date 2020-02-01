@@ -45,7 +45,7 @@ namespace Dodo.Roles
 					permissionLevel = EPermissionLevel.OWNER;
 					return true;
 				}
-				if (Parent.Value.IsAdmin(context.User, context))
+				if (Parent.GetValue().IsAdmin(context.User, context))
 				{
 					permissionLevel = EPermissionLevel.ADMIN;
 					return true;

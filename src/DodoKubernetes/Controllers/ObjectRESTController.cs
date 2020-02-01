@@ -74,8 +74,9 @@ namespace REST
 			return target.IsAuthorised(context, requestType, out permissionLevel);
 		}
 
-		[HttpPost]
-		public virtual IActionResult Create([FromBody]TSchema schema)
+		public abstract IActionResult Create([FromBody] TSchema schema);
+
+		protected virtual IActionResult CreateInternal(TSchema schema)
 		{
 			var context = Request.GetRequestOwner();
 			if (!IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
@@ -166,6 +167,7 @@ namespace REST
 			}
 			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
 		}
+
 
 		protected virtual void OnCreation(AccessContext context, T user)
 		{
