@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Kubernetes.Tools.Targets" Version="1.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
-    <PackageReference Include="OpenIddict" Version="2.0.1" />
+    <PackageReference Include="MongoDB.AspNet.Identity" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup>
