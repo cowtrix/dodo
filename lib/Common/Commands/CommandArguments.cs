@@ -3,28 +3,91 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Common.Commands
 {
+	public static class RegexMatches
+	{
+		public const string WINDOWS_PATH = "(^([a-z]|[A-Z]):(?=\\\\(?![\\0-\\37<>:\"/\\\\|?*])|\\/(?![\\0-\\37<>:\"/\\\\|?*])|$)|^\\\\(?=[\\\\\\/][^\\0-\\37<>:\"/\\\\|?*]+)|^(?=(\\\\|\\/)$)|^\\.(?=(\\\\|\\/)$)|^\\.\\.(?=(\\\\|\\/)$)|^(?=(\\\\|\\/)[^\\0-\\37<>:\"/\\\\|?*]+)|^\\.(?=(\\\\|\\/)[^\\0-\\37<>:\"/\\\\|?*]+)|^\\.\\.(?=(\\\\|\\/)[^\\0-\\37<>:\"/\\\\|?*]+))((\\\\|\\/)[^\\0-\\37<>:\"/\\\\|?*]+|(\\\\|\\/)$)*()$";
+		public const string POSITIVE_NUMBER = @"^[+]?\d+([.]\d+)?$";
+	}
+
 	public interface ICommandArguments
 	{
 		T TryGetValue<T>(string key, T defaultValue);
 	}
 
-	public struct CommandArgumentParameters
+	public interface ICommandArgumentValidator
 	{
-		public static CommandArgumentParameters Default => new ConfigVariable<CommandArgumentParameters>("DefaultCommandArgumentParameters", new CommandArgumentParameters
-		{
-			CommandParamSeperator = ':',
-			CommandSeperator = ' ',
-			CommandPrefix = '/',
-			QuotationChar = '"',
-		}).Value;
+		bool Validate(CommandArgumentParameters param, string key, string rawValue, out string error);
+	}
 
-		public char CommandParamSeperator;
-		public char CommandSeperator;
-		public char CommandPrefix;
-		public char QuotationChar;
+	public class CommandArgumentRegexSchema : ICommandArgumentValidator
+	{
+		private Dictionary<string, ValueTuple<string, string>> m_regexMapping = new Dictionary<string, (string, string)>();
+		private bool m_allowUnspecifiedArgs;
+
+		public CommandArgumentRegexSchema(bool allowUnspecifiedArgs, params ValueTuple<string, string, string>[] values)
+		{
+			m_allowUnspecifiedArgs = allowUnspecifiedArgs;
+			foreach (var kvp in values)
+			{
+				m_regexMapping[kvp.Item1] = (kvp.Item2, kvp.Item3);
+			}
+		}
+
+		public bool Validate(CommandArgumentParameters param, string key, string rawValue, out string error)
+		{
+			if (!m_regexMapping.TryGetValue(key, out var regex))
+			{
+				error = $"No argument found with key {key}";
+				return m_allowUnspecifiedArgs;
+			}
+			if (!Regex.IsMatch(rawValue, regex.Item1))
+			{
+				error = $"Regex mismatch: {param.CommandPrefix}{key}{param.CommandParamSeperator}{rawValue} did not match required regex. {regex.Item2}";
+				return false;
+			}
+			error = null;
+			return true;
+		}
+
+		public string GetHelpString(CommandArgumentParameters argParams)
+		{
+			var sb = new StringBuilder("");
+			foreach (var mapping in m_regexMapping)
+			{
+				sb.AppendLine($"{argParams.CommandPrefix}{mapping.Key}{argParams.CommandParamSeperator}value\t{mapping.Value.Item2}");
+			}
+			return sb.ToString();
+		}
+	}
+
+	public delegate bool ValidateArgumentDelegate(CommandArgumentParameters param, string key, string rawValue, out string error);
+
+	public class CommandArgumentParameters
+	{
+		public static CommandArgumentParameters Default => new ConfigVariable<CommandArgumentParameters>("DefaultCommandArgumentParameters", new CommandArgumentParameters()).Value;
+		public readonly char CommandParamSeperator;
+		public readonly char CommandSeperator;
+		public readonly char CommandPrefix;
+		public readonly char QuotationChar;
+		public ValidateArgumentDelegate OnValidate;
+
+		public CommandArgumentParameters(ICommandArgumentValidator validator, char prefix = '/', char paramSeperator = ':', char commandSeperator = ' ', char quotationChar = '"')
+			: this(validator.Validate, prefix, paramSeperator, commandSeperator, quotationChar)
+		{
+		}
+
+		public CommandArgumentParameters(ValidateArgumentDelegate validator = null, char prefix = '/', char paramSeperator = ':', char commandSeperator = ' ', char quotationChar = '"')
+		{
+			OnValidate = validator;
+			CommandPrefix = prefix;
+			CommandParamSeperator = paramSeperator;
+			CommandSeperator = commandSeperator;
+			QuotationChar = quotationChar;
+		}
 	}
 
 	public struct CommandArguments : ICommandArguments
@@ -39,6 +102,7 @@ namespace Common.Commands
 
 		const char EOL = '\0';
 		private Dictionary<string, string> m_args;
+		public string RawValue { get; private set; }
 
 		public CommandArguments(IEnumerable<string> args, CommandArgumentParameters parameters) :
 			this(args.Aggregate("", (current, next) => current + (current == "" ? "" : " ") + next), parameters)
@@ -56,6 +120,7 @@ namespace Common.Commands
 
 		public CommandArguments(string arg, CommandArgumentParameters parameters)
 		{
+			RawValue = arg;
 			m_args = new Dictionary<string, string>();
 			var sb = new StringBuilder();
 			eReadState state = eReadState.Seek;
@@ -69,10 +134,18 @@ namespace Common.Commands
 				{
 					char c = charCounter == arg.Length ? EOL : (char)arg[charCounter];
 
-					if (state == eReadState.Seek && c == parameters.CommandPrefix)
+					if (state == eReadState.Seek)
 					{
-						// We start reading the parameter key, but skip the prefix
-						state = eReadState.ReadKey;
+						if (c == parameters.CommandPrefix)
+						{
+							// We start reading the parameter key, but skip the prefix
+							state = eReadState.ReadKey;
+							//continue;
+						}
+						/*if (c != parameters.CommandSeperator && c != EOL)
+						{
+							throw new Exception();
+						}*/
 						continue;
 					}
 					else if (state == eReadState.ReadKey)
@@ -136,23 +209,43 @@ namespace Common.Commands
 					}
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				throw new Exception($"Args [{arg}] failed to parse. Unexpected character at index {charCounter}\n", e);
 			}
+			if (parameters.OnValidate == null)
+			{
+				return;
+			}
+			foreach (var parsedArg in m_args)
+			{
+				if (!parameters.OnValidate(parameters, parsedArg.Key, parsedArg.Value, out var error))
+				{
+					throw new Exception(error);
+				}
+			}
+		}
+
+		public T TryGetValue<T>(IEnumerable<string> keys, T defaultValue)
+		{
+			foreach (var key in keys)
+			{
+				if (!m_args.TryGetValue(key, out var rawVal))
+				{
+					continue;
+				}
+				if (!TryConvert<T>(rawVal, out var value))
+				{
+					throw new Exception($"Failed to parse {rawVal} to type {typeof(T).FullName}");
+				}
+				return value;
+			}
+			return defaultValue;
 		}
 
 		public T TryGetValue<T>(string key, T defaultValue)
 		{
-			if(!m_args.TryGetValue(key, out var rawVal))
-			{
-				return defaultValue;
-			}
-			if(TryConvert<T>(rawVal, out var value))
-			{
-				return value;
-			}
-			throw new Exception($"Failed to parse {rawVal} to type {typeof(T).FullName}");
+			return TryGetValue<T>(new[] { key }, defaultValue);
 		}
 
 		private bool TryConvert<T>(string str, out T result)
@@ -165,6 +258,18 @@ namespace Common.Commands
 
 		private bool TryConvert(string str, Type t, out object result)
 		{
+			if (t == typeof(bool))
+			{
+				if (bool.TryParse(str, out var boolresult))
+				{
+					result = boolresult;
+				}
+				else
+				{
+					result = true;
+				}
+				return true;
+			}
 			if (t == typeof(string))
 			{
 				result = str;
@@ -195,7 +300,17 @@ namespace Common.Commands
 				result = Guid.Parse(str);
 				return true;
 			}
-			result = default;
+			if (t.IsEnum)
+			{
+				if (int.TryParse(str, out var intVal))
+				{
+					result = Convert.ChangeType(intVal, t);
+					return true;
+				}
+				result = Enum.Parse(t, str);
+				return true;
+			}
+			result = default(object);
 			return false;
 		}
 	}

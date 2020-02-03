@@ -25,10 +25,20 @@ namespace Common.Commands
 	{
 		private struct CommandData
 		{
-			public MethodInfo Method;
+			public Action<CommandArguments> Method;
 			public CommandAttribute Attribute;
 		}
 		private static Dictionary<Regex, CommandData> m_commands = new Dictionary<Regex, CommandData>();
+		private static CommandData m_fallbackCommand;   // The command to run when all else fails - default is help
+		public static Action HelpOverride;
+		public static Action<CommandArguments> OnPreExecute;
+
+		private static List<string> m_ignoredAssemblies = new List<string>()
+		{
+			"Microsoft.", "System."
+		};
+
+
 		static CommandManager()
 		{
 			LoadCommands();
@@ -36,7 +46,8 @@ namespace Common.Commands
 
 		private static void LoadCommands()
 		{
-			var allTypes = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetTypes()).ConcatenateCollection();
+			var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(ass => !m_ignoredAssemblies.Any(ign => ass.FullName.StartsWith(ign)));
+			var allTypes = assemblies.Select(assembly => assembly.GetTypes()).ConcatenateCollection();
 			var allMethods = allTypes.Select(x => x.GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null)).ConcatenateCollection();
 			foreach (var method in allMethods)
 			{
@@ -50,33 +61,78 @@ namespace Common.Commands
 					throw new Exception($"Method {method.DeclaringType.Name}:{method.Name} parameter must be a single CommandArguments variable");
 				}
 				var attr = method.GetCustomAttribute<CommandAttribute>();
-				m_commands.Add(new Regex(attr.CommandRegex), new CommandData
+				var cmdData = new CommandData
 				{
 					Attribute = attr,
-					Method = method,
-				});
+					Method = args => method.Invoke(null, new object[] { args }),
+				};
+				if (attr.CommandRegex == null)
+				{
+					m_fallbackCommand = cmdData;
+				}
+				else
+				{
+					m_commands.Add(new Regex(attr.CommandRegex), cmdData);
+				}
 			}
+			if (m_fallbackCommand.Method == null)
+			{
+				m_fallbackCommand = new CommandData() { Method = args => Help(args) };
+			}
+		}
+
+		public static void Execute(string line, CommandArgumentParameters parameters)
+		{
+			try
+			{
+				var cmds = m_commands.Where(x => x.Key.IsMatch(line));
+				var cmdCount = cmds.Count();
+				if (cmdCount > 1)
+				{
+					throw new Exception("Ambigious command");
+				}
+				CommandData cmd;
+				if (cmdCount == 0)
+				{
+					cmd = m_fallbackCommand;
+				}
+				else
+				{
+					cmd = cmds.Single().Value;
+				}
+				var args = new CommandArguments(line, parameters);
+				OnPreExecute?.Invoke(args);
+				cmd.Method.Invoke(args);
+			}
+			catch (Exception e)
+			{
+				Logger.Exception(e);
+			}
+		}
+
+		public static void Execute(string[] args, CommandArgumentParameters parameters)
+		{
+			Execute(string.Join(" ", args), parameters);
+		}
+
+		public static void Execute(string[] args)
+		{
+			Execute(args, CommandArgumentParameters.Default);
 		}
 
 		public static void Execute(string line)
 		{
-			var cmds = m_commands.Where(x => x.Key.IsMatch(line));
-			var cmdCount = cmds.Count();
-			if (cmdCount > 1)
-			{
-				throw new Exception("Ambigious command");
-			}
-			if (cmdCount == 0)
-			{
-				throw new Exception("Command not found");
-			}
-			var cmd = cmds.Single();
-			cmd.Value.Method.Invoke(null, new object[] { new CommandArguments(line) });
+			Execute(line, CommandArgumentParameters.Default);
 		}
 
 		[Command(@"^help$", "help", "List all commands")]
 		public static void Help(CommandArguments args)
 		{
+			if (HelpOverride != null)
+			{
+				HelpOverride.Invoke();
+				return;
+			}
 			foreach (var cmd in m_commands.OrderBy(x => x.Value.Attribute.FriendlyName))
 			{
 				Console.WriteLine($"  {cmd.Value.Attribute.FriendlyName,-20}\t\t{cmd.Value.Attribute.Description,10}");

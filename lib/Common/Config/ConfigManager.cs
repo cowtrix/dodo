@@ -14,7 +14,7 @@ namespace Common.Config
 	/// </summary>
 	public static class ConfigManager
 	{
-		const string m_configPath = "config.json";
+		private static string m_configPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.json");
 		static Dictionary<string, object> m_data = new Dictionary<string, object>();
 
 		static ConfigManager()
@@ -22,22 +22,20 @@ namespace Common.Config
 			LoadFromFile();
 		}
 
-		[Command("^config load$", "config load", "Load configuration from file")]
-		public static void LoadFromFile(string args = null)
+		public static void LoadFromFile()
 		{
 			if (!File.Exists(m_configPath))
 			{
 				Logger.Warning($"No config file found at {Path.GetFullPath(m_configPath)}");
 				return;
 			}
-			m_data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(m_configPath), JsonExtensions.DatabaseSettings);
+			m_data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(m_configPath));
 			Logger.Debug($"Loaded configuration data from {m_configPath}");
 		}
 
-		[Command("^config save", "config save", "Save configuration to file")]
-		public static void SaveToFile(string args = null)
+		public static void SaveToFile()
 		{
-			File.WriteAllText(m_configPath, JsonConvert.SerializeObject(m_data, JsonExtensions.DatabaseSettings));
+			File.WriteAllText(m_configPath, JsonConvert.SerializeObject(m_data, Formatting.Indented));
 			Logger.Debug($"Saved configuration data to {m_configPath}");
 		}
 
@@ -45,7 +43,7 @@ namespace Common.Config
 		{
 			if (!m_data.TryGetValue(configVariable.ConfigKey, out var obj))
 			{
-				result = default;
+				result = default(T);
 				return false;
 			}
 			if (typeof(Enum).IsAssignableFrom(typeof(T)))
@@ -59,13 +57,20 @@ namespace Common.Config
 			return true;
 		}
 
+		internal static bool SetValue<T>(string configKey, T newVal)
+		{
+			m_data[configKey] = newVal;
+			SaveToFile();
+			return true;
+		}
+
 #if DEBUG
-		const string m_sampleConfigPath = @"..\..\config.sample.json";
+		const string m_sampleConfigPath = @"config.sample.json";
 		static Dictionary<string, object> m_sampleData = new Dictionary<string, object>();
 		internal static void Register<T>(ConfigVariable<T> configVariable)
 		{
-			//m_sampleData[configVariable.ConfigKey] = configVariable.DefaultValue;
-			//File.WriteAllText(m_sampleConfigPath, JsonConvert.SerializeObject(m_sampleData, JsonExtensions.DatabaseSettings));
+			m_sampleData[configVariable.ConfigKey] = configVariable.DefaultValue;
+			File.WriteAllText(m_sampleConfigPath, JsonConvert.SerializeObject(m_sampleData, Formatting.Indented));
 		}
 #endif
 	}

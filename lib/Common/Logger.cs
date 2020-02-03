@@ -1,25 +1,17 @@
-﻿using Common.Config;
+﻿using Common.Commands;
+using Common.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Common
 {
 	public enum ELogLevel
 	{
-		Info,
-		Warn,
 		Error,
+		Warning,
+		Info,
 		Debug,
-	}
-
-	internal struct ExceptionEntry
-	{
-		public string Message;
-		public DateTime TimeStamp;
 	}
 
 	public delegate void LogEvent(string message, ELogLevel logLevel);
@@ -27,99 +19,88 @@ namespace Common
 	public static class Logger
 	{
 		public static LogEvent OnLog;
-		private static ELogLevel m_logLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Debug).Value;
-		internal static List<ExceptionEntry> ExceptionLog = new List<ExceptionEntry>();
-		public static string LogPath => Path.GetFullPath(Path.Combine("logs", "log.log"));
+		public static ELogLevel CurrentLogLevel = ELogLevel.Info;
 		private static object m_fileLock = new object();
 
 		static Logger()
 		{
-			var logDir = Path.GetDirectoryName(LogPath);
-			if (!Directory.Exists(logDir))
+			CommandManager.OnPreExecute += GetArgs;
+			CurrentLogLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Info).Value;
+		}
+
+		private static void GetArgs(CommandArguments args)
+		{
+			var newLog = args.TryGetValue("log", CurrentLogLevel);
+			if (newLog != CurrentLogLevel)
 			{
-				Directory.CreateDirectory(logDir);
+				CurrentLogLevel = newLog;
+				Info($"Logging level is " + CurrentLogLevel);
 			}
 		}
 
-		public static void Exception(Exception exception, string message = null, bool nolog = false)
+		public static void Exception(Exception exception, string message = null)
 		{
-			if(exception == null)
+			if (exception == null)
 			{
 				return;
 			}
-			if(!string.IsNullOrEmpty(message))
+			if (!string.IsNullOrEmpty(message))
 			{
 				Error(message, true);
-			}
-			if(!nolog)
-			{
-				ExceptionLog.Add(new ExceptionEntry()
-				{
-					Message = exception.Message,
-					TimeStamp = DateTime.Now,
-				});
 			}
 			Error(exception.Message, true);
 			Error(exception.StackTrace, true);
 			if (exception.InnerException != null)
 			{
-				Exception(exception.InnerException, "Inner exception: ", nolog);
+				Exception(exception.InnerException, "Inner exception: ");
 			}
 		}
 
-		public static void Debug(string message, ConsoleColor foreground = ConsoleColor.White, ConsoleColor background = ConsoleColor.Black, bool writeToLog = true, ELogLevel lvl = ELogLevel.Info)
+		public static void Info(string message)
 		{
-			if(lvl > m_logLevel)
+			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Info);
+		}
+
+		public static void Debug(string message)
+		{
+			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Debug);
+		}
+
+		private static void DoLog(string message, ConsoleColor foreground, ConsoleColor background, ELogLevel logLevel)
+		{
+			if (logLevel > CurrentLogLevel)
 			{
 				return;
 			}
+			ConsoleColor prevFore = Console.ForegroundColor;
+			ConsoleColor prevBack = Console.BackgroundColor;
 			try
 			{
-				message = $"{(writeToLog ? "" : "~")}[{DateTime.Now.ToString()}]\t{message}";
+				message = $"[{DateTime.Now.ToString()}]\t{message}";
 				Console.ForegroundColor = foreground;
 				Console.BackgroundColor = background;
 				Console.WriteLine(message);
-				OnLog?.Invoke(message, lvl);
-				if (writeToLog)
-				{
-					lock (m_fileLock)
-					{
-						File.AppendAllText(LogPath, message + "\n");
-					}
-				}
+				OnLog?.Invoke(message, logLevel);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				Logger.Exception(e);
+				Console.WriteLine(e.Message);
+			}
+			finally
+			{
+				Console.ForegroundColor = prevFore;
+				Console.BackgroundColor = prevBack;
 			}
 		}
 
 		public static void Error(string message, bool nolog = false)
 		{
-			if (!nolog)
-			{
-				ExceptionLog.Add(new ExceptionEntry()
-				{
-					Message = message,
-					TimeStamp = DateTime.Now,
-				});
-			}
-			Debug(message, ConsoleColor.Red, lvl:ELogLevel.Error);
+			DoLog(message, ConsoleColor.Red, ConsoleColor.Black, ELogLevel.Error);
 		}
 
 		public static void Warning(string message)
 		{
-			Debug(message, ConsoleColor.Yellow, lvl: ELogLevel.Warn);
-		}
-
-		public static void Alert(string message)
-		{
-			ExceptionLog.Add(new ExceptionEntry()
-			{
-				Message = message,
-				TimeStamp = DateTime.Now,
-			});
-			Debug(message, ConsoleColor.Cyan, lvl: ELogLevel.Info);
+			DoLog(message, ConsoleColor.Yellow, ConsoleColor.Black, ELogLevel.Warning);
 		}
 	}
 }
