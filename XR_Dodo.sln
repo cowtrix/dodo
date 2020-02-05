@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dodo.SharedTest", "test\Dod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateSampleData", "test\GenerateSampleData\GenerateSampleData.csproj", "{42C92349-34DC-4963-8BD9-CFE7EAB4D5A3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DodoIdentity", "src\DodoIdentity\DodoIdentity.csproj", "{23717533-7741-4783-99B0-DFFE162FFB6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,14 @@ Global
 		{42C92349-34DC-4963-8BD9-CFE7EAB4D5A3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{42C92349-34DC-4963-8BD9-CFE7EAB4D5A3}.Release|x86.ActiveCfg = Release|Any CPU
 		{42C92349-34DC-4963-8BD9-CFE7EAB4D5A3}.Release|x86.Build.0 = Release|Any CPU
+		{23717533-7741-4783-99B0-DFFE162FFB6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23717533-7741-4783-99B0-DFFE162FFB6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23717533-7741-4783-99B0-DFFE162FFB6B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{23717533-7741-4783-99B0-DFFE162FFB6B}.Debug|x86.Build.0 = Debug|Any CPU
+		{23717533-7741-4783-99B0-DFFE162FFB6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23717533-7741-4783-99B0-DFFE162FFB6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23717533-7741-4783-99B0-DFFE162FFB6B}.Release|x86.ActiveCfg = Release|Any CPU
+		{23717533-7741-4783-99B0-DFFE162FFB6B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -121,6 +131,7 @@ Global
 		{DD2B0435-E8EF-4C50-A8F0-CD5C383A6D31} = {D4CB2E64-9C5A-4D5B-921A-52F4905F87D4}
 		{18D95DA6-20C3-4361-81DC-230143B69929} = {D4CB2E64-9C5A-4D5B-921A-52F4905F87D4}
 		{42C92349-34DC-4963-8BD9-CFE7EAB4D5A3} = {D4CB2E64-9C5A-4D5B-921A-52F4905F87D4}
+		{23717533-7741-4783-99B0-DFFE162FFB6B} = {0D1FD671-44F9-4E15-B7A6-5AE6D79E4761}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {422CF172-1C2B-4D24-8D1B-872D16322C5F}

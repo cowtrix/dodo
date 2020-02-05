@@ -24,3 +24,5 @@
 /src/DodoKubernetes/logs/
 /test/GenerateSampleData/bin/
 /test/GenerateSampleData/obj/
+/src/DodoIdentity/bin
+/src/DodoIdentity/obj
