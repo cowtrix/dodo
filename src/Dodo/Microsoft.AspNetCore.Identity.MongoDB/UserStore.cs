@@ -41,7 +41,7 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
 
 		public virtual async Task<IdentityResult> CreateAsync(User user, CancellationToken token)
 		{
-			UserManager.Add(user);
+			// TODO what are we doing here?
 			return IdentityResult.Success;
 		}
 

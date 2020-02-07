@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{520277FC-CAED-456A-A6FE-7D75D2FA7A40}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0D1FD671-44F9-4E15-B7A6-5AE6D79E4761}"
+	ProjectSection(SolutionItems) = preProject
+		src\DodoIdentity\DodoIdentity.csproj = src\DodoIdentity\DodoIdentity.csproj
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D4CB2E64-9C5A-4D5B-921A-52F4905F87D4}"
 EndProject
