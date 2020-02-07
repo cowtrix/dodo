@@ -54,7 +54,7 @@ namespace REST
 
 		public Resource(ResourceSchemaBase schema)
 		{
-			Name = schema.Name;
+			Name = schema?.Name;
 			GUID = Guid.NewGuid();
 		}
 

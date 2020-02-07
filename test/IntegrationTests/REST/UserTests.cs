@@ -6,17 +6,39 @@ using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RestSharp;
 using REST;
 using System;
 using SharedTest;
+using System.Threading.Tasks;
+using Dodo.SharedTest;
+using IdentityServer4.Quickstart.UI;
 
 namespace RESTTests
 {
 	[TestClass]
-	public class UserTests : RESTTestBase<User>
+	public class UserTests : IntegrationTestBase
 	{
-		public override string ResourceRoot => UserController.RootURL;
+		[AssemblyInitialize]
+		public static void SetupTests(TestContext testContext)
+		{
+			ResourceUtility.ClearAllManagers();
+		}
+
+		[TestMethod]
+		public async Task CanRegisterNewUser()
+		{
+			var response = await RequestAuth("account/register", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
+			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
+		}
+
+		[TestMethod]
+		public async Task CanLogin()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var response = await RequestAuth("account/login", EHTTPRequestType.POST, 
+				new LoginInputModel { Username = user.AuthData.Username, Password = password, RememberLogin = true });
+			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
+		}
 
 		/*public override object GetCreationSchema(bool unique)
 		{

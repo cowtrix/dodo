@@ -160,12 +160,13 @@ namespace REST
 			{
 				return NotFound();
 			}
-			var context = Request.GetRequestOwner();
+			return Ok(target.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
+			/*var context = Request.GetRequestOwner();
 			if (!IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
-			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
+			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase)); */
 		}
 
 

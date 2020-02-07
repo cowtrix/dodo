@@ -13,13 +13,17 @@ using Common;
 namespace REST
 {
 	[AttributeUsage(AttributeTargets.Struct)]
-	public class ViewClassAttribute : Attribute { }
+	public class ViewClassAttribute : Attribute 
+	{
+	}
 
 	/// <summary>
 	/// This class will performs Resource specific JSON parsing tasks.
 	/// </summary>
 	public static class JsonViewUtility
 	{
+		public const string METADATA_KEY = "METADATA";
+
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
 			typeof(string),
@@ -74,7 +78,9 @@ namespace REST
 			}
 			if (obj is Resource)
 			{
-				(obj as Resource).AppendAuxilaryData(vals, visibility, requester, passphrase);
+				var metadata = new Dictionary<string, object>();
+				(obj as Resource).AppendAuxilaryData(metadata, visibility, requester, passphrase);
+				vals.Add(METADATA_KEY, metadata);
 			}
 			return vals;
 		}

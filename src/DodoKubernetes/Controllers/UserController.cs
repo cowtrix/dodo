@@ -1,4 +1,4 @@
-﻿using Common;
+﻿/*using Common;
 using Common.Extensions;
 using REST.Security;
 using Dodo.Utility;
@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Dodo.Users
 {
+	
 	[Route(RootURL)]
 	public class UserController : ObjectRESTController<User, UserSchema>
 	{
@@ -32,7 +33,7 @@ namespace Dodo.Users
 		}
 
 		[HttpGet("~/signout"), HttpPost("~/signout")]
-		public ActionResult SignOut()
+		public async Task<IActionResult> SignOut()
 		{
 			// Instruct the cookies middleware to delete the local cookie created
 			// when the user agent is redirected from the external identity provider
@@ -78,7 +79,7 @@ namespace Dodo.Users
 						throw HttpException.FORBIDDEN;
 					}
 					var newPass = JsonConvert.DeserializeObject<string>(Request.ReadBody());
-					if (user.WebAuth.ChallengePassword(newPass, out _))
+					if (user.AuthData.ChallengePassword(newPass, out _))
 					{
 						return HttpBuilder.ServerError("Cannot use same password.");
 					}
@@ -87,7 +88,7 @@ namespace Dodo.Users
 						// Password does not meet requirements
 						return HttpBuilder.ServerError(error);
 					}
-					user.WebAuth = new WebPortalAuth(user.WebAuth.Username, newPass);
+					user.AuthData = new AuthorizationData(user.AuthData.Username, newPass);
 					ResourceManager.Update(user, rscLock);
 					return HttpBuilder.OK("You've succesfully changed your password.");
 				}
@@ -126,7 +127,7 @@ namespace Dodo.Users
 			{
 				var newPass = JsonConvert.DeserializeObject<string>(Request.ReadBody());
 				var user = rscLock.Value as User;
-				user.WebAuth.ChangePassword(new Passphrase(passRaw), new Passphrase(newPass));
+				user.AuthData.ChangePassword(new Passphrase(passRaw), new Passphrase(newPass));
 				ResourceManager.Update(user, rscLock);
 				return HttpBuilder.OK();
 			}
@@ -198,8 +199,6 @@ namespace Dodo.Users
 			return base.CreateInternal(generalSchema);
 		}
 
-
-
 		protected override void OnCreation(AccessContext context, User user)
 		{
 			SendEmailVerificationEmail(user);
@@ -210,7 +209,7 @@ namespace Dodo.Users
 			var emailVerifyPushAction = new VerifyEmailAction();
 			newUser.PushActions.Add(emailVerifyPushAction);
 #if DEBUG
-			Console.WriteLine($"Added a new VerifyEmailAction for user {newUser.WebAuth.Username}: {emailVerifyPushAction.Token}");
+			Console.WriteLine($"Added a new VerifyEmailAction for user {newUser.AuthData.Username}: {emailVerifyPushAction.Token}");
 #endif
 			EmailHelper.SendEmail(newUser.Email, newUser.Name, $"{Dodo.PRODUCT_NAME}: Please verify your email",
 				"To verify your email, click the following link:\n" +
@@ -223,4 +222,4 @@ namespace Dodo.Users
 			return CreateInternal(schema);
 		}
 	}
-}
+}*/

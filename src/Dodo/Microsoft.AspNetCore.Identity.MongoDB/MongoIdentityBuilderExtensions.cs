@@ -5,9 +5,11 @@ namespace Microsoft.Extensions.DependencyInjection
 	using System;
 	using AspNetCore.Identity;
 	using AspNetCore.Identity.MongoDB;
-	using MongoDB.Driver;
+    using Dodo.Users;
+    using MongoDB.Driver;
+    using REST;
 
-	public static class MongoIdentityBuilderExtensions
+    public static class MongoIdentityBuilderExtensions
 	{
 		/// <summary>
 		///     This method only registers mongo stores, you also need to call AddIdentity.
@@ -15,19 +17,12 @@ namespace Microsoft.Extensions.DependencyInjection
 		/// </summary>
 		/// <param name="builder"></param>
 		/// <param name="connectionString">Must contain the database name</param>
-		public static IdentityBuilder RegisterMongoStores<TUser, TRole>(this IdentityBuilder builder, string connectionString)
+		public static IdentityBuilder RegisterMongoStores<TRole>(this IdentityBuilder builder, string databaseName)
 			where TRole : IdentityRole
-			where TUser : IdentityUser
 		{
-			var url = new MongoUrl(connectionString);
-			var client = new MongoClient(url);
-			if (url.DatabaseName == null)
-			{
-				throw new ArgumentException("Your connection string must contain a database name", connectionString);
-			}
-			var database = client.GetDatabase(url.DatabaseName);
+			var database = ResourceUtility.MongoDB.GetDatabase(databaseName);
 			return builder.RegisterMongoStores(
-				p => database.GetCollection<TUser>("users"),
+				p => database.GetCollection<User>("users"),
 				p => database.GetCollection<TRole>("roles"));
 		}
 
@@ -35,21 +30,20 @@ namespace Microsoft.Extensions.DependencyInjection
 		///     If you want control over creating the users and roles collections, use this overload.
 		///     This method only registers mongo stores, you also need to call AddIdentity.
 		/// </summary>
-		/// <typeparam name="TUser"></typeparam>
+		/// <typeparam name="User"></typeparam>
 		/// <typeparam name="TRole"></typeparam>
 		/// <param name="builder"></param>
 		/// <param name="usersCollectionFactory"></param>
 		/// <param name="rolesCollectionFactory"></param>
-		public static IdentityBuilder RegisterMongoStores<TUser, TRole>(this IdentityBuilder builder,
-			Func<IServiceProvider, IMongoCollection<TUser>> usersCollectionFactory,
+		public static IdentityBuilder RegisterMongoStores<TRole>(this IdentityBuilder builder,
+			Func<IServiceProvider, IMongoCollection<User>> usersCollectionFactory,
 			Func<IServiceProvider, IMongoCollection<TRole>> rolesCollectionFactory)
 			where TRole : IdentityRole
-			where TUser : IdentityUser
 		{
-			if (typeof(TUser) != builder.UserType)
+			if (typeof(User) != builder.UserType)
 			{
 				var message = "User type passed to RegisterMongoStores must match user type passed to AddIdentity. "
-				              + $"You passed {builder.UserType} to AddIdentity and {typeof(TUser)} to RegisterMongoStores, "
+				              + $"You passed {builder.UserType} to AddIdentity and {typeof(User)} to RegisterMongoStores, "
 				              + "these do not match.";
 				throw new ArgumentException(message);
 			}
@@ -60,7 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
 				              + "these do not match.";
 				throw new ArgumentException(message);
 			}
-			builder.Services.AddSingleton<IUserStore<TUser>>(p => new UserStore<TUser>(usersCollectionFactory(p)));
+			builder.Services.AddSingleton<IUserStore<User>>(p => new UserStore());
 			builder.Services.AddSingleton<IRoleStore<TRole>>(p => new RoleStore<TRole>(rolesCollectionFactory(p)));
 			return builder;
 		}
@@ -69,26 +63,25 @@ namespace Microsoft.Extensions.DependencyInjection
 		///     This method registers identity services and MongoDB stores using the IdentityUser and IdentityRole types.
 		/// </summary>
 		/// <param name="services"></param>
-		/// <param name="connectionString">Connection string must contain the database name</param>
-		public static IdentityBuilder AddIdentityWithMongoStores(this IServiceCollection services, string connectionString)
+		/// <param name="databaseName">Connection string must contain the database name</param>
+		public static IdentityBuilder AddIdentityWithMongoStores(this IServiceCollection services, string databaseName)
 		{
-			return services.AddIdentityWithMongoStoresUsingCustomTypes<IdentityUser, IdentityRole>(connectionString);
+			return services.AddIdentityWithMongoStoresUsingCustomTypes<IdentityRole>(databaseName);
 		}
 
 		/// <summary>
 		///     This method allows you to customize the user and role type when registering identity services
 		///     and MongoDB stores.
 		/// </summary>
-		/// <typeparam name="TUser"></typeparam>
+		/// <typeparam name="User"></typeparam>
 		/// <typeparam name="TRole"></typeparam>
 		/// <param name="services"></param>
-		/// <param name="connectionString">Connection string must contain the database name</param>
-		public static IdentityBuilder AddIdentityWithMongoStoresUsingCustomTypes<TUser, TRole>(this IServiceCollection services, string connectionString)
-			where TUser : IdentityUser
+		/// <param name="databaseName">Connection string must contain the database name</param>
+		public static IdentityBuilder AddIdentityWithMongoStoresUsingCustomTypes<TRole>(this IServiceCollection services, string databaseName)
 			where TRole : IdentityRole
 		{
-			return services.AddIdentity<TUser, TRole>()
-				.RegisterMongoStores<TUser, TRole>(connectionString);
+			return services.AddIdentity<User, TRole>()
+				.RegisterMongoStores<TRole>(databaseName);
 		}
 	}
 }

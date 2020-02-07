@@ -5,9 +5,9 @@
 	public static class IndexChecks
 	{
 		public static void EnsureUniqueIndexOnNormalizedUserName<TUser>(IMongoCollection<TUser> users)
-			where TUser : IdentityUser
+			where TUser : Dodo.Users.User
 		{
-			var userName = Builders<TUser>.IndexKeys.Ascending(t => t.NormalizedUserName);
+			var userName = Builders<TUser>.IndexKeys.Ascending(t => t.AuthData.Username);
 			var unique = new CreateIndexOptions {Unique = true};
 			users.Indexes.CreateOneAsync(userName, unique);
 		}
@@ -21,9 +21,9 @@
 		}
 
 		public static void EnsureUniqueIndexOnNormalizedEmail<TUser>(IMongoCollection<TUser> users)
-			where TUser : IdentityUser
+			where TUser : Dodo.Users.User
 		{
-			var email = Builders<TUser>.IndexKeys.Ascending(t => t.NormalizedEmail);
+			var email = Builders<TUser>.IndexKeys.Ascending(t => t.PersonalData);
 			var unique = new CreateIndexOptions {Unique = true};
 			users.Indexes.CreateOneAsync(email, unique);
 		}
@@ -35,9 +35,9 @@
 		public static class OptionalIndexChecks
 		{
 			public static void EnsureUniqueIndexOnUserName<TUser>(IMongoCollection<TUser> users)
-				where TUser : IdentityUser
+				where TUser : Dodo.Users.User
 			{
-				var userName = Builders<TUser>.IndexKeys.Ascending(t => t.UserName);
+				var userName = Builders<TUser>.IndexKeys.Ascending(t => t.AuthData.Username);
 				var unique = new CreateIndexOptions {Unique = true};
 				users.Indexes.CreateOneAsync(userName, unique);
 			}
@@ -51,9 +51,9 @@
 			}
 
 			public static void EnsureUniqueIndexOnEmail<TUser>(IMongoCollection<TUser> users)
-				where TUser : IdentityUser
+				where TUser : Dodo.Users.User
 			{
-				var email = Builders<TUser>.IndexKeys.Ascending(t => t.Email);
+				var email = Builders<TUser>.IndexKeys.Ascending(t => t.PersonalData.Email);
 				var unique = new CreateIndexOptions {Unique = true};
 				users.Indexes.CreateOneAsync(email, unique);
 			}

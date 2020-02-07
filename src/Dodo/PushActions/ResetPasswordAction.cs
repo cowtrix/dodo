@@ -20,14 +20,14 @@ namespace Dodo.Users
 			TargetUser = targetUser;
 			TemporaryToken = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 #if DEBUG
-			Console.WriteLine($"Reset password action added for user {targetUser.WebAuth.Username}: {TemporaryToken}");
+			Console.WriteLine($"Reset password action added for user {targetUser.AuthData.Username}: {TemporaryToken}");
 #endif
 		}
 
 		public override void OnAdd()
 		{
 			var user = TargetUser.GetValue();
-			EmailHelper.SendEmail(user.Email, user.Name, $"{Dodo.PRODUCT_NAME}: Reset your password",
+			EmailHelper.SendEmail(user.PersonalData.Email, user.Name, $"{Dodo.PRODUCT_NAME}: Reset your password",
 				$"You've requested a password reset for your account on {Dns.GetHostName()}." +
 				$"To reset your password, visit the following link: {Dns.GetHostName()}/resetpassword?token={TemporaryToken}");
 		}

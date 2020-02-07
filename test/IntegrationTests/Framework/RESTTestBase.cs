@@ -13,48 +13,26 @@ using Dodo;
 using Dodo.Rebellions;
 using Dodo.SharedTest;
 using Dodo.Users;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using REST;
-using RestSharp;
-using SharedTest;
 
 namespace RESTTests
 {
 
-	public abstract class RESTTestBase<T> : TestBase where T:DodoResource
+	public abstract class RESTTestBase<T> : IntegrationTestBase where T:DodoResource
 	{
 		public abstract string ResourceRoot { get; }
-		protected static RestClient RestClient;
-		private readonly TestServer _server;
-		private readonly HttpClient _client;
-
-		public RESTTestBase()
-		{
-			ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
-
-			_server = new TestServer(new WebHostBuilder()
-				.UseStartup<DodoKubernetes.Startup>());
-			_client = _server.CreateClient();
-		}
-
-		public static bool MyRemoteCertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-		{
-			return true;
-		}
-
+		
 		[TestMethod]
 		public async virtual Task CanGetAnonymously()
 		{
 			GetRandomUser(out _, out var context);
 			var resource = ResourceUtility.GetFactory<T>().CreateObject(SchemaGenerator.GetRandomSchema<T>(context));
-			var resourceObj = await RequestJSON($"{ResourceRoot}/{resource.GUID.ToString()}", Method.GET);
+			var resourceObj = await RequestJSON($"{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.GET);
 			Assert.IsNotNull(resourceObj.Value<string>("GUID"));
 		}
-
 
 		/*[TestMethod]
 		public async virtual void CanCreate()
@@ -198,35 +176,7 @@ namespace RESTTests
 			return JsonConvert.DeserializeObject<JObject>(response);
 		}*/
 
-		protected async Task<JObject> RequestJSON(string url, Method method, object data = null, string user = null, string password = null)
-		{
-			HttpResponseMessage response;
-			switch (method)
-			{
-				case Method.GET:
-					response = await _client.GetAsync(url);
-					break;
-				case Method.POST:
-					response = await _client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data)));
-					break;
-				default:
-					throw new Exception("Unsupported method " + method);
-			}
-			var content = await response.Content.ReadAsStringAsync();
-			Assert.IsTrue(content.IsValidJson(), 
-				$"Invalid JSON: {response.StatusCode} | {response.ReasonPhrase} | {content}");
-			return JsonConvert.DeserializeObject<JObject>(content);
-		}
-
-		protected IRestResponse Request(string url, Method method, object data = null, string username = null, string password = null)
-		{
-			var request = new RestRequest(url, method);
-			if (data != null)
-			{
-				request.AddJsonBody(data);
-			}
-			return RestClient.Execute(request);
-		}
+		
 
 		/*protected static void AuthoriseRequest(RestRequest request, string user, string password)
 		{

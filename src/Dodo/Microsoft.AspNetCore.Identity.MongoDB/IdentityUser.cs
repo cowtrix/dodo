@@ -1,25 +1,23 @@
-﻿namespace Microsoft.AspNetCore.Identity.MongoDB
+﻿/*namespace Microsoft.AspNetCore.Identity.MongoDB
 {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Security.Claims;
-	using global::MongoDB.Bson;
+    using Dodo;
+    using Dodo.Users;
 	using global::MongoDB.Bson.Serialization.Attributes;
+	using REST;
 
-	public class IdentityUser
+	public class IdentityUser : DodoResource
 	{
-		public IdentityUser()
+		public IdentityUser(UserSchema schema) : base(schema)
 		{
-			Id = ObjectId.GenerateNewId().ToString();
 			Roles = new List<string>();
 			Logins = new List<IdentityUserLogin>();
 			Claims = new List<IdentityUserClaim>();
 			Tokens = new List<IdentityUserToken>();
 		}
-
-		[BsonRepresentation(BsonType.ObjectId)]
-		public virtual string Id { get; set; }
 
 		public virtual string UserName { get; set; }
 
@@ -144,5 +142,10 @@
 		}
 
 		public override string ToString() => UserName;
+
+		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
+		{
+			throw new NotImplementedException();
+		}
 	}
-}
+}*/

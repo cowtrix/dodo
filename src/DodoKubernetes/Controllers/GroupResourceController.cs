@@ -48,7 +48,7 @@ namespace Dodo
 			}
 			else if(ValidationExtensions.EmailIsValid(newAdminIdentifier))
 			{
-				targetUser = userManager.GetSingle(x => x.Email == newAdminIdentifier);
+				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier);
 			}
 			if(resource.AddAdmin(context, targetUser))
 			{

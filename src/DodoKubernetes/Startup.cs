@@ -26,8 +26,8 @@ namespace DodoKubernetes
 		{
 			services.AddControllers();
 			services.AddRouting(options => options.LowercaseUrls = true);
-			services.AddIdentityWithMongoStores("mongodb://localhost/Dodo")
-				.AddDefaultTokenProviders();
+			/*services.AddIdentityWithMongoStores("users")
+				.AddDefaultTokenProviders();*/
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,8 +48,6 @@ namespace DodoKubernetes
 			{
 				endpoints.MapControllers();
 			});
-
-			
 		}
 
 

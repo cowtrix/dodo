@@ -14,7 +14,7 @@ namespace Dodo
 		public AccessContext(User user, string password)
 		{
 			User = user;
-			Passphrase = new Passphrase(User.WebAuth.PassPhrase.GetValue(new Passphrase(password)));
+			Passphrase = new Passphrase(User.AuthData.PassPhrase.GetValue(new Passphrase(password)));
 		}
 
 		public AccessContext(User user, Passphrase passphrase)
@@ -39,7 +39,7 @@ namespace Dodo
 
 		public bool Challenge()
 		{
-			return User != null && User.WebAuth.PassphraseHash == SHA256Utility.SHA256(Passphrase.Value);
+			return User != null && User.AuthData.PassphraseHash == SHA256Utility.SHA256(Passphrase.Value);
 		}
 	}
 }

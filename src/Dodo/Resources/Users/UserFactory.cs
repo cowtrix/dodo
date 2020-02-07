@@ -46,5 +46,10 @@ namespace Dodo.Users
 			error = null;
 			return true;
 		}
+
+		protected override User CreateObjectInternal(UserSchema schema)
+		{
+			return base.CreateObjectInternal(schema);
+		}
 	}
 }

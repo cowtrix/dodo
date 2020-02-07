@@ -1,4 +1,5 @@
-﻿using REST;
+﻿using Dodo.Users;
+using REST;
 using System;
 using System.Collections.Generic;
 using System.Text;

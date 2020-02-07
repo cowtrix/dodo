@@ -3,6 +3,7 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Http;
 using REST;
 using REST.Security;
+using System;
 
 namespace Dodo.Utility
 {
@@ -30,17 +31,18 @@ namespace Dodo.Utility
 		/// <returns>The user context that made this request</returns>
 		public static AccessContext GetRequestOwner(this HttpRequest request)
 		{
-			GetAuth(request, out var username, out var password);
+			throw new NotImplementedException();
+			/*GetAuth(request, out var username, out var password);
 			if (username == null || password == null)
 			{
 				return default;
 			}
-			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.WebAuth.Username == username);
-			if (user != null && !user.WebAuth.ChallengePassword(password, out var passphrase))
+			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.AuthData.Username == username);
+			if (user != null && !user.AuthData.ChallengePassword(password, out var passphrase))
 			{
 				throw HttpException.FORBIDDEN;
 			}
-			return new AccessContext(user, passphrase);
+			return new AccessContext(user, passphrase);*/
 		}
 
 		public static void GetAuth(this HttpRequest request, out string username, out string password)

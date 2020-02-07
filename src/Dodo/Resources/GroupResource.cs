@@ -125,7 +125,7 @@ namespace Dodo
 			}
 			using (var userLock = new ResourceLock(newAdmin))
 			{
-				newAdmin.PushActions.Add(new AddAdminAction(this, temporaryPass, newAdmin.WebAuth.PublicKey));
+				newAdmin.PushActions.Add(new AddAdminAction(this, temporaryPass, newAdmin.AuthData.PublicKey));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;

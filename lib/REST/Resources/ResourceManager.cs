@@ -45,14 +45,14 @@ namespace REST
 		/// See: WaitForUnlocked
 		/// </summary>
 		private ConfigVariable<int> m_resourceLockTimeoutMs = new ConfigVariable<int>("ResourceLockTimeout", 10 * 1000);
-		private IMongoCollection<T> m_db;
+		public IMongoCollection<T> MongoDatabase { get; private set; }
 
 		public ResourceManager()
 		{
 			// Connect to the database
 			var database = ResourceUtility.MongoDB.GetDatabase(MongoDBDatabaseName);
 			// Get the collection (which is the name of this type by default)
-			m_db = database.GetCollection<T>(MongoDBCollectionName);
+			MongoDatabase = database.GetCollection<T>(MongoDBCollectionName);
 
 			foreach (var type in ReflectionExtensions.GetConcreteClasses<T>())
 			{
@@ -66,7 +66,7 @@ namespace REST
 			var indexKeys = Builders<T>.IndexKeys//.Ascending(rsc => rsc.ResourceURL)
 				.Ascending(rsc => rsc.GUID);
 			var indexModel = new CreateIndexModel<T>(indexKeys, indexOptions);
-			m_db.Indexes.CreateOne(indexModel);
+			MongoDatabase.Indexes.CreateOne(indexModel);
 		}
 
 		// Check to see if map is registered before registering class map
@@ -90,7 +90,7 @@ namespace REST
 			{
 				throw HttpException.CONFLICT;
 			}
-			m_db.InsertOne(newObject);
+			MongoDatabase.InsertOne(newObject);
 		}
 
 		/// <summary>
@@ -100,7 +100,7 @@ namespace REST
 		public virtual void Delete(T objToDelete)
 		{
 			objToDelete.OnDestroy();
-			m_db.DeleteOne(x => x.GUID == objToDelete.GUID);
+			MongoDatabase.DeleteOne(x => x.GUID == objToDelete.GUID);
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace REST
 				// This should never, ever happen in normal execution of the program
 				throw new Exception("Locker GUID mismatch");
 			}
-			m_db.ReplaceOne(x => x.GUID == objToUpdate.GUID, objToUpdate);
+			MongoDatabase.ReplaceOne(x => x.GUID == objToUpdate.GUID, objToUpdate);
 		}
 
 		/// <summary>
@@ -126,7 +126,7 @@ namespace REST
 		/// <returns>A resource of type T that satisfies the selector</returns>
 		public virtual T GetSingle(Func<T, bool> selector)
 		{
-			return WaitForUnlocked(m_db.AsQueryable().SingleOrDefault(selector));
+			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector));
 		}
 
 		/// <summary>
@@ -136,7 +136,7 @@ namespace REST
 		/// <returns>A resource of type T that satisfies the selector</returns>
 		public virtual T GetFirst(Func<T, bool> selector)
 		{
-			return WaitForUnlocked(m_db.AsQueryable().FirstOrDefault(selector));
+			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector));
 		}
 
 		/// <summary>
@@ -146,7 +146,7 @@ namespace REST
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
 		public virtual IEnumerable<T> Get(Func<T, bool> selector)
 		{
-			return WaitForAllUnlocked(m_db.AsQueryable().Where(selector));
+			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector));
 		}
 
 		/// <summary>
@@ -154,7 +154,7 @@ namespace REST
 		/// </summary>
 		public virtual void Clear()
 		{
-			m_db.Database.DropCollection(typeof(T).Name);
+			MongoDatabase.Database.DropCollection(typeof(T).Name);
 		}
 
 		/// <summary>
@@ -185,17 +185,17 @@ namespace REST
 
 		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector)
 		{
-			return m_db.AsQueryable().SingleOrDefault(selector);
+			return MongoDatabase.AsQueryable().SingleOrDefault(selector);
 		}
 
 		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector)
 		{
-			return m_db.AsQueryable().FirstOrDefault(selector);
+			return MongoDatabase.AsQueryable().FirstOrDefault(selector);
 		}
 
 		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector)
 		{
-			return m_db.AsQueryable().Where(selector);
+			return MongoDatabase.AsQueryable().Where(selector);
 		}
 
 		IEnumerable<T> WaitForAllUnlocked(IEnumerable<T> enumerable)

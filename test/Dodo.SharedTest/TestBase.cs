@@ -86,7 +86,7 @@ namespace SharedTest
 		protected static User GenerateUser(UserSchema schema, out AccessContext context)
 		{
 			var user = ResourceUtility.GetFactory<User>().CreateObject(schema);
-			context = new AccessContext(user, new Passphrase(user.WebAuth.PassPhrase.GetValue(new Passphrase(schema?.Password))));
+			context = new AccessContext(user, new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema?.Password))));
 			return user;
 		}
 	}

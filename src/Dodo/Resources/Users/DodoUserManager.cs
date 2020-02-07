@@ -6,7 +6,7 @@ using System;
 
 namespace Dodo.Users
 {
-	public class UserManager : DodoResourceManager<User>
+	public class DodoUserManager : DodoResourceManager<User>
 	{
 		public User CreateTemporaryUser(string email, out Passphrase temporaryPassword)
 		{

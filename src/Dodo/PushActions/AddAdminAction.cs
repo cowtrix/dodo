@@ -23,7 +23,7 @@ namespace Dodo.Users
 		protected override void ExecuteInternal(AccessContext context)
 		{
 			Resource.CheckValue();
-			var privateKey = context.User.WebAuth.PrivateKey.GetValue(context.Passphrase);
+			var privateKey = context.User.AuthData.PrivateKey.GetValue(context.Passphrase);
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
 			using (var rscLocker = new ResourceLock(Resource.GetValue()))
 			{
