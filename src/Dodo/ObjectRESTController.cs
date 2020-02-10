@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Dodo;
 using Dodo.Users;
 using Dodo.Utility;
+using System.Threading.Tasks;
 
 namespace REST
 {
@@ -74,9 +75,9 @@ namespace REST
 			return target.IsAuthorised(context, requestType, out permissionLevel);
 		}
 
-		public abstract IActionResult Create([FromBody] TSchema schema);
+		public abstract Task<IActionResult> Create([FromBody] TSchema schema);
 
-		protected virtual IActionResult CreateInternal(TSchema schema)
+		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
 			var context = Request.GetRequestOwner();
 			if (!IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
@@ -87,10 +88,6 @@ namespace REST
 			T createdObject;
 			try
 			{
-				/*var schema = JsonConvert.DeserializeObject(Request.ReadBody(), factory.SchemaType, new JsonSerializerSettings()
-				{
-					CheckAdditionalContent = true,
-				}) as ResourceSchemaBase;*/
 				createdObject = factory.CreateObject(schema);
 				OnCreation(context, createdObject);
 			}
@@ -102,7 +99,7 @@ namespace REST
 		}
 
 		[HttpPatch("{id}")]
-		public virtual IActionResult Update(Guid id, [FromBody]Dictionary<string, object> values)
+		public virtual async Task<IActionResult> Update(Guid id, [FromBody]Dictionary<string, object> values)
 		{
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
@@ -114,29 +111,31 @@ namespace REST
 			{
 				return Forbid();
 			}
-			using var resourceLock = new ResourceLock(target);
-			target = resourceLock.Value as T;
-			if (target == null)
+			using (var resourceLock = new ResourceLock(target))
 			{
-				return NotFound();
+				target = resourceLock.Value as T;
+				if (target == null)
+				{
+					return NotFound();
+				}
+				//var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(Request.ReadBody());
+				if (values == null)
+				{
+					return BadRequest("Invalid JSON body");
+				}
+				var jsonSettings = new JsonSerializerSettings()
+				{
+					TypeNameHandling = TypeNameHandling.All
+				};
+				var prev = JsonConvert.SerializeObject(target, jsonSettings);
+				target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
+				ResourceManager.Update(target, resourceLock);
 			}
-			//var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(Request.ReadBody());
-			if (values == null)
-			{
-				return BadRequest("Invalid JSON body");
-			}
-			var jsonSettings = new JsonSerializerSettings()
-			{
-				TypeNameHandling = TypeNameHandling.All
-			};
-			var prev = JsonConvert.SerializeObject(target, jsonSettings);
-			target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
-			ResourceManager.Update(target, resourceLock);
 			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
 		}
 
 		[HttpDelete("{id}")]
-		public virtual IActionResult Delete(Guid id)
+		public virtual async Task<IActionResult> Delete(Guid id)
 		{
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
@@ -153,7 +152,7 @@ namespace REST
 		}
 
 		[HttpGet("{id}")]
-		public IActionResult Get(Guid id)
+		public async Task<IActionResult> Get(Guid id)
 		{
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)

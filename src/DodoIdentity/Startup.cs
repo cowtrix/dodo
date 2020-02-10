@@ -44,10 +44,22 @@ namespace DodoIdentity
 				.AddInMemoryClients(Config.Clients)
 				.AddAspNetIdentity<User>();
 
+#if DEBUG
 			// not recommended for production - you need to store your key material somewhere secure
 			builder.AddDeveloperSigningCredential();
+#endif
 
-			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(config =>
+			{
+			});
+
+			services.AddAuthorization(config =>
+			{
+				/*config.AddPolicy(Dodo.Dodo.PRODUCT_NAME, config =>
+				{
+					config.
+				});*/
+			});
 		}
 
 		public void Configure(IApplicationBuilder app)

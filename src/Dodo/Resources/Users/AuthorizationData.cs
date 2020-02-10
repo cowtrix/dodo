@@ -51,16 +51,16 @@ namespace Dodo.Users
 		[JsonProperty]
 		public EncryptedStore<string> PrivateKey;
 
+		public AuthorizationData()
+		{
+			SecurityStamp = "";
+		}
+
 		public AuthorizationData(string userName, string password)
 		{
 			// URGENT TODO: we can't really use the password here
 			// BECAUSE we need to change the key to the passphrase when the user auth changes
 			PasswordHash = HashPassword(password);
-
-			if (!ValidationExtensions.IsStrongPassword(password, out var error))
-			{
-				throw new Exception(error);
-			}
 			Username = userName;
 			var passphrase = KeyGenerator.GetUniqueKey(128);
 			PassphraseHash = SHA256Utility.SHA256(passphrase);
@@ -68,6 +68,7 @@ namespace Dodo.Users
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			PrivateKey = new EncryptedStore<string>(pv, new Passphrase(passphrase));
 			PublicKey = pk;
+			SecurityStamp = SHA256Utility.SHA256(pv + password);
 		}
 
 		private static string HashPassword(string password)
@@ -88,8 +89,6 @@ namespace Dodo.Users
 			Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
 			return Convert.ToBase64String(dst);
 		}
-
-		public AuthorizationData() { }
 
 		/*
 		public bool ChallengePassword(string password, out Passphrase passphrase)

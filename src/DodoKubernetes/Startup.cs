@@ -26,8 +26,11 @@ namespace DodoKubernetes
 		{
 			services.AddControllers();
 			services.AddRouting(options => options.LowercaseUrls = true);
-			/*services.AddIdentityWithMongoStores("users")
-				.AddDefaultTokenProviders();*/
+			services.AddAuthentication().AddJwtBearer(options =>
+			{
+				options.SaveToken = true;
+
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

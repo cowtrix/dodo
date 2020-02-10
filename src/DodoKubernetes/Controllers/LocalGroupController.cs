@@ -1,5 +1,7 @@
 ﻿using REST;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Dodo.LocalGroups
 {
@@ -9,9 +11,10 @@ namespace Dodo.LocalGroups
 		public const string RootURL = "api/localgroups";
 
 		[HttpPost]
-		public override IActionResult Create([FromBody] LocalGroupSchema schema)
+		[Authorize]
+		public override async Task<IActionResult> Create([FromBody] LocalGroupSchema schema)
 		{
-			return CreateInternal(schema);
+			return await CreateInternal(schema);
 		}
 	}
 }

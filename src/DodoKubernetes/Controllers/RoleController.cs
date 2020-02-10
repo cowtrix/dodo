@@ -5,6 +5,8 @@ using System;
 using Dodo.Utility;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Dodo.Roles
 {
@@ -14,9 +16,10 @@ namespace Dodo.Roles
 		public const string RootURL = "api/roles";
 
 		[HttpPost]
-		public override IActionResult Create([FromBody] RoleSchema schema)
+		[Authorize]
+		public override async Task<IActionResult> Create([FromBody] RoleSchema schema)
 		{
-			return CreateInternal(schema);
+			return await CreateInternal(schema);
 		}
 	}
 }

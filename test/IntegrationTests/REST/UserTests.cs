@@ -11,7 +11,6 @@ using System;
 using SharedTest;
 using System.Threading.Tasks;
 using Dodo.SharedTest;
-using IdentityServer4.Quickstart.UI;
 
 namespace RESTTests
 {
@@ -27,17 +26,23 @@ namespace RESTTests
 		[TestMethod]
 		public async Task CanRegisterNewUser()
 		{
-			var response = await RequestAuth("account/register", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
+			var response = await RequestAuth("register", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
 			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
 		}
 
 		[TestMethod]
-		public async Task CanLogin()
+		public async Task CanAuthorise()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			var response = await RequestAuth("account/login", EHTTPRequestType.POST, 
-				new LoginInputModel { Username = user.AuthData.Username, Password = password, RememberLogin = true });
-			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
+			await Authorize(user.AuthData.Username, password);
+		}
+
+		[TestMethod]
+		public async Task BadAuthFails()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			await AssertX.ThrowsAsync<Exception>(Authorize(user.AuthData.Username, "not the password"),
+				e => e.Message.Contains("invalid_grant"));
 		}
 
 		/*public override object GetCreationSchema(bool unique)

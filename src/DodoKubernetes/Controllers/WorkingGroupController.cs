@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Dodo.Utility;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Dodo.WorkingGroups
 {
@@ -15,9 +17,10 @@ namespace Dodo.WorkingGroups
 		public const string RootURL = "api/workinggroups";
 
 		[HttpPost]
-		public override IActionResult Create([FromBody] WorkingGroupSchema schema)
+		[Authorize]
+		public override async Task<IActionResult> Create([FromBody] WorkingGroupSchema schema)
 		{
-			return CreateInternal(schema);
+			return await CreateInternal(schema);
 		}
 	}
 }

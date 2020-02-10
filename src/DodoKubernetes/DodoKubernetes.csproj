@@ -8,11 +8,19 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath></OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\Base\**" />
+    <Content Remove="Controllers\Base\**" />
+    <EmbeddedResource Remove="Controllers\Base\**" />
+    <None Remove="Controllers\Base\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
@@ -27,10 +35,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dodo\Dodo.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Base\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Dodo.Utility;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Dodo.Rebellions
 {
@@ -16,9 +18,10 @@ namespace Dodo.Rebellions
 		public const string RootURL = "api/rebellions";
 
 		[HttpPost]
-		public override IActionResult Create([FromBody] RebellionSchema schema)
+		[Authorize]
+		public override async Task<IActionResult> Create([FromBody] RebellionSchema schema)
 		{
-			return CreateInternal(schema);
+			return await CreateInternal(schema);
 		}
 	}
 }

@@ -45,6 +45,11 @@ namespace RESTTests
 			return await Request(m_authClient, url, method, data);
 		}
 
+		protected async Task<HttpResponseMessage> RequestResource(string url, EHTTPRequestType method, object data = null)
+		{
+			return await Request(m_resourceClient, url, method, data);
+		}
+
 		private static async Task<HttpResponseMessage> Request(HttpClient client, string url, EHTTPRequestType method, object data = null)
 		{
 			HttpResponseMessage response;
@@ -63,20 +68,25 @@ namespace RESTTests
 			return response;
 		}
 
-		protected async Task Authorize(string url, string username, string password)
+		protected async Task Authorize(string username, string password)
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
 
 			var tokenResponse = await m_authClient.RequestPasswordTokenAsync(new PasswordTokenRequest
 			{
-				Address = url,
+				Address = disco.TokenEndpoint,
 				UserName = username,
 				Password = password,
+				ClientId = "spa",
+				Scope = "api",
 			});
-			Assert.IsFalse(tokenResponse.IsError, tokenResponse.Error);
-
-
+			if (tokenResponse.IsError)
+			{
+				throw new Exception(tokenResponse.Error);
+			}
+			m_resourceClient.SetBearerToken(tokenResponse.AccessToken);
+			m_resourceClient.SetBearerToken(tokenResponse.RefreshToken);
 		}
 	}
 }
