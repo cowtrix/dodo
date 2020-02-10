@@ -43,10 +43,13 @@ namespace Dodo.Sites
 			var siteType = Type.GetType(schema.Type);
 			if(siteType == null)
 			{
-				throw new HttpException("Invalid Site Type", System.Net.HttpStatusCode.BadRequest);
+				throw new Exception("Invalid Site Type: " + schema.Type);
 			}
 			var newSite = Activator.CreateInstance(siteType, schema) as Site;
-			newSite.Verify();
+			if(!newSite.Verify(out var error))
+			{
+				throw new Exception(error);
+			}
 			return newSite;
 		}
 	}

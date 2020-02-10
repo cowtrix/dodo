@@ -18,6 +18,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dodo.Users;
 using REST;
+using Newtonsoft.Json;
+using Common.Extensions;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -51,6 +53,11 @@ namespace IdentityServer4.Quickstart.UI
 		[HttpPost]
 		public async Task<IActionResult> Register([FromBody]UserSchema schema)
 		{
+			string error = null;
+			if(schema == null || !schema.Verify(out error))
+			{
+				return BadRequest($"{error}\nExpecting application/json object:\n{JsonConvert.SerializeObject(new UserSchema(), Formatting.Indented)}");
+			}
 			var user = await _userManager.FindByNameAsync(schema.Username);
 			if(user != null)
 			{

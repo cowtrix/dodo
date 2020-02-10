@@ -123,7 +123,7 @@ namespace REST
 			//var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(Request.ReadBody());
 			if (values == null)
 			{
-				throw new HttpException("Invalid JSON body", HttpStatusCode.BadRequest);
+				return BadRequest("Invalid JSON body");
 			}
 			var jsonSettings = new JsonSerializerSettings()
 			{
@@ -149,7 +149,7 @@ namespace REST
 				return Forbid();
 			}
 			ResourceManager.Delete(target);
-			return HttpBuilder.Custom("Resource deleted", System.Net.HttpStatusCode.OK);
+			return Ok("Resource deleted");
 		}
 
 		[HttpGet("{id}")]
@@ -161,12 +161,6 @@ namespace REST
 				return NotFound();
 			}
 			return Ok(target.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
-			/*var context = Request.GetRequestOwner();
-			if (!IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
-			{
-				return Forbid();
-			}
-			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase)); */
 		}
 
 

@@ -17,8 +17,9 @@ namespace REST
 		void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
 	}
 
-	public abstract class ResourceSchemaBase
+	public abstract class ResourceSchemaBase : IVerifiable
 	{
+		[UserFriendlyName]
 		public string Name { get; set; }
 
 		public ResourceSchemaBase(string name)
@@ -27,6 +28,11 @@ namespace REST
 		}
 
 		public ResourceSchemaBase() { }
+
+		public bool CanVerify()
+		{
+			return true;
+		}
 	}
 
 	/// <summary>

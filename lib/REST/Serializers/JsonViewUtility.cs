@@ -114,22 +114,20 @@ namespace REST
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
+			string error = null;
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
 			// Firstly, if we hit a primitive type or a specially included type, we just convert the whole thing
 			// to an object of that type with Json
 			if (ShouldSerializeDirectly(targetType))
 			{
 				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values, JsonExtensions.DefaultSettings), targetType, JsonExtensions.DefaultSettings);
-				if (val is IVerifiable)
-				{
-					(val as IVerifiable).Verify();
-				}
 				return (T)val;
 			}
 
 			if(targetType.IsValueType)
 			{
-				throw new Exception("Cannot patch immutable struct - you must pass the full object. Add the [ViewClass] attribute to your struct.");
+				throw new Exception("Cannot patch immutable struct - you must pass the full object. " + 
+					"Add the [ViewClass] attribute to your struct.");
 			}
 
 			// If the object is decryptable, we handle this transparently and redirect the data within
@@ -138,13 +136,10 @@ namespace REST
 				var decryptable = targetObject as IDecryptable;
 				if (!decryptable.TryGetValue(requester, passphrase, out var encryptedObject))
 				{
-					return targetObject;
+					// User wasn't authorised
+					throw new SecurityException("Bad authorization");
 				}
 				encryptedObject.PatchObject(values, permissionLevel, requester, passphrase);
-				if (encryptedObject is IVerifiable)
-				{
-					(encryptedObject as IVerifiable).Verify();
-				}
 				decryptable.SetValue(encryptedObject, permissionLevel, requester, passphrase);
 				return targetObject;
 			}
@@ -154,19 +149,24 @@ namespace REST
 			members.AddRange(targetObject.GetType().GetFields());
 
 			// Validate that we are able to complete this operation
+			// Really, the client shouldn't ever do a bad request
+			// So any problems here may indicate an attack
 			var validFields = values.Select(kvp => members.FirstOrDefault(x => x.Name == kvp.Key))
 				.Where(member => member != null);
 			if (validFields.Count() != values.Count)
 			{
-				throw new Exception("Invalid field names");
+				// Request submitted incorrect fields
+				throw new SecurityException("Invalid field names");
 			}
-			if (validFields.Where(member => member.GetCustomAttribute<ViewAttribute>()?.EditPermission <= permissionLevel).Count() != values.Count)
+			if (validFields.Where(member => member.GetCustomAttribute<ViewAttribute>()?.EditPermission <= permissionLevel)
+				.Count() != values.Count)
 			{
-				throw new Exception("Insufficient privileges");
+				// The request is trying to modify fields it is not allowed to
+				throw new SecurityException("Insufficient privileges");
 			}
 			if (!validFields.Where(m => m.GetMemberType() is IDecryptable).Cast<IDecryptable>().All(decryptable => decryptable.IsAuthorised(requester, passphrase)))
 			{
-				throw new Exception("Authorisation failed");
+				throw new SecurityException("Authorisation failed");
 			}
 
 			// Go through the dictionary and set the values
@@ -179,12 +179,12 @@ namespace REST
 				}
 				if (targetMember.GetCustomAttribute<NoPatchAttribute>() != null)
 				{
-					throw new Exception($"Cannot patch field {targetMember.Name}: NoPatch");
+					throw new SecurityException($"Cannot patch field {targetMember.Name}: NoPatch");
 				}
 				var viewAttr = targetMember.GetCustomAttribute<ViewAttribute>();
 				if (viewAttr == null || viewAttr.EditPermission > permissionLevel)
 				{
-					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
+					throw new SecurityException($"Cannot patch field {targetMember.Name}: Insufficient privileges");
 				}
 				object objToPatch = targetObject;
 				var value = targetMember.GetValue(targetObject);
@@ -217,21 +217,16 @@ namespace REST
 					decryptable.SetValue(valueToSet, permissionLevel, requester, passphrase);
 					valueToSet = decryptable;
 				}
-				var checkAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
-				if (checkAttr != null && !checkAttr.Verify(valueToSet, out var error))
-				{
-					throw new Exception(error);
-				}
 				var verifyAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
-				if (verifyAttr != null && !verifyAttr.Verify(valueToSet, out var verificationError))
+				if (verifyAttr != null && !verifyAttr.Verify(valueToSet, out error))
 				{
-					throw new MemberVerificationException(verificationError);
+					throw new MemberVerificationException(error);
 				}
 				targetMember.SetValue(targetObject, valueToSet);
 			}
-			if (targetObject is IVerifiable)
+			if (targetObject is IVerifiable verifiable && !verifiable.Verify(out error))
 			{
-				(targetObject as IVerifiable).Verify();
+				throw new MemberVerificationException(error);
 			}
 			return targetObject;
 		}

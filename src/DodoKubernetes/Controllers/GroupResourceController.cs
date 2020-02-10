@@ -38,7 +38,7 @@ namespace Dodo
 			}
 			if (permissionLevel < EPermissionLevel.ADMIN)
 			{
-				throw HttpException.FORBIDDEN;
+				return Unauthorized();
 			}
 			var userManager = ResourceUtility.GetManager<User>();
 			User targetUser = null;
@@ -84,7 +84,7 @@ namespace Dodo
 			}
 			target.Members.Remove(context.User, context.Passphrase);
 			ResourceManager.Update(target, resourceLock);
-			return HttpBuilder.OK();
+			return Ok();
 		}
 
 		[HttpGet]

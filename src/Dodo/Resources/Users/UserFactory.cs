@@ -1,4 +1,5 @@
-﻿using Dodo.Resources;
+﻿using Common.Extensions;
+using Dodo.Resources;
 using REST;
 using REST.Serializers;
 using System;
@@ -9,8 +10,10 @@ namespace Dodo.Users
 
 	public class UserSchema : DodoResourceSchemaBase
 	{
+		[Username]
 		public string Username { get; set; }
 		public string Password { get; set; }
+		[Email]
 		public string Email { get; set; }
 		public UserSchema(AccessContext context, string name, string username, string password, string email) : base(context, name)
 		{

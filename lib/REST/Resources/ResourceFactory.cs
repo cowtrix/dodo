@@ -24,7 +24,10 @@ namespace REST
 				throw new Exception(error);
 			}
 			var newResource = CreateObjectInternal(schema);
-			newResource.Verify();
+			if(!newResource.Verify(out error))
+			{
+				throw new Exception(error);
+			}
 			ResourceUtility.Register(newResource);
 			Logger.Debug($"Created new resource {newResource.GetType().Name}: {newResource.GUID}");
 			return newResource;
@@ -45,8 +48,7 @@ namespace REST
 			{
 				throw new InvalidCastException($"Incorrect schema type. Expected: {typeof(TSchema).FullName}\t Actual: {schema.GetType().FullName}");
 			}
-			error = null;
-			return true;
+			return schema.Verify(out error);
 		}
 
 		public TResult CreateObject(ResourceSchemaBase schema)

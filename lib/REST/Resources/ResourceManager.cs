@@ -88,7 +88,7 @@ namespace REST
 		{
 			if (ResourceUtility.GetResourceByGuid(newObject.GUID) != null)
 			{
-				throw HttpException.CONFLICT;
+				throw new Exception("Conflicting GUID");
 			}
 			MongoDatabase.InsertOne(newObject);
 		}

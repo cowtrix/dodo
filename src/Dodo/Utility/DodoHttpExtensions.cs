@@ -17,7 +17,7 @@ namespace Dodo.Utility
 			{
 				return GetRequestOwner(request);
 			}
-			catch (HttpException)
+			catch (Exception)
 			{ }
 			return default;
 		}

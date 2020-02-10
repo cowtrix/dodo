@@ -35,21 +35,7 @@ namespace Common.Extensions
 		public override bool Verify(object value, out string validationError)
 		{
 			var verifiable = value as IVerifiable;
-			validationError = null;
-			if (verifiable == null || !verifiable.CanVerify())
-			{
-				return true;
-			}
-			try
-			{
-				verifiable.Verify();
-			}
-			catch (Exception e)
-			{
-				validationError = e.Message;
-				return false;
-			}
-			return true;
+			return verifiable.Verify(out validationError);
 		}
 	}
 
@@ -86,11 +72,12 @@ namespace Common.Extensions
 		/// The type of verify attribute tells it how to check the value
 		/// </summary>
 		/// <param name="objectToVerify"></param>
-		public static void Verify(this IVerifiable objectToVerify)
+		public static bool Verify(this IVerifiable objectToVerify, out string error)
 		{
 			if(objectToVerify == null)
 			{
-				return;
+				error = null;
+				return true;
 			}
 			var members = objectToVerify.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			foreach(var m in members)
@@ -114,12 +101,13 @@ namespace Common.Extensions
 				{
 					continue;
 				}
-				if(!attr.Verify(value, out var validationError))
+				if(!attr.Verify(value, out error))
 				{
-					throw new MemberVerificationException(validationError);
+					return false;
 				}
-
 			}
+			error = null;
+			return true;
 		}
 	}
 
