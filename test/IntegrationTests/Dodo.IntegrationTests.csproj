@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DodoIdentity\DodoIdentity.csproj" />
-    <ProjectReference Include="..\..\src\DodoKubernetes\DodoKubernetes.csproj" />
+    <ProjectReference Include="..\..\src\DodoResources\DodoResources.csproj" />
     <ProjectReference Include="..\Dodo.SharedTest\Dodo.SharedTest.csproj" />
   </ItemGroup>
 

@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using REST;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Dodo;
+using Microsoft.IdentityModel.Logging;
 
 namespace DodoKubernetes
 {
@@ -28,14 +28,22 @@ namespace DodoKubernetes
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			IdentityModelEventSource.ShowPII = true; //Add this line
 			services.AddControllers();
 			services.AddRouting(options => options.LowercaseUrls = true);
-			services.AddTransient<IAuthorizationService, AuthService>();
-			services.AddAuthorization();
-			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 			{
 				options.SaveToken = true;
+				options.Authority = DodoIdentity.Program.GetHostname();
+				options.Audience = "api";
+#if DEBUG
+				options.RequireHttpsMetadata = false;
+#endif
 			});
+
+			services.AddAuthorization();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +65,5 @@ namespace DodoKubernetes
 				endpoints.MapControllers();
 			});
 		}
-
-
 	}
 }

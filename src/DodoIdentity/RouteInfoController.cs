@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace REST
 {
-	[Route("api")]
+	[Route("api/identity")]
 	public class RouteInfoController : Controller
 	{
 		private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
@@ -40,7 +40,6 @@ namespace REST
 			{
 				"Name",
 				"URI",
-				//"Action",
 				"Method(s)",
 				"Parameters"
 			});

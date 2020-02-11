@@ -25,9 +25,10 @@ namespace RESTTests
 		public IntegrationTestBase()
 		{
 			m_authServer = new TestServer(new WebHostBuilder()
-				.UseStartup<DodoIdentity.Startup>());
+				.UseStartup<DodoIdentity.IdentityStartup>());
 			m_resourceServer = new TestServer(new WebHostBuilder()
-				.UseStartup<DodoKubernetes.Startup>());
+				.UseStartup<DodoResources.ResourceStartup>());
+
 			m_resourceClient = m_resourceServer.CreateClient();
 			m_authClient = m_authServer.CreateClient();
 		}
@@ -79,16 +80,13 @@ namespace RESTTests
 				UserName = username,
 				Password = password,
 				ClientId = "spa",
-				Scope = "api", 
-				/*Parameters = new Dictionary<string, string>()
-				{ 
-					"Resource", 
-				}*/
+				Scope = "api",
 			});
 			if (tokenResponse.IsError)
 			{
 				throw new Exception(tokenResponse.Error);
 			}
+
 			m_resourceClient.SetBearerToken(tokenResponse.AccessToken);
 			m_authClient.SetBearerToken(tokenResponse.AccessToken);
 		}

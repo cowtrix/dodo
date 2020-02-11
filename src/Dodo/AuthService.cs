@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Dodo
 {
-
     public class AuthService : IAuthorizationService
 	{
 		public const string PERMISSION_LEVEL = "PERMISSION";

@@ -25,4 +25,10 @@
   <ItemGroup>
 	<ProjectReference Include="..\Dodo\Dodo.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\EmbeddedCss.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

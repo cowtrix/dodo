@@ -13,7 +13,10 @@ namespace DodoIdentity
 		public static IEnumerable<IdentityResource> Ids =>
 			new IdentityResource[]
 			{
-				new IdentityResources.Profile(),
+				new IdentityResource("User", new []
+				{
+					"Username"
+				})
 			};
 
 
@@ -32,13 +35,12 @@ namespace DodoIdentity
 				{
 					ClientId = "spa",
 					ClientName = "SPA Client",
-
+					
 					AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-					//RequirePkce = true,
+					RequirePkce = true,
 					RequireClientSecret = false,
 					AllowedScopes = new List<string>
 					{
-						//IdentityServerConstants.StandardScopes.Profile,
 						"api"
 					},
 				}
