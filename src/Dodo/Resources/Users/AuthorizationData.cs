@@ -22,7 +22,7 @@ namespace Dodo.Users
 		public string SecurityStamp { get; set; }
 
 		public List<IdentityUserLogin> Logins = new List<IdentityUserLogin>();
-		public List<IdentityUserClaim> Claims = new List<IdentityUserClaim>();
+		public List<IdentityUserClaim> Claims => new List<IdentityUserClaim>() { new IdentityUserClaim(new Claim("Username", Username)) } ;
 		public List<IdentityUserToken> Tokens = new List<IdentityUserToken>();
 		public List<string> Roles = new List<string>();
 

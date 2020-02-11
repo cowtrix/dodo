@@ -11,6 +11,7 @@ using SharedTest;
 using Common.Extensions;
 using System.Text;
 using IdentityModel.Client;
+using System.Collections.Generic;
 
 namespace RESTTests
 {
@@ -72,21 +73,24 @@ namespace RESTTests
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
-
 			var tokenResponse = await m_authClient.RequestPasswordTokenAsync(new PasswordTokenRequest
 			{
 				Address = disco.TokenEndpoint,
 				UserName = username,
 				Password = password,
 				ClientId = "spa",
-				Scope = "api",
+				Scope = "api", 
+				/*Parameters = new Dictionary<string, string>()
+				{ 
+					"Resource", 
+				}*/
 			});
 			if (tokenResponse.IsError)
 			{
 				throw new Exception(tokenResponse.Error);
 			}
 			m_resourceClient.SetBearerToken(tokenResponse.AccessToken);
-			m_resourceClient.SetBearerToken(tokenResponse.RefreshToken);
+			m_authClient.SetBearerToken(tokenResponse.AccessToken);
 		}
 	}
 }

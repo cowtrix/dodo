@@ -17,6 +17,10 @@ namespace Dodo.Rebellions
 	{
 		public const string RootURL = "api/rebellions";
 
+		public RebellionController(IAuthorizationService authorizationService) : base(authorizationService)
+		{
+		}
+
 		[HttpPost]
 		[Authorize]
 		public override async Task<IActionResult> Create([FromBody] RebellionSchema schema)

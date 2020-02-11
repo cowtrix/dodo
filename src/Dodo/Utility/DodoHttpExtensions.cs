@@ -4,23 +4,13 @@ using Microsoft.AspNetCore.Http;
 using REST;
 using REST.Security;
 using System;
+using System.Security.Claims;
 
 namespace Dodo.Utility
 {
 	public static class DodoHttpExtensions
 	{
 		private const string AUTH_KEY = "Authorization";
-
-		public static AccessContext TryGetRequestOwner(this HttpRequest request)
-		{
-			try
-			{
-				return GetRequestOwner(request);
-			}
-			catch (Exception)
-			{ }
-			return default;
-		}
 
 		/// <summary>
 		/// Get the user that made an HTTP request, validate authentication, and return the
@@ -29,26 +19,11 @@ namespace Dodo.Utility
 		/// </summary>
 		/// <param name="request">The requ</param>
 		/// <returns>The user context that made this request</returns>
-		public static AccessContext GetRequestOwner(this HttpRequest request)
+		public static AccessContext GetRequestOwner(this ClaimsPrincipal request)
 		{
-			throw new NotImplementedException();
-			/*GetAuth(request, out var username, out var password);
-			if (username == null || password == null)
-			{
-				return default;
-			}
-			var user = ResourceUtility.GetManager<User>().GetSingle(x => x.AuthData.Username == username);
-			if (user != null && !user.AuthData.ChallengePassword(password, out var passphrase))
-			{
-				throw HttpException.FORBIDDEN;
-			}
-			return new AccessContext(user, passphrase);*/
-		}
-
-		public static void GetAuth(this HttpRequest request, out string username, out string password)
-		{
-			username = request.HttpContext.User.Identity.Name;
-			password = (string)request.HttpContext.Items["Passphrase"];
+			var username = request.FindFirst(AuthService.USERNAME).Value;
+			var user = ResourceUtility.GetManager<User>().GetSingle(u => u.AuthData.Username == username);
+			return new AccessContext(user, "");
 		}
 	}
 }

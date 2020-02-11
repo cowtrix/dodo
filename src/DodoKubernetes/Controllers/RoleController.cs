@@ -15,6 +15,10 @@ namespace Dodo.Roles
 	{
 		public const string RootURL = "api/roles";
 
+		public RoleController(IAuthorizationService authorizationService) : base(authorizationService)
+		{
+		}
+
 		[HttpPost]
 		[Authorize]
 		public override async Task<IActionResult> Create([FromBody] RoleSchema schema)

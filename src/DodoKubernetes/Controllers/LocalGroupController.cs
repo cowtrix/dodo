@@ -10,8 +10,12 @@ namespace Dodo.LocalGroups
 	{
 		public const string RootURL = "api/localgroups";
 
+		public LocalGroupController(IAuthorizationService authorizationService) : base(authorizationService)
+		{
+		}
+
 		[HttpPost]
-		[Authorize]
+		[Authorize(Roles = PermissionLevel.ADMIN)]
 		public override async Task<IActionResult> Create([FromBody] LocalGroupSchema schema)
 		{
 			return await CreateInternal(schema);

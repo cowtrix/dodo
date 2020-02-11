@@ -26,7 +26,7 @@ namespace Dodo.Users
 
 		private readonly UserManager<User> _userManager;
 
-		public UserController(UserManager<User> userManager)
+		public UserController(UserManager<User> userManager, IAuthorizationService auth) : base(auth)
 		{
 			_userManager = userManager;
 		}
@@ -54,6 +54,12 @@ namespace Dodo.Users
 				throw new Exception(result.Errors.First().Description);
 			}
 			return Ok();
+		}
+
+		[Authorize]
+		public override Task<IActionResult> Get(Guid id)
+		{
+			return base.Get(id);
 		}
 	}
 }

@@ -12,6 +12,7 @@ using Common.Security;
 using System.Net;
 using System.Linq;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Dodo
 {
@@ -23,6 +24,10 @@ namespace Dodo
 		public const string JOIN_GROUP = "join";
 		public const string LEAVE_GROUP = "leave";
 
+		public GroupResourceController(IAuthorizationService authorizationService) : base(authorizationService)
+		{
+		}
+
 		[HttpPost("{id}/" + ADD_ADMIN)]
 		public IActionResult AddAdministrator(Guid resourceID, [FromBody]string newAdminIdentifier)
 		{
@@ -31,7 +36,7 @@ namespace Dodo
 			{
 				return NotFound();
 			}
-			var context = Request.GetRequestOwner();
+			var context = User.GetRequestOwner();
 			if (!IsAuthorised(context, resource, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
@@ -60,7 +65,7 @@ namespace Dodo
 		[HttpPost("{id}/" + JOIN_GROUP)]
 		public IActionResult JoinGroup(Guid id)
 		{
-			var context = Request.GetRequestOwner();
+			var context = User.GetRequestOwner();
 			using var resourceLock = new ResourceLock(id);
 			var target = resourceLock.Value as GroupResource;
 			if (target == null)
@@ -75,7 +80,7 @@ namespace Dodo
 		[HttpPost("{id}/" + LEAVE_GROUP)]
 		public IActionResult LeaveGroup(Guid id)
 		{
-			var context = Request.GetRequestOwner();
+			var context = User.GetRequestOwner();
 			using var resourceLock = new ResourceLock(id);
 			var target = resourceLock.Value as GroupResource;
 			if (target == null)

@@ -10,6 +10,10 @@ namespace Dodo.Sites
 	{
 		public const string RootURL = "api/sites";
 
+		public SiteController(IAuthorizationService authorizationService) : base(authorizationService)
+		{
+		}
+
 		[HttpPost]
 		[Authorize]
 		public override async Task<IActionResult> Create([FromBody] SiteSchema schema)

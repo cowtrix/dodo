@@ -13,7 +13,7 @@ namespace Dodo
 		private void ProcessPushActions(HttpRequest request)
 		{
 			// TODO
-			var context = request.TryGetRequestOwner();
+			/*var context = request.TryGetRequestOwner();
 			if (context.User == null)
 			{
 				return;
@@ -26,7 +26,7 @@ namespace Dodo
 					pushAction.Execute(context);
 					ResourceUtility.GetManager<User>().Update(user, locker);
 				}
-			}
+			}*/
 		}
 	}
 }

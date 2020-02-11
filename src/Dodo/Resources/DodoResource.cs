@@ -2,6 +2,7 @@
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
 using REST;
+using Newtonsoft.Json;
 
 namespace Dodo
 {
@@ -13,6 +14,8 @@ namespace Dodo
 
 	public class DodoResourceSchemaBase : ResourceSchemaBase
 	{
+		// TODO get rid of the context, it should be something fed into the actual resource constructor
+		[JsonIgnore]
 		public AccessContext Context { get; set; }
 		internal DodoResourceSchemaBase(AccessContext context, string name) : base(name)
 		{

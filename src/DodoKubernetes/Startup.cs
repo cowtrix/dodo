@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using REST;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Dodo;
 
 namespace DodoKubernetes
 {
@@ -26,10 +30,11 @@ namespace DodoKubernetes
 		{
 			services.AddControllers();
 			services.AddRouting(options => options.LowercaseUrls = true);
-			services.AddAuthentication().AddJwtBearer(options =>
+			services.AddTransient<IAuthorizationService, AuthService>();
+			services.AddAuthorization();
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 			{
 				options.SaveToken = true;
-
 			});
 		}
 
@@ -43,9 +48,9 @@ namespace DodoKubernetes
 
 			app.UseRouting();
 
-			app.UseAuthorization();
-
 			app.UseAuthentication();
+
+			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{

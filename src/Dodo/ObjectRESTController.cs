@@ -13,6 +13,7 @@ using Dodo;
 using Dodo.Users;
 using Dodo.Utility;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace REST
 {
@@ -27,6 +28,12 @@ namespace REST
 		where T : class, IDodoResource
 		where TSchema : DodoResourceSchemaBase
 	{
+		protected IAuthorizationService AuthorizationService;
+		public ObjectRESTController(IAuthorizationService authorizationService)
+		{
+			AuthorizationService = authorizationService;
+		}
+
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
 		protected bool IsAuthorised(AccessContext context, T target,
@@ -79,7 +86,7 @@ namespace REST
 
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
-			var context = Request.GetRequestOwner();
+			var context = User.GetRequestOwner();
 			if (!IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
@@ -106,7 +113,7 @@ namespace REST
 			{
 				return NotFound();
 			}
-			var context = Request.GetRequestOwner();
+			var context = User.GetRequestOwner();
 			if (!IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
@@ -135,6 +142,7 @@ namespace REST
 		}
 
 		[HttpDelete("{id}")]
+		[Authorize(Roles = PermissionLevel.ADMIN)]
 		public virtual async Task<IActionResult> Delete(Guid id)
 		{
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
@@ -142,7 +150,7 @@ namespace REST
 			{
 				return NotFound();
 			}
-			var context = Request.GetRequestOwner();
+			var context = User.GetRequestOwner();
 			if (!IsAuthorised(context, target, Request.MethodEnum(), out _))
 			{
 				return Forbid();
@@ -152,7 +160,7 @@ namespace REST
 		}
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> Get(Guid id)
+		public virtual async Task<IActionResult> Get(Guid id)
 		{
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
