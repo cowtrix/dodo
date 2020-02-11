@@ -12,16 +12,13 @@ namespace Dodo.Utility
 	{
 		private const string AUTH_KEY = "Authorization";
 
-		/// <summary>
-		/// Get the user that made an HTTP request, validate authentication, and return the
-		/// unlocked passphrase. DO NOT store this passphrase anywhere except as a local
-		/// scope variable.
-		/// </summary>
-		/// <param name="request">The requ</param>
-		/// <returns>The user context that made this request</returns>
 		public static AccessContext GetRequestOwner(this ClaimsPrincipal request)
 		{
-			var username = request.FindFirst(AuthService.USERNAME).Value;
+			var username = request.FindFirst(AuthService.USERNAME)?.Value;
+			if(string.IsNullOrEmpty(username))
+			{
+				return default;
+			}
 			var user = ResourceUtility.GetManager<User>().GetSingle(u => u.AuthData.Username == username);
 			return new AccessContext(user, "");
 		}
