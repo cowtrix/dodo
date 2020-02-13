@@ -34,15 +34,22 @@ namespace RESTTests
 		public async Task CanAuthorise()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			await Authorize(user.AuthData.Username, password);
+			await Authorize(user.AuthData.Username, password, "");
 		}
 
 		[TestMethod]
 		public async Task BadAuthFails()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			await AssertX.ThrowsAsync<Exception>(Authorize(user.AuthData.Username, "not the password"),
+			await AssertX.ThrowsAsync<Exception>(Authorize(user.AuthData.Username, "not the password", ""),
 				e => e.Message.Contains("invalid_grant"));
+		}
+
+		[TestMethod]
+		public async virtual Task CannotGetAnonymously()
+		{
+			var user = GetRandomUser(out _, out var context);
+			await AssertX.ThrowsAsync<Exception>(RequestJSON($"{UserController.RootURL}/{user.GUID.ToString()}", EHTTPRequestType.GET));
 		}
 
 		/*public override object GetCreationSchema(bool unique)

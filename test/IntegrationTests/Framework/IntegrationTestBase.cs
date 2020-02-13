@@ -70,7 +70,7 @@ namespace RESTTests
 			return response;
 		}
 
-		protected async Task Authorize(string username, string password)
+		protected async Task Authorize(string username, string password, string url)
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
@@ -81,14 +81,29 @@ namespace RESTTests
 				Password = password,
 				ClientId = "spa",
 				Scope = "api",
+				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
 			});
 			if (tokenResponse.IsError)
 			{
 				throw new Exception(tokenResponse.Error);
 			}
-
 			m_resourceClient.SetBearerToken(tokenResponse.AccessToken);
 			m_authClient.SetBearerToken(tokenResponse.AccessToken);
+
+			var response = await m_authClient.PostAsync("Account/Login", new StringContent(""));
+
+			/*
+			var authorizeRequest = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
+			{
+				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
+				ClientId = "spa",
+			});
+			if (authorizeRequest.IsError)
+			{
+				throw new Exception(tokenResponse.Error);
+			}
+			m_resourceClient.SetBearerToken(authorizeRequest.AccessToken);
+			m_authClient.SetBearerToken(authorizeRequest.AccessToken);*/
 		}
 	}
 }

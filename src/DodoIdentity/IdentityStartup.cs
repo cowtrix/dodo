@@ -77,6 +77,8 @@ namespace DodoIdentity
 					options.Events.RaiseInformationEvents = true;
 					options.Events.RaiseFailureEvents = true;
 					options.Events.RaiseSuccessEvents = true;
+					options.UserInteraction.LoginUrl = $"{UserController.RootURL}/{UserController.LOGIN}";
+					options.UserInteraction.LogoutUrl = $"{UserController.RootURL}/{UserController.LOGOUT}";
 				})
 				.AddInMemoryIdentityResources(Config.Ids)
 				.AddInMemoryApiResources(Config.Apis)
@@ -90,6 +92,7 @@ namespace DodoIdentity
 #endif
 			services.AddTransient<IAuthorizationService, AuthService>();
 			services.AddAuthorization();
+			
 		}
 
 		public void Configure(IApplicationBuilder app)
@@ -99,6 +102,7 @@ namespace DodoIdentity
 				app.UseDeveloperExceptionPage();
 				app.UseDatabaseErrorPage();
 			}
+			app.UseCors();
 			app.UseStaticFiles();
 			app.UseRouting();
 			app.UseIdentityServer();

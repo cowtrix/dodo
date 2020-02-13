@@ -33,29 +33,16 @@ namespace DodoResources
 			services.AddIdentityWithMongoStoresUsingCustomTypes<Microsoft.AspNetCore.Identity.MongoDB.IdentityRole>(Dodo.Dodo.PRODUCT_NAME)
 				.AddDefaultTokenProviders();
 			services.AddRouting(options => options.LowercaseUrls = true);
-			/*services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-				.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-			{
-				options.SaveToken = true;
-				options.Authority = DodoIdentity.DodoIdentity.GetHostname();
-				options.Audience = DodoResources.GetHostname(); ;
-#if DEBUG
-				options.RequireHttpsMetadata = false;
-				IdentityModelEventSource.ShowPII = true; //Add this line
-#endif
-			});*/
-
 			services.AddAuthentication("IdentityServer4")
 				.AddIdentityServerAuthentication("IdentityServer4", options =>
 				{
-					options.Authority = DodoIdentity.DodoIdentity.GetHostname();
+					//options.Authority = ;
 					options.RequireHttpsMetadata = false;
 					options.ApiName = "api";
 				});
 
 			services.AddTransient<IAuthorizationService, AuthService>();
 			services.AddAuthorization();
-			services.AddIdentityServer();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

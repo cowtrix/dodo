@@ -38,7 +38,7 @@ namespace RESTTests
 		public async Task CanCreate()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			await Authorize(user.AuthData.Username, password);
+			await Authorize(user.AuthData.Username, password, ResourceRoot);
 			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
 				SchemaGenerator.GetRandomSchema<T>(context));
 		}

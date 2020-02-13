@@ -16,13 +16,16 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Dodo.Users
 {
-	
 	[SecurityHeaders]
 	[Authorize]
 	[ApiController]
+	[Route(RootURL)]
 	public class UserController : ObjectRESTController<User, UserSchema>
 	{
-		public const string RootURL = "api/users";
+		public const string RootURL = "auth/users";
+		public const string LOGIN = "login";
+		public const string LOGOUT = "logout";
+		public const string REGISTER = "register";
 
 		private readonly UserManager<User> _userManager;
 
@@ -33,7 +36,7 @@ namespace Dodo.Users
 
 		[HttpPost]
 		[AllowAnonymous]
-		[Route("register")]
+		[Route(REGISTER)]
 		public override async Task<IActionResult> Create([FromBody] UserSchema schema)
 		{
 			string error = null;
