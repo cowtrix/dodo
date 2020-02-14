@@ -71,10 +71,9 @@ namespace SharedTest
 		{
 			var schema = (UserSchema)SchemaGenerator.GetRandomSchema<User>(default);
 			password = schema.Password;
-			var user = ResourceUtility.GetFactory<User>().CreateObject(schema);
-			context = new AccessContext(user, password);
-			return user;
+			return GenerateUser(schema, out context);
 		}
+
 		long LongRandom(long min, long max)
 		{
 			long result = m_random.Next((Int32)(min >> 32), (Int32)(max >> 32));
@@ -85,7 +84,8 @@ namespace SharedTest
 
 		protected static User GenerateUser(UserSchema schema, out AccessContext context)
 		{
-			var user = ResourceUtility.GetFactory<User>().CreateObject(schema);
+			var userFactory = ResourceUtility.GetFactory<User>();
+			var user = userFactory.CreateObject(default(AccessContext), schema);
 			context = new AccessContext(user, new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema?.Password))));
 			return user;
 		}

@@ -24,11 +24,11 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.USER)]
 		public UserCollection RoleHolders;
 
-		public Role(RoleSchema schema) : base(schema)
+		public Role(AccessContext context, RoleSchema schema) : base(context, schema)
 		{
 			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			PublicDescription = schema.PublicDescription;
-			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), schema.Context);
+			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), context);
 		}
 
 		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)

@@ -11,7 +11,7 @@ using SharedTest;
 using Common.Extensions;
 using System.Text;
 using IdentityModel.Client;
-using System.Collections.Generic;
+using DodoResources;
 
 namespace RESTTests
 {
@@ -74,13 +74,10 @@ namespace RESTTests
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
-			var tokenResponse = await m_authClient.RequestPasswordTokenAsync(new PasswordTokenRequest
+			var tokenResponse = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
 			{
 				Address = disco.TokenEndpoint,
-				UserName = username,
-				Password = password,
 				ClientId = "spa",
-				Scope = "api",
 				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
 			});
 			if (tokenResponse.IsError)
@@ -89,8 +86,6 @@ namespace RESTTests
 			}
 			m_resourceClient.SetBearerToken(tokenResponse.AccessToken);
 			m_authClient.SetBearerToken(tokenResponse.AccessToken);
-
-			var response = await m_authClient.PostAsync("Account/Login", new StringContent(""));
 
 			/*
 			var authorizeRequest = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()

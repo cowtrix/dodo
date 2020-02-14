@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
+using Dodo.LocalGroups;
 
-namespace Dodo.LocalGroups
+namespace DodoResources.LocalGroups
 {
 	[Route(RootURL)]
 	public class LocalGroupController : GroupResourceController<LocalGroup, LocalGroupSchema>

@@ -7,7 +7,7 @@ namespace Dodo.Sites
 {
 	public class OccupationalSite : Site
 	{
-		public OccupationalSite(SiteSchema schema) : base(schema)
+		public OccupationalSite(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
 		}
 	}

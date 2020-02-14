@@ -39,30 +39,28 @@ namespace Dodo.SharedTest
 		public static RoleSchema GetRandomRole(AccessContext context, WorkingGroup wg = null)
 		{
 			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateObject(
+				context,
 				GetRandomWorkinGroup(context));
-			return new RoleSchema(context,
-				StringExtensions.RandomString(32),
+			return new RoleSchema(StringExtensions.RandomString(32),
 				SampleMarkdown,
-				wg);
+				wg.GUID);
 		}
 
 		public static SiteSchema GetRandomSite(AccessContext context, WorkingGroup wg = null)
 		{
 			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateObject(
+				context,
 				GetRandomWorkinGroup(context));
-			return new SiteSchema(context,
-				StringExtensions.RandomString(32),
+			return new SiteSchema(StringExtensions.RandomString(32),
 				ReflectionExtensions.GetConcreteClasses<Site>().Random().FullName,
-				wg,
+				wg.GUID,
 				RandomLocation,
 				SampleMarkdown);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)
 		{
-			return new UserSchema(
-				context,
-				StringExtensions.RandomString(32),
+			return new UserSchema(StringExtensions.RandomString(32),
 				StringExtensions.RandomString(32).ToLowerInvariant(),
 				ValidationExtensions.GenerateStrongPassword(),
 				$"{StringExtensions.RandomString(16)}@{StringExtensions.RandomString(16)}.com"
@@ -72,11 +70,9 @@ namespace Dodo.SharedTest
 		public static RebellionSchema GetRandomRebellion(AccessContext context)
 		{
 			var startDate = RandomDate;
-			return new RebellionSchema(
-				context,
-				StringExtensions.RandomString(32),
-				RandomLocation,
+			return new RebellionSchema(StringExtensions.RandomString(32),
 				SampleMarkdown,
+				RandomLocation,
 				startDate,
 				startDate + TimeSpan.FromDays(m_random.NextDouble() * 14)
 			);
@@ -85,22 +81,20 @@ namespace Dodo.SharedTest
 		public static WorkingGroupSchema GetRandomWorkinGroup(AccessContext context, GroupResource rsc = null)
 		{
 			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateObject(
-				GetRandomRebellion(context));
-			return new WorkingGroupSchema(
 				context,
-				StringExtensions.RandomString(32),
+				GetRandomRebellion(context));
+			return new WorkingGroupSchema(StringExtensions.RandomString(32),
 				SampleMarkdown,
-				rsc
+				rsc.GUID
 			);
 		}
 
 		public static LocalGroupSchema GetRandomLocalGroup(AccessContext context, GroupResource rsc = null)
 		{
 			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateObject(
-				GetRandomRebellion(context));
-			return new LocalGroupSchema(
 				context,
-				StringExtensions.RandomString(32),
+				GetRandomRebellion(context));
+			return new LocalGroupSchema(StringExtensions.RandomString(32),
 				SampleMarkdown,
 				RandomLocation
 			);

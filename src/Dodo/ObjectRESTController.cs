@@ -95,7 +95,7 @@ namespace REST
 			T createdObject;
 			try
 			{
-				createdObject = factory.CreateObject(schema);
+				createdObject = factory.CreateObject(context, schema);
 				OnCreation(context, createdObject);
 			}
 			catch (Exception e)
@@ -169,7 +169,6 @@ namespace REST
 			}
 			return Ok(target.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
 		}
-
 
 		protected virtual void OnCreation(AccessContext context, T user)
 		{

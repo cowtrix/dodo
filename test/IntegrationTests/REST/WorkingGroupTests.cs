@@ -5,6 +5,7 @@ using Dodo.SharedTest;
 using Dodo.Users;
 using Dodo.Utility;
 using Dodo.WorkingGroups;
+using DodoResources.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RestSharp;

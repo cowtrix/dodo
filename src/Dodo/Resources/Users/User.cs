@@ -27,14 +27,13 @@ namespace Dodo.Users
 		[VerifyObject]
 		public AuthorizationData AuthData;
 		public PushActionCollection PushActions = new PushActionCollection();
-		
 		#endregion
 
-		public User() : base(default)
+		public User() : base(default, default)
 		{
 		}
 
-		public User(UserSchema schema) : base(schema)
+		public User(AccessContext context, UserSchema schema) : base(default, schema)
 		{
 			AuthData = new AuthorizationData(schema.Username, schema.Password);
 			PersonalData.Email = schema.Email;

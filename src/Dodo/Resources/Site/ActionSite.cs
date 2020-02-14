@@ -7,7 +7,7 @@ namespace Dodo.Sites
 {
 	public class ActionSite : Site
 	{
-		public ActionSite(SiteSchema schema) : base(schema)
+		public ActionSite(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
 		}
 	}

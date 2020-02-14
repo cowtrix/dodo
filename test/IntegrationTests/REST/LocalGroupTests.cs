@@ -1,13 +1,6 @@
-﻿using Common;
-using Common.Extensions;
-using Dodo.LocalGroups;
+﻿using Dodo.LocalGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
-using RestSharp;
-using SharedTest;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using DodoResources.LocalGroups;
 
 namespace RESTTests
 {

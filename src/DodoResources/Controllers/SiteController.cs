@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Dodo.Sites;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using REST;
 using System.Threading.Tasks;
 
-namespace Dodo.Sites
+namespace DodoResources.Sites
 {
 	[Route(RootURL)]
 	public class SiteController : ObjectRESTController<Site, SiteSchema>

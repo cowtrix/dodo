@@ -18,16 +18,6 @@ namespace Dodo
 		public string PublicDescription { get; set; }
 		public Guid Parent { get; set; }
 
-		internal GroupResourceSchemaBase(AccessContext context, string name, string publicDescription, GroupResource parent) 
-			: base(context, name)
-		{
-			PublicDescription = publicDescription;
-			if(parent != null)
-			{
-				Parent = parent.GUID;
-			}
-		}
-
 		public GroupResourceSchemaBase(string name, string publicDescription, Guid parent)
 			: base(name)
 		{
@@ -85,12 +75,12 @@ namespace Dodo
 		[JsonProperty]
 		public string GroupPublicKey { get; private set; }
 
-		public GroupResource(GroupResourceSchemaBase schema) : base(schema)
+		public GroupResource(AccessContext context, GroupResourceSchemaBase schema) : base(context, schema)
 		{
 			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			GroupPublicKey = pk;
-			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(schema.Context.User, pv), schema.Context);
+			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(context.User, pv), context);
 			PublicDescription = schema.PublicDescription;
 		}
 

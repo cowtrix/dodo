@@ -13,8 +13,9 @@ using System.Net;
 using System.Linq;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using Dodo;
 
-namespace Dodo
+namespace DodoResources
 {
 	public abstract class GroupResourceController<T, TSchema> : ObjectRESTController<T, TSchema> 
 		where T : GroupResource
@@ -29,6 +30,7 @@ namespace Dodo
 		}
 
 		[HttpPost("{id}/" + ADD_ADMIN)]
+		[Authorize]
 		public IActionResult AddAdministrator(Guid resourceID, [FromBody]string newAdminIdentifier)
 		{
 			var resource = ResourceManager.GetSingle(x => x.GUID == resourceID);
@@ -63,6 +65,7 @@ namespace Dodo
 		}
 
 		[HttpPost("{id}/" + JOIN_GROUP)]
+		[Authorize]
 		public IActionResult JoinGroup(Guid id)
 		{
 			var context = User.GetRequestOwner();
@@ -78,6 +81,7 @@ namespace Dodo
 		}
 
 		[HttpPost("{id}/" + LEAVE_GROUP)]
+		[Authorize]
 		public IActionResult LeaveGroup(Guid id)
 		{
 			var context = User.GetRequestOwner();
@@ -92,9 +96,33 @@ namespace Dodo
 			return Ok();
 		}
 
-		[HttpGet]
-		public IActionResult Index()
+		public const char FilterVarSeperatorChar = '+';
+		public struct FilterModel
 		{
+			public string latlong;
+			public double distance;
+			public string startdate;
+			public string enddate;
+		}
+
+		[HttpGet]
+		[AllowAnonymous]
+		public IActionResult Index(FilterModel? filter)
+		{
+			if(filter.HasValue)
+			{
+				var filterVars = filter.Value;
+				if (!typeof(T).IsAssignableFrom(typeof(ILocationalResource)))
+				{
+					return BadRequest("Filter invalid for this type of resource");
+				}
+				var latlong = filterVars.latlong.Split(FilterVarSeperatorChar).Select(x => double.Parse(x))
+					.Transpose(x => new GeoLocation(x.ElementAt(0), x.ElementAt(1)));
+				var startDate = string.IsNullOrEmpty(filterVars.startdate) ? DateTime.MinValue : DateTime.Parse(filterVars.startdate);
+				var endDate = string.IsNullOrEmpty(filterVars.enddate) ? DateTime.MaxValue : DateTime.Parse(filterVars.enddate);
+
+				//return Ok(ResourceManager.Get(rsc => rsc.Start))
+			}
 			return Ok(ResourceManager.Get(x => true).Select(rsc => rsc.GUID));
 		}
 	}

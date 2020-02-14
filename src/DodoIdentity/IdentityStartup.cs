@@ -102,6 +102,7 @@ namespace DodoIdentity
 				app.UseDeveloperExceptionPage();
 				app.UseDatabaseErrorPage();
 			}
+			//app.UsePathBase();
 			app.UseCors();
 			app.UseStaticFiles();
 			app.UseRouting();

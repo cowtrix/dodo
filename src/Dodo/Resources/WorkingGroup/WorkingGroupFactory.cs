@@ -19,11 +19,6 @@ namespace Dodo.WorkingGroups
 			PublicDescription = description;
 			Parent = parent;
 		}
-
-		public WorkingGroupSchema(AccessContext context, string name, string publicDescription, GroupResource parent) 
-			: base(context, name, publicDescription, parent)
-		{
-		}
 	}
 
 	public class WorkingGroupFactory : DodoResourceFactory<WorkingGroup, WorkingGroupSchema>

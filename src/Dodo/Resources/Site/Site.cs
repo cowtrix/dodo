@@ -65,7 +65,7 @@ namespace Dodo.Sites
 		public EAccessType Electricity;
 	}
 
-	public abstract class Site : DodoResource
+	public abstract class Site : DodoResource, ILocationalResource
 	{
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
@@ -88,7 +88,7 @@ namespace Dodo.Sites
 		[View(EPermissionLevel.PUBLIC)]
 		public string Type { get { return GetType().FullName; } }
 
-		public Site(SiteSchema schema) : base(schema)
+		public Site(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
 			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			Location = schema.Location;

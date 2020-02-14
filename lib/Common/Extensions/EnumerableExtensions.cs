@@ -44,5 +44,10 @@ namespace Common.Extensions
 		{
 			return sequences.SelectMany(x => x);
 		}
+
+		public static T2 Transpose<T, T2>(this IEnumerable<T> sequence, Func<IEnumerable<T>, T2> function)
+		{
+			return function(sequence);
+		}
 	}
 }

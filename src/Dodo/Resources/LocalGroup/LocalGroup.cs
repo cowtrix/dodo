@@ -10,11 +10,11 @@ using REST.Serializers;
 namespace Dodo.LocalGroups
 {
 	[Name("Local Group")]
-	public class LocalGroup : GroupResource
+	public class LocalGroup : GroupResource, ILocationalResource
 	{
 		public const string ROOT = "localgroups";
 
-		public LocalGroup(LocalGroupSchema schema) : base(schema)
+		public LocalGroup(AccessContext context, LocalGroupSchema schema) : base(context, schema)
 		{
 			Location = schema.Location;
 		}

@@ -7,8 +7,9 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Dodo.Roles;
 
-namespace Dodo.Roles
+namespace DodoResources.Roles
 {
 	[Route(RootURL)]
 	public class RoleController : ObjectRESTController<Role, RoleSchema>

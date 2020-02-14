@@ -15,12 +15,6 @@ namespace Dodo.Users
 		public string Password { get; set; }
 		[Email]
 		public string Email { get; set; }
-		public UserSchema(AccessContext context, string name, string username, string password, string email) : base(context, name)
-		{
-			Username = username;
-			Password = password;
-			Email = email;
-		}
 
 		public UserSchema(string name, string username, string password, string email) : base(name)
 		{
@@ -36,7 +30,7 @@ namespace Dodo.Users
 
 	public class UserFactory : DodoResourceFactory<User, UserSchema>
 	{
-		protected override bool ValidateSchema(ResourceSchemaBase schema, out string error)
+		protected override bool ValidateSchema(AccessContext context, ResourceSchemaBase schema, out string error)
 		{
 			if (schema == null)
 			{
@@ -48,11 +42,6 @@ namespace Dodo.Users
 			}
 			error = null;
 			return true;
-		}
-
-		protected override User CreateObjectInternal(UserSchema schema)
-		{
-			return base.CreateObjectInternal(schema);
 		}
 	}
 }

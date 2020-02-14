@@ -22,7 +22,7 @@ namespace Dodo.WorkingGroups
 	[Name("Working Group")]
 	public class WorkingGroup : GroupResource
 	{
-		public WorkingGroup(WorkingGroupSchema schema) : base(schema)
+		public WorkingGroup(AccessContext context, WorkingGroupSchema schema) : base(context, schema)
 		{
 
 		}

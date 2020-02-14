@@ -6,21 +6,19 @@ using System.Text;
 
 namespace Dodo.Resources
 {
-	public abstract class DodoResourceFactory<TResult, TSchema>
-		: ResourceFactory<TResult, TSchema>
+	public abstract class DodoResourceFactory<TResult, TSchema>	: ResourceFactory<TResult, TSchema, AccessContext>
 		where TResult : class, IRESTResource
 		where TSchema : DodoResourceSchemaBase
 	{
-		protected override bool ValidateSchema(ResourceSchemaBase schemaBase, out string error)
+		protected override bool ValidateSchema(AccessContext context, ResourceSchemaBase schemaBase, out string error)
 		{
-			if(!base.ValidateSchema(schemaBase, out error))
+			if(!base.ValidateSchema(context, schemaBase, out error))
 			{
 				return false;
 			}
-			var schema = (TSchema)schemaBase;
-			if(schema == null || !schema.Context.Challenge())
+			if(!context.Challenge())
 			{
-				error = "Bad Context";
+				error = "Bad authorisation";
 				return false;
 			}
 			return true;

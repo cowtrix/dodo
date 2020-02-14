@@ -5,7 +5,7 @@ using REST;
 using System;
 using System.Linq;
 
-namespace Dodo
+namespace DodoResources
 {
 	[Obsolete]
 	public class DodoRESTManager

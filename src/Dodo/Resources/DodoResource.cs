@@ -14,13 +14,6 @@ namespace Dodo
 
 	public class DodoResourceSchemaBase : ResourceSchemaBase
 	{
-		// TODO get rid of the context, it should be something fed into the actual resource constructor
-		[JsonIgnore]
-		public AccessContext Context { get; set; }
-		internal DodoResourceSchemaBase(AccessContext context, string name) : base(name)
-		{
-			Context = context;
-		}
 		public DodoResourceSchemaBase(string name) : base(name)
 		{
 		}
@@ -29,9 +22,9 @@ namespace Dodo
 
 	public abstract class DodoResource : Resource, IDodoResource
 	{
-		public DodoResource(DodoResourceSchemaBase schema) : base(schema)
+		public DodoResource(AccessContext creator, DodoResourceSchemaBase schema) : base(schema)
 		{
-			Creator = new ResourceReference<User>(schema?.Context.User);
+			Creator = new ResourceReference<User>(creator.User);
 		}
 		[View(EPermissionLevel.ADMIN)]
 		public ResourceReference<User> Creator { get; private set; }

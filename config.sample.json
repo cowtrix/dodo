@@ -1,7 +1,7 @@
 {
-  "LogLevel": 3,
-  "HttpPort": 443,
-  "SSLCertificatePath": "server.pfx",
-  "CmdOutput": "cmdIn.data",
-  "CmdInput": "cmdOut.data"
+  "LogLevel": 2,
+  "DodoResources_Https": "https://localhost:5000",
+  "DodoResources_Http": "http://localhost:5001",
+  "MongoDBServerURL": "",
+  "ResourceLockTimeout": 10000
 }

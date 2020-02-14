@@ -13,12 +13,12 @@ using System.Linq;
 namespace Dodo.Rebellions
 {
 	[Name("Rebellion")]
-	public class Rebellion : GroupResource
+	public class Rebellion : GroupResource, ILocationalResource, ITimeBoundResource
 	{
 		public const string ROOT = "rebellions";
 
-		[View(EPermissionLevel.USER)]
-		public GeoLocation Location;
+		[View(EPermissionLevel.PUBLIC)]
+		public GeoLocation Location { get; set; }
 
 		[View(EPermissionLevel.PUBLIC)]
 		public List<string> WorkingGroups
@@ -44,7 +44,7 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.PUBLIC)]
 		public DateTime EndDate { get; set; }
 
-		public Rebellion(RebellionSchema schema) : base(schema)
+		public Rebellion(AccessContext context, RebellionSchema schema) : base(context, schema)
 		{
 			Location = schema.Location;
 			StartDate = schema.StartDate;

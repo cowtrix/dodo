@@ -8,8 +8,9 @@ using Dodo.Utility;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Dodo.WorkingGroups;
 
-namespace Dodo.WorkingGroups
+namespace DodoResources.WorkingGroups
 {
 	[Route(RootURL)]
 	public class WorkingGroupController : GroupResourceController<WorkingGroup, WorkingGroupSchema>

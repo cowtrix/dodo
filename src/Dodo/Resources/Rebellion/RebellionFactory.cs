@@ -15,14 +15,6 @@ namespace Dodo.Rebellions
 		public DateTime StartDate { get; private set; }
 		public DateTime EndDate { get; private set; }
 
-		public RebellionSchema(AccessContext context, string name, GeoLocation location, string publicDescription, DateTime startDate, DateTime endDate)
-			: base(context, name, publicDescription, null)
-		{
-			Location = location;
-			StartDate = startDate;
-			EndDate = endDate;
-		}
-
 		public RebellionSchema()
 		{
 		}

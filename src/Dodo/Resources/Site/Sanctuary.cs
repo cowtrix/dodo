@@ -7,7 +7,7 @@ namespace Dodo.Sites
 {
 	public class Sanctuary : Site
 	{
-		public Sanctuary(SiteSchema schema) : base(schema)
+		public Sanctuary(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
 		}
 	}

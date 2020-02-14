@@ -20,7 +20,7 @@ namespace Factory
 			var factory = ResourceUtility.GetFactory<T>();
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context);
-			var newObj = factory.CreateObject(schema);
+			var newObj = factory.CreateObject(context, schema);
 			VerifyCreatedObject(newObj, schema);
 		}
 
@@ -30,9 +30,9 @@ namespace Factory
 			var factory = ResourceUtility.GetFactory<T>();
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as DodoResourceSchemaBase;
-			schema.Context = new AccessContext(context.User, new REST.Security.Passphrase("asbasdbasdb"));
-			AssertX.Throws<Exception>(() => factory.CreateObject(schema),
-				e => e.Message.Contains("Bad Context"));
+			var badContext = new AccessContext(context.User, new REST.Security.Passphrase("asbasdbasdb"));
+			AssertX.Throws<Exception>(() => factory.CreateObject(badContext, schema),
+				e => e.Message.Contains("Bad authorisation"));
 		}
 
 
@@ -43,7 +43,7 @@ namespace Factory
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as DodoResourceSchemaBase;
 			schema.Name = "Admin - this is an invalid name value";
-			AssertX.Throws<Exception>(() => factory.CreateObject(schema),
+			AssertX.Throws<Exception>(() => factory.CreateObject(context, schema),
 				e => e.Message.Contains("Name contains reserved word"));
 		}
 

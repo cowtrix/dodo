@@ -7,23 +7,23 @@ namespace REST
 	public interface IResourceFactory<T> : IResourceFactory
 	{
 		Type SchemaType { get; }
-		T CreateObject(ResourceSchemaBase schema);
+		T CreateObject(object context, ResourceSchemaBase schema);
 	}
 
 	public interface IResourceFactory { }
 
-	public abstract class ResourceFactory<TResult, TSchema> 
+	public abstract class ResourceFactory<TResult, TSchema, TContext> 
 		: IResourceFactory<TResult>
 		where TResult : class, IRESTResource
 		where TSchema : ResourceSchemaBase
 	{
-		public TResult CreateObject(TSchema schema)
+		public TResult CreateObject(TContext context, TSchema schema)
 		{
-			if(!ValidateSchema(schema, out var error))
+			if(!ValidateSchema(context, schema, out var error))
 			{
 				throw new Exception(error);
 			}
-			var newResource = CreateObjectInternal(schema);
+			var newResource = CreateObjectInternal(context, schema);
 			if(!newResource.Verify(out error))
 			{
 				throw new Exception(error);
@@ -33,12 +33,12 @@ namespace REST
 			return newResource;
 		}
 
-		protected virtual TResult CreateObjectInternal(TSchema schema)
+		protected virtual TResult CreateObjectInternal(TContext context, TSchema schema)
 		{
-			return (TResult)Activator.CreateInstance(typeof(TResult), schema);
+			return (TResult)Activator.CreateInstance(typeof(TResult), context, schema);
 		}
 
-		protected virtual bool ValidateSchema(ResourceSchemaBase schema, out string error)
+		protected virtual bool ValidateSchema(TContext context, ResourceSchemaBase schema, out string error)
 		{
 			if (schema == null)
 			{
@@ -51,9 +51,9 @@ namespace REST
 			return schema.Verify(out error);
 		}
 
-		public TResult CreateObject(ResourceSchemaBase schema)
+		public TResult CreateObject(object context, ResourceSchemaBase schema)
 		{
-			return CreateObject((TSchema)schema);
+			return CreateObject((TContext)context, (TSchema)schema);
 		}
 
 		public Type SchemaType => typeof(TSchema);

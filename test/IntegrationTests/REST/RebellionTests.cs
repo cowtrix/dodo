@@ -1,16 +1,7 @@
-﻿using Common;
-using Common.Extensions;
-using Dodo.Rebellions;
-using Dodo.SharedTest;
-using Dodo.Users;
+﻿using Dodo.Rebellions;
+using DodoResources.Rebellions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json.Linq;
-using REST;
-using RestSharp;
-using SharedTest;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RESTTests
 {

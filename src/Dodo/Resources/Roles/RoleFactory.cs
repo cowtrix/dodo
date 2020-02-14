@@ -12,14 +12,6 @@ namespace Dodo.Roles
 	{
 		public Guid Parent { get; set; }
 		public string PublicDescription { get; set; }
-		public RoleSchema(AccessContext context, string name, string publicDescription, GroupResource parent) : base(context, name)
-		{
-			PublicDescription = publicDescription;
-			if(parent != null)
-			{
-				Parent = parent.GUID;
-			}
-		}
 
 		public RoleSchema(string name, string publicDescription, Guid parent) : base(name)
 		{
