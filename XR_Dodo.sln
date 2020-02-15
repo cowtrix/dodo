@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D4CB2E64-9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "lib\Common\Common.csproj", "{12B6D7ED-DCDD-491C-964C-EA34C077FAA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REST", "lib\REST\REST.csproj", "{C078D41E-895E-4F3A-B231-842DB388270E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resources", "lib\REST\Resources.csproj", "{C078D41E-895E-4F3A-B231-842DB388270E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dodo", "src\Dodo\Dodo.csproj", "{696776BD-5F7E-4F1B-BD1F-B91130C0A6B4}"
 EndProject
@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateSampleData", "test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DodoIdentity", "src\DodoIdentity\DodoIdentity.csproj", "{23717533-7741-4783-99B0-DFFE162FFB6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DodoResources", "src\DodoResources\DodoResources.csproj", "{E570AE59-809E-4E70-B43D-1FDB2045CA12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DodoResources", "src\DodoResources\DodoResources.csproj", "{E570AE59-809E-4E70-B43D-1FDB2045CA12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

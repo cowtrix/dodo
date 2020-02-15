@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lib\REST\REST.csproj" />
+    <ProjectReference Include="..\..\lib\REST\Resources.csproj" />
   </ItemGroup>
 
 </Project>
