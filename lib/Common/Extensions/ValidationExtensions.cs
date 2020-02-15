@@ -124,6 +124,40 @@ namespace Common.Extensions
 		}
 	}
 
+	public class PasswordAttribute : VerifyMemberBase
+	{
+		public override bool Verify(object value, out string validationError)
+		{
+			var str = value as string;
+			if (!ValidationExtensions.IsStrongPassword(str, out validationError))
+			{
+				return false;
+			}
+			return true;
+		}
+	}
+
+	public class RangeAttribute : VerifyMemberBase
+	{
+		public readonly double Min;
+		public readonly double Max;
+		public RangeAttribute(double min, double max)
+		{
+			Min = min;
+			Max = max;
+		}
+
+		public override bool Verify(object value, out string validationError)
+		{
+			if(value is double doubleVal)
+			{
+				validationError = $"Value {doubleVal} was not within {Min}-{Max}";
+				return doubleVal >= Min && doubleVal <= Max;
+			}
+			throw new Exception($"Type not supported: {value?.GetType()}");
+		}
+	}
+
 	public class UserFriendlyNameAttribute : VerifyMemberBase
 	{
 		public override bool Verify(object value, out string validationError)

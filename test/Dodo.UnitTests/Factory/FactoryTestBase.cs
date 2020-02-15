@@ -7,6 +7,7 @@ using SharedTest;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Common.Extensions;
 
 namespace Factory
 {
@@ -47,6 +48,9 @@ namespace Factory
 				e => e.Message.Contains("Name contains reserved word"));
 		}
 
-		protected abstract void VerifyCreatedObject(T obj, TSchema schema);
+		protected virtual void VerifyCreatedObject(T obj, TSchema schema)
+		{
+			Assert.IsTrue(obj.Verify(out var error), error);
+		}
 	}
 }
