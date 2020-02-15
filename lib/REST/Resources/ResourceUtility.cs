@@ -145,7 +145,21 @@ namespace Resources
 		#region Factories
 		public static IResourceFactory<T> GetFactory<T>() where T : IRESTResource
 		{
-			return Factories[typeof(T)] as IResourceFactory<T>;
+			return GetFactory(typeof(T)) as IResourceFactory<T>;
+		}
+
+		
+		public static IResourceFactory GetFactory(Type type)
+		{
+			if(Factories.TryGetValue(type, out var factory))
+			{
+				return factory;
+			}
+			if(type.BaseType != null)
+			{
+				return GetFactory(type.BaseType);
+			}
+			throw new Exception($"No factory found for type {type}");
 		}
 		#endregion
 	}

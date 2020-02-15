@@ -50,7 +50,7 @@ namespace Dodo.Users
 				return Conflict();
 			}
 			var factory = ResourceUtility.GetFactory<User>();
-			user = factory.CreateObject(default(AccessContext), schema);
+			user = factory.CreateTypedObject(default(AccessContext), schema);
 			var result = await _userManager.CreateAsync(user, schema.Password);
 			if (!result.Succeeded)
 			{

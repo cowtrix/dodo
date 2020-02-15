@@ -29,7 +29,6 @@ namespace Resources
 			typeof(string),
 			typeof(Guid),
 			typeof(Enum),
-			typeof(GeoLocation),
 			typeof(DateTime),
 			typeof(IResourceReference)
 		};

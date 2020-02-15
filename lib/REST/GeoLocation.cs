@@ -1,5 +1,6 @@
 ﻿using Common.Extensions;
 using GeoCoordinatePortable;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,18 +15,23 @@ namespace Resources
 	/// <summary>
 	/// Represents a geographic location on the Earth's surface
 	/// </summary>
-	public struct GeoLocation : IVerifiable
+	public class GeoLocation : IVerifiable
 	{
-		[JsonProperty]
-		public GeoCoordinatePortable.GeoCoordinate Coordinate { get; private set; }
+		public GeoCoordinatePortable.GeoCoordinate Coordinate => new GeoCoordinate(Latitude, Longitude);
 		[JsonProperty]
 		private Guid m_reverseGeocodingKey { get; set; }
+		[JsonProperty]
+		[Range(-180, 180)]
+		public double Latitude { get; private set; }
+		[JsonProperty]
+		[Range(-90, 90)]
+		public double Longitude { get; private set; }
 
 		public GeoLocation(double latitude, double longitude)
 		{
-			Coordinate = new GeoCoordinatePortable.GeoCoordinate(latitude, longitude);
+			Latitude = latitude;
+			Longitude = longitude;
 		}
-
 
 		public bool CanVerify()
 		{
@@ -35,15 +41,15 @@ namespace Resources
 		public override bool Equals(object obj)
 		{
 			return obj is GeoLocation location &&
-				   EqualityComparer<GeoCoordinate>.Default.Equals(Coordinate, location.Coordinate) &&
-				   m_reverseGeocodingKey.Equals(location.m_reverseGeocodingKey);
+				   Latitude == location.Latitude &&
+				   Longitude == location.Longitude;
 		}
 
 		public override int GetHashCode()
 		{
-			var hashCode = 205427882;
-			hashCode = hashCode * -1521134295 + EqualityComparer<GeoCoordinate>.Default.GetHashCode(Coordinate);
-			hashCode = hashCode * -1521134295 + m_reverseGeocodingKey.GetHashCode();
+			var hashCode = -1416534245;
+			hashCode = hashCode * -1521134295 + Latitude.GetHashCode();
+			hashCode = hashCode * -1521134295 + Longitude.GetHashCode();
 			return hashCode;
 		}
 

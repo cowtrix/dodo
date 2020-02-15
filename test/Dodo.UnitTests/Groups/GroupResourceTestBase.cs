@@ -24,7 +24,7 @@ namespace Groups
 		public void CanJoinAndLeave()
 		{
 			var creator = GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var newGroup = ResourceUtility.GetFactory<T>().CreateObject(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
+			var newGroup = ResourceUtility.GetFactory<T>().CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
 
 			// Join
 			var user = GenerateUser(SchemaGenerator.GetRandomUser(default), out var joinerContext);
@@ -55,7 +55,7 @@ namespace Groups
 		public void CanAddAdmin()
 		{
 			var creator = GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var newGroup = ResourceUtility.GetFactory<T>().CreateObject(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
+			var newGroup = ResourceUtility.GetFactory<T>().CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
 
 			// Add
 			var newAdmin = GenerateUser(SchemaGenerator.GetRandomUser(default), out var newAdminContext);

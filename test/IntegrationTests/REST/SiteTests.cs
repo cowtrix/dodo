@@ -1,11 +1,31 @@
-﻿using Dodo.Sites;
+﻿using Dodo;
+using Dodo.Sites;
 using DodoResources.Sites;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RESTTests
 {
 	[TestClass]
-	public class SiteTests : RESTTestBase<Site>
+	public class ActionSiteTests : SiteTests<ActionSite>
+	{
+	}
+
+	[TestClass]
+	public class EventSiteTests : SiteTests<EventSite>
+	{
+	}
+
+	[TestClass]
+	public class OccupationSiteTests : SiteTests<OccupationSite>
+	{
+	}
+
+	[TestClass]
+	public class SanctuarySiteTests : SiteTests<SanctuarySite>
+	{
+	}
+
+	public abstract class SiteTests<T> : RESTTestBase<T> where T:DodoResource
 	{
 		public override string ResourceRoot => SiteController.RootURL;
 

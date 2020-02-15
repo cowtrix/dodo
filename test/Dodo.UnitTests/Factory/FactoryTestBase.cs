@@ -18,10 +18,10 @@ namespace Factory
 		[TestMethod]
 		public void CanCreateFromSchema()
 		{
-			var factory = ResourceUtility.GetFactory<T>();
+			var factory = ResourceUtility.GetFactory(typeof(T));
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context);
-			var newObj = factory.CreateObject(context, schema);
+			var newObj = (T)factory.CreateObject(context, schema);
 			VerifyCreatedObject(newObj, schema);
 		}
 

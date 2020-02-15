@@ -14,6 +14,7 @@ using System.Linq;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using Dodo;
+using GeoCoordinatePortable;
 
 namespace DodoResources
 {
@@ -97,31 +98,56 @@ namespace DodoResources
 		}
 
 		public const char FilterVarSeperatorChar = '+';
-		public struct FilterModel
+		public class ResourceFilterModel<T>
 		{
 			public string latlong;
-			public double distance;
+			public double? distance;
 			public string startdate;
 			public string enddate;
+
+			private bool m_generatedData;
+			private GeoCoordinate m_coordinate;
+			private DateTime m_startDate;
+			private DateTime m_endDate;
+
+			public void GenerateFilterData()
+			{
+				if(m_generatedData)
+				{
+					return;
+				}
+				m_generatedData = true;
+				m_coordinate = latlong.Split(FilterVarSeperatorChar).Select(x => double.Parse(x))
+							.Transpose(x => new GeoCoordinate(x.ElementAt(0), x.ElementAt(1)));
+				m_startDate = string.IsNullOrEmpty(startdate) ? DateTime.MinValue : DateTime.Parse(startdate);
+				m_endDate = string.IsNullOrEmpty(enddate) ? DateTime.MaxValue : DateTime.Parse(enddate);
+			}
+
+			public bool Filter(T rsc)
+			{
+				if(rsc is ILocationalResource locationalResource)
+				{
+					return locationalResource.Location.Coordinate.GetDistanceTo(m_coordinate) < distance;
+				}
+				if(rsc is ITimeBoundResource timeboundResource)
+				{
+					return timeboundResource.StartDate >= m_startDate && timeboundResource.EndDate <= m_endDate;
+				}
+				else if(!string.IsNullOrEmpty(latlong) || distance.HasValue)
+				{
+					throw new Exception("Invalid filter. You cannot filter this resource by location");
+				}
+				return false;
+			}
 		}
 
 		[HttpGet]
 		[AllowAnonymous]
-		public IActionResult Index(FilterModel? filter)
+		public IActionResult Index(ResourceFilterModel<T> filter = null)
 		{
-			if(filter.HasValue)
+			if(filter != null)
 			{
-				var filterVars = filter.Value;
-				if (!typeof(T).IsAssignableFrom(typeof(ILocationalResource)))
-				{
-					return BadRequest("Filter invalid for this type of resource");
-				}
-				var latlong = filterVars.latlong.Split(FilterVarSeperatorChar).Select(x => double.Parse(x))
-					.Transpose(x => new GeoLocation(x.ElementAt(0), x.ElementAt(1)));
-				var startDate = string.IsNullOrEmpty(filterVars.startdate) ? DateTime.MinValue : DateTime.Parse(filterVars.startdate);
-				var endDate = string.IsNullOrEmpty(filterVars.enddate) ? DateTime.MaxValue : DateTime.Parse(filterVars.enddate);
-
-				//return Ok(ResourceManager.Get(rsc => rsc.Start))
+				return Ok(ResourceManager.Get(rsc => filter.Filter(rsc)));
 			}
 			return Ok(ResourceManager.Get(x => true).Select(rsc => rsc.GUID));
 		}

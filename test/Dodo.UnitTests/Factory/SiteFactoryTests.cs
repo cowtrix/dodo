@@ -6,10 +6,22 @@ using Resources.Security;
 namespace Factory
 {
 	[TestClass]
-	public class SiteFactoryTests : FactoryTestBase<Site, SiteSchema>
+	public class ActionSiteFactoryTests : FactoryTestBase<ActionSite, ActionSiteSchema>
 	{
-		protected override void VerifyCreatedObject(Site obj, SiteSchema schema)
-		{
-		}
+	}
+
+	[TestClass]
+	public class EventSiteFactoryTests : FactoryTestBase<EventSite, EventSiteSchema>
+	{
+	}
+
+	[TestClass]
+	public class SanctuarySiteFactoryTests : FactoryTestBase<SanctuarySite, SanctuarySiteSchema>
+	{
+	}
+
+	[TestClass]
+	public class OccupationSiteFactoryTests : FactoryTestBase<OccupationSite, OccupationSiteSchema>
+	{
 	}
 }

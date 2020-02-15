@@ -26,7 +26,7 @@ namespace RESTTests
 		[TestMethod]
 		public async Task CanRegisterNewUser()
 		{
-			var response = await RequestAuth("register", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
+			var response = await RequestAuth("auth/users/register", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
 			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
 		}
 

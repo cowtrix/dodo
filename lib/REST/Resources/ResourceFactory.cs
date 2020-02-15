@@ -7,10 +7,13 @@ namespace Resources
 	public interface IResourceFactory<T> : IResourceFactory
 	{
 		Type SchemaType { get; }
-		T CreateObject(object context, ResourceSchemaBase schema);
+		T CreateTypedObject(object context, ResourceSchemaBase schema);
 	}
 
-	public interface IResourceFactory { }
+	public interface IResourceFactory 
+	{
+		object CreateObject(object context, ResourceSchemaBase schema);
+	}
 
 	public abstract class ResourceFactory<TResult, TSchema, TContext> 
 		: IResourceFactory<TResult>
@@ -51,9 +54,14 @@ namespace Resources
 			return schema.Verify(out error);
 		}
 
-		public TResult CreateObject(object context, ResourceSchemaBase schema)
+		public object CreateObject(object context, ResourceSchemaBase schema)
 		{
 			return CreateObject((TContext)context, (TSchema)schema);
+		}
+
+		public TResult CreateTypedObject(object context, ResourceSchemaBase schema)
+		{
+			return CreateObject(context, schema) as TResult;
 		}
 
 		public Type SchemaType => typeof(TSchema);

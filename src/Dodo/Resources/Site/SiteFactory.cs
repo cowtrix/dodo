@@ -27,7 +27,7 @@ namespace Dodo.Sites
 		}
 	}
 
-	public class TimeboundSiteSchema : SiteSchema
+	public abstract class TimeboundSiteSchema : SiteSchema
 	{
 		public DateTime StartDate { get; private set; }
 		public DateTime EndDate { get; private set; }
@@ -44,7 +44,8 @@ namespace Dodo.Sites
 		}
 	}
 
-	public class SiteFactory : DodoResourceFactory<Site, SiteSchema> 
+	public class SiteFactory : DodoResourceFactory<Site, SiteSchema>, 
+		IResourceFactory<ActionSite>, IResourceFactory<EventSite>, IResourceFactory<MarchSite>, IResourceFactory<OccupationSite>, IResourceFactory<SanctuarySite>
 	{
 		protected override Site CreateObjectInternal(AccessContext context, SiteSchema schema)
 		{
@@ -59,6 +60,31 @@ namespace Dodo.Sites
 				throw new Exception(error);
 			}
 			return newSite;
+		}
+
+		ActionSite IResourceFactory<ActionSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
+		{
+			return CreateObject(context, schema) as ActionSite;
+		}
+
+		EventSite IResourceFactory<EventSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
+		{
+			return CreateObject(context, schema) as EventSite;
+		}
+
+		OccupationSite IResourceFactory<OccupationSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
+		{
+			return CreateObject(context, schema) as OccupationSite;
+		}
+
+		SanctuarySite IResourceFactory<SanctuarySite>.CreateTypedObject(object context, ResourceSchemaBase schema)
+		{
+			return CreateObject(context, schema) as SanctuarySite;
+		}
+
+		MarchSite IResourceFactory<MarchSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
+		{
+			return CreateObject(context, schema) as MarchSite;
 		}
 	}
 }

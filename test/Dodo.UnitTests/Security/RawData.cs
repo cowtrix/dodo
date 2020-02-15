@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common;
+using Dodo.SharedTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 using Resources.Security;
@@ -66,7 +67,7 @@ namespace Security
 			var data = new TestEncryptedData();
 			AssertX.Throws<Exception>(() => data = data.PatchObject(new Dictionary<string, object>()
 			{
-				{ "Location", new GeoLocation() },
+				{ "Location", SchemaGenerator.RandomLocation },
 			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Insufficient privileges"));
 		}
 
@@ -78,7 +79,7 @@ namespace Security
 			var data = new TestEncryptedData();
 			AssertX.Throws<Exception>(() => data = data.PatchObject(new Dictionary<string, object>()
 			{
-				{ "NonExistantField", new GeoLocation() },
+				{ "NonExistantField", SchemaGenerator.RandomLocation },
 			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Invalid field names"));
 		}
 	}

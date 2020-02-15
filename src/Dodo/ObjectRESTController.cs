@@ -95,7 +95,7 @@ namespace Resources
 			T createdObject;
 			try
 			{
-				createdObject = factory.CreateObject(context, schema);
+				createdObject = factory.CreateObject(context, schema) as T;
 				OnCreation(context, createdObject);
 			}
 			catch (Exception e)

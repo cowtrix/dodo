@@ -7,17 +7,18 @@ using Resources;
 
 namespace Dodo.Sites
 {
-	public class ActionSiteSchema : TimeboundSiteSchema
+	public class MarchSchema : TimeboundSiteSchema
 	{
-		public ActionSiteSchema(string name, string type, Guid parent, GeoLocation location, string description, DateTime start, DateTime end) : 
+		public MarchSchema(string name, string type, Guid parent, GeoLocation location, string description, DateTime start, DateTime end) : 
 			base(name, type, parent, location, description, start, end)
 		{
 		}
 	}
 
-	public class ActionSite : Site, ITimeBoundResource
+	public class MarchSite : Site, ITimeBoundResource
 	{
-		public ActionSite(AccessContext context, ActionSiteSchema schema) : base(context, schema)
+		public MarchSite() : base(default, default) { }
+		public MarchSite(AccessContext context, MarchSchema schema) : base(context, schema)
 		{
 			StartDate = schema.StartDate;
 			EndDate = schema.EndDate;

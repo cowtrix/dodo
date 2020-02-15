@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Authentication;
 using Common;
 using Common.Security;
+using Dodo.SharedTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 using Resources.Security;
@@ -86,7 +87,7 @@ namespace Security
 			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
 			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
 			{
-				{ "Location", new GeoLocation() },
+				{ "Location", SchemaGenerator.RandomLocation },
 			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Insufficient privileges"));
 		}
 
@@ -99,7 +100,7 @@ namespace Security
 			var multiSig = new MultiSigEncryptedStore<string, TestEncryptedData>(data, key, password);
 			AssertX.Throws<Exception>(() => multiSig = multiSig.PatchObject(new Dictionary<string, object>()
 			{
-				{ "NonExistantField", new GeoLocation() },
+				{ "NonExistantField", SchemaGenerator.RandomLocation },
 			}, EPermissionLevel.USER, key, password), e => e.Message.Contains("Invalid field names"));
 		}
 
