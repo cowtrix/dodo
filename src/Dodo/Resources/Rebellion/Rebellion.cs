@@ -1,11 +1,11 @@
 ﻿using Common;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.Sites;
 using Dodo.Users;
 using Dodo.WorkingGroups;
-using REST;
-using REST.Serializers;
+using Resources;
+using Resources.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

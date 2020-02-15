@@ -1,6 +1,6 @@
 ﻿using Dodo.Users;
-using REST;
-using REST.Security;
+using Resources;
+using Resources.Security;
 using System;
 
 namespace Dodo

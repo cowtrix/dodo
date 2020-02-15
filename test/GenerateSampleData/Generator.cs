@@ -7,8 +7,8 @@ using Dodo.SharedTest;
 using Dodo.Sites;
 using Dodo.Users;
 using Dodo.WorkingGroups;
-using REST;
-using REST.Security;
+using Resources;
+using Resources.Security;
 using System;
 
 namespace GenerateSampleData
@@ -36,9 +36,9 @@ namespace GenerateSampleData
 			var currentRebellion = RebellionFactory.CreateObject(admin1context, 
 				new RebellionSchema("Amsterdam Rebllion", SchemaGenerator.SampleMarkdown, amstLocation, DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
 			var siteOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Occupationsal Site", typeof(OccupationalSite).FullName, currentRebellion.GUID, amstLocation, SchemaGenerator.SampleMarkdown));
-			var actionOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Action Site", typeof(ActionSite).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.Latitude + 0.05, amstLocation.Longitude + 0.05), SchemaGenerator.SampleMarkdown));
-			var march = SiteFactory.CreateObject(admin1context, new SiteSchema("March", typeof(March).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.Latitude - 0.05, amstLocation.Longitude + 0.05), SchemaGenerator.SampleMarkdown));
-			var sanctuary = SiteFactory.CreateObject(admin1context, new SiteSchema("Sanctuary Site", typeof(Sanctuary).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.Latitude - 0.05, amstLocation.Longitude - 0.05), SchemaGenerator.SampleMarkdown));
+			var actionOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Action Site", typeof(ActionSite).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.Coordinate.Latitude + 0.05, amstLocation.Coordinate.Longitude + 0.05), SchemaGenerator.SampleMarkdown));
+			var march = SiteFactory.CreateObject(admin1context, new SiteSchema("March", typeof(March).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.Coordinate.Latitude - 0.05, amstLocation.Coordinate.Longitude + 0.05), SchemaGenerator.SampleMarkdown));
+			var sanctuary = SiteFactory.CreateObject(admin1context, new SiteSchema("Sanctuary Site", typeof(Sanctuary).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.Coordinate.Latitude - 0.05, amstLocation.Coordinate.Longitude - 0.05), SchemaGenerator.SampleMarkdown));
 			
 			var actionSupport = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Action Support",
 				SchemaGenerator.SampleMarkdown, currentRebellion.GUID));

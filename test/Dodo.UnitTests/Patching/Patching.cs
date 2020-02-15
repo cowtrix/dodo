@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using REST;
+using Resources;
 using Common.Extensions;
 using System.Linq;
 using SharedTest;

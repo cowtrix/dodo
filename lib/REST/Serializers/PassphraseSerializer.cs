@@ -1,8 +1,8 @@
-﻿using REST.Security;
+﻿using Resources.Security;
 using MongoDB.Bson.Serialization;
 using System;
 
-namespace REST.Serializers
+namespace Resources.Serializers
 {
 	public class PassphraseSerializer : IBsonSerializer<Passphrase>, ICustomBsonSerializer
 	{

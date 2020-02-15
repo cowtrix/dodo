@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Http;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using REST.Serializers;
+using Resources.Serializers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace REST
+namespace Resources
 {
 
 	public static class ResourceUtility

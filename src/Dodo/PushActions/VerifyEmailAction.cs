@@ -1,5 +1,5 @@
 ﻿using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Newtonsoft.Json;
 using System;
 using Common.Security;

@@ -3,8 +3,8 @@ using Common;
 using Common.Security;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using REST;
-using REST.Security;
+using Resources;
+using Resources.Security;
 
 namespace Security
 {

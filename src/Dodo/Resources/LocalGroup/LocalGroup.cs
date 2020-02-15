@@ -1,11 +1,11 @@
 ﻿using Common;
 using Dodo.Users;
-using REST;
+using Resources;
 using System;
 using Dodo.Roles;
 using Common.Extensions;
-using REST.Security;
-using REST.Serializers;
+using Resources.Security;
+using Resources.Serializers;
 
 namespace Dodo.LocalGroups
 {

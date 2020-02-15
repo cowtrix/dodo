@@ -1,6 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
@@ -15,7 +15,7 @@ using Dodo.Utility;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
-namespace REST
+namespace Resources
 {
 	/// <summary>
 	/// This class implements a basic REST handler that can create, get, update and delete a given object.

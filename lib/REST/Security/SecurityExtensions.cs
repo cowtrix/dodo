@@ -1,6 +1,6 @@
 ﻿using Common.Security;
 
-namespace REST.Security
+namespace Resources.Security
 {
 	public static class SecurityExtensions
 	{

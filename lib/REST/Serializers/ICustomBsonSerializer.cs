@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization;
 
-namespace REST.Serializers
+namespace Resources.Serializers
 {
 	public interface ICustomBsonSerializer { }
 }

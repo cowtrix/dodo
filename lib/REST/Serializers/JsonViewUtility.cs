@@ -1,6 +1,6 @@
 ﻿using Common;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using Common;
 
-namespace REST
+namespace Resources
 {
 	[AttributeUsage(AttributeTargets.Struct)]
 	public class ViewClassAttribute : Attribute 

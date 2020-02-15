@@ -1,4 +1,4 @@
-﻿using REST.Security;
+﻿using Resources.Security;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Common;
@@ -8,8 +8,14 @@ namespace Dodo.Sites
 {
 	public class Event : Site, ITimeBoundResource
 	{
+		public Event() : base(default, default) { }
+
 		public Event(AccessContext context, TimeboundSiteSchema schema) : base(context, schema)
 		{
+			if(schema == null)
+			{
+				return;
+			}
 			StartDate = schema.StartDate;
 			EndDate = schema.EndDate;
 		}

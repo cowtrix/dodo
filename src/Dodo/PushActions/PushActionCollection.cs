@@ -1,7 +1,7 @@
-﻿using REST.Security;
+﻿using Resources.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using REST;
+using Resources;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;

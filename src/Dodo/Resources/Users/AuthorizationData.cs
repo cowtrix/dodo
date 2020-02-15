@@ -1,7 +1,7 @@
 ﻿using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Newtonsoft.Json;
-using REST;
+using Resources;
 using System;
 using Common.Security;
 using Microsoft.AspNetCore.Identity.MongoDB;

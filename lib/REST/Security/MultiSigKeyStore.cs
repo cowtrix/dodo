@@ -1,11 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using REST;
+using Resources;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace REST.Security
+namespace Resources.Security
 {
 	/// <summary>
 	/// This class allows multiple key/value pairs to prove that they have been added to this

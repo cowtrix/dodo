@@ -1,8 +1,8 @@
-﻿using REST;
+﻿using Resources;
 using System;
 using Common.Extensions;
 using Common;
-using REST.Serializers;
+using Resources.Serializers;
 using Dodo.Resources;
 
 namespace Dodo.LocalGroups

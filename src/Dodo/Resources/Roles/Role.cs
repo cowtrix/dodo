@@ -1,9 +1,9 @@
 ﻿using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
-using REST;
-using REST.Serializers;
+using Resources;
+using Resources.Serializers;
 using System.Collections.Generic;
 
 namespace Dodo.Roles

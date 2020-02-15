@@ -1,7 +1,7 @@
 ﻿using Common;
 using Common.Extensions;
 using Dodo.Resources;
-using REST;
+using Resources;
 using System;
 
 namespace Dodo.Sites

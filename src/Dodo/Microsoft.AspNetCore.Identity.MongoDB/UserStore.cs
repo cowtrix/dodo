@@ -13,7 +13,7 @@ namespace Microsoft.AspNetCore.Identity.MongoDB
     using Dodo.Users;
     using global::MongoDB.Bson;
 	using global::MongoDB.Driver;
-    using REST;
+    using Resources;
 	using Common.Extensions;
 
     /// <summary>

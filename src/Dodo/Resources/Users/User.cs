@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.WorkingGroups;
-using REST;
+using Resources;
 using Microsoft.AspNetCore.Identity.MongoDB;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;

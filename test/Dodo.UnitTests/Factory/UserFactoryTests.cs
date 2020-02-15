@@ -1,7 +1,7 @@
 ﻿using Dodo;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using REST;
+using Resources;
 using System;
 
 namespace Factory

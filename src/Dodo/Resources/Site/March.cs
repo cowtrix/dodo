@@ -1,4 +1,4 @@
-﻿using REST.Security;
+﻿using Resources.Security;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Common;
@@ -12,6 +12,7 @@ namespace Dodo.Sites
 
 	public class March : Site, ITimeBoundResource
 	{
+		public March() : base(default, default) { }
 		public March(AccessContext context, TimeboundSiteSchema schema) : base(context, schema)
 		{
 			StartDate = schema.StartDate;

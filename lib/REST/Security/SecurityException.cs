@@ -1,7 +1,7 @@
 ﻿using Common;
 using System;
 
-namespace REST
+namespace Resources
 {
 	/// <summary>
 	/// This exception should be thrown when any kind of security breach is detected

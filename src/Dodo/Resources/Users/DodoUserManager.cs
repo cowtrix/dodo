@@ -1,7 +1,7 @@
 ﻿using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.Resources;
-using REST;
+using Resources;
 using System;
 
 namespace Dodo.Users

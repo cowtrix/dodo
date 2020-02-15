@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace REST
+namespace Resources
 {
 	public class HttpStatusContentResult : ActionResult
 	{

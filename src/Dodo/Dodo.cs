@@ -1,6 +1,6 @@
 ﻿using Common;
 using Common.Commands;
-using REST;
+using Resources;
 using System.Threading;
 
 namespace Dodo

@@ -2,6 +2,7 @@
 using Common;
 using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Resources;
 
 namespace Security
 {
@@ -32,8 +33,8 @@ namespace Security
 		[TestMethod]
 		public void CanEncryptAndDecryptObject()
 		{
-			var data = new GeoLocation(42, 67);
-			CanEncryptAndDecrypt<GeoLocation>(data);
+			var data = (42, 67, 32);
+			CanEncryptAndDecrypt(data);
 		}
 
 		private void CanEncryptAndDecrypt<T>(T data)

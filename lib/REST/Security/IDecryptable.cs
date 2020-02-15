@@ -1,6 +1,6 @@
-﻿using REST;
+﻿using Resources;
 
-namespace REST.Security
+namespace Resources.Security
 {
 	public interface IKeyDecryptable<TKey, TVal> : IDecryptable
 	{

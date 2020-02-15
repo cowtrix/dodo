@@ -1,9 +1,9 @@
 ﻿using Common;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.Utility;
 using Newtonsoft.Json;
-using REST;
+using Resources;
 using System;
 using System.Collections.Generic;
 using System.Net;

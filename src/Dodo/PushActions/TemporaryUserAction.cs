@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using REST;
-using REST.Security;
+using Resources;
+using Resources.Security;
 
 namespace Dodo.Users
 {

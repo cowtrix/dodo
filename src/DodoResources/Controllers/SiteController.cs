@@ -1,7 +1,7 @@
 ﻿using Dodo.Sites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using REST;
+using Resources;
 using System.Threading.Tasks;
 
 namespace DodoResources.Sites

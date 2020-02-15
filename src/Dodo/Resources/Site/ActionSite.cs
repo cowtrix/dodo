@@ -1,4 +1,4 @@
-﻿using REST.Security;
+﻿using Resources.Security;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Common;

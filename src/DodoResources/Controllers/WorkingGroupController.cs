@@ -1,5 +1,5 @@
 ﻿using Common.Extensions;
-using REST;
+using Resources;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

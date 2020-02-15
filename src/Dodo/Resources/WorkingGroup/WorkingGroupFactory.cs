@@ -1,6 +1,6 @@
 ﻿using Dodo.Resources;
-using REST;
-using REST.Serializers;
+using Resources;
+using Resources.Serializers;
 using System;
 
 namespace Dodo.WorkingGroups

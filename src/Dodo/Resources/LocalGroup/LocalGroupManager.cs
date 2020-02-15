@@ -2,7 +2,7 @@
 using Dodo.Resources;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
-using REST;
+using Resources;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;

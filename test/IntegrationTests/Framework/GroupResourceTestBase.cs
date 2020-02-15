@@ -3,7 +3,7 @@ using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RestSharp;
-using REST;
+using Resources;
 using System;
 using System.Linq;
 using System.Threading;

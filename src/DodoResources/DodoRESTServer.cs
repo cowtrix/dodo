@@ -1,7 +1,7 @@
 ﻿using Dodo.Users;
 using Dodo.Utility;
 using Microsoft.AspNetCore.Http;
-using REST;
+using Resources;
 using System;
 using System.Linq;
 

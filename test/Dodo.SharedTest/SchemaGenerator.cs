@@ -6,7 +6,7 @@ using Dodo.Roles;
 using Dodo.Sites;
 using Dodo.Users;
 using Dodo.WorkingGroups;
-using REST;
+using Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;

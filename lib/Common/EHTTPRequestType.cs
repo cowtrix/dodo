@@ -1,4 +1,4 @@
-﻿namespace REST
+﻿namespace Resources
 {
 	public enum EHTTPRequestType
 	{

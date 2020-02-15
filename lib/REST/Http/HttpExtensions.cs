@@ -7,7 +7,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace REST
+namespace Resources
 {
 	public static class HttpExtensions
 	{

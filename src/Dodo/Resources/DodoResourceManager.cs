@@ -1,6 +1,6 @@
 ﻿using Dodo.Utility;
 using Microsoft.AspNetCore.Http;
-using REST;
+using Resources;
 
 namespace Dodo.Resources
 {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace REST.Security
+namespace Resources.Security
 {
 	/// <summary>
 	/// This is a collection of tokens that are used to create temporary

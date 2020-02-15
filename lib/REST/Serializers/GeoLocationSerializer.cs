@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization;
 using System;
 
-namespace REST.Serializers
+namespace Resources.Serializers
 {
 	public class GeoLocationSerializer : IBsonSerializer<GeoLocation>, ICustomBsonSerializer
 	{
@@ -21,9 +21,9 @@ namespace REST.Serializers
 		{
 			context.Writer.WriteStartDocument();
 			context.Writer.WriteName("Latitude");
-			context.Writer.WriteDouble(value.Latitude);
+			context.Writer.WriteDouble(value.Coordinate.Latitude);
 			context.Writer.WriteName("Longitude");
-			context.Writer.WriteDouble(value.Longitude);
+			context.Writer.WriteDouble(value.Coordinate.Longitude);
 			context.Writer.WriteEndDocument();
 		}
 

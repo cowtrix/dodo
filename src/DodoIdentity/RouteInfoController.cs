@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace REST
+namespace Resources
 {
 	[Route("api/identity")]
 	public class RouteInfoController : Controller

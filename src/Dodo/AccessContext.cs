@@ -1,6 +1,6 @@
 ﻿using Common.Security;
 using Dodo.Users;
-using REST.Security;
+using Resources.Security;
 using System;
 using System.Collections.Generic;
 

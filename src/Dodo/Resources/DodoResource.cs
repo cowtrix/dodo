@@ -1,7 +1,7 @@
-﻿using REST.Security;
+﻿using Resources.Security;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
-using REST;
+using Resources;
 using Newtonsoft.Json;
 
 namespace Dodo

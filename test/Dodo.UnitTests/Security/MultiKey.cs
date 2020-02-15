@@ -1,6 +1,6 @@
 ﻿using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using REST.Security;
+using Resources.Security;
 
 namespace Security
 {

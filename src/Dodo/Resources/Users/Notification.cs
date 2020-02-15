@@ -1,5 +1,5 @@
 ﻿using System;
-using REST;
+using Resources;
 
 namespace Dodo.Users
 {

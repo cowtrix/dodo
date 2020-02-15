@@ -1,6 +1,6 @@
 ﻿using Common.Extensions;
 using Dodo.LocalGroups;
-using REST;
+using Resources;
 using Microsoft.AspNetCore.Identity;
 
 namespace Dodo.Users

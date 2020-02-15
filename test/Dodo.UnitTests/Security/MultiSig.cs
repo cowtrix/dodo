@@ -4,8 +4,8 @@ using System.Security.Authentication;
 using Common;
 using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using REST;
-using REST.Security;
+using Resources;
+using Resources.Security;
 using SharedTest;
 
 namespace Security
@@ -47,7 +47,7 @@ namespace Security
 			Assert.AreEqual("test", data.StringProperty);
 			Assert.AreEqual("a new value", data.EncryptedString.GetValue(password));
 			Assert.AreEqual(7.1, data.EncryptedObject.GetValue(key, password).DoubleProperty);
-			Assert.AreEqual(4, data.EncryptedObjectProp.GetValue(key, password).Latitude);
+			Assert.AreEqual(4, data.EncryptedObjectProp.GetValue(key, password).Coordinate.Latitude);
 		}
 
 		[TestMethod]

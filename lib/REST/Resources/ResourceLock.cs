@@ -3,7 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 
-namespace REST
+namespace Resources
 {
 	/// <summary>
 	/// <para>A ResourceLock will prevent a Resource from being altered while it is being edited. It is

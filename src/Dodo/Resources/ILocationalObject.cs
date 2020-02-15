@@ -1,4 +1,5 @@
 ﻿using Common;
+using Resources;
 using System;
 
 namespace Dodo

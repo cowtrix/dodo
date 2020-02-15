@@ -1,12 +1,12 @@
 ﻿using Common.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using REST;
+using Resources;
 using System;
 using System.Collections.Generic;
 using System.Security.Authentication;
 
-namespace REST.Security
+namespace Resources.Security
 {
 	/// <summary>
 	/// This represents a passphrase - the key of every user that unlocks all of their data.

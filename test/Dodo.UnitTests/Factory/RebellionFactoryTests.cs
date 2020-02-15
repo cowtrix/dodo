@@ -1,7 +1,7 @@
 ﻿using Dodo;
 using Dodo.Rebellions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using REST.Security;
+using Resources.Security;
 
 namespace Factory
 {

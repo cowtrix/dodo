@@ -1,5 +1,5 @@
 ﻿using Common;
-using REST.Security;
+using Resources.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;

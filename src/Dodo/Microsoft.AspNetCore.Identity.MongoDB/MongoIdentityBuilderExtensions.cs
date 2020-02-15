@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 	using AspNetCore.Identity.MongoDB;
     using Dodo.Users;
     using MongoDB.Driver;
-    using REST;
+    using Resources;
 
     public static class MongoIdentityBuilderExtensions
 	{

@@ -1,12 +1,12 @@
 ﻿using Common;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
-using REST;
-using REST.Serializers;
+using Resources;
+using Resources.Serializers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

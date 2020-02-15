@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.Users;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
-using REST;
-using REST.Serializers;
+using Resources;
+using Resources.Serializers;
 using Common.Security;
 
 namespace Dodo

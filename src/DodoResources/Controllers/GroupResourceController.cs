@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using Common;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.Users;
 using Dodo.Utility;
 using Newtonsoft.Json;
-using REST;
+using Resources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Common.Security;

@@ -5,7 +5,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace REST
+namespace Resources
 {
 	public class SecurityHeadersAttribute : ActionFilterAttribute
 	{

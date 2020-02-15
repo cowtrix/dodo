@@ -1,7 +1,7 @@
 ﻿using Dodo;
 using Dodo.Sites;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using REST.Security;
+using Resources.Security;
 
 namespace Factory
 {

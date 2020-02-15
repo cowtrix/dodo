@@ -1,5 +1,5 @@
-﻿using REST.Security;
-using REST;
+﻿using Resources.Security;
+using Resources;
 using System;
 using Common.Security;
 using Dodo.Utility;

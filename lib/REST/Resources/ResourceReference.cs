@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace REST
+namespace Resources
 {
 
 	public interface IResourceReference : IVerifiable

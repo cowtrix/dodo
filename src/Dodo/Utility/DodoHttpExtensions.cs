@@ -1,8 +1,8 @@
 ﻿using Common.Extensions;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
-using REST;
-using REST.Security;
+using Resources;
+using Resources.Security;
 using System;
 using System.Security.Claims;
 

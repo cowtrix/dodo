@@ -2,7 +2,8 @@
 using Common;
 using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using REST.Security;
+using Resources;
+using Resources.Security;
 using Ryadel.Components.Security;
 
 namespace Security

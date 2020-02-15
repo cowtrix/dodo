@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Text.RegularExpressions;
 
-namespace REST
+namespace Resources
 {
 	public static class ResourceCommands
 	{

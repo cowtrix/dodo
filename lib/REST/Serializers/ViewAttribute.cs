@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace REST
+namespace Resources
 {
 	/// <summary>
 	/// Fields and properties with this attribute will be serialized in REST api queries.

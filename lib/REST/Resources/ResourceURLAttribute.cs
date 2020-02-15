@@ -1,4 +1,4 @@
-﻿using REST;
+﻿using Resources;
 using System;
 
 namespace Common.Extensions

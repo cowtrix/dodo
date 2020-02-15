@@ -2,7 +2,7 @@
 using Common.Extensions;
 using System;
 
-namespace REST
+namespace Resources
 {
 	public interface IResourceFactory<T> : IResourceFactory
 	{

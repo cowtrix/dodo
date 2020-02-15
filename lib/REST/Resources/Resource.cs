@@ -1,14 +1,14 @@
 ﻿using Common;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using REST.Serializers;
+using Resources.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace REST
+namespace Resources
 {
 	public interface IRESTResource : IVerifiable
 	{

@@ -12,7 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-namespace REST
+namespace Resources
 {
 	public interface IResourceManager
 	{
@@ -60,10 +60,8 @@ namespace REST
 			}
 
 			// Create an index of the GUID
-			// TODO investigate ResourceURL commented out bit - ResourceURL not currently serialized so can't be used
-			// TODO investigate if we need to do this every time or if it will create a new index every time
 			var indexOptions = new CreateIndexOptions();
-			var indexKeys = Builders<T>.IndexKeys//.Ascending(rsc => rsc.ResourceURL)
+			var indexKeys = Builders<T>.IndexKeys
 				.Ascending(rsc => rsc.GUID);
 			var indexModel = new CreateIndexModel<T>(indexKeys, indexOptions);
 			MongoDatabase.Indexes.CreateOne(indexModel);

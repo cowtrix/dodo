@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using REST.Security;
+using Resources.Security;
 using Dodo.Users;
-using REST;
+using Resources;
 
 namespace Dodo
 {

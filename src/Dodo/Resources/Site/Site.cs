@@ -1,12 +1,12 @@
 ﻿using Common;
 using Common.Extensions;
-using REST.Security;
+using Resources.Security;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.Users;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
-using REST;
+using Resources;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -90,6 +90,10 @@ namespace Dodo.Sites
 
 		public Site(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
+			if (schema == null)
+			{
+				return;
+			}
 			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;

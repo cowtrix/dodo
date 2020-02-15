@@ -6,7 +6,7 @@ using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using REST;
+using Resources;
 using System;
 using SharedTest;
 using System.Threading.Tasks;

@@ -2,7 +2,7 @@
 using Dodo.SharedTest;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using REST;
+using Resources;
 using SharedTest;
 using System;
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Factory
 			var factory = ResourceUtility.GetFactory<T>();
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as DodoResourceSchemaBase;
-			var badContext = new AccessContext(context.User, new REST.Security.Passphrase("asbasdbasdb"));
+			var badContext = new AccessContext(context.User, new Resources.Security.Passphrase("asbasdbasdb"));
 			AssertX.Throws<Exception>(() => factory.CreateObject(badContext, schema),
 				e => e.Message.Contains("Bad authorisation"));
 		}
