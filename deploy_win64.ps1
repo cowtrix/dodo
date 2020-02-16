@@ -13,4 +13,5 @@ dotnet publish --force src\DodoResources\DodoResources.csproj -o ..\build\rsc
 Start-Sleep -Seconds 2
 # run
 Start-Process -FilePath ..\build\auth\DodoIdentity.exe
+Start-Sleep -Seconds 2
 Start-Process -FilePath ..\build\rsc\DodoResources.exe
