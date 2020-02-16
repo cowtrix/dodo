@@ -100,7 +100,7 @@ namespace DodoResources
 		[HttpGet]
 		[AllowAnonymous]
 		public virtual async Task<IActionResult> IndexInternal(
-			[FromQuery]LocationFilter locationFilter, [FromQuery]DateFilter dateFilter)
+			[FromQuery]DistanceFilter locationFilter, [FromQuery]DateFilter dateFilter)
 		{
 			try
 			{

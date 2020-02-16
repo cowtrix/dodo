@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading;
 
 namespace Resources
 {
@@ -15,7 +16,7 @@ namespace Resources
 	/// </summary>
 	public class ResourceLock : IDisposable
 	{
-		private static ConcurrentDictionary<Guid, bool> m_locks = new ConcurrentDictionary<Guid, bool>();
+		private static ConcurrentDictionary<Guid, Guid> m_locks = new ConcurrentDictionary<Guid, Guid>();
 
 		/// <summary>
 		/// When using a ResourceLock, always get the value from here. This is guaranteed to be the most
@@ -23,18 +24,22 @@ namespace Resources
 		/// </summary>
 		public IRESTResource Value { get; private set; }
 
-		public static bool IsLocked(Guid resource)
+		public static bool IsLocked(Guid resource, Guid? handle = null)
 		{
+			if(handle.HasValue)
+			{
+				return m_locks.TryGetValue(resource, out var handleGuid) && handleGuid != handle;
+			}
 			return m_locks.ContainsKey(resource);
 		}
 
-		public static bool IsLocked(IRESTResource resource)
+		public static bool IsLocked(IRESTResource resource, Guid? handle = null)
 		{
 			if(resource == null)
 			{
 				return false;
 			}
-			return IsLocked(resource.GUID);
+			return IsLocked(resource.GUID, handle);
 		}
 
 		public Guid Guid { get; private set; }
@@ -49,11 +54,13 @@ namespace Resources
 			{
 				return;
 			}
-			while (IsLocked(resource.GUID) || !m_locks.TryAdd(resource.GUID, default))
+			var handle = Guid.NewGuid();
+			while (IsLocked(resource.GUID, handle) || !m_locks.TryAdd(resource.GUID, handle))
 			{
+				Thread.Sleep(10);
 			}
 			Guid = resource.GUID;
-			Value = ResourceUtility.GetResourceByGuid(Guid);
+			Value = ResourceUtility.GetResourceByGuid(Guid, handle);
 		}
 
 		#region IDisposable Support

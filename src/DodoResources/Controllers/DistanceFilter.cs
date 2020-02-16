@@ -7,7 +7,7 @@ using GeoCoordinatePortable;
 
 namespace DodoResources
 {
-	public class LocationFilter
+	public class DistanceFilter
 	{
 		public string latlong { get; set; }
 		public double? distance { get; set; }

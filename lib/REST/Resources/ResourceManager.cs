@@ -19,9 +19,9 @@ namespace Resources
 		void Clear();
 		void Add(IRESTResource newObject);
 		void Update(IRESTResource objToUpdate, ResourceLock locker);
-		IRESTResource GetSingle(Func<IRESTResource, bool> selector);
-		IRESTResource GetFirst(Func<IRESTResource, bool> selector);
-		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector);
+		IRESTResource GetSingle(Func<IRESTResource, bool> selector, Guid? handle = null);
+		IRESTResource GetFirst(Func<IRESTResource, bool> selector, Guid? handle = null);
+		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector, Guid? handle = null);
 	}
 
 	public interface IResourceManager<T> : IResourceManager
@@ -29,9 +29,9 @@ namespace Resources
 		void Add(T newObject);
 		void Delete(T objToDelete);
 		void Update(T objToUpdate, ResourceLock locker);
-		T GetSingle(Func<T, bool> selector);
-		T GetFirst(Func<T, bool> selector);
-		IEnumerable<T> Get(Func<T, bool> selector);
+		T GetSingle(Func<T, bool> selector, Guid? handle = null);
+		T GetFirst(Func<T, bool> selector, Guid? handle = null);
+		IEnumerable<T> Get(Func<T, bool> selector, Guid? handle = null);
 	}
 
 	/// <summary>
@@ -122,9 +122,9 @@ namespace Resources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>A resource of type T that satisfies the selector</returns>
-		public virtual T GetSingle(Func<T, bool> selector)
+		public virtual T GetSingle(Func<T, bool> selector, Guid? handle = null)
 		{
-			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector)) as T;
+			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle) as T;
 		}
 
 		/// <summary>
@@ -132,9 +132,9 @@ namespace Resources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>A resource of type T that satisfies the selector</returns>
-		public virtual T GetFirst(Func<T, bool> selector)
+		public virtual T GetFirst(Func<T, bool> selector, Guid? handle = null)
 		{
-			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector)) as T;
+			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle) as T;
 		}
 
 		/// <summary>
@@ -142,9 +142,9 @@ namespace Resources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
-		public virtual IEnumerable<T> Get(Func<T, bool> selector)
+		public virtual IEnumerable<T> Get(Func<T, bool> selector, Guid? handle = null)
 		{
-			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector)).Cast<T>();
+			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle).Cast<T>();
 		}
 
 		/// <summary>
@@ -181,35 +181,35 @@ namespace Resources
 			Update((T)newObject, locker);
 		}
 
-		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector)
+		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector, Guid? handle = null)
 		{
-			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector));
+			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle);
 		}
 
-		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector)
+		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector, Guid? handle = null)
 		{
-			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector));
+			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle);
 		}
 
-		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector)
+		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector, Guid? handle = null)
 		{
-			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector));
+			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle);
 		}
 
-		IEnumerable<IRESTResource> WaitForAllUnlocked(IEnumerable<IRESTResource> enumerable)
+		IEnumerable<IRESTResource> WaitForAllUnlocked(IEnumerable<IRESTResource> enumerable, Guid? handle = null)
 		{
 			foreach (var rsc in enumerable)
 			{
-				WaitForUnlocked(rsc);
+				WaitForUnlocked(rsc, handle);
 			}
 			return enumerable;
 		}
 
-		IRESTResource WaitForUnlocked(IRESTResource resource)
+		IRESTResource WaitForUnlocked(IRESTResource resource, Guid? handle)
 		{
 			var sw = new Stopwatch();
 			sw.Start();
-			while (ResourceLock.IsLocked(resource))
+			while (ResourceLock.IsLocked(resource, handle))
 			{
 				if (sw.Elapsed.TotalMilliseconds > m_resourceLockTimeoutMs.Value)
 				{

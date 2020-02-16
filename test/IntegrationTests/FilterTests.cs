@@ -77,7 +77,7 @@ namespace FilterTests
 			var schema = SchemaGenerator.GetRandomSchema<T>(context);
 			var factory = ResourceUtility.GetFactory<T>();
 			var rsc = factory.CreateTypedObject(context, schema);
-			var filter = new LocationFilter() { latlong = $"{rsc.Location.Latitude} {rsc.Location.Longitude}", distance = 20 };
+			var filter = new DistanceFilter() { latlong = $"{rsc.Location.Latitude} {rsc.Location.Longitude}", distance = 20 };
 			var manager = ResourceUtility.GetManager(typeof(T));
 			var search = manager.Get(x => filter.Filter(x));
 			Assert.IsTrue(search.Single().GUID == rsc.GUID);

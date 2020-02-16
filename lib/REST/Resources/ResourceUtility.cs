@@ -76,12 +76,12 @@ namespace Resources
 			GetManagerForResource(resource).Add(resource);
 		}
 
-		public static T GetResourceByGuid<T>(this Guid guid) where T : class, IRESTResource
+		public static T GetResourceByGuid<T>(this Guid guid, Guid? handle = null) where T : class, IRESTResource
 		{
 			T result;
 			foreach(var rm in ResourceManagers)
 			{
-				result = (T)rm.Value.GetSingle(x => x.GUID == guid);
+				result = (T)rm.Value.GetSingle(x => x.GUID == guid, handle);
 				if(result != null)
 				{
 					return result;
@@ -90,9 +90,9 @@ namespace Resources
 			return null;
 		}
 
-		public static IRESTResource GetResourceByGuid(this Guid guid)
+		public static IRESTResource GetResourceByGuid(this Guid guid, Guid? handle = null)
 		{
-			return GetResourceByGuid<IRESTResource>(guid);
+			return GetResourceByGuid<IRESTResource>(guid, handle);
 		}
 
 		public static IEnumerable<T> Search<T>(string query) where T : class, IRESTResource
@@ -134,7 +134,7 @@ namespace Resources
 
 		public static IResourceManager GetManagerForResource(this Resource resource)
 		{
-			return GetManagerForResource(resource.GUID);
+			return GetManager(resource.GetType());
 		}
 
 		public static IResourceManager<T> GetManager<T>()

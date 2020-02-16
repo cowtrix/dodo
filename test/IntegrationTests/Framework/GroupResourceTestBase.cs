@@ -21,11 +21,11 @@ namespace RESTTests
 		public async virtual Task CanListWithDistanceFilter()
 		{
 			GetRandomUser(out _, out var context);
-			var factory = ResourceUtility.GetFactory<Rebellion>();
-			var resources = new List<Rebellion>();
+			var factory = ResourceUtility.GetFactory<T>();
+			var resources = new List<T>();
 			for (var i = 0; i < 5; ++i)
 			{
-				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<Rebellion>(context)));
+				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random() as ILocationalResource;
 			if (resource == null)
