@@ -6,20 +6,16 @@ using System;
 
 namespace Dodo.Sites
 {
-	public class SiteSchema : DodoResourceSchemaBase
+	public class SiteSchema : GroupResourceSchemaBase
 	{
 		public string Type { get; private set; }
-		public Guid Parent { get; private set; }
 		public GeoLocation Location { get; private set; }
-		public string PublicDescription { get; private set; }
 
 		public SiteSchema(string name, string type, Guid parent, GeoLocation location, string description)
-			: base(name)
+			: base(name, description, parent)
 		{
 			Type = type;
 			Location = location;
-			Parent = parent;
-			PublicDescription = description;
 		}
 
 		public SiteSchema()

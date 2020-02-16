@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Resources;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DodoResources.Sites
 {
 	[Route(RootURL)]
-	public class SiteController : ObjectRESTController<Site, SiteSchema>
+	public class SiteController : GroupResourceController<Site, SiteSchema>
 	{
 		public const string RootURL = "api/sites";
 

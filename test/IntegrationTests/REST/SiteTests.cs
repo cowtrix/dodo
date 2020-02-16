@@ -1,7 +1,15 @@
 ﻿using Dodo;
+using Dodo.SharedTest;
 using Dodo.Sites;
 using DodoResources.Sites;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
+using Resources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Common.Extensions;
 
 namespace RESTTests
 {
@@ -25,9 +33,11 @@ namespace RESTTests
 	{
 	}
 
-	public abstract class SiteTests<T> : RESTTestBase<T> where T:DodoResource
+	public abstract class SiteTests<T> : GroupResourceTestBase<T> where T:GroupResource
 	{
 		public override string ResourceRoot => SiteController.RootURL;
+
+		
 
 		/*[TestInitialize]
 		public void Setup()

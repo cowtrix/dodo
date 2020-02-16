@@ -9,11 +9,79 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SharedTest;
+using Dodo.Rebellions;
+using Dodo.SharedTest;
+using System.Collections.Generic;
 
 namespace RESTTests
 {
 	public abstract class GroupResourceTestBase<T> : RESTTestBase<T> where T:GroupResource
 	{
+		[TestMethod]
+		public async virtual Task CanListWithDistanceFilter()
+		{
+			GetRandomUser(out _, out var context);
+			var factory = ResourceUtility.GetFactory<Rebellion>();
+			var resources = new List<Rebellion>();
+			for (var i = 0; i < 5; ++i)
+			{
+				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<Rebellion>(context)));
+			}
+			var resource = resources.Random() as ILocationalResource;
+			if (resource == null)
+			{
+				Assert.Inconclusive();
+			}
+			var list = await RequestJSON<JArray>($"{ResourceRoot}", EHTTPRequestType.GET,
+				parameters: new[]
+				{
+					("latlong", $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
+					("distance", "20.6"),
+				});
+			var guids = list.Values<string>().Select(x => Guid.Parse(x)).GetEnumerator().ToIEnumerable().ToList();
+			Assert.IsTrue(guids.Contains(resource.GUID));
+		}
+
+		[TestMethod]
+		public async virtual Task CanListWithDateFilter()
+		{
+			GetRandomUser(out _, out var context);
+			var factory = ResourceUtility.GetFactory<T>();
+			var resources = new List<T>();
+			for (var i = 0; i < 1; ++i)
+			{
+				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
+			}
+			var resource = resources.Random() as ITimeBoundResource;
+			if(resource == null)
+			{
+				Assert.Inconclusive();
+			}
+			var list = await RequestJSON<JArray>($"{ResourceRoot}", EHTTPRequestType.GET,
+				parameters: new[]
+				{
+					("startdate", $"{resource.StartDate.ToShortDateString()}"),
+					("enddate", $"{resource.EndDate.ToShortDateString()}")
+				});
+			var guids = list.Values<string>().Select(x => Guid.Parse(x)).GetEnumerator().ToIEnumerable().ToList();
+			Assert.IsTrue(guids.Contains(resource.GUID));
+		}
+
+		[TestMethod]
+		public async virtual Task CanList()
+		{
+			GetRandomUser(out _, out var context);
+			var factory = ResourceUtility.GetFactory<T>();
+			var sites = new List<T>();
+			for (var i = 0; i < 5; ++i)
+			{
+				sites.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
+			}
+			var list = await RequestJSON<JArray>($"{ResourceRoot}", EHTTPRequestType.GET);
+			var guids = list.Values<string>().Select(x => Guid.Parse(x)).GetEnumerator().ToIEnumerable().ToList();
+			Assert.IsFalse(sites.Any(x => !guids.Contains(x.GUID)));
+		}
+
 		/*[TestMethod]
 		public void CanAddAdminFromExistingUser()
 		{

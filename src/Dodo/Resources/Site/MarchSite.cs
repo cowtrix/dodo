@@ -4,12 +4,13 @@ using Dodo.Users;
 using Common;
 using System;
 using Resources;
+using Newtonsoft.Json;
 
 namespace Dodo.Sites
 {
-	public class MarchSchema : TimeboundSiteSchema
+	public class MarchSiteSchema : TimeboundSiteSchema
 	{
-		public MarchSchema(string name, string type, Guid parent, GeoLocation location, string description, DateTime start, DateTime end) : 
+		public MarchSiteSchema(string name, string type, Guid parent, GeoLocation location, string description, DateTime start, DateTime end) : 
 			base(name, type, parent, location, description, start, end)
 		{
 		}
@@ -18,14 +19,18 @@ namespace Dodo.Sites
 	public class MarchSite : Site, ITimeBoundResource
 	{
 		public MarchSite() : base(default, default) { }
-		public MarchSite(AccessContext context, MarchSchema schema) : base(context, schema)
+		public MarchSite(AccessContext context, MarchSiteSchema schema) : base(context, schema)
 		{
 			StartDate = schema.StartDate;
 			EndDate = schema.EndDate;
 		}
 
+		[JsonProperty]
+		[View(EPermissionLevel.PUBLIC)]
 		public DateTime StartDate { get; set; }
 
+		[JsonProperty]
+		[View(EPermissionLevel.PUBLIC)]
 		public DateTime EndDate { get; set; }
 	}
 }

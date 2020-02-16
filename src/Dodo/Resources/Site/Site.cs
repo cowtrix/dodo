@@ -66,11 +66,8 @@ namespace Dodo.Sites
 		public EAccessType Electricity;
 	}
 
-	public abstract class Site : DodoResource, ILocationalResource
+	public abstract class Site : GroupResource, ILocationalResource
 	{
-		[View(EPermissionLevel.PUBLIC)]
-		[JsonProperty]
-		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.USER)]
 		[JsonProperty]
 		public EArrestRisk ArrestRisk { get; set; }
@@ -80,12 +77,6 @@ namespace Dodo.Sites
 		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; }
-		/// <summary>
-		/// Markdown formatted description of the site
-		/// </summary>
-		[JsonProperty]
-		[View(EPermissionLevel.USER)]
-		public string PublicDescription { get; private set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public string Type { get { return GetType().FullName; } }
 
@@ -95,7 +86,6 @@ namespace Dodo.Sites
 			{
 				return;
 			}
-			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();
@@ -104,6 +94,11 @@ namespace Dodo.Sites
 		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
 			return Parent.GetValue().IsAuthorised(context, requestType, out permissionLevel);
+		}
+
+		public override bool CanContain(Type type)
+		{
+			return false;
 		}
 	}
 }

@@ -4,6 +4,7 @@ using Dodo.Users;
 using Common;
 using System;
 using Resources;
+using Newtonsoft.Json;
 
 namespace Dodo.Sites
 {
@@ -29,8 +30,12 @@ namespace Dodo.Sites
 			EndDate = schema.EndDate;
 		}
 
+		[JsonProperty]
+		[View(EPermissionLevel.PUBLIC)]
 		public DateTime StartDate { get; set; }
 
+		[JsonProperty]
+		[View(EPermissionLevel.PUBLIC)]
 		public DateTime EndDate { get; set; }
 	}
 }

@@ -14,7 +14,7 @@ using System.Linq;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using Dodo;
-using GeoCoordinatePortable;
+using System.Threading.Tasks;
 
 namespace DodoResources
 {
@@ -97,59 +97,26 @@ namespace DodoResources
 			return Ok();
 		}
 
-		public const char FilterVarSeperatorChar = '+';
-		public class ResourceFilterModel<T>
-		{
-			public string latlong;
-			public double? distance;
-			public string startdate;
-			public string enddate;
-
-			private bool m_generatedData;
-			private GeoCoordinate m_coordinate;
-			private DateTime m_startDate;
-			private DateTime m_endDate;
-
-			public void GenerateFilterData()
-			{
-				if(m_generatedData)
-				{
-					return;
-				}
-				m_generatedData = true;
-				m_coordinate = latlong.Split(FilterVarSeperatorChar).Select(x => double.Parse(x))
-							.Transpose(x => new GeoCoordinate(x.ElementAt(0), x.ElementAt(1)));
-				m_startDate = string.IsNullOrEmpty(startdate) ? DateTime.MinValue : DateTime.Parse(startdate);
-				m_endDate = string.IsNullOrEmpty(enddate) ? DateTime.MaxValue : DateTime.Parse(enddate);
-			}
-
-			public bool Filter(T rsc)
-			{
-				if(rsc is ILocationalResource locationalResource)
-				{
-					return locationalResource.Location.Coordinate.GetDistanceTo(m_coordinate) < distance;
-				}
-				if(rsc is ITimeBoundResource timeboundResource)
-				{
-					return timeboundResource.StartDate >= m_startDate && timeboundResource.EndDate <= m_endDate;
-				}
-				else if(!string.IsNullOrEmpty(latlong) || distance.HasValue)
-				{
-					throw new Exception("Invalid filter. You cannot filter this resource by location");
-				}
-				return false;
-			}
-		}
-
 		[HttpGet]
 		[AllowAnonymous]
-		public IActionResult Index(ResourceFilterModel<T> filter = null)
+		public virtual async Task<IActionResult> IndexInternal(
+			[FromQuery]LocationFilter locationFilter, [FromQuery]DateFilter dateFilter)
 		{
-			if(filter != null)
+			try
 			{
-				return Ok(ResourceManager.Get(rsc => filter.Filter(rsc)));
+				var allrsc = ResourceManager.Get(x => true).ToList();
+				var resources = ResourceManager.Get(rsc => locationFilter.Filter(rsc) && dateFilter.Filter(rsc));
+				var guids = resources.Select(rsc => rsc.GUID).ToList();
+				return Ok(guids);
 			}
-			return Ok(ResourceManager.Get(x => true).Select(rsc => rsc.GUID));
+			catch(Exception e)
+			{
+#if DEBUG
+				return BadRequest(e.Message);
+#else
+				return BadRequest();
+#endif
+			}
 		}
 	}
 }

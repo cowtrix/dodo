@@ -124,7 +124,7 @@ namespace Resources
 		/// <returns>A resource of type T that satisfies the selector</returns>
 		public virtual T GetSingle(Func<T, bool> selector)
 		{
-			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector));
+			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector)) as T;
 		}
 
 		/// <summary>
@@ -134,7 +134,7 @@ namespace Resources
 		/// <returns>A resource of type T that satisfies the selector</returns>
 		public virtual T GetFirst(Func<T, bool> selector)
 		{
-			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector));
+			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector)) as T;
 		}
 
 		/// <summary>
@@ -144,7 +144,7 @@ namespace Resources
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
 		public virtual IEnumerable<T> Get(Func<T, bool> selector)
 		{
-			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector));
+			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector)).Cast<T>();
 		}
 
 		/// <summary>
@@ -183,20 +183,20 @@ namespace Resources
 
 		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector)
 		{
-			return MongoDatabase.AsQueryable().SingleOrDefault(selector);
+			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector));
 		}
 
 		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector)
 		{
-			return MongoDatabase.AsQueryable().FirstOrDefault(selector);
+			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector));
 		}
 
 		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector)
 		{
-			return MongoDatabase.AsQueryable().Where(selector);
+			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector));
 		}
 
-		IEnumerable<T> WaitForAllUnlocked(IEnumerable<T> enumerable)
+		IEnumerable<IRESTResource> WaitForAllUnlocked(IEnumerable<IRESTResource> enumerable)
 		{
 			foreach (var rsc in enumerable)
 			{
@@ -205,7 +205,7 @@ namespace Resources
 			return enumerable;
 		}
 
-		T WaitForUnlocked(T resource)
+		IRESTResource WaitForUnlocked(IRESTResource resource)
 		{
 			var sw = new Stopwatch();
 			sw.Start();

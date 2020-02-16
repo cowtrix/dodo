@@ -77,6 +77,10 @@ namespace Dodo
 
 		public GroupResource(AccessContext context, GroupResourceSchemaBase schema) : base(context, schema)
 		{
+			if(schema == null)
+			{
+				return;
+			}
 			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			GroupPublicKey = pk;

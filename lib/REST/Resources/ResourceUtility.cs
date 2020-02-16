@@ -137,9 +137,22 @@ namespace Resources
 			return GetManagerForResource(resource.GUID);
 		}
 
-		public static IResourceManager<T> GetManager<T>() where T : IRESTResource
+		public static IResourceManager<T> GetManager<T>()
 		{
-			return ResourceManagers[typeof(T)] as IResourceManager<T>;
+			return GetManager(typeof(T)) as IResourceManager<T>;
+		}
+
+		public static IResourceManager GetManager(Type type)
+		{
+			if(ResourceManagers.TryGetValue(type, out var factory))
+			{
+				return factory;
+			}
+			if(type.BaseType != null)
+			{
+				return GetManager(type.BaseType);
+			}
+			throw new Exception($"No factory found for type {type}");
 		}
 		#endregion
 		#region Factories

@@ -38,6 +38,7 @@ namespace Dodo.SharedTest
 			{ typeof(EventSite), s => GetRandomSite<EventSiteSchema>(s) },
 			{ typeof(OccupationSite), s => GetRandomSite<OccupationSiteSchema>(s) },
 			{ typeof(SanctuarySite), s => GetRandomSite<SanctuarySiteSchema>(s) },
+			{ typeof(MarchSite), s => GetRandomSite<MarchSiteSchema>(s) },
 			{ typeof(Role), r => GetRandomRole(r) },
 		};
 
@@ -74,7 +75,11 @@ namespace Dodo.SharedTest
 			{
 				result = new SanctuarySiteSchema(RandomName, typeof(SanctuarySite).FullName, wg.GUID, RandomLocation, SampleMarkdown);
 			}
-			if(result == null)
+			else if (type == typeof(MarchSiteSchema))
+			{
+				result = new MarchSiteSchema(RandomName, typeof(MarchSite).FullName, wg.GUID, RandomLocation, SampleMarkdown, RandomDate, RandomDate + TimeSpan.FromHours(4));
+			}
+			if (result == null)
 			{
 				throw new Exception($"Couldn't make site: {type}");
 			}

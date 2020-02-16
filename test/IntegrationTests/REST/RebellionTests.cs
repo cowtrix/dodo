@@ -1,10 +1,19 @@
 ﻿using Dodo.Rebellions;
+using Dodo.SharedTest;
 using DodoResources.Rebellions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Resources;
 using System;
+using System.Threading.Tasks;
+using Common.Extensions;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace RESTTests
 {
+
+
 	[TestClass]
 	public class RebellionTests : GroupResourceTestBase<Rebellion>
 	{
