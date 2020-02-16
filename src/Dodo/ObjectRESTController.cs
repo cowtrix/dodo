@@ -86,6 +86,7 @@ namespace Resources
 
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
+			LogRequest();
 			var context = User.GetRequestOwner();
 			if (!IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
 			{
@@ -108,6 +109,7 @@ namespace Resources
 		[HttpPatch("{id}")]
 		public virtual async Task<IActionResult> Update(Guid id, [FromBody]Dictionary<string, object> values)
 		{
+			LogRequest();
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
 			{
@@ -145,6 +147,7 @@ namespace Resources
 		[Authorize(Roles = PermissionLevel.ADMIN)]
 		public virtual async Task<IActionResult> Delete(Guid id)
 		{
+			LogRequest();
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
 			{
@@ -162,12 +165,18 @@ namespace Resources
 		[HttpGet("{id}")]
 		public virtual async Task<IActionResult> Get(Guid id)
 		{
+			LogRequest();
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
 			if (target == null)
 			{
 				return NotFound();
 			}
 			return Ok(target.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
+		}
+
+		protected void LogRequest()
+		{
+			Logger.Debug($"Received {Request.MethodEnum()} for {Request.Path}.");
 		}
 
 		protected virtual void OnCreation(AccessContext context, T user)

@@ -8,10 +8,7 @@ namespace DodoResourcesResources
 	public static class DodoResources
 	{
 		public static string HttpsUrl => m_https.Value;
-		static ConfigVariable<string> m_https = new ConfigVariable<string>("DodoResources_Https", "https://localhost:5000");
-
-		public static string HttpUrl => m_http.Value;
-		static ConfigVariable<string> m_http = new ConfigVariable<string>("DodoResources_Http", "http://localhost:5001");
+		static ConfigVariable<string> m_https = new ConfigVariable<string>("DodoResources_Https", "https://0.0.0.0:5000");
 
 		public static void Main(string[] args)
 		{
@@ -23,7 +20,7 @@ namespace DodoResourcesResources
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<ResourceStartup>();
-					webBuilder.UseUrls($"{m_https.Value};{m_http.Value}");
+					webBuilder.UseUrls($"{m_https.Value}");
 				});
 	}
 }

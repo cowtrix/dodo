@@ -15,10 +15,7 @@ namespace DodoIdentity
 	public static class DodoIdentity
 	{
 		public static string HttpsUrl => m_https.Value;
-		static ConfigVariable<string> m_https = new ConfigVariable<string>("DodoIdentity_Https", "https://localhost:6000");
-
-		public static string HttpUrl => m_http.Value;
-		static ConfigVariable<string> m_http = new ConfigVariable<string>("DodoIdentity_Http", "http://localhost:6001");
+		static ConfigVariable<string> m_https = new ConfigVariable<string>("DodoIdentity_Https", "https://*:6000");
 
 		public static void Main(string[] args)
 		{
@@ -30,7 +27,7 @@ namespace DodoIdentity
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<IdentityStartup>();
-					webBuilder.UseUrls($"{m_https.Value};{m_http.Value}");
+					webBuilder.UseUrls($"{m_https.Value}");
 				});
 	}
 }

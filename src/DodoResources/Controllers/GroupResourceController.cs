@@ -34,6 +34,7 @@ namespace DodoResources
 		[Authorize]
 		public IActionResult AddAdministrator(Guid resourceID, [FromBody]string newAdminIdentifier)
 		{
+			LogRequest();
 			var resource = ResourceManager.GetSingle(x => x.GUID == resourceID);
 			if (resource == null)
 			{
@@ -69,6 +70,7 @@ namespace DodoResources
 		[Authorize]
 		public IActionResult JoinGroup(Guid id)
 		{
+			LogRequest();
 			var context = User.GetRequestOwner();
 			using var resourceLock = new ResourceLock(id);
 			var target = resourceLock.Value as GroupResource;
@@ -85,6 +87,7 @@ namespace DodoResources
 		[Authorize]
 		public IActionResult LeaveGroup(Guid id)
 		{
+			LogRequest();
 			var context = User.GetRequestOwner();
 			using var resourceLock = new ResourceLock(id);
 			var target = resourceLock.Value as GroupResource;
@@ -102,6 +105,7 @@ namespace DodoResources
 		public virtual async Task<IActionResult> IndexInternal(
 			[FromQuery]DistanceFilter locationFilter, [FromQuery]DateFilter dateFilter)
 		{
+			LogRequest();
 			try
 			{
 				var allrsc = ResourceManager.Get(x => true).ToList();
