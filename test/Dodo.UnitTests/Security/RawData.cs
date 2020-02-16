@@ -44,7 +44,7 @@ namespace Security
 			Assert.AreEqual("test", data.StringProperty);
 			Assert.AreEqual("a new value", data.EncryptedString.GetValue(password));
 			Assert.AreEqual(7.1, data.EncryptedObject.GetValue(key, password).DoubleProperty);
-			Assert.AreEqual(4, data.EncryptedObjectProp.GetValue(key, password).Coordinate.Latitude);
+			Assert.AreEqual(4, data.EncryptedObjectProp.GetValue(key, password).Latitude);
 		}
 
 		[TestMethod]

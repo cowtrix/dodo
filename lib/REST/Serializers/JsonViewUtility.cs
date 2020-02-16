@@ -30,6 +30,7 @@ namespace Resources
 			typeof(Guid),
 			typeof(Enum),
 			typeof(DateTime),
+			typeof(GeoLocation),
 			typeof(IResourceReference)
 		};
 

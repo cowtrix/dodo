@@ -21,6 +21,13 @@ namespace RESTTests
 		public static DateTime DefaultEnd => new DateTime(2019, 10, 14, 0, 0, 0, DateTimeKind.Utc);
 		public override string ResourceRoot => RebellionController.RootURL;
 
+		protected override void VerifyCreatedObject(Rebellion rebellion, JObject obj)
+		{
+			base.VerifyCreatedObject(rebellion, obj);
+			Assert.AreEqual(rebellion.Location.Latitude, obj.Value<JObject>("Location").Value<double>("latitude"));
+			Assert.AreEqual(rebellion.Location.Longitude, obj.Value<JObject>("Location").Value<double>("longitude"));
+		}
+
 		/*public override object GetCreationSchema(bool unique = false)
 		{
 			if(!unique)

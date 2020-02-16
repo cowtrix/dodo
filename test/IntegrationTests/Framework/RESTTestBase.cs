@@ -31,7 +31,13 @@ namespace RESTTests
 			GetRandomUser(out _, out var context);
 			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context));
 			var resourceObj = await RequestJSON($"{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.GET);
-			Assert.IsNotNull(resourceObj.Value<string>("GUID"));
+			VerifyCreatedObject(resource, resourceObj);
+		}
+
+		protected virtual void VerifyCreatedObject(T rsc, JObject obj)
+		{
+			Assert.AreEqual(rsc.GUID, Guid.Parse(obj.Value<string>("GUID")));
+			Assert.AreEqual(rsc.Name, obj.Value<string>("Name"));
 		}
 
 		/*[TestMethod]

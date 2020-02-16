@@ -49,7 +49,7 @@ namespace DodoResources
 			}
 			if (rsc is ILocationalResource locationalResource)
 			{
-				return locationalResource.Location.Coordinate.GetDistanceTo(m_coordinate) < distance * 1000;
+				return locationalResource.Location.ToCoordinate().GetDistanceTo(m_coordinate) < distance * 1000;
 			}
 			else if (!string.IsNullOrEmpty(latlong) || distance.HasValue)
 			{

@@ -15,19 +15,17 @@ namespace Resources
 	/// <summary>
 	/// Represents a geographic location on the Earth's surface
 	/// </summary>
-	public class GeoLocation : IVerifiable
+	public struct GeoLocation : IVerifiable
 	{
-		public GeoCoordinatePortable.GeoCoordinate Coordinate => new GeoCoordinate(Latitude, Longitude);
+		public GeoCoordinatePortable.GeoCoordinate ToCoordinate() => new GeoCoordinate(Latitude, Longitude);
 		[JsonProperty]
 		private Guid m_reverseGeocodingKey { get; set; }
 		[JsonProperty]
 		[Range(-180, 180)]
-		[View(EPermissionLevel.PUBLIC)]
-		public double Latitude { get; private set; }
+		public double Latitude { get; set; }
 		[JsonProperty]
 		[Range(-90, 90)]
-		[View(EPermissionLevel.PUBLIC)]
-		public double Longitude { get; private set; }
+		public double Longitude { get; set; }
 
 		public GeoLocation(double latitude, double longitude)
 		{
