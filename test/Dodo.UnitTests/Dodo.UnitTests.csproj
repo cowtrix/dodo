@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\bin\test</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,5 +26,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Dodo.SharedTest\Dodo.SharedTest.csproj" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;..\..\resources&quot; &quot;$(TargetDir)resources&quot; /i /s /r /y" />
+  </Target>
 
 </Project>

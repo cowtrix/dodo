@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <None Update="SampleMarkdown.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
