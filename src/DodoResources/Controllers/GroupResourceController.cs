@@ -109,7 +109,9 @@ namespace DodoResources
 			try
 			{
 				var allrsc = ResourceManager.Get(x => true).ToList();
-				var resources = ResourceManager.Get(rsc => locationFilter.Filter(rsc) && dateFilter.Filter(rsc));
+				var resources = ResourceManager.Get(rsc => locationFilter.Filter(rsc) && dateFilter.Filter(rsc))
+					.Transpose(x => locationFilter.Mutate(x))
+					.Transpose(x => dateFilter.Mutate(x));
 				var guids = resources.Select(rsc => rsc.GUID).ToList();
 				return Ok(guids);
 			}

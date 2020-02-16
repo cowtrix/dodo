@@ -4,6 +4,7 @@ using System.Linq;
 using System;
 using Dodo;
 using GeoCoordinatePortable;
+using System.Collections.Generic;
 
 namespace DodoResources
 {
@@ -56,6 +57,20 @@ namespace DodoResources
 				throw new Exception("Invalid filter. You cannot filter this resource by location");
 			}
 			return false;
+		}
+
+		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
+		{
+			GenerateFilterData();
+			if (m_empty || !rsc.Any())
+			{
+				return rsc;
+			}
+			else if (string.IsNullOrEmpty(latlong) || !distance.HasValue)
+			{
+				throw new Exception("Invalid filter. You cannot filter this resource by location");
+			}
+			return rsc.OrderBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
 		}
 	}
 }

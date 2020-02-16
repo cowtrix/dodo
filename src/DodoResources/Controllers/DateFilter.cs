@@ -1,6 +1,8 @@
 ﻿using Resources;
 using System;
 using Dodo;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DodoResources
 {
@@ -41,6 +43,16 @@ namespace DodoResources
 				return timeboundResource.StartDate <= m_endDate || timeboundResource.EndDate >= m_startDate;
 			}
 			return false;
+		}
+
+		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
+		{
+			GenerateFilterData();
+			if (m_empty || !rsc.Any())
+			{
+				return rsc;
+			}
+			return rsc.OrderBy(rsc => (rsc as ITimeBoundResource)?.StartDate);
 		}
 	}
 }
