@@ -25,6 +25,7 @@ namespace GenerateSampleData
 
 		static void Main(string[] args)
 		{
+			Logger.CurrentLogLevel = ELogLevel.Debug;
 			ResourceUtility.ClearAllManagers();
 			var admin1 = GenerateUser(new UserSchema("Rebellion Tom", "tom", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
 
