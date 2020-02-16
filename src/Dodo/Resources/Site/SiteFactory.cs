@@ -6,7 +6,7 @@ using System;
 
 namespace Dodo.Sites
 {
-	public class SiteSchema : GroupResourceSchemaBase
+	public abstract class SiteSchema : GroupResourceSchemaBase
 	{
 		public string Type { get; private set; }
 		public GeoLocation Location { get; private set; }
