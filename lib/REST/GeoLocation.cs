@@ -22,9 +22,11 @@ namespace Resources
 		private Guid m_reverseGeocodingKey { get; set; }
 		[JsonProperty]
 		[Range(-180, 180)]
+		[View(EPermissionLevel.PUBLIC)]
 		public double Latitude { get; private set; }
 		[JsonProperty]
 		[Range(-90, 90)]
+		[View(EPermissionLevel.PUBLIC)]
 		public double Longitude { get; private set; }
 
 		public GeoLocation(double latitude, double longitude)
