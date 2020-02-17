@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Dodo;
 using Microsoft.IdentityModel.Logging;
 using System.Net;
+using Dodo.Users;
 
 namespace DodoResources
 {
@@ -33,16 +34,12 @@ namespace DodoResources
 			services.AddIdentityWithMongoStoresUsingCustomTypes<Microsoft.AspNetCore.Identity.MongoDB.IdentityRole>(Dodo.Dodo.PRODUCT_NAME)
 				.AddDefaultTokenProviders();
 			services.AddRouting(options => options.LowercaseUrls = true);
-			services.AddAuthentication("IdentityServer4")
-				.AddIdentityServerAuthentication("IdentityServer4", options =>
+			services.AddAuthentication().AddIdentityServerAuthentication(options =>
 				{
-					//options.Authority = ;
 					options.RequireHttpsMetadata = false;
 					options.ApiName = "api";
 				});
-
 			services.AddTransient<IAuthorizationService, AuthService>();
-			services.AddAuthorization();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

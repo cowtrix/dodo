@@ -92,11 +92,13 @@ namespace RESTTests
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
-			var tokenResponse = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
+			var tokenResponse = await m_authClient.RequestPasswordTokenAsync(new PasswordTokenRequest
 			{
 				Address = disco.TokenEndpoint,
 				ClientId = "spa",
 				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
+				UserName = username,
+				Password = password
 			});
 			if (tokenResponse.IsError)
 			{

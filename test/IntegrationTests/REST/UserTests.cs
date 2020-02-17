@@ -35,6 +35,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			await Authorize(user.AuthData.Username, password, "");
+			await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
 		}
 
 		[TestMethod]

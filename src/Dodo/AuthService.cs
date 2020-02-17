@@ -22,7 +22,8 @@ namespace Dodo
 
 		public async Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object resource, IEnumerable<IAuthorizationRequirement> requirements)
 		{
-			return await base.AuthorizeAsync(user, resource, requirements);
+			var response = await base.AuthorizeAsync(user, resource, requirements);
+			return response;
 		}
 
 		public async Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object resource, string policyName)
