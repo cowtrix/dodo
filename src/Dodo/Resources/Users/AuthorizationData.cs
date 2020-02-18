@@ -1,14 +1,9 @@
 ﻿using Common.Extensions;
-using Resources.Security;
+using Common.Security;
 using Newtonsoft.Json;
 using Resources;
+using Resources.Security;
 using System;
-using Common.Security;
-using Microsoft.AspNetCore.Identity.MongoDB;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Linq;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 
 namespace Dodo.Users
@@ -20,12 +15,6 @@ namespace Dodo.Users
 		///     (password changed, login removed)
 		/// </summary>
 		public string SecurityStamp { get; set; }
-
-		public List<IdentityUserLogin> Logins = new List<IdentityUserLogin>();
-		public List<IdentityUserClaim> Claims => new List<IdentityUserClaim>() { new IdentityUserClaim(new Claim("Username", Username)) } ;
-		public List<IdentityUserToken> Tokens = new List<IdentityUserToken>();
-		public List<string> Roles = new List<string>();
-
 		public virtual bool TwoFactorEnabled { get; set; }
 		public virtual DateTime? LockoutEndDateUtc { get; set; }
 		public virtual bool LockoutEnabled { get; set; }
@@ -90,8 +79,7 @@ namespace Dodo.Users
 			return Convert.ToBase64String(dst);
 		}
 
-		/*
-		public bool ChallengePassword(string password, out Passphrase passphrase)
+		public bool ChallengePassword(string password, out string passphrase)
 		{
 			passphrase = default;
 			if (SHA256Utility.SHA256(password + PublicKey) != PasswordHash)
@@ -102,89 +90,25 @@ namespace Dodo.Users
 			{
 				return false;
 			}
-			passphrase = new Passphrase(PassPhrase.GetValue(password));
+			passphrase = PassPhrase.GetValue(password);
 			return true;
 		}
 
-		public void ChangePassword(Passphrase oldValue, Passphrase newValue)
+		public bool ChangePassword(Passphrase oldValue, Passphrase newValue)
 		{
 			if(!ChallengePassword(oldValue.Value, out var passphrase))
 			{
-				throw HttpException.FORBIDDEN;
+				return false;
 			}
-			PassPhrase = new EncryptedStore<string>(passphrase.Value, newValue);
+			PassPhrase = new EncryptedStore<string>(passphrase, newValue);
 			PasswordHash = SHA256Utility.SHA256(newValue.Value + PublicKey);
 			if(!ChallengePassword(newValue.Value, out _))
 			{
-				throw new Exception("Failed to change password");
+				return false;
 			}
+			return true;
 		}
-		*/
-
-		public virtual void AddLogin(UserLoginInfo login)
-		{
-			Logins.Add(new IdentityUserLogin(login));
-		}
-
-		public virtual void RemoveLogin(string loginProvider, string providerKey)
-		{
-			Logins.RemoveAll(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
-		}
-
-		public virtual void AddClaim(Claim claim)
-		{
-			Claims.Add(new IdentityUserClaim(claim));
-		}
-
-		public virtual void RemoveClaim(Claim claim)
-		{
-			Claims.RemoveAll(c => c.Type == claim.Type && c.Value == claim.Value);
-		}
-
-		public virtual void ReplaceClaim(Claim existingClaim, Claim newClaim)
-		{
-			var claimExists = Claims
-				.Any(c => c.Type == existingClaim.Type && c.Value == existingClaim.Value);
-			if (!claimExists)
-			{
-				// note: nothing to update, ignore, no need to throw
-				return;
-			}
-			RemoveClaim(existingClaim);
-			AddClaim(newClaim);
-		}
-
-		private IdentityUserToken GetToken(string loginProider, string name)
-			=> Tokens
-				.FirstOrDefault(t => t.LoginProvider == loginProider && t.Name == name);
-
-		public virtual void SetToken(string loginProider, string name, string value)
-		{
-			var existingToken = GetToken(loginProider, name);
-			if (existingToken != null)
-			{
-				existingToken.Value = value;
-				return;
-			}
-
-			Tokens.Add(new IdentityUserToken
-			{
-				LoginProvider = loginProider,
-				Name = name,
-				Value = value
-			});
-		}
-
-		public virtual string GetTokenValue(string loginProider, string name)
-		{
-			return GetToken(loginProider, name)?.Value;
-		}
-
-		public virtual void RemoveToken(string loginProvider, string name)
-		{
-			Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
-		}
-
+		
 		public bool CanVerify()
 		{
 			return true;

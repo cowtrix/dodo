@@ -17,24 +17,12 @@ namespace Resources.Security
 	/// </summary>
 	public struct Passphrase
 	{
-		[JsonProperty]
-		[BsonElement]
-		public string TokenKey { get; private set; }
-		[JsonProperty]
-		[BsonElement]
-		public string Data { get; private set; }
+		public string TokenKey { get; set; }
 
 		public Passphrase(string value, TimeSpan? timeout = null)
 		{
-			TemporaryTokenManager.GetTemporaryToken(out var tokenKey, out var token, timeout);
-			TokenKey = tokenKey;
-			Data = SymmetricSecurity.Encrypt(value, token);
-		}
-
-		internal Passphrase(string tokenKey, string data)
-		{
-			TokenKey = tokenKey;
-			Data = data;
+			TemporaryTokenManager.SetTemporaryToken(value, out var key, timeout);
+			TokenKey = key;
 		}
 
 		public string Value
@@ -45,26 +33,24 @@ namespace Resources.Security
 				{
 					return null;
 				}
-				if(!TemporaryTokenManager.IsValidToken(TokenKey, out var token))
+				if(!TemporaryTokenManager.CheckToken(TokenKey, out var token))
 				{
 					throw new AuthenticationException("Token Expired or Invalid");
 				}
-				return SymmetricSecurity.Decrypt<string>(Data, token);
+				return token;
 			}
 		}
 
 		public override bool Equals(object obj)
 		{
 			return obj is Passphrase passphrase &&
-				   TokenKey == passphrase.TokenKey &&
-				   Data == passphrase.Data;
+				   TokenKey == passphrase.TokenKey;
 		}
 
 		public override int GetHashCode()
 		{
 			var hashCode = 1853675142;
 			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(TokenKey);
-			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Data);
 			return hashCode;
 		}
 	}

@@ -17,12 +17,7 @@ namespace DodoResources.WorkingGroups
 	{
 		public const string RootURL = "api/workinggroups";
 
-		public WorkingGroupController(IAuthorizationService authorizationService) : base(authorizationService)
-		{
-		}
-
 		[HttpPost]
-		[Authorize]
 		public override async Task<IActionResult> Create([FromBody] WorkingGroupSchema schema)
 		{
 			return await CreateInternal(schema);

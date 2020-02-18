@@ -87,7 +87,7 @@ namespace RESTTests
 			}
 			return response;
 		}
-
+		
 		protected async Task Authorize(string username, string password, string url)
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();

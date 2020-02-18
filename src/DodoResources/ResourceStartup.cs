@@ -20,29 +20,11 @@ namespace DodoResources
 {
     public class ResourceStartup
 	{
-		public ResourceStartup(IConfiguration configuration)
-		{
-			Configuration = configuration;
-		}
-
-		public IConfiguration Configuration { get; }
-
-		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
-			services.AddIdentityWithMongoStoresUsingCustomTypes<Microsoft.AspNetCore.Identity.MongoDB.IdentityRole>(Dodo.Dodo.PRODUCT_NAME)
-				.AddDefaultTokenProviders();
-			services.AddRouting(options => options.LowercaseUrls = true);
-			services.AddAuthentication().AddIdentityServerAuthentication(options =>
-				{
-					options.RequireHttpsMetadata = false;
-					options.ApiName = "api";
-				});
-			services.AddTransient<IAuthorizationService, AuthService>();
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
@@ -51,10 +33,6 @@ namespace DodoResources
 			}
 
 			app.UseRouting();
-
-			app.UseAuthentication();
-
-			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{

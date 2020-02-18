@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Common.Config;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Dodo.Users
 {
@@ -22,16 +26,35 @@ namespace Dodo.Users
 	[Route(RootURL)]
 	public class UserController : ObjectRESTController<User, UserSchema>
 	{
-		public const string RootURL = "auth/users";
+		public const string RootURL = "auth";
 		public const string LOGIN = "login";
 		public const string LOGOUT = "logout";
 		public const string REGISTER = "register";
 
-		private readonly UserManager<User> _userManager;
-
-		public UserController(UserManager<User> userManager, IAuthorizationService auth) : base(auth)
+		[HttpPost(LOGIN)]
+		[RequireHttps]
+		public async Task<IActionResult> Login(string username, string password)
 		{
-			_userManager = userManager;
+			var user = ResourceManager.GetSingle(x => x.AuthData.Username == username);
+			if(!user.AuthData.ChallengePassword(password, out var passphrase))
+			{
+				return BadRequest();
+			}
+			TemporaryTokenManager.SetTemporaryToken(passphrase, out var tokenKey, TimeSpan.FromHours(24));
+
+			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AuthService.JwtKey));
+			var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
+			var header = new JwtHeader(credentials);
+			var payload = new JwtPayload
+			{
+				{ AuthService.GUID, user.GUID },
+				{ AuthService.KEY, tokenKey }
+			};
+			var secToken = new JwtSecurityToken(header, payload);
+			var handler = new JwtSecurityTokenHandler();
+			var tokenString = handler.WriteToken(secToken);
+			Response.Headers.Add(AuthService.JWTHEADER, tokenString);
+			return Ok();
 		}
 
 		[HttpPost]
@@ -44,18 +67,13 @@ namespace Dodo.Users
 			{
 				return BadRequest($"{error}\nExpecting application/json object:\n{JsonConvert.SerializeObject(new UserSchema(), Formatting.Indented)}");
 			}
-			var user = await _userManager.FindByNameAsync(schema.Username);
+			var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username);
 			if (user != null)
 			{
 				return Conflict();
 			}
 			var factory = ResourceUtility.GetFactory<User>();
-			user = factory.CreateTypedObject(default(AccessContext), schema);
-			var result = await _userManager.CreateAsync(user, schema.Password);
-			if (!result.Succeeded)
-			{
-				throw new Exception(result.Errors.First().Description);
-			}
+			factory.CreateObject(default(AccessContext), schema);
 			return Ok();
 		}
 

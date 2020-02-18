@@ -12,17 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.0.1" />
-
-	<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.0.0" />
-
-	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
-
-	<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0" />
-	<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
 	<ProjectReference Include="..\Dodo\Dodo.csproj" />
   </ItemGroup>
 

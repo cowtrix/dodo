@@ -26,10 +26,6 @@ namespace DodoResources
 		public const string JOIN_GROUP = "join";
 		public const string LEAVE_GROUP = "leave";
 
-		public GroupResourceController(IAuthorizationService authorizationService) : base(authorizationService)
-		{
-		}
-
 		[HttpPost("{id}/" + ADD_ADMIN)]
 		[Authorize]
 		public IActionResult AddAdministrator(Guid resourceID, [FromBody]string newAdminIdentifier)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Common.Config;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -11,24 +12,12 @@ using System.Threading.Tasks;
 
 namespace Dodo
 {
-    public class AuthService : DefaultAuthorizationService
+	public static class AuthService
 	{
-		public const string PERMISSION_LEVEL = "PERMISSION";
-		public const string USERNAME = "USERNAME";
-
-		public AuthService(IAuthorizationPolicyProvider policyProvider, IAuthorizationHandlerProvider handlers, ILogger<DefaultAuthorizationService> logger, IAuthorizationHandlerContextFactory contextFactory, IAuthorizationEvaluator evaluator, IOptions<AuthorizationOptions> options) : base(policyProvider, handlers, logger, contextFactory, evaluator, options)
-		{
-		}
-
-		public async Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object resource, IEnumerable<IAuthorizationRequirement> requirements)
-		{
-			var response = await base.AuthorizeAsync(user, resource, requirements);
-			return response;
-		}
-
-		public async Task<AuthorizationResult> AuthorizeAsync(ClaimsPrincipal user, object resource, string policyName)
-		{
-			throw new NotImplementedException();
-		}
+		public static string JwtKey => new ConfigVariable<string>("JWTSecret", 
+			"401b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae731f5a65ed1").Value;
+		public const string GUID = "USERNAME";
+		public const string JWTHEADER = "Bearer";
+		public const string KEY = "AuthToken";
 	}
 }
