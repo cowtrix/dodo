@@ -17,11 +17,15 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Common.Config;
 using Microsoft.IdentityModel.Tokens;
+using IdentityServer4.Services;
+using IdentityServer4.Events;
+using System.Security.Claims;
+using System.Security.Principal;
+using IdentityModel;
 
 namespace Dodo.Users
 {
 	[SecurityHeaders]
-	[Authorize]
 	[ApiController]
 	[Route(RootURL)]
 	public class UserController : ObjectRESTController<User, UserSchema>
@@ -31,29 +35,67 @@ namespace Dodo.Users
 		public const string LOGOUT = "logout";
 		public const string REGISTER = "register";
 
-		[HttpPost(LOGIN)]
-		[RequireHttps]
-		public async Task<IActionResult> Login(string username, string password)
+		public class LoginModel
 		{
-			var user = ResourceManager.GetSingle(x => x.AuthData.Username == username);
-			if(!user.AuthData.ChallengePassword(password, out var passphrase))
+			public string username { get; set; }
+			public string password { get; set; }
+		}
+
+		private readonly IIdentityServerInteractionService _interaction;
+		private readonly IAuthenticationSchemeProvider _schemeProvider;
+		private readonly IEventService _events;
+
+		public UserController(
+			IIdentityServerInteractionService interaction,
+			IAuthenticationSchemeProvider schemeProvider,
+			IEventService events)
+		{
+			_interaction = interaction;
+			_schemeProvider = schemeProvider;
+			_events = events;
+		}
+
+		class LoginIdentity : IIdentity
+		{
+			public string AuthenticationType => AuthConstants.GUID;
+
+			public bool IsAuthenticated => true;
+
+			public string Name { get; private set; }
+
+			public LoginIdentity(string username)
 			{
+				Name = username;
+			}
+		}
+
+
+		[HttpPost(LOGIN)]
+		public async Task<IActionResult> Login([FromBody] LoginModel login)
+		{
+			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.username);
+			if (!user.AuthData.ChallengePassword(login.password, out var passphrase))
+			{
+				await _events.RaiseAsync(new UserLoginFailureEvent(login.username, "invalid credentials"));
 				return BadRequest();
 			}
+			await _events.RaiseAsync(
+				new UserLoginSuccessEvent(user.AuthData.Username, user.GUID.ToString(), user.Name));
+
 			TemporaryTokenManager.SetTemporaryToken(passphrase, out var tokenKey, TimeSpan.FromHours(24));
 
-			var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AuthService.JwtKey));
-			var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-			var header = new JwtHeader(credentials);
-			var payload = new JwtPayload
+			var id = new ClaimsIdentity(AuthConstants.AUTHSCHEME);
+			id.AddClaim(new Claim(JwtClaimTypes.Subject, user.GUID.ToString()));
+			id.AddClaim(new Claim(AuthConstants.KEY, tokenKey));
+			var principal = new ClaimsPrincipal(id);
+			var props = new AuthenticationProperties
 			{
-				{ AuthService.GUID, user.GUID },
-				{ AuthService.KEY, tokenKey }
+				IsPersistent = true,
+				ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(1))
 			};
-			var secToken = new JwtSecurityToken(header, payload);
-			var handler = new JwtSecurityTokenHandler();
-			var tokenString = handler.WriteToken(secToken);
-			Response.Headers.Add(AuthService.JWTHEADER, tokenString);
+			// issue authentication cookie with subject ID and username
+			await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
+			
 			return Ok();
 		}
 

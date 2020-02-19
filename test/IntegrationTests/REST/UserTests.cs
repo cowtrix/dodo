@@ -34,7 +34,16 @@ namespace RESTTests
 		public async Task CanAuthorise()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			await Authorize(user.AuthData.Username, password, "");
+			await Login(user.AuthData.Username, password);
+			await Authorize(user.AuthData.Username, password, $"{DodoIdentity.DodoIdentity.HttpsUrl}/{UserController.RootURL}/{user.GUID}");
+			await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
+		}
+
+		[TestMethod]
+		public async Task CanLogin()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			await Login(user.AuthData.Username, password);
 			await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
 		}
 

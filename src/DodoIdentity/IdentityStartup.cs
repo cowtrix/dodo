@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using IdentityServer4;
+using System;
 
 namespace DodoIdentity
 {
@@ -27,16 +29,37 @@ namespace DodoIdentity
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
+			var builder = services.AddIdentityServer()
+				.AddInMemoryIdentityResources(Config.Ids)
+				.AddInMemoryApiResources(Config.Apis)
+				.AddInMemoryClients(Config.Clients);
+
+			builder.AddDeveloperSigningCredential();
+
+			services.AddAuthentication()
+				.AddCookie("cookie", config =>
+				{
+					config.LogoutPath = $"{UserController.RootURL}/{UserController.LOGOUT}";
+					config.LoginPath = $"{UserController.RootURL}/{UserController.LOGIN}";
+					config.ExpireTimeSpan = TimeSpan.FromDays(1);
+					config.SlidingExpiration = true;
+					
+				});
+			services.AddTransient<IAuthorizationService, AuthService>();
 		}
 
 		public void Configure(IApplicationBuilder app)
 		{
 			app.UseCors();
 			app.UseRouting();
+			app.UseStaticFiles();
+			app.UseIdentityServer();
+			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapDefaultControllerRoute();
 			});
+			
 		}
 	}
 }

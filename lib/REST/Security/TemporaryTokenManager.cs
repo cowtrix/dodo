@@ -13,7 +13,7 @@ namespace Resources.Security
 	/// </summary>
 	public static class TemporaryTokenManager
 	{
-		private struct InnerToken
+		private class InnerToken
 		{
 			public string Value;
 			public TimeSpan Timeout;
@@ -33,12 +33,12 @@ namespace Resources.Security
 				{
 					await Task.Delay(TimeSpan.FromMinutes(1));
 					var now = DateTime.Now;
-					var outdatedTokens = m_tokens.GetQueryable().Where(val => val.Value.CreationDate < now - val.Value.Timeout);
+					/*var outdatedTokens = m_tokens.GetQueryable().Where(val => val.Value.CreationDate < now - val.Value.Timeout).ToList();
 					foreach(var r in outdatedTokens)
 					{
 						// Expire tokens
 						m_tokens.Remove(r.Key);
-					}
+					}*/
 				}
 			});
 			tokenTask.Start();

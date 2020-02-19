@@ -30,19 +30,19 @@ namespace Resources
 		{
 			get
 			{
-				if(!Request.Headers.TryGetValue(AuthService.JWTHEADER, out var jwt))
+				if(!Request.Headers.TryGetValue(AuthConstants.JWTHEADER, out var jwt))
 				{
 					return default;
 				}
 				var handler = new JwtSecurityTokenHandler();
 				var token = handler.ReadJwtToken(jwt);
-				var guid = (Guid)token.Payload.Single(x => x.Key == AuthService.GUID).Value;
+				var guid = (Guid)token.Payload.Single(x => x.Key == AuthConstants.GUID).Value;
 				var user = UserManager.GetSingle(x => x.GUID == guid);
 				if(user == null)
 				{
 					return default;
 				}
-				var key = token.Payload.Single(x => x.Key == AuthService.KEY).Value as string;
+				var key = token.Payload.Single(x => x.Key == AuthConstants.KEY).Value as string;
 				if(!TemporaryTokenManager.CheckToken(key, out var passphrase))
 				{
 					return default;

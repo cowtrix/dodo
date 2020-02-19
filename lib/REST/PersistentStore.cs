@@ -16,9 +16,9 @@ namespace Resources
 			[BsonId]
 			public TKey Key;
 			[BsonElement]
-			public string Value;
+			public TValue Value;
 
-			public Entry(TKey key, string value)
+			public Entry(TKey key, TValue value)
 			{
 				Key = key;
 				Value = value;
@@ -40,18 +40,18 @@ namespace Resources
 		{
 			get
 			{
-				return JsonConvert.DeserializeObject<TValue>(m_collection.Find(x => x.Key != null && x.Key.Equals(key)).First().Value);
+				return m_collection.Find(x => x.Key != null && x.Key.Equals(key)).First().Value;
 			}
 			set
 			{
-				m_collection.InsertOne(new Entry(key, JsonConvert.SerializeObject(value)));
+				m_collection.InsertOne(new Entry(key, value));
 				//m_collection.ReplaceOne(x => x.Key != null && x.Key.Equals(key), new Entry(key, JsonConvert.SerializeObject(value)));
 			}
 		}
 
-		public IMongoQueryable<KeyValuePair<TKey, TValue>> GetQueryable()
+		public IMongoQueryable<Entry> GetQueryable()
 		{
-			return m_collection.AsQueryable().Select(x => new KeyValuePair<TKey, TValue>(x.Key, JsonConvert.DeserializeObject<TValue>(x.Value)));
+			return m_collection.AsQueryable();
 		}
 
 		public bool Remove(TKey key)
@@ -67,7 +67,7 @@ namespace Resources
 				value = default;
 				return false;
 			}
-			value = JsonConvert.DeserializeObject<TValue>(match.First().Value);
+			value = match.First().Value;
 			return true;
 		}
 	}

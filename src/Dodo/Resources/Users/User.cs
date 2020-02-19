@@ -7,6 +7,7 @@ using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.WorkingGroups;
 using Resources;
+using System.Security.Principal;
 
 namespace Dodo.Users
 {

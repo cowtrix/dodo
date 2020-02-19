@@ -14,6 +14,8 @@ using IdentityModel.Client;
 using DodoResources;
 using System.Collections.Generic;
 using System.Linq;
+using Dodo.Users;
+using Dodo;
 
 namespace RESTTests
 {
@@ -87,16 +89,56 @@ namespace RESTTests
 			}
 			return response;
 		}
+
+		protected async Task Login(string username, string password)
+		{
+			var response = await m_authClient.PostAsync($"{UserController.RootURL}/{UserController.LOGIN}",
+				new StringContent(JsonConvert.SerializeObject(new UserController.LoginModel { username = username, password = password }), 
+				Encoding.UTF8, "application/json"));
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new Exception(response.ToString());
+			}
+			foreach(var cookie in response.Headers.GetValues("Set-Cookie"))
+			{
+
+			}
+			m_authClient.DefaultRequestHeaders.Add("Authorization", );
+			//m_authClient.DefaultRequestHeaders[]
+			/*if(!response.Headers.TryGetValues(AuthConstants.JWTHEADER, out var values) || values.Count() != 1)
+			{
+				throw new Exception("Unexpected header content");
+			}
+			m_authClient.SetBearerToken(values.Single());*/
+		}
 		
 		protected async Task Authorize(string username, string password, string url)
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
-			var tokenResponse = await m_authClient.RequestPasswordTokenAsync(new PasswordTokenRequest
+
+			var scope = "api1";
+			var audience = DodoIdentity.DodoIdentity.HttpsUrl;
+			var responsetype = "code";
+			var clientId = "spa";
+
+			var fullUri = $"{disco.AuthorizeEndpoint}?scope={scope}&audience={audience}&response_type={responsetype}&client_id={clientId}&redirect_uri={url}";
+
+			var response = await m_authClient.GetAsync(fullUri);
+			return;
+
+			/*var response = await m_authClient.RequestTokenAsync(new TokenRequest()
+			{
+				RequestUri = new Uri(m_authClient.BaseAddress, "connect/authorize"),
+				ClientId = "spa",
+				GrantType = "authorization_code",
+				
+			});
+
+			/*var tokenResponse = await m_authClient.RequestPasswordTokenAsync(new PasswordTokenRequest
 			{
 				Address = disco.TokenEndpoint,
 				ClientId = "spa",
-				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
 				UserName = username,
 				Password = password
 			});
@@ -104,21 +146,19 @@ namespace RESTTests
 			{
 				throw new Exception(tokenResponse.Error);
 			}
-			m_resourceClient.SetBearerToken(tokenResponse.AccessToken);
-			m_authClient.SetBearerToken(tokenResponse.AccessToken);
-
-			/*
+			
 			var authorizeRequest = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
 			{
 				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
 				ClientId = "spa",
+				Code = tokenResponse.AccessToken,
 			});
 			if (authorizeRequest.IsError)
 			{
-				throw new Exception(tokenResponse.Error);
+				throw new Exception(authorizeRequest.Error);
 			}
-			m_resourceClient.SetBearerToken(authorizeRequest.AccessToken);
-			m_authClient.SetBearerToken(authorizeRequest.AccessToken);*/
+
+			m_resourceClient.SetBearerToken(authorizeRequest.AccessToken);*/
 		}
 	}
 }

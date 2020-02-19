@@ -1,6 +1,4 @@
 {
   "LogLevel": 2,
-  "DodoResources_Https": "https://0.0.0.0:5000",
-  "MongoDBServerURL": "",
-  "ResourceLockTimeout": 10000
+  "DodoResources_Https": "https://0.0.0.0:5000"
 }
