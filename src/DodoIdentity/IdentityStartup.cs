@@ -29,23 +29,39 @@ namespace DodoIdentity
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
-			var builder = services.AddIdentityServer()
+			var builder = services.AddIdentityServer(config =>
+			{
+				config.UserInteraction.LoginUrl = $"/{UserController.RootURL}/{UserController.LOGIN}";
+			})
 				.AddInMemoryIdentityResources(Config.Ids)
 				.AddInMemoryApiResources(Config.Apis)
 				.AddInMemoryClients(Config.Clients);
 
 			builder.AddDeveloperSigningCredential();
 
-			services.AddAuthentication()
-				.AddCookie("cookie", config =>
+			services.AddAuthentication(config =>
+			{
+			})
+				.AddCookie(config =>
 				{
-					config.LogoutPath = $"{UserController.RootURL}/{UserController.LOGOUT}";
-					config.LoginPath = $"{UserController.RootURL}/{UserController.LOGIN}";
+					config.LogoutPath = $"/{UserController.RootURL}/{UserController.LOGOUT}";
+					config.LoginPath = $"/{UserController.RootURL}/{UserController.LOGIN}";
 					config.ExpireTimeSpan = TimeSpan.FromDays(1);
 					config.SlidingExpiration = true;
-					
-				});
-			services.AddTransient<IAuthorizationService, AuthService>();
+				})/*.AddOpenIdConnect("oidc", options =>
+				{
+					options.Authority = DodoIdentity.HttpsUrl;
+					options.ClientId = "spa";
+				})*/;
+
+			services.AddAuthorization(config =>
+			{
+				/*config.AddPolicy("Default", config =>
+				{
+					config.
+				})*/
+			});
+			//services.AddTransient<IAuthorizationService, AuthService>();
 		}
 
 		public void Configure(IApplicationBuilder app)

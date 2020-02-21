@@ -16,18 +16,30 @@ using System.Collections.Generic;
 using System.Linq;
 using Dodo.Users;
 using Dodo;
+using System.Net;
+using static IdentityModel.OidcConstants;
+using Resources.Security;
+using Common.Security;
+using IdentityModel;
 
 namespace RESTTests
 {
+
+
+
 	public abstract class IntegrationTestBase : TestBase
 	{
+		protected string AuthURL => "https://0.0.0.0:6000";
+
 		private readonly TestServer m_resourceServer;
 		private readonly TestServer m_authServer;
 		private readonly HttpClient m_resourceClient;
 		private readonly HttpClient m_authClient;
+		protected CookieContainer m_cookies;
 
 		public IntegrationTestBase()
 		{
+			m_cookies = new CookieContainer();	
 			m_authServer = new TestServer(new WebHostBuilder()
 				.UseStartup<DodoIdentity.IdentityStartup>());
 			m_resourceServer = new TestServer(new WebHostBuilder()
@@ -99,33 +111,45 @@ namespace RESTTests
 			{
 				throw new Exception(response.ToString());
 			}
-			foreach(var cookie in response.Headers.GetValues("Set-Cookie"))
-			{
-
-			}
-			m_authClient.DefaultRequestHeaders.Add("Authorization", );
-			//m_authClient.DefaultRequestHeaders[]
-			/*if(!response.Headers.TryGetValues(AuthConstants.JWTHEADER, out var values) || values.Count() != 1)
-			{
-				throw new Exception("Unexpected header content");
-			}
-			m_authClient.SetBearerToken(values.Single());*/
+			var cookie = response.Headers.GetValues("Set-Cookie");
+			m_authClient.DefaultRequestHeaders.Add("cookie", cookie);
 		}
-		
-		protected async Task Authorize(string username, string password, string url)
+
+		protected async Task<string> Authorize(string username, string password, string url)
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
 
 			var scope = "api1";
-			var audience = DodoIdentity.DodoIdentity.HttpsUrl;
+			var audience = m_authClient.BaseAddress;
 			var responsetype = "code";
 			var clientId = "spa";
+			url = AuthURL;
 
-			var fullUri = $"{disco.AuthorizeEndpoint}?scope={scope}&audience={audience}&response_type={responsetype}&client_id={clientId}&redirect_uri={url}";
+			/*var fullUri = $"{disco.AuthorizeEndpoint}?scope={scope}&audience={audience}&response_type={responsetype}&client_id={clientId}&redirect_uri={url}&code=test";
 
-			var response = await m_authClient.GetAsync(fullUri);
-			return;
+			var response = await m_authClient.GetAsync(fullUri);*/
+			var response = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
+			{
+				Address = disco.AuthorizeEndpoint,
+				ClientId = clientId,
+				Code = KeyGenerator.GetUniqueKey(128),
+				RedirectUri = AuthURL,
+				GrantType = GrantTypes.AuthorizationCode,
+				Parameters = 
+				{
+					{ OidcConstants.AuthorizeRequest.ResponseType, OidcConstants.ResponseTypes.Code },
+					{ OidcConstants.AuthorizeRequest.CodeChallenge, KeyGenerator.GetUniqueKey(128) },
+					{ OidcConstants.AuthorizeRequest.CodeChallengeMethod, OidcConstants.CodeChallengeMethods.Sha256 },
+					{ OidcConstants.AuthorizeRequest.Scope, "api1" },
+				}
+			});
+			if(response.HttpStatusCode != HttpStatusCode.Redirect)
+			{
+				throw new Exception(response.Error);
+			}
+			
+			return response.HttpResponse.Headers.GetValues("Location").First();
 
 			/*var response = await m_authClient.RequestTokenAsync(new TokenRequest()
 			{

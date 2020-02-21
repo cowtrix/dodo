@@ -14,6 +14,9 @@ namespace DodoIdentity
 {
 	public static class DodoIdentity
 	{
+		public static string ResourceHttpsURL => m_resourceUrl.Value;
+		static ConfigVariable<string> m_resourceUrl = new ConfigVariable<string>("DodoResources_Https", "https://0.0.0.0:5000");
+
 		public static string HttpsUrl => m_https.Value;
 		static ConfigVariable<string> m_https = new ConfigVariable<string>("DodoIdentity_Https", "https://0.0.0.0:6000");
 

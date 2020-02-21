@@ -2,33 +2,34 @@
 
   <PropertyGroup>
 	<TargetFramework>netcoreapp3.1</TargetFramework>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <LangVersion>8.0</LangVersion>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+	<GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+	<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+	<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
 	<ProjectReference Include="..\..\..\include\IdentityServer4\src\IdentityServer4\src\IdentityServer4.csproj" />
+	<ProjectReference Include="..\..\lib\IdentityServer4\src\IdentityServer4\src\IdentityServer4.csproj" />
 	<ProjectReference Include="..\Dodo\Dodo.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Properties\launchSettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+	<Content Update="Properties\launchSettings.json">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</Content>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\EmbeddedCss.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+	<None Update="Resources\EmbeddedCss.css">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;..\..\resources&quot; &quot;$(TargetDir)resources&quot; /i /s /r /y" />
+	<Exec Command="xcopy &quot;..\..\resources&quot; &quot;$(TargetDir)resources&quot; /i /s /r /y" />
   </Target>
 </Project>

@@ -71,6 +71,7 @@ namespace Dodo.Users
 
 
 		[HttpPost(LOGIN)]
+		[AllowAnonymous]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
 		{
 			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.username);
@@ -100,7 +101,6 @@ namespace Dodo.Users
 		}
 
 		[HttpPost]
-		[AllowAnonymous]
 		[Route(REGISTER)]
 		public override async Task<IActionResult> Create([FromBody] UserSchema schema)
 		{
