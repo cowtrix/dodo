@@ -28,3 +28,7 @@ _ReSharper*/
 .vs/
 #Nuget packages folder
 packages/
+/lib/IdentityServer4/docs/
+/lib/IdentityServer4/.github/
+/lib/IdentityServer4/.config/
+/lib/IdentityServer4/samples/
