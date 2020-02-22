@@ -34,11 +34,7 @@ namespace Dodo.SharedTest
 			{ typeof(Rebellion), GetRandomRebellion },
 			{ typeof(WorkingGroup), wg => GetRandomWorkinGroup(wg) },
 			{ typeof(LocalGroup), lg => GetRandomLocalGroup(lg) },
-			{ typeof(ActionSite), s => GetRandomSite<ActionSiteSchema>(s) },
-			{ typeof(EventSite), s => GetRandomSite<EventSiteSchema>(s) },
-			{ typeof(OccupationSite), s => GetRandomSite<OccupationSiteSchema>(s) },
-			{ typeof(SanctuarySite), s => GetRandomSite<SanctuarySiteSchema>(s) },
-			{ typeof(MarchSite), s => GetRandomSite<MarchSiteSchema>(s) },
+			{ typeof(ActionSite), s => GetRandomSite<SiteSchema>(s) },
 			{ typeof(Role), r => GetRandomRole(r) },
 		};
 
@@ -52,38 +48,13 @@ namespace Dodo.SharedTest
 				wg.GUID);
 		}
 
-		public static T GetRandomSite<T>(AccessContext context, WorkingGroup wg = null) where T: SiteSchema
+		public static SiteSchema GetRandomSite<T>(AccessContext context, WorkingGroup wg = null)
 		{
 			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(
 				context,
 				GetRandomWorkinGroup(context));
-			var type = typeof(T);
-			object result = null;
-			if(type == typeof(ActionSiteSchema))
-			{
-				result = new ActionSiteSchema(RandomName, typeof(ActionSite).FullName, wg.GUID, RandomLocation, SampleMarkdown, RandomDate, RandomDate + TimeSpan.FromHours(4));
-			}
-			else if (type == typeof(EventSiteSchema))
-			{
-				result = new EventSiteSchema(RandomName, typeof(EventSite).FullName, wg.GUID, RandomLocation, SampleMarkdown, RandomDate, RandomDate + TimeSpan.FromHours(4));
-			}
-			else if (type == typeof(OccupationSiteSchema))
-			{
-				result = new OccupationSiteSchema(RandomName, typeof(OccupationSite).FullName, wg.GUID, RandomLocation, SampleMarkdown);
-			}
-			else if (type == typeof(SanctuarySiteSchema))
-			{
-				result = new SanctuarySiteSchema(RandomName, typeof(SanctuarySite).FullName, wg.GUID, RandomLocation, SampleMarkdown);
-			}
-			else if (type == typeof(MarchSiteSchema))
-			{
-				result = new MarchSiteSchema(RandomName, typeof(MarchSite).FullName, wg.GUID, RandomLocation, SampleMarkdown, RandomDate, RandomDate + TimeSpan.FromHours(4));
-			}
-			if (result == null)
-			{
-				throw new Exception($"Couldn't make site: {type}");
-			}
-			return result as T;
+			var t = ReflectionExtensions.GetConcreteClasses<Site>().Random(); 
+			return new SiteSchema(RandomName, t.FullName, wg.GUID, RandomLocation, SampleMarkdown);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)

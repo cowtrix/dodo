@@ -87,6 +87,7 @@ namespace SharedTest
 			var userFactory = ResourceUtility.GetFactory<User>();
 			var user = userFactory.CreateTypedObject(default(AccessContext), schema);
 			context = new AccessContext(user, new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema?.Password))));
+			Assert.IsTrue(context.Challenge());
 			return user;
 		}
 	}

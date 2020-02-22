@@ -113,6 +113,7 @@ namespace RESTTests
 			}
 			var cookie = response.Headers.GetValues("Set-Cookie");
 			m_authClient.DefaultRequestHeaders.Add("cookie", cookie);
+			m_resourceClient.DefaultRequestHeaders.Add("cookie", cookie);
 		}
 
 		protected async Task<string> Authorize(string username, string password, string url)

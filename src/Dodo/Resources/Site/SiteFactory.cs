@@ -6,7 +6,7 @@ using System;
 
 namespace Dodo.Sites
 {
-	public abstract class SiteSchema : GroupResourceSchemaBase
+	public sealed class SiteSchema : GroupResourceSchemaBase
 	{
 		public string Type { get; private set; }
 		public GeoLocation Location { get; private set; }
@@ -19,23 +19,6 @@ namespace Dodo.Sites
 		}
 
 		public SiteSchema()
-		{
-		}
-	}
-
-	public abstract class TimeboundSiteSchema : SiteSchema
-	{
-		public DateTime StartDate { get; private set; }
-		public DateTime EndDate { get; private set; }
-
-		public TimeboundSiteSchema(string name, string type, Guid parent, GeoLocation location, string description, DateTime start, DateTime end) : 
-			base(name, type, parent, location, description)
-		{
-			StartDate = start;
-			EndDate = end;
-		}
-
-		public TimeboundSiteSchema()
 		{
 		}
 	}

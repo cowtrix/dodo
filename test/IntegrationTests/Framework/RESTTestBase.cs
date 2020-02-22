@@ -40,11 +40,12 @@ namespace RESTTests
 			Assert.AreEqual(rsc.Name, obj.Value<string>("Name"));
 		}
 
-		/*[TestMethod]
+		[TestMethod]
 		public async Task CanCreate()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			await Authorize(user.AuthData.Username, password, ResourceRoot);
+			//await Authorize(user.AuthData.Username, password, ResourceRoot);
+			await Login(user.AuthData.Username, password);
 			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
 				SchemaGenerator.GetRandomSchema<T>(context));
 		}

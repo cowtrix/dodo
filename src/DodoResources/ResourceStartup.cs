@@ -20,34 +20,9 @@ namespace DodoResources
             services.AddCors();
             services.AddDistributedMemoryCache();
 
-            services.AddAuthentication("token")
-                .AddIdentityServerAuthentication("token", options =>
-                {
-                    options.Authority = m_authURI.Value;
-                    options.RequireHttpsMetadata = false;
-
-                    // enable for MTLS scenarios
-                    // options.Authority = Constants.AuthorityMtls;
-
-                    options.ApiName = "api1";
-                    options.ApiSecret = "secret";
-
-                    options.JwtBearerEvents = new Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerEvents
-                    {
-                        OnTokenValidated = e =>
-                        {
-                            var jwt = e.SecurityToken as JwtSecurityToken;
-                            var type = jwt.Header.Typ;
-
-                            if (!string.Equals(type, "at+jwt", StringComparison.Ordinal))
-                            {
-                                e.Fail("JWT is not an access token");
-                            }
-
-                            return Task.CompletedTask;
-                        }
-                    };
-                })
+            services.AddAuthentication("cookie")
+                .AddIdentityServerAuthentication()
+                .AddCookie("cookie")
                 .AddCertificate(options =>
                 {
                     options.AllowedCertificateTypes = CertificateTypes.All;

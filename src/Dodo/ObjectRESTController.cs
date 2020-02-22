@@ -30,19 +30,13 @@ namespace Resources
 		{
 			get
 			{
-				if(!Request.Headers.TryGetValue(AuthConstants.JWTHEADER, out var jwt))
+				if(User.Identity == null || !User.Identity.IsAuthenticated)
 				{
 					return default;
 				}
-				var handler = new JwtSecurityTokenHandler();
-				var token = handler.ReadJwtToken(jwt);
-				var guid = (Guid)token.Payload.Single(x => x.Key == AuthConstants.GUID).Value;
-				var user = UserManager.GetSingle(x => x.GUID == guid);
-				if(user == null)
-				{
-					return default;
-				}
-				var key = token.Payload.Single(x => x.Key == AuthConstants.KEY).Value as string;
+				var username = Guid.Parse(User.Identity.Name);
+				var user = UserManager.GetSingle(x => x.GUID == username);
+				var key = "";
 				if(!TemporaryTokenManager.CheckToken(key, out var passphrase))
 				{
 					return default;
@@ -53,8 +47,7 @@ namespace Resources
 
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
-		protected bool IsAuthorised(AccessContext Context, T target,
-			EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
+		protected bool IsAuthorised(AccessContext Context, T target, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
 			if (target != null && !(target is T))
 			{
