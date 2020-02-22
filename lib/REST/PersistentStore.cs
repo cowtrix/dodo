@@ -1,5 +1,9 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,10 +11,18 @@ namespace Resources
 {
 	public class PersistentStore<TKey, TValue>
 	{
-		struct Entry
+		public class Entry
 		{
+			[BsonId]
 			public TKey Key;
-			public TValue Object;
+			[BsonElement]
+			public TValue Value;
+
+			public Entry(TKey key, TValue value)
+			{
+				Key = key;
+				Value = value;
+			}
 		}
 
 		IMongoCollection<Entry> m_collection;
@@ -28,12 +40,35 @@ namespace Resources
 		{
 			get
 			{
-				return m_collection.Find(x => x.Key != null && x.Key.Equals(key)).First().Object;
+				return m_collection.Find(x => x.Key != null && x.Key.Equals(key)).First().Value;
 			}
 			set
 			{
-				m_collection.FindOneAndUpdate(x => x.Key != null && x.Key.Equals(key), new ObjectUpdateDefinition<Entry>(value));
+				m_collection.InsertOne(new Entry(key, value));
+				//m_collection.ReplaceOne(x => x.Key != null && x.Key.Equals(key), new Entry(key, JsonConvert.SerializeObject(value)));
 			}
+		}
+
+		public IMongoQueryable<Entry> GetQueryable()
+		{
+			return m_collection.AsQueryable();
+		}
+
+		public bool Remove(TKey key)
+		{
+			return m_collection.DeleteOne(x => x.Key.Equals(key)).IsAcknowledged;
+		}
+
+		public bool TryGetValue(TKey key, out TValue value)
+		{
+			var match = m_collection.Find(x => x.Key.Equals(key));
+			if(!match.Any())
+			{
+				value = default;
+				return false;
+			}
+			value = match.First().Value;
+			return true;
 		}
 	}
 }

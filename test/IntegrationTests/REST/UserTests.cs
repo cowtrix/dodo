@@ -33,14 +33,24 @@ namespace RESTTests
 		[TestMethod]
 		public async Task CanAuthorise()
 		{
-			var user = GetRandomUser(out var password, out var context);
-			await Authorize(user.AuthData.Username, password, "");
+			var user = GetRandomUser(out var password, out _);
+			await Login(user.AuthData.Username, password);
+			await Authorize(user.AuthData.Username, password, $"{UserController.RootURL}/{user.GUID}"); // Not actually necessary for the next step to succeed???
+			await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
+		}
+
+		[TestMethod]
+		public async Task CanLogin()
+		{
+			var user = GetRandomUser(out var password, out _);
+			await Login(user.AuthData.Username, password);
+			await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
 		}
 
 		[TestMethod]
 		public async Task BadAuthFails()
 		{
-			var user = GetRandomUser(out var password, out var context);
+			var user = GetRandomUser(out var password, out _);
 			await AssertX.ThrowsAsync<Exception>(Authorize(user.AuthData.Username, "not the password", ""),
 				e => e.Message.Contains("invalid_grant"));
 		}
@@ -48,7 +58,7 @@ namespace RESTTests
 		[TestMethod]
 		public async virtual Task CannotGetAnonymously()
 		{
-			var user = GetRandomUser(out _, out var context);
+			var user = GetRandomUser(out _, out _);
 			await AssertX.ThrowsAsync<Exception>(RequestJSON($"{UserController.RootURL}/{user.GUID.ToString()}", EHTTPRequestType.GET));
 		}
 

@@ -1,10 +1,12 @@
 ﻿using Common.Extensions;
 using Dodo.LocalGroups;
 using Resources;
-using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Dodo.Users
 {
+	public class PersonalDataAttribute : Attribute { }
+
 	public class PersonalInfo
 	{
 		[PersonalData]

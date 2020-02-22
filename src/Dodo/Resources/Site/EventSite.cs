@@ -8,26 +8,12 @@ using Newtonsoft.Json;
 
 namespace Dodo.Sites
 {
-	public class EventSiteSchema : TimeboundSiteSchema
-	{
-		public EventSiteSchema(string name, string type, Guid parent, GeoLocation location, string description, DateTime start, DateTime end) : 
-			base(name, type, parent, location, description, start, end)
-		{
-		}
-	}
-
 	public class EventSite : Site, ITimeBoundResource
 	{
 		public EventSite() : base(default, default) { }
 
-		public EventSite(AccessContext context, EventSiteSchema schema) : base(context, schema)
+		public EventSite(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
-			if(schema == null)
-			{
-				return;
-			}
-			StartDate = schema.StartDate;
-			EndDate = schema.EndDate;
 		}
 
 		[JsonProperty]

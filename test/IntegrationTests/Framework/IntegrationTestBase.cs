@@ -14,18 +14,32 @@ using IdentityModel.Client;
 using DodoResources;
 using System.Collections.Generic;
 using System.Linq;
+using Dodo.Users;
+using Dodo;
+using System.Net;
+using static IdentityModel.OidcConstants;
+using Resources.Security;
+using Common.Security;
+using IdentityModel;
 
 namespace RESTTests
 {
+
+
+
 	public abstract class IntegrationTestBase : TestBase
 	{
+		protected string AuthURL => "https://0.0.0.0:6000";
+
 		private readonly TestServer m_resourceServer;
 		private readonly TestServer m_authServer;
 		private readonly HttpClient m_resourceClient;
 		private readonly HttpClient m_authClient;
+		protected CookieContainer m_cookies;
 
 		public IntegrationTestBase()
 		{
+			m_cookies = new CookieContainer();	
 			m_authServer = new TestServer(new WebHostBuilder()
 				.UseStartup<DodoIdentity.IdentityStartup>());
 			m_resourceServer = new TestServer(new WebHostBuilder()
@@ -88,37 +102,88 @@ namespace RESTTests
 			return response;
 		}
 
-		protected async Task Authorize(string username, string password, string url)
+		protected async Task Login(string username, string password)
+		{
+			var response = await m_authClient.PostAsync($"{UserController.RootURL}/{UserController.LOGIN}",
+				new StringContent(JsonConvert.SerializeObject(new UserController.LoginModel { username = username, password = password }), 
+				Encoding.UTF8, "application/json"));
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new Exception(response.ToString());
+			}
+			var cookie = response.Headers.GetValues("Set-Cookie");
+			m_authClient.DefaultRequestHeaders.Add("cookie", cookie);
+			m_resourceClient.DefaultRequestHeaders.Add("cookie", cookie);
+		}
+
+		protected async Task<string> Authorize(string username, string password, string url)
 		{
 			var disco = await m_authClient.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
-			var tokenResponse = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
+
+			var scope = "api1";
+			var audience = m_authClient.BaseAddress;
+			var responsetype = "code";
+			var clientId = "spa";
+			url = AuthURL;
+
+			/*var fullUri = $"{disco.AuthorizeEndpoint}?scope={scope}&audience={audience}&response_type={responsetype}&client_id={clientId}&redirect_uri={url}&code=test";
+
+			var response = await m_authClient.GetAsync(fullUri);*/
+			var response = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
+			{
+				Address = disco.AuthorizeEndpoint,
+				ClientId = clientId,
+				Code = KeyGenerator.GetUniqueKey(128),
+				RedirectUri = AuthURL,
+				GrantType = GrantTypes.AuthorizationCode,
+				Parameters = 
+				{
+					{ OidcConstants.AuthorizeRequest.ResponseType, OidcConstants.ResponseTypes.Code },
+					{ OidcConstants.AuthorizeRequest.CodeChallenge, KeyGenerator.GetUniqueKey(128) },
+					{ OidcConstants.AuthorizeRequest.CodeChallengeMethod, OidcConstants.CodeChallengeMethods.Sha256 },
+					{ OidcConstants.AuthorizeRequest.Scope, "api1" },
+				}
+			});
+			if(response.HttpStatusCode != HttpStatusCode.Redirect)
+			{
+				throw new Exception(response.Error);
+			}
+			
+			return response.HttpResponse.Headers.GetValues("Location").First();
+
+			/*var response = await m_authClient.RequestTokenAsync(new TokenRequest()
+			{
+				RequestUri = new Uri(m_authClient.BaseAddress, "connect/authorize"),
+				ClientId = "spa",
+				GrantType = "authorization_code",
+				
+			});
+
+			/*var tokenResponse = await m_authClient.RequestPasswordTokenAsync(new PasswordTokenRequest
 			{
 				Address = disco.TokenEndpoint,
 				ClientId = "spa",
-				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
-				Code = "code", //?
-				RedirectUri = "redirect",//?
+				UserName = username,
+				Password = password
 			});
 			if (tokenResponse.IsError)
 			{
 				throw new Exception(tokenResponse.Error);
 			}
-			m_resourceClient.SetBearerToken(tokenResponse.AccessToken);
-			m_authClient.SetBearerToken(tokenResponse.AccessToken);
-
-			/*
+			
 			var authorizeRequest = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
 			{
 				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
 				ClientId = "spa",
+				Code = tokenResponse.AccessToken,
 			});
 			if (authorizeRequest.IsError)
 			{
-				throw new Exception(tokenResponse.Error);
+				throw new Exception(authorizeRequest.Error);
 			}
-			m_resourceClient.SetBearerToken(authorizeRequest.AccessToken);
-			m_authClient.SetBearerToken(authorizeRequest.AccessToken);*/
+
+			m_resourceClient.SetBearerToken(authorizeRequest.AccessToken);*/
 		}
 	}
 }

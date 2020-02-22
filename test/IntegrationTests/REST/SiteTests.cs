@@ -13,27 +13,8 @@ using Common.Extensions;
 
 namespace RESTTests
 {
-	[TestClass]
-	public class ActionSiteTests : SiteTests<ActionSite>
-	{
-	}
 
-	[TestClass]
-	public class EventSiteTests : SiteTests<EventSite>
-	{
-	}
-
-	[TestClass]
-	public class OccupationSiteTests : SiteTests<OccupationSite>
-	{
-	}
-
-	[TestClass]
-	public class SanctuarySiteTests : SiteTests<SanctuarySite>
-	{
-	}
-
-	public abstract class SiteTests<T> : GroupResourceTestBase<T> where T:GroupResource
+	public abstract class SiteTests : GroupResourceTestBase<Site>
 	{
 		public override string ResourceRoot => SiteController.RootURL;
 

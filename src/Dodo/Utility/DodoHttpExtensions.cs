@@ -14,7 +14,7 @@ namespace Dodo.Utility
 
 		public static AccessContext GetRequestOwner(this ClaimsPrincipal request)
 		{
-			var username = request.FindFirst(AuthService.USERNAME)?.Value;
+			var username = request.FindFirst(AuthConstants.GUID)?.Value;
 			if(string.IsNullOrEmpty(username))
 			{
 				return default;

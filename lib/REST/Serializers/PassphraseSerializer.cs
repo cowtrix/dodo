@@ -12,9 +12,8 @@ namespace Resources.Serializers
 		{
 			context.Reader.ReadStartDocument();
 			var tokenKey = context.Reader.ReadString();
-			var data = context.Reader.ReadString();
 			context.Reader.ReadEndDocument();
-			return new Passphrase(tokenKey, data);
+			return new Passphrase { TokenKey = tokenKey };
 		}
 
 		public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, Passphrase value)
@@ -22,8 +21,6 @@ namespace Resources.Serializers
 			context.Writer.WriteStartDocument();
 			context.Writer.WriteName("TokenKey");
 			context.Writer.WriteString(value.TokenKey);
-			context.Writer.WriteName("Data");
-			context.Writer.WriteString(value.Data);
 			context.Writer.WriteEndDocument();
 		}
 

@@ -1,19 +1,15 @@
 ﻿using Common;
-using Common.Extensions;
-using Resources.Security;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using Dodo;
 using Dodo.Users;
-using Dodo.Utility;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using Resources.Security;
 
 namespace Resources
 {
@@ -28,23 +24,37 @@ namespace Resources
 		where T : class, IDodoResource
 		where TSchema : DodoResourceSchemaBase
 	{
-		protected IAuthorizationService AuthorizationService;
-		public ObjectRESTController(IAuthorizationService authorizationService)
+		private DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
+
+		protected AccessContext Context
 		{
-			AuthorizationService = authorizationService;
+			get
+			{
+				if(User.Identity == null || !User.Identity.IsAuthenticated)
+				{
+					return default;
+				}
+				var username = Guid.Parse(User.Identity.Name);
+				var user = UserManager.GetSingle(x => x.GUID == username);
+				var key = "";
+				if(!TemporaryTokenManager.CheckToken(key, out var passphrase))
+				{
+					return default;
+				}
+				return new AccessContext(user, passphrase);
+			}
 		}
 
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
-		protected bool IsAuthorised(AccessContext context, T target,
-			EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
+		protected bool IsAuthorised(AccessContext Context, T target, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
 		{
 			if (target != null && !(target is T))
 			{
 				permissionLevel = EPermissionLevel.PUBLIC;
 				return false;
 			}
-			if (target != null && context.User == null)
+			if (target != null && Context.User == null)
 			{
 				permissionLevel = EPermissionLevel.PUBLIC;
 				if (requestType != EHTTPRequestType.GET)
@@ -55,7 +65,7 @@ namespace Resources
 			}
 			if (target == null)
 			{
-				if (context.User != null)
+				if (Context.User != null)
 				{
 					if (typeof(T) == typeof(User) && requestType == EHTTPRequestType.POST)
 					{
@@ -79,7 +89,7 @@ namespace Resources
 				permissionLevel = EPermissionLevel.PUBLIC;
 				return true;
 			}
-			return target.IsAuthorised(context, requestType, out permissionLevel);
+			return target.IsAuthorised(Context, requestType, out permissionLevel);
 		}
 
 		public abstract Task<IActionResult> Create([FromBody] TSchema schema);
@@ -87,8 +97,8 @@ namespace Resources
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
 			LogRequest();
-			var context = User.GetRequestOwner();
-			if (!IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
+			
+			if (!IsAuthorised(Context, null, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
@@ -96,14 +106,14 @@ namespace Resources
 			T createdObject;
 			try
 			{
-				createdObject = factory.CreateObject(context, schema) as T;
-				OnCreation(context, createdObject);
+				createdObject = factory.CreateObject(Context, schema) as T;
+				OnCreation(Context, createdObject);
 			}
 			catch (Exception e)
 			{
 				return BadRequest($"Failed to deserialise JSON: {e.Message}");
 			}
-			return Ok(createdObject.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
+			return Ok(createdObject.GenerateJsonView(permissionLevel, Context.User, Context.Passphrase));
 		}
 
 		[HttpPatch("{id}")]
@@ -115,8 +125,7 @@ namespace Resources
 			{
 				return NotFound();
 			}
-			var context = User.GetRequestOwner();
-			if (!IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
+			if (!IsAuthorised(Context, target, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
@@ -137,14 +146,13 @@ namespace Resources
 					TypeNameHandling = TypeNameHandling.All
 				};
 				var prev = JsonConvert.SerializeObject(target, jsonSettings);
-				target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
+				target.PatchObject(values, permissionLevel, Context.User, Context.Passphrase);
 				ResourceManager.Update(target, resourceLock);
 			}
-			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
+			return Ok(target.GenerateJsonView(permissionLevel, Context.User, Context.Passphrase));
 		}
 
 		[HttpDelete("{id}")]
-		[Authorize(Roles = PermissionLevel.ADMIN)]
 		public virtual async Task<IActionResult> Delete(Guid id)
 		{
 			LogRequest();
@@ -153,8 +161,7 @@ namespace Resources
 			{
 				return NotFound();
 			}
-			var context = User.GetRequestOwner();
-			if (!IsAuthorised(context, target, Request.MethodEnum(), out _))
+			if (!IsAuthorised(Context, target, Request.MethodEnum(), out _))
 			{
 				return Forbid();
 			}
@@ -179,7 +186,7 @@ namespace Resources
 			Logger.Debug($"Received {Request.MethodEnum()} for {Request.Path}.");
 		}
 
-		protected virtual void OnCreation(AccessContext context, T user)
+		protected virtual void OnCreation(AccessContext Context, T user)
 		{
 		}
 	}

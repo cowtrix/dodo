@@ -1,31 +1,22 @@
 ﻿using Common.Extensions;
-using Resources.Security;
+using Common.Security;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Resources;
+using Resources.Security;
 using System;
-using Common.Security;
-using Microsoft.AspNetCore.Identity.MongoDB;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Linq;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 
 namespace Dodo.Users
 {
 	public class AuthorizationData : IVerifiable
 	{
+
 		/// <summary>
 		///     A random value that must change whenever a users credentials change
 		///     (password changed, login removed)
 		/// </summary>
 		public string SecurityStamp { get; set; }
-
-		public List<IdentityUserLogin> Logins = new List<IdentityUserLogin>();
-		public List<IdentityUserClaim> Claims => new List<IdentityUserClaim>() { new IdentityUserClaim(new Claim("Username", Username)) } ;
-		public List<IdentityUserToken> Tokens = new List<IdentityUserToken>();
-		public List<string> Roles = new List<string>();
-
 		public virtual bool TwoFactorEnabled { get; set; }
 		public virtual DateTime? LockoutEndDateUtc { get; set; }
 		public virtual bool LockoutEnabled { get; set; }
@@ -58,43 +49,22 @@ namespace Dodo.Users
 
 		public AuthorizationData(string userName, string password)
 		{
-			// URGENT TODO: we can't really use the password here
-			// BECAUSE we need to change the key to the passphrase when the user auth changes
-			PasswordHash = HashPassword(password);
 			Username = userName;
+
 			var passphrase = KeyGenerator.GetUniqueKey(128);
-			PassphraseHash = SHA256Utility.SHA256(passphrase);
-			PassPhrase = new EncryptedStore<string>(passphrase, new Passphrase(password));
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			PrivateKey = new EncryptedStore<string>(pv, new Passphrase(passphrase));
 			PublicKey = pk;
+			PasswordHash = PasswordHasher.HashPassword(password);
+			PassphraseHash = PasswordHasher.HashPassword(passphrase);
+			PassPhrase = new EncryptedStore<string>(passphrase, new Passphrase(password));
 			SecurityStamp = SHA256Utility.SHA256(pv + password);
 		}
 
-		private static string HashPassword(string password)
-		{
-			byte[] salt;
-			byte[] buffer2;
-			if (password == null)
-			{
-				throw new ArgumentNullException("password");
-			}
-			using (Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(password, 0x10, 0x3e8))
-			{
-				salt = bytes.Salt;
-				buffer2 = bytes.GetBytes(0x20);
-			}
-			byte[] dst = new byte[0x31];
-			Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
-			Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
-			return Convert.ToBase64String(dst);
-		}
-
-		/*
-		public bool ChallengePassword(string password, out Passphrase passphrase)
+		public bool ChallengePassword(string password, out string passphrase)
 		{
 			passphrase = default;
-			if (SHA256Utility.SHA256(password + PublicKey) != PasswordHash)
+			if (!PasswordHasher.VerifyHashedPassword(PasswordHash, password))
 			{
 				return false;
 			}
@@ -102,89 +72,27 @@ namespace Dodo.Users
 			{
 				return false;
 			}
-			passphrase = new Passphrase(PassPhrase.GetValue(password));
+			passphrase = PassPhrase.GetValue(password);
 			return true;
 		}
 
-		public void ChangePassword(Passphrase oldValue, Passphrase newValue)
+		public bool ChangePassword(Passphrase oldPassword, Passphrase newPassword)
 		{
-			if(!ChallengePassword(oldValue.Value, out var passphrase))
+			if(!ChallengePassword(oldPassword.Value, out var passphrase))
 			{
-				throw HttpException.FORBIDDEN;
+				return false;
 			}
-			PassPhrase = new EncryptedStore<string>(passphrase.Value, newValue);
-			PasswordHash = SHA256Utility.SHA256(newValue.Value + PublicKey);
-			if(!ChallengePassword(newValue.Value, out _))
+			PassPhrase = new EncryptedStore<string>(passphrase, newPassword);
+			PasswordHash = SHA256Utility.SHA256(newPassword.Value + PublicKey);
+			if(!ChallengePassword(newPassword.Value, out _))
 			{
-				throw new Exception("Failed to change password");
+				return false;
 			}
+			var pv = PrivateKey.GetValue(passphrase);
+			SecurityStamp = SHA256Utility.SHA256(pv + newPassword.Value);
+			return true;
 		}
-		*/
-
-		public virtual void AddLogin(UserLoginInfo login)
-		{
-			Logins.Add(new IdentityUserLogin(login));
-		}
-
-		public virtual void RemoveLogin(string loginProvider, string providerKey)
-		{
-			Logins.RemoveAll(l => l.LoginProvider == loginProvider && l.ProviderKey == providerKey);
-		}
-
-		public virtual void AddClaim(Claim claim)
-		{
-			Claims.Add(new IdentityUserClaim(claim));
-		}
-
-		public virtual void RemoveClaim(Claim claim)
-		{
-			Claims.RemoveAll(c => c.Type == claim.Type && c.Value == claim.Value);
-		}
-
-		public virtual void ReplaceClaim(Claim existingClaim, Claim newClaim)
-		{
-			var claimExists = Claims
-				.Any(c => c.Type == existingClaim.Type && c.Value == existingClaim.Value);
-			if (!claimExists)
-			{
-				// note: nothing to update, ignore, no need to throw
-				return;
-			}
-			RemoveClaim(existingClaim);
-			AddClaim(newClaim);
-		}
-
-		private IdentityUserToken GetToken(string loginProider, string name)
-			=> Tokens
-				.FirstOrDefault(t => t.LoginProvider == loginProider && t.Name == name);
-
-		public virtual void SetToken(string loginProider, string name, string value)
-		{
-			var existingToken = GetToken(loginProider, name);
-			if (existingToken != null)
-			{
-				existingToken.Value = value;
-				return;
-			}
-
-			Tokens.Add(new IdentityUserToken
-			{
-				LoginProvider = loginProider,
-				Name = name,
-				Value = value
-			});
-		}
-
-		public virtual string GetTokenValue(string loginProider, string name)
-		{
-			return GetToken(loginProider, name)?.Value;
-		}
-
-		public virtual void RemoveToken(string loginProvider, string name)
-		{
-			Tokens.RemoveAll(t => t.LoginProvider == loginProvider && t.Name == name);
-		}
-
+		
 		public bool CanVerify()
 		{
 			return true;

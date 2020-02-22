@@ -39,7 +39,7 @@ namespace Dodo
 
 		public bool Challenge()
 		{
-			return User != null && User.AuthData.PassphraseHash == SHA256Utility.SHA256(Passphrase.Value);
+			return User != null && PasswordHasher.VerifyHashedPassword(User.AuthData.PassphraseHash, Passphrase.Value);
 		}
 	}
 }

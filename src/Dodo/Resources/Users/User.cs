@@ -7,9 +7,7 @@ using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.WorkingGroups;
 using Resources;
-using Microsoft.AspNetCore.Identity.MongoDB;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
+using System.Security.Principal;
 
 namespace Dodo.Users
 {

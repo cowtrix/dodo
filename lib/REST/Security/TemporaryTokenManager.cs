@@ -13,14 +13,14 @@ namespace Resources.Security
 	/// </summary>
 	public static class TemporaryTokenManager
 	{
-		private struct InnerToken
+		private class InnerToken
 		{
 			public string Value;
 			public TimeSpan Timeout;
 			public DateTime CreationDate;
 		}
 
-		private static ConcurrentDictionary<string, InnerToken> m_tokens = new ConcurrentDictionary<string, InnerToken>();
+		private static PersistentStore<string, InnerToken> m_tokens = new PersistentStore<string, InnerToken>("auth", "temptokens");
 		const byte DEFAULT_TOKEN_TIMEOUT_MINUTES = 5;
 		const byte TOKEN_SIZE = 32;
 
@@ -33,29 +33,28 @@ namespace Resources.Security
 				{
 					await Task.Delay(TimeSpan.FromMinutes(1));
 					var now = DateTime.Now;
-					foreach (var val in m_tokens)
+					/*var outdatedTokens = m_tokens.GetQueryable().Where(val => val.Value.CreationDate < now - val.Value.Timeout).ToList();
+					foreach(var r in outdatedTokens)
 					{
-						if(val.Value.CreationDate > now - val.Value.Timeout)
-						{
-							continue;
-						}
-						toRemove.Add(val.Key);
-					}
-					foreach(var r in toRemove)
-					{
-						m_tokens.TryRemove(r, out _);
-					}
+						// Expire tokens
+						m_tokens.Remove(r.Key);
+					}*/
 				}
 			});
 			tokenTask.Start();
 		}
 
-		public static void GetTemporaryToken(out string tokenKey, out string token, TimeSpan? timeout = null)
+		public static void GetTemporaryToken(out string token, out string key, TimeSpan? timeout = null)
+		{
+			token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+			SetTemporaryToken(token, out key, timeout);
+		}
+
+		public static void SetTemporaryToken(string token, out string key, TimeSpan? timeout = null)
 		{
 			timeout = timeout ?? TimeSpan.FromMinutes(DEFAULT_TOKEN_TIMEOUT_MINUTES);
-			tokenKey = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
-			token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
-			m_tokens[SHA256Utility.SHA256(tokenKey)] = new InnerToken()
+			key = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+			m_tokens[key] = new InnerToken()
 			{
 				CreationDate = DateTime.Now,
 				Value = token,
@@ -63,10 +62,9 @@ namespace Resources.Security
 			};
 		}
 
-		public static bool IsValidToken(string tokenKey, out string token)
+		public static bool CheckToken(string key, out string token)
 		{
-			tokenKey = SHA256Utility.SHA256(tokenKey);
-			if(!m_tokens.TryGetValue(tokenKey, out var innerToken))
+			if(!m_tokens.TryGetValue(key, out var innerToken))
 			{
 				token = null;
 				return false;

@@ -1,9 +1,9 @@
 using Common.Config;
-using DodoResources;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace DodoResourcesResources
+namespace DodoResources
 {
 	public static class DodoResources
 	{
