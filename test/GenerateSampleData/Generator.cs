@@ -36,7 +36,7 @@ namespace GenerateSampleData
 			var amstLocation = new GeoLocation(52.373455, 4.898259);
 			var currentRebellion = RebellionFactory.CreateObject(admin1context,
 				new RebellionSchema("Amsterdam Rebellion", SchemaGenerator.SampleMarkdown, amstLocation, DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
-			var siteOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Occupationsal Site", typeof(OccupationSite).FullName, currentRebellion.GUID, amstLocation, SchemaGenerator.SampleMarkdown));
+			var siteOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Occupational Site", typeof(OccupationSite).FullName, currentRebellion.GUID, amstLocation, SchemaGenerator.SampleMarkdown));
 			var actionOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Action Site", typeof(ActionSite).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.ToCoordinate().Latitude + 0.05, amstLocation.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleMarkdown));
 			var march = SiteFactory.CreateObject(admin1context, new SiteSchema("March", typeof(MarchSite).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.ToCoordinate().Latitude - 0.05, amstLocation.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleMarkdown));
 			var sanctuary = SiteFactory.CreateObject(admin1context, new SiteSchema("Sanctuary Site", typeof(SanctuarySite).FullName, currentRebellion.GUID, new GeoLocation(amstLocation.ToCoordinate().Latitude - 0.05, amstLocation.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleMarkdown));
