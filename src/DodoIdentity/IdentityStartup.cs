@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using Common.Config;
@@ -39,14 +39,14 @@ namespace DodoIdentity
 
 			services.AddIdentityWithMongoStoresUsingCustomTypes<Microsoft.AspNetCore.Identity.MongoDB.IdentityRole>(Dodo.Dodo.PRODUCT_NAME)
 				.AddDefaultTokenProviders();
-			
+
 			var builder = services.AddIdentityServer(options =>
 				{
 					options.Events.RaiseErrorEvents = true;
 					options.Events.RaiseInformationEvents = true;
 					options.Events.RaiseFailureEvents = true;
 					options.Events.RaiseSuccessEvents = true;
-					options.UserInteraction.LoginUrl = $"{UserController.RootURL}/{UserController.LOGIN}";
+					options.UserInteraction.LoginUrl = $"{UserController.RootURL}/{UserController.LOGIN}"; // leading /?
 					options.UserInteraction.LogoutUrl = $"{UserController.RootURL}/{UserController.LOGOUT}";
 				})
 				.AddInMemoryIdentityResources(Config.Ids)
@@ -61,7 +61,7 @@ namespace DodoIdentity
 #endif
 			services.AddTransient<IAuthorizationService, AuthService>();
 			services.AddAuthorization();
-			
+
 		}
 
 		public void Configure(IApplicationBuilder app)
@@ -75,8 +75,8 @@ namespace DodoIdentity
 			app.UseCors();
 			app.UseStaticFiles();
 			app.UseRouting();
-			app.UseIdentityServer();
-			app.UseAuthentication();
+			app.UseIdentityServer(); // UseIdentityServer includes a call to UseAuthentication, so it’s not necessary to have both.
+			//app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
 			{
