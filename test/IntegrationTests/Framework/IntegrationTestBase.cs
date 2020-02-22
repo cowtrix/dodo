@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -65,7 +65,7 @@ namespace RESTTests
 
 		private static async Task<HttpResponseMessage> Request(HttpClient client, string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
 		{
-			if(parameters != null && parameters.Any())
+			if (parameters != null && parameters.Any())
 			{
 				url += "?" + string.Join("&", parameters.Select(x => $"{Uri.EscapeUriString(x.Item1)}={Uri.EscapeUriString(x.Item2)}"));
 			}
@@ -81,7 +81,7 @@ namespace RESTTests
 				default:
 					throw new Exception("Unsupported method " + method);
 			}
-			if(!response.IsSuccessStatusCode)
+			if (!response.IsSuccessStatusCode)
 			{
 				throw new Exception(response.ToString());
 			}
@@ -97,6 +97,8 @@ namespace RESTTests
 				Address = disco.TokenEndpoint,
 				ClientId = "spa",
 				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
+				Code = "code", //?
+				RedirectUri = "redirect",//?
 			});
 			if (tokenResponse.IsError)
 			{
