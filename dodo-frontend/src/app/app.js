@@ -11,6 +11,7 @@ export const App = () =>
   <div className={styles.app}>
     <Provider store={store}>
       <Header />
+	    test commit
 	    <RebellionMap/>
     </Provider>
   </div>
