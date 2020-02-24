@@ -20,9 +20,8 @@ namespace DodoResources
             services.AddCors();
             services.AddDistributedMemoryCache();
 
-            services.AddAuthentication("cookie")
+            services.AddAuthentication()
                 .AddIdentityServerAuthentication()
-                .AddCookie("cookie")
                 .AddCertificate(options =>
                 {
                     options.AllowedCertificateTypes = CertificateTypes.All;
@@ -31,23 +30,22 @@ namespace DodoResources
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
-            app.UseCors(policy =>
-            {
-                policy.WithOrigins(
-                    DodoResources.HttpsUrl,
-                    m_authURI.Value);
-
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-                policy.WithExposedHeaders("WWW-Authenticate");
-            });
-
             if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-			}
+                app.UseCors(policy =>
+                {
+                    policy.WithOrigins(
+                        "*",
+                        m_authURI.Value)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            }
 
 			app.UseRouting();
+
+            app.UseAuthentication();
 
 			app.UseEndpoints(endpoints =>
 			{

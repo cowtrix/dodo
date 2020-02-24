@@ -18,7 +18,20 @@ namespace Dodo.SharedTest
 	{
 		public static ResourceSchemaBase GetRandomSchema<T>(AccessContext context) where T : IRESTResource
 		{
-			return m_mappings[typeof(T)].Invoke(context);
+			return GetRandomSchema(typeof(T), context);
+		}
+
+		public static ResourceSchemaBase GetRandomSchema(Type type, AccessContext context)
+		{
+			if (m_mappings.TryGetValue(type, out var schemaFunc))
+			{
+				return schemaFunc.Invoke(context);
+			}
+			if (type.BaseType != null)
+			{
+				return GetRandomSchema(type.BaseType, context);
+			}
+			throw new Exception($"No schema generator found for type {type}");
 		}
 
 		private static Random m_random = new Random();
@@ -34,8 +47,13 @@ namespace Dodo.SharedTest
 			{ typeof(Rebellion), GetRandomRebellion },
 			{ typeof(WorkingGroup), wg => GetRandomWorkinGroup(wg) },
 			{ typeof(LocalGroup), lg => GetRandomLocalGroup(lg) },
-			{ typeof(ActionSite), s => GetRandomSite<SiteSchema>(s) },
 			{ typeof(Role), r => GetRandomRole(r) },
+			{ typeof(EventSite), s => GetRandomSite<EventSite>(s) },
+			{ typeof(ActionSite), s => GetRandomSite<ActionSite>(s) },
+			{ typeof(SanctuarySite), s => GetRandomSite<SanctuarySite>(s) },
+			{ typeof(MarchSite), s => GetRandomSite<MarchSite>(s) },
+			{ typeof(OccupationSite), s => GetRandomSite<OccupationSite>(s) },
+
 		};
 
 		public static RoleSchema GetRandomRole(AccessContext context, WorkingGroup wg = null)
@@ -48,13 +66,12 @@ namespace Dodo.SharedTest
 				wg.GUID);
 		}
 
-		public static SiteSchema GetRandomSite<T>(AccessContext context, WorkingGroup wg = null)
+		public static SiteSchema GetRandomSite<T>(AccessContext context, Rebellion rb = null) where T:Site
 		{
-			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(
+			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				context,
-				GetRandomWorkinGroup(context));
-			var t = ReflectionExtensions.GetConcreteClasses<Site>().Random(); 
-			return new SiteSchema(RandomName, t.FullName, wg.GUID, RandomLocation, SampleMarkdown);
+				GetRandomRebellion(context));
+			return new SiteSchema(RandomName, typeof(T).FullName, rb.GUID, RandomLocation, SampleMarkdown);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)

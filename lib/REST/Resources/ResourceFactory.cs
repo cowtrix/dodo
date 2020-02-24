@@ -27,6 +27,10 @@ namespace Resources
 				throw new Exception(error);
 			}
 			var newResource = CreateObjectInternal(context, schema);
+			if(newResource == null)
+			{
+				throw new Exception($"Failed to create resource of type {typeof(TResult)} from schema {schema?.GetType()}");
+			}
 			if(!newResource.Verify(out error))
 			{
 				throw new Exception(error);
@@ -61,7 +65,12 @@ namespace Resources
 
 		public TResult CreateTypedObject(object context, ResourceSchemaBase schema)
 		{
-			return CreateObject(context, schema) as TResult;
+			var obj = CreateObject(context, schema);
+			if(!(obj is TResult typedObj))
+			{
+				throw new Exception($"Could not create object: Generated incorrect type {obj.GetType()}");
+			}
+			return typedObj;
 		}
 
 		public Type SchemaType => typeof(TSchema);

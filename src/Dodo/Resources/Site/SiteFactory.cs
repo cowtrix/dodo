@@ -43,27 +43,37 @@ namespace Dodo.Sites
 
 		ActionSite IResourceFactory<ActionSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
 		{
-			return CreateObject(context, schema) as ActionSite;
+			return MakeTypedSite<ActionSite>(context, schema);
 		}
 
 		EventSite IResourceFactory<EventSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
 		{
-			return CreateObject(context, schema) as EventSite;
+			return MakeTypedSite<EventSite>(context, schema);
 		}
 
 		OccupationSite IResourceFactory<OccupationSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
 		{
-			return CreateObject(context, schema) as OccupationSite;
+			return MakeTypedSite<OccupationSite>(context, schema);
 		}
 
 		SanctuarySite IResourceFactory<SanctuarySite>.CreateTypedObject(object context, ResourceSchemaBase schema)
 		{
-			return CreateObject(context, schema) as SanctuarySite;
+			return MakeTypedSite<SanctuarySite>(context, schema);
 		}
 
 		MarchSite IResourceFactory<MarchSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
 		{
-			return CreateObject(context, schema) as MarchSite;
+			return MakeTypedSite<MarchSite>(context, schema);
+		}
+
+		private T MakeTypedSite<T>(object context, ResourceSchemaBase schema) where T : Site
+		{
+			var site = CreateObject(context, schema);
+			if(!(site is T typedSite))
+			{
+				throw new Exception($"Failed to create site {typeof(T)} with schema {schema.GetType()}");
+			}
+			return typedSite;
 		}
 	}
 }
