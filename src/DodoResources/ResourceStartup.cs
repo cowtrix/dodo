@@ -35,9 +35,8 @@ namespace DodoResources
 				app.UseDeveloperExceptionPage();
                 app.UseCors(policy =>
                 {
-                    policy.WithOrigins(
-                        "*",
-                        m_authURI.Value)
+                    policy.AllowAnyOrigin()
+                    .AllowCredentials()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
                 });
