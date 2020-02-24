@@ -33,16 +33,17 @@ namespace DodoResources
             if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-                app.UseCors(policy =>
-                {
-                    policy.AllowAnyOrigin()
-                    .AllowCredentials()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
             }
 
-			app.UseRouting();
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyOrigin()
+                .AllowCredentials()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
+
+            app.UseRouting();
 
             app.UseAuthentication();
 

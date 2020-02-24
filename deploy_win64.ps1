@@ -8,8 +8,8 @@ Get-Process | Where-Object {$_.HasExited}
 # test - TODO
 # dotnet test --project test\Dodo.UnitTests\Dodo.UnitTests.csproj
 # publish
-dotnet publish --force src\DodoIdentity\DodoIdentity.csproj -o ..\build\auth
-dotnet publish --force src\DodoResources\DodoResources.csproj -o ..\build\rsc
+dotnet publish --force src\DodoIdentity\DodoIdentity.csproj -o ..\build\auth -c Debug
+dotnet publish --force src\DodoResources\DodoResources.csproj -o ..\build\rsc -c Debug
 Start-Sleep -Seconds 2
 # run
 Start-Process -FilePath ..\build\auth\DodoIdentity.exe
