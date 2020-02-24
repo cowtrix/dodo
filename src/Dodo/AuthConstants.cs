@@ -1,4 +1,4 @@
-﻿using Common.Config;
+using Common.Config;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,9 +15,8 @@ namespace Dodo
 	public static class AuthConstants
 	{
 		public const string AUTHSCHEME = "idsrv";
-		public const string GUID = "Guid";
-		public const string JWTHEADER = "Bearer";
 		public const string KEY = "AuthToken";
+		public const string Subject = "sub";
 	}
 
 	public class AuthService : IAuthorizationService

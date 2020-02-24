@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Resources.Security;
 using Dodo.Utility;
@@ -54,21 +54,6 @@ namespace Dodo.Users
 			_schemeProvider = schemeProvider;
 			_events = events;
 		}
-
-		class LoginIdentity : IIdentity
-		{
-			public string AuthenticationType => AuthConstants.GUID;
-
-			public bool IsAuthenticated => true;
-
-			public string Name { get; private set; }
-
-			public LoginIdentity(string username)
-			{
-				Name = username;
-			}
-		}
-
 
 		[HttpPost(LOGIN)]
 		[AllowAnonymous]

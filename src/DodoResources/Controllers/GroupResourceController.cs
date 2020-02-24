@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Common;
 using Common.Extensions;
 using Resources.Security;
@@ -36,7 +36,7 @@ namespace DodoResources
 			{
 				return NotFound();
 			}
-			var context = User.GetRequestOwner();
+			var context = Context;
 			if (!IsAuthorised(context, resource, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
@@ -67,7 +67,7 @@ namespace DodoResources
 		public IActionResult JoinGroup(Guid id)
 		{
 			LogRequest();
-			var context = User.GetRequestOwner();
+			var context = Context;
 			using var resourceLock = new ResourceLock(id);
 			var target = resourceLock.Value as GroupResource;
 			if (target == null)
@@ -84,7 +84,7 @@ namespace DodoResources
 		public IActionResult LeaveGroup(Guid id)
 		{
 			LogRequest();
-			var context = User.GetRequestOwner();
+			var context = Context;
 			using var resourceLock = new ResourceLock(id);
 			var target = resourceLock.Value as GroupResource;
 			if (target == null)

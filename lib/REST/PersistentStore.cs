@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
@@ -25,43 +25,43 @@ namespace Resources
 			}
 		}
 
-		IMongoCollection<Entry> m_collection;
+		public IMongoCollection<Entry> Collection;
 		public PersistentStore(string dbName, string collectionName)
 		{
-			m_collection = ResourceUtility.MongoDB.GetDatabase(dbName).GetCollection<Entry>(collectionName);
+			Collection = ResourceUtility.MongoDB.GetDatabase(dbName).GetCollection<Entry>(collectionName);
 			var indexOptions = new CreateIndexOptions();
 			var indexKeys = Builders<Entry>.IndexKeys
 				.Ascending(rsc => rsc.Key);
 			var indexModel = new CreateIndexModel<Entry>(indexKeys, indexOptions);
-			m_collection.Indexes.CreateOne(indexModel);
+			Collection.Indexes.CreateOne(indexModel);
 		}
 
 		public TValue this[TKey key]    // Indexer declaration  
 		{
 			get
 			{
-				return m_collection.Find(x => x.Key != null && x.Key.Equals(key)).First().Value;
+				return Collection.Find(x => x.Key != null && x.Key.Equals(key)).First().Value;
 			}
 			set
 			{
-				m_collection.InsertOne(new Entry(key, value));
+				Collection.InsertOne(new Entry(key, value));
 				//m_collection.ReplaceOne(x => x.Key != null && x.Key.Equals(key), new Entry(key, JsonConvert.SerializeObject(value)));
 			}
 		}
 
 		public IMongoQueryable<Entry> GetQueryable()
 		{
-			return m_collection.AsQueryable();
+			return Collection.AsQueryable();
 		}
 
 		public bool Remove(TKey key)
 		{
-			return m_collection.DeleteOne(x => x.Key.Equals(key)).IsAcknowledged;
+			return Collection.DeleteOne(x => x.Key.Equals(key)).IsAcknowledged;
 		}
 
 		public bool TryGetValue(TKey key, out TValue value)
 		{
-			var match = m_collection.Find(x => x.Key.Equals(key));
+			var match = Collection.Find(x => x.Key.Equals(key));
 			if(!match.Any())
 			{
 				value = default;

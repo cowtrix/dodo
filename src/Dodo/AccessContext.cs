@@ -1,4 +1,4 @@
-﻿using Common.Security;
+using Common.Security;
 using Dodo.Users;
 using Resources.Security;
 using System;
@@ -11,10 +11,10 @@ namespace Dodo
 		public readonly User User;
 		public readonly Passphrase Passphrase;
 
-		public AccessContext(User user, string password)
+		public AccessContext(User user, string passphrase)
 		{
 			User = user;
-			Passphrase = new Passphrase(User.AuthData.PassPhrase.GetValue(new Passphrase(password)));
+			Passphrase = new Passphrase(passphrase);
 		}
 
 		public AccessContext(User user, Passphrase passphrase)

@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Resources.Security;
 using Newtonsoft.Json;
@@ -200,7 +200,11 @@ namespace Resources
 				{
 					try
 					{
-						var subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString(), JsonExtensions.DefaultSettings);
+						var subValues = val.Value as Dictionary<string, object>;
+						if (subValues == null)
+						{
+							subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString(), JsonExtensions.DefaultSettings);
+						}
 						valueToSet = value.PatchObject(subValues, permissionLevel, requester, passphrase);
 					}
 					catch (MemberVerificationException)

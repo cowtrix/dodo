@@ -92,6 +92,9 @@ namespace RESTTests
 				case EHTTPRequestType.POST:
 					response = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
 					break;
+				case EHTTPRequestType.PATCH:
+					response = await client.PatchAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
+					break;
 				default:
 					throw new Exception("Unsupported method " + method);
 			}

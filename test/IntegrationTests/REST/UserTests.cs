@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Dodo;
 using Dodo.LocalGroups;
@@ -26,8 +26,33 @@ namespace RESTTests
 		[TestMethod]
 		public async Task CanRegisterNewUser()
 		{
-			var response = await RequestAuth("auth/users/register", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
+			var response = await RequestAuth($"{UserController.RootURL}/{UserController.REGISTER}", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
 			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
+		}
+
+		[TestMethod]
+		public async Task CanUpdateProfile()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var lg = new LocalGroupFactory().CreateObject(context, SchemaGenerator.GetRandomLocalGroup(context));
+			await Login(user.AuthData.Username, password);
+			const string newName = "My New Name";
+			var patchObj = new
+			{
+				Name = newName,
+				PersonalData = new
+				{
+					LocalGroup = new 
+					{
+						Guid = lg.GUID
+					}
+				}
+			};
+			var response = await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.PATCH, patchObj);
+			Assert.IsTrue(response.IsSuccessStatusCode);
+			user = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID == user.GUID);
+			Assert.AreEqual(newName, user.Name);
+			Assert.AreEqual(user.PersonalData.LocalGroup.Guid, lg.GUID);
 		}
 
 		[TestMethod]

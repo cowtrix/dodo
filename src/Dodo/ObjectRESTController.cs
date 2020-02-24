@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Resources.Security;
+using System.Security.Claims;
+using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace Resources
 {
@@ -30,14 +33,18 @@ namespace Resources
 		{
 			get
 			{
-				if(User.Identity == null || !User.Identity.IsAuthenticated)
+				if (User.Identity == null || !User.Identity.IsAuthenticated)
 				{
 					return default;
 				}
-				var username = Guid.Parse(User.Identity.Name);
-				var user = UserManager.GetSingle(x => x.GUID == username);
-				var key = "";
-				if(!TemporaryTokenManager.CheckToken(key, out var passphrase))
+				if (!(User.Identity is ClaimsIdentity claimsID))
+				{
+					return default;
+				}
+				var userGuid = Guid.Parse(claimsID.FindFirst(AuthConstants.Subject).Value);
+				var user = UserManager.GetSingle(x => x.GUID == userGuid);
+				var key = claimsID.FindFirst(AuthConstants.KEY).Value;
+				if (!TemporaryTokenManager.CheckToken(key, out var passphrase))
 				{
 					return default;
 				}
@@ -97,7 +104,7 @@ namespace Resources
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
 			LogRequest();
-			
+
 			if (!IsAuthorised(Context, null, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
@@ -117,7 +124,7 @@ namespace Resources
 		}
 
 		[HttpPatch("{id}")]
-		public virtual async Task<IActionResult> Update(Guid id, [FromBody]Dictionary<string, object> values)
+		public virtual async Task<IActionResult> Update(Guid id, [FromBody]Dictionary<string, JsonElement> rawValues)
 		{
 			LogRequest();
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
@@ -129,6 +136,26 @@ namespace Resources
 			{
 				return Forbid();
 			}
+
+			Dictionary<string, object> Flatten(Dictionary<string, JsonElement> jsonDict)
+			{
+				var result = new Dictionary<string, object>();
+				foreach (var sub in jsonDict)
+				{
+					if (sub.Value.ValueKind == JsonValueKind.Object)
+					{
+						result[sub.Key] =
+							Flatten(System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(sub.Value.GetRawText()));
+					}
+					else
+					{
+						result[sub.Key] = sub.Value.GetString();
+					}
+				}
+				return result;
+			}
+
+			var context = Context;
 			using (var resourceLock = new ResourceLock(target))
 			{
 				target = resourceLock.Value as T;
@@ -136,7 +163,7 @@ namespace Resources
 				{
 					return NotFound();
 				}
-				//var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(Request.ReadBody());
+				var values = Flatten(rawValues);
 				if (values == null)
 				{
 					return BadRequest("Invalid JSON body");
@@ -146,7 +173,7 @@ namespace Resources
 					TypeNameHandling = TypeNameHandling.All
 				};
 				var prev = JsonConvert.SerializeObject(target, jsonSettings);
-				target.PatchObject(values, permissionLevel, Context.User, Context.Passphrase);
+				target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
 				ResourceManager.Update(target, resourceLock);
 			}
 			return Ok(target.GenerateJsonView(permissionLevel, Context.User, Context.Passphrase));
