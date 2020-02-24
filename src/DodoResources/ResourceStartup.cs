@@ -38,7 +38,6 @@ namespace DodoResources
             app.UseCors(policy =>
             {
                 policy.AllowAnyOrigin()
-                .AllowCredentials()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
             });
