@@ -1,5 +1,5 @@
 import React from "react";
-import { Map } from '../components'
+import { Map } from '../../components/index'
 
 export const RebellionMap = () =>
 	<Map
