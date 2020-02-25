@@ -15,12 +15,15 @@ using System.Text.RegularExpressions;
 
 namespace Resources
 {
-	[Route("api/identity")]
+	[Route("api")]
 	public class RouteInfoController : Controller
 	{
 		private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
-
-		static string TableStyle => System.IO.File.ReadAllText(Path.Combine("Resources", "EmbeddedCss.css"));
+#if DEBUG
+		static string TableStyle => System.IO.File.ReadAllText(Path.Combine(@"..\..\resources", "EmbeddedCss.css"));
+#else
+		static string TableStyle => System.IO.File.ReadAllText(Path.Combine("resources", "EmbeddedCss.css"));
+#endif
 
 		List<Type> m_documentedTypes = new List<Type>()
 		{
@@ -40,6 +43,7 @@ namespace Resources
 			{
 				"Name",
 				"URI",
+				//"Action",
 				"Method(s)",
 				"Parameters"
 			});

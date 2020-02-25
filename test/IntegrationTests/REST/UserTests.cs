@@ -26,7 +26,7 @@ namespace RESTTests
 		[TestMethod]
 		public async Task CanRegisterNewUser()
 		{
-			var response = await RequestAuth($"{UserController.RootURL}/{UserController.REGISTER}", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
+			var response = await Request($"{UserController.RootURL}/{UserController.REGISTER}", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
 			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
 		}
 
@@ -48,7 +48,7 @@ namespace RESTTests
 					}
 				}
 			};
-			var response = await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.PATCH, patchObj);
+			var response = await Request($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.PATCH, patchObj);
 			Assert.IsTrue(response.IsSuccessStatusCode);
 			user = ResourceUtility.GetManager<User>().GetSingle(x => x.GUID == user.GUID);
 			Assert.AreEqual(newName, user.Name);
@@ -61,7 +61,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out _);
 			await Login(user.AuthData.Username, password);
 			await Authorize(user.AuthData.Username, password, $"{UserController.RootURL}/{user.GUID}"); // Not actually necessary for the next step to succeed???
-			await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
+			await Request($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
 		}
 
 		[TestMethod]
@@ -69,7 +69,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out _);
 			await Login(user.AuthData.Username, password);
-			await RequestAuth($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
+			await Request($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
 		}
 
 		[TestMethod]

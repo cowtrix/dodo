@@ -1,4 +1,5 @@
 ﻿using Common.Security;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,9 +16,12 @@ namespace Resources.Security
 	{
 		private class InnerToken
 		{
+			[BsonElement]
 			public string Value;
-			public TimeSpan Timeout;
-			public DateTime CreationDate;
+			[BsonElement]
+			public long Timeout;
+			[BsonElement]
+			public long CreationDate;
 		}
 
 		private static PersistentStore<string, InnerToken> m_tokens = new PersistentStore<string, InnerToken>("auth", "temptokens");
@@ -32,7 +36,7 @@ namespace Resources.Security
 				while (true)
 				{
 					await Task.Delay(TimeSpan.FromMinutes(1));
-					var now = DateTime.Now;
+					var now = DateTime.Now.Ticks;
 					/*var outdatedTokens = m_tokens.GetQueryable().Where(val => val.Value.CreationDate < now - val.Value.Timeout).ToList();
 					foreach(var r in outdatedTokens)
 					{
@@ -56,9 +60,9 @@ namespace Resources.Security
 			key = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 			m_tokens[key] = new InnerToken()
 			{
-				CreationDate = DateTime.Now,
+				CreationDate = DateTime.Now.Ticks,
 				Value = token,
-				Timeout = timeout.Value,
+				Timeout = timeout.Value.Ticks,
 			};
 		}
 

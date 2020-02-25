@@ -11,7 +11,6 @@ using SharedTest;
 using Common.Extensions;
 using System.Text;
 using IdentityModel.Client;
-using DodoResources;
 using System.Collections.Generic;
 using System.Linq;
 using Dodo.Users;
@@ -21,6 +20,7 @@ using static IdentityModel.OidcConstants;
 using Resources.Security;
 using Common.Security;
 using IdentityModel;
+using DodoServer;
 
 namespace RESTTests
 {
@@ -29,29 +29,24 @@ namespace RESTTests
 
 	public abstract class IntegrationTestBase : TestBase
 	{
-		protected string AuthURL => "https://0.0.0.0:6000";
+		protected string URL => DodoServer.DodoServer.HttpsUrl;
 
-		private readonly TestServer m_resourceServer;
-		private readonly TestServer m_authServer;
-		private readonly HttpClient m_resourceClient;
-		private readonly HttpClient m_authClient;
+		private readonly TestServer m_server;
+		private readonly HttpClient m_client;
 		protected CookieContainer m_cookies;
 
 		public IntegrationTestBase()
 		{
 			m_cookies = new CookieContainer();	
-			m_authServer = new TestServer(new WebHostBuilder()
-				.UseStartup<DodoIdentity.IdentityStartup>());
-			m_resourceServer = new TestServer(new WebHostBuilder()
-				.UseStartup<DodoResources.ResourceStartup>());
+			m_server = new TestServer(new WebHostBuilder()
+				.UseStartup<DodoServer.DodoStartup>());
 
-			m_resourceClient = m_resourceServer.CreateClient();
-			m_authClient = m_authServer.CreateClient();
+			m_client = m_server.CreateClient();
 		}
 
 		protected async Task<JObject> RequestJSON(string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
 		{
-			var response = await Request(m_resourceClient, url, method, data, parameters);
+			var response = await Request(url, method, data, parameters);
 			var content = await response.Content.ReadAsStringAsync();
 			Assert.IsTrue(content.IsValidJson(),
 				$"Invalid JSON: {response.StatusCode} | {response.ReasonPhrase} | {content}");
@@ -60,24 +55,14 @@ namespace RESTTests
 
 		protected async Task<T> RequestJSON<T>(string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
 		{
-			var response = await Request(m_resourceClient, url, method, data, parameters);
+			var response = await Request(url, method, data, parameters);
 			var content = await response.Content.ReadAsStringAsync();
 			Assert.IsTrue(content.IsValidJson(),
 				$"Invalid JSON: {response.StatusCode} | {response.ReasonPhrase} | {content}");
 			return JsonConvert.DeserializeObject<T>(content);
 		}
 
-		protected async Task<HttpResponseMessage> RequestAuth(string url, EHTTPRequestType method, object data = null)
-		{
-			return await Request(m_authClient, url, method, data);
-		}
-
-		protected async Task<HttpResponseMessage> RequestResource(string url, EHTTPRequestType method, object data = null)
-		{
-			return await Request(m_resourceClient, url, method, data);
-		}
-
-		private static async Task<HttpResponseMessage> Request(HttpClient client, string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
+		protected async Task<HttpResponseMessage> Request(string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
 		{
 			if (parameters != null && parameters.Any())
 			{
@@ -87,13 +72,13 @@ namespace RESTTests
 			switch (method)
 			{
 				case EHTTPRequestType.GET:
-					response = await client.GetAsync(url);
+					response = await m_client.GetAsync(url);
 					break;
 				case EHTTPRequestType.POST:
-					response = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
+					response = await m_client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
 					break;
 				case EHTTPRequestType.PATCH:
-					response = await client.PatchAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
+					response = await m_client.PatchAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
 					break;
 				default:
 					throw new Exception("Unsupported method " + method);
@@ -107,7 +92,7 @@ namespace RESTTests
 
 		protected async Task Login(string username, string password)
 		{
-			var response = await m_authClient.PostAsync($"{UserController.RootURL}/{UserController.LOGIN}",
+			var response = await m_client.PostAsync($"{UserController.RootURL}/{UserController.LOGIN}",
 				new StringContent(JsonConvert.SerializeObject(new UserController.LoginModel { username = username, password = password }), 
 				Encoding.UTF8, "application/json"));
 			if (!response.IsSuccessStatusCode)
@@ -115,30 +100,29 @@ namespace RESTTests
 				throw new Exception(response.ToString());
 			}
 			var cookie = response.Headers.GetValues("Set-Cookie");
-			m_authClient.DefaultRequestHeaders.Add("cookie", cookie);
-			m_resourceClient.DefaultRequestHeaders.Add("cookie", cookie);
+			m_client.DefaultRequestHeaders.Add("cookie", cookie);
 		}
 
 		protected async Task<string> Authorize(string username, string password, string url)
 		{
-			var disco = await m_authClient.GetDiscoveryDocumentAsync();
+			var disco = await m_client.GetDiscoveryDocumentAsync();
 			Assert.IsFalse(disco.IsError, disco.Error);
 
 			var scope = "api1";
-			var audience = m_authClient.BaseAddress;
+			var audience = m_client.BaseAddress;
 			var responsetype = "code";
 			var clientId = "spa";
-			url = AuthURL;
+			url = URL;
 
 			/*var fullUri = $"{disco.AuthorizeEndpoint}?scope={scope}&audience={audience}&response_type={responsetype}&client_id={clientId}&redirect_uri={url}&code=test";
 
 			var response = await m_authClient.GetAsync(fullUri);*/
-			var response = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
+			var response = await m_client.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
 			{
 				Address = disco.AuthorizeEndpoint,
 				ClientId = clientId,
 				Code = KeyGenerator.GetUniqueKey(128),
-				RedirectUri = AuthURL,
+				RedirectUri = URL,
 				GrantType = GrantTypes.AuthorizationCode,
 				Parameters = 
 				{
@@ -175,7 +159,7 @@ namespace RESTTests
 				throw new Exception(tokenResponse.Error);
 			}
 			
-			var authorizeRequest = await m_authClient.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
+			var authorizeRequest = await m_authClient.RequestorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
 			{
 				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
 				ClientId = "spa",
