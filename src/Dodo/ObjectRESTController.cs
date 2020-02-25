@@ -28,84 +28,28 @@ namespace Resources
 		where TSchema : DodoResourceSchemaBase
 	{
 		private DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
-
-		protected AccessContext Context
+		protected virtual AuthorizationManager<T> AuthManager 
 		{
 			get
 			{
-				if (User.Identity == null || !User.Identity.IsAuthenticated)
+				if(m_defaultHander == null)
 				{
-					return default;
+					m_defaultHander = new AuthorizationManager<T>();
 				}
-				if (!(User.Identity is ClaimsIdentity claimsID))
-				{
-					return default;
-				}
-				var userGuid = Guid.Parse(claimsID.FindFirst(AuthConstants.Subject).Value);
-				var user = UserManager.GetSingle(x => x.GUID == userGuid);
-				var key = claimsID.FindFirst(AuthConstants.KEY).Value;
-				if (!TemporaryTokenManager.CheckToken(key, out var passphrase))
-				{
-					return default;
-				}
-				return new AccessContext(user, passphrase);
-			}
+				return m_defaultHander;
+			} 
 		}
-
+		private AuthorizationManager<T> m_defaultHander;
+		
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
-
-		protected bool IsAuthorised(AccessContext Context, T target, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
-		{
-			if (target != null && !(target is T))
-			{
-				permissionLevel = EPermissionLevel.PUBLIC;
-				return false;
-			}
-			if (target != null && Context.User == null)
-			{
-				permissionLevel = EPermissionLevel.PUBLIC;
-				if (requestType != EHTTPRequestType.GET)
-				{
-					return false; // Deny if not logged in and trying to do more than just fetch
-				}
-				return true; // If it's just GET then return a public view
-			}
-			if (target == null)
-			{
-				if (Context.User != null)
-				{
-					if (typeof(T) == typeof(User) && requestType == EHTTPRequestType.POST)
-					{
-						// Special case, unregistered requesters can create new users
-						permissionLevel = EPermissionLevel.OWNER;  // User is owner
-						return true;
-					}
-					else if (requestType != EHTTPRequestType.GET)
-					{
-						permissionLevel = EPermissionLevel.PUBLIC;  // Requester not logged in, they can't make or patch stuff
-						return false;
-					}
-					permissionLevel = EPermissionLevel.PUBLIC;
-					return true;
-				}
-				else if (requestType == EHTTPRequestType.POST)
-				{
-					permissionLevel = EPermissionLevel.OWNER;
-					return true;
-				}
-				permissionLevel = EPermissionLevel.PUBLIC;
-				return true;
-			}
-			return target.IsAuthorised(Context, requestType, out permissionLevel);
-		}
 
 		public abstract Task<IActionResult> Create([FromBody] TSchema schema);
 
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
 			LogRequest();
-
-			if (!IsAuthorised(Context, null, Request.MethodEnum(), out var permissionLevel))
+			var context = User.GetContext();
+			if (!AuthManager.IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
@@ -113,14 +57,14 @@ namespace Resources
 			T createdObject;
 			try
 			{
-				createdObject = factory.CreateObject(Context, schema) as T;
-				OnCreation(Context, createdObject);
+				createdObject = factory.CreateObject(context, schema) as T;
+				OnCreation(context, createdObject);
 			}
 			catch (Exception e)
 			{
 				return BadRequest($"Failed to deserialise JSON: {e.Message}");
 			}
-			return Ok(createdObject.GenerateJsonView(permissionLevel, Context.User, Context.Passphrase));
+			return Ok(createdObject.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
 		}
 
 		[HttpPatch("{id}")]
@@ -132,7 +76,8 @@ namespace Resources
 			{
 				return NotFound();
 			}
-			if (!IsAuthorised(Context, target, Request.MethodEnum(), out var permissionLevel))
+			var context = User.GetContext();
+			if (!AuthManager.IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
@@ -155,7 +100,6 @@ namespace Resources
 				return result;
 			}
 
-			var context = Context;
 			using (var resourceLock = new ResourceLock(target))
 			{
 				target = resourceLock.Value as T;
@@ -176,7 +120,7 @@ namespace Resources
 				target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
 				ResourceManager.Update(target, resourceLock);
 			}
-			return Ok(target.GenerateJsonView(permissionLevel, Context.User, Context.Passphrase));
+			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
 		}
 
 		[HttpDelete("{id}")]
@@ -184,11 +128,12 @@ namespace Resources
 		{
 			LogRequest();
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
+			var context = User.GetContext();
 			if (target == null)
 			{
 				return NotFound();
 			}
-			if (!IsAuthorised(Context, target, Request.MethodEnum(), out _))
+			if (!AuthManager.IsAuthorised(context, target, Request.MethodEnum(), out _))
 			{
 				return Forbid();
 			}

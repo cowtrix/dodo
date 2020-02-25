@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Dodo.Resources;
 using Resources;
 using Resources.Serializers;
@@ -12,6 +12,8 @@ namespace Dodo.Roles
 	{
 		public Guid Parent { get; set; }
 		public string PublicDescription { get; set; }
+
+		public RoleSchema() { }
 
 		public RoleSchema(string name, string publicDescription, Guid parent) : base(name)
 		{

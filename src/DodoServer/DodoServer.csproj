@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\..\lib\IdentityServer4\src\IdentityServer4\src\IdentityServer4.csproj" />
 	<ProjectReference Include="..\Dodo\Dodo.csproj" />
   </ItemGroup>
 

@@ -36,8 +36,8 @@ namespace DodoResources
 			{
 				return NotFound();
 			}
-			var context = Context;
-			if (!IsAuthorised(context, resource, Request.MethodEnum(), out var permissionLevel))
+			var context = User.GetContext();
+			if (!AuthManager.IsAuthorised(context, resource, Request.MethodEnum(), out var permissionLevel))
 			{
 				return Forbid();
 			}
@@ -67,13 +67,18 @@ namespace DodoResources
 		public IActionResult JoinGroup(Guid id)
 		{
 			LogRequest();
-			var context = Context;
-			using var resourceLock = new ResourceLock(id);
-			var target = resourceLock.Value as GroupResource;
+			var context = User.GetContext();
+			var target = ResourceManager.GetSingle(x => x.GUID == id);
 			if (target == null)
 			{
 				return NotFound();
 			}
+			if (!AuthManager.IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
+			{
+				return Forbid();
+			}
+			using var resourceLock = new ResourceLock(id);
+			target = resourceLock.Value as T;
 			target.Members.Add(context.User, context.Passphrase);
 			ResourceManager.Update(target, resourceLock);
 			return Ok();
@@ -84,13 +89,18 @@ namespace DodoResources
 		public IActionResult LeaveGroup(Guid id)
 		{
 			LogRequest();
-			var context = Context;
-			using var resourceLock = new ResourceLock(id);
-			var target = resourceLock.Value as GroupResource;
+			var context = User.GetContext();
+			var target = ResourceManager.GetSingle(x => x.GUID == id);
 			if (target == null)
 			{
 				return NotFound();
 			}
+			if (!AuthManager.IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
+			{
+				return Forbid();
+			}
+			using var resourceLock = new ResourceLock(id);
+			target = resourceLock.Value as T;
 			target.Members.Remove(context.User, context.Passphrase);
 			ResourceManager.Update(target, resourceLock);
 			return Ok();

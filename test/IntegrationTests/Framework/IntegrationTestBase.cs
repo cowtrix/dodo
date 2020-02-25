@@ -24,9 +24,6 @@ using DodoServer;
 
 namespace RESTTests
 {
-
-
-
 	public abstract class IntegrationTestBase : TestBase
 	{
 		protected string URL => DodoServer.DodoServer.HttpsUrl;
@@ -101,76 +98,6 @@ namespace RESTTests
 			}
 			var cookie = response.Headers.GetValues("Set-Cookie");
 			m_client.DefaultRequestHeaders.Add("cookie", cookie);
-		}
-
-		protected async Task<string> Authorize(string username, string password, string url)
-		{
-			var disco = await m_client.GetDiscoveryDocumentAsync();
-			Assert.IsFalse(disco.IsError, disco.Error);
-
-			var scope = "api1";
-			var audience = m_client.BaseAddress;
-			var responsetype = "code";
-			var clientId = "spa";
-			url = URL;
-
-			/*var fullUri = $"{disco.AuthorizeEndpoint}?scope={scope}&audience={audience}&response_type={responsetype}&client_id={clientId}&redirect_uri={url}&code=test";
-
-			var response = await m_authClient.GetAsync(fullUri);*/
-			var response = await m_client.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
-			{
-				Address = disco.AuthorizeEndpoint,
-				ClientId = clientId,
-				Code = KeyGenerator.GetUniqueKey(128),
-				RedirectUri = URL,
-				GrantType = GrantTypes.AuthorizationCode,
-				Parameters = 
-				{
-					{ OidcConstants.AuthorizeRequest.ResponseType, OidcConstants.ResponseTypes.Code },
-					{ OidcConstants.AuthorizeRequest.CodeChallenge, KeyGenerator.GetUniqueKey(128) },
-					{ OidcConstants.AuthorizeRequest.CodeChallengeMethod, OidcConstants.CodeChallengeMethods.Sha256 },
-					{ OidcConstants.AuthorizeRequest.Scope, "api1" },
-				}
-			});
-			if(response.HttpStatusCode != HttpStatusCode.Redirect)
-			{
-				throw new Exception(response.Error);
-			}
-			
-			return response.HttpResponse.Headers.GetValues("Location").First();
-
-			/*var response = await m_authClient.RequestTokenAsync(new TokenRequest()
-			{
-				RequestUri = new Uri(m_authClient.BaseAddress, "connect/authorize"),
-				ClientId = "spa",
-				GrantType = "authorization_code",
-				
-			});
-
-			/*var tokenResponse = await m_authClient.RequestPasswordTokenAsync(new PasswordTokenRequest
-			{
-				Address = disco.TokenEndpoint,
-				ClientId = "spa",
-				UserName = username,
-				Password = password
-			});
-			if (tokenResponse.IsError)
-			{
-				throw new Exception(tokenResponse.Error);
-			}
-			
-			var authorizeRequest = await m_authClient.RequestorizationCodeTokenAsync(new AuthorizationCodeTokenRequest()
-			{
-				RequestUri = new Uri(m_resourceClient.BaseAddress + url),
-				ClientId = "spa",
-				Code = tokenResponse.AccessToken,
-			});
-			if (authorizeRequest.IsError)
-			{
-				throw new Exception(authorizeRequest.Error);
-			}
-
-			m_resourceClient.SetBearerToken(authorizeRequest.AccessToken);*/
 		}
 	}
 }

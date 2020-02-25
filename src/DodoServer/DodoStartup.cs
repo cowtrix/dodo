@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using IdentityServer4;
 using System;
 
 namespace DodoServer
@@ -29,20 +27,21 @@ namespace DodoServer
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
-			var builder = services.AddIdentityServer(config =>
+			/*var builder = services.AddIdentityServer(config =>
 			{
 				config.UserInteraction.LoginUrl = $"/{UserController.RootURL}/{UserController.LOGIN}";
 			})
 				.AddInMemoryIdentityResources(Config.Ids)
 				.AddInMemoryApiResources(Config.Apis)
-				.AddInMemoryClients(Config.Clients);
+				.AddInMemoryClients(Config.Clients);*/
 
-			builder.AddDeveloperSigningCredential();
+			//builder.AddDeveloperSigningCredential();
 
 			services.AddAuthentication(config =>
 			{
+				config.DefaultAuthenticateScheme = AuthConstants.AUTHSCHEME;
 			})
-				.AddCookie(config =>
+				.AddCookie(AuthConstants.AUTHSCHEME, config =>
 				{
 					config.LogoutPath = $"/{UserController.RootURL}/{UserController.LOGOUT}";
 					config.LoginPath = $"/{UserController.RootURL}/{UserController.LOGIN}";
@@ -65,7 +64,7 @@ namespace DodoServer
 			app.UseCors();
 			app.UseRouting();
 			app.UseStaticFiles();
-			app.UseIdentityServer();
+			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
 			{
