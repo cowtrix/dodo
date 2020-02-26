@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Resources.Security;
 using Dodo.Rebellions;
@@ -89,11 +89,6 @@ namespace Dodo.Sites
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();
-		}
-
-		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
-		{
-			return Parent.GetValue().IsAuthorised(context, requestType, out permissionLevel);
 		}
 
 		public override bool CanContain(Type type)

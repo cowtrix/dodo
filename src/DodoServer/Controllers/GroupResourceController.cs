@@ -28,22 +28,12 @@ namespace DodoResources
 
 		[HttpPost("{id}/" + ADD_ADMIN)]
 		[Authorize]
-		public IActionResult AddAdministrator(Guid resourceID, [FromBody]string newAdminIdentifier)
+		public IActionResult AddAdministrator(Guid id, [FromBody]string newAdminIdentifier)
 		{
-			LogRequest();
-			var resource = ResourceManager.GetSingle(x => x.GUID == resourceID);
-			if (resource == null)
+			var req = VerifyRequest(id);
+			if (!req.IsSuccess)
 			{
-				return NotFound();
-			}
-			var context = User.GetContext();
-			if (!AuthManager.IsAuthorised(context, resource, Request.MethodEnum(), out var permissionLevel))
-			{
-				return Forbid();
-			}
-			if (permissionLevel < EPermissionLevel.ADMIN)
-			{
-				return Unauthorized();
+				return req.Error;
 			}
 			var userManager = ResourceUtility.GetManager<User>();
 			User targetUser = null;
@@ -55,7 +45,8 @@ namespace DodoResources
 			{
 				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier);
 			}
-			if(resource.AddAdmin(context, targetUser))
+			var resource = req.Resource as T;
+			if(resource.AddAdmin(req.Requester, targetUser))
 			{
 				return Ok();
 			}
@@ -66,20 +57,14 @@ namespace DodoResources
 		[Authorize]
 		public IActionResult JoinGroup(Guid id)
 		{
-			LogRequest();
-			var context = User.GetContext();
-			var target = ResourceManager.GetSingle(x => x.GUID == id);
-			if (target == null)
+			var req = VerifyRequest(id);
+			if (!req.IsSuccess)
 			{
-				return NotFound();
-			}
-			if (!AuthManager.IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
-			{
-				return Forbid();
+				return req.Error;
 			}
 			using var resourceLock = new ResourceLock(id);
-			target = resourceLock.Value as T;
-			target.Members.Add(context.User, context.Passphrase);
+			var target = resourceLock.Value as T;
+			target.Members.Add(req.Requester.User, req.Requester.Passphrase);
 			ResourceManager.Update(target, resourceLock);
 			return Ok();
 		}
@@ -88,20 +73,14 @@ namespace DodoResources
 		[Authorize]
 		public IActionResult LeaveGroup(Guid id)
 		{
-			LogRequest();
-			var context = User.GetContext();
-			var target = ResourceManager.GetSingle(x => x.GUID == id);
-			if (target == null)
+			var req = VerifyRequest(id);
+			if (!req.IsSuccess)
 			{
-				return NotFound();
-			}
-			if (!AuthManager.IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
-			{
-				return Forbid();
+				return req.Error;
 			}
 			using var resourceLock = new ResourceLock(id);
-			target = resourceLock.Value as T;
-			target.Members.Remove(context.User, context.Passphrase);
+			var target = resourceLock.Value as T;
+			target.Members.Remove(req.Requester.User, req.Requester.Passphrase);
 			ResourceManager.Update(target, resourceLock);
 			return Ok();
 		}
@@ -111,7 +90,11 @@ namespace DodoResources
 		public virtual async Task<IActionResult> IndexInternal(
 			[FromQuery]DistanceFilter locationFilter, [FromQuery]DateFilter dateFilter)
 		{
-			LogRequest();
+			var req = VerifyRequest();
+			if (!req.IsSuccess)
+			{
+				return req.Error;
+			}
 			try
 			{
 				var allrsc = ResourceManager.Get(x => true).ToList();

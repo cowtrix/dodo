@@ -1,53 +1,67 @@
 using Dodo.Users;
+using Microsoft.AspNetCore.Mvc;
 using Resources;
 
 namespace Dodo
 {
 	public class AuthorizationManager<T> where T: IDodoResource
 	{
-		public bool IsAuthorised(AccessContext Context, T target, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
+		public virtual ResourceRequest IsAuthorised(AccessContext context, T target, EHTTPRequestType requestType)
 		{
 			if (target != null && !(target is T))
 			{
-				permissionLevel = EPermissionLevel.PUBLIC;
-				return false;
+				return new ResourceRequest(new BadRequestResult());
 			}
-			if (target != null && Context.User == null)
+			
+			if(context.User == null)
 			{
-				permissionLevel = EPermissionLevel.PUBLIC;
-				if (requestType != EHTTPRequestType.GET)
-				{
-					return false; // Deny if not logged in and trying to do more than just fetch
-				}
-				return true; // If it's just GET then return a public view
+				return IsAuthorisedAnon(context, target, requestType);
 			}
-			if (target == null)
+			
+			switch(requestType)
 			{
-				if (Context.User == null)
-				{
-					if (typeof(T) == typeof(User) && requestType == EHTTPRequestType.POST)
-					{
-						// Special case, unregistered requesters can create new users
-						permissionLevel = EPermissionLevel.OWNER;  // User is owner
-						return true;
-					}
-					else if (requestType != EHTTPRequestType.GET)
-					{
-						permissionLevel = EPermissionLevel.PUBLIC;  // Requester not logged in, they can't make or patch stuff
-						return false;
-					}
-					permissionLevel = EPermissionLevel.PUBLIC;
-					return true;
-				}
-				else if (requestType == EHTTPRequestType.POST)
-				{
-					permissionLevel = EPermissionLevel.OWNER;
-					return true;
-				}
-				permissionLevel = EPermissionLevel.PUBLIC;
-				return true;
+				case EHTTPRequestType.GET:
+					return CanGet(context, target, requestType);
+				case EHTTPRequestType.POST:
+					return CanCreate(context, target, requestType);
+				case EHTTPRequestType.PATCH:
+					return CanEdit(context, target, requestType);
+				case EHTTPRequestType.DELETE:
+					return CanDelete(context, target, requestType);
+				default:
+					throw new System.Exception("Unexpected switch result");
 			}
-			return target.IsAuthorised(Context, requestType, out permissionLevel);
+		}
+
+		protected virtual ResourceRequest CanGet(AccessContext context, T target, EHTTPRequestType requestType)
+		{
+			return new ResourceRequest(context, target, requestType, EPermissionLevel.PUBLIC);
+		}
+
+		protected virtual ResourceRequest CanDelete(AccessContext context, T target, EHTTPRequestType requestType)
+		{
+			return new ResourceRequest(new UnauthorizedResult());
+		}
+
+		protected virtual ResourceRequest CanEdit(AccessContext context, T target, EHTTPRequestType requestType)
+		{
+			return new ResourceRequest(new UnauthorizedResult());
+		}
+
+		protected virtual ResourceRequest CanCreate(AccessContext context, T target, EHTTPRequestType requestType)
+		{
+			return new ResourceRequest(new UnauthorizedResult());
+		}
+
+		protected virtual ResourceRequest IsAuthorisedAnon(AccessContext context, T target, EHTTPRequestType requestType)
+		{
+			if(requestType == EHTTPRequestType.GET)
+			{
+				// If it's just GET then return a public view
+				return new ResourceRequest(context, target, requestType, EPermissionLevel.PUBLIC);
+			}
+			// Deny everything else
+			return new ResourceRequest(new ForbidResult());
 		}
 	}
 }

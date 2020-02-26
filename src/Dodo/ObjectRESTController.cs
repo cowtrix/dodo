@@ -28,18 +28,7 @@ namespace Resources
 		where TSchema : DodoResourceSchemaBase
 	{
 		private DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
-		protected virtual AuthorizationManager<T> AuthManager 
-		{
-			get
-			{
-				if(m_defaultHander == null)
-				{
-					m_defaultHander = new AuthorizationManager<T>();
-				}
-				return m_defaultHander;
-			} 
-		}
-		private AuthorizationManager<T> m_defaultHander;
+		protected virtual AuthorizationManager<T> AuthManager => new AuthorizationManager<T>();
 		
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
@@ -47,39 +36,32 @@ namespace Resources
 
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
-			LogRequest();
-			var context = User.GetContext();
-			if (!AuthManager.IsAuthorised(context, null, Request.MethodEnum(), out var permissionLevel))
+			var req = VerifyRequest();
+			if (!req.IsSuccess)
 			{
-				return Forbid();
+				return req.Error;
 			}
 			var factory = ResourceUtility.GetFactory<T>();
 			T createdObject;
 			try
 			{
-				createdObject = factory.CreateObject(context, schema) as T;
-				OnCreation(context, createdObject);
+				createdObject = factory.CreateObject(req.Requester, schema) as T;
+				OnCreation(req.Requester, createdObject);
 			}
 			catch (Exception e)
 			{
 				return BadRequest($"Failed to deserialise JSON: {e.Message}");
 			}
-			return Ok(createdObject.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
+			return Ok(createdObject.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 		}
 
 		[HttpPatch("{id}")]
 		public virtual async Task<IActionResult> Update(Guid id, [FromBody]Dictionary<string, JsonElement> rawValues)
 		{
-			LogRequest();
-			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
-			if (target == null)
+			var req = VerifyRequest(id);
+			if(!req.IsSuccess)
 			{
-				return NotFound();
-			}
-			var context = User.GetContext();
-			if (!AuthManager.IsAuthorised(context, target, Request.MethodEnum(), out var permissionLevel))
-			{
-				return Forbid();
+				return req.Error;
 			}
 
 			Dictionary<string, object> Flatten(Dictionary<string, JsonElement> jsonDict)
@@ -100,7 +82,8 @@ namespace Resources
 				return result;
 			}
 
-			using (var resourceLock = new ResourceLock(target))
+			T target;
+			using (var resourceLock = new ResourceLock(req.Resource))
 			{
 				target = resourceLock.Value as T;
 				if (target == null)
@@ -117,40 +100,33 @@ namespace Resources
 					TypeNameHandling = TypeNameHandling.All
 				};
 				var prev = JsonConvert.SerializeObject(target, jsonSettings);
-				target.PatchObject(values, permissionLevel, context.User, context.Passphrase);
+				target.PatchObject(values, req.PermissionLevel, req.Requester.User, req.Requester.Passphrase);
 				ResourceManager.Update(target, resourceLock);
 			}
-			return Ok(target.GenerateJsonView(permissionLevel, context.User, context.Passphrase));
+			return Ok(target.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 		}
 
 		[HttpDelete("{id}")]
 		public virtual async Task<IActionResult> Delete(Guid id)
 		{
-			LogRequest();
-			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
-			var context = User.GetContext();
-			if (target == null)
+			var req = VerifyRequest(id);
+			if (!req.IsSuccess)
 			{
-				return NotFound();
+				return req.Error;
 			}
-			if (!AuthManager.IsAuthorised(context, target, Request.MethodEnum(), out _))
-			{
-				return Forbid();
-			}
-			ResourceManager.Delete(target);
+			ResourceManager.Delete(req.Resource as T);
 			return Ok("Resource deleted");
 		}
 
 		[HttpGet("{id}")]
 		public virtual async Task<IActionResult> Get(Guid id)
 		{
-			LogRequest();
-			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
-			if (target == null)
+			var req = VerifyRequest(id);
+			if (!req.IsSuccess)
 			{
-				return NotFound();
+				return req.Error;
 			}
-			return Ok(target.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
+			return Ok(req.Resource.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
 		}
 
 		protected void LogRequest()
@@ -160,6 +136,18 @@ namespace Resources
 
 		protected virtual void OnCreation(AccessContext Context, T user)
 		{
+		}
+
+		protected ResourceRequest VerifyRequest(Guid id = default)
+		{
+			LogRequest();
+			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
+			if (target == null)
+			{
+				return new ResourceRequest(NotFound());
+			}
+			var context = User.GetContext();
+			return AuthManager.IsAuthorised(context, target, Request.MethodEnum());
 		}
 	}
 }

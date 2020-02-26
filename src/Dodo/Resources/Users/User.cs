@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Common.Extensions;
 using Resources.Security;
@@ -35,17 +35,6 @@ namespace Dodo.Users
 		{
 			AuthData = new AuthorizationData(schema.Username, schema.Password);
 			PersonalData.Email = schema.Email;
-		}
-
-		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
-		{
-			if(context.User.GUID == GUID)
-			{
-				permissionLevel = EPermissionLevel.OWNER;
-				return true;
-			}
-			permissionLevel = EPermissionLevel.PUBLIC;
-			return false;
 		}
 
 		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)

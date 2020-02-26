@@ -1,4 +1,4 @@
-﻿using Resources.Security;
+using Resources.Security;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
 using Resources;
@@ -9,7 +9,6 @@ namespace Dodo
 	public interface IDodoResource : IRESTResource
 	{
 		ResourceReference<User> Creator { get; }
-		bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel);
 	}
 
 	public class DodoResourceSchemaBase : ResourceSchemaBase
@@ -28,6 +27,5 @@ namespace Dodo
 		}
 		[View(EPermissionLevel.ADMIN)]
 		public ResourceReference<User> Creator { get; private set; }
-		public abstract bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel);
 	}
 }

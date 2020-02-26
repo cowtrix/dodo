@@ -11,6 +11,7 @@ using System.Security.Claims;
 
 namespace Dodo.Users
 {
+
 	[SecurityHeaders]
 	[ApiController]
 	[Route(RootURL)]
@@ -27,13 +28,7 @@ namespace Dodo.Users
 			public string password { get; set; }
 		}
 
-		private readonly IAuthenticationSchemeProvider _schemeProvider;
-
-		public UserController(
-			IAuthenticationSchemeProvider schemeProvider)
-		{
-			_schemeProvider = schemeProvider;
-		}
+		protected override AuthorizationManager<User> AuthManager => new UserAuthManager();
 
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)

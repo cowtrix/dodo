@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Common.Extensions;
 using Resources.Security;
@@ -148,36 +148,6 @@ namespace Dodo
 				adminList.Add(newAdmin);
 				group.AdministratorData.SetValue(adminData, newAdmin, newPass);
 				ResourceUtility.GetManagerForResource(group).Update(group, rscLock);
-				return true;
-			}
-		}
-
-
-		public override bool IsAuthorised(AccessContext context, EHTTPRequestType requestType, out EPermissionLevel permissionLevel)
-		{
-			if(context.User != null)
-			{
-				if (context.User.GUID == Creator.GetValue().GUID)
-				{
-					permissionLevel = EPermissionLevel.OWNER;
-					return true;
-				}
-				if (IsAdmin(context.User, context))
-				{
-					permissionLevel = EPermissionLevel.ADMIN;
-					return true;
-				}
-				if (requestType != EHTTPRequestType.GET)
-				{
-					permissionLevel = EPermissionLevel.PUBLIC;
-					return false;
-				}
-				permissionLevel = EPermissionLevel.USER;
-				return true;
-			}
-			else
-			{
-				permissionLevel = EPermissionLevel.PUBLIC;
 				return true;
 			}
 		}
