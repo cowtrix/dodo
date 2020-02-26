@@ -7,6 +7,7 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -47,6 +48,8 @@ namespace DodoServer
 					config.LoginPath = $"/{UserController.RootURL}/{UserController.LOGIN}";
 					config.ExpireTimeSpan = TimeSpan.FromDays(1);
 					config.SlidingExpiration = true;
+					config.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+					config.Cookie.HttpOnly = true;
 				});
 
 			services.AddAuthorization(config =>
@@ -57,11 +60,18 @@ namespace DodoServer
 				})*/
 			});
 			services.AddTransient<IAuthorizationService, AuthService>();
+
+			services.AddHttpsRedirection(options =>
+			{
+				options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+				options.HttpsPort = DodoServer.Port;
+			});
 		}
 
 		public void Configure(IApplicationBuilder app)
 		{
 			app.UseCors();
+			app.UseHttpsRedirection();
 			app.UseRouting();
 			app.UseStaticFiles();
 			app.UseAuthentication();

@@ -25,10 +25,17 @@ namespace Dodo
 			{
 				return default;
 			}
-			var userGuid = Guid.Parse(claimsID.FindFirst(AuthConstants.SUBJECT).Value);
+
+			var guidKey = claimsID.FindFirst(AuthConstants.SUBJECT).Value;
+			if (!TemporaryTokenManager.CheckToken(guidKey, out var guidStr)
+				|| !Guid.TryParse(guidStr, out var userGuid))
+			{
+				return default;
+			}
 			var user = m_userManager.GetSingle(x => x.GUID == userGuid);
-			var key = claimsID.FindFirst(AuthConstants.KEY).Value;
-			if (!TemporaryTokenManager.CheckToken(key, out var passphrase))
+
+			var tokenKey = claimsID.FindFirst(AuthConstants.KEY).Value;
+			if (!TemporaryTokenManager.CheckToken(tokenKey, out var passphrase))
 			{
 				return default;
 			}

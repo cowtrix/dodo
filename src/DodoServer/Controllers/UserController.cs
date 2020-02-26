@@ -38,11 +38,13 @@ namespace Dodo.Users
 			{
 				return BadRequest();
 			}
-			TemporaryTokenManager.SetTemporaryToken(passphrase, out var tokenKey, TimeSpan.FromHours(24));
+
+			TemporaryTokenManager.SetTemporaryToken(user.GUID.ToString(), out var guidKey, TimeSpan.FromHours(24));
+			TemporaryTokenManager.SetTemporaryToken(passphrase, out var passphraseKey, TimeSpan.FromHours(24));
 
 			var id = new ClaimsIdentity(AuthConstants.AUTHSCHEME);
-			id.AddClaim(new Claim(AuthConstants.SUBJECT, user.GUID.ToString()));
-			id.AddClaim(new Claim(AuthConstants.KEY, tokenKey));
+			id.AddClaim(new Claim(AuthConstants.SUBJECT, guidKey));
+			id.AddClaim(new Claim(AuthConstants.KEY, passphraseKey));
 			var principal = new ClaimsPrincipal(id);
 			var props = new AuthenticationProperties
 			{

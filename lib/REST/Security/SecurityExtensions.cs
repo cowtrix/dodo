@@ -1,4 +1,4 @@
-﻿using Common.Security;
+using Common.Security;
 
 namespace Resources.Security
 {
@@ -13,7 +13,19 @@ namespace Resources.Security
 		/// <returns></returns>
 		public static string GenerateID(object key, Passphrase passphrase)
 		{
-			return SHA256Utility.SHA256(key.GetHashCode() + passphrase.Value);
+			return GenerateID(key, passphrase.Value);
+		}
+
+		/// <summary>
+		/// It's important that we don't store the keys directly, so we instead create a one-way hash of the
+		/// key and passphrase. Note that then when we change a key's passphrase, we must remove the old hash.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="passphrase"></param>
+		/// <returns></returns>
+		public static string GenerateID(object key, string passphrase)
+		{
+			return SHA256Utility.SHA256(key.GetHashCode() + passphrase);
 		}
 	}
 }

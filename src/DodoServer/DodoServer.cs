@@ -14,8 +14,11 @@ namespace DodoServer
 {
 	public static class DodoServer
 	{
-		public static string HttpsUrl => m_https.Value;
-		static ConfigVariable<string> m_https = new ConfigVariable<string>($"{Dodo.Dodo.PRODUCT_NAME}URI_Https", "https://0.0.0.0:6000");
+		public static int Port => m_port.Value;
+		public static string HttpsUrl => $"{m_url.Value}:{m_port.Value}";
+
+		static ConfigVariable<string> m_url = new ConfigVariable<string>($"{Dodo.Dodo.PRODUCT_NAME}URI_Https", "https://0.0.0.0");
+		static ConfigVariable<int> m_port = new ConfigVariable<int>($"{Dodo.Dodo.PRODUCT_NAME}URI_HttpsPort", 6000);
 
 		public static void Main(string[] args)
 		{
@@ -27,7 +30,7 @@ namespace DodoServer
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<DodoStartup>();
-					webBuilder.UseUrls($"{m_https.Value}");
+					webBuilder.UseUrls(HttpsUrl);
 				});
 	}
 }

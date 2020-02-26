@@ -147,6 +147,10 @@ namespace Resources
 				return new ResourceRequest(NotFound());
 			}
 			var context = User.GetContext();
+			if(!context.Challenge())
+			{
+				return new ResourceRequest(new BadRequestResult());
+			}
 			return AuthManager.IsAuthorised(context, target, Request.MethodEnum());
 		}
 	}
