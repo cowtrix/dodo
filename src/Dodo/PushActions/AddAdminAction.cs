@@ -1,11 +1,11 @@
-﻿using Common.Security;
+using Common.Security;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
 
 namespace Dodo.Users
 {
-	public class AddAdminAction : PushAction
+	public class AddAdminAction : UserToken
 	{
 		[JsonProperty]
 		public ResourceReference<GroupResource> Resource { get; private set; }

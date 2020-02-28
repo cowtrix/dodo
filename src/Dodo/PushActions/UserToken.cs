@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Resources.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -7,13 +7,13 @@ using System.Linq;
 
 namespace Dodo.Users
 {
-	public class SingletonPushActionAttribute : Attribute
+	public class SingletonTokenAttribute : Attribute
 	{
 	}
 
-	public class PushActionDuplicateException : Exception
+	public class SingletonTokenDuplicateException : Exception
 	{
-		public PushActionDuplicateException(string message) : base(message)
+		public SingletonTokenDuplicateException(string message) : base(message)
 		{
 		}
 	}
@@ -26,7 +26,7 @@ namespace Dodo.Users
 		typeof(VerifyEmailAction),
 		typeof(AdminToken)
 		)]
-	public abstract class PushAction
+	public abstract class UserToken
 	{
 		public Guid GUID { get; private set; }
 		public virtual bool AutoFire { get { return false; } }
@@ -35,7 +35,7 @@ namespace Dodo.Users
 		[JsonProperty]
 		public virtual bool CanRemove { get { return false; } }
 
-		public PushAction()
+		public UserToken()
 		{
 			GUID = Guid.NewGuid();
 		}

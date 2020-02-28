@@ -6,8 +6,8 @@ using Common.Security;
 
 namespace Dodo.Users
 {
-	[SingletonPushAction]
-	public class VerifyEmailAction : PushAction
+	[SingletonToken]
+	public class VerifyEmailAction : UserToken
 	{
 		const int TOKEN_SIZE = 64;
 

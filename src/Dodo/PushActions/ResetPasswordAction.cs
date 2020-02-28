@@ -7,8 +7,8 @@ using System.Net;
 
 namespace Dodo.Users
 {
-	[SingletonPushAction]
-	public class ResetPasswordAction : PushAction
+	[SingletonToken]
+	public class ResetPasswordAction : UserToken
 	{
 		const int TOKEN_SIZE = 32;
 		const int TOKEN_TIMEOUT = 20;

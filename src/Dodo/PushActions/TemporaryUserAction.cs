@@ -4,8 +4,8 @@ using Resources.Security;
 
 namespace Dodo.Users
 {
-	[SingletonPushAction]
-	public class TemporaryUserAction : PushAction
+	[SingletonToken]
+	public class TemporaryUserAction : UserToken
 	{
 		[JsonProperty]
 		public string TemporaryToken { get; private set; }

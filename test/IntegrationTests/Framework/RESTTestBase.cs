@@ -138,7 +138,7 @@ namespace RESTTests
 		protected IRestResponse VerifyUser(string guid, string username, string password, string email)
 		{
 			var verifyAction = ResourceUtility.GetManager<User>().GetSingle(u => u.WebAuth.Username == username)
-				.PushActions.GetSinglePushAction<VerifyEmailAction>();
+				.Tokens.GetSingleToken<VerifyEmailAction>();
 			var response = Request($"verify?token={verifyAction.Token}", Method.POST, null, username, password);
 			Assert.IsTrue(response.Content.Contains("Email verified"), response + response.Content);
 			return response;

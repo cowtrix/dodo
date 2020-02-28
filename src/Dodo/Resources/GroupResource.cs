@@ -65,7 +65,7 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN)]
 		public UserMultiSigStore<AdminData> AdministratorData;
 
-		public PushActionCollection SharedActions = new PushActionCollection();
+		public TokenCollection SharedActions = new TokenCollection();
 
 		public SecureUserStore Members = new SecureUserStore();
 
@@ -120,7 +120,7 @@ namespace Dodo
 			}
 			using (var userLock = new ResourceLock(newAdmin))
 			{
-				newAdmin.PushActions.Add(new AddAdminAction(this, temporaryPass, newAdmin.AuthData.PublicKey));
+				newAdmin.Tokens.Add(new AddAdminAction(this, temporaryPass, newAdmin.AuthData.PublicKey));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;

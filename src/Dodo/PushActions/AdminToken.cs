@@ -1,7 +1,7 @@
-﻿namespace Dodo.Users
+namespace Dodo.Users
 {
-	[SingletonPushAction]
-	public class AdminToken : PushAction
+	[SingletonToken]
+	public class AdminToken : UserToken
 	{
 	}
 }

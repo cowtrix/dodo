@@ -16,7 +16,7 @@ namespace Dodo.Users
 			using (var rscLock = new ResourceLock(newUser))
 			{
 				Add(newUser);
-				newUser.PushActions.Add(new TemporaryUserAction(temporaryPassword));
+				newUser.Tokens.Add(new TemporaryUserAction(temporaryPassword));
 				Update(newUser, rscLock);
 				return newUser;
 			}
