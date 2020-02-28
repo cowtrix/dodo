@@ -1,45 +1,62 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Dodo;
 
 namespace Resources
 {
 	public class ResourceRequest
 	{
-		public AccessContext Requester;
-		public IRESTResource Resource;
-		public EHTTPRequestType RequestType;
-		public EPermissionLevel PermissionLevel;
-		public bool IsSuccess;
-		public IActionResult Error;
+		public static ResourceRequest BadRequest => new ResourceRequest(new BadRequestResult());
+		public static ResourceRequest ForbidRequest => new ResourceRequest(new ForbidResult());
+		public static ResourceRequest UnauthorizedRequest => new ResourceRequest(new UnauthorizedResult());
+		public static ResourceRequest NotFoundRequest => new ResourceRequest(new NotFoundResult());
 
-		public ResourceRequest(NotFoundResult notFoundResult)
+		public readonly IDodoResource Resource;
+		public readonly DodoResourceSchemaBase Schema;
+		public readonly AccessContext Requester;
+		public readonly EHTTPRequestType RequestType;
+		public readonly EPermissionLevel PermissionLevel;
+		public readonly bool IsSuccess;
+		public readonly IActionResult Error;
+
+
+		private ResourceRequest(NotFoundResult notFoundResult)
 		{
 			IsSuccess = false;
 			Error = notFoundResult;
 		}
 
-		public ResourceRequest(ForbidResult forbid)
+		private ResourceRequest(ForbidResult forbid)
 		{
 			IsSuccess = false;
 			Error = forbid;
 		}
 
-		public ResourceRequest(UnauthorizedResult unauthorizedResult)
+		private ResourceRequest(UnauthorizedResult unauthorizedResult)
 		{
 			IsSuccess = false;
 			Error = unauthorizedResult;
 		}
 
-		public ResourceRequest(BadRequestResult badRequestResult)
+		private ResourceRequest(BadRequestResult badRequestResult)
 		{
 			IsSuccess = false;
 			Error = badRequestResult;
 		}
 
-		public ResourceRequest(AccessContext context, IRESTResource rsc, EHTTPRequestType type, EPermissionLevel permissionLevel)
+		public ResourceRequest(AccessContext context, IDodoResource rsc, EHTTPRequestType type, EPermissionLevel permissionLevel)
 		{
 			Requester = context;
 			Resource = rsc;
+			RequestType = type;
+			PermissionLevel = permissionLevel;
+			IsSuccess = true;
+			Error = null;
+		}
+
+		public ResourceRequest(AccessContext context, DodoResourceSchemaBase schema, EHTTPRequestType type, EPermissionLevel permissionLevel)
+		{
+			Requester = context;
+			Schema = schema;
 			RequestType = type;
 			PermissionLevel = permissionLevel;
 			IsSuccess = true;

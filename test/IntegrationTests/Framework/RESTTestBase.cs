@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -44,7 +44,6 @@ namespace RESTTests
 		public async Task CanCreate()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			//await Authorize(user.AuthData.Username, password, ResourceRoot);
 			await Login(user.AuthData.Username, password);
 			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
 				SchemaGenerator.GetRandomSchema<T>(context));

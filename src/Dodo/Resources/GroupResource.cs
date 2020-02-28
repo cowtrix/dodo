@@ -72,8 +72,11 @@ namespace Dodo
 		[View(EPermissionLevel.PUBLIC)]
 		public int MemberCount { get { return Members.Count; } }
 
-		[JsonProperty]
+		[View(EPermissionLevel.MEMBER)]
 		public string GroupPublicKey { get; private set; }
+
+		[View(EPermissionLevel.ADMIN)]
+		public bool Published { get; set; }
 
 		public GroupResource(AccessContext context, GroupResourceSchemaBase schema) : base(context, schema)
 		{
@@ -87,8 +90,6 @@ namespace Dodo
 			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(context.User, pv), context);
 			PublicDescription = schema.PublicDescription;
 		}
-
-		
 
 		/// <summary>
 		/// Is this object a child of the target object
@@ -154,13 +155,13 @@ namespace Dodo
 
 		public abstract bool CanContain(Type type);
 
-		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel,
+		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
-			base.AppendAuxilaryData(view, permissionLevel, requester, passphrase);
+			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 	}
 }

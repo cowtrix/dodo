@@ -28,7 +28,7 @@ namespace Dodo.Users
 			public string password { get; set; }
 		}
 
-		protected override AuthorizationManager<User> AuthManager => new UserAuthManager();
+		protected override AuthorizationManager<User, UserSchema> AuthManager => new UserAuthManager();
 
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
@@ -61,12 +61,12 @@ namespace Dodo.Users
 		[Route(REGISTER)]
 		public override async Task<IActionResult> Create([FromBody] UserSchema schema)
 		{
-			string error = null;
-			if (schema == null || !schema.Verify(out error))
+			var req = VerifyRequest(schema);
+			if (!req.IsSuccess)
 			{
-				return BadRequest($"{error}\nExpecting application/json object:\n{JsonConvert.SerializeObject(new UserSchema(), Formatting.Indented)}");
+				return req.Error;
 			}
-			var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username);
+			var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username || x.PersonalData.Email == schema.Email);
 			if (user != null)
 			{
 				return Conflict();

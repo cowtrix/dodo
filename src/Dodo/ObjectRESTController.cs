@@ -13,6 +13,7 @@ using Resources.Security;
 using System.Security.Claims;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
+using Common.Extensions;
 
 namespace Resources
 {
@@ -28,7 +29,7 @@ namespace Resources
 		where TSchema : DodoResourceSchemaBase
 	{
 		private DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
-		protected virtual AuthorizationManager<T> AuthManager => new AuthorizationManager<T>();
+		protected virtual AuthorizationManager<T, TSchema> AuthManager => new AuthorizationManager<T, TSchema>();
 		
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
@@ -36,7 +37,7 @@ namespace Resources
 
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
-			var req = VerifyRequest();
+			var req = VerifyRequest(schema);
 			if (!req.IsSuccess)
 			{
 				return req.Error;
@@ -145,9 +146,21 @@ namespace Resources
 			var context = User.GetContext();
 			if(!context.Challenge())
 			{
-				return new ResourceRequest(new BadRequestResult());
+				return ResourceRequest.ForbidRequest;
 			}
 			return AuthManager.IsAuthorised(context, target, Request.MethodEnum());
 		}
+
+		protected ResourceRequest VerifyRequest(TSchema schema)
+		{
+			LogRequest();
+			var context = User.GetContext();
+			if (!context.Challenge())
+			{
+				return ResourceRequest.ForbidRequest;
+			}
+			return AuthManager.IsAuthorised(context, schema, Request.MethodEnum());
+		}
+
 	}
 }

@@ -37,7 +37,7 @@ namespace Dodo.Users
 			PersonalData.Email = schema.Email;
 		}
 
-		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
+		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
 			var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : (User)requester;
 			if(permissionLevel >= EPermissionLevel.ADMIN)
@@ -56,7 +56,7 @@ namespace Dodo.Users
 				view.Add(NOTIFICATIONS_KEY, PushActions.Actions.Select(x => new Notification { Message = x.GetNotificationMessage(), GUID = x.GUID })
 					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList());
 			}
-			base.AppendAuxilaryData(view, permissionLevel, requester, passphrase);
+			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 	}
 }

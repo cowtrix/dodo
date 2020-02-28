@@ -1,0 +1,46 @@
+using Resources;
+using Microsoft.AspNetCore.Mvc;
+using Dodo;
+
+namespace DodoResources
+{
+	public class GroupResourceAuthManager<T, TSchema> : AuthorizationManager<T, TSchema>
+		where T:GroupResource
+		where TSchema : GroupResourceSchemaBase
+	{
+		protected override EPermissionLevel GetPermission(AccessContext context, T target)
+		{
+			if (context.User == null)
+			{
+				return EPermissionLevel.PUBLIC;
+			}
+			if (context.User.GUID == target.Creator.Guid)
+			{
+				return EPermissionLevel.OWNER;
+			}
+			if (target.IsAdmin(context.User, context))
+			{
+				return EPermissionLevel.ADMIN;
+			}
+			if (target.Members.IsAuthorised(context))
+			{
+				return EPermissionLevel.MEMBER;
+			}
+			return EPermissionLevel.USER;
+		}
+
+		protected override ResourceRequest CanCreate(AccessContext context, TSchema target)
+		{
+			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as GroupResource;
+			if(parent == null)
+			{
+				return ResourceRequest.BadRequest;
+			}
+			if (!parent.IsAdmin(context.User, context))
+			{
+				return ResourceRequest.ForbidRequest;
+			}
+			return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+		}
+	}
+}

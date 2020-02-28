@@ -28,39 +28,24 @@ namespace DodoServer
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllers();
-			/*var builder = services.AddIdentityServer(config =>
-			{
-				config.UserInteraction.LoginUrl = $"/{UserController.RootURL}/{UserController.LOGIN}";
-			})
-				.AddInMemoryIdentityResources(Config.Ids)
-				.AddInMemoryApiResources(Config.Apis)
-				.AddInMemoryClients(Config.Clients);*/
-
-			//builder.AddDeveloperSigningCredential();
-
 			services.AddAuthentication(config =>
 			{
 				config.DefaultAuthenticateScheme = AuthConstants.AUTHSCHEME;
+				config.DefaultForbidScheme = AuthConstants.AUTHSCHEME;
 			})
 				.AddCookie(AuthConstants.AUTHSCHEME, config =>
 				{
 					config.LogoutPath = $"/{UserController.RootURL}/{UserController.LOGOUT}";
 					config.LoginPath = $"/{UserController.RootURL}/{UserController.LOGIN}";
+					config.AccessDeniedPath = config.LoginPath;
 					config.ExpireTimeSpan = TimeSpan.FromDays(1);
 					config.SlidingExpiration = true;
 					config.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
 					config.Cookie.HttpOnly = true;
 				});
-
 			services.AddAuthorization(config =>
 			{
-				/*config.AddPolicy("Default", config =>
-				{
-					config.
-				})*/
 			});
-			services.AddTransient<IAuthorizationService, AuthService>();
-
 			services.AddHttpsRedirection(options =>
 			{
 				options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;

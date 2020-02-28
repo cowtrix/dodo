@@ -79,7 +79,7 @@ namespace Resources
 			if (obj is Resource)
 			{
 				var metadata = new Dictionary<string, object>();
-				(obj as Resource).AppendAuxilaryData(metadata, visibility, requester, passphrase);
+				(obj as Resource).AppendMetadata(metadata, visibility, requester, passphrase);
 				vals.Add(METADATA_KEY, metadata);
 			}
 			return vals;
