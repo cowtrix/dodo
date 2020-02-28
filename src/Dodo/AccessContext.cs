@@ -37,9 +37,14 @@ namespace Dodo
 			return hashCode;
 		}
 
+		/// <summary>
+		/// Is the state of the AccessContext valid? Note that this doesn't tell
+		/// you if there is an authenticated user or not.
+		/// </summary>
+		/// <returns>True if the context is valid, false if it is not</returns>
 		public bool Challenge()
 		{
-			return User != null && PasswordHasher.VerifyHashedPassword(User.AuthData.PassphraseHash, Passphrase.Value);
+			return User == null || PasswordHasher.VerifyHashedPassword(User.AuthData.PassphraseHash, Passphrase.Value);
 		}
 	}
 }

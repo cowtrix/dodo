@@ -18,7 +18,7 @@ namespace DodoServer
 		public static string HttpsUrl => $"{m_url.Value}:{m_port.Value}";
 
 		static ConfigVariable<string> m_url = new ConfigVariable<string>($"{Dodo.Dodo.PRODUCT_NAME}URI_Https", "https://0.0.0.0");
-		static ConfigVariable<int> m_port = new ConfigVariable<int>($"{Dodo.Dodo.PRODUCT_NAME}URI_HttpsPort", 6000);
+		static ConfigVariable<int> m_port = new ConfigVariable<int>($"{Dodo.Dodo.PRODUCT_NAME}URI_HttpsPort", 5001);
 
 		public static void Main(string[] args)
 		{

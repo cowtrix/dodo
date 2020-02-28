@@ -142,10 +142,6 @@ namespace Resources
 		{
 			LogRequest();
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
-			if (target == null)
-			{
-				return new ResourceRequest(NotFound());
-			}
 			var context = User.GetContext();
 			if(!context.Challenge())
 			{
