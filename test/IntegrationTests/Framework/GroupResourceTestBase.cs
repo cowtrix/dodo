@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
@@ -12,6 +12,7 @@ using SharedTest;
 using Dodo.Rebellions;
 using Dodo.SharedTest;
 using System.Collections.Generic;
+using Dodo.Users;
 
 namespace RESTTests
 {
@@ -80,6 +81,22 @@ namespace RESTTests
 			var list = await RequestJSON<JArray>($"{ResourceRoot}", EHTTPRequestType.GET);
 			var guids = list.Values<string>().Select(x => Guid.Parse(x)).GetEnumerator().ToIEnumerable().ToList();
 			Assert.IsFalse(sites.Any(x => !guids.Contains(x.GUID)));
+		}
+
+		[TestMethod]
+		public override async Task CanCreate()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			using (var rscLock = new ResourceLock(user))
+			{
+				user.Tokens.Add(new ResourceCreationToken(typeof(T)));
+				UserManager.Update(user, rscLock);
+			}
+			await Login(user.AuthData.Username, password);
+			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
+				SchemaGenerator.GetRandomSchema<T>(context));
+			user = UserManager.GetSingle(u => u.GUID == user.GUID);
+			Assert.IsTrue(user.Tokens.GetTokens<ResourceCreationToken>().Single().IsRedeemed);
 		}
 
 		/*[TestMethod]

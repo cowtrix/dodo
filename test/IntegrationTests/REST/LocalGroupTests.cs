@@ -15,21 +15,7 @@ namespace RESTTests
 		
 		public override string ResourceRoot => LocalGroupController.RootURL;
 
-		[TestMethod]
-		public override async Task CanCreate()
-		{
-			var user = GetRandomUser(out var password, out var context);
-			using (var rscLock = new ResourceLock(user))
-			{
-				user.Tokens.Add(new ResourceCreationToken(typeof(LocalGroup)));
-				UserManager.Update(user, rscLock);
-			}
-			await Login(user.AuthData.Username, password);
-			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
-				SchemaGenerator.GetRandomSchema<LocalGroup>(context));
-			user = UserManager.GetSingle(u => u.GUID == user.GUID);
-			Assert.IsTrue(user.Tokens.GetTokens<ResourceCreationToken>().Single().IsRedeemed);
-		}
+		
 
 		/*[TestInitialize]
 		public void Setup()

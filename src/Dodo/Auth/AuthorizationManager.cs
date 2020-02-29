@@ -48,7 +48,11 @@ namespace Dodo
 			{
 				return new ResourceRequest(context, target, EHTTPRequestType.DELETE, permission);
 			}
-			return ResourceRequest.ForbidRequest;
+			if(context.User == null)
+			{
+				return ResourceRequest.ForbidRequest;
+			}
+			return ResourceRequest.UnauthorizedRequest;
 		}
 
 		protected virtual ResourceRequest CanEdit(AccessContext context, T target)
@@ -58,12 +62,20 @@ namespace Dodo
 			{
 				return new ResourceRequest(context, target, EHTTPRequestType.PATCH, permission);
 			}
-			return ResourceRequest.ForbidRequest;
+			if (context.User == null)
+			{
+				return ResourceRequest.ForbidRequest;
+			}
+			return ResourceRequest.UnauthorizedRequest;
 		}
 
 		protected virtual ResourceRequest CanCreate(AccessContext context, TSchema target)
 		{
-			return ResourceRequest.ForbidRequest;
+			if (context.User == null)
+			{
+				return ResourceRequest.ForbidRequest;
+			}
+			return ResourceRequest.UnauthorizedRequest;
 		}
 
 		protected virtual EPermissionLevel GetPermission(AccessContext context, T target)
