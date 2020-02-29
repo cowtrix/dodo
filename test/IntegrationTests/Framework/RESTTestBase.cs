@@ -41,7 +41,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async Task CanCreate()
+		public virtual async Task CanCreate()
 		{
 			var user = GetRandomUser(out var password, out var context);
 			await Login(user.AuthData.Username, password);

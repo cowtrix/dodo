@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Dodo;
+using Dodo.Users;
 
 namespace Resources
 {
@@ -17,7 +18,7 @@ namespace Resources
 		public readonly EPermissionLevel PermissionLevel;
 		public readonly bool IsSuccess;
 		public readonly IActionResult Error;
-
+		public readonly ResourceCreationToken Token;
 
 		private ResourceRequest(NotFoundResult notFoundResult)
 		{
@@ -53,7 +54,8 @@ namespace Resources
 			Error = null;
 		}
 
-		public ResourceRequest(AccessContext context, DodoResourceSchemaBase schema, EHTTPRequestType type, EPermissionLevel permissionLevel)
+		public ResourceRequest(AccessContext context, DodoResourceSchemaBase schema, EHTTPRequestType type, 
+			EPermissionLevel permissionLevel, ResourceCreationToken token = null)
 		{
 			Requester = context;
 			Schema = schema;
@@ -61,6 +63,7 @@ namespace Resources
 			PermissionLevel = permissionLevel;
 			IsSuccess = true;
 			Error = null;
+			Token = token;
 		}
 	}
 }

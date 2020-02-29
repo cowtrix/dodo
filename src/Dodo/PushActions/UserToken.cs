@@ -24,33 +24,21 @@ namespace Dodo.Users
 		typeof(AddAdminAction),
 		typeof(TemporaryUserAction),
 		typeof(VerifyEmailAction),
-		typeof(AdminToken)
+		typeof(SysAdminToken)
 		)]
 	public abstract class UserToken
 	{
 		public Guid GUID { get; private set; }
-		public virtual bool AutoFire { get { return false; } }
-		[JsonProperty]
-		public bool HasExecuted { get; private set; }
 		[JsonProperty]
 		public virtual bool CanRemove { get { return false; } }
+
+		[JsonProperty]
+		protected virtual bool Removed { get; set; }
 
 		public UserToken()
 		{
 			GUID = Guid.NewGuid();
 		}
-
-		public void Execute(AccessContext context)
-		{
-			if(HasExecuted)
-			{
-				return;
-			}
-			ExecuteInternal(context);
-			HasExecuted = true;
-		}
-
-		protected virtual void ExecuteInternal(AccessContext context) { }
 
 		public virtual void OnAdd()
 		{

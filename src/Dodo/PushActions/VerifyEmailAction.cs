@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Resources.Security;
 using Newtonsoft.Json;
 using System;

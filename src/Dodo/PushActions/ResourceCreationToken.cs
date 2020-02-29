@@ -4,11 +4,10 @@ using System;
 namespace Dodo.Users
 {
 
-	public class ResourceCreationToken : UserToken
+	public class ResourceCreationToken : OneTimeRedeemableToken
 	{
-		public bool Redeemed { get; set; }
 		[BsonElement]
-		public Type Type { get; private set; }
+		public string Type { get; private set; }
 
 		public ResourceCreationToken(Type type)
 		{
@@ -16,6 +15,7 @@ namespace Dodo.Users
 			{
 				throw new Exception($"Unexpected type: {type}");
 			}
+			Type = type.Name;
 		}
 	}
 }

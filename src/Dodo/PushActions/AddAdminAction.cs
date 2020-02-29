@@ -5,13 +5,12 @@ using Resources.Security;
 
 namespace Dodo.Users
 {
-	public class AddAdminAction : UserToken
+	public class AddAdminAction : ExecutableToken
 	{
 		[JsonProperty]
 		public ResourceReference<GroupResource> Resource { get; private set; }
 		[JsonProperty]
 		public byte[] Token { get; private set; }
-		public override bool AutoFire => true;
 		public override bool CanRemove => true;
 
 		public AddAdminAction(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
@@ -32,6 +31,7 @@ namespace Dodo.Users
 				resource.AddOrUpdateAdmin(new AccessContext(context.User, tempPass), context.User, context.Passphrase);
 				ResourceUtility.GetManagerForResource(resource).Update(resource, rscLocker);
 			}
+			Removed = true;
 		}
 
 		public override string GetNotificationMessage()

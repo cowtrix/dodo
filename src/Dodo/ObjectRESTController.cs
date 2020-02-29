@@ -47,6 +47,26 @@ namespace Resources
 			try
 			{
 				createdObject = factory.CreateObject(req.Requester, schema) as T;
+				if(req.Token != null && req.Requester.User != null)
+				{
+					// The user consumed a resource creation token to make this resource
+					using(var rscLock = new ResourceLock(req.Requester.User))
+					{
+						var user = rscLock.Value as User;
+						var token = user.Tokens.GetToken<ResourceCreationToken>(req.Token.GUID);
+						if(token == null)
+						{
+							throw new Exception("Resource creation token was missing");
+						}
+						if(token.IsRedeemed)
+						{
+							throw new SecurityException($"Unexpected token consumption could indicate a user " +
+								"is attempting to exploit creation of multiple resources.");
+						}
+						token.IsRedeemed = true;
+						UserManager.Update(user, rscLock);
+					}
+				}
 				OnCreation(req.Requester, createdObject);
 			}
 			catch (Exception e)

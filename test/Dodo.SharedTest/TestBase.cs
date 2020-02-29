@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Dodo;
 using Dodo.Rebellions;
@@ -26,11 +26,7 @@ namespace SharedTest
 		private Random m_random = new Random();
 		protected static PostmanCollection m_postman = new PostmanCollection("8888079-57fb4f3e-b2ad-4afe-a429-47a38866c5cd");
 
-		protected string DefaultUsername = "test_user";
-		protected string DefaultName = "Test User";
-		protected string DefaultPassword = "x@asjdbasjdas";
-		protected string DefaultEmail = "test@web.com";
-		protected string DefaultGUID;
+		protected IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
 
 		[AssemblyInitialize]
 		public static void SetupTests(TestContext testContext)

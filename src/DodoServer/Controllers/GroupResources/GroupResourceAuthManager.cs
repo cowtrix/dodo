@@ -1,6 +1,8 @@
 using Resources;
 using Microsoft.AspNetCore.Mvc;
 using Dodo;
+using Dodo.Users;
+using System.Linq;
 
 namespace DodoResources
 {
@@ -31,6 +33,15 @@ namespace DodoResources
 
 		protected override ResourceRequest CanCreate(AccessContext context, TSchema target)
 		{
+			// User has a resource creation token, so we consume it and return ok
+			var token = context.User.Tokens.GetTokens<ResourceCreationToken>()
+				.FirstOrDefault(t => !t.IsRedeemed && t.Type == typeof(T).Name);
+			if(token != null)
+			{
+				return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER, token);
+			}
+
+			// Test if user has admin on parent
 			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as GroupResource;
 			if(parent == null)
 			{

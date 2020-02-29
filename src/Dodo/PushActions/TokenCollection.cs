@@ -5,6 +5,7 @@ using Resources;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System;
 
 namespace Dodo.Users
 {
@@ -14,7 +15,7 @@ namespace Dodo.Users
 	/// </summary>
 	public class TokenCollection
 	{
-		public IEnumerable<UserToken> Actions { get { return m_actions; } }
+		public IEnumerable<UserToken> Tokens { get { return m_actions; } }
 
 		[JsonProperty]
 		[BsonElement]
@@ -24,7 +25,7 @@ namespace Dodo.Users
 		{
 			var type = pa.GetType();
 			var isSingleton = type.GetCustomAttribute<SingletonTokenAttribute>();
-			if (isSingleton != null && Actions.Any(action => action.GetType() == type))
+			if (isSingleton != null && Tokens.Any(action => action.GetType() == type))
 			{
 				throw new SingletonTokenDuplicateException($"Cannot have multiple {type} Tokens");
 			}
@@ -44,8 +45,17 @@ namespace Dodo.Users
 
 		public T GetSingleToken<T>() where T:UserToken
 		{
-			return Actions.SingleOrDefault(pa => pa is T) as T;
+			return Tokens.SingleOrDefault(pa => pa is T) as T;
 		}
+
+		public T GetByGuid<T>(Guid gUID)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IEnumerable<T> GetTokens<T>() where T : UserToken => Tokens.OfType<T>();
+
+		public T GetToken<T>(Guid guid) where T : UserToken => Tokens.SingleOrDefault(t => t.GUID == guid) as T;
 	}
 
 }
