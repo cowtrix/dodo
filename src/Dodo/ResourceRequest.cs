@@ -4,6 +4,7 @@ using Dodo.Users;
 
 namespace Resources
 {
+
 	public class ResourceRequest
 	{
 		public static ResourceRequest BadRequest => new ResourceRequest(new BadRequestResult());

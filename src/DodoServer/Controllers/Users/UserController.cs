@@ -28,7 +28,8 @@ namespace Dodo.Users
 			public string password { get; set; }
 		}
 
-		protected override AuthorizationManager<User, UserSchema> AuthManager => new UserAuthManager();
+		protected override AuthorizationManager<User, UserSchema> AuthManager => 
+			new UserAuthManager(this.ControllerContext, Request);
 
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
@@ -54,6 +55,18 @@ namespace Dodo.Users
 			// issue authentication cookie with subject ID and username
 			await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
 			
+			return Ok();
+		}
+
+		[HttpGet(LOGOUT)]
+		public async Task<IActionResult> Logout()
+		{
+			var context = User.GetContext();
+			if(context.User == null)
+			{
+				return Forbid();
+			}
+			await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
 			return Ok();
 		}
 

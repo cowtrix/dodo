@@ -27,7 +27,8 @@ namespace DodoResources
 		public const string JOIN_GROUP = "join";
 		public const string LEAVE_GROUP = "leave";
 
-		protected override AuthorizationManager<T, TSchema> AuthManager => new GroupResourceAuthManager<T, TSchema>();
+		protected override AuthorizationManager<T, TSchema> AuthManager => 
+			new GroupResourceAuthManager<T, TSchema>(this.ControllerContext, Request);
 
 		[HttpPost("{id}/" + ADD_ADMIN)]
 		public IActionResult AddAdministrator(Guid id, [FromBody]string newAdminIdentifier)
@@ -37,7 +38,7 @@ namespace DodoResources
 			{
 				return req.Error;
 			}
-			var userManager = ResourceUtility.GetManager<User>();
+			var userManager = UserManager;
 			User targetUser = null;
 			if(Guid.TryParse(newAdminIdentifier, out var newAdminGuid))
 			{

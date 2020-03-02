@@ -114,13 +114,17 @@ namespace Dodo
 		public bool AddAdmin(AccessContext context, User newAdmin)
 		{
 			var temporaryPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
-			if(!AddOrUpdateAdmin(context, newAdmin, temporaryPass))
+			using (var groupLock = new ResourceLock(this))
 			{
-				return false;
+				if (!AddOrUpdateAdmin(context, newAdmin, temporaryPass))
+				{
+					return false;
+				}
+				ResourceManager.Update(this, groupLock);
 			}
 			using (var userLock = new ResourceLock(newAdmin))
 			{
-				newAdmin.Tokens.Add(new AddAdminAction(this, temporaryPass, newAdmin.AuthData.PublicKey));
+				newAdmin.TokenCollection.Add(new AddAdminToken(this, temporaryPass, newAdmin.AuthData.PublicKey));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;
@@ -132,25 +136,21 @@ namespace Dodo
 			{
 				return false;
 			}
-			if (IsAdmin(newAdmin, context))
+			if (newAdmin.GUID != context.User.GUID && IsAdmin(newAdmin, context))
+			{
+				// Other user can't change existing admin password
+				return true;
+			}
+			AdministratorData.AddPermission(context.User, context.Passphrase, newAdmin, newPass);
+			var adminData = AdministratorData.GetValue(newAdmin, newPass);
+			var adminList = adminData.Administrators;
+			if (adminList.Contains(newAdmin))
 			{
 				return true;
 			}
-			using (var rscLock = new ResourceLock(this))
-			{
-				var group = rscLock.Value as GroupResource;
-				group.AdministratorData.AddPermission(context.User, context.Passphrase, newAdmin, newPass);
-				var adminData = group.AdministratorData.GetValue(context.User, context.Passphrase);
-				var adminList = adminData.Administrators;
-				if (adminList.Contains(newAdmin))
-				{
-					return true;
-				}
-				adminList.Add(newAdmin);
-				group.AdministratorData.SetValue(adminData, newAdmin, newPass);
-				ResourceUtility.GetManagerForResource(group).Update(group, rscLock);
-				return true;
-			}
+			adminList.Add(newAdmin);
+			AdministratorData.SetValue(adminData, newAdmin, newPass);
+			return true;
 		}
 
 		public abstract bool CanContain(Type type);

@@ -5,7 +5,7 @@ using Resources.Security;
 
 namespace Dodo.Users
 {
-	public class AddAdminAction : ExecutableToken
+	public class AddAdminToken : ExecutableToken
 	{
 		[JsonProperty]
 		public ResourceReference<GroupResource> Resource { get; private set; }
@@ -13,7 +13,7 @@ namespace Dodo.Users
 		public byte[] Token { get; private set; }
 		public override bool CanRemove => true;
 
-		public AddAdminAction(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
+		public AddAdminToken(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
 		{
 			Resource = new ResourceReference<GroupResource>(resource);
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);

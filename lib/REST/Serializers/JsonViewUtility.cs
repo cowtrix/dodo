@@ -22,7 +22,6 @@ namespace Resources
 	/// </summary>
 	public static class JsonViewUtility
 	{
-		public const string METADATA_KEY = "METADATA";
 
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
@@ -80,7 +79,7 @@ namespace Resources
 			{
 				var metadata = new Dictionary<string, object>();
 				(obj as Resource).AppendMetadata(metadata, visibility, requester, passphrase);
-				vals.Add(METADATA_KEY, metadata);
+				vals.Add(Resource.METADATA, metadata);
 			}
 			return vals;
 		}

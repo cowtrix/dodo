@@ -21,10 +21,11 @@ namespace Dodo.Users
 	[BsonDiscriminator(RootClass = true)]
 	[BsonKnownTypes(
 		typeof(ResetPasswordAction),
-		typeof(AddAdminAction),
+		typeof(AddAdminToken),
 		typeof(TemporaryUserAction),
 		typeof(VerifyEmailAction),
-		typeof(SysAdminToken)
+		typeof(SysAdminToken),
+		typeof(ResourceCreationToken)
 		)]
 	public abstract class UserToken
 	{
@@ -51,6 +52,10 @@ namespace Dodo.Users
 		public virtual string GetNotificationMessage()
 		{
 			return null;
+		}
+
+		public virtual void OnRequest(AccessContext context)
+		{
 		}
 	}
 }

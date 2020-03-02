@@ -1,13 +1,19 @@
 using Resources;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace Dodo.Users
 {
 	public class UserAuthManager : AuthorizationManager<User, UserSchema>
 	{
+		public UserAuthManager(ControllerContext controllercontext, HttpRequest request) :
+			base(controllercontext, request)
+		{
+		}
+
 		protected override EPermissionLevel GetPermission(AccessContext context, User target)
 		{
-			if(context.User.GUID == target.GUID)
+			if(context.User != null && context.User.GUID == target.GUID)
 			{
 				return EPermissionLevel.OWNER;
 			}

@@ -24,7 +24,7 @@ namespace Dodo.Users
 		[View(EPermissionLevel.USER)]
 		[VerifyObject]
 		public AuthorizationData AuthData;
-		public TokenCollection Tokens = new TokenCollection();
+		public TokenCollection TokenCollection = new TokenCollection();
 		#endregion
 
 		public User() : base(default, default)
@@ -53,7 +53,7 @@ namespace Dodo.Users
 			}
 			if(permissionLevel == EPermissionLevel.OWNER)
 			{
-				view.Add(NOTIFICATIONS_KEY, Tokens.Tokens.Select(x => new Notification { Message = x.GetNotificationMessage(), GUID = x.GUID })
+				view.Add(NOTIFICATIONS_KEY, TokenCollection.Tokens.Select(x => new Notification { Message = x.GetNotificationMessage(), GUID = x.GUID })
 					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList());
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);

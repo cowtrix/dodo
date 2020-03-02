@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Dodo;
 using Dodo.Users;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace DodoResources
 {
@@ -10,13 +11,18 @@ namespace DodoResources
 		where T:GroupResource
 		where TSchema : GroupResourceSchemaBase
 	{
+		public GroupResourceAuthManager(ControllerContext controllercontext, HttpRequest request) 
+			: base(controllercontext, request)
+		{
+		}
+
 		protected override EPermissionLevel GetPermission(AccessContext context, T target)
 		{
 			if (context.User == null)
 			{
 				return EPermissionLevel.PUBLIC;
 			}
-			if (context.User.GUID == target.Creator.Guid)
+			if (target.IsCreator(context))
 			{
 				return EPermissionLevel.OWNER;
 			}
@@ -34,7 +40,7 @@ namespace DodoResources
 		protected override ResourceRequest CanCreate(AccessContext context, TSchema target)
 		{
 			// User has a resource creation token, so we consume it and return ok
-			var token = context.User.Tokens.GetTokens<ResourceCreationToken>()
+			var token = context.User.TokenCollection.GetTokens<ResourceCreationToken>()
 				.FirstOrDefault(t => !t.IsRedeemed && t.Type == typeof(T).Name);
 			if(token != null)
 			{
@@ -52,6 +58,32 @@ namespace DodoResources
 				return ResourceRequest.ForbidRequest;
 			}
 			return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+		}
+
+		protected override ResourceRequest CanPost(AccessContext context, T target)
+		{
+			var action = Request.Path.Value.Split('/').LastOrDefault();
+			if(action.Contains('?'))
+			{
+				action = action.Substring(action.IndexOf('?'));
+			}
+			switch(action)
+			{
+				case GroupResourceController<T, TSchema>.ADD_ADMIN:
+					if(target.IsAdmin(context.User, context))
+					{
+						return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
+					}
+					break;
+				case GroupResourceController<T, TSchema>.JOIN_GROUP:
+				case GroupResourceController<T, TSchema>.LEAVE_GROUP:
+					if(context.User != null)
+					{
+						new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
+					}
+					break;
+			}
+			return ResourceRequest.UnauthorizedRequest;
 		}
 	}
 }

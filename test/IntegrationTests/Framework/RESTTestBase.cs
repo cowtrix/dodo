@@ -49,6 +49,17 @@ namespace RESTTests
 				SchemaGenerator.GetRandomSchema<T>(context));
 		}
 
+		protected virtual T CreateObject(AccessContext context = default)
+		{
+			if(context.User == null)
+			{
+				GetRandomUser(out var password, out context); ;
+			}
+			var schema = SchemaGenerator.GetRandomSchema<T>(context);
+			var factory = ResourceUtility.GetFactory<T>();
+			return factory.CreateTypedObject(context, schema);
+		}
+
 		/*[TestMethod]
 		public async virtual void CanCreate()
 		{

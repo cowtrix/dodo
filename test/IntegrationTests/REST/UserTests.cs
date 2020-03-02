@@ -60,7 +60,19 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out _);
 			await Login(user.AuthData.Username, password);
+			var response = await Request($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
+			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
+		}
+
+		[TestMethod]
+		public async Task CanLogout()
+		{
+			var user = GetRandomUser(out var password, out _);
+			await Login(user.AuthData.Username, password);
 			await Request($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET);
+			await Logout();
+			await AssertX.ThrowsAsync<Exception>(Request($"{UserController.RootURL}/{user.GUID}", EHTTPRequestType.GET),
+				e => e.Message.Contains("StatusCode: 302, ReasonPhrase: 'Found'"));
 		}
 
 		[TestMethod]

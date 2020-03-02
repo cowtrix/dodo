@@ -1,11 +1,18 @@
-﻿using Resources;
+using Resources;
 using Dodo.Roles;
 using Dodo;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DodoResources.Roles
 {
 	public class RoleAuthManager : AuthorizationManager<Role, RoleSchema>
 	{
+		public RoleAuthManager(ControllerContext controllercontext, HttpRequest request) : 
+			base(controllercontext, request)
+		{
+		}
+
 		protected override ResourceRequest CanCreate(AccessContext context, RoleSchema target)
 		{
 			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as GroupResource;

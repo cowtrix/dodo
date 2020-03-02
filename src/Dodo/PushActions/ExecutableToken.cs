@@ -5,11 +5,11 @@ namespace Dodo.Users
 {
 	public abstract class ExecutableToken : OneTimeRedeemableToken
 	{
-		public bool Execute(AccessContext context)
+		public override void OnRequest(AccessContext context)
 		{
 			if(IsRedeemed)
 			{
-				return false;
+				return;
 			}
 			try
 			{
@@ -23,7 +23,7 @@ namespace Dodo.Users
 			{
 				IsRedeemed = true;
 			}
-			return true;
+			return;
 		}
 
 		protected abstract void ExecuteInternal(AccessContext context);

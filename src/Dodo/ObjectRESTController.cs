@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using Common.Extensions;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Resources
 {
@@ -28,8 +29,9 @@ namespace Resources
 		where T : class, IDodoResource
 		where TSchema : DodoResourceSchemaBase
 	{
-		private DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
-		protected virtual AuthorizationManager<T, TSchema> AuthManager => new AuthorizationManager<T, TSchema>();
+		protected DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
+		protected virtual AuthorizationManager<T, TSchema> AuthManager => 
+			new AuthorizationManager<T, TSchema>(this.ControllerContext, Request);
 		
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
@@ -53,7 +55,7 @@ namespace Resources
 					using(var rscLock = new ResourceLock(req.Requester.User))
 					{
 						var user = rscLock.Value as User;
-						var token = user.Tokens.GetToken<ResourceCreationToken>(req.Token.GUID);
+						var token = user.TokenCollection.GetToken<ResourceCreationToken>(req.Token.GUID);
 						if(token == null)
 						{
 							throw new Exception("Resource creation token was missing");
@@ -147,7 +149,7 @@ namespace Resources
 			{
 				return req.Error;
 			}
-			return Ok(req.Resource.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
+			return Ok(req.Resource.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 		}
 
 		protected void LogRequest()
@@ -182,5 +184,17 @@ namespace Resources
 			return AuthManager.IsAuthorised(context, schema, Request.MethodEnum());
 		}
 
+		public override void OnActionExecuting(ActionExecutingContext actionContext)
+		{
+			var context = User.GetContext();
+			if(context.User != null)
+			{
+				foreach (var token in context.User.TokenCollection.Tokens)
+				{
+					token.OnRequest(context);
+				}
+			}
+			base.OnActionExecuting(actionContext);
+		}
 	}
 }
