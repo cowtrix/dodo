@@ -103,7 +103,7 @@ namespace RESTTests
 		public async Task CreatorIsShownAsAndOwner()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			var group = CreateObject(context);
+			var group = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
 			var obj = await RequestJSON($"{ResourceRoot}/{group.GUID}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.OWNER,
@@ -116,7 +116,7 @@ namespace RESTTests
 			// Create a new user
 			var user1 = GetRandomUser(out var user1Password, out var user1Context);
 			// Let them create a new group
-			var group = CreateObject(user1Context);
+			var group = CreateObject<T>(user1Context);
 			Assert.IsTrue(group.IsAdmin(user1, user1Context));
 			await Login(user1.AuthData.Username, user1Password);
 

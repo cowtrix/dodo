@@ -44,6 +44,7 @@ namespace Resources
 	[BsonIgnoreExtraElements(Inherited = true)]
 	public abstract class Resource : IRESTResource
 	{
+		public const string TYPE = "TYPE";
 		public const string METADATA = "METADATA";
 		public const string METADATA_PERMISSION = "PERMISSION";
 
@@ -92,6 +93,7 @@ namespace Resources
 			object requester, Passphrase passphrase )
 		{
 			view.Add(METADATA_PERMISSION, permissionLevel.GetName());
+			view.Add(TYPE, GetType().Name);
 		}
 
 		public bool CanVerify()

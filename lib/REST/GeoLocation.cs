@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using GeoCoordinatePortable;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -21,16 +21,29 @@ namespace Resources
 		[JsonProperty]
 		private Guid m_reverseGeocodingKey { get; set; }
 		[JsonProperty]
-		[Range(-180, 180)]
-		public double Latitude { get; set; }
-		[JsonProperty]
 		[Range(-90, 90)]
-		public double Longitude { get; set; }
+		public double Latitude { get { return m_lat; } set { m_lat = WrapClamp(value, -90, 90); } }
+		private double m_lat;
+
+		[JsonProperty]
+		[Range(-180, 180)]
+		public double Longitude { get { return m_long; } set { m_long = WrapClamp(value, -180, 180); } }
+		private double m_long;
 
 		public GeoLocation(double latitude, double longitude)
 		{
-			Latitude = latitude;
-			Longitude = longitude;
+			m_lat = WrapClamp(latitude, -90, 90);
+			m_long = WrapClamp(longitude, -180, 180);
+		}
+
+		private static double WrapClamp(double x, double x_min, double x_max)
+		{
+			return (((x - x_min) % (x_max - x_min)) + (x_max - x_min)) % (x_max - x_min) + x_min;
+		}
+
+		public GeoLocation(GeoLocation location) : 
+			this(location.Latitude, location.Longitude)
+		{
 		}
 
 		public bool CanVerify()
@@ -61,6 +74,11 @@ namespace Resources
 		public static bool operator !=(GeoLocation left, GeoLocation right)
 		{
 			return !(left == right);
+		}
+
+		public GeoLocation Offset(double latitude, double longitude)
+		{
+			return new GeoLocation(Latitude + latitude, Longitude + longitude);
 		}
 	}
 }
