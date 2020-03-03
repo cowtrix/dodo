@@ -18,8 +18,7 @@ using System.Threading.Tasks;
 
 namespace DodoResources
 {
-
-	public abstract class GroupResourceController<T, TSchema> : ObjectRESTController<T, TSchema> 
+	public abstract class GroupResourceController<T, TSchema> : ResourceController<T, TSchema> 
 		where T : GroupResource
 		where TSchema : GroupResourceSchemaBase
 	{
@@ -97,7 +96,6 @@ namespace DodoResources
 			}
 			try
 			{
-				var allrsc = ResourceManager.Get(x => true).ToList();
 				var resources = ResourceManager.Get(rsc => locationFilter.Filter(rsc) && dateFilter.Filter(rsc))
 					.Transpose(x => locationFilter.Mutate(x))
 					.Transpose(x => dateFilter.Mutate(x));

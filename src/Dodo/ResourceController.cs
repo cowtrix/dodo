@@ -1,4 +1,3 @@
-using Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,10 +13,10 @@ using System.Security.Claims;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using Common.Extensions;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Resources
 {
+
 	/// <summary>
 	/// This class implements a basic REST handler that can create, get, update and delete a given object.
 	/// This class handles receiving HTTP requests, transforming those requests into corresponding
@@ -25,16 +24,10 @@ namespace Resources
 	/// </summary>
 	/// <typeparam name="T">The type of the resource</typeparam>
 	[ApiController]
-	public abstract class ObjectRESTController<T, TSchema> : Controller
+	public abstract class ResourceController<T, TSchema> : CustomController<T, TSchema>
 		where T : class, IDodoResource
 		where TSchema : DodoResourceSchemaBase
 	{
-		protected DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
-		protected virtual AuthorizationManager<T, TSchema> AuthManager => 
-			new AuthorizationManager<T, TSchema>(this.ControllerContext, Request);
-		
-		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
-
 		public abstract Task<IActionResult> Create([FromBody] TSchema schema);
 
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
@@ -152,49 +145,12 @@ namespace Resources
 			return Ok(req.Resource.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 		}
 
-		protected void LogRequest()
-		{
-			Logger.Debug($"Received {Request.MethodEnum()} for {Request.Path}.");
-		}
+		
 
 		protected virtual void OnCreation(AccessContext Context, T user)
 		{
 		}
 
-		protected ResourceRequest VerifyRequest(Guid id = default)
-		{
-			LogRequest();
-			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
-			var context = User.GetContext();
-			if(!context.Challenge())
-			{
-				return ResourceRequest.ForbidRequest;
-			}
-			return AuthManager.IsAuthorised(context, target, Request.MethodEnum());
-		}
-
-		protected ResourceRequest VerifyRequest(TSchema schema)
-		{
-			LogRequest();
-			var context = User.GetContext();
-			if (!context.Challenge())
-			{
-				return ResourceRequest.ForbidRequest;
-			}
-			return AuthManager.IsAuthorised(context, schema, Request.MethodEnum());
-		}
-
-		public override void OnActionExecuting(ActionExecutingContext actionContext)
-		{
-			var context = User.GetContext();
-			if(context.User != null)
-			{
-				foreach (var token in context.User.TokenCollection.Tokens)
-				{
-					token.OnRequest(context);
-				}
-			}
-			base.OnActionExecuting(actionContext);
-		}
+		
 	}
 }

@@ -15,7 +15,7 @@ namespace Dodo.Users
 	[SecurityHeaders]
 	[ApiController]
 	[Route(RootURL)]
-	public class UserController : ObjectRESTController<User, UserSchema>
+	public class UserController : ResourceController<User, UserSchema>
 	{
 		public const string RootURL = "auth";
 		public const string LOGIN = "login";

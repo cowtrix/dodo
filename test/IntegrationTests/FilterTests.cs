@@ -1,4 +1,4 @@
-﻿using Dodo;
+using Dodo;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.SharedTest;
@@ -15,21 +15,22 @@ using System.Text;
 namespace FilterTests
 {
 	[TestClass]
-	public class RebellionDateFilterTests : DateFilterTests<Rebellion> { }
-
-	[TestClass]
-	public class ActionSiteDateFilterTests : DateFilterTests<ActionSite> { }
-
-	[TestClass]
-	public class EventSiteDateFilterTests : DateFilterTests<EventSite> { }
-
-	[TestClass]
-	public class MarchSiteDateFilterTests : DateFilterTests<MarchSite> { }
-
-	public abstract class DateFilterTests<T> : TestBase where T: GroupResource, ITimeBoundResource
+	public class FilterTests : TestBase
 	{
 		[TestMethod]
-		public void FilterByDate()
+		public void FilterRebellions()
+		{
+			FilterByDate<Rebellion>();
+			FilterByLocation<Rebellion>();
+		}
+
+		[TestMethod]
+		public void FilterLocalGroups()
+		{
+			FilterByLocation<LocalGroup>();
+		}
+
+		public void FilterByDate<T>() where T : GroupResource, ITimeBoundResource
 		{
 			if(typeof(T).IsAssignableFrom(typeof(ITimeBoundResource)))
 			{
@@ -44,32 +45,10 @@ namespace FilterTests
 			var search = manager.Get(x => filter.Filter(x));
 			Assert.IsTrue(search.Single().GUID == rsc.GUID);
 		}
-	}
 
-	[TestClass]
-	public class RebellionLocationFilterTests : LocationFilterTests<Rebellion> { }
-
-	[TestClass]
-	public class ActionSiteLocationFilterTests : LocationFilterTests<ActionSite> { }
-
-	[TestClass]
-	public class EventSiteLocationFilterTests : LocationFilterTests<EventSite> { }
-
-	[TestClass]
-	public class MarchSiteLocationFilterTests : LocationFilterTests<MarchSite> { }
-
-	[TestClass]
-	public class SanctuarySiteLocationFilterTests : LocationFilterTests<SanctuarySite> { }
-
-	[TestClass]
-	public class LocalGroupLocationFilterTests : LocationFilterTests<LocalGroup> { }
-
-	public abstract class LocationFilterTests<T> : TestBase where T : GroupResource, ILocationalResource
-	{
-		[TestMethod]
-		public void FilterByLocation()
+		public void FilterByLocation<T>() where T : GroupResource, ILocationalResource
 		{
-			if (typeof(T).IsAssignableFrom(typeof(ITimeBoundResource)))
+			if (typeof(T).IsAssignableFrom(typeof(ILocationalResource)))
 			{
 				Assert.Inconclusive();
 			}

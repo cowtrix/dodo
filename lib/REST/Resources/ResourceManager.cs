@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Config;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
