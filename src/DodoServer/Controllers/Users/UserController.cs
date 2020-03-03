@@ -15,7 +15,7 @@ namespace Dodo.Users
 	[SecurityHeaders]
 	[ApiController]
 	[Route(RootURL)]
-	public class UserController : ObjectRESTController<User, UserSchema>
+	public class UserController : ResourceController<User, UserSchema>
 	{
 		public const string RootURL = "auth";
 		public const string LOGIN = "login";
@@ -28,7 +28,8 @@ namespace Dodo.Users
 			public string password { get; set; }
 		}
 
-		protected override AuthorizationManager<User> AuthManager => new UserAuthManager();
+		protected override AuthorizationManager<User, UserSchema> AuthManager => 
+			new UserAuthManager(this.ControllerContext, Request);
 
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
@@ -57,16 +58,28 @@ namespace Dodo.Users
 			return Ok();
 		}
 
+		[HttpGet(LOGOUT)]
+		public async Task<IActionResult> Logout()
+		{
+			var context = User.GetContext();
+			if(context.User == null)
+			{
+				return Forbid();
+			}
+			await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
+			return Ok();
+		}
+
 		[HttpPost]
 		[Route(REGISTER)]
 		public override async Task<IActionResult> Create([FromBody] UserSchema schema)
 		{
-			string error = null;
-			if (schema == null || !schema.Verify(out error))
+			var req = VerifyRequest(schema);
+			if (!req.IsSuccess)
 			{
-				return BadRequest($"{error}\nExpecting application/json object:\n{JsonConvert.SerializeObject(new UserSchema(), Formatting.Indented)}");
+				return req.Error;
 			}
-			var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username);
+			var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username || x.PersonalData.Email == schema.Email);
 			if (user != null)
 			{
 				return Conflict();

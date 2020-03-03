@@ -18,16 +18,18 @@ using System.Threading.Tasks;
 
 namespace DodoResources
 {
-	public abstract class GroupResourceController<T, TSchema> : ObjectRESTController<T, TSchema> 
+	public abstract class GroupResourceController<T, TSchema> : ResourceController<T, TSchema> 
 		where T : GroupResource
-		where TSchema : DodoResourceSchemaBase
+		where TSchema : GroupResourceSchemaBase
 	{
 		public const string ADD_ADMIN = "addadmin";
 		public const string JOIN_GROUP = "join";
 		public const string LEAVE_GROUP = "leave";
 
+		protected override AuthorizationManager<T, TSchema> AuthManager => 
+			new GroupResourceAuthManager<T, TSchema>(this.ControllerContext, Request);
+
 		[HttpPost("{id}/" + ADD_ADMIN)]
-		[Authorize]
 		public IActionResult AddAdministrator(Guid id, [FromBody]string newAdminIdentifier)
 		{
 			var req = VerifyRequest(id);
@@ -35,7 +37,7 @@ namespace DodoResources
 			{
 				return req.Error;
 			}
-			var userManager = ResourceUtility.GetManager<User>();
+			var userManager = UserManager;
 			User targetUser = null;
 			if(Guid.TryParse(newAdminIdentifier, out var newAdminGuid))
 			{
@@ -54,7 +56,6 @@ namespace DodoResources
 		}
 
 		[HttpPost("{id}/" + JOIN_GROUP)]
-		[Authorize]
 		public IActionResult JoinGroup(Guid id)
 		{
 			var req = VerifyRequest(id);
@@ -70,7 +71,6 @@ namespace DodoResources
 		}
 
 		[HttpPost("{id}/" + LEAVE_GROUP)]
-		[Authorize]
 		public IActionResult LeaveGroup(Guid id)
 		{
 			var req = VerifyRequest(id);
@@ -86,7 +86,6 @@ namespace DodoResources
 		}
 
 		[HttpGet]
-		[AllowAnonymous]
 		public virtual async Task<IActionResult> IndexInternal(
 			[FromQuery]DistanceFilter locationFilter, [FromQuery]DateFilter dateFilter)
 		{
@@ -97,7 +96,6 @@ namespace DodoResources
 			}
 			try
 			{
-				var allrsc = ResourceManager.Get(x => true).ToList();
 				var resources = ResourceManager.Get(rsc => locationFilter.Filter(rsc) && dateFilter.Filter(rsc))
 					.Transpose(x => locationFilter.Mutate(x))
 					.Transpose(x => dateFilter.Mutate(x));

@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Resources.Security;
 using MongoDB.Bson.Serialization.Attributes;
@@ -13,8 +13,9 @@ namespace Resources
 	public interface IRESTResource : IVerifiable
 	{
 		Guid GUID { get; }
+		string Name { get; }
 		void OnDestroy();
-		void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
+		void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
 	}
 
 	public abstract class ResourceSchemaBase : IVerifiable
@@ -43,6 +44,9 @@ namespace Resources
 	[BsonIgnoreExtraElements(Inherited = true)]
 	public abstract class Resource : IRESTResource
 	{
+		public const string METADATA = "METADATA";
+		public const string METADATA_PERMISSION = "PERMISSION";
+
 		/// <summary>
 		/// The GUID of the resource is unique. You can get a resource
 		/// from it's guid by sending a GET request to /resources/{GUID}
@@ -84,10 +88,10 @@ namespace Resources
 		/// </summary>
 		public virtual void OnDestroy() { }
 
-		public virtual void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel,
+		public virtual void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase )
 		{
-			view.Add("PERMISSION", permissionLevel.GetName());
+			view.Add(METADATA_PERMISSION, permissionLevel.GetName());
 		}
 
 		public bool CanVerify()

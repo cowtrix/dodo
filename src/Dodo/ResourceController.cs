@@ -1,4 +1,3 @@
-using Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,9 +12,11 @@ using Resources.Security;
 using System.Security.Claims;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
+using Common.Extensions;
 
 namespace Resources
 {
+
 	/// <summary>
 	/// This class implements a basic REST handler that can create, get, update and delete a given object.
 	/// This class handles receiving HTTP requests, transforming those requests into corresponding
@@ -23,20 +24,15 @@ namespace Resources
 	/// </summary>
 	/// <typeparam name="T">The type of the resource</typeparam>
 	[ApiController]
-	public abstract class ObjectRESTController<T, TSchema> : Controller
+	public abstract class ResourceController<T, TSchema> : CustomController<T, TSchema>
 		where T : class, IDodoResource
 		where TSchema : DodoResourceSchemaBase
 	{
-		private DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
-		protected virtual AuthorizationManager<T> AuthManager => new AuthorizationManager<T>();
-		
-		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
-
 		public abstract Task<IActionResult> Create([FromBody] TSchema schema);
 
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{
-			var req = VerifyRequest();
+			var req = VerifyRequest(schema);
 			if (!req.IsSuccess)
 			{
 				return req.Error;
@@ -46,6 +42,26 @@ namespace Resources
 			try
 			{
 				createdObject = factory.CreateObject(req.Requester, schema) as T;
+				if(req.Token != null && req.Requester.User != null)
+				{
+					// The user consumed a resource creation token to make this resource
+					using(var rscLock = new ResourceLock(req.Requester.User))
+					{
+						var user = rscLock.Value as User;
+						var token = user.TokenCollection.GetToken<ResourceCreationToken>(req.Token.GUID);
+						if(token == null)
+						{
+							throw new Exception("Resource creation token was missing");
+						}
+						if(token.IsRedeemed)
+						{
+							throw new SecurityException($"Unexpected token consumption could indicate a user " +
+								"is attempting to exploit creation of multiple resources.");
+						}
+						token.IsRedeemed = true;
+						UserManager.Update(user, rscLock);
+					}
+				}
 				OnCreation(req.Requester, createdObject);
 			}
 			catch (Exception e)
@@ -126,28 +142,15 @@ namespace Resources
 			{
 				return req.Error;
 			}
-			return Ok(req.Resource.GenerateJsonView(EPermissionLevel.PUBLIC, null, default));
+			return Ok(req.Resource.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 		}
 
-		protected void LogRequest()
-		{
-			Logger.Debug($"Received {Request.MethodEnum()} for {Request.Path}.");
-		}
+		
 
 		protected virtual void OnCreation(AccessContext Context, T user)
 		{
 		}
 
-		protected ResourceRequest VerifyRequest(Guid id = default)
-		{
-			LogRequest();
-			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
-			var context = User.GetContext();
-			if(!context.Challenge())
-			{
-				return new ResourceRequest(new BadRequestResult());
-			}
-			return AuthManager.IsAuthorised(context, target, Request.MethodEnum());
-		}
+		
 	}
 }

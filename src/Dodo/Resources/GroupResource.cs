@@ -65,15 +65,18 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN)]
 		public UserMultiSigStore<AdminData> AdministratorData;
 
-		public PushActionCollection SharedActions = new PushActionCollection();
+		public TokenCollection SharedActions = new TokenCollection();
 
 		public SecureUserStore Members = new SecureUserStore();
 
 		[View(EPermissionLevel.PUBLIC)]
 		public int MemberCount { get { return Members.Count; } }
 
-		[JsonProperty]
+		[View(EPermissionLevel.MEMBER)]
 		public string GroupPublicKey { get; private set; }
+
+		[View(EPermissionLevel.ADMIN)]
+		public bool Published { get; set; }
 
 		public GroupResource(AccessContext context, GroupResourceSchemaBase schema) : base(context, schema)
 		{
@@ -87,8 +90,6 @@ namespace Dodo
 			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(context.User, pv), context);
 			PublicDescription = schema.PublicDescription;
 		}
-
-		
 
 		/// <summary>
 		/// Is this object a child of the target object
@@ -113,13 +114,17 @@ namespace Dodo
 		public bool AddAdmin(AccessContext context, User newAdmin)
 		{
 			var temporaryPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
-			if(!AddOrUpdateAdmin(context, newAdmin, temporaryPass))
+			using (var groupLock = new ResourceLock(this))
 			{
-				return false;
+				if (!AddOrUpdateAdmin(context, newAdmin, temporaryPass))
+				{
+					return false;
+				}
+				ResourceManager.Update(this, groupLock);
 			}
 			using (var userLock = new ResourceLock(newAdmin))
 			{
-				newAdmin.PushActions.Add(new AddAdminAction(this, temporaryPass, newAdmin.AuthData.PublicKey));
+				newAdmin.TokenCollection.Add(new AddAdminToken(this, temporaryPass, newAdmin.AuthData.PublicKey));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;
@@ -131,36 +136,32 @@ namespace Dodo
 			{
 				return false;
 			}
-			if (IsAdmin(newAdmin, context))
+			if (newAdmin.GUID != context.User.GUID && IsAdmin(newAdmin, context))
+			{
+				// Other user can't change existing admin password
+				return true;
+			}
+			AdministratorData.AddPermission(context.User, context.Passphrase, newAdmin, newPass);
+			var adminData = AdministratorData.GetValue(newAdmin, newPass);
+			var adminList = adminData.Administrators;
+			if (adminList.Contains(newAdmin))
 			{
 				return true;
 			}
-			using (var rscLock = new ResourceLock(this))
-			{
-				var group = rscLock.Value as GroupResource;
-				group.AdministratorData.AddPermission(context.User, context.Passphrase, newAdmin, newPass);
-				var adminData = group.AdministratorData.GetValue(context.User, context.Passphrase);
-				var adminList = adminData.Administrators;
-				if (adminList.Contains(newAdmin))
-				{
-					return true;
-				}
-				adminList.Add(newAdmin);
-				group.AdministratorData.SetValue(adminData, newAdmin, newPass);
-				ResourceUtility.GetManagerForResource(group).Update(group, rscLock);
-				return true;
-			}
+			adminList.Add(newAdmin);
+			AdministratorData.SetValue(adminData, newAdmin, newPass);
+			return true;
 		}
 
 		public abstract bool CanContain(Type type);
 
-		public override void AppendAuxilaryData(Dictionary<string, object> view, EPermissionLevel permissionLevel,
+		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
-			base.AppendAuxilaryData(view, permissionLevel, requester, passphrase);
+			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 	}
 }

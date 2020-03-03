@@ -1,6 +1,4 @@
 using Resources.Security;
-using Dodo.Users;
-using Microsoft.AspNetCore.Http;
 using Resources;
 using Newtonsoft.Json;
 
@@ -8,7 +6,7 @@ namespace Dodo
 {
 	public interface IDodoResource : IRESTResource
 	{
-		ResourceReference<User> Creator { get; }
+		bool IsCreator(AccessContext context);
 	}
 
 	public class DodoResourceSchemaBase : ResourceSchemaBase
@@ -23,9 +21,16 @@ namespace Dodo
 	{
 		public DodoResource(AccessContext creator, DodoResourceSchemaBase schema) : base(schema)
 		{
-			Creator = new ResourceReference<User>(creator.User);
+			if (creator.User != null)
+			{
+				Creator = SecurityExtensions.GenerateID(creator.User, creator.Passphrase);
+			}
 		}
 		[View(EPermissionLevel.ADMIN)]
-		public ResourceReference<User> Creator { get; private set; }
+		public string Creator { get; private set; }
+		public bool IsCreator(AccessContext context)
+		{
+			return Creator == SecurityExtensions.GenerateID(context.User, context.Passphrase);
+		}
 	}
 }

@@ -1,16 +1,14 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
 
 namespace Dodo.Users
 {
-	[SingletonPushAction]
-	public class TemporaryUserAction : PushAction
+	[SingletonToken]
+	public class TemporaryUserAction : OneTimeRedeemableToken
 	{
 		[JsonProperty]
 		public string TemporaryToken { get; private set; }
-
-		public override bool AutoFire => true;
 
 		public TemporaryUserAction(Passphrase temporaryPassword)
 		{

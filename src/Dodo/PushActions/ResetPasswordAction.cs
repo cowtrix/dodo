@@ -1,4 +1,4 @@
-﻿using Resources.Security;
+using Resources.Security;
 using Resources;
 using System;
 using Common.Security;
@@ -7,11 +7,10 @@ using System.Net;
 
 namespace Dodo.Users
 {
-	[SingletonPushAction]
-	public class ResetPasswordAction : PushAction
+	[SingletonToken]
+	public class ResetPasswordAction : OneTimeRedeemableToken
 	{
 		const int TOKEN_SIZE = 32;
-		const int TOKEN_TIMEOUT = 20;
 		public ResourceReference<User> TargetUser;
 		public string TemporaryToken;
 

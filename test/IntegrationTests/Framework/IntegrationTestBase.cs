@@ -101,5 +101,15 @@ namespace RESTTests
 			var cookie = response.Headers.GetValues("Set-Cookie");
 			m_client.DefaultRequestHeaders.Add("cookie", cookie);
 		}
+
+		protected async Task Logout()
+		{
+			var response = await m_client.GetAsync($"{UserController.RootURL}/{UserController.LOGOUT}");
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new Exception(response.ToString());
+			}
+			m_client.DefaultRequestHeaders.Clear();
+		}
 	}
 }

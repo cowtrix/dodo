@@ -1,4 +1,4 @@
-﻿using Resources.Security;
+using Resources.Security;
 using MongoDB.Bson.Serialization;
 using System;
 
@@ -11,16 +11,16 @@ namespace Resources.Serializers
 		public Passphrase Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
 		{
 			context.Reader.ReadStartDocument();
-			var tokenKey = context.Reader.ReadString();
+			var value = context.Reader.ReadString();
 			context.Reader.ReadEndDocument();
-			return new Passphrase { TokenKey = tokenKey };
+			return new Passphrase(value);
 		}
 
 		public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, Passphrase value)
 		{
 			context.Writer.WriteStartDocument();
-			context.Writer.WriteName("TokenKey");
-			context.Writer.WriteString(value.TokenKey);
+			context.Writer.WriteName("Value");
+			context.Writer.WriteString(value.Value);
 			context.Writer.WriteEndDocument();
 		}
 

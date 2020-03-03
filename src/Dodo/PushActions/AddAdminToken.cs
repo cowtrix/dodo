@@ -1,20 +1,19 @@
-﻿using Common.Security;
+using Common.Security;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
 
 namespace Dodo.Users
 {
-	public class AddAdminAction : PushAction
+	public class AddAdminToken : ExecutableToken
 	{
 		[JsonProperty]
 		public ResourceReference<GroupResource> Resource { get; private set; }
 		[JsonProperty]
 		public byte[] Token { get; private set; }
-		public override bool AutoFire => true;
 		public override bool CanRemove => true;
 
-		public AddAdminAction(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
+		public AddAdminToken(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
 		{
 			Resource = new ResourceReference<GroupResource>(resource);
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
@@ -32,6 +31,7 @@ namespace Dodo.Users
 				resource.AddOrUpdateAdmin(new AccessContext(context.User, tempPass), context.User, context.Passphrase);
 				ResourceUtility.GetManagerForResource(resource).Update(resource, rscLocker);
 			}
+			Removed = true;
 		}
 
 		public override string GetNotificationMessage()

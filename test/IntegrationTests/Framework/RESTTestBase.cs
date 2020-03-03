@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -41,13 +41,23 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async Task CanCreate()
+		public virtual async Task CanCreate()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			//await Authorize(user.AuthData.Username, password, ResourceRoot);
 			await Login(user.AuthData.Username, password);
 			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
 				SchemaGenerator.GetRandomSchema<T>(context));
+		}
+
+		protected virtual T CreateObject(AccessContext context = default)
+		{
+			if(context.User == null)
+			{
+				GetRandomUser(out var password, out context); ;
+			}
+			var schema = SchemaGenerator.GetRandomSchema<T>(context);
+			var factory = ResourceUtility.GetFactory<T>();
+			return factory.CreateTypedObject(context, schema);
 		}
 
 		/*[TestMethod]
@@ -139,7 +149,7 @@ namespace RESTTests
 		protected IRestResponse VerifyUser(string guid, string username, string password, string email)
 		{
 			var verifyAction = ResourceUtility.GetManager<User>().GetSingle(u => u.WebAuth.Username == username)
-				.PushActions.GetSinglePushAction<VerifyEmailAction>();
+				.Tokens.GetSingleToken<VerifyEmailAction>();
 			var response = Request($"verify?token={verifyAction.Token}", Method.POST, null, username, password);
 			Assert.IsTrue(response.Content.Contains("Email verified"), response + response.Content);
 			return response;

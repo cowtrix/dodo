@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
@@ -12,6 +12,7 @@ using SharedTest;
 using Dodo.Rebellions;
 using Dodo.SharedTest;
 using System.Collections.Generic;
+using Dodo.Users;
 
 namespace RESTTests
 {
@@ -82,24 +83,57 @@ namespace RESTTests
 			Assert.IsFalse(sites.Any(x => !guids.Contains(x.GUID)));
 		}
 
-		/*[TestMethod]
-		public void CanAddAdminFromExistingUser()
+		[TestMethod]
+		public override async Task CanCreate()
 		{
-			var createdObj = RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			var resourceURL = createdObj.Value<string>("ResourceURL");
-			createdObj = RequestJSON(resourceURL, Method.GET);
-			var adminBefore = createdObj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
-			Assert.IsTrue(adminBefore.All(x => x == DefaultGUID));
-			RegisterRandomUser(out var username1, out _, out var password, out _, out var guid);
-			var addAdminResponse = Request(resourceURL + GroupResourceRESTHandler<T>.ADD_ADMIN, Method.POST, guid);
-			Assert.IsTrue(addAdminResponse.StatusCode == System.Net.HttpStatusCode.OK);
-
-			var updatedObj = RequestJSON(resourceURL, Method.GET, user: username1, password:password);
-			Assert.AreEqual("ADMIN", updatedObj.Value<string>("PERMISSION"));
-			var adminAfter = updatedObj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").AsJEnumerable().Select(x => x.Value<string>("Guid"));
-			Assert.IsNotNull(adminAfter.SingleOrDefault(x => x == guid));
+			var user = GetRandomUser(out var password, out var context);
+			using (var rscLock = new ResourceLock(user))
+			{
+				user.TokenCollection.Add(new ResourceCreationToken(typeof(T)));
+				UserManager.Update(user, rscLock);
+			}
+			await Login(user.AuthData.Username, password);
+			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
+				SchemaGenerator.GetRandomSchema<T>(context));
+			user = UserManager.GetSingle(u => u.GUID == user.GUID);
+			Assert.IsTrue(user.TokenCollection.GetTokens<ResourceCreationToken>().Single().IsRedeemed);
 		}
 
+		[TestMethod]
+		public async Task CreatorIsShownAsAndOwner()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var group = CreateObject(context);
+			await Login(user.AuthData.Username, password);
+			var obj = await RequestJSON($"{ResourceRoot}/{group.GUID}", EHTTPRequestType.GET);
+			Assert.AreEqual(PermissionLevel.OWNER,
+				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
+		}
+
+		[TestMethod]
+		public async Task CanAddAdminFromExistingUser()
+		{
+			// Create a new user
+			var user1 = GetRandomUser(out var user1Password, out var user1Context);
+			// Let them create a new group
+			var group = CreateObject(user1Context);
+			Assert.IsTrue(group.IsAdmin(user1, user1Context));
+			await Login(user1.AuthData.Username, user1Password);
+
+			var user2 = GetRandomUser(out var user2Password, out var user2Context);
+			await Request($"{ResourceRoot}/{group.GUID}/addadmin", 
+				EHTTPRequestType.POST, user2.GUID);
+			var obj = await RequestJSON($"{ResourceRoot}/{group.GUID}", EHTTPRequestType.GET);
+			Assert.IsNotNull(obj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").Values<JToken>()
+				.Single(s => s.Value<string>("guid").ToString() == user2.GUID.ToString()));
+			await Logout();
+
+			await Login(user2.AuthData.Username, user2Password);
+			obj = await RequestJSON($"{ResourceRoot}/{group.GUID}", EHTTPRequestType.GET);
+			Assert.AreEqual(PermissionLevel.ADMIN,
+				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
+		}
+		/*
 		[TestMethod]
 		public void CanAddAdminFromNewUser()
 		{

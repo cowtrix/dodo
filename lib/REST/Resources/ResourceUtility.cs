@@ -1,4 +1,4 @@
-﻿using Common.Config;
+using Common.Config;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson.Serialization;
@@ -12,12 +12,11 @@ using System.Linq;
 
 namespace Resources
 {
-
 	public static class ResourceUtility
 	{
 		private static ConfigVariable<string> m_databasePath = new ConfigVariable<string>("MongoDBServerURL", "");
-		private static ConcurrentDictionary<Type, IResourceManager> ResourceManagers = new ConcurrentDictionary<Type, IResourceManager>();
-		private static ConcurrentDictionary<Type, IResourceFactory> Factories = new ConcurrentDictionary<Type, IResourceFactory>();
+		public static ConcurrentDictionary<Type, IResourceManager> ResourceManagers = new ConcurrentDictionary<Type, IResourceManager>();
+		public static ConcurrentDictionary<Type, IResourceFactory> Factories = new ConcurrentDictionary<Type, IResourceFactory>();
 		public static MongoClient MongoDB { get; private set; }
 
 		static ResourceUtility()

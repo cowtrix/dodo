@@ -1,6 +1,11 @@
-﻿using Dodo.LocalGroups;
+using Dodo.LocalGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DodoResources.LocalGroups;
+using System.Threading.Tasks;
+using Resources;
+using Dodo.SharedTest;
+using Dodo.Users;
+using System.Linq;
 
 namespace RESTTests
 {
@@ -9,6 +14,8 @@ namespace RESTTests
 	{
 		
 		public override string ResourceRoot => LocalGroupController.RootURL;
+
+		
 
 		/*[TestInitialize]
 		public void Setup()
