@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -59,11 +59,11 @@ namespace Resources
 
 				table.Add(new List<string>()
 				{
-					StripFriendlyName(ad.DisplayName),
-					ad.AttributeRouteInfo.Template,
+					StripFriendlyName(ad?.DisplayName),
+					ad?.AttributeRouteInfo?.Template,
 					//action,
-					string.Join(", ", ad.ActionConstraints?.OfType<HttpMethodActionConstraint>().FirstOrDefault()?.HttpMethods ?? new [] { "" }),
-					FormatAPIParams(controllerDescriptor?.MethodInfo.GetParameters()),
+					string.Join(", ", ad?.ActionConstraints?.OfType<HttpMethodActionConstraint>().FirstOrDefault()?.HttpMethods ?? new [] { "" }),
+					FormatAPIParams(controllerDescriptor?.MethodInfo?.GetParameters()),
 				});
 			}
 			return Content(CollectionToHtmlTable(table), new MediaTypeHeaderValue("text/html"));
@@ -72,11 +72,11 @@ namespace Resources
 		string FormatAPIParams(IEnumerable<ParameterInfo> parameters)
 		{
 			var sb = new StringBuilder();
-			foreach(var p in parameters)
+			foreach (var p in parameters)
 			{
 				bool isDocumentedType = m_documentedTypes.Any(t => t.IsAssignableFrom(p.ParameterType));
 				var prettyParamTypeName = GetPrettyTypeName(p.ParameterType);
-				if(isDocumentedType)
+				if (isDocumentedType)
 				{
 					sb.Append($"<a href=\"#{p.ParameterType.Name}\">");
 				}
@@ -116,12 +116,12 @@ namespace Resources
 		private string StripFriendlyName(string name)
 		{
 			var lastDot = name.IndexOf('.');
-			if(lastDot > 0)
+			if (lastDot > 0)
 			{
 				name = name.Substring(lastDot + 1);
 			}
 			var firstBracket = name.IndexOf('(');
-			if(firstBracket > 0)
+			if (firstBracket > 0)
 			{
 				name = name.Substring(0, firstBracket - 1);
 			}

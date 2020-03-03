@@ -53,7 +53,7 @@ namespace Dodo.Users
 			};
 			// issue authentication cookie with subject ID and username
 			await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
-			
+
 			return Ok();
 		}
 

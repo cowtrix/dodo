@@ -27,7 +27,8 @@ namespace DodoServer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
+			services.AddControllersWithViews();
+
 			/*var builder = services.AddIdentityServer(config =>
 			{
 				config.UserInteraction.LoginUrl = $"/{UserController.RootURL}/{UserController.LOGIN}";
@@ -80,7 +81,7 @@ namespace DodoServer
 			{
 				endpoints.MapDefaultControllerRoute();
 			});
-			
+
 		}
 	}
 }
