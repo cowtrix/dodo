@@ -27,7 +27,8 @@ namespace DodoServer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
+			services.AddControllersWithViews();
+
 			services.AddAuthentication(config =>
 			{
 				config.DefaultAuthenticateScheme = AuthConstants.AUTHSCHEME;
@@ -70,7 +71,7 @@ namespace DodoServer
 			{
 				endpoints.MapDefaultControllerRoute();
 			});
-			
+
 		}
 	}
 }

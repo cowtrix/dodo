@@ -1,0 +1,60 @@
+@model Dodo.Rebellions.Rebellion
+
+@{
+	ViewData["Title"] = "Rebellion Details";
+}
+
+<h1>Details</h1>
+
+<div>
+	<h4>Rebellion</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Name)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Name)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.StartDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.StartDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.EndDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.EndDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.MemberCount)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.MemberCount)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.PublicDescription)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.PublicDescription)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.GroupPublicKey)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.GroupPublicKey)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.GUID)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.GUID)
+		</dd>
+	</dl>
+</div>
+<div>
+	@Html.ActionLink("Edit", "Edit", new { id = Model.GUID }) |
+	<a asp-action="Index">Back to List</a>
+</div>
