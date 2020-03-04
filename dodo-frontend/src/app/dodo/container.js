@@ -1,11 +1,15 @@
 import { connect } from 'react-redux'
-import { rebellions } from '../domain/index'
+import { rebellions, localGroups } from '../domain/index'
 import { Dodo } from './dodo'
 
-const { actions } = rebellions
+const { allRebellionsGet } = rebellions.actions
+const { allLocalGroupsGet } = localGroups.actions
 
 const mapDispatchToProps = dispatch => ({
-	allRebellionsGet: () => actions.allRebellionsGet(dispatch)
+	startup: () => {
+		allRebellionsGet(dispatch)
+		allLocalGroupsGet(dispatch)
+	}
 })
 
 export const DodoConnected = connect(null, mapDispatchToProps)(Dodo)

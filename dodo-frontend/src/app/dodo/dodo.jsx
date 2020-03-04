@@ -1,14 +1,19 @@
-import React, {Fragment} from 'react'
-import {Header} from "./header";
-import {RebellionMap} from "./rebellion-map";
+import React, { Fragment } from 'react'
+import { PropTypes } from 'prop-types'
 
-export const Dodo = ({ allRebellionsGet }) => {
-	allRebellionsGet()
-	return(
+import { Header } from "./header"
+import { Routes } from './routes'
+
+export const Dodo = ({ startup }) => {
+	startup()
+	return (
 		<Fragment>
 			<Header/>
-			<RebellionMap/>
+			<Routes/>
 		</Fragment>
 	)
 }
 
+Dodo.propTypes = {
+	startup: PropTypes.func,
+}
