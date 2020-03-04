@@ -17,7 +17,7 @@ namespace DodoResources
 		public virtual async Task<IActionResult> Index(
 			[FromQuery]DistanceFilter locationFilter, [FromQuery]DateFilter dateFilter)
 		{
-			var req = VerifyRequest();
+			var req = VerifySearchRequest();
 			if (!req.IsSuccess)
 			{
 				return req.Error;
@@ -40,7 +40,7 @@ namespace DodoResources
 			}
 		}
 
-		protected ResourceRequest VerifyRequest()
+		protected ResourceRequest VerifySearchRequest()
 		{
 			LogRequest();
 			var context = User.GetContext();
