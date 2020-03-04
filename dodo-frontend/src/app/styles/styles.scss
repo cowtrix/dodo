@@ -1,0 +1,13 @@
+$font-size: 1rem;
+$responsive-breakpoint: 760px;
+
+body {
+  font-family: Arial;
+}
+
+$xsmall-spacing-unit: 3px;
+
+@function spacing($multiple, $unit: $xsmall-spacing-unit) {
+  $result: $multiple * $unit;
+  @return $result;
+}

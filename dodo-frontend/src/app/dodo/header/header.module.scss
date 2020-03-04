@@ -1,5 +1,13 @@
+@import "~app/styles/styles";
+
 .header {
   display: flex;
-  justify-content: center;
-  background: black;
+  align-items: stretch;
+  justify-content: space-between;
+
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
 }
