@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace Dodo.Users
 {
+
 	public class SingletonTokenAttribute : Attribute
 	{
 	}

@@ -90,6 +90,19 @@ namespace RESTTests
 			await AssertX.ThrowsAsync<Exception>(RequestJSON($"{UserController.RootURL}/{user.GUID.ToString()}", EHTTPRequestType.GET));
 		}
 
+		[TestMethod]
+		public async Task CanResetPassword()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.POST, 
+				user.PersonalData.Email);
+			Assert.AreEqual(request.StatusCode, System.Net.HttpStatusCode.OK);
+			var newPassword = ValidationExtensions.GenerateStrongPassword();
+
+			request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.POST,
+				null, new[] { ( UserController.PARAM_TOKEN,  ) });
+		}
+
 		/*public override object GetCreationSchema(bool unique)
 		{
 			if(unique)
@@ -128,19 +141,7 @@ namespace RESTTests
 			RequestJSON(secondObj.Value<string>("ResourceURL"), Method.GET, null, username, password);
 		}
 
-		[TestMethod]
-		public void CanResetPassword()
-		{
-			var user = RegisterUser(out var guid);
-			var request = Request(UserController.RESETPASS_URL, Method.POST, DefaultEmail, "", "");
-			Assert.IsTrue(request.Content.Contains("If an account with that email exists, a password reset email has been sent"));
-			var newPassword = ValidationExtensions.GenerateStrongPassword();
-			var token = (ResourceUtility.GetResourceByGuid(Guid.Parse(guid)) as User)
-				.Tokens.GetSingleToken<ResetPasswordAction>().TemporaryToken;
-			request = Request(UserController.RESETPASS_URL + "?token=" + token, Method.POST, newPassword, "", "");
-			Assert.IsTrue(request.Content.Contains("You've succesfully changed your password."));
-			RequestJSON(user.Value<string>("ResourceURL"), Method.GET, null, DefaultUsername, newPassword);
-		}
+		
 
 		[TestMethod]
 		public void CanChangePassword()

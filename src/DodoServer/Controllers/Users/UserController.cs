@@ -21,6 +21,8 @@ namespace Dodo.Users
 		public const string LOGIN = "login";
 		public const string LOGOUT = "logout";
 		public const string REGISTER = "register";
+		public const string RESET_PASSWORD = "resetpassword";
+		public const string PARAM_TOKEN = "token";
 
 		public class LoginModel
 		{
@@ -67,6 +69,23 @@ namespace Dodo.Users
 				return Forbid();
 			}
 			await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
+			return Ok();
+		}
+
+		[HttpGet(RESET_PASSWORD)]
+		public async Task<IActionResult> ResetPassword([FromBody]string password)
+		{
+			return Ok();
+		}
+
+		[HttpGet(RESET_PASSWORD)]
+		public async Task<IActionResult> RequestPasswordReset(string email)
+		{
+			var context = User.GetContext();
+			if(context.User != null)
+			{
+				var resetToken = 
+			}
 			return Ok();
 		}
 
