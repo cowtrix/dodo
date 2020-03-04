@@ -104,8 +104,9 @@ namespace Dodo.Users
 				return Conflict();
 			}
 			var factory = ResourceUtility.GetFactory<User>();
-			factory.CreateObject(default(AccessContext), schema);
-			return Ok();
+			user = factory.CreateTypedObject(default(AccessContext), schema);
+			var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));
+			return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.OWNER, user, passphrase));
 		}
 	}
 }
