@@ -46,6 +46,7 @@ namespace Resources
 			{
 				return null;
 			}
+
 			var vals = new Dictionary<string, object>();
 
 			// Get fields and properties, filter to what we can view with our permission level
@@ -88,7 +89,7 @@ namespace Resources
 		/// Generate a JSON view of an IEnumerable.
 		/// </summary>
 		/// <returns></returns>
-		public static List<Dictionary<string, object>> GenerateJsonView<T>(this IEnumerable<T> obj,
+		public static List<Dictionary<string, object>> GenerateJsonViewEnumerable<T>(this IEnumerable<T> obj,
 			EPermissionLevel visibility, object requester, Passphrase passphrase)
 		{
 			return obj.Select(x => x.GenerateJsonView(visibility, requester, passphrase)).ToList();

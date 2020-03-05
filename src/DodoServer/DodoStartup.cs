@@ -56,7 +56,12 @@ namespace DodoServer
 
 		public void Configure(IApplicationBuilder app)
 		{
-			app.UseCors();
+			app.UseCors(config =>
+			{
+				config.AllowAnyOrigin()
+				.AllowAnyMethod()
+				.AllowAnyHeader();
+			});
 			app.UseHttpsRedirection();
 			app.UseRouting();
 			app.UseStaticFiles();

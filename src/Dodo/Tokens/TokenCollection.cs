@@ -15,13 +15,13 @@ namespace Dodo.Users
 	/// </summary>
 	public class TokenCollection
 	{
-		public IEnumerable<UserToken> Tokens { get { return m_actions; } }
+		public IEnumerable<UserToken> Tokens { get { return m_tokens; } }
 
 		[JsonProperty]
 		[BsonElement]
-		private List<UserToken> m_actions = new List<UserToken>();
+		private List<UserToken> m_tokens = new List<UserToken>();
 
-		public void Add(UserToken pa)
+		public void Add(User parent, UserToken pa)
 		{
 			var type = pa.GetType();
 			var isSingleton = type.GetCustomAttribute<SingletonTokenAttribute>();
@@ -29,18 +29,23 @@ namespace Dodo.Users
 			{
 				throw new SingletonTokenDuplicateException($"Cannot have multiple {type} Tokens");
 			}
-			m_actions.Add(pa);
-			pa.OnAdd();
+			m_tokens.Add(pa);
+			pa.OnAdd(parent);
 		}
 
-		public void Remove(UserToken pa)
+		public void Remove<T>(User parent) where T: UserToken
+		{
+			m_tokens = Tokens.Where(t => !(t is T)).ToList();
+		}
+
+		public void Remove(User parent, UserToken pa)
 		{
 			if(!pa.CanRemove)
 			{
 				throw new System.Exception("This Token cannot be dismissed");
 			}
-			pa.OnRemove();
-			m_actions.Remove(pa);
+			pa.OnRemove(parent);
+			m_tokens.Remove(pa);
 		}
 
 		public T GetSingleToken<T>() where T:UserToken

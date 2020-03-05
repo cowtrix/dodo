@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Resources.Security;
 using Dodo.Resources;
 using Resources;
@@ -16,7 +16,7 @@ namespace Dodo.Users
 			using (var rscLock = new ResourceLock(newUser))
 			{
 				Add(newUser);
-				newUser.TokenCollection.Add(new TemporaryUserAction(temporaryPassword));
+				newUser.TokenCollection.Add(newUser, new TemporaryUserAction(temporaryPassword));
 				Update(newUser, rscLock);
 				return newUser;
 			}

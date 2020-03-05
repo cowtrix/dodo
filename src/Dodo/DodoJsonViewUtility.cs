@@ -17,5 +17,16 @@ namespace Resources
 		{
 			return JsonViewUtility.GenerateJsonView(obj, visibility, new ResourceReference<User>(requester), passphrase);
 		}
+
+		/// <summary>
+		/// Generate a JSON view of an IEnumerable.
+		/// </summary>
+		/// <returns></returns>
+		public static List<Dictionary<string, object>> GenerateJsonViewEnumerable<T>(this IEnumerable<T> obj,
+			EPermissionLevel visibility, User requester, Passphrase passphrase)
+		{
+			return JsonViewUtility.GenerateJsonViewEnumerable(obj, visibility, 
+				new ResourceReference<User>(requester), passphrase);
+		}
 	}
 }

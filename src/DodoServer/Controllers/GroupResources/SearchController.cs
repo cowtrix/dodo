@@ -17,7 +17,7 @@ namespace DodoResources
 		public virtual async Task<IActionResult> Index(
 			[FromQuery]DistanceFilter locationFilter, [FromQuery]DateFilter dateFilter)
 		{
-			var req = VerifyRequest();
+			var req = VerifySearchRequest();
 			if (!req.IsSuccess)
 			{
 				return req.Error;
@@ -27,8 +27,8 @@ namespace DodoResources
 				var resources = DodoResourceUtility.Get(rsc => locationFilter.Filter(rsc) && dateFilter.Filter(rsc))
 					.Transpose(x => locationFilter.Mutate(x))
 					.Transpose(x => dateFilter.Mutate(x));
-				var guids = resources.Select(rsc => rsc.GUID).ToList();
-				return Ok(guids);
+				return Ok(DodoJsonViewUtility.GenerateJsonViewEnumerable(resources, req.PermissionLevel, 
+					req.Requester.User, req.Requester.Passphrase));
 			}
 			catch (Exception e)
 			{
@@ -38,6 +38,21 @@ namespace DodoResources
 				return BadRequest();
 #endif
 			}
+		}
+
+		protected ResourceRequest VerifySearchRequest()
+		{
+			LogRequest();
+			var context = User.GetContext();
+			if (!context.Challenge())
+			{
+				return ResourceRequest.ForbidRequest;
+			}
+			if(context.User == null)
+			{
+				return new ResourceRequest(context, null, EHTTPRequestType.GET, EPermissionLevel.PUBLIC);
+			}
+			return new ResourceRequest(context, null, EHTTPRequestType.GET, EPermissionLevel.MEMBER);
 		}
 	}
 }

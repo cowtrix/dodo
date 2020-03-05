@@ -14,7 +14,7 @@ namespace Dodo.Users
 		[JsonProperty]
 		public string Token { get; private set; }
 
-		public override void OnAdd()
+		public override void OnAdd(User parent)
 		{
 			Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 		}

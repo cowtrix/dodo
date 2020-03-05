@@ -39,8 +39,8 @@ namespace RESTTests
 					("latlong", $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
 					("distance", "20.6"),
 				});
-			var guids = list.Values<string>().Select(x => Guid.Parse(x)).GetEnumerator().ToIEnumerable().ToList();
-			Assert.IsTrue(guids.Contains(resource.GUID));
+			var guids = list.Values<JObject>().Select(o => o.Value<string>("GUID"));
+			Assert.IsTrue(guids.Contains(resource.GUID.ToString()));
 		}
 
 		[TestMethod]
@@ -64,8 +64,8 @@ namespace RESTTests
 					("startdate", $"{resource.StartDate.ToShortDateString()}"),
 					("enddate", $"{resource.EndDate.ToShortDateString()}")
 				});
-			var guids = list.Values<string>().Select(x => Guid.Parse(x)).GetEnumerator().ToIEnumerable().ToList();
-			Assert.IsTrue(guids.Contains(resource.GUID));
+			var guids = list.Values<JObject>().Select(o => o.Value<string>("GUID"));
+			Assert.IsTrue(guids.Contains(resource.GUID.ToString()));
 		}
 
 		[TestMethod]
@@ -79,8 +79,8 @@ namespace RESTTests
 				sites.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var list = await RequestJSON<JArray>($"{ResourceRoot}", EHTTPRequestType.GET);
-			var guids = list.Values<string>().Select(x => Guid.Parse(x)).GetEnumerator().ToIEnumerable().ToList();
-			Assert.IsFalse(sites.Any(x => !guids.Contains(x.GUID)));
+			var guids = list.Values<JObject>().Select(o => o.Value<string>("GUID"));
+			Assert.IsFalse(sites.Any(x => !guids.Contains(x.GUID.ToString())));
 		}
 
 		[TestMethod]
@@ -89,7 +89,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			using (var rscLock = new ResourceLock(user))
 			{
-				user.TokenCollection.Add(new ResourceCreationToken(typeof(T)));
+				user.TokenCollection.Add(user, new ResourceCreationToken(typeof(T)));
 				UserManager.Update(user, rscLock);
 			}
 			await Login(user.AuthData.Username, password);
@@ -103,7 +103,7 @@ namespace RESTTests
 		public async Task CreatorIsShownAsAndOwner()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			var group = CreateObject(context);
+			var group = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
 			var obj = await RequestJSON($"{ResourceRoot}/{group.GUID}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.OWNER,
@@ -116,7 +116,7 @@ namespace RESTTests
 			// Create a new user
 			var user1 = GetRandomUser(out var user1Password, out var user1Context);
 			// Let them create a new group
-			var group = CreateObject(user1Context);
+			var group = CreateObject<T>(user1Context);
 			Assert.IsTrue(group.IsAdmin(user1, user1Context));
 			await Login(user1.AuthData.Username, user1Password);
 

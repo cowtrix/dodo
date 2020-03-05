@@ -45,11 +45,7 @@ namespace RESTTests
 
 		protected async Task<JObject> RequestJSON(string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
 		{
-			var response = await Request(url, method, data, parameters);
-			var content = await response.Content.ReadAsStringAsync();
-			Assert.IsTrue(content.IsValidJson(),
-				$"Invalid JSON: {response.StatusCode} | {response.ReasonPhrase} | {content}");
-			return JsonConvert.DeserializeObject<JObject>(content);
+			return await RequestJSON<JObject>(url, method, data, parameters);
 		}
 
 		protected async Task<T> RequestJSON<T>(string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)

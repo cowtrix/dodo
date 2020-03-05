@@ -70,6 +70,20 @@ namespace SharedTest
 			return GenerateUser(schema, out context);
 		}
 
+		protected virtual T CreateObject<T>(AccessContext context = default, ResourceSchemaBase schema = null) where T: IRESTResource
+		{
+			if (context.User == null)
+			{
+				GetRandomUser(out var password, out context); ;
+			}
+			if(schema == null)
+			{
+				schema = SchemaGenerator.GetRandomSchema<T>(context);
+			}
+			var factory = ResourceUtility.GetFactory<T>();
+			return factory.CreateTypedObject(context, schema);
+		}
+
 		long LongRandom(long min, long max)
 		{
 			long result = m_random.Next((Int32)(min >> 32), (Int32)(max >> 32));
