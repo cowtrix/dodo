@@ -8,13 +8,13 @@ using System.Net;
 namespace Dodo.Users
 {
 	[SingletonToken]
-	public class ResetPasswordAction : OneTimeRedeemableToken
+	public class ResetPasswordToken : OneTimeRedeemableToken
 	{
 		const int TOKEN_SIZE = 32;
 		public ResourceReference<User> TargetUser;
 		public string TemporaryToken;
 
-		public ResetPasswordAction(User targetUser)
+		public ResetPasswordToken(User targetUser)
 		{
 			TargetUser = targetUser;
 			TemporaryToken = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
@@ -23,9 +23,8 @@ namespace Dodo.Users
 #endif
 		}
 
-		public override void OnAdd()
+		public override void OnAdd(User user)
 		{
-			var user = TargetUser.GetValue();
 			EmailHelper.SendEmail(user.PersonalData.Email, user.Name, $"{Dodo.PRODUCT_NAME}: Reset your password",
 				$"You've requested a password reset for your account on {Dns.GetHostName()}." +
 				$"To reset your password, visit the following link: {Dns.GetHostName()}/resetpassword?token={TemporaryToken}");

@@ -94,13 +94,16 @@ namespace RESTTests
 		public async Task CanResetPassword()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			var request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.POST, 
-				user.PersonalData.Email);
+			var request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.GET,
+				null, new[] { ( "email", user.PersonalData.Email) } );
 			Assert.AreEqual(request.StatusCode, System.Net.HttpStatusCode.OK);
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
+			user = UserManager.GetSingle(u => u.GUID == user.GUID);
+			var token = user.TokenCollection.GetSingleToken<ResetPasswordToken>();
 
 			request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.POST,
-				null, new[] { ( UserController.PARAM_TOKEN,  ) });
+				newPassword, new[] { ( UserController.PARAM_TOKEN, token.TemporaryToken ) });
+			await Login(user.AuthData.Username, newPassword);
 		}
 
 		/*public override object GetCreationSchema(bool unique)

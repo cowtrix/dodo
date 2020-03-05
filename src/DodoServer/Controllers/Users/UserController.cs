@@ -72,19 +72,47 @@ namespace Dodo.Users
 			return Ok();
 		}
 
-		[HttpGet(RESET_PASSWORD)]
-		public async Task<IActionResult> ResetPassword([FromBody]string password)
+		[HttpPost(RESET_PASSWORD)]
+		public async Task<IActionResult> ResetPassword(string token, [FromBody]string password)
 		{
+			if(string.IsNullOrEmpty(token) || 
+				!ValidationExtensions.IsStrongPassword(password, out _))
+			{
+				return BadRequest();
+			}
+			var user = UserManager.GetSingle(u => 
+				u.TokenCollection.GetSingleToken<ResetPasswordToken>().TemporaryToken == token);
+			if(user == null)
+			{
+				return BadRequest();
+			}
+			using(var rscLock = new ResourceLock(user))
+			{
+				user = rscLock.Value as User;
+				user.TokenCollection.Remove<ResetPasswordToken>(user);
+				user.AuthData = new AuthorizationData(user.AuthData.Username, password);
+				UserManager.Update(user, rscLock);
+			}
 			return Ok();
 		}
-
+		
 		[HttpGet(RESET_PASSWORD)]
 		public async Task<IActionResult> RequestPasswordReset(string email)
 		{
 			var context = User.GetContext();
-			if(context.User != null)
+			if(context.User != null && context.User.PersonalData.Email != email)
 			{
-				var resetToken = 
+				return BadRequest("Mismatching emails");
+			}
+			var targetUser = UserManager.GetSingle(u => u.PersonalData.Email == email);
+			if (targetUser != null)
+			{
+				using(var rscLock = new ResourceLock(targetUser))
+				{
+					targetUser = rscLock.Value as User;
+					targetUser.TokenCollection.Add(targetUser, new ResetPasswordToken(targetUser));
+					UserManager.Update(targetUser, rscLock);
+				}				
 			}
 			return Ok();
 		}

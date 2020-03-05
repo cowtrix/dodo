@@ -21,7 +21,7 @@ namespace Dodo.Users
 
 	[BsonDiscriminator(RootClass = true)]
 	[BsonKnownTypes(
-		typeof(ResetPasswordAction),
+		typeof(ResetPasswordToken),
 		typeof(AddAdminToken),
 		typeof(TemporaryUserAction),
 		typeof(VerifyEmailAction),
@@ -42,11 +42,11 @@ namespace Dodo.Users
 			GUID = Guid.NewGuid();
 		}
 
-		public virtual void OnAdd()
+		public virtual void OnAdd(User parent)
 		{
 		}
 
-		public virtual void OnRemove()
+		public virtual void OnRemove(User parent)
 		{
 		}
 
