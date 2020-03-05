@@ -81,7 +81,7 @@ namespace Dodo.Users
 				return BadRequest();
 			}
 			var user = UserManager.GetSingle(u => 
-				u.TokenCollection.GetSingleToken<ResetPasswordToken>().TemporaryToken == token);
+				u.TokenCollection.GetSingleToken<ResetPasswordToken>()?.TemporaryToken == token);
 			if(user == null)
 			{
 				return BadRequest();
