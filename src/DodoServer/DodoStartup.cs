@@ -27,6 +27,9 @@ namespace DodoServer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			// ICorsService and ICorsPolicyProvider are added by AddControllers... but best to be explicit in case this changes
+			services.AddCors();
+
 			services.AddControllersWithViews();
 
 			services.AddAuthentication(config =>
@@ -56,14 +59,21 @@ namespace DodoServer
 
 		public void Configure(IApplicationBuilder app)
 		{
+			app.UseHttpsRedirection();
+			app.UseRouting();
+
+			// CORS must be called after UseRouting and before UseEndpoints to function correctly
+			// The `Access-Control-Allow-Origin` header will not be added to normal GET responses
+			// An `Origin` header must be on the request (for a different domain) for CORS to run
+			// CORS headers will show on preflight OPTIONS responses if the browser uses them
+			// AllowCredentials can't be used with AllowAnyOrigin (origins must be specified)
 			app.UseCors(config =>
 			{
 				config.AllowAnyOrigin()
 				.AllowAnyMethod()
 				.AllowAnyHeader();
 			});
-			app.UseHttpsRedirection();
-			app.UseRouting();
+
 			app.UseStaticFiles();
 			app.UseAuthentication();
 			app.UseAuthorization();
