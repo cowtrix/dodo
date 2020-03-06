@@ -2,12 +2,18 @@ $font-size: 1rem;
 $responsive-breakpoint: 760px;
 
 body {
-  font-family: Arial;
+	font-family: Arial;
+}
+
+* {
+	box-sizing: border-box;
 }
 
 $xsmall-spacing-unit: 3px;
 
 @function spacing($multiple, $unit: $xsmall-spacing-unit) {
-  $result: $multiple * $unit;
-  @return $result;
+	$result: $multiple * $unit;
+	@return $result;
 }
+
+$application-max-width: 1290px;

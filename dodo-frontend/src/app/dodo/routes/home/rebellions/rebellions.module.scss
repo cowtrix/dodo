@@ -1,0 +1,19 @@
+@import "~app/styles/styles";
+
+$rebellions-list-background: white;
+
+.wrapper {
+	display: flex;
+	justify-content: center;
+}
+
+.rebellions {
+	display: flex;
+	background: $rebellions-list-background;
+	border: 1px solid grey;
+	padding: spacing(10) spacing(8);
+	position: relative;
+	top: - spacing(9);
+	max-width: $application-max-width;
+	flex-grow: 1
+}

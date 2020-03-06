@@ -1,13 +1,21 @@
 @import "~app/styles/styles";
 
+.wrapper {
+	display: flex;
+	justify-content: center;
+}
+
 .header {
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
+	display: flex;
+	align-items: stretch;
+	justify-content: space-between;
+	max-width: $application-max-width;
+	flex-grow: 1;
 
 }
 
 .headerLeft {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
+
