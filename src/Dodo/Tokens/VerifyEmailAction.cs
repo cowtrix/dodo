@@ -7,7 +7,7 @@ using Common.Security;
 namespace Dodo.Users
 {
 	[SingletonToken]
-	public class VerifyEmailAction : UserToken
+	public class VerifyEmailToken : UserToken
 	{
 		const int TOKEN_SIZE = 64;
 

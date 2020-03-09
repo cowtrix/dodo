@@ -15,6 +15,7 @@ namespace Resources
 	/// <summary>
 	/// Represents a geographic location on the Earth's surface
 	/// </summary>
+	[Serializable]
 	public struct GeoLocation : IVerifiable
 	{
 		public GeoCoordinatePortable.GeoCoordinate ToCoordinate() => new GeoCoordinate(Latitude, Longitude);

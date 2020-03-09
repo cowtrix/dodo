@@ -23,6 +23,7 @@ namespace Dodo.Users
 		public const string REGISTER = "register";
 		public const string RESET_PASSWORD = "resetpassword";
 		public const string PARAM_TOKEN = "token";
+		public const string VERIFY_EMAIL = "verifyemail";
 
 		public class LoginModel
 		{
@@ -63,8 +64,7 @@ namespace Dodo.Users
 		[HttpGet(LOGOUT)]
 		public async Task<IActionResult> Logout()
 		{
-			var context = User.GetContext();
-			if(context.User == null)
+			if(Context.User == null)
 			{
 				return Forbid();
 			}
@@ -95,12 +95,38 @@ namespace Dodo.Users
 			}
 			return Ok();
 		}
-		
+
+		[HttpGet(VERIFY_EMAIL)]
+		public async Task<IActionResult> VerifyEmail(string token)
+		{
+			if(Context.User == null)
+			{
+				return Forbid();
+			}
+			if(Context.User.PersonalData.EmailConfirmed)
+			{
+				return Ok();
+			}
+			var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>();
+			if(verifyToken == null)
+			{
+				throw new Exception($"Verify token was null for user {Context.User.GUID}");
+			}
+			if(verifyToken.Token != token)
+			{
+				return BadRequest("Token mismatch");
+			}
+			using var rscLock = new ResourceLock(Context.User);
+			var user = rscLock.Value as User;
+			user.PersonalData.EmailConfirmed = true;
+			UserManager.Update(user, rscLock);
+			return Ok();
+		}
+
 		[HttpGet(RESET_PASSWORD)]
 		public async Task<IActionResult> RequestPasswordReset(string email)
 		{
-			var context = User.GetContext();
-			if(context.User != null && context.User.PersonalData.Email != email)
+			if(Context.User != null && Context.User.PersonalData.Email != email)
 			{
 				return BadRequest("Mismatching emails");
 			}

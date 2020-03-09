@@ -145,12 +145,8 @@ namespace Resources
 			return Ok(req.Resource.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 		}
 
-		
-
 		protected virtual void OnCreation(AccessContext Context, T user)
 		{
 		}
-
-		
 	}
 }

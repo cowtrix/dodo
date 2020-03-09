@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Dodo.Resources;
 using Resources;
 using Resources.Serializers;
@@ -43,6 +43,13 @@ namespace Dodo.Users
 			}
 			error = null;
 			return true;
+		}
+
+		protected override User CreateObjectInternal(AccessContext context, UserSchema schema)
+		{
+			var user = base.CreateObjectInternal(context, schema);
+			user.TokenCollection.Add(user, new VerifyEmailToken());
+			return user;
 		}
 	}
 }

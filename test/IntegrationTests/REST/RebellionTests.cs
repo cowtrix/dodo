@@ -1,4 +1,4 @@
-﻿using Dodo.Rebellions;
+using Dodo.Rebellions;
 using Dodo.SharedTest;
 using DodoResources.Rebellions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,17 +15,18 @@ namespace RESTTests
 
 
 	[TestClass]
-	public class RebellionTests : GroupResourceTestBase<Rebellion>
+	public class RebellionTests : GroupResourceTestBase<Rebellion, RebellionSchema>
 	{
 		public static DateTime DefaultStart => new DateTime(2019, 10, 7, 0, 0, 0, DateTimeKind.Utc);
 		public static DateTime DefaultEnd => new DateTime(2019, 10, 14, 0, 0, 0, DateTimeKind.Utc);
 		public override string ResourceRoot => RebellionController.RootURL;
 
-		protected override void VerifyCreatedObject(Rebellion rebellion, JObject obj)
+		protected override void VerifyCreatedObject(Rebellion rebellion, JObject obj, RebellionSchema schema)
 		{
-			base.VerifyCreatedObject(rebellion, obj);
-			Assert.AreEqual(rebellion.Location.Latitude, obj.Value<JObject>("Location").Value<double>("latitude"));
-			Assert.AreEqual(rebellion.Location.Longitude, obj.Value<JObject>("Location").Value<double>("longitude"));
+			base.VerifyCreatedObject(rebellion, obj, schema);
+			Assert.AreEqual(schema.Location, rebellion.Location);
+			Assert.IsTrue(schema.StartDate - rebellion.StartDate < TimeSpan.FromMinutes(1));
+			Assert.IsTrue(schema.EndDate - rebellion.EndDate < TimeSpan.FromMinutes(1));
 		}
 
 		/*public override object GetCreationSchema(bool unique = false)

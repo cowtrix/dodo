@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Dodo.Resources;
 using Resources;
@@ -11,9 +11,9 @@ namespace Dodo.Rebellions
 
 	public class RebellionSchema : GroupResourceSchemaBase
 	{
-		public GeoLocation Location { get; private set; }
-		public DateTime StartDate { get; private set; }
-		public DateTime EndDate { get; private set; }
+		public GeoLocation Location { get; set; }
+		public DateTime StartDate { get; set; }
+		public DateTime EndDate { get; set; }
 
 		public RebellionSchema()
 		{

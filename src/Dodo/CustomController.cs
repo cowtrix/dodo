@@ -17,43 +17,44 @@ namespace Resources
 
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
-
-		protected void LogRequest()
-		{
-			Logger.Debug($"Received {Request.MethodEnum()} for {Request.Path}.");
+		protected AccessContext Context { 
+			get 
+			{
+				if(__context == null)
+				{
+					__context = User.GetContext();
+				}
+				return __context.Value;
+			} 
 		}
+		private AccessContext? __context = null;
 
-		protected ResourceRequest VerifyRequest(Guid id = default)
+		protected ResourceRequest VerifyRequest(Guid id = default, string actionName = null)
 		{
-			LogRequest();
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
-			var context = User.GetContext();
-			if (!context.Challenge())
+			if (!Context.Challenge())
 			{
 				return ResourceRequest.ForbidRequest;
 			}
-			return AuthManager.IsAuthorised(context, target, Request.MethodEnum());
+			return AuthManager.IsAuthorised(Context, target, Request.MethodEnum(), actionName);
 		}
 
 		protected ResourceRequest VerifyRequest(TSchema schema)
 		{
-			LogRequest();
-			var context = User.GetContext();
-			if (!context.Challenge())
+			if (!Context.Challenge())
 			{
 				return ResourceRequest.ForbidRequest;
 			}
-			return AuthManager.IsAuthorised(context, schema, Request.MethodEnum());
+			return AuthManager.IsAuthorised(Context, schema, Request.MethodEnum());
 		}
 
 		public override void OnActionExecuting(ActionExecutingContext actionContext)
 		{
-			var context = User.GetContext();
-			if (context.User != null)
+			if (Context.User != null)
 			{
-				foreach (var token in context.User.TokenCollection.Tokens)
+				foreach (var token in Context.User.TokenCollection.Tokens)
 				{
-					token.OnRequest(context);
+					token.OnRequest(Context);
 				}
 			}
 			base.OnActionExecuting(actionContext);

@@ -63,18 +63,18 @@ namespace SharedTest
 			m_postman.Update();
 		}
 
-		protected User GetRandomUser(out string password, out AccessContext context)
+		protected User GetRandomUser(out string password, out AccessContext context, bool verifyEmail = true)
 		{
 			var schema = (UserSchema)SchemaGenerator.GetRandomSchema<User>(default);
 			password = schema.Password;
-			return GenerateUser(schema, out context);
+			return GenerateUser(schema, out context, verifyEmail);
 		}
 
 		protected virtual T CreateObject<T>(AccessContext context = default, ResourceSchemaBase schema = null) where T: IRESTResource
 		{
 			if (context.User == null)
 			{
-				GetRandomUser(out var password, out context); ;
+				GetRandomUser(out var password, out context, true); ;
 			}
 			if(schema == null)
 			{
@@ -92,12 +92,21 @@ namespace SharedTest
 			return result;
 		}
 
-		protected static User GenerateUser(UserSchema schema, out AccessContext context)
+		protected static User GenerateUser(UserSchema schema, out AccessContext context, bool verifyEmail = true)
 		{
 			var userFactory = ResourceUtility.GetFactory<User>();
 			var user = userFactory.CreateTypedObject(default(AccessContext), schema);
 			context = new AccessContext(user, new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema?.Password))));
 			Assert.IsTrue(context.Challenge());
+
+			// Verify email if flag has been set
+			if(verifyEmail)
+			{
+				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>();
+				Assert.IsNotNull(verifyToken);
+				user.PersonalData.EmailConfirmed = true;
+			}
+
 			return user;
 		}
 	}
