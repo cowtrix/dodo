@@ -1,4 +1,4 @@
-﻿using Resources;
+using Resources;
 using System;
 using Common.Extensions;
 using Common;
@@ -11,7 +11,7 @@ namespace Dodo.LocalGroups
 
 	public class LocalGroupSchema : GroupResourceSchemaBase
 	{
-		public GeoLocation Location { get; private set; }
+		public GeoLocation Location { get; set; }
 
 		public LocalGroupSchema()
 		{

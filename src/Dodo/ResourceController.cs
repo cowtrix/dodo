@@ -92,7 +92,20 @@ namespace Resources
 					}
 					else
 					{
-						result[sub.Key] = sub.Value.GetString();
+						switch (sub.Value.ValueKind)
+						{
+							case JsonValueKind.String:
+								result[sub.Key] = sub.Value.GetString();
+								break;
+							case JsonValueKind.Number:
+								result[sub.Key] = sub.Value.GetDouble();
+								break;
+							case JsonValueKind.Array:
+								result[sub.Key] = sub.Value.EnumerateArray().ToList();
+								break;
+							default:
+								throw new Exception($"Unsupported JsonValueKind {sub.Value.ValueKind}");
+						}
 					}
 				}
 				return result;
