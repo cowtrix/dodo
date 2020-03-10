@@ -28,11 +28,11 @@ namespace DodoResources
 				m_empty = true;
 				return;
 			}
-			if(!distance.HasValue)
+			if (!distance.HasValue)
 			{
 				throw new Exception("distance - Parameter for distance in km is required");
 			}
-			if(string.IsNullOrEmpty(latlong))
+			if (string.IsNullOrEmpty(latlong))
 			{
 				throw new Exception("latlong - Parameter for latitude and longitude, seperated by a '+' character, is required");
 			}
@@ -62,6 +62,7 @@ namespace DodoResources
 			{
 				return rsc;
 			}
+			if (null == m_coordinate) return rsc;
 			return rsc.OrderBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
 		}
 	}
