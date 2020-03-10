@@ -58,7 +58,7 @@ namespace DodoResources
 		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
 		{
 			GenerateFilterData();
-			if (m_empty || !rsc.Any())
+			if (!rsc.Any())
 			{
 				return rsc;
 			}
