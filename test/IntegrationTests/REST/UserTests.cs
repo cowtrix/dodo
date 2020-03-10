@@ -102,7 +102,8 @@ namespace RESTTests
 			var token = user.TokenCollection.GetSingleToken<ResetPasswordToken>();
 
 			request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.POST,
-				newPassword, new[] { ( UserController.PARAM_TOKEN, token.TemporaryToken ) });
+				newPassword, new[] { ( UserController.PARAM_TOKEN, token.TemporaryToken ) },
+				r => r.StatusCode == System.Net.HttpStatusCode.Redirect);
 			await Login(user.AuthData.Username, newPassword);
 		}
 
@@ -114,9 +115,8 @@ namespace RESTTests
 			Assert.IsNotNull(token);
 			await Login(user.AuthData.Username, password);
 			var request = await Request($"{UserController.RootURL}/{UserController.VERIFY_EMAIL}", EHTTPRequestType.GET,
-				null, new[] { ("token", token.Token) });
-			Assert.AreEqual(request.StatusCode, System.Net.HttpStatusCode.OK);
-			
+				null, new[] { ("token", token.Token) },
+				r => r.StatusCode == System.Net.HttpStatusCode.Redirect);
 		}
 
 

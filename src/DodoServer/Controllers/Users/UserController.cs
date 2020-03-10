@@ -11,7 +11,6 @@ using System.Security.Claims;
 
 namespace Dodo.Users
 {
-
 	[SecurityHeaders]
 	[ApiController]
 	[Route(RootURL)]
@@ -93,7 +92,8 @@ namespace Dodo.Users
 				user.AuthData = new AuthorizationData(user.AuthData.Username, password);
 				UserManager.Update(user, rscLock);
 			}
-			return Ok();
+			await Logout();
+			return Redirect(DodoServer.DodoServer.Index);
 		}
 
 		[HttpGet(VERIFY_EMAIL)]
@@ -120,7 +120,7 @@ namespace Dodo.Users
 			var user = rscLock.Value as User;
 			user.PersonalData.EmailConfirmed = true;
 			UserManager.Update(user, rscLock);
-			return Ok();
+			return Redirect(DodoServer.DodoServer.Index);
 		}
 
 		[HttpGet(RESET_PASSWORD)]

@@ -10,17 +10,10 @@ using Resources;
 using SharedTest;
 using Common.Extensions;
 using System.Text;
-using IdentityModel.Client;
 using System.Collections.Generic;
 using System.Linq;
 using Dodo.Users;
-using Dodo;
 using System.Net;
-using static IdentityModel.OidcConstants;
-using Resources.Security;
-using Common.Security;
-using IdentityModel;
-using DodoServer;
 
 namespace RESTTests
 {
@@ -43,21 +36,31 @@ namespace RESTTests
 			m_client.BaseAddress = new Uri(m_client.BaseAddress.ToString().Replace("http", "https"));
 		}
 
-		protected async Task<JObject> RequestJSON(string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
+		protected async Task<JObject> RequestJSON(string url, EHTTPRequestType method, object data = null, 
+			IEnumerable<ValueTuple<string, string>> parameters = null,
+			Func<HttpResponseMessage, bool> validator = null)
 		{
-			return await RequestJSON<JObject>(url, method, data, parameters);
+			return await RequestJSON<JObject>(url, method, data, parameters, validator);
 		}
 
-		protected async Task<T> RequestJSON<T>(string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
+		protected async Task<T> RequestJSON<T>(string url, EHTTPRequestType method, object data = null, 
+			IEnumerable<ValueTuple<string, string>> parameters = null,
+			Func<HttpResponseMessage, bool> validator = null)
 		{
-			var response = await Request(url, method, data, parameters);
+			var response = await Request(url, method, data, parameters, validator);
 			var content = await response.Content.ReadAsStringAsync();
 			Assert.IsTrue(content.IsValidJson(),
 				$"Invalid JSON: {response.StatusCode} | {response.ReasonPhrase} | {content}");
 			return JsonConvert.DeserializeObject<T>(content);
 		}
 
-		protected async Task<HttpResponseMessage> Request(string url, EHTTPRequestType method, object data = null, IEnumerable<ValueTuple<string, string>> parameters = null)
+		protected async Task<HttpResponseMessage> Request(
+			string url,
+			EHTTPRequestType method,
+			object data = null,
+			IEnumerable<ValueTuple<string, string>> parameters = null,
+			Func<HttpResponseMessage, bool> validator = null
+			)
 		{
 			if (parameters != null && parameters.Any())
 			{
@@ -78,7 +81,8 @@ namespace RESTTests
 				default:
 					throw new Exception("Unsupported method " + method);
 			}
-			if (!response.IsSuccessStatusCode)
+			validator ??= ((r) => r.IsSuccessStatusCode);
+			if (!validator(response))
 			{
 				throw new Exception(response.ToString());
 			}

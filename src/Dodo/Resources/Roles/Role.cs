@@ -8,10 +8,8 @@ using System.Collections.Generic;
 
 namespace Dodo.Roles
 {
-
 	public class Role : DodoResource
 	{
-
 		[NoPatch]
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
