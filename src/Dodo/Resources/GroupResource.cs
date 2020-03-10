@@ -65,7 +65,7 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN)]
 		public UserMultiSigStore<AdminData> AdministratorData;
 
-		public TokenCollection SharedActions = new TokenCollection();
+		public TokenCollection SharedTokens = new TokenCollection();
 
 		public SecureUserStore Members = new SecureUserStore();
 
@@ -98,6 +98,10 @@ namespace Dodo
 		/// <returns></returns>
 		public bool IsChildOf(GroupResource targetObject)
 		{
+			if(!Parent.HasValue)
+			{
+				return false;
+			}
 			return Parent.GetValue().GUID == targetObject.GUID;
 		}
 

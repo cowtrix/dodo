@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Resources;
 using System.Linq;
 using System;
@@ -30,7 +30,7 @@ namespace DodoResources
 			}
 			if(!distance.HasValue)
 			{
-				throw new Exception("dist - Parameter for distance in km is required");
+				throw new Exception("distance - Parameter for distance in km is required");
 			}
 			if(string.IsNullOrEmpty(latlong))
 			{
@@ -52,23 +52,15 @@ namespace DodoResources
 			{
 				return locationalResource.Location.ToCoordinate().GetDistanceTo(m_coordinate) < distance * 1000;
 			}
-			else if (!string.IsNullOrEmpty(latlong) || distance.HasValue)
-			{
-				throw new Exception("Invalid filter. You cannot filter this resource by location");
-			}
 			return false;
 		}
 
 		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
 		{
 			GenerateFilterData();
-			if (m_empty || !rsc.Any())
+			if (!rsc.Any())
 			{
 				return rsc;
-			}
-			else if (string.IsNullOrEmpty(latlong) || !distance.HasValue)
-			{
-				throw new Exception("Invalid filter. You cannot filter this resource by location");
 			}
 			return rsc.OrderBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
 		}

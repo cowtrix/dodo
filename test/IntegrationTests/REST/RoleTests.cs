@@ -1,11 +1,11 @@
-﻿using Dodo.Roles;
+using Dodo.Roles;
 using DodoResources.Roles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RESTTests
 {
 	[TestClass]
-	public class RoleTests : RESTTestBase<Role>
+	public class RoleTests : RESTTestBase<Role, RoleSchema>
 	{
 		public override string ResourceRoot => RoleController.RootURL;
 

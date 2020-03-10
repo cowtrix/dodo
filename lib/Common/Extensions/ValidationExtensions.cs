@@ -1,4 +1,4 @@
-﻿using Ryadel.Components.Security;
+using Ryadel.Components.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;

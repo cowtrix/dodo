@@ -1,4 +1,4 @@
-﻿using Dodo;
+using Dodo;
 using Dodo.SharedTest;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

@@ -21,23 +21,28 @@ using Resources;
 namespace RESTTests
 {
 
-	public abstract class RESTTestBase<T> : IntegrationTestBase where T:DodoResource
+	public abstract class RESTTestBase<T, TSchema> : IntegrationTestBase 
+		where T:DodoResource
+		where TSchema: DodoResourceSchemaBase
 	{
 		public abstract string ResourceRoot { get; }
-		
+		protected IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
+
 		[TestMethod]
 		public async virtual Task CanGetAnonymously()
 		{
 			GetRandomUser(out _, out var context);
-			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context));
+			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
+			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
 			var resourceObj = await RequestJSON($"{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.GET);
-			VerifyCreatedObject(resource, resourceObj);
+			VerifyCreatedObject(resource, resourceObj, schema);
 		}
 
-		protected virtual void VerifyCreatedObject(T rsc, JObject obj)
+		protected virtual void VerifyCreatedObject(T rsc, JObject obj, TSchema schema)
 		{
 			Assert.AreEqual(rsc.GUID, Guid.Parse(obj.Value<string>("GUID")));
 			Assert.AreEqual(rsc.Name, obj.Value<string>("Name"));
+			Assert.AreEqual(rsc.Name, schema.Name);
 		}
 
 		[TestMethod]

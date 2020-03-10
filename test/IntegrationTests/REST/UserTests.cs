@@ -106,6 +106,20 @@ namespace RESTTests
 			await Login(user.AuthData.Username, newPassword);
 		}
 
+		[TestMethod]
+		public async Task CanVerifyEmail()
+		{
+			var user = GetRandomUser(out var password, out var context, false);
+			var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>();
+			Assert.IsNotNull(token);
+			await Login(user.AuthData.Username, password);
+			var request = await Request($"{UserController.RootURL}/{UserController.VERIFY_EMAIL}", EHTTPRequestType.GET,
+				null, new[] { ("token", token.Token) });
+			Assert.AreEqual(request.StatusCode, System.Net.HttpStatusCode.OK);
+			
+		}
+
+
 		/*public override object GetCreationSchema(bool unique)
 		{
 			if(unique)

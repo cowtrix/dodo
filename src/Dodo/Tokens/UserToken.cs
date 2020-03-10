@@ -24,7 +24,7 @@ namespace Dodo.Users
 		typeof(ResetPasswordToken),
 		typeof(AddAdminToken),
 		typeof(TemporaryUserAction),
-		typeof(VerifyEmailAction),
+		typeof(VerifyEmailToken),
 		typeof(SysAdminToken),
 		typeof(ResourceCreationToken)
 		)]

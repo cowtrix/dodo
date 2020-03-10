@@ -32,7 +32,7 @@ namespace DodoResources
 		[HttpPost("{id}/" + ADD_ADMIN)]
 		public IActionResult AddAdministrator(Guid id, [FromBody]string newAdminIdentifier)
 		{
-			var req = VerifyRequest(id);
+			var req = VerifyRequest(id, ADD_ADMIN);
 			if (!req.IsSuccess)
 			{
 				return req.Error;
@@ -58,7 +58,7 @@ namespace DodoResources
 		[HttpPost("{id}/" + JOIN_GROUP)]
 		public IActionResult JoinGroup(Guid id)
 		{
-			var req = VerifyRequest(id);
+			var req = VerifyRequest(id, JOIN_GROUP);
 			if (!req.IsSuccess)
 			{
 				return req.Error;
@@ -73,7 +73,7 @@ namespace DodoResources
 		[HttpPost("{id}/" + LEAVE_GROUP)]
 		public IActionResult LeaveGroup(Guid id)
 		{
-			var req = VerifyRequest(id);
+			var req = VerifyRequest(id, LEAVE_GROUP);
 			if (!req.IsSuccess)
 			{
 				return req.Error;
@@ -114,17 +114,15 @@ namespace DodoResources
 
 		private ResourceRequest VerifySearchRequest()
 		{
-			LogRequest();
-			var context = User.GetContext();
-			if (!context.Challenge())
+			if (!Context.Challenge())
 			{
 				return ResourceRequest.ForbidRequest;
 			}
-			if (context.User == null)
+			if (Context.User == null)
 			{
-				return new ResourceRequest(context, null, EHTTPRequestType.GET, EPermissionLevel.PUBLIC);
+				return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.PUBLIC);
 			}
-			return new ResourceRequest(context, null, EHTTPRequestType.GET, EPermissionLevel.MEMBER);
+			return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.USER);
 		}
 	}
 }

@@ -16,7 +16,9 @@ using Dodo.Users;
 
 namespace RESTTests
 {
-	public abstract class GroupResourceTestBase<T> : RESTTestBase<T> where T:GroupResource
+	public abstract class GroupResourceTestBase<T, TSchema> : RESTTestBase<T, TSchema> 
+		where T:GroupResource
+		where TSchema:GroupResourceSchemaBase
 	{
 		[TestMethod]
 		public async virtual Task CanListWithDistanceFilter()
@@ -93,10 +95,12 @@ namespace RESTTests
 				UserManager.Update(user, rscLock);
 			}
 			await Login(user.AuthData.Username, password);
-			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
-				SchemaGenerator.GetRandomSchema<T>(context));
+			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
+			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST, schema);
 			user = UserManager.GetSingle(u => u.GUID == user.GUID);
 			Assert.IsTrue(user.TokenCollection.GetTokens<ResourceCreationToken>().Single().IsRedeemed);
+			var rsc = ResourceManager.GetSingle(r => r.GUID.ToString() == response.Value<string>("GUID"));
+			VerifyCreatedObject(rsc, response, schema);
 		}
 
 		[TestMethod]
@@ -133,6 +137,7 @@ namespace RESTTests
 			Assert.AreEqual(PermissionLevel.ADMIN,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
 		}
+
 		/*
 		[TestMethod]
 		public void CanAddAdminFromNewUser()

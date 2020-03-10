@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Resources.Security;
 using Dodo.Rebellions;
@@ -45,7 +45,7 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.Parent.GetValue().GUID == GUID)
+				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.Parent != null && wg.Parent.GetValue().GUID == GUID)
 					.Select(wg => wg.GUID.ToString()).ToList();
 			}
 		}

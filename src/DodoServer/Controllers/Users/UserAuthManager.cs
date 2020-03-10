@@ -20,7 +20,7 @@ namespace Dodo.Users
 			return EPermissionLevel.PUBLIC;
 		}
 
-		public override ResourceRequest IsAuthorised(AccessContext context, User target, EHTTPRequestType requestType)
+		public override ResourceRequest IsAuthorised(AccessContext context, User target, EHTTPRequestType requestType, string action)
 		{
 			var permission = GetPermission(context, target);
 			if(permission != EPermissionLevel.OWNER)

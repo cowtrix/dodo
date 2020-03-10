@@ -1,4 +1,4 @@
-﻿using Dodo;
+using Dodo;
 using Dodo.SharedTest;
 using Dodo.Sites;
 using DodoResources.Sites;
@@ -14,7 +14,7 @@ using Common.Extensions;
 namespace RESTTests
 {
 
-	public abstract class SiteTests : GroupResourceTestBase<Site>
+	public abstract class SiteTests : GroupResourceTestBase<Site, SiteSchema>
 	{
 		public override string ResourceRoot => SiteController.RootURL;
 

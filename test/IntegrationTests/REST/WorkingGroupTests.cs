@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Dodo.Rebellions;
 using Dodo.SharedTest;
@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace RESTTests
 {
 	[TestClass]
-	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup>
+	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup, WorkingGroupSchema>
 	{
 		public override string ResourceRoot => WorkingGroupController.RootURL;
 

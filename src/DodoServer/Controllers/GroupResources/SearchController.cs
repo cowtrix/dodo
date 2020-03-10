@@ -11,7 +11,7 @@ namespace DodoResources
 	[Route(RootUrl)]
 	public class SearchController : CustomController<DodoResource, DodoResourceSchemaBase>
 	{
-		public const string RootUrl = "search";
+		public const string RootUrl = "api/search";
 
 		[HttpGet]
 		public virtual async Task<IActionResult> Index(
@@ -42,17 +42,15 @@ namespace DodoResources
 
 		protected ResourceRequest VerifySearchRequest()
 		{
-			LogRequest();
-			var context = User.GetContext();
-			if (!context.Challenge())
+			if (!Context.Challenge())
 			{
 				return ResourceRequest.ForbidRequest;
 			}
-			if(context.User == null)
+			if(Context.User == null)
 			{
-				return new ResourceRequest(context, null, EHTTPRequestType.GET, EPermissionLevel.PUBLIC);
+				return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.PUBLIC);
 			}
-			return new ResourceRequest(context, null, EHTTPRequestType.GET, EPermissionLevel.MEMBER);
+			return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.MEMBER);
 		}
 	}
 }

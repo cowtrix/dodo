@@ -18,7 +18,7 @@ namespace Dodo
 		protected HttpRequest Request { get; private set; }
 		protected ControllerContext ControllerContext { get; private set; }
 
-		public virtual ResourceRequest IsAuthorised(AccessContext context, T target, EHTTPRequestType requestType)
+		public virtual ResourceRequest IsAuthorised(AccessContext context, T target, EHTTPRequestType requestType, string action = null)
 		{
 			if (target != null && !(target is T))
 			{
@@ -27,13 +27,13 @@ namespace Dodo
 			switch(requestType)
 			{
 				case EHTTPRequestType.GET:
-					return CanGet(context, target);
+					return CanGet(context, target, action);
 				case EHTTPRequestType.PATCH:
 					return CanEdit(context, target);
 				case EHTTPRequestType.DELETE:
 					return CanDelete(context, target);
 				case EHTTPRequestType.POST:
-					return CanPost(context, target);
+					return CanPost(context, target, action);
 				default:
 					throw new System.Exception("Unexpected auth switch fallthrough");  // Incorrect method call, this should never happen
 			}
@@ -48,7 +48,7 @@ namespace Dodo
 			return CanCreate(context, schema);
 		}
 
-		protected virtual ResourceRequest CanPost(AccessContext context, T target)
+		protected virtual ResourceRequest CanPost(AccessContext context, T target, string action = null)
 		{
 			if(context.User == null)
 			{
@@ -57,7 +57,7 @@ namespace Dodo
 			return ResourceRequest.UnauthorizedRequest;
 		}
 
-		protected virtual ResourceRequest CanGet(AccessContext context, T target)
+		protected virtual ResourceRequest CanGet(AccessContext context, T target, string action = null)
 		{
 			return new ResourceRequest(context, target, EHTTPRequestType.GET, GetPermission(context, target));
 		}

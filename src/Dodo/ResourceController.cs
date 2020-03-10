@@ -80,6 +80,7 @@ namespace Resources
 				return req.Error;
 			}
 
+			// This function will just flatten out the nested objects we can be sent
 			Dictionary<string, object> Flatten(Dictionary<string, JsonElement> jsonDict)
 			{
 				var result = new Dictionary<string, object>();
@@ -92,7 +93,20 @@ namespace Resources
 					}
 					else
 					{
-						result[sub.Key] = sub.Value.GetString();
+						switch (sub.Value.ValueKind)
+						{
+							case JsonValueKind.String:
+								result[sub.Key] = sub.Value.GetString();
+								break;
+							case JsonValueKind.Number:
+								result[sub.Key] = sub.Value.GetDouble();
+								break;
+							case JsonValueKind.Array:
+								result[sub.Key] = sub.Value.EnumerateArray().ToList();
+								break;
+							default:
+								throw new Exception($"Unsupported JsonValueKind {sub.Value.ValueKind}");
+						}
 					}
 				}
 				return result;
@@ -145,12 +159,8 @@ namespace Resources
 			return Ok(req.Resource.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 		}
 
-		
-
 		protected virtual void OnCreation(AccessContext Context, T user)
 		{
 		}
-
-		
 	}
 }

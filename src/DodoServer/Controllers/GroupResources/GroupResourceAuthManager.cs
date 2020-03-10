@@ -39,6 +39,11 @@ namespace DodoResources
 
 		protected override ResourceRequest CanCreate(AccessContext context, TSchema target)
 		{
+			if(context.User == null)
+			{
+				return ResourceRequest.ForbidRequest;
+			}
+
 			// User has a resource creation token, so we consume it and return ok
 			var token = context.User.TokenCollection.GetTokens<ResourceCreationToken>()
 				.FirstOrDefault(t => !t.IsRedeemed && t.Type == typeof(T).Name);
@@ -60,9 +65,8 @@ namespace DodoResources
 			return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
 		}
 
-		protected override ResourceRequest CanPost(AccessContext context, T target)
+		protected override ResourceRequest CanPost(AccessContext context, T target, string action = null)
 		{
-			var action = Request.Path.Value.Split('/').LastOrDefault();
 			if(action.Contains('?'))
 			{
 				action = action.Substring(action.IndexOf('?'));
