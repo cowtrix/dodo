@@ -80,6 +80,7 @@ namespace Resources
 				return req.Error;
 			}
 
+			// This function will just flatten out the nested objects we can be sent
 			Dictionary<string, object> Flatten(Dictionary<string, JsonElement> jsonDict)
 			{
 				var result = new Dictionary<string, object>();

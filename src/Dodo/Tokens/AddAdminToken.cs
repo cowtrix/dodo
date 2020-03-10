@@ -8,6 +8,7 @@ namespace Dodo.Users
 	public class AddAdminToken : ExecutableToken
 	{
 		[JsonProperty]
+		[NotNulResource]
 		public ResourceReference<GroupResource> Resource { get; private set; }
 		[JsonProperty]
 		public byte[] Token { get; private set; }
@@ -21,7 +22,6 @@ namespace Dodo.Users
 
 		protected override void ExecuteInternal(AccessContext context)
 		{
-			Resource.CheckValue();
 			var privateKey = context.User.AuthData.PrivateKey.GetValue(context.Passphrase);
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
 			using (var rscLocker = new ResourceLock(Resource.GetValue()))

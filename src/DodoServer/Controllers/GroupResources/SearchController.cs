@@ -11,7 +11,7 @@ namespace DodoResources
 	[Route(RootUrl)]
 	public class SearchController : CustomController<DodoResource, DodoResourceSchemaBase>
 	{
-		public const string RootUrl = "search";
+		public const string RootUrl = "api/search";
 
 		[HttpGet]
 		public virtual async Task<IActionResult> Index(

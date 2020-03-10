@@ -1,12 +1,27 @@
 using Resources.Security;
 using Resources;
 using Newtonsoft.Json;
+using Common.Extensions;
 
 namespace Dodo
 {
 	public interface IDodoResource : IRESTResource
 	{
 		bool IsCreator(AccessContext context);
+	}
+
+	public class NotNulResourceAttribute : VerifyMemberBase
+	{
+		public override bool Verify(object value, out string validationError)
+		{
+			if (value is IResourceReference rscRef && rscRef.HasValue)
+			{
+				validationError = null;
+				return true;
+			}
+			validationError = $"Resource reference as null for {value}";
+			return false;
+		}
 	}
 
 	public class DodoResourceSchemaBase : ResourceSchemaBase

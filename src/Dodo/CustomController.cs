@@ -32,6 +32,10 @@ namespace Resources
 		protected ResourceRequest VerifyRequest(Guid id = default, string actionName = null)
 		{
 			var target = ResourceManager.GetSingle(rsc => rsc.GUID == id);
+			if (id != default && target == null)
+			{
+				return ResourceRequest.NotFoundRequest;
+			}
 			if (!Context.Challenge())
 			{
 				return ResourceRequest.ForbidRequest;

@@ -98,6 +98,10 @@ namespace Dodo
 		/// <returns></returns>
 		public bool IsChildOf(GroupResource targetObject)
 		{
+			if(!Parent.HasValue)
+			{
+				return false;
+			}
 			return Parent.GetValue().GUID == targetObject.GUID;
 		}
 

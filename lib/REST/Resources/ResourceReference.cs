@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -11,6 +11,7 @@ namespace Resources
 	public interface IResourceReference : IVerifiable
 	{
 		Guid Guid { get; }
+		bool HasValue { get; }
 	}
 
 	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
@@ -47,14 +48,6 @@ namespace Resources
 		public override int GetHashCode()
 		{
 			return -737073652 + EqualityComparer<Guid>.Default.GetHashCode(Guid);
-		}
-
-		public void CheckValue()
-		{
-			if (GetValue() == null)
-			{
-				throw new Exception("Resource not found with GUID " + Guid);
-			}
 		}
 
 		public static bool operator ==(ResourceReference<T> left, ResourceReference<T> right)
