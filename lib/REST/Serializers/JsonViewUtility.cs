@@ -189,7 +189,7 @@ namespace Resources
 				object objToPatch = targetObject;
 				var value = targetMember.GetValue(targetObject);
 				var fieldValue = value;
-				var valueToSet = val.Value;
+				object valueToSet = val.Value;
 				if (typeof(IDecryptable).IsAssignableFrom(targetMember.GetMemberType()) &&
 					(value == null || !(value as IDecryptable).TryGetValue(requester, passphrase, out value)))
 				{
@@ -214,6 +214,12 @@ namespace Resources
 					catch
 					{
 					}
+				}
+				var memberType = targetMember.GetMemberType();
+				if (ShouldSerializeDirectly(memberType) && memberType != valueToSet?.GetType())
+				{
+					var serialized = JsonConvert.SerializeObject(valueToSet, memberType, JsonExtensions.DefaultSettings);
+					valueToSet = JsonConvert.DeserializeObject(serialized, memberType, JsonExtensions.DefaultSettings);
 				}
 				if (typeof(IDecryptable).IsAssignableFrom(targetMember.GetMemberType()))
 				{

@@ -37,7 +37,7 @@ namespace Dodo.SharedTest
 		private static Random m_random = new Random();
 		public static string SampleMarkdown => File.ReadAllText(@"resources\SampleMarkdown.md");
 		public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
-		private static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
+		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
 		private static string RandomName => StringExtensions.RandomString(32);
 
 		private static Dictionary<Type, Func<AccessContext, ResourceSchemaBase>> m_mappings =
