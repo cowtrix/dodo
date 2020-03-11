@@ -3,16 +3,15 @@ using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
 
-namespace Dodo.Users
+namespace Dodo.Users.Tokens
 {
-	public class AddAdminToken : ExecutableToken
+	public class AddAdminToken : RedeemableToken, INotificationToken
 	{
 		[JsonProperty]
 		[NotNulResource]
 		public ResourceReference<GroupResource> Resource { get; private set; }
 		[JsonProperty]
 		public byte[] Token { get; private set; }
-		public override bool CanRemove => true;
 
 		public AddAdminToken(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
 		{
@@ -20,7 +19,7 @@ namespace Dodo.Users
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
 		}
 
-		protected override void ExecuteInternal(AccessContext context)
+		protected override bool OnRedeemed(AccessContext context)
 		{
 			var privateKey = context.User.AuthData.PrivateKey.GetValue(context.Passphrase);
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
@@ -31,10 +30,10 @@ namespace Dodo.Users
 				resource.AddOrUpdateAdmin(new AccessContext(context.User, tempPass), context.User, context.Passphrase);
 				ResourceUtility.GetManagerForResource(resource).Update(resource, rscLocker);
 			}
-			Removed = true;
+			return true;
 		}
 
-		public override string GetNotificationMessage()
+		public string GetNotification(AccessContext context)
 		{
 			return $"You have been added as an Administrator to {Resource.GetValue().Name}";
 		}

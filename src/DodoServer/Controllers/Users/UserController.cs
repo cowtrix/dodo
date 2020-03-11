@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Dodo.Users.Tokens;
 
 namespace Dodo.Users
 {
@@ -50,8 +51,8 @@ namespace Dodo.Users
 				return BadRequest();
 			}
 
-			TemporaryTokenManager.SetTemporaryToken(user.GUID.ToString(), out var guidKey, TimeSpan.FromHours(24));
-			TemporaryTokenManager.SetTemporaryToken(passphrase, out var passphraseKey, TimeSpan.FromHours(24));
+			SessionTokenManager.SetTemporaryToken(user.GUID.ToString(), out var guidKey, TimeSpan.FromHours(24));
+			SessionTokenManager.SetTemporaryToken(passphrase, out var passphraseKey, TimeSpan.FromHours(24));
 
 			var id = new ClaimsIdentity(AuthConstants.AUTHSCHEME);
 			id.AddClaim(new Claim(AuthConstants.SUBJECT, guidKey));
@@ -117,7 +118,7 @@ namespace Dodo.Users
 			using(var rscLock = new ResourceLock(user))
 			{
 				user = rscLock.Value as User;
-				user.TokenCollection.Remove<ResetPasswordToken>(user);
+				user.TokenCollection.RemoveAll<ResetPasswordToken>(user);
 				user.AuthData = new AuthorizationData(user.AuthData.Username, password);
 				UserManager.Update(user, rscLock);
 			}

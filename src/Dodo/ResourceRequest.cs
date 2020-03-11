@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Dodo;
 using Dodo.Users;
+using Dodo.Users.Tokens;
 
 namespace Resources
 {

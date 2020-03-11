@@ -13,6 +13,7 @@ using System.Security.Claims;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using Common.Extensions;
+using Dodo.Users.Tokens;
 
 namespace Resources
 {
@@ -58,7 +59,7 @@ namespace Resources
 							throw new SecurityException($"Unexpected token consumption could indicate a user " +
 								"is attempting to exploit creation of multiple resources.");
 						}
-						token.IsRedeemed = true;
+						token.Redeem(Context);
 						UserManager.Update(user, rscLock);
 					}
 				}

@@ -11,6 +11,7 @@ using System;
 using SharedTest;
 using System.Threading.Tasks;
 using Dodo.SharedTest;
+using Dodo.Users.Tokens;
 
 namespace RESTTests
 {

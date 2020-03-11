@@ -8,6 +8,7 @@ using Dodo.Roles;
 using Dodo.WorkingGroups;
 using Resources;
 using System.Security.Principal;
+using Dodo.Users.Tokens;
 
 namespace Dodo.Users
 {
@@ -40,9 +41,9 @@ namespace Dodo.Users
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
 			var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : (User)requester;
-			if(permissionLevel >= EPermissionLevel.ADMIN)
+			var accessContext = new AccessContext(requesterUser, passphrase);
+			if (permissionLevel >= EPermissionLevel.ADMIN)
 			{
-				var accessContext = new AccessContext(requesterUser, passphrase);
 				view.Add(ADMIN_OF_KEY, new
 				{
 					Rebellions = ResourceUtility.GetManager<Rebellion>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.GUID),
@@ -53,7 +54,8 @@ namespace Dodo.Users
 			}
 			if(permissionLevel == EPermissionLevel.OWNER)
 			{
-				view.Add(NOTIFICATIONS_KEY, TokenCollection.Tokens.Select(x => new Notification { Message = x.GetNotificationMessage(), GUID = x.GUID })
+				view.Add(NOTIFICATIONS_KEY, TokenCollection.Tokens.OfType<INotificationToken>()
+					.Select(x => new Notification { Message = x.GetNotification(accessContext), GUID = x.GUID })
 					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList());
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);

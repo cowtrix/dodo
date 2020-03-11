@@ -20,12 +20,12 @@ namespace Dodo.Sites
 
 		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
-		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		public DateTime StartDate { get; set; }
 
 		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
-		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		public DateTime EndDate { get; set; }
 	}
 }

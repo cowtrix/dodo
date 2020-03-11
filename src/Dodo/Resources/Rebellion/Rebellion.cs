@@ -41,11 +41,11 @@ namespace Dodo.Rebellions
 		}
 
 		[View(EPermissionLevel.PUBLIC)]
-		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		public DateTime StartDate { get; set; }
 
 		[View(EPermissionLevel.PUBLIC)]
-		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		public DateTime EndDate { get; set; }
 
 		public Rebellion(AccessContext context, RebellionSchema schema) : base(context, schema)

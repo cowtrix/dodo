@@ -1,10 +1,13 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 
-namespace Dodo.Users
+namespace Dodo.Users.Tokens
 {
-
-	public class ResourceCreationToken : OneTimeRedeemableToken
+	/// <summary>
+	/// This token entitles the bearer to create 1 new object of the type
+	/// specified in the Type field
+	/// </summary>
+	public class ResourceCreationToken : RedeemableToken
 	{
 		[BsonElement]
 		public string Type { get; private set; }
