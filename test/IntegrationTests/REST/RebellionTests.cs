@@ -25,8 +25,8 @@ namespace RESTTests
 		{
 			base.VerifyCreatedObject(rebellion, obj, schema);
 			Assert.AreEqual(schema.Location, rebellion.Location);
-			Assert.IsTrue(schema.StartDate - rebellion.StartDate < TimeSpan.FromMinutes(1));
-			Assert.IsTrue(schema.EndDate - rebellion.EndDate < TimeSpan.FromMinutes(1));
+			Assert.IsTrue(schema.StartDate - rebellion.StartDate < TimeSpan.FromMinutes(2), $"Start date wasn't close enough - delta was {schema.StartDate - rebellion.StartDate}");
+			Assert.IsTrue(schema.EndDate - rebellion.EndDate < TimeSpan.FromMinutes(2), $"End date wasn't close enough - delta was {schema.EndDate - rebellion.EndDate}");
 		}
 
 		/*public override object GetCreationSchema(bool unique = false)

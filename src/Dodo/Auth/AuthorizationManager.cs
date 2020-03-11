@@ -101,6 +101,10 @@ namespace Dodo
 
 		protected virtual EPermissionLevel GetPermission(AccessContext context, T target)
 		{
+			if(target.IsCreator(context))
+			{
+				return EPermissionLevel.OWNER;
+			}
 			return EPermissionLevel.PUBLIC;
 		}
 	}

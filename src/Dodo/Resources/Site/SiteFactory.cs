@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Dodo.Resources;
 using Resources;
@@ -24,7 +24,7 @@ namespace Dodo.Sites
 	}
 
 	public class SiteFactory : DodoResourceFactory<Site, SiteSchema>, 
-		IResourceFactory<ActionSite>, IResourceFactory<EventSite>, IResourceFactory<MarchSite>, IResourceFactory<OccupationSite>, IResourceFactory<SanctuarySite>
+		IResourceFactory<EventSite>, IResourceFactory<MarchSite>, IResourceFactory<PermanentSite>
 	{
 		protected override Site CreateObjectInternal(AccessContext context, SiteSchema schema)
 		{
@@ -41,24 +41,14 @@ namespace Dodo.Sites
 			return newSite;
 		}
 
-		ActionSite IResourceFactory<ActionSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
-		{
-			return MakeTypedSite<ActionSite>(context, schema);
-		}
-
 		EventSite IResourceFactory<EventSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
 		{
 			return MakeTypedSite<EventSite>(context, schema);
 		}
 
-		OccupationSite IResourceFactory<OccupationSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
+		PermanentSite IResourceFactory<PermanentSite>.CreateTypedObject(object context, ResourceSchemaBase schema)
 		{
-			return MakeTypedSite<OccupationSite>(context, schema);
-		}
-
-		SanctuarySite IResourceFactory<SanctuarySite>.CreateTypedObject(object context, ResourceSchemaBase schema)
-		{
-			return MakeTypedSite<SanctuarySite>(context, schema);
+			return MakeTypedSite<PermanentSite>(context, schema);
 		}
 
 		MarchSite IResourceFactory<MarchSite>.CreateTypedObject(object context, ResourceSchemaBase schema)

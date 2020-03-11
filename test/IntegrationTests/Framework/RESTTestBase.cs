@@ -54,6 +54,17 @@ namespace RESTTests
 				SchemaGenerator.GetRandomSchema<T>(context));
 		}
 
+		[TestMethod]
+		public virtual async Task CanDelete()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var resource = CreateObject<T>(context);
+			await Login(user.AuthData.Username, password);
+			await Request($"{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.DELETE,
+				SchemaGenerator.GetRandomSchema<T>(context));
+			Assert.IsNull(ResourceManager.GetSingle(r => r.GUID == resource.GUID));
+		}
+
 		/*[TestMethod]
 		public async virtual void CanCreate()
 		{
@@ -90,13 +101,7 @@ namespace RESTTests
 
 		protected virtual void CheckGetObject(JObject obj) { }
 
-		[TestMethod]
-		public async virtual void CanDestroy()
-		{
-			var obj = await RequestJSON(CreationURL, Method.POST, GetCreationSchema());
-			var response = Request(obj.Value<string>("ResourceURL"), Method.DELETE);
-			Assert.IsTrue(response.StatusDescription.Contains("Resource deleted"));
-		}
+		
 
 		[TestMethod]
 		public async virtual void CanGetByResource()

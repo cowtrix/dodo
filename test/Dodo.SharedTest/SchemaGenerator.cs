@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
@@ -49,10 +49,8 @@ namespace Dodo.SharedTest
 			{ typeof(LocalGroup), lg => GetRandomLocalGroup(lg) },
 			{ typeof(Role), r => GetRandomRole(r) },
 			{ typeof(EventSite), s => GetRandomSite<EventSite>(s) },
-			{ typeof(ActionSite), s => GetRandomSite<ActionSite>(s) },
-			{ typeof(SanctuarySite), s => GetRandomSite<SanctuarySite>(s) },
 			{ typeof(MarchSite), s => GetRandomSite<MarchSite>(s) },
-			{ typeof(OccupationSite), s => GetRandomSite<OccupationSite>(s) },
+			{ typeof(PermanentSite), s => GetRandomSite<PermanentSite>(s) },
 
 		};
 

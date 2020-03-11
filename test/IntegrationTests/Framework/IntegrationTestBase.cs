@@ -75,6 +75,9 @@ namespace RESTTests
 				case EHTTPRequestType.PATCH:
 					response = await m_client.PatchAsync(url, new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
 					break;
+				case EHTTPRequestType.DELETE:
+					response = await m_client.DeleteAsync(url);
+					break;
 				default:
 					throw new Exception("Unsupported method " + method);
 			}

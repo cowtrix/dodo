@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using Resources.Security;
 using Dodo.Sites;
@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Rebellions
 {
@@ -40,9 +41,11 @@ namespace Dodo.Rebellions
 		}
 
 		[View(EPermissionLevel.PUBLIC)]
+		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
 		public DateTime StartDate { get; set; }
 
 		[View(EPermissionLevel.PUBLIC)]
+		[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
 		public DateTime EndDate { get; set; }
 
 		public Rebellion(AccessContext context, RebellionSchema schema) : base(context, schema)
