@@ -1,10 +1,12 @@
-﻿using Resources.Security;
+using Resources.Security;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Common;
 using System;
 using Resources;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Sites
 {
@@ -18,10 +20,12 @@ namespace Dodo.Sites
 
 		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
+		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		public DateTime StartDate { get; set; }
 
 		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
+		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		public DateTime EndDate { get; set; }
 	}
 }

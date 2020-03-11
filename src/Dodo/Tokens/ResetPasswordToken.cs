@@ -5,14 +5,17 @@ using Common.Security;
 using Dodo.Utility;
 using System.Net;
 
-namespace Dodo.Users
+namespace Dodo.Users.Tokens
 {
+	/// <summary>
+	/// This token entitles the bearer to reset their password, if they provide the generated token.
+	/// </summary>
 	[SingletonToken]
-	public class ResetPasswordToken : OneTimeRedeemableToken
+	public class ResetPasswordToken : RedeemableToken, INotificationToken
 	{
-		const int TOKEN_SIZE = 32;
-		public ResourceReference<User> TargetUser;
-		public string TemporaryToken;
+		const int TOKEN_SIZE = 64;
+		public ResourceReference<User> TargetUser { get; set; }
+		public string TemporaryToken { get; set; }
 
 		public ResetPasswordToken(User targetUser)
 		{
@@ -30,7 +33,7 @@ namespace Dodo.Users
 				$"To reset your password, visit the following link: {Dns.GetHostName()}/resetpassword?token={TemporaryToken}");
 		}
 
-		public override string GetNotificationMessage()
+		public string GetNotification(AccessContext context)
 		{
 			return "You've requested your password to be reset. " +
 				"Check your email and click the link there. If this wasn't you, change your password immediately.";

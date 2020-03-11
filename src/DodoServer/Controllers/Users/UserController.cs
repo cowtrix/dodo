@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Dodo.Users.Tokens;
 
 namespace Dodo.Users
 {
@@ -21,6 +22,7 @@ namespace Dodo.Users
 		public const string LOGOUT = "logout";
 		public const string REGISTER = "register";
 		public const string RESET_PASSWORD = "resetpassword";
+		public const string CHANGE_PASSWORD = "changepassword";
 		public const string PARAM_TOKEN = "token";
 		public const string VERIFY_EMAIL = "verifyemail";
 
@@ -28,6 +30,12 @@ namespace Dodo.Users
 		{
 			public string username { get; set; }
 			public string password { get; set; }
+		}
+
+		public class ChangePasswordModel
+		{
+			public string currentpassword { get; set; }
+			public string newpassword { get; set; }
 		}
 
 		protected override AuthorizationManager<User, UserSchema> AuthManager => 
@@ -42,8 +50,8 @@ namespace Dodo.Users
 				return BadRequest();
 			}
 
-			TemporaryTokenManager.SetTemporaryToken(user.GUID.ToString(), out var guidKey, TimeSpan.FromHours(24));
-			TemporaryTokenManager.SetTemporaryToken(passphrase, out var passphraseKey, TimeSpan.FromHours(24));
+			SessionTokenManager.SetTemporaryToken(user.GUID.ToString(), out var guidKey, TimeSpan.FromHours(24));
+			SessionTokenManager.SetTemporaryToken(passphrase, out var passphraseKey, TimeSpan.FromHours(24));
 
 			var id = new ClaimsIdentity(AuthConstants.AUTHSCHEME);
 			id.AddClaim(new Claim(AuthConstants.SUBJECT, guidKey));
@@ -71,6 +79,27 @@ namespace Dodo.Users
 			return Ok();
 		}
 
+
+		[HttpGet(RESET_PASSWORD)]
+		public async Task<IActionResult> RequestPasswordReset(string email)
+		{
+			if (Context.User != null && Context.User.PersonalData.Email != email)
+			{
+				return BadRequest("Mismatching emails");
+			}
+			var targetUser = UserManager.GetSingle(u => u.PersonalData.Email == email);
+			if (targetUser != null)
+			{
+				using (var rscLock = new ResourceLock(targetUser))
+				{
+					targetUser = rscLock.Value as User;
+					targetUser.TokenCollection.Add(targetUser, new ResetPasswordToken(targetUser));
+					UserManager.Update(targetUser, rscLock);
+				}
+			}
+			return Ok();
+		}
+
 		[HttpPost(RESET_PASSWORD)]
 		public async Task<IActionResult> ResetPassword(string token, [FromBody]string password)
 		{
@@ -88,12 +117,30 @@ namespace Dodo.Users
 			using(var rscLock = new ResourceLock(user))
 			{
 				user = rscLock.Value as User;
-				user.TokenCollection.Remove<ResetPasswordToken>(user);
+				user.TokenCollection.RemoveAll<ResetPasswordToken>(user);
 				user.AuthData = new AuthorizationData(user.AuthData.Username, password);
 				UserManager.Update(user, rscLock);
 			}
 			await Logout();
 			return Redirect(DodoServer.DodoServer.Index);
+		}
+
+		[HttpPost(CHANGE_PASSWORD)]
+		public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordModel model)
+		{
+			if(Context.User == null)
+			{
+				return Forbid();
+			}
+			if(!Context.User.AuthData.ChallengePassword(model.currentpassword, out _))
+			{
+				return Unauthorized();
+			}
+			using var rscLock = new ResourceLock(Context.User);
+			var user = rscLock.Value as User;
+			user.AuthData.ChangePassword(new Passphrase(model.currentpassword), new Passphrase(model.newpassword));
+			UserManager.Update(user, rscLock);
+			return Ok();
 		}
 
 		[HttpGet(VERIFY_EMAIL)]
@@ -121,26 +168,6 @@ namespace Dodo.Users
 			user.PersonalData.EmailConfirmed = true;
 			UserManager.Update(user, rscLock);
 			return Redirect(DodoServer.DodoServer.Index);
-		}
-
-		[HttpGet(RESET_PASSWORD)]
-		public async Task<IActionResult> RequestPasswordReset(string email)
-		{
-			if(Context.User != null && Context.User.PersonalData.Email != email)
-			{
-				return BadRequest("Mismatching emails");
-			}
-			var targetUser = UserManager.GetSingle(u => u.PersonalData.Email == email);
-			if (targetUser != null)
-			{
-				using(var rscLock = new ResourceLock(targetUser))
-				{
-					targetUser = rscLock.Value as User;
-					targetUser.TokenCollection.Add(targetUser, new ResetPasswordToken(targetUser));
-					UserManager.Update(targetUser, rscLock);
-				}				
-			}
-			return Ok();
 		}
 
 		[HttpPost]

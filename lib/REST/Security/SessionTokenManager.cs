@@ -1,4 +1,4 @@
-﻿using Common.Security;
+using Common.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Concurrent;
@@ -12,37 +12,37 @@ namespace Resources.Security
 	/// This is a collection of tokens that are used to create temporary
 	/// expiring encrypted stores.
 	/// </summary>
-	public static class TemporaryTokenManager
+	public static class SessionTokenManager
 	{
-		private class InnerToken
+		public class SessionToken
 		{
-			[BsonElement]
+			public string UserToken;
 			public string Value;
-			[BsonElement]
-			public long Timeout;
-			[BsonElement]
-			public long CreationDate;
+			public TimeSpan Timeout;
+			[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+			public DateTime CreationDate;
+
+			public bool IsExpired => CreationDate + Timeout < DateTime.Now;
 		}
 
-		private static PersistentStore<string, InnerToken> m_tokens = new PersistentStore<string, InnerToken>("auth", "temptokens");
+		private static PersistentStore<string, SessionToken> m_tokens = new PersistentStore<string, SessionToken>("auth", "temptokens");
 		const byte DEFAULT_TOKEN_TIMEOUT_MINUTES = 5;
 		const byte TOKEN_SIZE = 32;
 
-		static TemporaryTokenManager()
+		static SessionTokenManager()
 		{
 			Task tokenTask = new Task(async () =>
 			{
-				var toRemove = new List<string>();
 				while (true)
 				{
 					await Task.Delay(TimeSpan.FromMinutes(1));
-					var now = DateTime.Now.Ticks;
-					/*var outdatedTokens = m_tokens.GetQueryable().Where(val => val.Value.CreationDate < now - val.Value.Timeout).ToList();
-					foreach(var r in outdatedTokens)
+					foreach(var token in m_tokens.GetQueryable())
 					{
-						// Expire tokens
-						m_tokens.Remove(r.Key);
-					}*/
+						if(token.Value.IsExpired)
+						{
+							m_tokens.Remove(token.Key);
+						}
+					}
 				}
 			});
 			tokenTask.Start();
@@ -58,11 +58,11 @@ namespace Resources.Security
 		{
 			timeout = timeout ?? TimeSpan.FromMinutes(DEFAULT_TOKEN_TIMEOUT_MINUTES);
 			key = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
-			m_tokens[key] = new InnerToken()
+			m_tokens[key] = new SessionToken()
 			{
-				CreationDate = DateTime.Now.Ticks,
+				CreationDate = DateTime.Now,
 				Value = token,
-				Timeout = timeout.Value.Ticks,
+				Timeout = timeout.Value,
 			};
 		}
 

@@ -9,6 +9,7 @@ using Common.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Common;
 
 namespace RESTTests
 {
@@ -25,8 +26,26 @@ namespace RESTTests
 		{
 			base.VerifyCreatedObject(rebellion, obj, schema);
 			Assert.AreEqual(schema.Location, rebellion.Location);
-			Assert.IsTrue(schema.StartDate - rebellion.StartDate < TimeSpan.FromMinutes(1));
-			Assert.IsTrue(schema.EndDate - rebellion.EndDate < TimeSpan.FromMinutes(1));
+			Assert.IsTrue(schema.StartDate - rebellion.StartDate < TimeSpan.FromMinutes(2), $"Start date wasn't close enough - delta was {schema.StartDate - rebellion.StartDate}");
+			Assert.IsTrue(schema.EndDate - rebellion.EndDate < TimeSpan.FromMinutes(2), $"End date wasn't close enough - delta was {schema.EndDate - rebellion.EndDate}");
+		}
+
+		protected override JObject GetPatchObject()
+		{
+			var ret = new JObject();
+			ret["Location"] = JToken.FromObject(SchemaGenerator.RandomLocation);
+			ret["StartDate"] = SchemaGenerator.RandomDate;
+			ret["EndDate"] = SchemaGenerator.RandomDate;
+			ret["PublicDescription"] = "test test test";
+			return ret;
+		}
+
+		protected override void VerifyPatchedObject(Rebellion rsc, JObject patchObj)
+		{
+			Assert.AreEqual(patchObj["Location"].ToObject<GeoLocation>(), rsc.Location);
+			Assert.IsTrue(patchObj.Value<DateTime>("StartDate") - rsc.StartDate < TimeSpan.FromMinutes(2));
+			Assert.IsTrue(patchObj.Value<DateTime>("EndDate") - rsc.EndDate < TimeSpan.FromMinutes(2));
+			Assert.AreEqual(patchObj.Value<string>("PublicDescription"), rsc.PublicDescription);
 		}
 
 		/*public override object GetCreationSchema(bool unique = false)

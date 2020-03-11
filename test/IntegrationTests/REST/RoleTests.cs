@@ -1,6 +1,7 @@
 using Dodo.Roles;
 using DodoResources.Roles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json.Linq;
 
 namespace RESTTests
 {
@@ -8,6 +9,18 @@ namespace RESTTests
 	public class RoleTests : RESTTestBase<Role, RoleSchema>
 	{
 		public override string ResourceRoot => RoleController.RootURL;
+
+		protected override JObject GetPatchObject()
+		{
+			var ret = new JObject();
+			ret["PublicDescription"] = "test test test";
+			return ret;
+		}
+
+		protected override void VerifyPatchedObject(Role rsc, JObject patchObj)
+		{
+			Assert.AreEqual(patchObj.Value<string>("PublicDescription"), rsc.PublicDescription);
+		}
 
 		/*[TestInitialize]
 		public void Setup()
