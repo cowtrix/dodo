@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Common.Security;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -83,8 +83,8 @@ namespace Dodo.Users
 				return false;
 			}
 			PassPhrase = new EncryptedStore<string>(passphrase, newPassword);
-			PasswordHash = SHA256Utility.SHA256(newPassword.Value + PublicKey);
-			if(!ChallengePassword(newPassword.Value, out _))
+			PasswordHash = PasswordHasher.HashPassword(newPassword.Value);
+			if (!ChallengePassword(newPassword.Value, out _))
 			{
 				return false;
 			}

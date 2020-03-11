@@ -22,6 +22,7 @@ namespace Dodo.Users
 		public const string LOGOUT = "logout";
 		public const string REGISTER = "register";
 		public const string RESET_PASSWORD = "resetpassword";
+		public const string CHANGE_PASSWORD = "changepassword";
 		public const string PARAM_TOKEN = "token";
 		public const string VERIFY_EMAIL = "verifyemail";
 
@@ -29,6 +30,12 @@ namespace Dodo.Users
 		{
 			public string username { get; set; }
 			public string password { get; set; }
+		}
+
+		public class ChangePasswordModel
+		{
+			public string currentpassword { get; set; }
+			public string newpassword { get; set; }
 		}
 
 		protected override AuthorizationManager<User, UserSchema> AuthManager => 
@@ -72,6 +79,27 @@ namespace Dodo.Users
 			return Ok();
 		}
 
+
+		[HttpGet(RESET_PASSWORD)]
+		public async Task<IActionResult> RequestPasswordReset(string email)
+		{
+			if (Context.User != null && Context.User.PersonalData.Email != email)
+			{
+				return BadRequest("Mismatching emails");
+			}
+			var targetUser = UserManager.GetSingle(u => u.PersonalData.Email == email);
+			if (targetUser != null)
+			{
+				using (var rscLock = new ResourceLock(targetUser))
+				{
+					targetUser = rscLock.Value as User;
+					targetUser.TokenCollection.Add(targetUser, new ResetPasswordToken(targetUser));
+					UserManager.Update(targetUser, rscLock);
+				}
+			}
+			return Ok();
+		}
+
 		[HttpPost(RESET_PASSWORD)]
 		public async Task<IActionResult> ResetPassword(string token, [FromBody]string password)
 		{
@@ -93,6 +121,24 @@ namespace Dodo.Users
 				user.AuthData = new AuthorizationData(user.AuthData.Username, password);
 				UserManager.Update(user, rscLock);
 			}
+			return Ok();
+		}
+
+		[HttpPost(CHANGE_PASSWORD)]
+		public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordModel model)
+		{
+			if(Context.User == null)
+			{
+				return Forbid();
+			}
+			if(!Context.User.AuthData.ChallengePassword(model.currentpassword, out _))
+			{
+				return Unauthorized();
+			}
+			using var rscLock = new ResourceLock(Context.User);
+			var user = rscLock.Value as User;
+			user.AuthData.ChangePassword(new Passphrase(model.currentpassword), new Passphrase(model.newpassword));
+			UserManager.Update(user, rscLock);
 			return Ok();
 		}
 
@@ -120,26 +166,6 @@ namespace Dodo.Users
 			var user = rscLock.Value as User;
 			user.PersonalData.EmailConfirmed = true;
 			UserManager.Update(user, rscLock);
-			return Ok();
-		}
-
-		[HttpGet(RESET_PASSWORD)]
-		public async Task<IActionResult> RequestPasswordReset(string email)
-		{
-			if(Context.User != null && Context.User.PersonalData.Email != email)
-			{
-				return BadRequest("Mismatching emails");
-			}
-			var targetUser = UserManager.GetSingle(u => u.PersonalData.Email == email);
-			if (targetUser != null)
-			{
-				using(var rscLock = new ResourceLock(targetUser))
-				{
-					targetUser = rscLock.Value as User;
-					targetUser.TokenCollection.Add(targetUser, new ResetPasswordToken(targetUser));
-					UserManager.Update(targetUser, rscLock);
-				}				
-			}
 			return Ok();
 		}
 

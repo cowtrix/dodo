@@ -96,13 +96,22 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.GET,
 				null, new[] { ( "email", user.PersonalData.Email) } );
-			Assert.AreEqual(request.StatusCode, System.Net.HttpStatusCode.OK);
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			user = UserManager.GetSingle(u => u.GUID == user.GUID);
 			var token = user.TokenCollection.GetSingleToken<ResetPasswordToken>();
 
 			request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.POST,
 				newPassword, new[] { ( UserController.PARAM_TOKEN, token.TemporaryToken ) });
+			await Login(user.AuthData.Username, newPassword);
+		}
+
+		[TestMethod]
+		public async Task CanChangePassword()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var newPassword = ValidationExtensions.GenerateStrongPassword();
+			await Login(user.AuthData.Username, password);
+			await Request($"{UserController.RootURL}/{UserController.CHANGE_PASSWORD}", EHTTPRequestType.POST, new { currentpassword = password, newpassword = newPassword });
 			await Login(user.AuthData.Username, newPassword);
 		}
 

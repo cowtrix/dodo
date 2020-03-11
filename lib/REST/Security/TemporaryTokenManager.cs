@@ -1,4 +1,4 @@
-﻿using Common.Security;
+using Common.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Concurrent;
