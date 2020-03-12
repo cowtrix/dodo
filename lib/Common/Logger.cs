@@ -3,6 +3,8 @@ using Common.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Text;
 
 namespace Common
 {
@@ -18,8 +20,11 @@ namespace Common
 
 	public static class Logger
 	{
+		private const string PARAM_Y = "y";
+
 		public static LogEvent OnLog;
 		public static ELogLevel CurrentLogLevel = ELogLevel.Info;
+		public static bool PromptUser { get; private set; }
 		private static object m_fileLock = new object();
 
 		static Logger()
@@ -36,6 +41,7 @@ namespace Common
 				CurrentLogLevel = newLog;
 				Info($"Logging level is " + CurrentLogLevel);
 			}
+			PromptUser = !args.HasKey(PARAM_Y);
 		}
 
 		public static void Exception(Exception exception, string message = null)
@@ -44,12 +50,18 @@ namespace Common
 			{
 				return;
 			}
+			var sb = new StringBuilder(message);
 			if (!string.IsNullOrEmpty(message))
 			{
-				Error(message, true);
+				sb.Append('\n');
 			}
-			Error(exception.Message, true);
-			Error(exception.StackTrace, true);
+			if(exception is TargetInvocationException)
+			{
+				exception = exception.InnerException;
+			}
+			sb.AppendLine(exception.Message);
+			sb.AppendLine(exception.StackTrace);
+			DoLog(sb.ToString(), ConsoleColor.Red, ConsoleColor.Black, ELogLevel.Error);
 			if (exception.InnerException != null)
 			{
 				Exception(exception.InnerException, "Inner exception: ");
@@ -76,21 +88,64 @@ namespace Common
 			ConsoleColor prevBack = Console.BackgroundColor;
 			try
 			{
-				message = $"[{DateTime.Now.ToString()}]\t{message}";
+				//message = $"[{DateTime.Now.ToLocalTime().ToShortTimeString()}]\t{message}";
 				Console.ForegroundColor = foreground;
 				Console.BackgroundColor = background;
-				Console.WriteLine(message);
+				if(logLevel == ELogLevel.Error)
+				{
+					Console.Error.WriteLine(message);
+				}
+				else
+				{
+					Console.WriteLine(message);
+				}
 				OnLog?.Invoke(message, logLevel);
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.Message);
+				Console.Error.WriteLine(e.Message);
 			}
 			finally
 			{
 				Console.ForegroundColor = prevFore;
 				Console.BackgroundColor = prevBack;
 			}
+		}
+
+		public static bool Prompt(string message, ConsoleKey confirm = ConsoleKey.Y)
+		{
+			const ConsoleKey ALWAYS = ConsoleKey.A;
+			if(!PromptUser)
+			{
+				Info(message);
+				return true;
+			}
+			ConsoleColor prevFore = Console.ForegroundColor;
+			ConsoleColor prevBack = Console.BackgroundColor;
+			try
+			{
+				while(Console.KeyAvailable) { Console.ReadKey(); /* flush buffer */ }
+				message = $"{message}";
+				Console.ForegroundColor = ConsoleColor.Green;
+				Console.WriteLine(message);
+				Console.WriteLine($"Press {confirm} to confirm, {ALWAYS} to confirm all further actions, or any other key to cancel.");
+			}
+			catch (Exception e)
+			{
+				Console.Error.WriteLine(e.Message);
+			}
+			finally
+			{
+				Console.ForegroundColor = prevFore;
+				Console.BackgroundColor = prevBack;
+			}
+			var key = Console.ReadKey().Key;
+			Console.WriteLine();
+			if(key == ALWAYS)
+			{
+				PromptUser = false;
+			}
+			return key == confirm || key == ALWAYS;
 		}
 
 		public static void Error(string message, bool nolog = false)
