@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Dodo.Users.Tokens
 {
-	public class SessionToken : UserToken
+	public class SessionToken : UserToken, IRemovableToken
 	{
 		public const int KEYSIZE = 64;
 
@@ -18,11 +18,17 @@ namespace Dodo.Users.Tokens
 		[JsonProperty]
 		public EncryptedStore<string> EncryptedPassphrase { get; private set; }
 
+		public bool CanRemove => true;
+
 		public SessionToken(User user, string passphrase, Passphrase encryptionKey)
 		{
 			UserToken = KeyGenerator.GetUniqueKey(KEYSIZE);
 			EncryptedPassphrase = new EncryptedStore<string>(passphrase, encryptionKey);
 			SessionTokenStore.SetUser(UserToken, encryptionKey, user.GUID);
+		}
+
+		public void OnRemove(User parent)
+		{
 		}
 	}
 }

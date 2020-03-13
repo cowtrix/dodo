@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Dodo.Users.Tokens;
 using Common.Security;
+using System.Linq;
 
 namespace Dodo.Users
 {
@@ -93,6 +94,16 @@ namespace Dodo.Users
 				return Forbid();
 			}
 			await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
+			using var rscLock = new ResourceLock(Context.User);
+			var user = rscLock.Value as User;
+			var session = user.TokenCollection.GetTokens<SessionToken>()
+					.SingleOrDefault(t => t.UserToken == Context.UserToken);
+			if(session == null)
+			{
+				return BadRequest();
+			}
+			user.TokenCollection.Remove(user, session);
+			UserManager.Update(user, rscLock);
 			return Ok();
 		}
 
@@ -153,10 +164,12 @@ namespace Dodo.Users
 			{
 				return Unauthorized();
 			}
-			using var rscLock = new ResourceLock(Context.User);
-			var user = rscLock.Value as User;
-			user.AuthData.ChangePassword(new Passphrase(model.currentpassword), new Passphrase(model.newpassword));
-			UserManager.Update(user, rscLock);
+			using (var rscLock = new ResourceLock(Context.User))
+			{
+				var user = rscLock.Value as User;
+				user.AuthData.ChangePassword(new Passphrase(model.currentpassword), new Passphrase(model.newpassword));
+				UserManager.Update(user, rscLock);
+			}
 			await Logout();
 			return Ok();
 		}

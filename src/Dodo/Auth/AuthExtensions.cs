@@ -50,7 +50,7 @@ namespace Dodo
 			var passphrase = sessionToken.EncryptedPassphrase.GetValue(sessionKey);
 
 			// Create the context and make sure its valid
-			var context = new AccessContext(user, passphrase);
+			var context = new AccessContext(user, passphrase, userToken);
 			if(!context.Challenge())
 			{
 				return default;
