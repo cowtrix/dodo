@@ -21,7 +21,8 @@ namespace Dodo.Users.Tokens
 		typeof(TemporaryUserToken),
 		typeof(VerifyEmailToken),
 		typeof(SysAdminToken),
-		typeof(ResourceCreationToken)
+		typeof(ResourceCreationToken),
+		typeof(SessionToken)
 		)]
 	public abstract class UserToken : IUserToken
 	{

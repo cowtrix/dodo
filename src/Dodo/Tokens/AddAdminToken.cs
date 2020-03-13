@@ -5,7 +5,7 @@ using Resources.Security;
 
 namespace Dodo.Users.Tokens
 {
-	public class AddAdminToken : RedeemableToken, INotificationToken
+	public class AddAdminToken : AutoExecutableToken, INotificationToken
 	{
 		[JsonProperty]
 		[NotNulResource]
@@ -19,7 +19,7 @@ namespace Dodo.Users.Tokens
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
 		}
 
-		protected override bool OnRedeemed(AccessContext context)
+		protected override bool OnExecuted(AccessContext context)
 		{
 			var privateKey = context.User.AuthData.PrivateKey.GetValue(context.Passphrase);
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));

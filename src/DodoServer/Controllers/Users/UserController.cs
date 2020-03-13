@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Dodo.Users.Tokens;
+using Common.Security;
 
 namespace Dodo.Users
 {
@@ -44,18 +45,34 @@ namespace Dodo.Users
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
 		{
+			if (Context.User != null)
+			{
+				// User is already logged in
+				return Ok();
+			}
+
 			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.username);
 			if (!user.AuthData.ChallengePassword(login.password, out var passphrase))
 			{
 				return BadRequest();
 			}
 
-			SessionTokenManager.SetTemporaryToken(user.GUID.ToString(), out var guidKey, TimeSpan.FromHours(24));
-			SessionTokenManager.SetTemporaryToken(passphrase, out var passphraseKey, TimeSpan.FromHours(24));
+			// Generate an encryption key that we will include in the cookie and throw away on our end
+			var key = new Passphrase(KeyGenerator.GetUniqueKey(SessionToken.KEYSIZE));
 
+			// Create the session token
+			var token = new SessionToken(user, passphrase, key);
+			using (var rscLock = new ResourceLock(user))
+			{
+				user = rscLock.Value as User;
+				user.TokenCollection.Add(user, token);
+				UserManager.Update(user, rscLock);
+			}
+
+			// Create the claims ID
 			var id = new ClaimsIdentity(AuthConstants.AUTHSCHEME);
-			id.AddClaim(new Claim(AuthConstants.SUBJECT, guidKey));
-			id.AddClaim(new Claim(AuthConstants.KEY, passphraseKey));
+			id.AddClaim(new Claim(AuthConstants.SUBJECT, token.UserToken));
+			id.AddClaim(new Claim(AuthConstants.KEY, key.Value));
 			var principal = new ClaimsPrincipal(id);
 			var props = new AuthenticationProperties
 			{
@@ -140,6 +157,7 @@ namespace Dodo.Users
 			var user = rscLock.Value as User;
 			user.AuthData.ChangePassword(new Passphrase(model.currentpassword), new Passphrase(model.newpassword));
 			UserManager.Update(user, rscLock);
+			await Logout();
 			return Ok();
 		}
 

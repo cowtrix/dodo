@@ -4,6 +4,7 @@ using Dodo;
 using Dodo.Rebellions;
 using Dodo.SharedTest;
 using Dodo.Users;
+using Dodo.Users.Tokens;
 using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;

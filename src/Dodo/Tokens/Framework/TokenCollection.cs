@@ -38,24 +38,34 @@ namespace Dodo.Users.Tokens
 			token.OnAdd(parent);
 		}
 
-		public void RemoveAll<T>(User parent) where T: IRemovableToken
+		public bool RemoveAll<T>(User parent) where T: IRemovableToken
 		{
-			Remove(parent, t => t is T);
+			return Remove(parent, t => t is T);
 		}
 
-		public void Remove(User parent, IRemovableToken pa)
+		public bool Remove(User parent, IRemovableToken token)
 		{
-			Remove(parent, t => t.GUID == pa.GUID);
+			return Remove(parent, t => t.GUID == token.GUID);
 		}
 
-		public void Remove(User parent, Func<IRemovableToken, bool> removeWhere)
+		public bool Remove(User parent, Guid tokenGuid)
+		{
+			return Remove(parent, t => t.GUID == tokenGuid);
+		}
+
+		public bool Remove(User parent, Func<IRemovableToken, bool> removeWhere)
 		{
 			var toRemove = Tokens.OfType<IRemovableToken>().Where(t => t.CanRemove && removeWhere(t));
+			if(!toRemove.Any())
+			{
+				return false;
+			}
 			foreach(var token in toRemove)
 			{
 				token.OnRemove(parent);
 			}
 			m_tokens = m_tokens.Where(t1 => !toRemove.Any(t2 => t2.GUID == t1.GUID)).ToList();
+			return true;
 		}
 
 		public T GetSingleToken<T>() where T:UserToken

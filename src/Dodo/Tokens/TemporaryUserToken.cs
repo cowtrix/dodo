@@ -5,7 +5,7 @@ using Resources.Security;
 namespace Dodo.Users.Tokens
 {
 	[SingletonToken]
-	public class TemporaryUserToken : RedeemableToken
+	public class TemporaryUserToken : AutoExecutableToken
 	{
 		[JsonProperty]
 		public string TemporaryToken { get; private set; }

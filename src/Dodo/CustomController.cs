@@ -58,9 +58,9 @@ namespace Resources
 		{
 			if (Context.User != null)
 			{
-				foreach (var token in Context.User.TokenCollection.Tokens.OfType<IRedeemableToken>())
+				foreach (var token in Context.User.TokenCollection.Tokens.OfType<IAutoExecuteToken>())
 				{
-					token.Redeem(Context);
+					token.Execute(Context);
 				}
 			}
 			base.OnActionExecuting(actionContext);

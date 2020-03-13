@@ -3,7 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Users.Tokens
 {
-	public class RedeemableToken : UserToken, IRedeemableToken, IRemovableToken
+
+	public abstract class RedeemableToken : UserToken, IRedeemableToken, IRemovableToken
 	{
 		[BsonElement]
 		public bool IsRedeemed { get; private set; }

@@ -3,6 +3,7 @@ using Resources.Security;
 using Dodo.Resources;
 using Resources;
 using System;
+using Dodo.Users.Tokens;
 
 namespace Dodo.Users
 {
@@ -16,7 +17,7 @@ namespace Dodo.Users
 			using (var rscLock = new ResourceLock(newUser))
 			{
 				Add(newUser);
-				newUser.TokenCollection.Add(newUser, new TemporaryUserAction(temporaryPassword));
+				newUser.TokenCollection.Add(newUser, new TemporaryUserToken(temporaryPassword));
 				Update(newUser, rscLock);
 				return newUser;
 			}
