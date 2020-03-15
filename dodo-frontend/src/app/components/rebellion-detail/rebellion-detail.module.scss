@@ -1,0 +1,29 @@
+@import "~app/styles/styles";
+
+.RebellionDetail {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  max-width: $application-max-width;
+  flex-grow: 1;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: spacing(6);
+}
+
+.heading {
+  display: flex;
+
+  @media (max-width: $responsive-breakpoint) {
+    flex-direction: row-reverse;
+  }
+}
+
+.title {
+  margin-left: spacing(6);
+  @media (max-width: $responsive-breakpoint) {
+    margin-left: 0;
+    margin-right: spacing(6);
+  }
+}
