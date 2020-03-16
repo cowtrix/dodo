@@ -2,6 +2,7 @@
   "LogLevel": 2,
   "DodoURI_Https": "https://0.0.0.0",
   "DodoURI_HttpsPort": 5001,
+  "DodoURI_Index": "https://0.0.0.0",
   "MongoDBServerURL": "",
   "ResourceLockTimeout": 10000
 }

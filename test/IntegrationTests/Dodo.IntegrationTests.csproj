@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;..\..\resources&quot; &quot;$(TargetDir)resources&quot; /i /s /r /y" />
+    <Exec Command="xcopy &quot;$(SolutionDir)resources&quot; &quot;$(TargetDir)resources&quot; /i /s /r /y" />
   </Target>
 
 </Project>

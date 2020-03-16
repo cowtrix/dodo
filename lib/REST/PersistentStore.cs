@@ -26,6 +26,7 @@ namespace Resources
 		}
 
 		public IMongoCollection<Entry> Collection;
+
 		public PersistentStore(string dbName, string collectionName)
 		{
 			Collection = ResourceUtility.MongoDB.GetDatabase(dbName).GetCollection<Entry>(collectionName);
@@ -40,13 +41,17 @@ namespace Resources
 		{
 			get
 			{
-				return Collection.Find(x => x.Key != null && x.Key.Equals(key)).First().Value;
+				return Collection.Find(x => x.Key.Equals(key)).First().Value;
 			}
 			set
 			{
-				Collection.InsertOne(new Entry(key, value));
-				//m_collection.ReplaceOne(x => x.Key != null && x.Key.Equals(key), new Entry(key, JsonConvert.SerializeObject(value)));
+				Collection.ReplaceOne(e => e.Key.Equals(key), new Entry(key, value), new ReplaceOptions() { IsUpsert = true });
 			}
+		}
+
+		public void Clear()
+		{
+			Collection.Database.DropCollection(Collection.CollectionNamespace.CollectionName);
 		}
 
 		public IMongoQueryable<Entry> GetQueryable()
