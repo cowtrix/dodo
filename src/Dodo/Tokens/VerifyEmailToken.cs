@@ -4,10 +4,10 @@ using Newtonsoft.Json;
 using System;
 using Common.Security;
 
-namespace Dodo.Users
+namespace Dodo.Users.Tokens
 {
 	[SingletonToken]
-	public class VerifyEmailToken : UserToken
+	public class VerifyEmailToken : RedeemableToken, INotificationToken
 	{
 		const int TOKEN_SIZE = 64;
 
@@ -19,9 +19,6 @@ namespace Dodo.Users
 			Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 		}
 
-		public override string GetNotificationMessage()
-		{
-			return "You should check your email and verify your email address with us.";
-		}
+		public string GetNotification(AccessContext context) => "You should check your email and verify your email address with us.";
 	}
 }

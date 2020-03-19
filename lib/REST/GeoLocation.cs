@@ -81,5 +81,10 @@ namespace Resources
 		{
 			return new GeoLocation(Latitude + latitude, Longitude + longitude);
 		}
+
+		public override string ToString()
+		{
+			return $"Lat:{Latitude} Long:{Longitude}";
+		}
 	}
 }

@@ -13,6 +13,7 @@ using Dodo.Rebellions;
 using Dodo.SharedTest;
 using System.Collections.Generic;
 using Dodo.Users;
+using Dodo.Users.Tokens;
 
 namespace RESTTests
 {

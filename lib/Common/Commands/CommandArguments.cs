@@ -1,111 +1,22 @@
-﻿using Common.Config;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Common.Commands
 {
-	public static class RegexMatches
-	{
-		public const string WINDOWS_PATH = "(^([a-z]|[A-Z]):(?=\\\\(?![\\0-\\37<>:\"/\\\\|?*])|\\/(?![\\0-\\37<>:\"/\\\\|?*])|$)|^\\\\(?=[\\\\\\/][^\\0-\\37<>:\"/\\\\|?*]+)|^(?=(\\\\|\\/)$)|^\\.(?=(\\\\|\\/)$)|^\\.\\.(?=(\\\\|\\/)$)|^(?=(\\\\|\\/)[^\\0-\\37<>:\"/\\\\|?*]+)|^\\.(?=(\\\\|\\/)[^\\0-\\37<>:\"/\\\\|?*]+)|^\\.\\.(?=(\\\\|\\/)[^\\0-\\37<>:\"/\\\\|?*]+))((\\\\|\\/)[^\\0-\\37<>:\"/\\\\|?*]+|(\\\\|\\/)$)*()$";
-		public const string POSITIVE_NUMBER = @"^[+]?\d+([.]\d+)?$";
-	}
-
-	public interface ICommandArguments
-	{
-		T TryGetValue<T>(string key, T defaultValue);
-	}
-
-	public interface ICommandArgumentValidator
-	{
-		bool Validate(CommandArgumentParameters param, string key, string rawValue, out string error);
-	}
-
-	public class CommandArgumentRegexSchema : ICommandArgumentValidator
-	{
-		private Dictionary<string, ValueTuple<string, string>> m_regexMapping = new Dictionary<string, (string, string)>();
-		private bool m_allowUnspecifiedArgs;
-
-		public CommandArgumentRegexSchema(bool allowUnspecifiedArgs, params ValueTuple<string, string, string>[] values)
-		{
-			m_allowUnspecifiedArgs = allowUnspecifiedArgs;
-			foreach (var kvp in values)
-			{
-				m_regexMapping[kvp.Item1] = (kvp.Item2, kvp.Item3);
-			}
-		}
-
-		public bool Validate(CommandArgumentParameters param, string key, string rawValue, out string error)
-		{
-			if (!m_regexMapping.TryGetValue(key, out var regex))
-			{
-				error = $"No argument found with key {key}";
-				return m_allowUnspecifiedArgs;
-			}
-			if (!Regex.IsMatch(rawValue, regex.Item1))
-			{
-				error = $"Regex mismatch: {param.CommandPrefix}{key}{param.CommandParamSeperator}{rawValue} did not match required regex. {regex.Item2}";
-				return false;
-			}
-			error = null;
-			return true;
-		}
-
-		public string GetHelpString(CommandArgumentParameters argParams)
-		{
-			var sb = new StringBuilder("");
-			foreach (var mapping in m_regexMapping)
-			{
-				sb.AppendLine($"{argParams.CommandPrefix}{mapping.Key}{argParams.CommandParamSeperator}value\t{mapping.Value.Item2}");
-			}
-			return sb.ToString();
-		}
-	}
-
 	public delegate bool ValidateArgumentDelegate(CommandArgumentParameters param, string key, string rawValue, out string error);
 
-	public class CommandArgumentParameters
+	/// <summary>
+	/// Represents the parsed values from a raw commandline string
+	/// </summary>
+	public struct CommandArguments
 	{
-		public static CommandArgumentParameters Default => new ConfigVariable<CommandArgumentParameters>("DefaultCommandArgumentParameters", new CommandArgumentParameters()).Value;
-		public readonly char CommandParamSeperator;
-		public readonly char CommandSeperator;
-		public readonly char CommandPrefix;
-		public readonly char QuotationChar;
-		public ValidateArgumentDelegate OnValidate;
-
-		public CommandArgumentParameters(ICommandArgumentValidator validator, char prefix = '/', char paramSeperator = ':', char commandSeperator = ' ', char quotationChar = '"')
-			: this(validator.Validate, prefix, paramSeperator, commandSeperator, quotationChar)
-		{
-		}
-
-		public CommandArgumentParameters(ValidateArgumentDelegate validator = null, char prefix = '/', char paramSeperator = ':', char commandSeperator = ' ', char quotationChar = '"')
-		{
-			OnValidate = validator;
-			CommandPrefix = prefix;
-			CommandParamSeperator = paramSeperator;
-			CommandSeperator = commandSeperator;
-			QuotationChar = quotationChar;
-		}
-	}
-
-	public struct CommandArguments : ICommandArguments
-	{
-		enum eReadState
-		{
-			Seek,
-			ReadKey,
-			ReadValue,
-			ReadValueInQuotations,
-		}
-
-		const char EOL = '\0';
 		private Dictionary<string, string> m_args;
-		public string RawValue { get; private set; }
 
-		public CommandArguments(IEnumerable<string> args, CommandArgumentParameters parameters) :
-			this(args.Aggregate("", (current, next) => current + (current == "" ? "" : " ") + next), parameters)
+		public CommandArguments(string args, CommandArgumentParameters parameters) :
+			this(Split(args, parameters), parameters)
 		{
 		}
 
@@ -118,114 +29,72 @@ namespace Common.Commands
 		{
 		}
 
-		public CommandArguments(string arg, CommandArgumentParameters parameters)
+		public CommandArguments(IEnumerable<string> args, CommandArgumentParameters parameters)
 		{
-			RawValue = arg;
 			m_args = new Dictionary<string, string>();
-			var sb = new StringBuilder();
-			eReadState state = eReadState.Seek;
-
-			string keyBuffer = null;
-			int charCounter = 0;
-			// Go through the string provided character by character
-			try
+			foreach(var arg in args)
 			{
-				for (charCounter = 0; charCounter <= arg.Length; charCounter++)
+				if(!arg.StartsWith(parameters.CommandPrefix.ToString()))
 				{
-					char c = charCounter == arg.Length ? EOL : (char)arg[charCounter];
-
-					if (state == eReadState.Seek)
-					{
-						if (c == parameters.CommandPrefix)
-						{
-							// We start reading the parameter key, but skip the prefix
-							state = eReadState.ReadKey;
-							//continue;
-						}
-						/*if (c != parameters.CommandSeperator && c != EOL)
-						{
-							throw new Exception();
-						}*/
-						continue;
-					}
-					else if (state == eReadState.ReadKey)
-					{
-						if (c == parameters.CommandSeperator || c == EOL)
-						{
-							// It's a flag (no value)
-							m_args[sb.ToString()] = null;
-							sb.Clear();
-							state = eReadState.Seek;
-						}
-						else if (c == parameters.CommandParamSeperator)
-						{
-							// Switch to reading value
-							state = eReadState.ReadValue;
-							keyBuffer = sb.ToString();
-							sb.Clear();
-						}
-						else
-						{
-							sb.Append(c);
-						}
-						continue;
-					}
-					else if (state == eReadState.ReadValue)
-					{
-						if (c == parameters.QuotationChar)
-						{
-							state = eReadState.ReadValueInQuotations;
-						}
-						else if (c == parameters.CommandSeperator || c == EOL)
-						{
-							// Finished reading command with value
-							m_args[keyBuffer] = sb.ToString();
-							sb.Clear();
-							keyBuffer = null;
-							state = eReadState.Seek;
-						}
-						else
-						{
-							sb.Append(c);
-						}
-						continue;
-					}
-					else if (state == eReadState.ReadValueInQuotations)
-					{
-						if (c == parameters.QuotationChar)
-						{
-							state = eReadState.Seek;
-							// Finished reading command with value within quotations
-							m_args[keyBuffer] = sb.ToString();
-							sb.Clear();
-							keyBuffer = null;
-							state = eReadState.Seek;
-						}
-						else
-						{
-							sb.Append(c);
-						}
-						continue;
-					}
+					continue;
 				}
-			}
-			catch (Exception e)
-			{
-				throw new Exception($"Args [{arg}] failed to parse. Unexpected character at index {charCounter}\n", e);
-			}
-			if (parameters.OnValidate == null)
-			{
-				return;
-			}
-			foreach (var parsedArg in m_args)
-			{
-				if (!parameters.OnValidate(parameters, parsedArg.Key, parsedArg.Value, out var error))
+				var index = arg.IndexOf(parameters.CommandParamSeperator);
+				if(index < 0)
 				{
-					throw new Exception(error);
+					// This is a flag
+					m_args[arg.Substring(1)] = "";
+					continue;
+				}
+				var key = arg.Substring(1, index - 1);
+				var value = arg.Substring(index + 1);
+				m_args[key] = value;
+			}
+			if(parameters.OnValidate != null)
+			{
+				foreach (var parsedArg in m_args)
+				{
+					if (!parameters.OnValidate(parameters, parsedArg.Key, parsedArg.Value, out var error))
+					{
+						throw new Exception(error);
+					}
 				}
 			}
 		}
 
+		/// <summary>
+		/// Get a value with the given keys, and throw an exception if not found
+		/// </summary>
+		/// <typeparam name="T">The type to return</typeparam>
+		/// <param name="keys">The keys we can match</param>
+		/// <returns>An object of type T that matches the given keys</returns>
+		public T MustGetValue<T>(IEnumerable<string> keys)
+		{
+			if(!HasKey(keys))
+			{
+				throw new Exception($"Missing required argument: {string.Join(", ", keys)}");
+			}
+			return TryGetValue<T>(keys, default);
+		}
+
+		/// <summary>
+		/// Get a value with the given key, and throw an exception if not found
+		/// </summary>
+		/// <typeparam name="T">The type to return</typeparam>
+		/// <param name="key">The key we can match</param>
+		/// <returns>An object of type T that matches the given key</returns>
+		public T MustGetValue<T>(string key)
+		{
+			return MustGetValue<T>(new [] { key });
+		}
+
+		/// <summary>
+		/// Try to get a value with the given keys, and return the default value
+		/// if none is found.
+		/// </summary>
+		/// <typeparam name="T">The type to return</typeparam>
+		/// <param name="keys">The keys we can match</param>
+		/// <param name="defaultValue">A default value</param>
+		/// <returns>An object of type T that matches the given keys</returns>
 		public T TryGetValue<T>(IEnumerable<string> keys, T defaultValue)
 		{
 			foreach (var key in keys)
@@ -243,6 +112,14 @@ namespace Common.Commands
 			return defaultValue;
 		}
 
+		/// <summary>
+		/// Try to get a value with the given keys, and return the default value
+		/// if none is found.
+		/// </summary>
+		/// <typeparam name="T">The type to return</typeparam>
+		/// <param name="key">The key we can match</param>
+		/// <param name="defaultValue">A default value</param>
+		/// <returns>An object of type T that matches the given keys</returns>
 		public T TryGetValue<T>(string key, T defaultValue)
 		{
 			return TryGetValue<T>(new[] { key }, defaultValue);
@@ -251,13 +128,22 @@ namespace Common.Commands
 		private bool TryConvert<T>(string str, out T result)
 		{
 			var t = typeof(T);
-			var success = TryConvert(str, t, out var objResult);
+			if(!TryConvert(str, t, out var objResult))
+			{
+				throw new Exception($"Could not convert type {t}");
+			}
 			result = (T)objResult;
-			return success;
+			return true;
 		}
 
 		private bool TryConvert(string str, Type t, out object result)
 		{
+			var nullType = Nullable.GetUnderlyingType(t);
+			if (nullType != null)
+			{
+				// Nullable type extra handling
+				return TryConvert(str, nullType, out result);
+			}
 			if (t == typeof(bool))
 			{
 				if (bool.TryParse(str, out var boolresult))
@@ -278,6 +164,11 @@ namespace Common.Commands
 			if (t == typeof(int))
 			{
 				result = int.Parse(str);
+				return true;
+			}
+			if (t == typeof(ulong))
+			{
+				result = ulong.Parse(str);
 				return true;
 			}
 			if (t == typeof(double))
@@ -310,8 +201,82 @@ namespace Common.Commands
 				result = Enum.Parse(t, str);
 				return true;
 			}
+			if (typeof(IEnumerable).IsAssignableFrom(t))
+			{
+				var listGenericArg = t.GetGenericArguments().Single();
+				if(t.IsInterface)
+				{
+					t = typeof(List<>).MakeGenericType(listGenericArg);
+				}
+				var list = Activator.CreateInstance(t) as IList;
+				foreach (var obj in str.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries)
+					.Select(x => x.Trim()))
+				{
+					if (!TryConvert(obj, listGenericArg, out var innerObj))
+					{
+						result = null;
+						return false;
+					}
+					list.Add(innerObj);
+				}
+				result = list;
+				return true;
+			}
 			result = default(object);
 			return false;
+		}
+
+		/// <summary>
+		/// Did the user explictly define the given key?
+		/// </summary>
+		/// <param name="key">The key to match</param>
+		/// <returns>True if the user has given the key in the commandline</returns>
+		public bool HasKey(string key)
+		{
+			return m_args.ContainsKey(key);
+		}
+
+		/// <summary>
+		/// Did the user explictly define any of the given keys?
+		/// </summary>
+		/// <param name="keys">The keys to match</param>
+		/// <returns>True if the user has given any of the keys in the commandline</returns>
+		public bool HasKey(IEnumerable<string> keys)
+		{
+			var args = m_args;
+			return keys.Any(key => args.ContainsKey(key));
+		}
+
+		/// <summary>
+		/// Utility function to split up raw strings in string arrays, like Main(string[] args)
+		/// </summary>
+		/// <param name="raw">The raw commandline string</param>
+		/// <param name="parameters">The parameters of how to parse the commandline</param>
+		/// <returns>An enumerable of parsed commands</returns>
+		public static IEnumerable<string> Split(string raw, CommandArgumentParameters parameters)
+		{
+			StringBuilder sb = new StringBuilder();
+			var result = new List<string>();
+			bool withinQuotes = false;
+			foreach(var c in raw)
+			{
+				if(c == parameters.QuotationChar)
+				{
+					withinQuotes = !withinQuotes;
+					continue;
+				}
+
+				if(c == parameters.CommandSeperator && !withinQuotes)
+				{
+					result.Add(sb.ToString());
+					sb.Clear();
+					continue;
+				}
+
+				sb.Append(c);
+			}
+			result.Add(sb.ToString());
+			return result;
 		}
 	}
 }

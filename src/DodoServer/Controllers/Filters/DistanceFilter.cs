@@ -58,7 +58,7 @@ namespace DodoResources
 		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
 		{
 			GenerateFilterData();
-			if (!rsc.Any())
+			if (!rsc.Any() || !(rsc.Any(r => r is ILocationalResource)) || m_coordinate == null)
 			{
 				return rsc;
 			}

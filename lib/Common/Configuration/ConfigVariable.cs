@@ -20,6 +20,10 @@ namespace Common.Config
 					return obj;
 				return DefaultValue;
 			}
+			set
+			{
+				ConfigManager.SetValue(ConfigKey, value);
+			}
 		}
 		public T DefaultValue { get; private set; }
 		public string ConfigKey { get; private set; }

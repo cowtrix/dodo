@@ -3,6 +3,7 @@ using Dodo.Users;
 using Resources.Security;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Dodo
 {
@@ -10,17 +11,20 @@ namespace Dodo
 	{
 		public readonly User User;
 		public readonly Passphrase Passphrase;
+		public readonly string UserToken;
 
-		public AccessContext(User user, string passphrase)
+		public AccessContext(User user, string passphrase, string userToken = null)
 		{
 			User = user;
 			Passphrase = new Passphrase(passphrase);
+			UserToken = userToken;
 		}
 
-		public AccessContext(User user, Passphrase passphrase)
+		public AccessContext(User user, Passphrase passphrase, string userToken = null)
 		{
 			User = user;
 			Passphrase = passphrase;
+			UserToken = userToken;
 		}
 
 		public override bool Equals(object obj)

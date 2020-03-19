@@ -4,6 +4,7 @@ using Dodo;
 using Dodo.Rebellions;
 using Dodo.SharedTest;
 using Dodo.Users;
+using Dodo.Users.Tokens;
 using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -24,7 +25,7 @@ namespace SharedTest
 	{
 		protected static TestContext Context;
 		private Random m_random = new Random();
-		protected static PostmanCollection m_postman = new PostmanCollection("8888079-57fb4f3e-b2ad-4afe-a429-47a38866c5cd");
+		protected static PostmanCollection Postman = new PostmanCollection("8888079-57fb4f3e-b2ad-4afe-a429-47a38866c5cd");
 
 		protected IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
 
@@ -60,7 +61,7 @@ namespace SharedTest
 		[AssemblyCleanup]
 		public static void Finalise()
 		{
-			m_postman.Update();
+			Postman.Update();
 		}
 
 		protected User GetRandomUser(out string password, out AccessContext context, bool verifyEmail = true)

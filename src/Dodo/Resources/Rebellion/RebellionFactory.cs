@@ -4,6 +4,7 @@ using Dodo.Resources;
 using Resources;
 using Resources.Serializers;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dodo.Rebellions
 {
@@ -12,7 +13,11 @@ namespace Dodo.Rebellions
 	public class RebellionSchema : GroupResourceSchemaBase
 	{
 		public GeoLocation Location { get; set; }
+		[DataType(DataType.DateTime)]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime StartDate { get; set; }
+		[DataType(DataType.DateTime)]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime EndDate { get; set; }
 
 		public RebellionSchema()

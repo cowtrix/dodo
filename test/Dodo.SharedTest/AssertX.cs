@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
 
@@ -43,6 +43,24 @@ namespace SharedTest
 				return;
 			}
 			throw new AssertFailedException("Exception was not thrown");
+		}
+
+		public static void AreEqual<T>(T first, T second, Func<T, T, bool> equalityOperator = null)
+		{
+			if(equalityOperator == null)
+			{
+				equalityOperator = (f, s) => f.Equals(s);
+			}
+			Assert.IsTrue(equalityOperator(first, second), $"Equality failed. Expected: {first}\nActual: {second}");
+		}
+
+		public static void AreNotEqual<T>(T first, T second, Func<T, T, bool> equalityOperator = null)
+		{
+			if (equalityOperator == null)
+			{
+				equalityOperator = (f, s) => f.Equals(s);
+			}
+			Assert.IsFalse(equalityOperator(first, second), $"Equality failed. Expected: {first}\nActual: {second}");
 		}
 	}
 }

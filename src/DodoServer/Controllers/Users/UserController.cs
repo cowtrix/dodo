@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Authentication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Dodo.Users.Tokens;
+using Common.Security;
+using System.Linq;
 
 namespace Dodo.Users
 {
-
 	[SecurityHeaders]
 	[ApiController]
 	[Route(RootURL)]
@@ -22,6 +24,7 @@ namespace Dodo.Users
 		public const string LOGOUT = "logout";
 		public const string REGISTER = "register";
 		public const string RESET_PASSWORD = "resetpassword";
+		public const string CHANGE_PASSWORD = "changepassword";
 		public const string PARAM_TOKEN = "token";
 		public const string VERIFY_EMAIL = "verifyemail";
 
@@ -31,24 +34,46 @@ namespace Dodo.Users
 			public string password { get; set; }
 		}
 
+		public class ChangePasswordModel
+		{
+			public string currentpassword { get; set; }
+			public string newpassword { get; set; }
+		}
+
 		protected override AuthorizationManager<User, UserSchema> AuthManager => 
 			new UserAuthManager(this.ControllerContext, Request);
 
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
 		{
+			if (Context.User != null)
+			{
+				// User is already logged in
+				return Ok();
+			}
+
 			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.username);
 			if (!user.AuthData.ChallengePassword(login.password, out var passphrase))
 			{
 				return BadRequest();
 			}
 
-			TemporaryTokenManager.SetTemporaryToken(user.GUID.ToString(), out var guidKey, TimeSpan.FromHours(24));
-			TemporaryTokenManager.SetTemporaryToken(passphrase, out var passphraseKey, TimeSpan.FromHours(24));
+			// Generate an encryption key that we will include in the cookie and throw away on our end
+			var key = new Passphrase(KeyGenerator.GetUniqueKey(SessionToken.KEYSIZE));
 
+			// Create the session token
+			var token = new SessionToken(user, passphrase, key);
+			using (var rscLock = new ResourceLock(user))
+			{
+				user = rscLock.Value as User;
+				user.TokenCollection.Add(user, token);
+				UserManager.Update(user, rscLock);
+			}
+
+			// Create the claims ID
 			var id = new ClaimsIdentity(AuthConstants.AUTHSCHEME);
-			id.AddClaim(new Claim(AuthConstants.SUBJECT, guidKey));
-			id.AddClaim(new Claim(AuthConstants.KEY, passphraseKey));
+			id.AddClaim(new Claim(AuthConstants.SUBJECT, token.UserToken));
+			id.AddClaim(new Claim(AuthConstants.KEY, key.Value));
 			var principal = new ClaimsPrincipal(id);
 			var props = new AuthenticationProperties
 			{
@@ -69,6 +94,37 @@ namespace Dodo.Users
 				return Forbid();
 			}
 			await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
+			using var rscLock = new ResourceLock(Context.User);
+			var user = rscLock.Value as User;
+			var session = user.TokenCollection.GetTokens<SessionToken>()
+					.SingleOrDefault(t => t.UserToken == Context.UserToken);
+			if(session == null)
+			{
+				return BadRequest();
+			}
+			user.TokenCollection.Remove(user, session);
+			UserManager.Update(user, rscLock);
+			return Ok();
+		}
+
+
+		[HttpGet(RESET_PASSWORD)]
+		public async Task<IActionResult> RequestPasswordReset(string email)
+		{
+			if (Context.User != null && Context.User.PersonalData.Email != email)
+			{
+				return BadRequest("Mismatching emails");
+			}
+			var targetUser = UserManager.GetSingle(u => u.PersonalData.Email == email);
+			if (targetUser != null)
+			{
+				using (var rscLock = new ResourceLock(targetUser))
+				{
+					targetUser = rscLock.Value as User;
+					targetUser.TokenCollection.Add(targetUser, new ResetPasswordToken(targetUser));
+					UserManager.Update(targetUser, rscLock);
+				}
+			}
 			return Ok();
 		}
 
@@ -89,10 +145,32 @@ namespace Dodo.Users
 			using(var rscLock = new ResourceLock(user))
 			{
 				user = rscLock.Value as User;
-				user.TokenCollection.Remove<ResetPasswordToken>(user);
+				user.TokenCollection.RemoveAll<ResetPasswordToken>(user);
 				user.AuthData = new AuthorizationData(user.AuthData.Username, password);
 				UserManager.Update(user, rscLock);
 			}
+			await Logout();
+			return Redirect(DodoServer.DodoServer.Index);
+		}
+
+		[HttpPost(CHANGE_PASSWORD)]
+		public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordModel model)
+		{
+			if(Context.User == null)
+			{
+				return Forbid();
+			}
+			if(!Context.User.AuthData.ChallengePassword(model.currentpassword, out _))
+			{
+				return Unauthorized();
+			}
+			using (var rscLock = new ResourceLock(Context.User))
+			{
+				var user = rscLock.Value as User;
+				user.AuthData.ChangePassword(new Passphrase(model.currentpassword), new Passphrase(model.newpassword));
+				UserManager.Update(user, rscLock);
+			}
+			await Logout();
 			return Ok();
 		}
 
@@ -120,27 +198,7 @@ namespace Dodo.Users
 			var user = rscLock.Value as User;
 			user.PersonalData.EmailConfirmed = true;
 			UserManager.Update(user, rscLock);
-			return Ok();
-		}
-
-		[HttpGet(RESET_PASSWORD)]
-		public async Task<IActionResult> RequestPasswordReset(string email)
-		{
-			if(Context.User != null && Context.User.PersonalData.Email != email)
-			{
-				return BadRequest("Mismatching emails");
-			}
-			var targetUser = UserManager.GetSingle(u => u.PersonalData.Email == email);
-			if (targetUser != null)
-			{
-				using(var rscLock = new ResourceLock(targetUser))
-				{
-					targetUser = rscLock.Value as User;
-					targetUser.TokenCollection.Add(targetUser, new ResetPasswordToken(targetUser));
-					UserManager.Update(targetUser, rscLock);
-				}				
-			}
-			return Ok();
+			return Redirect(DodoServer.DodoServer.Index);
 		}
 
 		[HttpPost]

@@ -6,16 +6,29 @@ using Resources;
 using Dodo.SharedTest;
 using Dodo.Users;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace RESTTests
 {
 	[TestClass]
 	public class LocalGroupTests : GroupResourceTestBase<LocalGroup, LocalGroupSchema>
 	{
-		
 		public override string ResourceRoot => LocalGroupController.RootURL;
 
-		
+		protected override JObject GetPatchObject()
+		{
+			var ret = new JObject();
+			ret["Location"] = JToken.FromObject(SchemaGenerator.RandomLocation);
+			ret["PublicDescription"] = "test test test";
+			return ret;
+		}
+
+		protected override void VerifyPatchedObject(LocalGroup rsc, JObject patchObj)
+		{
+			Assert.AreEqual(patchObj["Location"].ToObject<GeoLocation>(), rsc.Location);
+			Assert.AreEqual(patchObj.Value<string>("PublicDescription"), rsc.PublicDescription);
+		}
 
 		/*[TestInitialize]
 		public void Setup()

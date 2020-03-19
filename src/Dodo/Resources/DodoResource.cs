@@ -45,6 +45,10 @@ namespace Dodo
 		public string Creator { get; private set; }
 		public bool IsCreator(AccessContext context)
 		{
+			if(context.User == null)
+			{
+				return false;
+			}
 			return Creator == SecurityExtensions.GenerateID(context.User, context.Passphrase);
 		}
 	}

@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
+using Common.Extensions;
 
-namespace Dodo.Users
+namespace Dodo.Users.Tokens
 {
 	/// <summary>
 	/// This collection enforces some restrictions on tokens, e.g. there can only be
@@ -21,31 +22,50 @@ namespace Dodo.Users
 		[BsonElement]
 		private List<UserToken> m_tokens = new List<UserToken>();
 
-		public void Add(User parent, UserToken pa)
+		public void Add(User parent, UserToken token)
 		{
-			var type = pa.GetType();
+			if(!token.Verify(out var error))
+			{
+				throw new Exception(error);
+			}
+			var type = token.GetType();
 			var isSingleton = type.GetCustomAttribute<SingletonTokenAttribute>();
 			if (isSingleton != null && Tokens.Any(action => action.GetType() == type))
 			{
-				throw new SingletonTokenDuplicateException($"Cannot have multiple {type} Tokens");
+				throw new SingletonTokenDuplicateException($"Cannot have multiple {type.Name} Tokens");
 			}
-			m_tokens.Add(pa);
-			pa.OnAdd(parent);
+			m_tokens.Add(token);
+			token.OnAdd(parent);
 		}
 
-		public void Remove<T>(User parent) where T: UserToken
+		public bool RemoveAll<T>(User parent) where T: IRemovableToken
 		{
-			m_tokens = Tokens.Where(t => !(t is T)).ToList();
+			return Remove(parent, t => t is T);
 		}
 
-		public void Remove(User parent, UserToken pa)
+		public bool Remove(User parent, IRemovableToken token)
 		{
-			if(!pa.CanRemove)
+			return Remove(parent, t => t.GUID == token.GUID);
+		}
+
+		public bool Remove(User parent, Guid tokenGuid)
+		{
+			return Remove(parent, t => t.GUID == tokenGuid);
+		}
+
+		public bool Remove(User parent, Func<IRemovableToken, bool> removeWhere)
+		{
+			var toRemove = Tokens.OfType<IRemovableToken>().Where(t => t.CanRemove && removeWhere(t));
+			if(!toRemove.Any())
 			{
-				throw new System.Exception("This Token cannot be dismissed");
+				return false;
 			}
-			pa.OnRemove(parent);
-			m_tokens.Remove(pa);
+			foreach(var token in toRemove)
+			{
+				token.OnRemove(parent);
+			}
+			m_tokens = m_tokens.Where(t1 => !toRemove.Any(t2 => t2.GUID == t1.GUID)).ToList();
+			return true;
 		}
 
 		public T GetSingleToken<T>() where T:UserToken

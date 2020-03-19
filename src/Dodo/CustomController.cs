@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Dodo;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Dodo.Users;
+using System.Linq;
+using Dodo.Users.Tokens;
 
 namespace Resources
 {
@@ -56,9 +58,9 @@ namespace Resources
 		{
 			if (Context.User != null)
 			{
-				foreach (var token in Context.User.TokenCollection.Tokens)
+				foreach (var token in Context.User.TokenCollection.Tokens.OfType<IAutoExecuteToken>())
 				{
-					token.OnRequest(Context);
+					token.Execute(Context);
 				}
 			}
 			base.OnActionExecuting(actionContext);
