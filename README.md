@@ -56,7 +56,7 @@ You're ready to go! Just run the executable Dodo.executable
 
 Dodo is designed to be highly secure. The developers acknowledge that protest is a politically sensitive activity in many countries, and that individuals should be assured that their information is protected. The philosophy behind the security decisions of Dodo is to encrypt all relational information. This means that even in a threat scenario where the server data is compromised, an attacker will not be able to create any connection between individual users and activity, except where that information is explicitly published by the user. **This security infrastructure results in some caveats that any systems adminstrator should be aware of:**
 
-- Systems adminstrators do not have access to a lot of the information stored on the Dodo server. Wherever possible, only the user concerned will have access to information. This includes but is not limited to:
-  - Whether or not a user is an adminstrator of a given resource.
+- Systems administrators do not have access to a lot of the information stored on the Dodo server. Wherever possible, only the user concerned will have access to information. This includes but is not limited to:
+  - Whether or not a user is an administrator of a given resource.
   - Whether or not a user is a member of a given group.
-- When a user resets their password, they will lose access to any secure resources. This means that users will have to be readded as administrators to any groups if they forget their password.
+- When a user resets their password, they will lose access to any secure resources. This means that users will have to be re-added as administrators to any groups if they forget their password.

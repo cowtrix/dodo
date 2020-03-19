@@ -32,3 +32,5 @@ packages/
 /lib/IdentityServer4/.github/
 /lib/IdentityServer4/.config/
 /lib/IdentityServer4/samples/
+*.user
+*.orig
