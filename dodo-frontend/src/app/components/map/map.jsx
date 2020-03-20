@@ -21,6 +21,7 @@ export const Map = withScriptjs(
 		<GoogleMap
 			defaultZoom={8}
 			defaultCenter={getDefaultCenter(props.markers)}
+			options={props.options || {}}
 		>
 			{props.markers &&
 				props.markers.map(marker => (

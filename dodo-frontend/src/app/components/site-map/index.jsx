@@ -11,6 +11,7 @@ const SiteMap = ({ sites, height = "220px" }) => {
 			loadingElement={<div style={{ height: "100%" }} />}
 			containerElement={<div style={{ height }} />}
 			mapElement={<div style={{ height: "100%" }} />}
+			options={{ fullscreenControl: false, zoomControl: false }}
 			markers={markers}
 		/>
 	);

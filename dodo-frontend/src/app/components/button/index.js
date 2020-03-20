@@ -4,15 +4,15 @@ import { Link } from "react-router-dom";
 
 import styles from "./button.module.scss";
 
-const Button = ({ children, variant = "primary", to, onClick }) => {
+const Button = ({ children, style = {}, variant = "primary", to, onClick }) => {
 	const className = `${styles.button} ${styles[variant]}`;
 
 	return onClick ? (
-		<button className={className} onClick={onClick}>
+		<button className={className} onClick={onClick} style={style}>
 			{children}
 		</button>
 	) : (
-		<Link to={to} className={className}>
+		<Link to={to} className={className} style={style}>
 			{children}
 		</Link>
 	);
