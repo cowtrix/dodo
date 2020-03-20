@@ -15,7 +15,7 @@ const RebellionDetail = ({ rebellion }) => {
 					backgroundColor="#8dd7cf"
 				/>
 				<div className={styles.title}>
-					<PageTitle title={rebellion.Name} />
+					<PageTitle title={rebellion.Name} subTitle="Glasgow" />
 				</div>
 			</div>
 			<div className={styles.detail}>{rebellion.PublicDescription}</div>

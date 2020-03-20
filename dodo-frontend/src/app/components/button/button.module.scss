@@ -1,14 +1,14 @@
 @import "~app/styles/styles";
 
 .button {
-  display: inline-block;
-  padding: spacing(3) spacing(6);
-  line-height: 1.2;
-  cursor: pointer;
-  text-decoration: none;
+	display: inline-block;
+	padding: spacing(3) spacing(6);
+	line-height: 1.2;
+	cursor: pointer;
+	text-decoration: none;
 }
 
 .primary {
-  background-color: $color-primary;
-  color: white;
+	background-color: $color-primary;
+	color: white;
 }

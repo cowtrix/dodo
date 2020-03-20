@@ -1,32 +1,33 @@
 @import "~app/styles/styles";
 
 .RebellionDetail {
-  max-width: $application-max-width;
-  flex-grow: 1;
+	max-width: $application-max-width;
+	flex-grow: 1;
 
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: spacing(6);
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: spacing(6);
 }
 
 .heading {
-  display: flex;
-  margin-bottom: spacing(6);
+	display: flex;
+	margin-bottom: spacing(6);
 
-  @media (max-width: $responsive-breakpoint) {
-    justify-content: space-between;
-    flex-direction: row-reverse;
-  }
+	@media (max-width: $responsive-breakpoint) {
+		align-items: center;
+		justify-content: space-between;
+		flex-direction: row-reverse;
+	}
 }
 
 .title {
-  margin-left: spacing(6);
-  @media (max-width: $responsive-breakpoint) {
-    margin-left: 0;
-    margin-right: spacing(6);
-  }
+	margin-left: spacing(6);
+	@media (max-width: $responsive-breakpoint) {
+		margin-left: 0;
+		margin-right: spacing(6);
+	}
 }
 
 .join {
-  margin-top: spacing(6);
+	margin-top: spacing(6);
 }
