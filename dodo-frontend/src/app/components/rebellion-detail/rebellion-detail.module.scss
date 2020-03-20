@@ -1,9 +1,6 @@
 @import "~app/styles/styles";
 
 .RebellionDetail {
-  display: flex;
-  align-items: stretch;
-  justify-content: space-between;
   max-width: $application-max-width;
   flex-grow: 1;
 
@@ -14,8 +11,10 @@
 
 .heading {
   display: flex;
+  margin-bottom: spacing(6);
 
   @media (max-width: $responsive-breakpoint) {
+    justify-content: space-between;
     flex-direction: row-reverse;
   }
 }

@@ -12,11 +12,12 @@ const RebellionDetail = ({ rebellion }) => {
 					startDate={new Date(rebellion.StartDate)}
 					endDate={new Date(rebellion.EndDate)}
 					backgroundColor="#8dd7cf"
-        />
-        <div className={styles.title}>
-          <PageTitle title={rebellion.Name} />
-        </div>
+				/>
+				<div className={styles.title}>
+					<PageTitle title={rebellion.Name} />
+				</div>
 			</div>
+			<div className={styles.detail}>{rebellion.PublicDescription}</div>
 		</div>
 	);
 };
