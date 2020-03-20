@@ -1,0 +1,21 @@
+@import "~app/styles/styles";
+
+.rebellion {
+	display: flex;
+	flex-wrap: wrap;
+  color: $color-text;
+}
+
+.detail {
+	max-width: 900px;
+	min-width: 300px;
+	margin-right: spacing(6);
+
+	@media (max-width: $responsive-breakpoint) {
+		margin-right: 0;
+	}
+}
+
+.events {
+	max-width: 300px;
+}
