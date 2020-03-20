@@ -12,7 +12,6 @@ const RebellionDetail = ({ rebellion }) => {
 				<DateTile
 					startDate={new Date(rebellion.StartDate)}
 					endDate={new Date(rebellion.EndDate)}
-					backgroundColor="#8dd7cf"
 				/>
 				<div className={styles.title}>
 					<PageTitle title={rebellion.Name} subTitle="Glasgow" />
