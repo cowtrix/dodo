@@ -1,30 +1,40 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
-using Dodo.Rebellions;
-using DodoResources.Rebellions;
-using Microsoft.AspNetCore.Http;
+using DodoServer.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resources;
 
 namespace DodoServer.Controllers.Edit
 {
-	// TODO: Auth
+	[Authorize]
 	public class RebellionsController : Controller
 	{
-		private IResourceManager<Rebellion> ResourceManager => ResourceUtility.GetManager<Rebellion>();
+		// DodoURI_Https in DodoServer_config.json must be set to actual IP or localhost (not 0.0.0.0) for this to work
 
 		// GET: Rebellions
-		public IActionResult Index()
+		[AllowAnonymous]
+		public async Task<IActionResult> Index()
 		{
-			return View(ResourceManager.Get(r => true));
+			var client = new HttpClient();
+			var httpResponse = await client.GetAsync($"{DodoServer.HttpsUrl}/api/rebellions");
+			httpResponse.EnsureSuccessStatusCode();
+			var rebellions = await httpResponse.Content.ReadAsAsync<IEnumerable<Rebellion>>();
+			return View(rebellions);
 		}
 
 		// GET: Rebellions/Details/0a985dee-0b68-4805-96f5-3abe6f1ae13e
-		public IActionResult Details(Guid id)
+		[AllowAnonymous]
+		public async Task<IActionResult> Details(Guid id)
 		{
-			return View(ResourceManager.GetSingle(r => r.GUID == id));
+			var client = new HttpClient();
+			var httpResponse = await client.GetAsync($"{DodoServer.HttpsUrl}/api/rebellions/{id}");
+			httpResponse.EnsureSuccessStatusCode();
+			var rebellion = await httpResponse.Content.ReadAsAsync<Rebellion>();
+			return View(rebellion);
 		}
 
 		// GET: Rebellions/Create
@@ -36,68 +46,119 @@ namespace DodoServer.Controllers.Edit
 		// POST: Rebellions/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(IFormCollection rebellion)
+		public async Task<IActionResult> Create(Rebellion rebellion)
 		{
 			try
 			{
-				// TODO: Graceful value parsing
-				var location = new GeoLocation(double.Parse(rebellion["Location.Latitude"]), double.Parse(rebellion["Location.Longitude"]));
-				var schema = new RebellionSchema(rebellion["Name"], rebellion["PublicDescription"], location, DateTime.Parse(rebellion["StartDate"]), DateTime.Parse(rebellion["EndDate"]));
+				if (!ModelState.IsValid) return View(rebellion);
+				var client = GetHttpClient();
 
-				// TODO: Create direct or call API controller via HTTP? (can't call method on controller directly as Request there will be null)
+				// Currently you can't create a rebellion as the user needs to have admin on the parent
+				// Rebellions (and Local Groups) don't have a parent as they are top level entities
+				// This works if the parent check is bypassed in GroupResourceAuthManager.CanCreate
+				// The actual method to authorize a user for rebellion creation is to be decided
+				var result = await client.PostAsJsonAsync($"{DodoServer.HttpsUrl}/api/rebellions", rebellion);
+				result.EnsureSuccessStatusCode();
 
 				return RedirectToAction(nameof(Index));
 			}
-			catch
+			catch (Exception e)
 			{
-				return View();
+				ModelState.AddModelError("", e.Message);
+				return View(rebellion);
 			}
 		}
 
 		// GET: Rebellions/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
-		public IActionResult Edit(Guid id)
+		public async Task<IActionResult> Edit(Guid id)
 		{
-			return View(ResourceManager.GetSingle(r => r.GUID == id));
+			var client = new HttpClient();
+			var httpResponse = await client.GetAsync($"{DodoServer.HttpsUrl}/api/rebellions/{id}");
+			httpResponse.EnsureSuccessStatusCode();
+			var rebellion = await httpResponse.Content.ReadAsAsync<Rebellion>();
+			return View(rebellion);
 		}
 
 		// POST: Rebellions/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Edit(Guid id, IFormCollection rebellion)
+		public async Task<IActionResult> Edit(Guid id, Rebellion rebellion)
 		{
 			try
 			{
-				// TODO: Add update logic here
+				if (!ModelState.IsValid) return View(rebellion);
+				var client = GetHttpClient();
+
+				// Can't use Rebellion View Model as read-only properties causes security exceptions
+				// Can't use RebellionSchema as Parent gets serialized and that causes issues
+				// If using JSON.NET then GeoLocation.m_reverseGeocodingKey is also serialized
+				var dto = new RebellionDto
+				{
+					Name = rebellion.Name,
+					PublicDescription = rebellion.PublicDescription,
+					Location = rebellion.Location,
+					StartDate = rebellion.StartDate,
+					EndDate = rebellion.EndDate,
+				};
+				var json = System.Text.Json.JsonSerializer.Serialize(dto);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+				// This currently throws a resource locked exception for rebellions with working groups
+				var result = await client.PatchAsync($"{DodoServer.HttpsUrl}/api/rebellions/{id}", content);
+				result.EnsureSuccessStatusCode();
 
 				return RedirectToAction(nameof(Index));
 			}
-			catch
+			catch (Exception e)
 			{
-				return View();
+				ModelState.AddModelError("", e.Message);
+				return View(rebellion);
 			}
 		}
 
 		// GET: Rebellions/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
-		public IActionResult Delete(Guid id)
+		public async Task<IActionResult> Delete(Guid id)
 		{
-			return View(ResourceManager.GetSingle(r => r.GUID == id));
+			var client = new HttpClient();
+			var httpResponse = await client.GetAsync($"{DodoServer.HttpsUrl}/api/rebellions/{id}");
+			httpResponse.EnsureSuccessStatusCode();
+			var rebellion = await httpResponse.Content.ReadAsAsync<Rebellion>();
+			return View(rebellion);
 		}
 
 		// POST: Rebellions/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Delete(Guid id, IFormCollection rebellion)
+		public async Task<IActionResult> Delete(Guid id, Rebellion rebellion)
 		{
 			try
 			{
-				// TODO: Add delete logic here
+				var client = GetHttpClient();
+
+				var result = await client.DeleteAsync($"{DodoServer.HttpsUrl}/api/rebellions/{id}");
+				result.EnsureSuccessStatusCode();
 
 				return RedirectToAction(nameof(Index));
 			}
-			catch
+			catch (Exception e)
 			{
-				return View();
+				ModelState.AddModelError("", e.Message);
+				return View(rebellion);
 			}
+		}
+
+		private HttpClient GetHttpClient()
+		{
+			var cookieContainer = new CookieContainer();
+			var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
+			var client = new HttpClient(handler);
+
+			foreach (var cookie in Request.Cookies)
+			{
+				cookieContainer.Add(new Cookie(cookie.Key, cookie.Value, "/", "localhost"));
+			}
+
+			return client;
 		}
 	}
 }

@@ -34,3 +34,4 @@ packages/
 /lib/IdentityServer4/samples/
 *.user
 *.orig
+*config.json

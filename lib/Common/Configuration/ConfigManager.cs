@@ -1,4 +1,4 @@
-﻿using Common.Commands;
+using Common.Commands;
 using Common.Extensions;
 using Newtonsoft.Json;
 using System;
@@ -15,6 +15,7 @@ namespace Common.Config
 	/// </summary>
 	public static class ConfigManager
 	{
+		// TODO: this is the wrong path if hosting in IIS (maybe use IWebHostEnvironment to get it)
 		private static string m_configPath => Path.Combine(
 			Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), $"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
 		static Dictionary<string, object> m_data = new Dictionary<string, object>();
@@ -48,7 +49,7 @@ namespace Common.Config
 				result = default(T);
 				return false;
 			}
-			if(typeof(Enum).IsAssignableFrom(typeof(T)))
+			if (typeof(Enum).IsAssignableFrom(typeof(T)))
 			{
 				result = (T)Enum.Parse(typeof(T), obj.ToString());
 			}

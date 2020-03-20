@@ -1,14 +1,20 @@
-@model IEnumerable<Dodo.Rebellions.Rebellion>
+@model IEnumerable<DodoServer.ViewModels.Rebellion>
 
 @{
 	ViewData["Title"] = "Rebellions";
+	var loggedIn = true == User?.Identity?.IsAuthenticated;
 }
 
 <h1>Rebellions</h1>
 
-<p>
-	<a asp-action="Create">Create New</a>
-</p>
+@*
+	@if (loggedIn)
+	{
+		<p>
+			<a asp-action="Create">Create New</a>
+		</p>
+	}
+*@
 <table class="table">
 	<thead>
 		<tr>
@@ -50,11 +56,30 @@
 					@Html.DisplayFor(modelItem => item.Location)
 				</td>
 				<td>
-					@Html.ActionLink("Edit", "Edit", new { id = item.GUID }) |
-					@Html.ActionLink("Details", "Details", new { id = item.GUID }) |
-					@Html.ActionLink("Delete", "Delete", new { id = item.GUID })
+					@if (loggedIn)
+					{
+						<text>
+							@Html.ActionLink("Edit", "Edit", new { id = item.GUID }) |
+						</text>
+					}
+					@Html.ActionLink("Details", "Details", new { id = item.GUID })
+					@if (loggedIn)
+					{
+						<text>
+							| @Html.ActionLink("Delete", "Delete", new { id = item.GUID })
+						</text>
+					}
 				</td>
 			</tr>
 		}
 	</tbody>
 </table>
+
+@if (loggedIn)
+{
+	<a asp-controller="User" asp-action="Logout">Log out</a>
+}
+else
+{
+	<a asp-controller="Login" asp-action="Index">Log in to create/edit/delete</a>
+}
