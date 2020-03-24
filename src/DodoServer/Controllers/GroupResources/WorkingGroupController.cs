@@ -1,4 +1,4 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using Resources;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -12,10 +12,10 @@ using Dodo.WorkingGroups;
 
 namespace DodoResources.WorkingGroups
 {
-	[Route(RootURL)]
+	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class WorkingGroupController : GroupResourceController<WorkingGroup, WorkingGroupSchema>
 	{
-		public const string RootURL = "api/workinggroups";
+		public const string RootURL = "workinggroups";
 
 		[HttpPost]
 		public override async Task<IActionResult> Create([FromBody] WorkingGroupSchema schema)
