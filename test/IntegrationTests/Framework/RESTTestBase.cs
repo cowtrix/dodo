@@ -34,7 +34,7 @@ namespace RESTTests
 			GetRandomUser(out _, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
-			var resourceObj = await RequestJSON($"{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.GET);
 			VerifyCreatedObject(resource, resourceObj, schema);
 		}
 
@@ -50,7 +50,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			await Login(user.AuthData.Username, password);
-			var response = await RequestJSON(ResourceRoot, EHTTPRequestType.POST,
+			var response = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST,
 				SchemaGenerator.GetRandomSchema<T>(context));
 		}
 
@@ -60,7 +60,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
-			await Request($"{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.DELETE,
+			await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.DELETE,
 				SchemaGenerator.GetRandomSchema<T>(context));
 			Assert.IsNull(ResourceManager.GetSingle(r => r.GUID == resource.GUID));
 		}
@@ -74,7 +74,7 @@ namespace RESTTests
 			var resource = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
 			var patch = GetPatchObject();
-			await RequestJSON($"{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.PATCH,	patch);
+			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.PATCH,	patch);
 			var updatedObj = ResourceManager.GetSingle(r => r.GUID == resource.GUID);
 			VerifyPatchedObject(updatedObj, patch);
 		}
