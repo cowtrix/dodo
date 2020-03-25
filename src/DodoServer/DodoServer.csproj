@@ -36,8 +36,4 @@
 		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.min.js.map" />
 	</ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(SolutionDir)resources&quot; &quot;$(TargetDir)resources&quot; /i /s /r /y" />
-  </Target>
-
 </Project>
