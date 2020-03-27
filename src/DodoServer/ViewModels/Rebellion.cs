@@ -16,6 +16,7 @@ namespace DodoServer.ViewModels
 		[MaxLength(64)]
 		public string Name { get; set; }
 
+		[Required]
 		[MaxLength(2048)]
 		[DisplayName("Public Description")]
 		public string PublicDescription { get; set; }
