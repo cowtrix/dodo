@@ -7,14 +7,12 @@
 
 <h1>Rebellions</h1>
 
-@*
-	@if (loggedIn)
-	{
-		<p>
-			<a asp-action="Create">Create New</a>
-		</p>
-	}
-*@
+@if (loggedIn)
+{
+	<p>
+		<a asp-action="Create">Create New</a>
+	</p>
+}
 <table class="table">
 	<thead>
 		<tr>

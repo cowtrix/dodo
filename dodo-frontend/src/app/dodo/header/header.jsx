@@ -6,11 +6,13 @@ import { Login } from './login'
 
 
 export const Header = () =>
-	<div className={styles.header}>
-		<div className={styles.headerLeft}>
-			<Logo/>
-			<SearchBar/>
+	<div className={styles.wrapper}>
+		<div className={styles.header}>
+			<div className={styles.headerLeft}>
+				<Logo/>
+				<SearchBar/>
+			</div>
+			<Login/>
 		</div>
-		<Login/>
 	</div>
 

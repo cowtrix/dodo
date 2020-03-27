@@ -7,7 +7,7 @@ namespace Dodo.UnitTests
 	[TestClass]
 	public class DateTimeTests : BasicObjectTests<DateTime>
 	{
-		protected override Func<DateTime, DateTime, bool> EqualityFunction => (first, second) => Math.Abs((first - second).TotalMinutes) < 1;
+		protected override Func<DateTime, DateTime, bool> EqualityFunction => (first, second) => Math.Abs((first.ToUniversalTime() - second.ToUniversalTime()).TotalMinutes) < 1;
 
 		protected override DateTime Get()
 		{

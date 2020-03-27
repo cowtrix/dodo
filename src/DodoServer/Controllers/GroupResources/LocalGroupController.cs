@@ -6,10 +6,10 @@ using Dodo.LocalGroups;
 
 namespace DodoResources.LocalGroups
 {
-	[Route(RootURL)]
+	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class LocalGroupController : GroupResourceController<LocalGroup, LocalGroupSchema>
 	{
-		public const string RootURL = "api/localgroups";
+		public const string RootURL = "localgroups";
 
 		[HttpPost]
 		public override async Task<IActionResult> Create([FromBody] LocalGroupSchema schema)

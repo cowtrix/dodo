@@ -35,7 +35,7 @@ namespace RESTTests
 				};
 			var negGuids = negatives.Select(rsc => rsc.GUID).ToList();
 
-			var request = await RequestJSON<JArray>($"{SearchController.RootUrl}", EHTTPRequestType.GET, null,
+			var request = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
 					("latlong", $"{rebellion.Location.Latitude}+{rebellion.Location.Longitude}"),

@@ -32,6 +32,7 @@ namespace Dodo.Users
 		{
 			public string username { get; set; }
 			public string password { get; set; }
+			public string redirect { get; internal set; }
 		}
 
 		public class ChangePasswordModel
@@ -53,6 +54,10 @@ namespace Dodo.Users
 			}
 
 			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.username);
+			if(user == null)
+			{
+				return NotFound();
+			}
 			if (!user.AuthData.ChallengePassword(login.password, out var passphrase))
 			{
 				return BadRequest();
@@ -150,7 +155,7 @@ namespace Dodo.Users
 				UserManager.Update(user, rscLock);
 			}
 			await Logout();
-			return Redirect(DodoServer.DodoServer.Index);
+			return Redirect(DodoServer.DodoServer.Homepage);
 		}
 
 		[HttpPost(CHANGE_PASSWORD)]
@@ -198,7 +203,7 @@ namespace Dodo.Users
 			var user = rscLock.Value as User;
 			user.PersonalData.EmailConfirmed = true;
 			UserManager.Update(user, rscLock);
-			return Redirect(DodoServer.DodoServer.Index);
+			return Redirect(DodoServer.DodoServer.Homepage);
 		}
 
 		[HttpPost]
