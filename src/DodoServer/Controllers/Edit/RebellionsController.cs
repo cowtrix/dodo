@@ -149,6 +149,9 @@ namespace DodoServer.Controllers.Edit
 
 		private HttpClient GetHttpClient()
 		{
+			// Best practice for HttpClient is to use a singleton and not dispose of it in using statement
+			// However, as these are authenticated requests with cookies it is safer to use a new instance
+			// TODO: Keep an eye on this under load to see if it causes perf problems or socket exhaustion
 			var cookieContainer = new CookieContainer();
 			var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
 			var client = new HttpClient(handler);
