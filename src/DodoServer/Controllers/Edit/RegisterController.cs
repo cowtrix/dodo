@@ -1,9 +1,7 @@
 using Dodo.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Resources;
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;

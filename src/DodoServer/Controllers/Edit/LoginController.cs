@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Resources;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -14,11 +13,12 @@ namespace DodoServer.Controllers.Edit
 	[Route(LOGIN)]
 	public class LoginController : Controller
 	{
-		string m_redirect;
+
 		// GET: Login
 		public ActionResult Index(string redirect = null)
 		{
-			m_redirect = redirect;
+			// Controller life-cycle is per request so we need to give this to the client to get it back
+			ViewData["redirect"] = redirect;
 			return View();
 		}
 
@@ -27,15 +27,18 @@ namespace DodoServer.Controllers.Edit
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Index(LoginModel model)
 		{
+			ViewData["redirect"] = model.redirect;
 			try
 			{
 				var cookieContainer = new CookieContainer();
 				var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
 				var client = new HttpClient(handler);
 				var loginResponse = await client.PostAsJsonAsync($"{DodoServer.HttpsUrl}/{RootURL}/{LOGIN}", model);
-				if(!loginResponse.IsSuccessStatusCode)
+				if (!loginResponse.IsSuccessStatusCode)
 				{
-					return new HttpStatusContentResult(loginResponse.StatusCode, await loginResponse.Content.ReadAsStringAsync());
+					// Put error on model state
+					ModelState.AddModelError("", "Log in failed (wrong username / password?)");
+					return View(model);
 				}
 				var cookies = cookieContainer.GetCookies(new Uri(DodoServer.HttpsUrl));
 				foreach (Cookie cookie in cookies)
@@ -48,12 +51,21 @@ namespace DodoServer.Controllers.Edit
 					});
 				}
 
-				return Redirect(model.redirect ?? m_redirect ?? DodoServer.Homepage);
+				// Guard against open redirect attack
+				if (Url.IsLocalUrl(model.redirect))
+				{
+					return Redirect(model.redirect);
+				}
+				else
+				{
+					return Redirect(DodoServer.Homepage);
+				}
 			}
 			catch
 			{
-				return View();
+				return View(model);
 			}
 		}
+
 	}
 }
