@@ -7,7 +7,8 @@
 <h1>Register</h1>
 <div class="row">
 	<div class="col-md-4">
-		<form asp-action="Index">
+		<form asp-action="Index" asp-route-redirect="@ViewData["redirect"]">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 			<div class="form-group">
 				<label asp-for="Name" class="control-label"></label>
 				<input asp-for="Name" class="form-control" />
@@ -25,8 +26,9 @@
 				<input asp-for="Email" type="email" class="form-control" />
 			</div>
 			<div class="form-group">
-				<input type="submit" value="Login" class="btn btn-success" />
+				<input type="submit" value="Register" class="btn btn-success" />
 			</div>
 		</form>
+		<a asp-controller="Login" asp-action="Index" asp-route-redirect="@ViewData["redirect"]">Log in</a>
 	</div>
 </div>

@@ -56,10 +56,7 @@ namespace DodoServer.Controllers.Edit
 				{
 					return Redirect(model.redirect);
 				}
-				else
-				{
-					return Redirect(DodoServer.Homepage);
-				}
+				return Redirect(DodoServer.HttpsUrl);
 			}
 			catch
 			{
