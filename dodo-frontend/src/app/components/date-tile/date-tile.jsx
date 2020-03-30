@@ -11,7 +11,7 @@ const getTileColor = (startDate, endDate) => {
 	return COLORS[(startTime + endTime) % COLORS.length];
 };
 
-const DateTile = ({ startDate, endDate = null, backgroundColor }) => {
+export const DateTile = ({ startDate, endDate = null, backgroundColor }) => {
 	const splitStartDate = `${startDate}`.split(" ");
 	const style = backgroundColor
 		? { backgroundColor }
@@ -49,4 +49,3 @@ const DateTile = ({ startDate, endDate = null, backgroundColor }) => {
 	);
 };
 
-export default DateTile;

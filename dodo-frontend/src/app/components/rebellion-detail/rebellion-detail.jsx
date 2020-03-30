@@ -5,7 +5,7 @@ import PageTitle from "app/components/page-title";
 import Button from "app/components/button";
 import styles from "./rebellion-detail.module.scss";
 
-const RebellionDetail = ({ rebellion }) => {
+export const RebellionDetail = ({ rebellion }) => {
 	return (
 		<div className={styles.RebellionDetail}>
 			<div className={styles.heading}>
@@ -25,4 +25,3 @@ const RebellionDetail = ({ rebellion }) => {
 	);
 };
 
-export default RebellionDetail;

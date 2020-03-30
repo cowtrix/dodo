@@ -1,4 +1,4 @@
-import { api } from "app/domain/services/api-service";
+import { api } from "./api-service";
 import { SITES, REBELLIONS } from "app/domain/urls";
 
 export const fetchRebellion = rebellionId => api(`${REBELLIONS}${rebellionId}`);

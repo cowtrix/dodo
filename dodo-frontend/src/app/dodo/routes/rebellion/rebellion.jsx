@@ -5,12 +5,12 @@ import {
 } from "app/domain/services/rebellion";
 import PropTypes from "prop-types";
 
-import RebellionDetail from "app/components/rebellion-detail";
-import RebellionEvents from "app/components/rebellion-events";
+import { RebellionDetail, RebellionEvents } from 'app/components'
+
 
 import styles from "./rebellion.module.scss";
 
-const Rebellion = ({ match }) => {
+export const Rebellion = ({ match }) => {
 	const { rebellionId } = match.params;
 	const [rebellion, setRebellion] = useState();
 	const [events, setEvents] = useState();
@@ -43,4 +43,3 @@ Rebellion.propTypes = {
 	match: PropTypes.object.isRequired
 };
 
-export default Rebellion;
