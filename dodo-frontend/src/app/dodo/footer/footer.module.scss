@@ -1,0 +1,11 @@
+@import "~app/styles/styles";
+
+.footer {
+	padding: 0 spacing(13);
+	display: flex;
+	flex-direction: column;
+
+	@media (min-width: $responsive-breakpoint) {
+		flex-direction: row;
+	}
+}
