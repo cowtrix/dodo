@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {SubHeader} from "app/components/sub-header"
 import styles from './header.module.scss'

@@ -1,8 +1,8 @@
-import React from 'react'
-import { Route, BrowserRouter as Router } from 'react-router-dom'
+import React, {Fragment} from 'react'
+import { Route } from 'react-router-dom'
 import { Home, route as home } from './home'
 
 export const Routes = () =>
-	<Router>
+	<Fragment>
 		<Route path={home} component={Home} />
-	</Router>
+	</Fragment>
