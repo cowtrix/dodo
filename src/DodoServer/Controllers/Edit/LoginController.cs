@@ -10,12 +10,15 @@ using static Dodo.Users.UserController;
 namespace DodoServer.Controllers.Edit
 {
 	[AllowAnonymous]
+	[Route(LOGIN)]
 	public class LoginController : Controller
 	{
 
 		// GET: Login
-		public ActionResult Index()
+		public ActionResult Index(string redirect = null)
 		{
+			// Controller life-cycle is per request so we need to give this to the client to get it back
+			ViewData["redirect"] = redirect;
 			return View();
 		}
 
@@ -24,12 +27,19 @@ namespace DodoServer.Controllers.Edit
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Index(LoginModel model)
 		{
+			ViewData["redirect"] = model.redirect;
 			try
 			{
 				var cookieContainer = new CookieContainer();
 				var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
 				var client = new HttpClient(handler);
 				var loginResponse = await client.PostAsJsonAsync($"{DodoServer.HttpsUrl}/{RootURL}/{LOGIN}", model);
+				if (!loginResponse.IsSuccessStatusCode)
+				{
+					// Put error on model state
+					ModelState.AddModelError("", "Log in failed (wrong username / password?)");
+					return View(model);
+				}
 				var cookies = cookieContainer.GetCookies(new Uri(DodoServer.HttpsUrl));
 				foreach (Cookie cookie in cookies)
 				{
@@ -41,11 +51,16 @@ namespace DodoServer.Controllers.Edit
 					});
 				}
 
-				return RedirectToAction(nameof(Index), "Rebellions");
+				// Guard against open redirect attack
+				if (Url.IsLocalUrl(model.redirect))
+				{
+					return Redirect(model.redirect);
+				}
+				return Redirect(DodoServer.HttpsUrl);
 			}
 			catch
 			{
-				return View();
+				return View(model);
 			}
 		}
 

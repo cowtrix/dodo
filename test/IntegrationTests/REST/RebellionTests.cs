@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Common;
+using Dodo.WorkingGroups;
 
 namespace RESTTests
 {
@@ -44,6 +45,20 @@ namespace RESTTests
 			Assert.IsTrue(patchObj.Value<DateTime>("StartDate").ToUniversalTime() - rsc.StartDate.ToUniversalTime() < TimeSpan.FromMinutes(2));
 			Assert.IsTrue(patchObj.Value<DateTime>("EndDate").ToUniversalTime() - rsc.EndDate.ToUniversalTime() < TimeSpan.FromMinutes(2));
 			Assert.AreEqual(patchObj.Value<string>("PublicDescription"), rsc.PublicDescription);
+		}
+
+		[TestMethod]
+		public async Task PatchRebellionWithWorkingGroups()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var rebellion = CreateObject<Rebellion>(context);
+			var wg = CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test WG", "test", rebellion.GUID));
+
+			await Login(user.AuthData.Username, password);
+			var patch = GetPatchObject();
+			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{rebellion.GUID}", EHTTPRequestType.PATCH, patch);
+			var updatedObj = ResourceManager.GetSingle(r => r.GUID == rebellion.GUID);
+			VerifyPatchedObject(updatedObj, patch);
 		}
 	}
 }

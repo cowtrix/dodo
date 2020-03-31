@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharedTest;
 using System;
 using System.Collections.Generic;
 
@@ -22,4 +23,5 @@ namespace Patching
 			RandomTimespan,
 		};
 	}
+
 }

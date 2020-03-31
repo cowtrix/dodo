@@ -45,14 +45,14 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.Parent != null && wg.Parent.GetValue().GUID == GUID)
+				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg?.Parent != null && wg?.Parent.GetValue()?.GUID == GUID)
 					.Select(wg => wg.GUID.ToString()).ToList();
 			}
 		}
 
 		public override bool CanContain(Type type)
 		{
-			if(type == typeof(WorkingGroup) || type == typeof(Role))
+			if (type == typeof(WorkingGroup) || type == typeof(Role))
 			{
 				return true;
 			}

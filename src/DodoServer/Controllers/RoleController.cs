@@ -7,10 +7,10 @@ using Dodo;
 namespace DodoResources.Roles
 {
 
-	[Route(RootURL)]
+	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class RoleController : ResourceController<Role, RoleSchema>
 	{
-		public const string RootURL = "api/roles";
+		public const string RootURL = "roles";
 
 		protected override AuthorizationManager<Role, RoleSchema> AuthManager => 
 			new RoleAuthManager(this.ControllerContext, Request);

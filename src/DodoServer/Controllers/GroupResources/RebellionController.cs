@@ -13,10 +13,10 @@ using Dodo.Rebellions;
 
 namespace DodoResources.Rebellions
 {
-	[Route(RootURL)]
+	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class RebellionController : GroupResourceController<Rebellion, RebellionSchema>
 	{
-		public const string RootURL = "api/rebellions";
+		public const string RootURL = "rebellions";
 
 		[HttpPost]
 		public override async Task<IActionResult> Create([FromBody] RebellionSchema schema)
