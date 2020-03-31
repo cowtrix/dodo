@@ -16,13 +16,14 @@
 }
 
 .detail {
-	max-width: 900px;
 	min-width: 300px;
-	margin-right: spacing(6);
 	flex-grow: 1;
+	margin-left: spacing(5);
+	margin-right: spacing(5);
 
 	@media (max-width: $responsive-breakpoint) {
 		margin-right: 0;
+		margin-left: 0;
 	}
 }
 
