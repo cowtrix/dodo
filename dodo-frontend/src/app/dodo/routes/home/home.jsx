@@ -4,8 +4,8 @@ import { Header } from './header'
 import { Rebellions } from './rebellions'
 
 
-export const Home = ({ getRebellions, rebellions = [] }) => {
-	getRebellions(rebellions)
+export const Home = ({ getRebellions }) => {
+	getRebellions()
 	return (
 		<div>
 			<Header/>
@@ -17,5 +17,4 @@ export const Home = ({ getRebellions, rebellions = [] }) => {
 
 Home.propTypes = {
 	getRebellions: PropTypes.func,
-	rebellions: PropTypes.array,
 }

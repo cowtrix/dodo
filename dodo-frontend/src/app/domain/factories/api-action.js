@@ -11,7 +11,6 @@ export const apiAction = ( dispatch, action, url, method, body, cb ) => {
 	})
 	return api(url, method, body)
 		.then(response => {
-			console.log(response)
 			if (cb) cb(response.success)
 			dispatch({
 				type: action + SUCCESS,

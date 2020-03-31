@@ -3,6 +3,14 @@
 .login {
   display: flex;
   align-items: center;
-  padding: 0 spacing(16);
   cursor: pointer;
+  position: absolute;
+  right: 0;
+  padding: spacing(8);
+
+  @media (min-width: $responsive-breakpoint) {
+    position: relative;
+    padding: 0 spacing(16);
+    padding-bottom: spacing(5);
+  }
 }

@@ -17,5 +17,11 @@
 .headerLeft {
 	display: flex;
 	align-items: center;
+	flex-wrap: wrap;
+	flex-grow: 1;
+
+	@media (min-width: $responsive-breakpoint) {
+		flex-wrap: nowrap;
+	}
 }
 
