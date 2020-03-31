@@ -1,7 +1,7 @@
 import React from "react";
 
-import SiteMap from "app/components/site-map";
-import Button from "app/components/button";
+import { SiteMap } from "app/components/site-map";
+import { Button } from "app/components/button";
 import styles from "./rebellion-events.module.scss";
 
 const getDescription = event => {
@@ -9,7 +9,7 @@ const getDescription = event => {
 	return description.slice(0, 180);
 };
 
-const RebellionEvents = ({ events }) => {
+export const RebellionEvents = ({ events }) => {
 	if (!events) {
 		return <div>Loading</div>;
 	}
@@ -40,5 +40,3 @@ const RebellionEvents = ({ events }) => {
 		</div>
 	);
 };
-
-export default RebellionEvents;

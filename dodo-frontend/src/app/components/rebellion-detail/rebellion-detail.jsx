@@ -1,8 +1,8 @@
 import React from "react";
 
-import DateTile from "app/components/date-tile";
-import PageTitle from "app/components/page-title";
-import Button from "app/components/button";
+import { DateTile } from "app/components/date-tile";
+import { PageTitle } from "app/components/page-title";
+import { Button } from "app/components/button";
 import styles from "./rebellion-detail.module.scss";
 
 export const RebellionDetail = ({ rebellion }) => {
@@ -24,4 +24,3 @@ export const RebellionDetail = ({ rebellion }) => {
 		</div>
 	);
 };
-
