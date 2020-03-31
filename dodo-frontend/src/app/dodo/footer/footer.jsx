@@ -5,8 +5,10 @@ import { Copyright } from "./copyright"
 import { Social } from './social'
 
 export const Footer = () =>
-	<div className={styles.footer}>
-		<Links/>
-		<Copyright/>
-    <Social/>
+	<div className={styles.footerContainer}>
+		<div className={styles.footer}>
+			<Links/>
+			<Copyright/>
+	    <Social/>
+		</div>
 	</div>

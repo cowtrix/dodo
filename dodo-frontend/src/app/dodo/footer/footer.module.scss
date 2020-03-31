@@ -4,8 +4,15 @@
 	padding: 0 spacing(13);
 	display: flex;
 	flex-direction: column;
+	max-width: $application-max-width;
+	margin-bottom: spacing(20);
 
 	@media (min-width: $responsive-breakpoint) {
 		flex-direction: row;
 	}
+}
+
+.footerContainer {
+	display: flex;
+	justify-content: center;
 }
