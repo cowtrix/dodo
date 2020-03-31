@@ -1,1 +1,5 @@
 export { Map } from './map'
+export { DateTile } from './date-tile'
+export { Button } from './button'
+export { RebellionDetail } from './rebellion-detail'
+export { RebellionEvents } from './rebellion-events'
