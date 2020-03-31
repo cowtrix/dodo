@@ -2,8 +2,6 @@ import React, {Fragment} from 'react'
 import { Route } from 'react-router-dom'
 import { Home, route as home } from './home'
 import { Switch } from "react-router"
-import { Route, BrowserRouter as Router } from "react-router-dom"
-import { Home, route as home } from "./home"
 import { Rebellion } from "app/dodo/routes/rebellion"
 
 
