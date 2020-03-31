@@ -1,12 +1,14 @@
-import React from "react";
-import { Switch } from "react-router";
-import { Route, BrowserRouter as Router } from "react-router-dom";
-import { Home, route as home } from "./home";
+import React, {Fragment} from 'react'
+import { Route } from 'react-router-dom'
+import { Home, route as home } from './home'
+import { Switch } from "react-router"
+import { Route, BrowserRouter as Router } from "react-router-dom"
+import { Home, route as home } from "./home"
+import { Rebellion } from "app/dodo/routes/rebellion"
 
-import { Rebellion } from "app/dodo/routes/rebellion";
 
-export const Routes = () => (
-	<Router>
+export const Routes = () =>
+	<Fragment>
 		<Switch>
 			<Route
 				path={"/rebellion/:rebellionId"}
@@ -15,5 +17,5 @@ export const Routes = () => (
 			/>
 			<Route path={home} component={Home} />
 		</Switch>
-	</Router>
-);
+	</Fragment>
+

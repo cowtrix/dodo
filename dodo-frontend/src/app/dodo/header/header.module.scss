@@ -16,6 +16,12 @@
 
 .headerLeft {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-start;
+	flex-grow: 1;
+
+	@media (min-width: $responsive-breakpoint) {
+		flex-direction: row;
+	}
 }
 
