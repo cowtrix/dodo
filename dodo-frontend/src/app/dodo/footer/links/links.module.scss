@@ -3,7 +3,10 @@
 .linksBox {
 	flex-grow: 1;
 	flex-basis: 25%;
-	padding-right: spacing(20);
+
+	@media (min-width: $responsive-breakpoint) {
+		padding-right: spacing(20);
+	}
 }
 
 

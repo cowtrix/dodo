@@ -1,18 +1,15 @@
 @import "~app/styles/styles";
 
-.wrapper {
+.rebellionContainer {
 	display: flex;
 	justify-content: center;
 }
 
 .rebellion {
 	display: flex;
-	color: $color-text;
+	flex-wrap: wrap;
+  color: $color-text;
 	max-width: $application-max-width;
-
-	@media (max-width: $responsive-breakpoint) {
-		flex-wrap: wrap;
-	}
 }
 
 .detail {

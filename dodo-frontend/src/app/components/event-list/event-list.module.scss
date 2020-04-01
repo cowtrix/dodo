@@ -1,0 +1,26 @@
+@import "~app/styles/styles";
+
+.eventList {
+	display: flex;
+	flex-direction: column;
+
+
+	li {
+		flex-direction: row;
+		border-bottom: 2px dashed $color-text-light;
+		padding: spacing(5) 0;
+
+		@media (min-width: $responsive-breakpoint) {
+			padding: spacing(7) 0;
+			border-bottom: 1px solid $color-light-grey;
+		}
+	}
+
+	>:first-child {
+		padding-top: 0;
+	}
+
+	>:last-child {
+		border: none;
+	}
+}

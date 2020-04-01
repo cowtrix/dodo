@@ -1,13 +1,15 @@
 @import "~app/styles/styles";
 
 .footer {
-	padding: 0 spacing(13);
-	display: flex;
+	padding: 0 spacing(4);
+	display: none;
 	flex-direction: column;
 	max-width: $application-max-width;
 	margin-bottom: spacing(20);
 
 	@media (min-width: $responsive-breakpoint) {
+		display: flex;
+		padding: 0 spacing(13);
 		flex-direction: row;
 	}
 }

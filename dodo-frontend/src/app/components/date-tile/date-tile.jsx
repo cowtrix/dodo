@@ -1,51 +1,41 @@
-import React from "react";
+import React from "react"
+import PropTypes from 'prop-types'
 
-import styles from "./date-tile.module.scss";
+import styles from "./date-tile.module.scss"
+import { getTileColor } from './services'
 
-const COLORS = ["#d6b1b1", "#8dd7cf", "#fbe192", "#de9ae8"];
-
-const getTileColor = (startDate, endDate) => {
-	const startTime = startDate.getDate() + startDate.getMonth();
-	const endTime = endDate ? endDate.getDate() + endDate.getMonth() : 0;
-
-	return COLORS[(startTime + endTime) % COLORS.length];
-};
 
 export const DateTile = ({ startDate, endDate = null, backgroundColor }) => {
-	const splitStartDate = `${startDate}`.split(" ");
-	const style = backgroundColor
-		? { backgroundColor }
-		: { backgroundColor: getTileColor(startDate, endDate) };
+	const splitStartDate = `${startDate}`.split(" ")
+	const style = backgroundColor ?
+		{ backgroundColor } :
+		{ backgroundColor: getTileColor(startDate, endDate) }
 
-	if (!endDate) {
-		return (
-			<div className={styles.DateTile} style={style}>
-				<div>{splitStartDate[2]}</div>
-				<strong>{splitStartDate[1]}</strong>
-			</div>
-		);
-	}
-	const splitEndDate = `${endDate}`.split(" ");
+	const splitEndDate = `${endDate}`.split(" ")
 
-	if (endDate.getMonth() === startDate.getMonth()) {
+	const dayDate = (endDate) =>
+		!endDate ?
+			splitStartDate[2]:
+			endDate.getMonth() === startDate.getMonth() ?
+					splitStartDate[2] + '-' + splitEndDate[2] :
+					splitStartDate[2] + '-' +splitStartDate[1]
+
+	const monthDate = (endDate) =>
+		!endDate || endDate.getMonth() === startDate.getMonth() ?
+			splitStartDate[1] :
+			'-' + splitEndDate[2] + '-' + splitEndDate[1]
+
 		return (
-			<div className={styles.DateTile} style={style}>
-				<div>
-					{splitStartDate[2]} - {splitEndDate[2]}
-				</div>
-				<strong>{splitStartDate[1]}</strong>
+			<div className={styles.dateTile} style={style}>
+				<div className={styles.dayDate}>{dayDate(endDate)}</div>
+				<div className={styles.monthDate}>{monthDate(endDate)}</div>
 			</div>
-		);
-	}
-	return (
-		<div className={styles.DateTile} style={style}>
-			<strong>
-				{splitStartDate[2]} - {splitStartDate[1]}
-			</strong>
-			<strong>
-				- {splitEndDate[2]} - {splitEndDate[1]}
-			</strong>
-		</div>
-	);
-};
+		)
+}
+
+DateTile.propTypes = {
+	startDate: PropTypes.string,
+	endDate: PropTypes.string,
+	backgroundColor: PropTypes.string,
+}
 

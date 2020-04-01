@@ -22,6 +22,8 @@
 
 	@media (min-width: $responsive-breakpoint) {
 		flex-direction: row;
+		align-items: center;
+
 	}
 }
 

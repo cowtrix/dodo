@@ -1,12 +1,13 @@
 @import "~app/styles/styles";
 
 .button {
-	display: inline-block;
+	display: flex;
 	padding: spacing(3) spacing(6);
 	line-height: 1.2;
 	cursor: pointer;
 	text-decoration: none;
 	border-radius: 4px;
+	justify-content: center;
 }
 
 .primary {
@@ -20,3 +21,10 @@
 	color: $color-secondary;
 	border: solid 1px $color-secondary;
 }
+
+.link {
+	color: inherit;
+	display: inherit;
+	text-decoration: inherit;
+}
+
