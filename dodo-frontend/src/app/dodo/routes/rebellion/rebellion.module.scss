@@ -1,21 +1,33 @@
 @import "~app/styles/styles";
 
+.wrapper {
+	display: flex;
+	justify-content: center;
+}
+
 .rebellion {
 	display: flex;
-	flex-wrap: wrap;
-  color: $color-text;
+	color: $color-text;
+	max-width: $application-max-width;
+
+	@media (max-width: $responsive-breakpoint) {
+		flex-wrap: wrap;
+	}
 }
 
 .detail {
-	max-width: 900px;
 	min-width: 300px;
-	margin-right: spacing(6);
+	flex-grow: 1;
+	margin-left: spacing(5);
+	margin-right: spacing(5);
 
 	@media (max-width: $responsive-breakpoint) {
 		margin-right: 0;
+		margin-left: 0;
 	}
 }
 
 .events {
-	max-width: 300px;
+	min-width: 300px;
+	width: 100%;
 }
