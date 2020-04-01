@@ -5,7 +5,7 @@ import { rebellions } from 'app/domain'
 const { selectors } = rebellions
 
 const mapStateToProps = state => ({
-    rebellionsCount: selectors.rebellions(state).length
+	rebellionsCount: selectors.rebellions(state).length
 })
 
 export const HeaderConnected = connect(mapStateToProps)(Header)
