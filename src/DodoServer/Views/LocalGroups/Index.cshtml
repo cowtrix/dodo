@@ -1,11 +1,11 @@
-@model IEnumerable<DodoServer.ViewModels.Rebellion>
+@model IEnumerable<DodoServer.ViewModels.LocalGroup>
 
 @{
-	ViewData["Title"] = "Rebellions";
+	ViewData["Title"] = "Local Groups";
 	var loggedIn = true == User?.Identity?.IsAuthenticated;
 }
 
-<h1>Rebellions</h1>
+<h1>Local Groups</h1>
 
 @if (loggedIn)
 {
@@ -18,12 +18,6 @@
 		<tr>
 			<th>
 				@Html.DisplayNameFor(model => model.Name)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.StartDate)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.EndDate)
 			</th>
 			<th>
 				@Html.DisplayNameFor(model => model.MemberCount)
@@ -40,12 +34,6 @@
 			<tr>
 				<td>
 					@Html.DisplayFor(modelItem => item.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.StartDate)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.EndDate)
 				</td>
 				<td>
 					@Html.DisplayFor(modelItem => item.MemberCount)
@@ -79,5 +67,5 @@
 }
 else
 {
-	<a asp-controller="Login" asp-action="Index" asp-route-redirect="/rebellions">Log in to create/edit/delete</a>
+	<a asp-controller="Login" asp-action="Index" asp-route-redirect="/LocalGroups">Log in to create/edit/delete</a>
 }

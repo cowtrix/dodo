@@ -18,6 +18,7 @@ namespace Dodo.Security
 			var usermanager = ResourceUtility.GetManager<User>();
 			Task expireTokenTask = new Task(async () =>
 			{
+				const int timeout = 10;
 				var expiredTokens = new List<Guid>();
 				while (true)
 				{
@@ -25,6 +26,7 @@ namespace Dodo.Security
 					{
 						ExpireTokensForUser(user);
 					}
+					await Task.Delay(TimeSpan.FromSeconds(timeout));
 				}
 			});
 			expireTokenTask.Start();

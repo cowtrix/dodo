@@ -1,12 +1,10 @@
 using Common.Extensions;
 using Resources.Security;
-using Newtonsoft.Json;
 using Resources;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Dodo.Users.Tokens;
 using Common.Security;
@@ -32,6 +30,7 @@ namespace Dodo.Users
 		{
 			public string username { get; set; }
 			public string password { get; set; }
+			public string redirect { get; set; }
 		}
 
 		public class ChangePasswordModel
@@ -40,7 +39,7 @@ namespace Dodo.Users
 			public string newpassword { get; set; }
 		}
 
-		protected override AuthorizationManager<User, UserSchema> AuthManager => 
+		protected override AuthorizationManager<User, UserSchema> AuthManager =>
 			new UserAuthManager(this.ControllerContext, Request);
 
 		[HttpPost(LOGIN)]
@@ -53,6 +52,10 @@ namespace Dodo.Users
 			}
 
 			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.username);
+			if (user == null)
+			{
+				return NotFound();
+			}
 			if (!user.AuthData.ChallengePassword(login.password, out var passphrase))
 			{
 				return BadRequest();
@@ -89,7 +92,7 @@ namespace Dodo.Users
 		[HttpGet(LOGOUT)]
 		public async Task<IActionResult> Logout()
 		{
-			if(Context.User == null)
+			if (Context.User == null)
 			{
 				return Forbid();
 			}
@@ -98,7 +101,7 @@ namespace Dodo.Users
 			var user = rscLock.Value as User;
 			var session = user.TokenCollection.GetTokens<SessionToken>()
 					.SingleOrDefault(t => t.UserToken == Context.UserToken);
-			if(session == null)
+			if (session == null)
 			{
 				return BadRequest();
 			}
@@ -131,18 +134,18 @@ namespace Dodo.Users
 		[HttpPost(RESET_PASSWORD)]
 		public async Task<IActionResult> ResetPassword(string token, [FromBody]string password)
 		{
-			if(string.IsNullOrEmpty(token) || 
+			if (string.IsNullOrEmpty(token) ||
 				!ValidationExtensions.IsStrongPassword(password, out _))
 			{
 				return BadRequest();
 			}
-			var user = UserManager.GetSingle(u => 
+			var user = UserManager.GetSingle(u =>
 				u.TokenCollection.GetSingleToken<ResetPasswordToken>()?.TemporaryToken == token);
-			if(user == null)
+			if (user == null)
 			{
 				return BadRequest();
 			}
-			using(var rscLock = new ResourceLock(user))
+			using (var rscLock = new ResourceLock(user))
 			{
 				user = rscLock.Value as User;
 				user.TokenCollection.RemoveAll<ResetPasswordToken>(user);
@@ -150,17 +153,17 @@ namespace Dodo.Users
 				UserManager.Update(user, rscLock);
 			}
 			await Logout();
-			return Redirect(DodoServer.DodoServer.Index);
+			return Redirect(DodoServer.DodoServer.Homepage);
 		}
 
 		[HttpPost(CHANGE_PASSWORD)]
 		public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordModel model)
 		{
-			if(Context.User == null)
+			if (Context.User == null)
 			{
 				return Forbid();
 			}
-			if(!Context.User.AuthData.ChallengePassword(model.currentpassword, out _))
+			if (!Context.User.AuthData.ChallengePassword(model.currentpassword, out _))
 			{
 				return Unauthorized();
 			}
@@ -177,20 +180,20 @@ namespace Dodo.Users
 		[HttpGet(VERIFY_EMAIL)]
 		public async Task<IActionResult> VerifyEmail(string token)
 		{
-			if(Context.User == null)
+			if (Context.User == null)
 			{
 				return Forbid();
 			}
-			if(Context.User.PersonalData.EmailConfirmed)
+			if (Context.User.PersonalData.EmailConfirmed)
 			{
 				return Ok();
 			}
 			var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>();
-			if(verifyToken == null)
+			if (verifyToken == null)
 			{
 				throw new Exception($"Verify token was null for user {Context.User.GUID}");
 			}
-			if(verifyToken.Token != token)
+			if (verifyToken.Token != token)
 			{
 				return BadRequest("Token mismatch");
 			}
@@ -198,7 +201,7 @@ namespace Dodo.Users
 			var user = rscLock.Value as User;
 			user.PersonalData.EmailConfirmed = true;
 			UserManager.Update(user, rscLock);
-			return Redirect(DodoServer.DodoServer.Index);
+			return Redirect(DodoServer.DodoServer.Homepage);
 		}
 
 		[HttpPost]

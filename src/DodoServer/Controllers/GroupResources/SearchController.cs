@@ -8,10 +8,10 @@ using System;
 
 namespace DodoResources
 {
-	[Route(RootUrl)]
+	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class SearchController : CustomController<DodoResource, DodoResourceSchemaBase>
 	{
-		public const string RootUrl = "api/search";
+		public const string RootURL = "search";
 
 		[HttpGet]
 		public virtual async Task<IActionResult> Index(

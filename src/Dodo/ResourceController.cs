@@ -130,7 +130,6 @@ namespace Resources
 				{
 					TypeNameHandling = TypeNameHandling.All
 				};
-				var prev = JsonConvert.SerializeObject(target, jsonSettings);
 				target.PatchObject(values, req.PermissionLevel, req.Requester.User, req.Requester.Passphrase);
 				ResourceManager.Update(target, resourceLock);
 			}
