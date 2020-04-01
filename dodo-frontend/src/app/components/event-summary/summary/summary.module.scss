@@ -1,0 +1,11 @@
+@import "~app/styles/styles";
+
+.summary {
+	display: none;
+	align-items: center;
+	color: $color-text-light;
+
+	@media (min-width: $responsive-breakpoint) {
+		display: flex;
+	}
+}

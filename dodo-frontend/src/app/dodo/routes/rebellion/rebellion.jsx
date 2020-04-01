@@ -28,12 +28,14 @@ export const Rebellion = ({ match }) => {
 	}
 
 	return (
-		<div className={styles.rebellion}>
-			<div className={styles.detail}>
-				<RebellionDetail rebellion={rebellion} />
-			</div>
-			<div className={styles.events}>
-				<RebellionEvents events={events} />
+		<div className={styles.rebellionContainer}>
+			<div className={styles.rebellion}>
+				<div className={styles.detail}>
+					<RebellionDetail rebellion={rebellion}/>
+				</div>
+				<div className={styles.events}>
+					<RebellionEvents events={events}/>
+				</div>
 			</div>
 		</div>
 	);

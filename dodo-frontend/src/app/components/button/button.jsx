@@ -6,21 +6,22 @@ import styles from "./button.module.scss";
 
 export const Button = ({
 	children,
+	className,
 	style = {},
 	variant = "primary",
 	to,
 	onClick
 }) => {
-	const className = `${styles.button} ${styles[variant]}`;
+	const buttonStyle = `${styles.button} ${styles[variant]} `;
 
 	return (
 		<Fragment>
 			{onClick ? (
-				<button className={className} onClick={onClick} style={style}>
+				<button className={buttonStyle} onClick={onClick} style={style}>
 					{children}
 				</button>
 			) : (
-				<Link to={to} className={className} style={style}>
+				<Link to={to} className={`${className} ${styles.link}`} style={style}>
 					{children}
 				</Link>
 			)}
