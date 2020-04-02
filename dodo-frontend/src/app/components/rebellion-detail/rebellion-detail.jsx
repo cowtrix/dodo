@@ -1,9 +1,9 @@
-import React from "react";
+import React from "react"
 
-import { DateTile } from "app/components/date-tile";
-import { PageTitle } from "app/components/page-title";
-import { Button } from "app/components/button";
-import styles from "./rebellion-detail.module.scss";
+import { DateTile } from "app/components/date-tile"
+import { PageTitle } from "app/components/page-title"
+import { Button } from "app/components/button"
+import styles from "./rebellion-detail.module.scss"
 
 export const RebellionDetail = ({ rebellion }) => {
 	return (
@@ -28,5 +28,5 @@ export const RebellionDetail = ({ rebellion }) => {
 				</Button>
 			</div>
 		</div>
-	);
-};
+	)
+}

@@ -1,1 +1,1 @@
-export { ContentPage } from "./content-page";
+export { ContentPage } from "./content-page"

@@ -1,8 +1,8 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import React, { Fragment } from "react"
+import PropTypes from "prop-types"
+import { Link } from "react-router-dom"
 
-import styles from "./button.module.scss";
+import styles from "./button.module.scss"
 
 export const Button = ({
 	children,
@@ -13,7 +13,7 @@ export const Button = ({
 	onClick,
 	type
 }) => {
-	const buttonStyle = `${styles.button} ${styles[variant]} `;
+	const buttonStyle = `${styles.button} ${styles[variant]} `
 
 	return (
 		<Fragment>
@@ -33,12 +33,12 @@ export const Button = ({
 				</Link>
 			)}
 		</Fragment>
-	);
-};
+	)
+}
 
 Button.propTypes = {
 	children: PropTypes.node.isRequired,
 	to: PropTypes.string,
 	variant: PropTypes.string,
 	onClick: PropTypes.func
-};
+}

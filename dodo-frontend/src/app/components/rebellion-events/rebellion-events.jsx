@@ -1,17 +1,17 @@
-import React from "react";
+import React from "react"
 
-import { SiteMap } from "app/components/site-map";
-import { Button } from "app/components/button";
-import styles from "./rebellion-events.module.scss";
+import { SiteMap } from "app/components/site-map"
+import { Button } from "app/components/button"
+import styles from "./rebellion-events.module.scss"
 
 const getDescription = event => {
-	const description = event.PublicDescription || "";
-	return description.slice(0, 180);
-};
+	const description = event.PublicDescription || ""
+	return description.slice(0, 180)
+}
 
 export const RebellionEvents = ({ events }) => {
 	if (!events) {
-		return <div>Loading</div>;
+		return <div>Loading</div>
 	}
 
 	return (
@@ -39,5 +39,5 @@ export const RebellionEvents = ({ events }) => {
 				View All Events ({events.length})
 			</Button>
 		</div>
-	);
-};
+	)
+}

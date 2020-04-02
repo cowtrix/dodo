@@ -1,6 +1,6 @@
-import React from "react";
+import React from "react"
 
-import styles from "./content-page.module.scss";
+import styles from "./content-page.module.scss"
 
 export const ContentPage = ({ children, sideBar }) => (
 	<div className={styles.contentPage}>
@@ -9,4 +9,4 @@ export const ContentPage = ({ children, sideBar }) => (
 			<div className={styles.sideBar}>{sideBar}</div>
 		</div>
 	</div>
-);
+)
