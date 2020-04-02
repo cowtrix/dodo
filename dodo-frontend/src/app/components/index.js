@@ -8,5 +8,7 @@ export { DateTile } from './date-tile'
 export { Button } from './button'
 export { RebellionDetail } from './rebellion-detail'
 export { RebellionEvents } from './rebellion-events'
+export { SiteMap } from './site-map'
+
 
 export { footer, events }
