@@ -36,8 +36,7 @@ export const reducerFactory = (actionType) => (state = [], action) => {
 	switch (action.type) {
 		case actionType + SUCCESS : {
 			return ([
-                ...state,
-                ...action.payload,
+				...action.payload,
 			])
 		}
 		default:

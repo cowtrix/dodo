@@ -1,8 +1,10 @@
 import React, {Fragment} from 'react'
 import { Route } from 'react-router-dom'
-import { Home, route as home } from './home'
 import { Switch } from "react-router"
-import { Rebellion } from "app/dodo/routes/rebellion"
+
+import { Home, route as home } from './home'
+import { Search, route as search } from './search'
+import { Rebellion } from "./rebellion"
 
 
 export const Routes = () =>
@@ -13,7 +15,8 @@ export const Routes = () =>
 				component={Rebellion}
 				exact
 			/>
-			<Route path={home} component={Home} />
+			<Route path={home} component={Home} exact />
+			<Route path={search} component={Search} />
 		</Switch>
 	</Fragment>
 

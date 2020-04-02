@@ -1,7 +1,7 @@
 import React from "react";
 import { Map } from "app/components/index";
 
-export const SiteMap = ({ sites, height = "220px" }) => {
+export const SiteMap = ({ sites = [], height = "220px" }) => {
 	const markers = sites.map(site => site.Location);
 
 	return (

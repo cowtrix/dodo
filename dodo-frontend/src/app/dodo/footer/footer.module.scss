@@ -2,7 +2,7 @@
 
 .footer {
 	padding: 0 spacing(4);
-	display: none;
+	display: flex;
 	flex-direction: column;
 	max-width: $application-max-width;
 	margin-bottom: spacing(20);
