@@ -11,7 +11,7 @@ export const Button = ({
 	variant = "primary",
 	to,
 	onClick,
-	type,
+	type
 }) => {
 	const buttonStyle = `${styles.button} ${styles[variant]} `;
 
@@ -22,7 +22,13 @@ export const Button = ({
 					{children}
 				</button>
 			) : (
-				<Link to={to} className={`${className} ${styles.link} ${type === 'button' ? buttonStyle : ''}`} style={style}>
+				<Link
+					to={to}
+					className={`${className} ${styles.link} ${
+						type === "button" ? buttonStyle : ""
+					}`}
+					style={style}
+				>
 					{children}
 				</Link>
 			)}

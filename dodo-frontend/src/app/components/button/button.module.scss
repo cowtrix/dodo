@@ -11,8 +11,10 @@
 	align-items: center;
 }
 
-a.button {
-	color: white;
+.link {
+	color: inherit;
+	display: inherit;
+	text-decoration: inherit;
 }
 
 .primary {
@@ -26,10 +28,3 @@ a.button {
 	color: $color-secondary;
 	border: solid 1px $color-secondary;
 }
-
-.link {
-	color: inherit;
-	display: inherit;
-	text-decoration: inherit;
-}
-

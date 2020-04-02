@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 
 import { SiteMap } from "app/components/site-map";
 import { Button } from "app/components/button";
@@ -33,6 +33,7 @@ export const RebellionEvents = ({ events }) => {
 			<Button
 				to={"/sites/search"}
 				variant="outline"
+				type="button"
 				style={{ width: "100%", textAlign: "center" }}
 			>
 				View All Events ({events.length})

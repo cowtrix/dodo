@@ -19,7 +19,13 @@ export const RebellionDetail = ({ rebellion }) => {
 			</div>
 			<div className={styles.detail}>{rebellion.PublicDescription}</div>
 			<div className={styles.join}>
-				<Button to={"/rebellion/join"}>JOIN REBELLION</Button>
+				<Button
+					to={"/rebellion/join"}
+					type="button"
+					style={{ display: "inline-block" }}
+				>
+					JOIN REBELLION
+				</Button>
 			</div>
 		</div>
 	);
