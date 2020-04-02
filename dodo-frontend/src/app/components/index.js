@@ -10,5 +10,7 @@ export { RebellionDetail } from "./rebellion-detail"
 export { RebellionEvents } from "./rebellion-events"
 export { SiteMap } from "./site-map"
 export { ContentPage } from "./content-page"
+export { SiteDetail } from "./site-detail"
+export { DatePage } from "./date-page"
 
 export { footer, events }
