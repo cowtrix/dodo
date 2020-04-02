@@ -12,7 +12,7 @@ export const Header = ({ rebellionsCount }) =>
 		<SubHeader
 			content={rebellionsCount + REBELLIONS_HEADER_COPY}
 		/>
-		<Button onClick={() => {}}>
+		<Button to="/search" type="button">
 			{LOCATION_SEARCH_COPY}
 			<Icon icon="bullseye" className={styles.searchIcon} size="s" />
 		</Button>
