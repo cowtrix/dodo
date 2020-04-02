@@ -1,44 +1,27 @@
-import React, { Fragment } from "react"
+import React from "react"
 import PropTypes from "prop-types"
-import { Link } from "react-router-dom"
 
 import styles from "./button.module.scss"
 
 export const Button = ({
 	children,
 	className,
-	style = {},
 	variant = "primary",
-	to,
-	onClick,
-	type
+	as = <button />,
+	...props
 }) => {
-	const buttonStyle = `${styles.button} ${styles[variant]} `
+	const buttonProps = {
+		...props,
+		className: `${styles.button} ${styles[variant]} ${className}`
+	}
 
-	return (
-		<Fragment>
-			{onClick ? (
-				<button className={buttonStyle} onClick={onClick} style={style}>
-					{children}
-				</button>
-			) : (
-				<Link
-					to={to}
-					className={`${className} ${styles.link} ${
-						type === "button" ? buttonStyle : ""
-					}`}
-					style={style}
-				>
-					{children}
-				</Link>
-			)}
-		</Fragment>
-	)
+	return React.cloneElement(as, buttonProps, children)
 }
 
 Button.propTypes = {
 	children: PropTypes.node.isRequired,
 	to: PropTypes.string,
 	variant: PropTypes.string,
-	onClick: PropTypes.func
+	onClick: PropTypes.func,
+	as: PropTypes.node
 }
