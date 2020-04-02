@@ -1,8 +1,9 @@
 import React, {Fragment} from 'react'
 import { Route } from 'react-router-dom'
-import { Home, route as home } from './home'
 import { Switch } from "react-router"
-import { Rebellion } from "app/dodo/routes/rebellion"
+
+import { Home, route as home } from './home'
+import { Rebellion } from "./rebellion"
 
 
 export const Routes = () =>

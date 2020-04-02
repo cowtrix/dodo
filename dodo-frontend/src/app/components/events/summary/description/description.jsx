@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import styles from './summary.module.scss'
+import styles from './description.module.scss'
 
 
-export const Summary = ({ description }) => {
+export const Description = ({ description }) => {
 	const summary = description.slice(0, 200)
 
 	return (
@@ -15,6 +15,6 @@ export const Summary = ({ description }) => {
 }
 
 
-Summary.propTypes = {
+Description.propTypes = {
 	description: PropTypes.string,
 }

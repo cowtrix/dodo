@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
-import styles from './rebellions.module.scss'
-import {Header} from "./header"
-import { EventList } from '../../../../components/event-list/event-list'
+import { Header } from "./header"
+import { List, ListContainer } from 'app/components/event'
 
 export const Rebellions = ({ rebellions }) =>
-	<div className={styles.wrapper}>
-		<div className={styles.rebellions}>
+	<ListContainer
+	content={
+		<Fragment>
 			<Header/>
-			<EventList events={rebellions}/>
-		</div>
-	</div>
+			<List events={rebellions}/>
+		</Fragment>
+	}
+	/>
+
+
+
 

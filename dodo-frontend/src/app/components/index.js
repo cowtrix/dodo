@@ -1,4 +1,5 @@
-import * as footer from './footer/title/index'
+import * as footer from './footer/title'
+import * as events from './events'
 
 export { Map } from './map'
 export { SubHeader } from './sub-header'
@@ -7,6 +8,5 @@ export { DateTile } from './date-tile'
 export { Button } from './button'
 export { RebellionDetail } from './rebellion-detail'
 export { RebellionEvents } from './rebellion-events'
-export { EventSummary } from './event-summary'
 
-export { footer }
+export { footer, events }
