@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import PropTypes from "prop-types"
 
 import { fetchSite } from "app/domain/services/site"
-import { ContentPage, SiteDetail } from "app/components"
+import { useFetch } from "app/domain/services/useFetch"
+import { ContentPage, SiteDetail, SiteInfo } from "app/components"
 
 export const Site = ({ match }) => {
 	const { siteId } = match.params
-	const [site, setSite] = useState()
-
-	useEffect(() => {
-		const load = async () => {
-			setSite(await fetchSite(siteId))
-		}
-		load()
-	}, [siteId])
+	const site = useFetch(fetchSite, siteId)
 
 	if (!site) {
 		return <div>Loading</div>
 	}
 
 	return (
-		<ContentPage sideBar={<div />}>
+		<ContentPage sideBar={<SiteInfo site={site} />}>
 			<SiteDetail site={site} />
 		</ContentPage>
 	)

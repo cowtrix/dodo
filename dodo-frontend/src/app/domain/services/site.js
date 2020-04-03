@@ -1,4 +1,5 @@
-import { api } from "./api-service"
 import { SITES } from "app/domain/urls"
+import { api } from "./api-service"
+import { memoize } from "./memoize"
 
-export const fetchSite = siteId => api(`${SITES}${siteId}`)
+export const fetchSite = memoize(async siteId => api(`${SITES}${siteId}`))
