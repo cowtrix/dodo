@@ -2,13 +2,13 @@ import React from "react"
 import { Link } from "react-router-dom"
 
 import { PageTitle } from "app/components/page-title"
-import { DatePage } from "app/components/date-page"
+import { DateLayout } from "app/components/date-layout"
 import { Button } from "app/components/button"
 import styles from "./rebellion-detail.module.scss"
 
 export const RebellionDetail = ({ rebellion }) => {
 	return (
-		<DatePage
+		<DateLayout
 			startDate={
 				rebellion.StartDate ? new Date(rebellion.StartDate) : null
 			}
@@ -25,6 +25,6 @@ export const RebellionDetail = ({ rebellion }) => {
 					JOIN REBELLION
 				</Button>
 			</div>
-		</DatePage>
+		</DateLayout>
 	)
 }

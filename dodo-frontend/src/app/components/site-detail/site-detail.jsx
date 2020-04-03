@@ -2,14 +2,14 @@ import React from "react"
 import { Link } from "react-router-dom"
 
 import { PageTitle } from "app/components/page-title"
-import { DatePage } from "app/components/date-page"
+import { DateLayout } from "app/components/date-layout"
 import { Button } from "app/components/button"
 
 import styles from "./site-detail.module.scss"
 
 export const SiteDetail = ({ site }) => {
 	return (
-		<DatePage
+		<DateLayout
 			startDate={site.StartDate ? new Date(site.StartDate) : null}
 			endDate={site.EndDate ? new Date(site.EndDate) : null}
 			title={<PageTitle title={site.Name} subTitle="Glasgow" />}
@@ -25,6 +25,6 @@ export const SiteDetail = ({ site }) => {
 					ATTEND EVENT
 				</Button>
 			</div>
-		</DatePage>
+		</DateLayout>
 	)
 }

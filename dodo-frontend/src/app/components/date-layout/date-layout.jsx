@@ -2,11 +2,11 @@ import React from "react"
 import PropTypes from "prop-types"
 
 import { DateTile } from "app/components/date-tile"
-import styles from "./date-page.module.scss"
+import styles from "./date-layout.module.scss"
 
-export const DatePage = ({ startDate, endDate, title, children }) => {
+export const DateLayout = ({ startDate, endDate, title, children }) => {
 	return (
-		<div className={styles.DatePage}>
+		<div className={styles.DateLayout}>
 			<div className={styles.heading}>
 				{startDate && (
 					<div className={styles.dateTile}>
@@ -20,7 +20,7 @@ export const DatePage = ({ startDate, endDate, title, children }) => {
 	)
 }
 
-DatePage.propTypes = {
+DateLayout.propTypes = {
 	title: PropTypes.node.isRequired,
 	children: PropTypes.node,
 	startDate: PropTypes.instanceOf(Date),
