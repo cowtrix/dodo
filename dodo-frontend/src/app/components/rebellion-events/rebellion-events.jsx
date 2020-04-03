@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "react-router-dom"
 
 import { SiteMap } from "app/components/site-map"
 import { Button } from "app/components/button"
@@ -21,7 +22,9 @@ export const RebellionEvents = ({ events }) => {
 			<div className={styles.events}>
 				{events.map(event => (
 					<div key={event.GUID} className={styles.event}>
-						<strong>{event.Name}</strong>
+						<Link to={`/site/${event.GUID}`}>
+							<strong>{event.Name}</strong>
+						</Link>
 						<div className={styles.date}>26th March 2020</div>
 						<div className={styles.description}>
 							{getDescription(event)}
