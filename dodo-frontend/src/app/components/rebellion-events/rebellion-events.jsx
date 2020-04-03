@@ -35,7 +35,7 @@ export const RebellionEvents = ({ events }) => {
 
 			<Button
 				to={"/sites/search"}
-				variant="outline"
+				variant="outlinePrimary"
 				type="button"
 				style={{ width: "100%", textAlign: "center" }}
 			>

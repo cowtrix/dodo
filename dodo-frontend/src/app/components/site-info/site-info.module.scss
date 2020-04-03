@@ -1,7 +1,17 @@
+@import "~app/styles/styles";
+
 .siteInfo {
 }
 
 .rebellionDescription {
-  max-height: 188px;
-  overflow: hidden;
+	max-height: 188px;
+	overflow: hidden;
+
+	margin-top: spacing(4);
+	margin-bottom: spacing(4);
+}
+
+.address {
+	margin-top: spacing(4);
+	margin-bottom: spacing(4);
 }

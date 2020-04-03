@@ -21,8 +21,7 @@ export const RebellionInfo = ({ rebellionId }) => {
 				{rebellion.PublicDescription}
 			</div>
 			<Button
-				to={`/rebellion/${rebellionId}`}
-				as={<Link />}
+				as={<Link to={`/rebellion/${rebellionId}`} />}
 				variant="outline"
 				style={{ display: "inline-block" }}
 			>

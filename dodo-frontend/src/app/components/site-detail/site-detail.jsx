@@ -17,8 +17,7 @@ export const SiteDetail = ({ site }) => {
 			<div>{site.PublicDescription}</div>
 			<div className={styles.attendees}>
 				<Button
-					to={"/site/join"}
-					as={<Link />}
+					as={<Link to={"/site/join"} />}
 					type="button"
 					style={{ display: "inline-block" }}
 				>

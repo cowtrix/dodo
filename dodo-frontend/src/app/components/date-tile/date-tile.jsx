@@ -33,7 +33,7 @@ export const DateTile = ({ startDate, endDate = null, backgroundColor }) => {
 }
 
 DateTile.propTypes = {
-	startDate: PropTypes.string,
-	endDate: PropTypes.string,
+	startDate: PropTypes.instanceOf(Date),
+	endDate: PropTypes.instanceOf(Date),
 	backgroundColor: PropTypes.string
 }
