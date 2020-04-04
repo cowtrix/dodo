@@ -61,7 +61,7 @@ namespace Dodo.SharedTest
 				GetRandomWorkinGroup(context));
 			return new RoleSchema(RandomName,
 				SampleMarkdown,
-				wg.GUID);
+				wg.Guid);
 		}
 
 		public static SiteSchema GetRandomSite<T>(AccessContext context, Rebellion rb = null) where T:Site
@@ -69,7 +69,7 @@ namespace Dodo.SharedTest
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				context,
 				GetRandomRebellion(context));
-			return new SiteSchema(RandomName, typeof(T).FullName, rb.GUID, RandomLocation, SampleMarkdown);
+			return new SiteSchema(RandomName, typeof(T).FullName, rb.Guid, RandomLocation, SampleMarkdown);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)
@@ -99,7 +99,7 @@ namespace Dodo.SharedTest
 				GetRandomRebellion(context));
 			return new WorkingGroupSchema(RandomName,
 				SampleMarkdown,
-				rsc.GUID
+				rsc.Guid
 			);
 		}
 

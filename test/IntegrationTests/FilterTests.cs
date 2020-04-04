@@ -43,7 +43,7 @@ namespace FilterTests
 			var filter = new DateFilter() { startdate = rsc.StartDate.ToShortDateString() };
 			var manager = ResourceUtility.GetManager(typeof(T));
 			var search = manager.Get(x => filter.Filter(x));
-			Assert.IsTrue(search.Single().GUID == rsc.GUID);
+			Assert.IsTrue(search.Single().Guid == rsc.Guid);
 		}
 
 		public void FilterByLocation<T>() where T : GroupResource, ILocationalResource
@@ -59,7 +59,7 @@ namespace FilterTests
 			var filter = new DistanceFilter() { latlong = $"{rsc.Location.Latitude} {rsc.Location.Longitude}", distance = 20 };
 			var manager = ResourceUtility.GetManager(typeof(T));
 			var search = manager.Get(x => filter.Filter(x));
-			Assert.IsTrue(search.Single().GUID == rsc.GUID);
+			Assert.IsTrue(search.Single().Guid == rsc.Guid);
 		}
 	}
 }

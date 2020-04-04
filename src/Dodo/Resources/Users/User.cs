@@ -14,9 +14,9 @@ namespace Dodo.Users
 {
 	public class User : DodoResource
 	{
-		public const string ADMIN_OF_KEY = "ADMIN_OF";
-		public const string ROLES_HELD_KEY = "ROLES";
-		public const string NOTIFICATIONS_KEY = "NOTIFICATIONS";
+		public const string ADMIN_OF_KEY = "adminOf";
+		public const string ROLES_HELD_KEY = "roles";
+		public const string NOTIFICATIONS_KEY = "notifications";
 
 		#region Data
 		[View(EPermissionLevel.USER)]
@@ -46,11 +46,11 @@ namespace Dodo.Users
 			{
 				view.Add(ADMIN_OF_KEY, new
 				{
-					Rebellions = ResourceUtility.GetManager<Rebellion>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.GUID),
-					WorkingGroups = ResourceUtility.GetManager<WorkingGroup>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.GUID),
-					LocalGroups = ResourceUtility.GetManager<LocalGroup>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.GUID),
+					Rebellions = ResourceUtility.GetManager<Rebellion>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.Guid),
+					WorkingGroups = ResourceUtility.GetManager<WorkingGroup>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.Guid),
+					LocalGroups = ResourceUtility.GetManager<LocalGroup>().Get(r => r.IsAdmin(this, accessContext)).Select(r => r.Guid),
 				});
-				view.Add(ROLES_HELD_KEY, ResourceUtility.GetManager<Role>().Get(r => r.RoleHolders.IsAuthorised(this, passphrase)).Select(r => r.GUID));
+				view.Add(ROLES_HELD_KEY, ResourceUtility.GetManager<Role>().Get(r => r.RoleHolders.IsAuthorised(this, passphrase)).Select(r => r.Guid));
 			}
 			if(permissionLevel == EPermissionLevel.OWNER)
 			{

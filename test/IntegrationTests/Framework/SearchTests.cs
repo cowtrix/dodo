@@ -9,6 +9,7 @@ using Resources;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Common.Extensions;
 
 namespace RESTTests
 {
@@ -23,17 +24,17 @@ namespace RESTTests
 			var positives = new ILocationalResource[] {
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("My Local Group 1", "", new GeoLocation(rebellion.Location).Offset(-.1, -.1))),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("My Local Group 2", "", new GeoLocation(rebellion.Location).Offset(.1, -.1))),
-				CreateObject<MarchSite>(context, new SiteSchema("My March", typeof(MarchSite).FullName, rebellion.GUID, new GeoLocation(rebellion.Location).Offset(-.05, .1), "")),
-				CreateObject<PermanentSite>(context, new SiteSchema("My Occupation", typeof(PermanentSite).FullName, rebellion.GUID, new GeoLocation(rebellion.Location).Offset(.05, -.1), "")),
+				CreateObject<MarchSite>(context, new SiteSchema("My March", typeof(MarchSite).FullName, rebellion.Guid, new GeoLocation(rebellion.Location).Offset(-.05, .1), "")),
+				CreateObject<PermanentSite>(context, new SiteSchema("My Occupation", typeof(PermanentSite).FullName, rebellion.Guid, new GeoLocation(rebellion.Location).Offset(.05, -.1), "")),
 				};
-			var posGuids = positives.Select(rsc => rsc.GUID).ToList();
+			var posGuids = positives.Select(rsc => rsc.Guid).ToList();
 			var negatives = new ILocationalResource[] {
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("My Local Group 1", "", new GeoLocation(rebellion.Location).Offset(-45, -45))),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("My Local Group 2", "", new GeoLocation(rebellion.Location).Offset(-45, -45))),
-				CreateObject<MarchSite>(context, new SiteSchema("My March", typeof(MarchSite).FullName, rebellion.GUID, new GeoLocation(rebellion.Location).Offset(-45, 45), "")),
-				CreateObject<PermanentSite>(context, new SiteSchema("My Occupation", typeof(PermanentSite).FullName, rebellion.GUID, new GeoLocation(rebellion.Location).Offset(45, 45), "")),
+				CreateObject<MarchSite>(context, new SiteSchema("My March", typeof(MarchSite).FullName, rebellion.Guid, new GeoLocation(rebellion.Location).Offset(-45, 45), "")),
+				CreateObject<PermanentSite>(context, new SiteSchema("My Occupation", typeof(PermanentSite).FullName, rebellion.Guid, new GeoLocation(rebellion.Location).Offset(45, 45), "")),
 				};
-			var negGuids = negatives.Select(rsc => rsc.GUID).ToList();
+			var negGuids = negatives.Select(rsc => rsc.Guid).ToList();
 
 			var request = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
@@ -41,14 +42,14 @@ namespace RESTTests
 					("latlong", $"{rebellion.Location.Latitude}+{rebellion.Location.Longitude}"),
 					("distance", "60"),
 				});
-			var guids = request.Values<JObject>().Select(o => o.Value<string>("GUID"));
+			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			foreach(var guid in guids)
 			{
-				if(rebellion.GUID == Guid.Parse(guid))
+				if(rebellion.Guid == Guid.Parse(guid))
 				{
 					continue;
 				}
-				var match = positives.SingleOrDefault(rsc => rsc.GUID == Guid.Parse(guid));
+				var match = positives.SingleOrDefault(rsc => rsc.Guid == Guid.Parse(guid));
 				Assert.IsNotNull(match, $"Unable to find resource with GUID {guid}");
 			}
 		}

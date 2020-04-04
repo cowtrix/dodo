@@ -52,12 +52,12 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var rebellion = CreateObject<Rebellion>(context);
-			var wg = CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test WG", "test", rebellion.GUID));
+			var wg = CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test WG", "test", rebellion.Guid));
 
 			await Login(user.AuthData.Username, password);
 			var patch = GetPatchObject();
-			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{rebellion.GUID}", EHTTPRequestType.PATCH, patch);
-			var updatedObj = ResourceManager.GetSingle(r => r.GUID == rebellion.GUID);
+			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{rebellion.Guid}", EHTTPRequestType.PATCH, patch);
+			var updatedObj = ResourceManager.GetSingle(r => r.Guid == rebellion.Guid);
 			VerifyPatchedObject(updatedObj, patch);
 		}
 	}

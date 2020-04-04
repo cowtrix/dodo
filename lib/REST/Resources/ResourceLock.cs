@@ -39,7 +39,7 @@ namespace Resources
 			{
 				return false;
 			}
-			return IsLocked(resource.GUID, handle);
+			return IsLocked(resource.Guid, handle);
 		}
 
 		public Guid Guid { get; private set; }
@@ -55,11 +55,11 @@ namespace Resources
 				return;
 			}
 			var handle = Guid.NewGuid();
-			while (IsLocked(resource.GUID, handle) || !m_locks.TryAdd(resource.GUID, handle))
+			while (IsLocked(resource.Guid, handle) || !m_locks.TryAdd(resource.Guid, handle))
 			{
 				Thread.Sleep(10);
 			}
-			Guid = resource.GUID;
+			Guid = resource.Guid;
 			Value = ResourceUtility.GetResourceByGuid(Guid, handle);
 		}
 

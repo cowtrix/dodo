@@ -191,7 +191,7 @@ namespace Dodo.Users
 			var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>();
 			if (verifyToken == null)
 			{
-				throw new Exception($"Verify token was null for user {Context.User.GUID}");
+				throw new Exception($"Verify token was null for user {Context.User.Guid}");
 			}
 			if (verifyToken.Token != token)
 			{

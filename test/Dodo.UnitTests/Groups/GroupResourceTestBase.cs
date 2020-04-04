@@ -35,7 +35,7 @@ namespace Groups
 				Assert.IsTrue(newGroup.Members.IsAuthorised(user, joinerContext.Passphrase));
 				ResourceManager.Update(newGroup, rscLock);
 			}
-			var updatedGroup = ResourceManager.GetSingle(g => g.GUID == newGroup.GUID);
+			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
 			Assert.IsTrue(updatedGroup.Members.IsAuthorised(user, joinerContext.Passphrase));
 
 			// Leave
@@ -46,7 +46,7 @@ namespace Groups
 				Assert.IsFalse(newGroup.Members.IsAuthorised(user, joinerContext.Passphrase));
 				ResourceManager.Update(newGroup, rscLock);
 			}
-			updatedGroup = ResourceManager.GetSingle(g => g.GUID == newGroup.GUID);
+			updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
 			Assert.IsFalse(updatedGroup.Members.IsAuthorised(user, joinerContext.Passphrase));
 		}
 
@@ -61,7 +61,7 @@ namespace Groups
 			// Add
 			var newAdmin = GenerateUser(SchemaGenerator.GetRandomUser(default), out var newAdminContext);
 			newGroup.AddAdmin(creatorContext, newAdmin);
-			var updatedGroup = ResourceManager.GetSingle(g => g.GUID == newGroup.GUID);
+			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
 			Assert.IsTrue(updatedGroup.IsAdmin(newAdmin, creatorContext));
 		}
 	}

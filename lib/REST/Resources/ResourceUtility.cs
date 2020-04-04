@@ -80,7 +80,7 @@ namespace Resources
 			T result;
 			foreach(var rm in ResourceManagers)
 			{
-				result = (T)rm.Value.GetSingle(x => x.GUID == guid, handle);
+				result = (T)rm.Value.GetSingle(x => x.Guid == guid, handle);
 				if(result != null)
 				{
 					return result;
@@ -128,7 +128,7 @@ namespace Resources
 
 		public static IResourceManager GetManagerForResource(this Guid guid)
 		{
-			return ResourceManagers.SingleOrDefault(x => x.Value.Get(resource => resource.GUID == guid).Any()).Value;
+			return ResourceManagers.SingleOrDefault(x => x.Value.Get(resource => resource.Guid == guid).Any()).Value;
 		}
 
 		public static IResourceManager GetManagerForResource(this Resource resource)

@@ -10,7 +10,7 @@ namespace DodoServer.ViewModels
 	public class Group
 	{
 		[DisplayName("Group ID")]
-		public Guid GUID { get; set; }
+		public Guid Guid { get; set; }
 
 		[Required]
 		[MaxLength(64)]

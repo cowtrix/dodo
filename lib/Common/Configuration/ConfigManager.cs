@@ -16,8 +16,7 @@ namespace Common.Config
 	public static class ConfigManager
 	{
 		// TODO: this is the wrong path if hosting in IIS (maybe use IWebHostEnvironment to get it)
-		private static string m_configPath => Path.Combine(
-			Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), $"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
+		private static string m_configPath => Path.GetFullPath($"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
 		static Dictionary<string, object> m_data = new Dictionary<string, object>();
 
 		static ConfigManager()

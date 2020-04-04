@@ -32,8 +32,8 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return ResourceUtility.GetManager<Role>().Get(role => role.Parent.Guid == GUID)
-					.Select(x => x.GUID.ToString()).ToList();
+				return ResourceUtility.GetManager<Role>().Get(role => role.Parent.Guid == Guid)
+					.Select(x => x.Guid.ToString()).ToList();
 			}
 		}
 
@@ -45,8 +45,8 @@ namespace Dodo.WorkingGroups
 		{
 			get
 			{
-				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg?.Parent != null && wg?.Parent.GetValue()?.GUID == GUID)
-					.Select(wg => wg.GUID.ToString()).ToList();
+				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg?.Parent != null && wg?.Parent.GetValue()?.Guid == Guid)
+					.Select(wg => wg.Guid.ToString()).ToList();
 			}
 		}
 

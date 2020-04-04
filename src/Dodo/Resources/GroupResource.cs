@@ -36,7 +36,7 @@ namespace Dodo
 	/// </summary>
 	public abstract class GroupResource : DodoResource
 	{
-		public const string IS_MEMBER_AUX_TOKEN = "IS_MEMBER";
+		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		public class AdminData
 		{
 			[View(EPermissionLevel.ADMIN)]
@@ -103,7 +103,7 @@ namespace Dodo
 			{
 				return false;
 			}
-			return Parent.GetValue().GUID == targetObject.GUID;
+			return Parent.GetValue().Guid == targetObject.Guid;
 		}
 
 		public bool IsAdmin(User target, AccessContext requesterContext)
@@ -141,7 +141,7 @@ namespace Dodo
 			{
 				return false;
 			}
-			if (newAdmin.GUID != context.User.GUID && IsAdmin(newAdmin, context))
+			if (newAdmin.Guid != context.User.Guid && IsAdmin(newAdmin, context))
 			{
 				// Other user can't change existing admin password
 				return true;

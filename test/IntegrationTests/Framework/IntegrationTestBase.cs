@@ -25,6 +25,8 @@ namespace RESTTests
 		private readonly HttpClient m_client;
 		protected CookieContainer m_cookies;
 
+		protected HttpResponseMessage LastRequest { get; private set; }
+
 		public IntegrationTestBase()
 		{
 			m_cookies = new CookieContainer();	
@@ -66,6 +68,7 @@ namespace RESTTests
 			{
 				url += "?" + string.Join("&", parameters.Select(x => $"{Uri.EscapeUriString(x.Item1)}={Uri.EscapeUriString(x.Item2)}"));
 			}
+			LastRequest = null;
 			HttpResponseMessage response;
 			switch (method)
 			{
@@ -84,12 +87,19 @@ namespace RESTTests
 				default:
 					throw new Exception("Unsupported method " + method);
 			}
+			LastRequest = response;
 			validator ??= ((r) => r.IsSuccessStatusCode);
 			if (!validator(response))
 			{
 				throw new Exception(response.ToString());
 			}
 			return response;
+		}
+
+		[AssemblyCleanup]
+		public static void Finalise()
+		{
+			Postman.Update();
 		}
 
 		protected async Task Login(string username, string password)

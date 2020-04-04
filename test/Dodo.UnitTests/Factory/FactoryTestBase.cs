@@ -36,7 +36,6 @@ namespace Factory
 				e => e.Message.Contains("Bad authorisation"));
 		}
 
-
 		[TestMethod]
 		public virtual void CannotCreateWithBadName()
 		{

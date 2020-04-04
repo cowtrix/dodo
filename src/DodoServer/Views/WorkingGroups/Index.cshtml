@@ -51,14 +51,14 @@
 					@if (loggedIn)
 					{
 						<text>
-							@Html.ActionLink("Edit", "Edit", new { id = item.GUID }) |
+							@Html.ActionLink("Edit", "Edit", new { id = item.Guid }) |
 						</text>
 					}
-					@Html.ActionLink("Details", "Details", new { id = item.GUID })
+					@Html.ActionLink("Details", "Details", new { id = item.Guid })
 					@if (loggedIn)
 					{
 						<text>
-							| @Html.ActionLink("Delete", "Delete", new { id = item.GUID })
+							| @Html.ActionLink("Delete", "Delete", new { id = item.Guid })
 						</text>
 					}
 				</td>

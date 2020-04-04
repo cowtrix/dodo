@@ -27,7 +27,7 @@ namespace Dodo.Rebellions
 		{
 			get
 			{
-				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).Select(x => x.GUID.ToString()).ToList();
+				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg.IsChildOf(this)).Select(x => x.Guid.ToString()).ToList();
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace Dodo.Rebellions
 		{
 			get
 			{
-				return ResourceUtility.GetManager<Site>().Get(wg => wg.Parent.Guid == GUID).Select(x => x.GUID.ToString()).ToList();
+				return ResourceUtility.GetManager<Site>().Get(wg => wg.Parent.Guid == Guid).Select(x => x.Guid.ToString()).ToList();
 			}
 		}
 

@@ -30,7 +30,7 @@ namespace Dodo
 		public override bool Equals(object obj)
 		{
 			return obj is AccessContext context &&
-				   User.GUID.Equals(context.User.GUID) &&
+				   User.Guid.Equals(context.User.Guid) &&
 				   Passphrase.Equals(context.Passphrase);
 		}
 

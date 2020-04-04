@@ -30,7 +30,7 @@ namespace Resources
 
 		public ResourceReference(T resource)
 		{
-			Guid = resource != null ? resource.GUID : default;
+			Guid = resource != null ? resource.Guid : default;
 		}
 		public ResourceReference(Guid guid)
 		{

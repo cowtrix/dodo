@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,6 +8,14 @@ namespace Common.Extensions
 
 	public static class StringExtensions
 	{
+		public static string ToCamelCase(this string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return str;
+			}
+			return $"{char.ToLowerInvariant(str[0])}{str.Substring(1)}";
+		}
 		public static byte[] AsciiToByteArray(this string str)
 		{
 			return System.Text.Encoding.ASCII.GetBytes(str);

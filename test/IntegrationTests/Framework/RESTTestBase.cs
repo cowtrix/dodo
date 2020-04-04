@@ -34,14 +34,14 @@ namespace RESTTests
 			GetRandomUser(out _, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
-			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
 			VerifyCreatedObject(resource, resourceObj, schema);
 		}
 
 		protected virtual void VerifyCreatedObject(T rsc, JObject obj, TSchema schema)
 		{
-			Assert.AreEqual(rsc.GUID, Guid.Parse(obj.Value<string>("GUID")));
-			Assert.AreEqual(rsc.Name, obj.Value<string>("Name"));
+			Assert.AreEqual(rsc.Guid, Guid.Parse(obj.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())));
+			Assert.AreEqual(rsc.Name, obj.Value<string>(nameof(IRESTResource.Name).ToCamelCase()));
 			Assert.AreEqual(rsc.Name, schema.Name);
 		}
 
@@ -60,9 +60,9 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
-			await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.DELETE,
+			await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.DELETE,
 				SchemaGenerator.GetRandomSchema<T>(context));
-			Assert.IsNull(ResourceManager.GetSingle(r => r.GUID == resource.GUID));
+			Assert.IsNull(ResourceManager.GetSingle(r => r.Guid == resource.Guid));
 		}
 
 		protected abstract JObject GetPatchObject();
@@ -74,8 +74,8 @@ namespace RESTTests
 			var resource = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
 			var patch = GetPatchObject();
-			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.GUID.ToString()}", EHTTPRequestType.PATCH,	patch);
-			var updatedObj = ResourceManager.GetSingle(r => r.GUID == resource.GUID);
+			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.PATCH,	patch);
+			var updatedObj = ResourceManager.GetSingle(r => r.Guid == resource.Guid);
 			VerifyPatchedObject(updatedObj, patch);
 		}
 

@@ -67,7 +67,7 @@ namespace Resources
 
 			foreach (var member in filteredMembers)
 			{
-				var memberName = member.Name;
+				var memberName = member.Name.ToCamelCase();
 				var targetPropValue = member.GetValue(obj);
 				var memberType = member.GetMemberType();
 				var finalObj = GetObject(targetPropValue, memberType, requester, visibility, passphrase);
@@ -114,6 +114,15 @@ namespace Resources
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
+			// Check for case insensitive duplicates
+			foreach (var key in values.Keys)
+			{
+				if(values.Keys.Count(k => string.Equals(key, k, StringComparison.OrdinalIgnoreCase)) != 1)
+				{
+					throw new Exception($"Duplicate key {key} - field names are case insensitive and must be unique.");
+				}
+			}
+
 			string error = null;
 			var targetType = targetObject != null ? targetObject.GetType() : typeof(T);
 			// Firstly, if we hit a primitive type or a specially included type, we just convert the whole thing

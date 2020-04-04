@@ -41,7 +41,7 @@ namespace DodoResources
 			User targetUser = null;
 			if(Guid.TryParse(newAdminIdentifier, out var newAdminGuid))
 			{
-				targetUser = userManager.GetSingle(x => x.GUID == newAdminGuid);
+				targetUser = userManager.GetSingle(x => x.Guid == newAdminGuid);
 			}
 			else if(ValidationExtensions.EmailIsValid(newAdminIdentifier))
 			{

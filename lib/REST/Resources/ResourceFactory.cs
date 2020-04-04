@@ -36,7 +36,7 @@ namespace Resources
 				throw new Exception(error);
 			}
 			ResourceUtility.Register(newResource);
-			Logger.Debug($"Created new resource {newResource.GetType().Name}: {newResource.GUID}");
+			Logger.Debug($"Created new resource {newResource.GetType().Name}: {newResource.Guid}");
 			return newResource;
 		}
 

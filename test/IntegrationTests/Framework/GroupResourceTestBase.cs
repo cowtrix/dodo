@@ -14,6 +14,7 @@ using Dodo.SharedTest;
 using System.Collections.Generic;
 using Dodo.Users;
 using Dodo.Users.Tokens;
+using DodoResources;
 
 namespace RESTTests
 {
@@ -39,11 +40,11 @@ namespace RESTTests
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
-					("latlong", $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
-					("distance", "20.6"),
+					(nameof(DistanceFilter.latlong), $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
+					(nameof(DistanceFilter.distance), "20.6"),
 				});
-			var guids = list.Values<JObject>().Select(o => o.Value<string>("GUID"));
-			Assert.IsTrue(guids.Contains(resource.GUID.ToString()));
+			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
+			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
 		}
 
 		[TestMethod]
@@ -64,11 +65,11 @@ namespace RESTTests
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
-					("startdate", $"{resource.StartDate.ToShortDateString()}"),
-					("enddate", $"{resource.EndDate.ToShortDateString()}")
+					(nameof(DateFilter.startdate), $"{resource.StartDate.ToShortDateString()}"),
+					(nameof(DateFilter.enddate), $"{resource.EndDate.ToShortDateString()}")
 				});
-			var guids = list.Values<JObject>().Select(o => o.Value<string>("GUID"));
-			Assert.IsTrue(guids.Contains(resource.GUID.ToString()));
+			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
+			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
 		}
 
 		[TestMethod]
@@ -82,8 +83,8 @@ namespace RESTTests
 				sites.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET);
-			var guids = list.Values<JObject>().Select(o => o.Value<string>("GUID"));
-			Assert.IsFalse(sites.Any(x => !guids.Contains(x.GUID.ToString())));
+			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
+			Assert.IsFalse(sites.Any(x => !guids.Contains(x.Guid.ToString())));
 		}
 
 		[TestMethod]
@@ -98,9 +99,9 @@ namespace RESTTests
 			await Login(user.AuthData.Username, password);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var response = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST, schema);
-			user = UserManager.GetSingle(u => u.GUID == user.GUID);
+			user = UserManager.GetSingle(u => u.Guid == user.Guid);
 			//Assert.IsTrue(user.TokenCollection.GetTokens<ResourceCreationToken>().Single().IsRedeemed);
-			var rsc = ResourceManager.GetSingle(r => r.GUID.ToString() == response.Value<string>("GUID"));
+			var rsc = ResourceManager.GetSingle(r => r.Guid.ToString() == response.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			VerifyCreatedObject(rsc, response, schema);
 		}
 
@@ -110,7 +111,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var group = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
-			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.GUID}", EHTTPRequestType.GET);
+			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.OWNER,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
 		}
@@ -126,15 +127,15 @@ namespace RESTTests
 			await Login(user1.AuthData.Username, user1Password);
 
 			var user2 = GetRandomUser(out var user2Password, out var user2Context);
-			await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.GUID}/addadmin", 
-				EHTTPRequestType.POST, user2.GUID);
-			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.GUID}", EHTTPRequestType.GET);
-			Assert.IsNotNull(obj.Value<JObject>("AdministratorData").Value<JArray>("Administrators").Values<JToken>()
-				.Single(s => s.Value<string>("guid").ToString() == user2.GUID.ToString()));
+			await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin", 
+				EHTTPRequestType.POST, user2.Guid);
+			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(GroupResource.AdminData.Administrators).ToCamelCase()).Values<JToken>()
+				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() == user2.Guid.ToString()));
 			await Logout();
 
 			await Login(user2.AuthData.Username, user2Password);
-			obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.GUID}", EHTTPRequestType.GET);
+			obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.ADMIN,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
 		}

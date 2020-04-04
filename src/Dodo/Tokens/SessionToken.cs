@@ -24,7 +24,7 @@ namespace Dodo.Users.Tokens
 		{
 			UserToken = KeyGenerator.GetUniqueKey(KEYSIZE);
 			EncryptedPassphrase = new EncryptedStore<string>(passphrase, encryptionKey);
-			SessionTokenStore.SetUser(UserToken, encryptionKey, user.GUID);
+			SessionTokenStore.SetUser(UserToken, encryptionKey, user.Guid);
 		}
 
 		public void OnRemove(User parent)

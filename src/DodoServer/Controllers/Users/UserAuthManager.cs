@@ -13,7 +13,7 @@ namespace Dodo.Users
 
 		protected override EPermissionLevel GetPermission(AccessContext context, User target)
 		{
-			if(context.User != null && context.User.GUID == target.GUID)
+			if(context.User != null && context.User.Guid == target.Guid)
 			{
 				return EPermissionLevel.OWNER;
 			}

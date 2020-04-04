@@ -24,7 +24,7 @@ namespace Dodo.Security
 				return null;
 			}
 			var userGuid = userEncryptedGuid.EncryptedGUID.GetValue(sessionKey);
-			return UserManager.GetSingle(u => u.GUID == userGuid);
+			return UserManager.GetSingle(u => u.Guid == userGuid);
 		}
 
 		public static void SetUser(string userToken, Passphrase sessionKey, Guid userGuid)

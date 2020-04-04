@@ -62,7 +62,7 @@ namespace Resources
 			// Create an index of the GUID
 			var indexOptions = new CreateIndexOptions();
 			var indexKeys = Builders<T>.IndexKeys
-				.Ascending(rsc => rsc.GUID);
+				.Ascending(rsc => rsc.Guid);
 			var indexModel = new CreateIndexModel<T>(indexKeys, indexOptions);
 			MongoDatabase.Indexes.CreateOne(indexModel);
 		}
@@ -84,7 +84,7 @@ namespace Resources
 		/// <param name="newObject"></param>
 		public virtual void Add(T newObject)
 		{
-			if (ResourceUtility.GetResourceByGuid(newObject.GUID) != null)
+			if (ResourceUtility.GetResourceByGuid(newObject.Guid) != null)
 			{
 				throw new Exception("Conflicting GUID");
 			}
@@ -98,7 +98,7 @@ namespace Resources
 		public virtual void Delete(T objToDelete)
 		{
 			objToDelete.OnDestroy();
-			MongoDatabase.DeleteOne(x => x.GUID == objToDelete.GUID);
+			MongoDatabase.DeleteOne(x => x.Guid == objToDelete.Guid);
 		}
 
 		/// <summary>
@@ -108,12 +108,12 @@ namespace Resources
 		/// <param name="locker">The ResourceLock of the object (to guarantee someone else isn't editing it)</param>
 		public virtual void Update(T objToUpdate, ResourceLock locker)
 		{
-			if (locker.Guid != objToUpdate.GUID)
+			if (locker.Guid != objToUpdate.Guid)
 			{
 				// This should never, ever happen in normal execution of the program
 				throw new Exception("Locker GUID mismatch");
 			}
-			MongoDatabase.ReplaceOne(x => x.GUID == objToUpdate.GUID, objToUpdate);
+			MongoDatabase.ReplaceOne(x => x.Guid == objToUpdate.Guid, objToUpdate);
 		}
 
 		/// <summary>

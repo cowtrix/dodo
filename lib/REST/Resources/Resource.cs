@@ -12,7 +12,7 @@ namespace Resources
 {
 	public interface IRESTResource : IVerifiable
 	{
-		Guid GUID { get; }
+		Guid Guid { get; }
 		string Name { get; }
 		void OnDestroy();
 		void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
@@ -44,9 +44,9 @@ namespace Resources
 	[BsonIgnoreExtraElements(Inherited = true)]
 	public abstract class Resource : IRESTResource
 	{
-		public const string TYPE = "TYPE";
-		public const string METADATA = "METADATA";
-		public const string METADATA_PERMISSION = "PERMISSION";
+		public const string TYPE = "type";
+		public const string METADATA = "metadata";
+		public const string METADATA_PERMISSION = "permission";
 
 		/// <summary>
 		/// The GUID of the resource is unique. You can get a resource
@@ -56,7 +56,7 @@ namespace Resources
 		[NoPatch]
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
-		public Guid GUID { get; private set; }
+		public Guid Guid { get; private set; }
 
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
@@ -66,20 +66,20 @@ namespace Resources
 		public Resource(ResourceSchemaBase schema)
 		{
 			Name = schema?.Name;
-			GUID = Guid.NewGuid();
+			Guid = Guid.NewGuid();
 		}
 
 		public override bool Equals(object obj)
 		{
 			var resource = obj as Resource;
 			return resource != null &&
-				   GUID.Equals(resource.GUID);
+				   Guid.Equals(resource.Guid);
 		}
 
 		public override int GetHashCode()
 		{
 			var hashCode = 1286416240;
-			hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(GUID);
+			hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(Guid);
 			return hashCode;
 		}
 
