@@ -18,8 +18,6 @@
 .content {
 	min-width: 300px;
 	flex-grow: 1;
-	margin-right: 0;
-	margin-left: 0;
 
 	@media (min-width: $responsive-breakpoint) {
 		margin-left: spacing(5);
