@@ -29,7 +29,10 @@ namespace Resources
 		where T : class, IDodoResource
 		where TSchema : DodoResourceSchemaBase
 	{
-		public abstract Task<IActionResult> Create([FromBody] TSchema schema);
+		public virtual Task<IActionResult> Create([FromBody] TSchema schema)
+		{
+			throw new NotImplementedException();
+		}
 
 		protected virtual async Task<IActionResult> CreateInternal(TSchema schema)
 		{

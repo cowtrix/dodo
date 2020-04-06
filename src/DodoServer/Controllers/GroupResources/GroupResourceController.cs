@@ -45,7 +45,8 @@ namespace DodoResources
 			}
 			else if(ValidationExtensions.EmailIsValid(newAdminIdentifier))
 			{
-				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier);
+				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier) ??
+					UserController.CreateTemporaryUser(newAdminIdentifier);
 			}
 			var resource = req.Resource as T;
 			if(resource.AddAdmin(req.Requester, targetUser))

@@ -13,6 +13,7 @@ namespace Common.Extensions
 	public interface IVerifiable
 	{
 		bool CanVerify();
+		bool VerifyExplicit(out string error);
 	}
 
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]

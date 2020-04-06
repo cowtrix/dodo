@@ -16,6 +16,7 @@ using Dodo.Users;
 using Dodo.Users.Tokens;
 using DodoResources;
 using DodoTest.Framework.Postman;
+using Resources.Security;
 
 namespace RESTTests
 {
@@ -126,7 +127,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async Task CanAddAdminFromExistingUser()
+		public async Task CanAddAdminFromGuid()
 		{
 			// Create a new user
 			var user1 = GetRandomUser(out var user1Password, out var user1Context);
@@ -136,8 +137,9 @@ namespace RESTTests
 			await Login(user1.AuthData.Username, user1Password);
 
 			var user2 = GetRandomUser(out var user2Password, out var user2Context);
-			await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin", 
+			var apiReq = await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin", 
 				EHTTPRequestType.POST, user2.Guid);
+
 			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(GroupResource.AdminData.Administrators).ToCamelCase()).Values<JToken>()
 				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() == user2.Guid.ToString()));
@@ -147,6 +149,43 @@ namespace RESTTests
 			obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.ADMIN,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Add an Administrator by Guid" },
+				apiReq);
+		}
+
+		[TestMethod]
+		public async Task CanAddAdminFromEmail()
+		{
+			// Create a new user
+			var user1 = GetRandomUser(out var user1Password, out var user1Context);
+			// Let them create a new group
+			var group = CreateObject<T>(user1Context);
+			Assert.IsTrue(group.IsAdmin(user1, user1Context));
+			await Login(user1.AuthData.Username, user1Password);
+
+			var user2Email = "myUser2@email.com";
+			var apiReq = await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin",
+				EHTTPRequestType.POST, user2Email);
+
+			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(GroupResource.AdminData.Administrators).ToCamelCase()).Values<JToken>()
+				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() != user1.Guid.ToString()));
+			await Logout();
+
+			var user2Password = ValidationExtensions.GenerateStrongPassword();
+			await Request($"{UserController.RootURL}/{UserController.REGISTER}", EHTTPRequestType.POST, new UserSchema("Test User 2", "testuser2", user2Password, user2Email));
+			var user2 = UserManager.GetSingle(u => u.PersonalData.Email == user2Email);
+
+			await Login(user2.AuthData.Username, user2Password);
+			obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			Assert.AreEqual(PermissionLevel.ADMIN,
+				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Add an Administrator by Email" },
+				apiReq);
 		}
 
 		/*

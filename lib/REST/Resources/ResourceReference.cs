@@ -64,5 +64,11 @@ namespace Resources
 		{
 			return !ResourceLock.IsLocked(Guid);
 		}
+
+		public bool VerifyExplicit(out string error)
+		{
+			error = null;
+			return true;
+		}
 	}
 }

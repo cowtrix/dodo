@@ -34,6 +34,12 @@ namespace Resources
 		{
 			return true;
 		}
+
+		public virtual bool VerifyExplicit(out string error)
+		{
+			error = null;
+			return true;
+		}
 	}
 
 	/// <summary>
@@ -99,6 +105,12 @@ namespace Resources
 		public bool CanVerify()
 		{
 			return false;
+		}
+
+		public virtual bool VerifyExplicit(out string error)
+		{
+			error = null;
+			return true;
 		}
 	}
 }

@@ -1,3 +1,5 @@
+using Common.Extensions;
+using Common.Security;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
@@ -5,14 +7,14 @@ using Resources.Security;
 namespace Dodo.Users.Tokens
 {
 	[SingletonToken]
-	public class TemporaryUserToken : AutoExecutableToken
+	public class TemporaryUserToken : RedeemableToken
 	{
 		[JsonProperty]
-		public string TemporaryToken { get; private set; }
+		public string Password { get; private set; }
 
-		public TemporaryUserToken(Passphrase temporaryPassword)
+		public TemporaryUserToken(Passphrase password)
 		{
-			TemporaryToken = temporaryPassword.Value;
+			Password = password.Value;
 		}
 	}
 }

@@ -38,5 +38,11 @@ namespace Dodo.Users.Tokens
 		}
 
 		public bool CanVerify() => true;
+
+		public virtual bool VerifyExplicit(out string error)
+		{
+			error = null;
+			return true;
+		}
 	}
 }

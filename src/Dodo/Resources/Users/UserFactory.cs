@@ -17,12 +17,15 @@ namespace Dodo.Users
 		public string Password { get; set; }
 		[Email]
 		public string Email { get; set; }
+		
+		public string Token { get; set; }
 
-		public UserSchema(string name, string username, string password, string email) : base(name)
+		public UserSchema(string name, string username, string password, string email, string token = null) : base(name)
 		{
 			Username = username;
 			Password = password;
 			Email = email;
+			Token = token;
 		}
 
 		public UserSchema()

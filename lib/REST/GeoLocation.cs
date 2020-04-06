@@ -86,5 +86,11 @@ namespace Resources
 		{
 			return $"Lat:{Latitude} Long:{Longitude}";
 		}
+
+		public bool VerifyExplicit(out string error)
+		{
+			error = null;
+			return true;
+		}
 	}
 }

@@ -9,6 +9,7 @@ using System.Security.Claims;
 using Dodo.Users.Tokens;
 using Common.Security;
 using System.Linq;
+using Dodo.Utility;
 
 namespace Dodo.Users
 {
@@ -216,12 +217,50 @@ namespace Dodo.Users
 			var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username || x.PersonalData.Email == schema.Email);
 			if (user != null)
 			{
-				return Conflict();
+				// Check if this is a temporary user (e.g. a new admin activating an email invite to administrate a resource)
+				var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>();
+				if(tempToken == null)
+				{
+					return Conflict();
+				}
+				if(UserManager.GetSingle(u => u.AuthData.Username == schema.Username) != null)
+				{
+					return Conflict();
+				}
+				using var rscLock = new ResourceLock(user.Guid);
+				user.AuthData.ChangePassword(new Passphrase(tempToken.Password), new Passphrase(schema.Password));
+				user.AuthData.Username = schema.Username;
+				user.Name = schema.Name;
+				if(!user.Verify(out var verificationError))
+				{
+					return BadRequest(verificationError);
+				}
+				tempToken.Redeem(default);
+				UserManager.Update(user, rscLock);
+				return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.PUBLIC, null, default));
 			}
 			var factory = ResourceUtility.GetFactory<User>();
 			user = factory.CreateTypedObject(default(AccessContext), schema);
 			var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));
 			return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.OWNER, user, passphrase));
+		}
+
+		public static User CreateTemporaryUser(string email)
+		{
+			var temporaryPassword = new Passphrase(ValidationExtensions.GenerateStrongPassword());
+			var schema = new UserSchema("TEMPORARY", Guid.NewGuid().ToString().Replace("-", ""),
+				temporaryPassword.Value, email);
+			var factory = ResourceUtility.GetFactory<User>();
+			var newUser = factory.CreateTypedObject(default(AccessContext), schema);
+			using (var rscLock = new ResourceLock(newUser))
+			{
+				newUser.TokenCollection.Add(newUser, new TemporaryUserToken(temporaryPassword));
+				ResourceUtility.GetManager<User>().Update(newUser, rscLock);
+			}
+			EmailHelper.SendEmail(email, "New Rebel",
+				$"You've been invited to create an account on {Dodo.PRODUCT_NAME}",
+				$"To create your account, please following the following link:\n\n{DodoServer.DodoServer.HttpsUrl}/{DodoServer.DodoServer.API_ROOT}/{RootURL}/{REGISTER}");
+			return newUser;
 		}
 	}
 }

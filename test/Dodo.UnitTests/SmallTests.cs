@@ -21,6 +21,12 @@ namespace Dodo.UnitTests
 			public ResourceReference<T> Ref;
 
 			public bool CanVerify() => true;
+
+			public bool VerifyExplicit(out string error)
+			{
+				error = null;
+				return true;
+			}
 		}
 
 		[TestMethod]

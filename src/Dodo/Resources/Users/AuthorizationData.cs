@@ -11,7 +11,6 @@ namespace Dodo.Users
 {
 	public class AuthorizationData : IVerifiable
 	{
-
 		/// <summary>
 		///     A random value that must change whenever a users credentials change
 		///     (password changed, login removed)
@@ -94,6 +93,12 @@ namespace Dodo.Users
 		
 		public bool CanVerify()
 		{
+			return true;
+		}
+
+		public bool VerifyExplicit(out string error)
+		{
+			error = null;
 			return true;
 		}
 	}

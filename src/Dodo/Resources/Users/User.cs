@@ -12,7 +12,7 @@ using Dodo.Users.Tokens;
 
 namespace Dodo.Users
 {
-	public class User : DodoResource
+	public class User : DodoResource, IVerifiable
 	{
 		public const string ADMIN_OF_KEY = "adminOf";
 		public const string ROLES_HELD_KEY = "roles";
@@ -36,6 +36,18 @@ namespace Dodo.Users
 		{
 			AuthData = new AuthorizationData(schema.Username, schema.Password);
 			PersonalData.Email = schema.Email;
+		}
+
+		public bool Verify(out string error)
+		{
+			var um = ResourceUtility.GetManager<User>();
+			if (um.GetSingle(u => u.AuthData.Username == AuthData.Username && u.Guid != Guid) != null)
+			{
+				error = "A user with that username already exists";
+				return false;
+			}
+			error = null;
+			return true;
 		}
 
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)

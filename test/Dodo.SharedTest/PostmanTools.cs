@@ -49,7 +49,18 @@ namespace DodoTest.Framework.Postman
 				JsonExtensions.PrettifyJSON(Task.Run(async () => await req.Content.ReadAsStringAsync().ConfigureAwait(false))?.Result);
 
 			var request = item["request"];
-			
+			const string autogen = "Auto generated\n\n";
+			var desc = request.Value<string>("description");
+			if (string.IsNullOrEmpty(desc))
+			{
+				desc = autogen;
+			}
+			else if (!desc.StartsWith(autogen))
+			{
+				desc = autogen + desc;
+			}
+			item["request"]["description"] = desc;
+
 			var response = item["response"][exampleIndex];
 			response["originalRequest"]["method"] = req.RequestMessage.Method.Method;
 			response["originalRequest"]["url"]["raw"] = req.RequestMessage.RequestUri.OriginalString;
