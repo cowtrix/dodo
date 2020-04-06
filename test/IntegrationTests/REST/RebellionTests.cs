@@ -11,6 +11,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using Common;
 using Dodo.WorkingGroups;
+using DodoTest.Framework.Postman;
 
 namespace RESTTests
 {
@@ -20,6 +21,7 @@ namespace RESTTests
 		public static DateTime DefaultStart => new DateTime(2019, 10, 7, 0, 0, 0, DateTimeKind.Utc);
 		public static DateTime DefaultEnd => new DateTime(2019, 10, 14, 0, 0, 0, DateTimeKind.Utc);
 		public override string ResourceRoot => RebellionController.RootURL;
+		protected override string PostmanCategory => "Rebellions";
 
 		protected override void VerifyCreatedObject(Rebellion rebellion, JObject obj, RebellionSchema schema)
 		{

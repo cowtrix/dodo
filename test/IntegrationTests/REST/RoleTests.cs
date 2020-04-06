@@ -10,6 +10,8 @@ namespace RESTTests
 	{
 		public override string ResourceRoot => RoleController.RootURL;
 
+		protected override string PostmanCategory => "Roles";
+
 		protected override JObject GetPatchObject()
 		{
 			var ret = new JObject();

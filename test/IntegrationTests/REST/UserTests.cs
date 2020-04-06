@@ -61,7 +61,7 @@ namespace RESTTests
 			Assert.AreEqual(newName, user.Name);
 			Assert.AreEqual(user.PersonalData.LocalGroup.Guid, lg.Guid);
 			Postman.Update(
-				new PostmanEntryAddress { Category = UserCat, Request = "Update a user's details" },
+				new PostmanEntryAddress { Category = UserCat, Request = "Update a User" },
 				LastRequest);
 		}
 
@@ -92,6 +92,17 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		public async Task CanDeleteProfile()
+		{
+			var user = GetRandomUser(out var password, out _);
+			await Login(user.AuthData.Username, password);
+			await Request($"{UserController.RootURL}/{user.Guid}", EHTTPRequestType.DELETE);
+			Postman.Update(
+				new PostmanEntryAddress { Category = UserCat, Request = "Delete a User" },
+				LastRequest);
+		}
+
+		[TestMethod]
 		public async Task CannotLoginWithBadAuth()
 		{
 			var user = GetRandomUser(out var password, out _);
@@ -104,6 +115,17 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out _, out _);
 			await AssertX.ThrowsAsync<Exception>(RequestJSON($"{UserController.RootURL}/{user.Guid.ToString()}", EHTTPRequestType.GET));
+		}
+
+		[TestMethod]
+		public async virtual Task CanGetOwnProfile()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			await Login(user.AuthData.Username, password);
+			await RequestJSON($"{UserController.RootURL}/{user.Guid.ToString()}", EHTTPRequestType.GET);
+			Postman.Update(
+				new PostmanEntryAddress { Category = UserCat, Request = "Get a User" },
+				LastRequest);
 		}
 
 		[TestMethod]

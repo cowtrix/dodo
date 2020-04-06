@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using DodoResources;
+using DodoTest.Framework.Postman;
 
 namespace RESTTests
 {
@@ -85,6 +86,10 @@ namespace RESTTests
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET);
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsFalse(sites.Any(x => !guids.Contains(x.Guid.ToString())));
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"List all {typeof(T).Name}s" },
+				LastRequest);
 		}
 
 		[TestMethod]
@@ -103,6 +108,10 @@ namespace RESTTests
 			//Assert.IsTrue(user.TokenCollection.GetTokens<ResourceCreationToken>().Single().IsRedeemed);
 			var rsc = ResourceManager.GetSingle(r => r.Guid.ToString() == response.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			VerifyCreatedObject(rsc, response, schema);
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Create a new {typeof(T).Name}" },
+				LastRequest);
 		}
 
 		[TestMethod]

@@ -77,7 +77,7 @@ namespace Common.Extensions
 
 		public static string PrettifyJSON(string json)
 		{
-			if(string.IsNullOrEmpty(json))
+			if(string.IsNullOrEmpty(json) || !IsValidJson(json))
 			{
 				return json;
 			}

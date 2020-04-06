@@ -16,6 +16,8 @@ namespace RESTTests
 	{
 		public override string ResourceRoot => LocalGroupController.RootURL;
 
+		protected override string PostmanCategory => "Local Groups";
+
 		protected override JObject GetPatchObject()
 		{
 			var ret = new JObject();

@@ -5,11 +5,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DodoTest.Framework.Postman
@@ -43,7 +41,7 @@ namespace DodoTest.Framework.Postman
 				return;
 			var items = m_collection.Value<JObject>("collection").Value<JArray>("item");
 			var cat = items.First(x => x.Value<string>("name") == entry.Category).Value<JArray>("item");
-			var item = cat.First(x => x.Value<string>("name") == entry.Request);
+			var item = cat.First(x => x.Value<string>("name").Replace(" ", "") == entry.Request.Replace(" ", ""));
 
 			var requestBody = req.RequestMessage.Content == null ? "" :
 				JsonExtensions.PrettifyJSON(Task.Run(async () => await req.RequestMessage.Content.ReadAsStringAsync().ConfigureAwait(false))?.Result);
@@ -54,7 +52,13 @@ namespace DodoTest.Framework.Postman
 			
 			var response = item["response"][exampleIndex];
 			response["originalRequest"]["method"] = req.RequestMessage.Method.Method;
-			response["originalRequest"]["body"]["raw"] = requestBody;
+			response["originalRequest"]["url"]["raw"] = req.RequestMessage.RequestUri.OriginalString;
+			response["originalRequest"]["url"]["host"] = new JArray(new [] { $"https://{req.RequestMessage.RequestUri.Host}:{req.RequestMessage.RequestUri.Port}" });
+			response["originalRequest"]["url"]["path"] = new JArray(req.RequestMessage.RequestUri.AbsolutePath.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries));
+			if (response["originalRequest"].Value<JObject>("body") != null)
+			{
+				response["originalRequest"]["body"]["raw"] = requestBody;
+			}
 			response["status"] = req.ReasonPhrase;
 			response["code"] = (int)req.StatusCode;
 			response["body"] = responseBody;

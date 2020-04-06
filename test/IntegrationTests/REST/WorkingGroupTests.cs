@@ -10,6 +10,8 @@ namespace RESTTests
 	{
 		public override string ResourceRoot => WorkingGroupController.RootURL;
 
+		protected override string PostmanCategory => "Working Groups";
+
 		protected override JObject GetPatchObject()
 		{
 			var ret = new JObject();
