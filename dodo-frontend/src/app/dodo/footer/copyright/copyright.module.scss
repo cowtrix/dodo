@@ -1,0 +1,10 @@
+@import "~app/styles/styles";
+
+.copyright {
+	flex-grow: 50;
+	flex-basis: 25%;
+
+	@media (min-width: $responsive-breakpoint) {
+		padding-right: spacing(20);
+	}
+}

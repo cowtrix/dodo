@@ -1,0 +1,15 @@
+@import "~app/styles/styles";
+
+.subHeader {
+	font-size: 1rem;
+	font-weight: normal;
+	margin: 0;
+	padding: 0;
+	margin-bottom: spacing(4);
+
+	@media (min-width: $responsive-breakpoint) {
+		font-size: 1.4rem;
+		margin-bottom: 0;
+	}
+
+}

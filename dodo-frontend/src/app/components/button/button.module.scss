@@ -1,0 +1,35 @@
+@import "~app/styles/styles";
+
+.button {
+	display: flex;
+	padding: spacing(3) spacing(6);
+	line-height: 1.2;
+	cursor: pointer;
+	text-decoration: none;
+	border-radius: 4px;
+	justify-content: center;
+	align-items: center;
+}
+
+a.button {
+	color: white;
+}
+
+.primary {
+	background-color: $color-primary;
+	border: solid 1px $color-primary;
+	color: white;
+}
+
+.outline {
+	background-color: white;
+	color: $color-secondary;
+	border: solid 1px $color-secondary;
+}
+
+.link {
+	color: inherit;
+	display: inherit;
+	text-decoration: inherit;
+}
+

@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { Header } from './header'
+import { Rebellions } from './rebellions'
 
-export const Home = ({ getRebellions, rebellions = [] }) => {
-		getRebellions(rebellions)
+
+export const Home = ({ getRebellions }) => {
+
+	useEffect(() => {
+		getRebellions()
+	})
+
 	return (
 		<div>
-
+			<Header/>
+			<Rebellions/>
 		</div>
 	)
 }
@@ -13,5 +21,4 @@ export const Home = ({ getRebellions, rebellions = [] }) => {
 
 Home.propTypes = {
 	getRebellions: PropTypes.func,
-	rebellions: PropTypes.array,
 }

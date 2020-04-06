@@ -1,8 +1,22 @@
-import React from 'react'
-import { Route, BrowserRouter as Router } from 'react-router-dom'
+import React, {Fragment} from 'react'
+import { Route } from 'react-router-dom'
+import { Switch } from "react-router"
+
 import { Home, route as home } from './home'
+import { Search, route as search } from './search'
+import { Rebellion } from "./rebellion"
+
 
 export const Routes = () =>
-	<Router>
-		<Route path={home} component={Home} />
-	</Router>
+	<Fragment>
+		<Switch>
+			<Route
+				path={"/rebellion/:rebellionId"}
+				component={Rebellion}
+				exact
+			/>
+			<Route path={home} component={Home} exact />
+			<Route path={search} component={Search} />
+		</Switch>
+	</Fragment>
+

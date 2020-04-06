@@ -1,0 +1,16 @@
+@import "~app/styles/styles";
+
+.title {
+	padding: 0;
+	margin: 0;
+	margin-bottom: spacing(4);
+	font-size: 28px;
+
+	@media (max-width: $responsive-breakpoint) {
+		font-size: 22px;
+		margin-bottom: spacing(3);
+	}
+}
+
+.subTitle {
+}

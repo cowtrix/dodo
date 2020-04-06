@@ -1,1 +1,1 @@
-export { Rebellions } from './rebellions'
+export { RebellionsConnected as Rebellions } from './container'

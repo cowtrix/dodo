@@ -1,5 +1,14 @@
 @import "~app/styles/styles";
+
+.logoContainer {
+  max-width: 180px
+}
+
 .logo {
-  max-width: 180px;
-  margin-left: spacing(5);
+  width: 100%;
+  padding-bottom: spacing(5);
+
+  @media (min-width: $responsive-breakpoint) {
+    margin-left: spacing(5);
+  }
 }

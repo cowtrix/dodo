@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import header from './home-header.png'
 import styles from './header.module.scss'
 

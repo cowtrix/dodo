@@ -1,0 +1,17 @@
+@import "~app/styles/styles";
+
+.description {
+}
+
+.date {
+	color: $color-text-light;
+	margin-bottom: spacing(4);
+}
+
+.events {
+	margin-top: spacing(6);
+}
+
+.event {
+	margin-bottom: spacing(6);
+}
