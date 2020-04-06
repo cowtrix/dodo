@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using Resources;
 
 namespace Dodo.Users
 {
-	[ViewClass]
-	public struct Notification
+	public class Notification
 	{
-		public string Message;
-		public Guid GUID;
+		public string Message { get; set; }
+		public Guid GUID { get; set; }
 	}
 }

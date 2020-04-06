@@ -29,7 +29,6 @@ namespace Dodo.Users
 		[Username]
 		public string Username { get; set; }
 
-		[View(EPermissionLevel.USER)]
 		public string PublicKey { get; set; }
 
 		/// <summary>

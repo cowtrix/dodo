@@ -54,9 +54,10 @@ namespace Dodo.Users
 			}
 			if(permissionLevel == EPermissionLevel.OWNER)
 			{
-				view.Add(NOTIFICATIONS_KEY, TokenCollection.Tokens.OfType<INotificationToken>()
+				var notifications = TokenCollection.Tokens.OfType<INotificationToken>()
 					.Select(x => new Notification { Message = x.GetNotification(accessContext), GUID = x.GUID })
-					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList());
+					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
+				view.Add(NOTIFICATIONS_KEY, notifications);
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}

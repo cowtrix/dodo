@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
@@ -73,6 +73,15 @@ namespace Common.Extensions
 				throw new NullReferenceException();
 			}
 			return newObj;
+		}
+
+		public static string PrettifyJSON(string json)
+		{
+			if(string.IsNullOrEmpty(json))
+			{
+				return json;
+			}
+			return JValue.Parse(json).ToString(Formatting.Indented);
 		}
 	}
 }

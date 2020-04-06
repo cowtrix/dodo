@@ -1,9 +1,12 @@
+using Common;
 using Common.Config;
+using Common.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -31,6 +34,7 @@ namespace DodoTest.Framework.Postman
 			var req = new RestRequest($"collections/{m_guid}", Method.GET);
 			var response = m_restClient.Execute(req);
 			m_collection = JsonConvert.DeserializeObject<JObject>(response.Content);
+			File.WriteAllText("postmancollection_before.json", m_collection.ToString());
 		}
 
 		public void Update(PostmanEntryAddress entry, HttpResponseMessage req, int exampleIndex = 0)
@@ -41,8 +45,10 @@ namespace DodoTest.Framework.Postman
 			var cat = items.First(x => x.Value<string>("name") == entry.Category).Value<JArray>("item");
 			var item = cat.First(x => x.Value<string>("name") == entry.Request);
 
-			var requestBody = Task.Run(async () => await req.RequestMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).Result;
-			var responseBody = Task.Run(async () => await req.Content.ReadAsStringAsync().ConfigureAwait(false)).Result;
+			var requestBody = req.RequestMessage.Content == null ? "" :
+				JsonExtensions.PrettifyJSON(Task.Run(async () => await req.RequestMessage.Content.ReadAsStringAsync().ConfigureAwait(false))?.Result);
+			var responseBody = req.Content == null ? "" :
+				JsonExtensions.PrettifyJSON(Task.Run(async () => await req.Content.ReadAsStringAsync().ConfigureAwait(false))?.Result);
 
 			var request = item["request"];
 			
@@ -60,8 +66,14 @@ namespace DodoTest.Framework.Postman
 			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
 			var req = new RestRequest($"collections/{m_guid}", Method.PUT);
+			File.WriteAllText("postmancollection_after.json", m_collection.ToString());
 			req.AddParameter("text/json", m_collection.ToString(), ParameterType.RequestBody);
 			var response = m_restClient.Execute(req);
+			if(!response.IsSuccessful)
+			{
+				throw new Exception($"Failed to update Postman documentation: {response}");
+			}
+			Logger.Info("Updated Postman documentation");
 		}
 	}
 }

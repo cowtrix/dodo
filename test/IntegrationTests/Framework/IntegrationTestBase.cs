@@ -113,6 +113,7 @@ namespace RESTTests
 			}
 			var cookie = response.Headers.GetValues("Set-Cookie");
 			m_client.DefaultRequestHeaders.Add("cookie", cookie);
+			LastRequest = response;
 		}
 
 		protected async Task Logout()
@@ -123,6 +124,7 @@ namespace RESTTests
 				throw new Exception(response.ToString());
 			}
 			m_client.DefaultRequestHeaders.Clear();
+			LastRequest = response;
 		}
 	}
 }
