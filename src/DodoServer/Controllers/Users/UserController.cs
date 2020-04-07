@@ -207,8 +207,12 @@ namespace Dodo.Users
 
 		[HttpPost]
 		[Route(REGISTER)]
-		public override async Task<IActionResult> Create([FromBody] UserSchema schema)
+		public async Task<IActionResult> Register([FromBody] UserSchema schema, [FromQuery]string token = null)
 		{
+			if(!string.IsNullOrEmpty(token))
+			{
+				return await CreateWithToken(token, schema);
+			}
 			var req = VerifyRequest(schema);
 			if (!req.IsSuccess)
 			{
@@ -217,32 +221,47 @@ namespace Dodo.Users
 			var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username || x.PersonalData.Email == schema.Email);
 			if (user != null)
 			{
-				// Check if this is a temporary user (e.g. a new admin activating an email invite to administrate a resource)
-				var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>();
-				if(tempToken == null)
-				{
-					return Conflict();
-				}
-				if(UserManager.GetSingle(u => u.AuthData.Username == schema.Username) != null)
-				{
-					return Conflict();
-				}
-				using var rscLock = new ResourceLock(user.Guid);
-				user.AuthData.ChangePassword(new Passphrase(tempToken.Password), new Passphrase(schema.Password));
-				user.AuthData.Username = schema.Username;
-				user.Name = schema.Name;
-				if(!user.Verify(out var verificationError))
-				{
-					return BadRequest(verificationError);
-				}
-				tempToken.Redeem(default);
-				UserManager.Update(user, rscLock);
-				return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.PUBLIC, null, default));
+				return Conflict();
 			}
 			var factory = ResourceUtility.GetFactory<User>();
 			user = factory.CreateTypedObject(default(AccessContext), schema);
 			var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));
 			return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.OWNER, user, passphrase));
+		}
+
+		private async Task<IActionResult> CreateWithToken(string token, UserSchema schema)
+		{
+			var req = VerifyRequest(schema);
+			if (!req.IsSuccess)
+			{
+				return req.Error;
+			}
+			var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username || x.PersonalData.Email == schema.Email);
+			if (user == null)
+			{
+				return BadRequest();
+			}
+			// Check if this is a temporary user (e.g. a new admin activating an email invite to administrate a resource)
+			var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>();
+			if (tempToken == null)
+			{
+				return Conflict();
+			}
+			if (UserManager.GetSingle(u => u.AuthData.Username == schema.Username) != null)
+			{
+				return Conflict();
+			}
+			using var rscLock = new ResourceLock(user.Guid);
+			user.AuthData.ChangePassword(new Passphrase(tempToken.Password), new Passphrase(schema.Password));
+			user.AuthData.Username = schema.Username;
+			user.Name = schema.Name;
+			if (!user.Verify(out var verificationError))
+			{
+				return BadRequest(verificationError);
+			}
+			tempToken.Redeem(default);
+			UserManager.Update(user, rscLock);
+			return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.PUBLIC, null, default));
 		}
 
 		public static User CreateTemporaryUser(string email)
@@ -252,14 +271,16 @@ namespace Dodo.Users
 				temporaryPassword.Value, email);
 			var factory = ResourceUtility.GetFactory<User>();
 			var newUser = factory.CreateTypedObject(default(AccessContext), schema);
+			var token = KeyGenerator.GetUniqueKey(32);
+			var tokenChallenge = PasswordHasher.HashPassword(token);
 			using (var rscLock = new ResourceLock(newUser))
 			{
-				newUser.TokenCollection.Add(newUser, new TemporaryUserToken(temporaryPassword));
+				newUser.TokenCollection.Add(newUser, new TemporaryUserToken(temporaryPassword, tokenChallenge));
 				ResourceUtility.GetManager<User>().Update(newUser, rscLock);
 			}
 			EmailHelper.SendEmail(email, "New Rebel",
 				$"You've been invited to create an account on {Dodo.PRODUCT_NAME}",
-				$"To create your account, please following the following link:\n\n{DodoServer.DodoServer.HttpsUrl}/{DodoServer.DodoServer.API_ROOT}/{RootURL}/{REGISTER}");
+				$"To create your account, please following the following link:\n\n{DodoServer.DodoServer.HttpsUrl}/{RootURL}/{REGISTER}?token={token}");
 			return newUser;
 		}
 	}

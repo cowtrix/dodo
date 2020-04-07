@@ -11,10 +11,13 @@ namespace Dodo.Users.Tokens
 	{
 		[JsonProperty]
 		public string Password { get; private set; }
+		[JsonProperty]
+		public string TokenChallenge { get; private set; }
 
-		public TemporaryUserToken(Passphrase password)
+		public TemporaryUserToken(Passphrase password, string tokenChallenge)
 		{
 			Password = password.Value;
+			TokenChallenge = tokenChallenge;
 		}
 	}
 }
