@@ -1,0 +1,23 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+  dodo:
+    build:
+      context: .
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./src:/app/src
+      - ./lib:/app/lib
+      - ./test:/app/test
+      - ./config-docker.json:/app/src/DodoServer/DodoServer_config.json
+    command: dotnet run
+    depends_on:
+      - mongo
