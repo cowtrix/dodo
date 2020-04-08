@@ -52,6 +52,67 @@ Dodo expects to load a `.pfx` file containing the SSL certificate it will use to
 
 You're ready to go! Just run the executable Dodo.executable
 
+
+## Docker
+
+```
+docker-compose up
+```
+
+This will spin up 2 containers:
+* dodo_dodo_1: dotnet webapp listening at https://localhost:5001/
+* dodo_mongo_1: Mongo DB
+
+### Loading Sample Data
+
+* Apply the following diff
+
+```
+diff --git a/test/Dodo.SharedTest/SchemaGenerator.cs b/test/Dodo.SharedTest/SchemaGenerator.cs
+index 495fb72..296d8ee 100644
+--- a/test/Dodo.SharedTest/SchemaGenerator.cs
++++ b/test/Dodo.SharedTest/SchemaGenerator.cs
+@@ -35,7 +35,7 @@ namespace Dodo.SharedTest
+                }
+ 
+                private static Random m_random = new Random();
+-               public static string SampleMarkdown => File.ReadAllText(@"resources\SampleMarkdown.md");
++               public static string SampleMarkdown => File.ReadAllText(@"resources/SampleMarkdown.md");
+                public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
+                public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
+                private static string RandomName => StringExtensions.RandomString(32);
+diff --git a/test/GenerateSampleData/GenerateSampleData.csproj b/test/GenerateSampleData/GenerateSampleData.csproj
+index d801cb2..fbdd8eb 100644
+--- a/test/GenerateSampleData/GenerateSampleData.csproj
++++ b/test/GenerateSampleData/GenerateSampleData.csproj
+@@ -21,8 +21,10 @@
+     </ProjectReference>
+   </ItemGroup>
+ 
++  <!--
+   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+     <Exec Command="xcopy &quot;..\..\resources&quot; &quot;$(TargetDir)resources&quot; /i /s /r /y" />
+   </Target>
++  -->
+ 
+ </Project>
+```
+
+* Enter the running container:
+
+```
+docker exec -it dodo_dodo_1 bash
+```
+
+* Generate the sample data:
+
+```
+cd /app/test/GenerateSampleData
+dotnet run
+```
+
+* See results https://localhost:5001/api/rebellions/
+
 # Security
 
 Dodo is designed to be highly secure. The developers acknowledge that protest is a politically sensitive activity in many countries, and that individuals should be assured that their information is protected. The philosophy behind the security decisions of Dodo is to encrypt all relational information. This means that even in a threat scenario where the server data is compromised, an attacker will not be able to create any connection between individual users and activity, except where that information is explicitly published by the user. **This security infrastructure results in some caveats that any systems adminstrator should be aware of:**
