@@ -14,7 +14,7 @@ export const useFetch = (fetchFn, id) => {
 		if (id) {
 			load()
 		}
-	}, [fetchFn, id])
+	}, [fetchFn, id, result])
 
 	return resource
 }

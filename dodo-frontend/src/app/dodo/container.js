@@ -1,6 +1,6 @@
-import { connect } from 'react-redux'
-import { rebellions, localGroups } from '../domain/index'
-import { Dodo } from './dodo'
+import { connect } from "react-redux"
+import { localGroups } from "../domain/index"
+import { Dodo } from "./dodo"
 
 const { allLocalGroupsGet } = localGroups.actions
 

@@ -1,6 +1,6 @@
 import { connect } from "react-redux"
 import { Search } from "./search"
-import { rebellions, search } from "app/domain"
+import { search } from "app/domain"
 
 const mapStateToProps = state => ({
 	searchResults: search.selectors.searchResultsFiltered(state)

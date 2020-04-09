@@ -16,7 +16,7 @@ export const Search = ({
 }) => {
 	useEffect(() => {
 		getSearchResults(mockParams)
-	}, [params])
+	}, [params, getSearchResults])
 
 	return (
 		<Fragment>
