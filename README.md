@@ -65,6 +65,14 @@ This will spin up 2 containers:
 
 ### Loading Sample Data
 
+* Convert some windows specific stuff
+
+```
+docker exec -it dodo_dodo_1 sed -i s/resources\\\\SampleMarkdown/resources\\/SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
+docker exec -it dodo_dodo_1 dotnet run --project /app/test/GenerateSampleData/GenerateSampleData.csproj
+docker exec -it dodo_dodo_1 sed -i s/resources\\/SampleMarkdown/resources\\\\SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
+``
+
 * Apply the following diff
 
 ```
