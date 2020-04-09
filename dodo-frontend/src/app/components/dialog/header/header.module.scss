@@ -1,0 +1,9 @@
+@import "~app/styles/styles";
+
+.dialogHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-left: spacing(6);
+	border-bottom: 1px solid $color-light-grey;
+}

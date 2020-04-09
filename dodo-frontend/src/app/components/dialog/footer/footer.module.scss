@@ -1,0 +1,12 @@
+@import "~app/styles/styles";
+
+.dialogFooter {
+	display: flex;
+	justify-content: center;
+	border-top: 1px solid $color-light-grey;
+	padding: spacing(5) spacing(7);
+}
+
+.button {
+	width: 100%;
+}
