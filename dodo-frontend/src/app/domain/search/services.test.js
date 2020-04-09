@@ -1,6 +1,6 @@
-import { filterByEvent } from "./services";
+import { filterByEvent } from "./services"
 
-const mockEvents = ["type1", "type3"];
+const mockEvents = ["type1", "type3"]
 
 const mockResults = [
 	{
@@ -33,7 +33,7 @@ const mockResults = [
 			TYPE: "type4"
 		}
 	}
-];
+]
 
 const mockResult = [
 	{
@@ -54,10 +54,10 @@ const mockResult = [
 			TYPE: "type1"
 		}
 	}
-];
+]
 
 describe("format events", () => {
 	it("should take an array of results and filter them by event", () => {
-		expect(filterByEvent(mockResults, mockEvents)).toEqual(mockResult);
-	});
-});
+		expect(filterByEvent(mockResults, mockEvents)).toEqual(mockResult)
+	})
+})

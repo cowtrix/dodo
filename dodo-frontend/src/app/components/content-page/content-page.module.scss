@@ -1,0 +1,36 @@
+@import "~app/styles/styles";
+
+.contentPage {
+	display: flex;
+	justify-content: center;
+}
+
+.page {
+	display: flex;
+	flex-wrap: wrap;
+	color: $color-text;
+
+	@media (min-width: $responsive-breakpoint) {
+		flex-wrap: nowrap;
+	}
+}
+
+.content {
+	min-width: 300px;
+	flex-grow: 1;
+
+	@media (min-width: $responsive-breakpoint) {
+		margin-left: spacing(5);
+		margin-right: spacing(5);
+		max-width: $application-max-width - 330px;
+	}
+}
+
+.sideBar {
+	min-width: 300px;
+	width: 100%;
+
+	@media (min-width: $responsive-breakpoint) {
+		max-width: 300px;
+	}
+}

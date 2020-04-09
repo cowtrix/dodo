@@ -3,3 +3,12 @@
 .eventSummmary {
 	display: flex;
 }
+
+.link {
+	display: flex;
+	padding: spacing(3) spacing(6);
+	line-height: 1.2;
+	text-decoration: none;
+	justify-content: center;
+	align-items: center;
+}

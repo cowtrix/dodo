@@ -1,12 +1,12 @@
-import React, { Fragment, useState } from "react";
-import { Button } from "app/components";
-import { Dialog } from "./dialog";
-import { Selector } from "./selector";
+import React, { Fragment, useState } from "react"
+import { Button } from "app/components"
+import { Dialog } from "./dialog"
+import { Selector } from "./selector"
 
-import styles from "./events.module.scss";
+import styles from "./events.module.scss"
 
 export const Events = ({ eventTypes, eventsFiltered, searchFilterEvents }) => {
-	const [dialogOpen, setDialogOpen] = useState(false);
+	const [dialogOpen, setDialogOpen] = useState(false)
 
 	return (
 		<Fragment>
@@ -30,5 +30,5 @@ export const Events = ({ eventTypes, eventsFiltered, searchFilterEvents }) => {
 				/>
 			</div>
 		</Fragment>
-	);
-};
+	)
+}

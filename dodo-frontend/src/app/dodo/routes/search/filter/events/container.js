@@ -1,7 +1,7 @@
-import { connect } from "react-redux";
-import { Events } from "./events";
+import { connect } from "react-redux"
+import { Events } from "./events"
 
-import { selectors, actions } from "app/domain/search";
+import { selectors, actions } from "app/domain/search"
 
 const mapStateToProps = state => ({
 	eventTypes: [
@@ -10,13 +10,13 @@ const mapStateToProps = state => ({
 		)
 	],
 	eventsFiltered: selectors.eventsFiltered(state)
-});
+})
 
 const mapDispatchToProps = dispatch => ({
 	searchFilterEvents: events => dispatch(actions.searchFilterEvents(events))
-});
+})
 
 export const EventsConnected = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Events);
+)(Events)

@@ -1,11 +1,11 @@
-import { combineReducers } from "redux";
-import { reducerFactory } from "./domain/factories";
-import { rebellions, localGroups, search } from "./domain";
+import { combineReducers } from "redux"
+import { reducerFactory } from "./domain/factories"
+import { rebellions, localGroups, search } from "./domain"
 
-const { ALL_REBELLIONS_GET } = rebellions.actionTypes;
-const { ALL_LOCAL_GROUPS_GET } = localGroups.actionTypes;
+const { ALL_REBELLIONS_GET } = rebellions.actionTypes
+const { ALL_LOCAL_GROUPS_GET } = localGroups.actionTypes
 
-const searchReducer = search.reducer;
+const searchReducer = search.reducer
 
 export const store = combineReducers({
 	domain: combineReducers({
@@ -13,4 +13,4 @@ export const store = combineReducers({
 		localGroups: reducerFactory(ALL_LOCAL_GROUPS_GET),
 		search: searchReducer
 	})
-});
+})

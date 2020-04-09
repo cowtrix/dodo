@@ -1,17 +1,18 @@
- import React from "react";
+import React from "react"
+import { Link } from "react-router-dom"
 
-import { SiteMap } from "app/components/site-map";
-import { Button } from "app/components/button";
-import styles from "./rebellion-events.module.scss";
+import { SiteMap } from "app/components/site-map"
+import { Button } from "app/components/button"
+import styles from "./rebellion-events.module.scss"
 
 const getDescription = event => {
-	const description = event.PublicDescription || "";
-	return description.slice(0, 180);
-};
+	const description = event.PublicDescription || ""
+	return description.slice(0, 180)
+}
 
 export const RebellionEvents = ({ events }) => {
 	if (!events) {
-		return <div>Loading</div>;
+		return <div>Loading</div>
 	}
 
 	return (
@@ -21,7 +22,9 @@ export const RebellionEvents = ({ events }) => {
 			<div className={styles.events}>
 				{events.map(event => (
 					<div key={event.GUID} className={styles.event}>
-						<strong>{event.Name}</strong>
+						<Link to={`/site/${event.GUID}`}>
+							<strong>{event.Name}</strong>
+						</Link>
 						<div className={styles.date}>26th March 2020</div>
 						<div className={styles.description}>
 							{getDescription(event)}
@@ -32,11 +35,12 @@ export const RebellionEvents = ({ events }) => {
 
 			<Button
 				to={"/sites/search"}
-				variant="outline"
+				variant="outlinePrimary"
+				type="button"
 				style={{ width: "100%", textAlign: "center" }}
 			>
 				View All Events ({events.length})
 			</Button>
 		</div>
-	);
-};
+	)
+}

@@ -1,6 +1,6 @@
-import { formatEvents } from "./services";
+import { formatEvents } from "./services"
 
-const mockEvents = ["event1", "event2"];
+const mockEvents = ["event1", "event2"]
 
 const mockResult = [
 	{
@@ -11,10 +11,10 @@ const mockResult = [
 		value: "event2",
 		label: "event2"
 	}
-];
+]
 
 describe("format events", () => {
 	it("should take an array of events and format them for the select component", () => {
-		expect(formatEvents(mockEvents)).toEqual(mockResult);
-	});
-});
+		expect(formatEvents(mockEvents)).toEqual(mockResult)
+	})
+})
