@@ -1,24 +1,26 @@
-import React, { Fragment, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { ListContainer, List } from 'app/components/events'
-import { SiteMap } from 'app/components'
-import { Filter } from './filter'
+import React, { Fragment, useEffect } from "react";
+import PropTypes from "prop-types";
+import { ListContainer, List } from "app/components/events";
+import { SiteMap } from "app/components";
+import { Filter } from "./filter";
 
 const mockParams = {
 	latlong: "79+47",
-	distance: 10000,
-}
+	distance: 100000
+};
 
-export const Search = ({ searchResults = [], params = mockParams, getSearchResults }) => {
-
+export const Search = ({
+	searchResults = [],
+	params = mockParams,
+	getSearchResults
+}) => {
 	useEffect(() => {
-		getSearchResults(mockParams)
-	}, [params])
-
+		getSearchResults(mockParams);
+	}, [params]);
 
 	return (
 		<Fragment>
-			<SiteMap/>
+			<SiteMap />
 			<ListContainer
 				content={
 					<Fragment>
@@ -28,13 +30,11 @@ export const Search = ({ searchResults = [], params = mockParams, getSearchResul
 				}
 			/>
 		</Fragment>
-		)
-
-}
-
+	);
+};
 
 Search.propTypes = {
 	getSearchResults: PropTypes.func,
 	params: PropTypes.object,
-	searchResults: PropTypes.array,
-}
+	searchResults: PropTypes.array
+};
