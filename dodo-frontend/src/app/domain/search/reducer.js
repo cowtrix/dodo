@@ -1,11 +1,12 @@
-import { SEARCH_FILTER_EVENTS, SEARCH_GET } from "./action-types";
-import { SUCCESS } from "../constants";
+import { SEARCH_FILTER_EVENTS, SEARCH_GET } from "./action-types"
+import { SUCCESS } from "../constants"
+import { filterByEvent } from "./services"
 
 const initialState = {
 	searchResults: [],
 	searchResultsFiltered: [],
 	events: []
-};
+}
 
 export const reducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -16,7 +17,7 @@ export const reducer = (state = initialState, action) => {
 				searchResultsFiltered: state.events.length
 					? filterByEvent(action.payload, state.events)
 					: action.payload
-			};
+			}
 		}
 		case SEARCH_FILTER_EVENTS: {
 			if (action.payload.length) {
@@ -27,15 +28,15 @@ export const reducer = (state = initialState, action) => {
 						state.searchResults,
 						action.payload
 					)
-				};
+				}
 			}
 			return {
 				...state,
 				events: action.payload,
 				searchResultsFiltered: state.searchResults
-			};
+			}
 		}
 		default:
-			return state;
+			return state
 	}
-};
+}
