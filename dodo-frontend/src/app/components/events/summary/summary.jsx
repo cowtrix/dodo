@@ -1,9 +1,9 @@
 import React from "react"
-import { Link } from "react-router-dom"
 import PropTypes from "prop-types"
 
-import { DateTile } from "../../date-tile/index"
-import { Title } from "./title/index"
+import { Link } from "react-router-dom"
+import { DateTile } from "../../date-tile"
+import { Title } from "./title"
 import { Description } from "./description"
 import styles from "./summary.module.scss"
 

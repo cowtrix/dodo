@@ -2,8 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="linting">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/list-container/list-container.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/list-container/list-container.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/list/list.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/list/list.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/summary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/summary/summary.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/title/title.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/summary/title/title.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/header/header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/header/header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/rebellion/rebellion.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/rebellion/rebellion.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/services/useFetch.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/services/useFetch.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,6 +39,7 @@
         <counts>
           <entry key="css" value="1" />
           <entry key="env" value="1" />
+          <entry key="gitignore" value="1" />
           <entry key="html" value="1" />
           <entry key="js" value="219" />
           <entry key="json" value="12" />
@@ -41,7 +54,7 @@
           <entry key="JSON" value="11" />
           <entry key="JSX Harmony" value="198" />
           <entry key="JavaScript" value="219" />
-          <entry key="PLAIN_TEXT" value="1" />
+          <entry key="PLAIN_TEXT" value="2" />
           <entry key="SCSS" value="105" />
           <entry key="Scratch" value="1" />
         </counts>
@@ -53,6 +66,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
+          <entry key="gitignore" value="7" />
           <entry key="html" value="21" />
           <entry key="js" value="5969" />
           <entry key="json" value="301" />
@@ -67,7 +81,7 @@
           <entry key="JSON" value="301" />
           <entry key="JSX Harmony" value="8196" />
           <entry key="JavaScript" value="5968" />
-          <entry key="PLAIN_TEXT" value="934" />
+          <entry key="PLAIN_TEXT" value="941" />
           <entry key="SCSS" value="3666" />
         </counts>
       </usages-collector>
@@ -88,15 +102,6 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state>
                   <caret column="12" selection-start-column="12" selection-end-column="12" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/header/header.module.scss">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="105">
-                  <caret line="7" selection-start-line="7" selection-end-line="7" selection-end-column="46" />
                 </state>
               </provider>
             </entry>
@@ -167,7 +172,7 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="270">
@@ -175,6 +180,15 @@
                   <folding>
                     <element signature="e#0#50#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/.gitignore">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="360">
+                  <caret line="24" column="1" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
                 </state>
               </provider>
             </entry>
@@ -215,7 +229,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/app/components/modal/dialog-header/dialog-header.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/modal/dialog.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/modal/dialog-footer/dialog-footer.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/dialog/dialog-header/dialog-header.module.scss" />
@@ -266,6 +279,7 @@
         <option value="$PROJECT_DIR$/src/app/components/events/list/list.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/services/useFetch.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -558,7 +572,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586433554210</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="linting">
+      <created>1586447657772</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1586447657772</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -582,10 +603,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="82874000" />
+    <option name="totallyTimeSpent" value="82948000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21800947" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -655,7 +677,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/app/components/overlay/overlay.jsx" />
     <entry file="file://$PROJECT_DIR$/src/app/components/overlay/overlay.scss" />
     <entry file="file://$PROJECT_DIR$/src/app/components/dialog/dialog.module.scss">
       <provider selected="true" editor-type-id="text-editor">
@@ -998,6 +1019,13 @@
           <folding>
             <element signature="e#0#50#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="1" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
         </state>
       </provider>
     </entry>
