@@ -48,6 +48,9 @@
 		"pretty-quick": "2.0.1",
 		"redux-devtools-extension": "^2.13.8"
 	},
+	"prettier": {
+		"semi": false
+	},
 	"husky": {
 		"hooks": {
 			"pre-commit": "pretty-quick --staged"
