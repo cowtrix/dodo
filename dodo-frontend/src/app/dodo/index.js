@@ -1,2 +1,1 @@
-export { DodoConnected as Dodo } from "./container";
-
+export { DodoConnected as Dodo } from "./container"

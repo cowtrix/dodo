@@ -1,0 +1,15 @@
+@import "~app/styles/styles";
+
+.mobile {
+	@media (min-width: $responsive-breakpoint) {
+		display: none;
+	}
+}
+
+.desktop {
+	display: none;
+
+	@media (min-width: $responsive-breakpoint) {
+		display: flex;
+	}
+}

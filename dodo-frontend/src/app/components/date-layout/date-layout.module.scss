@@ -1,0 +1,39 @@
+@import "~app/styles/styles";
+
+.DatePage {
+	flex-grow: 1;
+
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: spacing(6);
+
+	@media (min-width: $responsive-breakpoint) {
+		padding-left: 130px;
+	}
+}
+
+.heading {
+	display: flex;
+	margin-bottom: spacing(6);
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: row-reverse;
+
+	@media (min-width: $responsive-breakpoint) {
+		align-items: flex-start;
+		justify-content: initial;
+		flex-direction: row;
+	}
+}
+
+.title {
+  flex-grow: 1;
+}
+
+.dateTile {
+	margin-right: 0;
+	@media (min-width: $responsive-breakpoint) {
+		margin-right: spacing(6);
+		margin-left: -130px;
+	}
+}

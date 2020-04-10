@@ -1,11 +1,12 @@
-import React, { Fragment } from 'react'
-import PropTypes from 'prop-types'
+import React from "react"
+import { Events } from "./events"
 
-export const Filter = ({}) =>
-	<Fragment>
+import styles from "./filter.module.scss"
 
-	</Fragment>
+export const Filter = () => (
+	<div className={styles.filter}>
+		<Events />
+	</div>
+)
 
-Filter.propTypes = {
-	
-}
+Filter.propTypes = {}
