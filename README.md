@@ -52,6 +52,29 @@ Dodo expects to load a `.pfx` file containing the SSL certificate it will use to
 
 You're ready to go! Just run the executable Dodo.executable
 
+
+## Docker
+
+```
+docker-compose up
+```
+
+This will spin up 2 containers:
+* dodo_dodo_1: dotnet webapp listening at https://localhost:5001/
+* dodo_mongo_1: Mongo DB listening at `mongodb://root:example@localhost:27017`
+
+### Loading Sample Data
+
+* Convert some windows seperators stuff, run script, convert back
+
+```
+docker exec -it dodo_dodo_1 sed -i s/resources\\\\SampleMarkdown/resources\\/SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
+docker exec -it dodo_dodo_1 dotnet run --project /app/test/GenerateSampleData/GenerateSampleData.csproj
+docker exec -it dodo_dodo_1 sed -i s/resources\\/SampleMarkdown/resources\\\\SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
+``
+
+* See results https://localhost:5001/api/rebellions/
+
 # Security
 
 Dodo is designed to be highly secure. The developers acknowledge that protest is a politically sensitive activity in many countries, and that individuals should be assured that their information is protected. The philosophy behind the security decisions of Dodo is to encrypt all relational information. This means that even in a threat scenario where the server data is compromised, an attacker will not be able to create any connection between individual users and activity, except where that information is explicitly published by the user. **This security infrastructure results in some caveats that any systems adminstrator should be aware of:**
