@@ -1,9 +1,8 @@
+using Common;
 using Dodo.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -31,8 +30,20 @@ namespace DodoServer.Controllers.Edit
 			try
 			{
 				var cookieContainer = new CookieContainer();
-				var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
+				var handler = new HttpClientHandler()
+				{
+					CookieContainer = cookieContainer,
+#if DEBUG
+					// TODO: REMOVE DangerousAcceptAnyServerCertificateValidator AS SOON AS IS REASONABLE!
+					ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+#endif
+				};
 				var client = new HttpClient(handler);
+				if (HttpClientHandler.DangerousAcceptAnyServerCertificateValidator ==
+					handler.ServerCertificateCustomValidationCallback)
+				{
+					Logger.Warning("Server certificate is not being validated!");
+				}
 				var registerResponse = await client.PostAsJsonAsync($"{DodoServer.HttpsUrl}/{RootURL}/{REGISTER}", model);
 				if (!registerResponse.IsSuccessStatusCode)
 				{

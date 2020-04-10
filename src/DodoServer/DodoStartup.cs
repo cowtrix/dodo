@@ -1,10 +1,5 @@
-// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-using Common.Config;
 using Dodo;
 using Dodo.Users;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +39,7 @@ namespace DodoServer
 					config.AccessDeniedPath = config.LoginPath;
 					config.ExpireTimeSpan = TimeSpan.FromDays(1);
 					config.SlidingExpiration = true;
-					config.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+					config.Cookie.SameSite = SameSiteMode.Strict;
 					config.Cookie.HttpOnly = true;
 				});
 			services.AddAuthorization(config =>
