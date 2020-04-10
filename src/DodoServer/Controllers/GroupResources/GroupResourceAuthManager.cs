@@ -95,9 +95,9 @@ namespace DodoResources
 				case GroupResourceController<T, TSchema>.LEAVE_GROUP:
 					if (context.User != null)
 					{
-						new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
+						return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
 					}
-					break;
+					return ResourceRequest.ForbidRequest;
 			}
 			return ResourceRequest.UnauthorizedRequest;
 		}

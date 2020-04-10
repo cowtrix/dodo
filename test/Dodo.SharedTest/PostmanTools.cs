@@ -35,7 +35,7 @@ namespace DodoTest.Framework.Postman
 			File.WriteAllText("postmancollection_before.json", m_collection.ToString());
 		}
 
-		public void Update(PostmanEntryAddress entry, HttpResponseMessage req, int exampleIndex = 0)
+		public void Update(PostmanEntryAddress entry, HttpResponseMessage req, int exampleIndex = 0, string exampleName = null)
 		{
 			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
@@ -49,6 +49,10 @@ namespace DodoTest.Framework.Postman
 				JsonExtensions.PrettifyJSON(Task.Run(async () => await req.Content.ReadAsStringAsync().ConfigureAwait(false))?.Result);
 
 			var request = item["request"];
+			if(!string.IsNullOrEmpty(exampleName))
+			{
+				request["name"] = exampleName;
+			}
 			const string autogen = "Auto generated\n\n";
 			var desc = request.Value<string>("description");
 			if (string.IsNullOrEmpty(desc))

@@ -105,6 +105,10 @@ namespace Dodo
 			{
 				return EPermissionLevel.OWNER;
 			}
+			if(context.User != null)
+			{
+				return EPermissionLevel.USER;
+			}
 			return EPermissionLevel.PUBLIC;
 		}
 	}

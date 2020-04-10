@@ -1,21 +1,10 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Security;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Common;
 using Common.Extensions;
 using Dodo;
-using Dodo.Rebellions;
 using Dodo.SharedTest;
-using Dodo.Users;
 using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Resources;
 
@@ -41,7 +30,7 @@ namespace RESTTests
 
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
-				LastRequest);
+				LastRequest, 0, "Get anonymously");
 		}
 
 		[TestMethod]
@@ -52,12 +41,25 @@ namespace RESTTests
 			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
 			await Login(user.AuthData.Username, password);
 			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
-			VerifyCreatedObject(resource, resourceObj, schema);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
 
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
-				LastRequest, 1);
+				LastRequest, 1, "Get as Owner");
+		}
+
+		[TestMethod]
+		public async virtual Task CanGetAsUser()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var resource = CreateObject<T>();
+			await Login(user.AuthData.Username, password);
+			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
+			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.USER);
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
+				LastRequest, 2, "Get as User");
 		}
 
 		protected virtual void VerifyCreatedObject(T rsc, JObject obj, TSchema schema)
