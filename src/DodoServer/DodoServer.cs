@@ -1,3 +1,4 @@
+using Common;
 using Common.Config;
 using Dodo.Security;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,7 @@ namespace DodoServer
 				{
 					webBuilder.UseStartup<DodoStartup>();
 					webBuilder.UseUrls(HttpsUri);
+					Logger.Info($"Using HttpsUri: {HttpsUri}");
 					// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2
 					webBuilder.UseKestrel(options =>
 						options.ConfigureEndpointDefaults(defaults =>
