@@ -46,14 +46,14 @@ namespace DodoServer.Controllers.Edit
 				{
 					Logger.Warning("Server certificate is not being validated!");
 				}
-				var loginResponse = await client.PostAsJsonAsync($"{DodoServer.HttpsUrl}/{RootURL}/{LOGIN}", model);
+				var loginResponse = await client.PostAsJsonAsync($"{DodoServer.HttpsUri}/{RootURL}/{LOGIN}", model);
 				if (!loginResponse.IsSuccessStatusCode)
 				{
 					// Put error on model state
 					ModelState.AddModelError("", "Log in failed (wrong username / password?)");
 					return View(model);
 				}
-				var cookies = cookieContainer.GetCookies(new Uri(DodoServer.HttpsUrl));
+				var cookies = cookieContainer.GetCookies(new Uri(DodoServer.HttpsUri));
 				foreach (Cookie cookie in cookies)
 				{
 					Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions
@@ -69,7 +69,7 @@ namespace DodoServer.Controllers.Edit
 				{
 					return Redirect(model.redirect);
 				}
-				return Redirect(DodoServer.HttpsUrl);
+				return Redirect(DodoServer.HttpsUri);
 			}
 			catch
 			{

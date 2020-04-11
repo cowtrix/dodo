@@ -280,7 +280,7 @@ namespace Dodo.Users
 			}
 			EmailHelper.SendEmail(email, "New Rebel",
 				$"You've been invited to create an account on {Dodo.PRODUCT_NAME}",
-				$"To create your account, please following the following link:\n\n{DodoServer.DodoServer.HttpsUrl}/{RootURL}/{REGISTER}?token={token}");
+				$"To create your account, please following the following link:\n\n{DodoServer.DodoServer.HttpsUri}/{RootURL}/{REGISTER}?token={token}");
 			return newUser;
 		}
 	}

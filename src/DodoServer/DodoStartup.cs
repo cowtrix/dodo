@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 
 namespace DodoServer
@@ -22,6 +23,16 @@ namespace DodoServer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			if(!Environment.IsDevelopment())
+			{
+				services.AddLetsEncrypt(config =>
+				{
+					config.AcceptTermsOfService = true;
+					config.DomainNames = new[] { DodoServer.Domain };
+					config.EmailAddress = DodoServer.DevEmail;
+				});
+			}
+			
 			// ICorsService and ICorsPolicyProvider are added by AddControllers... but best to be explicit in case this changes
 			services.AddCors();
 
@@ -32,16 +43,16 @@ namespace DodoServer
 				config.DefaultAuthenticateScheme = AuthConstants.AUTHSCHEME;
 				config.DefaultForbidScheme = AuthConstants.AUTHSCHEME;
 			})
-				.AddCookie(AuthConstants.AUTHSCHEME, config =>
-				{
-					config.LogoutPath = $"/{UserController.RootURL}/{UserController.LOGOUT}";
-					config.LoginPath = $"/{UserController.RootURL}/{UserController.LOGIN}";
-					config.AccessDeniedPath = config.LoginPath;
-					config.ExpireTimeSpan = TimeSpan.FromDays(1);
-					config.SlidingExpiration = true;
-					config.Cookie.SameSite = SameSiteMode.Strict;
-					config.Cookie.HttpOnly = true;
-				});
+			.AddCookie(AuthConstants.AUTHSCHEME, config =>
+			{
+				config.LogoutPath = $"/{UserController.RootURL}/{UserController.LOGOUT}";
+				config.LoginPath = $"/{UserController.RootURL}/{UserController.LOGIN}";
+				config.AccessDeniedPath = config.LoginPath;
+				config.ExpireTimeSpan = TimeSpan.FromDays(1);
+				config.SlidingExpiration = true;
+				config.Cookie.SameSite = SameSiteMode.Strict;
+				config.Cookie.HttpOnly = true;
+			});
 			services.AddAuthorization(config =>
 			{
 			});
