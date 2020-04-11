@@ -14,11 +14,13 @@ namespace DodoServer
 		public static string DevEmail => m_devEmail.Value;
 		public static string HttpsUri => $"https://{m_domain.Value}";
 		public static string Homepage => $"https://{m_domain.Value}";
+		public static bool LetsEncryptAutoSetup => m_letsEncryptAutoSetup.Value;
 
 		// TODO: these values don't load from file if running in IIS
 		static ConfigVariable<string> m_domain;
 		static ConfigVariable<int> m_port;
 		static ConfigVariable<string> m_devEmail;
+		static ConfigVariable<bool> m_letsEncryptAutoSetup = new ConfigVariable<bool>("LetsEncryptAutoSetup", false);
 
 		private static UserTokenWorker m_tokenWorker = new UserTokenWorker();
 

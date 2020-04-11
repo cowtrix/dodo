@@ -23,7 +23,7 @@ namespace DodoServer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			if(!Environment.IsDevelopment())
+			if(!Environment.IsDevelopment() && DodoServer.LetsEncryptAutoSetup)
 			{
 				services.AddLetsEncrypt(config =>
 				{
