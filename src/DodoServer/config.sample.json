@@ -1,8 +1,11 @@
 {
   "LogLevel": 2,
   "Dodo_URI_HttpsPort": 5001,
+  "LetsEncryptAutoSetup": false,
   "MongoDBServerURL": "",
   "ResourceLockTimeout": 10000,
-  "Dodo_Domain": "localhost:5001",
+  "Dodo_Domain": [
+    "localhost:5001"
+  ],
   "Dodo_DevEmail": "test@web.com"
 }
