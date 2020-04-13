@@ -44,7 +44,7 @@ namespace DodoServer.Controllers.Edit
 				{
 					Logger.Warning("Server certificate is not being validated!");
 				}
-				var registerResponse = await client.PostAsJsonAsync($"{DodoServer.HttpsUri}/{RootURL}/{REGISTER}", model);
+				var registerResponse = await client.PostAsJsonAsync($"{DodoServer.NetConfig.Domain}/{RootURL}/{REGISTER}", model);
 				if (!registerResponse.IsSuccessStatusCode)
 				{
 					ModelState.AddModelError("", "Register failed");
@@ -56,9 +56,9 @@ namespace DodoServer.Controllers.Edit
 				{
 					// As redirect is user provided we should not trust it
 					// Ensure redirect is URL encoded when used as a query string parameter
-					return Redirect(QueryHelpers.AddQueryString($"{DodoServer.HttpsUri}/{LOGIN}", "redirect", redirect));
+					return Redirect(QueryHelpers.AddQueryString($"{DodoServer.NetConfig.Domain}/{LOGIN}", "redirect", redirect));
 				}
-				return Redirect($"{DodoServer.HttpsUri}/{LOGIN}");
+				return Redirect($"{DodoServer.NetConfig.Domain}/{LOGIN}");
 
 			}
 			catch

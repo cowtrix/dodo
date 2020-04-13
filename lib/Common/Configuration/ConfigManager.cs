@@ -43,6 +43,10 @@ namespace Common.Config
 
 		internal static bool GetValue<T>(ConfigVariable<T> configVariable, out T result)
 		{
+			if(string.IsNullOrEmpty(configVariable.ConfigKey))
+			{
+				throw new ArgumentNullException("ConfigVariable had null key");
+			}
 			if (!m_data.TryGetValue(configVariable.ConfigKey, out var obj))
 			{
 				result = default(T);

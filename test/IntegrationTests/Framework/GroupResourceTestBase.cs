@@ -175,9 +175,10 @@ namespace RESTTests
 				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() != user1.Guid.ToString()));
 			await Logout();
 
-			var invviteURL = new Uri(EmailHelper.EmailHistory.Last().Content.Split('\n').Last()).PathAndQuery;
+			var inviteURL = EmailHelper.EmailHistory.Last().Content.Split('\n').Last();
+			var trim = inviteURL.Substring(inviteURL.IndexOf("?token=") + 7);
 			var user2Password = ValidationExtensions.GenerateStrongPassword();
-			await Request(invviteURL, EHTTPRequestType.POST, new UserSchema("Test User 2", "testuser2", user2Password, user2Email));
+			await Request(inviteURL, EHTTPRequestType.POST, new UserSchema("Test User 2", "testuser2", user2Password, user2Email));
 			var user2 = UserManager.GetSingle(u => u.PersonalData.Email == user2Email);
 
 			await Login(user2.AuthData.Username, user2Password);

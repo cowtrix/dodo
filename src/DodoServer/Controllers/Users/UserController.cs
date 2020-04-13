@@ -154,7 +154,7 @@ namespace Dodo.Users
 				UserManager.Update(user, rscLock);
 			}
 			await Logout();
-			return Redirect(DodoServer.DodoServer.Homepage);
+			return Redirect(DodoServer.DodoServer.NetConfig.Domain);
 		}
 
 		[HttpPost(CHANGE_PASSWORD)]
@@ -202,7 +202,7 @@ namespace Dodo.Users
 			var user = rscLock.Value as User;
 			user.PersonalData.EmailConfirmed = true;
 			UserManager.Update(user, rscLock);
-			return Redirect(DodoServer.DodoServer.Homepage);
+			return Redirect(DodoServer.DodoServer.NetConfig.FullURI);
 		}
 
 		[HttpPost]
@@ -280,7 +280,7 @@ namespace Dodo.Users
 			}
 			EmailHelper.SendEmail(email, "New Rebel",
 				$"You've been invited to create an account on {Dodo.PRODUCT_NAME}",
-				$"To create your account, please following the following link:\n\n{DodoServer.DodoServer.HttpsUri}/{RootURL}/{REGISTER}?token={token}");
+				$"To create your account, please following the following link:\n\n{DodoServer.DodoServer.NetConfig.FullURI}/{RootURL}/{REGISTER}?token={token}");
 			return newUser;
 		}
 	}
