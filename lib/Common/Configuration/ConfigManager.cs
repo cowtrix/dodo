@@ -52,9 +52,13 @@ namespace Common.Config
 			{
 				result = (T)Enum.Parse(typeof(T), obj.ToString());
 			}
-			else
+			else if (obj is IConvertible)
 			{
 				result = (T)Convert.ChangeType(obj, typeof(T));
+			}
+			else
+			{
+				result = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj));
 			}
 			return true;
 		}
