@@ -28,7 +28,7 @@ namespace DodoServer
 				services.AddLetsEncrypt(config =>
 				{
 					config.AcceptTermsOfService = true;
-					config.DomainNames = new[] { DodoServer.Domain };
+					config.DomainNames = new[] { DodoServer.PrimaryDomain };
 					config.EmailAddress = DodoServer.DevEmail;
 				});
 			}
