@@ -5,7 +5,7 @@
   "MongoDBServerURL": "",
   "ResourceLockTimeout": 10000,
   "Dodo_Domain": [
-    "localhost:5001"
+    "localhost"
   ],
   "Dodo_DevEmail": "test@web.com"
 }

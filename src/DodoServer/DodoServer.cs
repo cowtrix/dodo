@@ -30,7 +30,7 @@ namespace DodoServer
 		public static void Main(string[] args)
 		{
 			m_port = new ConfigVariable<int>($"{Dodo.Dodo.PRODUCT_NAME}_URI_HttpsPort", 5001);
-			m_domains = new ConfigVariable<string[]>($"{Dodo.Dodo.PRODUCT_NAME}_Domain", new [] { $"localhost:{Port}" });
+			m_domains = new ConfigVariable<string[]>($"{Dodo.Dodo.PRODUCT_NAME}_Domain", new [] { "localhost" });
 			m_devEmail = new ConfigVariable<string>($"{Dodo.Dodo.PRODUCT_NAME}_DevEmail", "test@web.com");
 			CreateHostBuilder(args).Build().Run();
 		}
@@ -40,8 +40,7 @@ namespace DodoServer
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<DodoStartup>();
-					webBuilder.UseUrls(HttpsUri);
-					Logger.Info($"Using HttpsUri: {HttpsUri}");
+					webBuilder.UseUrls($"https://{PrimaryDomain}:{Port}");
 					// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2
 					webBuilder.UseKestrel(options =>
 						options.ConfigureEndpointDefaults(defaults =>
