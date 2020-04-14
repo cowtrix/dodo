@@ -13,7 +13,7 @@ namespace DodoServer.Controllers.Edit
 	public class CrudController : Controller
 	{
 		// DodoURI_Https in DodoServer_config.json must be set to actual IP or localhost (not 0.0.0.0)
-		private static readonly string baseApiUrl = $"{DodoServer.NetConfig.Domain}/{DodoServer.API_ROOT}";
+		private static readonly string baseApiUrl = $"{DodoServer.NetConfig.FullURI}/{DodoServer.API_ROOT}";
 
 		internal async Task<IActionResult> GetResourcesView<T>(string resourceUrl)
 		{
@@ -42,10 +42,6 @@ namespace DodoServer.Controllers.Edit
 			var handler = new HttpClientHandler()
 			{
 				CookieContainer = cookieContainer,
-#if DEBUG
-				// TODO: REMOVE DangerousAcceptAnyServerCertificateValidator AS SOON AS IS REASONABLE!
-				ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
-#endif
 			};
 			var client = new HttpClient(handler)
 			{
@@ -54,11 +50,6 @@ namespace DodoServer.Controllers.Edit
 			foreach (var cookie in Request.Cookies)
 			{
 				cookieContainer.Add(new Cookie(cookie.Key, cookie.Value, "/", "localhost"));
-			}
-			if (HttpClientHandler.DangerousAcceptAnyServerCertificateValidator ==
-				handler.ServerCertificateCustomValidationCallback)
-			{
-				Logger.Warning("Server certificate is not being validated!");
 			}
 			return client;
 		}
