@@ -17,7 +17,7 @@ namespace Dodo.Utility
 		public static List<SendGridMessage> EmailHistory = new List<SendGridMessage>();
 #endif
 
-		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", $"noreply@{Dns.GetHostName()}");
+		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", $"noreply@{Dodo.PRODUCT_NAME}.com");
 		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", $"{Dodo.PRODUCT_NAME} SysAdmin");
 		static ConfigVariable<string> m_privacyPolicy = new ConfigVariable<string>("PrivacyPolicyURL", "http://www.todo.com/privacypolicy");
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");

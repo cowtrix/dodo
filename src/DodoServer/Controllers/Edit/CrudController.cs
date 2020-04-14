@@ -13,7 +13,7 @@ namespace DodoServer.Controllers.Edit
 	public class CrudController : Controller
 	{
 		// DodoURI_Https in DodoServer_config.json must be set to actual IP or localhost (not 0.0.0.0)
-		private static readonly string baseApiUrl = $"{DodoServer.NetConfig.FullURI}/{DodoServer.API_ROOT}";
+		private static readonly string baseApiUrl = $"{DodoServer.NetConfig.FullURI}/";
 
 		internal async Task<IActionResult> GetResourcesView<T>(string resourceUrl)
 		{

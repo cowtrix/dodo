@@ -3,6 +3,7 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -47,8 +48,9 @@ namespace DodoServer.Controllers.Edit
 				return Redirect($"{DodoServer.NetConfig.FullURI}/{LOGIN}");
 
 			}
-			catch
+			catch (Exception e)
 			{
+				Logger.Exception(e);
 				return View();
 			}
 		}

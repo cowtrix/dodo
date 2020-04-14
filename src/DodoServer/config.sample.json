@@ -4,7 +4,8 @@
     "IP": "0.0.0.0",
     "SSLPort": 5001,
     "Domain": "localhost",
-    "LetsEncryptAutoSetup": false
+    "LetsEncryptAutoSetup": false,
+    "HTTPPort": 5000
   },
   "Dodo_DevEmail": "test@web.com",
   "MongoDBServerURL": "",

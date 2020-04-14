@@ -16,14 +16,14 @@ namespace DodoServer.Controllers.Edit
 		[AllowAnonymous]
 		public async Task<IActionResult> Index()
 		{
-			return await GetResourcesView<Rebellion>(RebellionController.RootURL);
+			return await GetResourcesView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}");
 		}
 
 		// GET: Rebellions/Details/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[AllowAnonymous]
 		public async Task<IActionResult> Details(Guid id)
 		{
-			return await GetResourceView<Rebellion>(RebellionController.RootURL, id);
+			return await GetResourceView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}", id);
 		}
 
 		// GET: Rebellions/Create
@@ -40,7 +40,7 @@ namespace DodoServer.Controllers.Edit
 			try
 			{
 				if (!ModelState.IsValid) return View(rebellion);
-				var client = GetHttpClient(RebellionController.RootURL);
+				var client = GetHttpClient($"{DodoServer.API_ROOT}{RebellionController.RootURL}");
 
 				var result = await client.PostAsJsonAsync("", rebellion);
 				result.EnsureSuccessStatusCode();
@@ -57,7 +57,7 @@ namespace DodoServer.Controllers.Edit
 		// GET: Rebellions/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		public async Task<IActionResult> Edit(Guid id)
 		{
-			return await GetResourceView<Rebellion>(RebellionController.RootURL, id);
+			return await GetResourceView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}", id);
 		}
 
 		// POST: Rebellions/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
@@ -68,7 +68,7 @@ namespace DodoServer.Controllers.Edit
 			try
 			{
 				if (!ModelState.IsValid) return View(rebellion);
-				var client = GetHttpClient(RebellionController.RootURL);
+				var client = GetHttpClient($"{DodoServer.API_ROOT}{RebellionController.RootURL}");
 
 				// Can't use Rebellion View Model as read-only properties causes security exceptions
 				// Can't use RebellionSchema as Parent gets serialized and that causes issues
@@ -99,7 +99,7 @@ namespace DodoServer.Controllers.Edit
 		// GET: Rebellions/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		public async Task<IActionResult> Delete(Guid id)
 		{
-			return await GetResourceView<Rebellion>(RebellionController.RootURL, id);
+			return await GetResourceView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}", id);
 		}
 
 		// POST: Rebellions/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
@@ -109,7 +109,7 @@ namespace DodoServer.Controllers.Edit
 		{
 			try
 			{
-				var client = GetHttpClient(RebellionController.RootURL);
+				var client = GetHttpClient($"{DodoServer.API_ROOT}{RebellionController.RootURL}");
 
 				var result = await client.DeleteAsync($"{id}");
 				result.EnsureSuccessStatusCode();
@@ -119,7 +119,7 @@ namespace DodoServer.Controllers.Edit
 			catch (Exception e)
 			{
 				ModelState.AddModelError("", e.Message);
-				return await GetResourceView<Rebellion>(RebellionController.RootURL, id);
+				return await GetResourceView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}", id);
 			}
 		}
 
