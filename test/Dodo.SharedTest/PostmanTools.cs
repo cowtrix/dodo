@@ -27,16 +27,19 @@ namespace DodoTest.Framework.Postman
 
 		public PostmanCollection(string guid)
 		{
+#if !DEBUG
 			m_guid = guid;
 			m_restClient.AddDefaultHeader("X-Api-Key", m_postmanAPIKey.Value);
 			var req = new RestRequest($"collections/{m_guid}", Method.GET);
 			var response = m_restClient.Execute(req);
 			m_collection = JsonConvert.DeserializeObject<JObject>(response.Content);
 			File.WriteAllText("postmancollection_before.json", m_collection.ToString());
+#endif
 		}
 
 		public void Update(PostmanEntryAddress entry, HttpResponseMessage req, int exampleIndex = 0, string exampleName = null)
 		{
+#if !DEBUG
 			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
 			var items = m_collection.Value<JObject>("collection").Value<JArray>("item");
@@ -78,10 +81,12 @@ namespace DodoTest.Framework.Postman
 			response["code"] = (int)req.StatusCode;
 			response["body"] = responseBody;
 			item["response"][exampleIndex] = response;
+#endif
 		}
 
 		public void Update()
 		{
+#if !DEBUG
 			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
 			var req = new RestRequest($"collections/{m_guid}", Method.PUT);
@@ -93,6 +98,7 @@ namespace DodoTest.Framework.Postman
 				throw new Exception($"Failed to update Postman documentation: {response}");
 			}
 			Logger.Info("Updated Postman documentation");
+#endif
 		}
 	}
 }
