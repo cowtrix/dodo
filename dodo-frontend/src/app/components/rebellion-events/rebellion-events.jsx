@@ -6,7 +6,7 @@ import { Button } from "app/components/button"
 import styles from "./rebellion-events.module.scss"
 
 const getDescription = event => {
-	const description = event.PublicDescription || ""
+	const description = event.publicDescription || ""
 	return description.slice(0, 180)
 }
 
@@ -21,9 +21,9 @@ export const RebellionEvents = ({ events }) => {
 			<SiteMap sites={events} />
 			<div className={styles.events}>
 				{events.map(event => (
-					<div key={event.GUID} className={styles.event}>
-						<Link to={`/site/${event.GUID}`}>
-							<strong>{event.Name}</strong>
+					<div key={event.guid} className={styles.event}>
+						<Link to={`/site/${event.guid}`}>
+							<strong>{event.name}</strong>
 						</Link>
 						<div className={styles.date}>26th March 2020</div>
 						<div className={styles.description}>

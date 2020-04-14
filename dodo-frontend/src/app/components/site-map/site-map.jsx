@@ -1,8 +1,8 @@
-import React from "react";
-import { Map } from "app/components/index";
+import React from "react"
+import { Map } from "app/components/index"
 
 export const SiteMap = ({ sites = [], height = "220px" }) => {
-	const markers = sites.map(site => site.Location);
+	const markers = sites.map(site => site.Location)
 
 	return (
 		<Map
@@ -14,5 +14,9 @@ export const SiteMap = ({ sites = [], height = "220px" }) => {
 			options={{ fullscreenControl: false, zoomControl: false }}
 			markers={markers}
 		/>
-	);
-};
+	)
+}
+//export const SiteMap = React.memo(({ sites = [], height = "220px" }) => {
+//	const markers = sites.map(site => site.location)
+//	return <MapboxMap markers={markers} height={height} />
+//})
