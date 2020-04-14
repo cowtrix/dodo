@@ -1,3 +1,4 @@
+using Common;
 using Common.Security;
 using Dodo.Users;
 using Resources;
@@ -34,6 +35,14 @@ namespace Dodo.Security
 				EncryptedGUID = new EncryptedStore<Guid>(userGuid, sessionKey),
 				DateCreated = DateTime.Now
 			};
+		}
+
+		public static void RemoveUser(string userToken)
+		{
+			if(!m_tokenStore.Remove(userToken))
+			{
+				Logger.Warning($"Unexpectedly failed to remove session token {userToken}");
+			}
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace Dodo.Users.Tokens
 {
 	public interface IUserToken : IVerifiable
 	{
-		Guid GUID { get; }
+		Guid Guid { get; }
 		void OnAdd(User parent);
 	}
 
@@ -26,11 +26,11 @@ namespace Dodo.Users.Tokens
 		)]
 	public abstract class UserToken : IUserToken
 	{
-		public Guid GUID { get; private set; }
+		public Guid Guid { get; private set; }
 
 		public UserToken()
 		{
-			GUID = Guid.NewGuid();
+			Guid = Guid.NewGuid();
 		}
 
 		public virtual void OnAdd(User parent)

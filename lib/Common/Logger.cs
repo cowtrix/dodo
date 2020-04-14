@@ -1,4 +1,4 @@
-﻿using Common.Commands;
+using Common.Commands;
 using Common.Config;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,11 @@ namespace Common
 		private const string PARAM_Y = "y";
 
 		public static LogEvent OnLog;
+#if DEBUG
+		public static ELogLevel CurrentLogLevel = ELogLevel.Debug;
+#else
 		public static ELogLevel CurrentLogLevel = ELogLevel.Info;
+#endif
 		public static bool PromptUser { get; private set; }
 		private static object m_fileLock = new object();
 

@@ -158,11 +158,11 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			await Login(user.AuthData.Username, password);
-			await Request($"{UserController.RootURL}/{UserController.CHANGE_PASSWORD}", EHTTPRequestType.POST, new { currentpassword = password, newpassword = newPassword });
+			var req = await Request($"{UserController.RootURL}/{UserController.CHANGE_PASSWORD}", EHTTPRequestType.POST, new { currentpassword = password, newpassword = newPassword });
+			await Login(user.AuthData.Username, newPassword);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Change your password" },
-				LastRequest);
-			await Login(user.AuthData.Username, newPassword);
+				req);
 		}
 
 		[TestMethod]

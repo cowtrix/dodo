@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Users.Tokens
@@ -8,7 +8,7 @@ namespace Dodo.Users.Tokens
 		[BsonElement]
 		public bool HasExecuted { get; private set; }
 
-		public bool CanRemove => HasExecuted;
+		public bool ShouldRemove => HasExecuted;
 
 		/// <summary>
 		/// Redeem this token.
@@ -19,7 +19,7 @@ namespace Dodo.Users.Tokens
 		{
 			if (HasExecuted)
 			{
-				Logger.Warning($"Attempting to execute already redeemed token: {GUID}");
+				Logger.Warning($"Attempting to execute already redeemed token: {Guid}");
 				return false;
 			}
 			if (OnExecuted(context))
@@ -36,4 +36,5 @@ namespace Dodo.Users.Tokens
 		{
 		}
 	}
+
 }

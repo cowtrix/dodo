@@ -52,7 +52,7 @@ namespace Resources
 					using(var rscLock = new ResourceLock(req.Requester.User))
 					{
 						var user = rscLock.Value as User;
-						var token = user.TokenCollection.GetToken<ResourceCreationToken>(req.Token.GUID);
+						var token = user.TokenCollection.GetToken<ResourceCreationToken>(req.Token.Guid);
 						if(token == null)
 						{
 							throw new Exception("Resource creation token was missing");

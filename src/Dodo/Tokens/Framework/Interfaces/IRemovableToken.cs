@@ -1,8 +1,8 @@
-﻿namespace Dodo.Users.Tokens
+namespace Dodo.Users.Tokens
 {
 	public interface IRemovableToken : IUserToken
 	{
-		bool CanRemove { get; }
+		bool ShouldRemove { get; }
 		void OnRemove(User parent);
 	}
 }

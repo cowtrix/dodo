@@ -16,7 +16,7 @@ namespace Common.Config
 		{
 			get
 			{
-				if(ConfigManager.GetValue(this, out var obj))
+				if(ConfigManager.TryGetValue(this, out var obj))
 					return obj;
 				return DefaultValue;
 			}

@@ -41,13 +41,22 @@ namespace Common.Config
 			Logger.Debug($"Saved configuration data to {m_configPath}");
 		}
 
-		internal static bool GetValue<T>(ConfigVariable<T> configVariable, out T result)
+		public static T GetValue<T>(string key, T defaultValue)
 		{
-			if(string.IsNullOrEmpty(configVariable.ConfigKey))
+			if(!TryGetValue<T>(key, out var result))
+			{
+				return defaultValue;
+			}
+			return result;
+		}
+
+		public static bool TryGetValue<T>(string key, out T result)
+		{
+			if (string.IsNullOrEmpty(key))
 			{
 				throw new ArgumentNullException("ConfigVariable had null key");
 			}
-			if (!m_data.TryGetValue(configVariable.ConfigKey, out var obj))
+			if (!m_data.TryGetValue(key, out var obj))
 			{
 				result = default(T);
 				return false;
@@ -65,6 +74,11 @@ namespace Common.Config
 				result = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj));
 			}
 			return true;
+		}
+
+		internal static bool TryGetValue<T>(ConfigVariable<T> configVariable, out T result)
+		{
+			return TryGetValue<T>(configVariable.ConfigKey, out result);
 		}
 
 		internal static bool SetValue<T>(string configKey, T newVal)

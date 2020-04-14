@@ -1,30 +1,32 @@
-using Common.Security;
 using Dodo.Users;
-using MongoDB.Bson.Serialization.Attributes;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dodo.Users.Tokens;
 using Resources;
+using Common;
+using Common.Config;
 
 namespace Dodo.Security
 {
 	public class UserTokenWorker
 	{
+		private IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
+		private int TokenWorkerWaitSeconds => ConfigManager.GetValue($"{nameof(UserTokenWorker)}_{nameof(TokenWorkerWaitSeconds)}", 10);
+
 		public UserTokenWorker()
 		{
-			var usermanager = ResourceUtility.GetManager<User>();
 			Task expireTokenTask = new Task(async () =>
 			{
-				const int timeout = 10;
+				int timeout = TokenWorkerWaitSeconds;
+				Logger.Debug($"Starting token worker loop with timeout {timeout}s");
 				var expiredTokens = new List<Guid>();
 				while (true)
 				{
-					foreach (var user in usermanager.Get(r => true))
+					foreach (var user in UserManager.Get(r => true))
 					{
-						ExpireTokensForUser(user);
+						RemoveTokensForUser(user);
 					}
 					await Task.Delay(TimeSpan.FromSeconds(timeout));
 				}
@@ -32,27 +34,32 @@ namespace Dodo.Security
 			expireTokenTask.Start();
 		}
 
-		private static void ExpireTokensForUser(User user)
+		private void RemoveTokensForUser(User user)
 		{
-			var expiredTokens = new List<Guid>();
-			foreach (var token in user.TokenCollection.Tokens.OfType<IExpiringToken>())
+			var removedTokens = new List<Guid>();
+			foreach (var token in user.TokenCollection.Tokens.OfType<IRemovableToken>())
 			{
-				if (token.IsExpired)
+				if (token.ShouldRemove)
 				{
-					expiredTokens.Add(token.GUID);
+					removedTokens.Add(token.Guid);
 				}
 			}
-			if (!expiredTokens.Any())
+			if (!removedTokens.Any())
 			{
 				return;
 			}
+			Logger.Debug($"Removing {removedTokens.Count} tokens from user {user}");
 			using (var rscLock = new ResourceLock(user))
 			{
 				var newUser = rscLock.Value as User;
-				foreach (var guid in expiredTokens)
+				foreach (var guid in removedTokens)
 				{
-					newUser.TokenCollection.Remove(newUser, guid);
+					if(!newUser.TokenCollection.Remove(newUser, guid))
+					{
+						Logger.Warning($"Unexpectedly failed to removed token from user {user.Guid} with token Guid {guid}");
+					}
 				}
+				UserManager.Update(newUser, rscLock);
 			}
 		}
 	}

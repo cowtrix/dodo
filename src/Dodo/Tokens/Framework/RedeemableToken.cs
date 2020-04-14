@@ -9,7 +9,7 @@ namespace Dodo.Users.Tokens
 		[BsonElement]
 		public bool IsRedeemed { get; private set; }
 
-		public bool CanRemove => IsRedeemed;
+		public bool ShouldRemove => IsRedeemed;
 
 		/// <summary>
 		/// Redeem this token.
@@ -20,7 +20,7 @@ namespace Dodo.Users.Tokens
 		{
 			if (IsRedeemed)
 			{
-				Logger.Warning($"Attempting to redeem already redeemed token: {GUID}");
+				Logger.Warning($"Attempting to redeem already redeemed token: {Guid}");
 				return false;
 			}
 			if(OnRedeemed(context))

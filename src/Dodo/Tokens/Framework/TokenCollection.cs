@@ -45,17 +45,17 @@ namespace Dodo.Users.Tokens
 
 		public bool Remove(User parent, IRemovableToken token)
 		{
-			return Remove(parent, t => t.GUID == token.GUID);
+			return Remove(parent, t => t.Guid == token.Guid);
 		}
 
 		public bool Remove(User parent, Guid tokenGuid)
 		{
-			return Remove(parent, t => t.GUID == tokenGuid);
+			return Remove(parent, t => t.Guid == tokenGuid);
 		}
 
 		public bool Remove(User parent, Func<IRemovableToken, bool> removeWhere)
 		{
-			var toRemove = Tokens.OfType<IRemovableToken>().Where(t => t.CanRemove && removeWhere(t));
+			var toRemove = Tokens.OfType<IRemovableToken>().Where(t => removeWhere(t));
 			if(!toRemove.Any())
 			{
 				return false;
@@ -64,7 +64,7 @@ namespace Dodo.Users.Tokens
 			{
 				token.OnRemove(parent);
 			}
-			m_tokens = m_tokens.Where(t1 => !toRemove.Any(t2 => t2.GUID == t1.GUID)).ToList();
+			m_tokens = m_tokens.Where(t1 => !toRemove.Any(t2 => t2.Guid == t1.Guid)).ToList();
 			return true;
 		}
 
@@ -80,7 +80,7 @@ namespace Dodo.Users.Tokens
 
 		public IEnumerable<T> GetTokens<T>() where T : UserToken => Tokens.OfType<T>();
 
-		public T GetToken<T>(Guid guid) where T : UserToken => Tokens.SingleOrDefault(t => t.GUID == guid) as T;
+		public T GetToken<T>(Guid guid) where T : UserToken => Tokens.SingleOrDefault(t => t.Guid == guid) as T;
 	}
 
 }

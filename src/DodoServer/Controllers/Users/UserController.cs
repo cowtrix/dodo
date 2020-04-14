@@ -47,19 +47,23 @@ namespace Dodo.Users
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
 		{
+			var logstr = $"Login request for {login.username} (redirect: {login.redirect}).";
 			if (Context.User != null)
 			{
 				// User is already logged in
+				Logger.Debug($"{logstr} User was already logged in under guid {Context.User.Guid}");
 				return Ok();
 			}
 
 			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.username);
 			if (user == null)
 			{
+				Logger.Debug($"{logstr} User was not found with that username.");
 				return NotFound();
 			}
 			if (!user.AuthData.ChallengePassword(login.password, out var passphrase))
 			{
+				Logger.Debug($"{logstr} User provided incorrect username.");
 				return BadRequest();
 			}
 
@@ -87,7 +91,7 @@ namespace Dodo.Users
 			};
 			// issue authentication cookie with subject ID and username
 			await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
-
+			Logger.Debug($"{logstr} Request was successful, created new session token {token.Guid} (expires {token.ExpiryDate})");
 			return Ok();
 		}
 
@@ -107,7 +111,10 @@ namespace Dodo.Users
 			{
 				return BadRequest();
 			}
-			user.TokenCollection.Remove(user, session);
+			if(!user.TokenCollection.Remove(user, session))
+			{
+				Logger.Error($"Failed to log user {user} out - could not remove session token");
+			}
 			UserManager.Update(user, rscLock);
 			return Ok();
 		}
