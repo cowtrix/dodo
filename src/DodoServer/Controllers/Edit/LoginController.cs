@@ -12,7 +12,7 @@ namespace DodoServer.Controllers.Edit
 {
 	[AllowAnonymous]
 	[Route(LOGIN)]
-	public class LoginController : Controller
+	public class LoginController : CrudController
 	{
 
 		// GET: Login
@@ -35,25 +35,16 @@ namespace DodoServer.Controllers.Edit
 				var handler = new HttpClientHandler()
 				{
 					CookieContainer = cookieContainer,
-#if DEBUG
-					// TODO: REMOVE DangerousAcceptAnyServerCertificateValidator AS SOON AS IS REASONABLE!
-					ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
-#endif
 				};
-				var client = new HttpClient(handler);
-				if (HttpClientHandler.DangerousAcceptAnyServerCertificateValidator ==
-					handler.ServerCertificateCustomValidationCallback)
-				{
-					Logger.Warning("Server certificate is not being validated!");
-				}
-				var loginResponse = await client.PostAsJsonAsync($"{DodoServer.NetConfig.Domain}/{RootURL}/{LOGIN}", model);
+				var client = GetHttpClient(RootURL, cookieContainer);
+				var loginResponse = await client.PostAsJsonAsync(LOGIN, model);
 				if (!loginResponse.IsSuccessStatusCode)
 				{
 					// Put error on model state
 					ModelState.AddModelError("", "Log in failed (wrong username / password?)");
 					return View(model);
 				}
-				var cookies = cookieContainer.GetCookies(new Uri(DodoServer.NetConfig.Domain));
+				var cookies = cookieContainer.GetCookies(new Uri(DodoServer.NetConfig.FullURI));
 				foreach (Cookie cookie in cookies)
 				{
 					Response.Cookies.Append(cookie.Name, cookie.Value, new CookieOptions
@@ -69,7 +60,7 @@ namespace DodoServer.Controllers.Edit
 				{
 					return Redirect(model.redirect);
 				}
-				return Redirect(DodoServer.NetConfig.Domain);
+				return Redirect(DodoServer.NetConfig.FullURI);
 			}
 			catch
 			{

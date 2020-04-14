@@ -12,7 +12,7 @@ namespace DodoServer.Controllers.Edit
 {
 	[AllowAnonymous]
 	[Route(REGISTER)]
-	public class RegisterController : Controller
+	public class RegisterController : CrudController
 	{
 		// GET: Login
 		public ActionResult Index(string redirect = null)
@@ -29,25 +29,11 @@ namespace DodoServer.Controllers.Edit
 			ViewData["redirect"] = redirect;
 			try
 			{
-				var cookieContainer = new CookieContainer();
-				var handler = new HttpClientHandler()
-				{
-					CookieContainer = cookieContainer,
-#if DEBUG
-					// TODO: REMOVE DangerousAcceptAnyServerCertificateValidator AS SOON AS IS REASONABLE!
-					ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
-#endif
-				};
-				var client = new HttpClient(handler);
-				if (HttpClientHandler.DangerousAcceptAnyServerCertificateValidator ==
-					handler.ServerCertificateCustomValidationCallback)
-				{
-					Logger.Warning("Server certificate is not being validated!");
-				}
-				var registerResponse = await client.PostAsJsonAsync($"{DodoServer.NetConfig.Domain}/{RootURL}/{REGISTER}", model);
+				var client = GetHttpClient(RootURL);
+				var registerResponse = await client.PostAsJsonAsync(REGISTER, model);
 				if (!registerResponse.IsSuccessStatusCode)
 				{
-					ModelState.AddModelError("", "Register failed");
+					ModelState.AddModelError("", $"Register failed: {registerResponse.Content}");
 					return View(model);
 				}
 
@@ -56,9 +42,9 @@ namespace DodoServer.Controllers.Edit
 				{
 					// As redirect is user provided we should not trust it
 					// Ensure redirect is URL encoded when used as a query string parameter
-					return Redirect(QueryHelpers.AddQueryString($"{DodoServer.NetConfig.Domain}/{LOGIN}", "redirect", redirect));
+					return Redirect(QueryHelpers.AddQueryString($"{DodoServer.NetConfig.FullURI}/{LOGIN}", "redirect", redirect));
 				}
-				return Redirect($"{DodoServer.NetConfig.Domain}/{LOGIN}");
+				return Redirect($"{DodoServer.NetConfig.FullURI}/{LOGIN}");
 
 			}
 			catch

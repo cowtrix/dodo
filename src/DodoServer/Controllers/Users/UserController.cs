@@ -155,7 +155,7 @@ namespace Dodo.Users
 				UserManager.Update(user, rscLock);
 			}
 			await Logout();
-			return Redirect(DodoServer.DodoServer.NetConfig.Domain);
+			return Redirect(DodoServer.DodoServer.NetConfig.FullURI);
 		}
 
 		[HttpPost(CHANGE_PASSWORD)]
