@@ -10,6 +10,7 @@ using Dodo.Users.Tokens;
 using Common.Security;
 using System.Linq;
 using Dodo.Utility;
+using Common;
 
 namespace Dodo.Users
 {
@@ -226,6 +227,7 @@ namespace Dodo.Users
 			var factory = ResourceUtility.GetFactory<User>();
 			user = factory.CreateTypedObject(default(AccessContext), schema);
 			var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));
+			SendEmailVerification(user);
 			return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.OWNER, user, passphrase));
 		}
 
@@ -261,7 +263,20 @@ namespace Dodo.Users
 			}
 			tempToken.Redeem(default);
 			UserManager.Update(user, rscLock);
+			SendEmailVerification(user);
 			return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.PUBLIC, null, default));
+		}
+
+		private static void SendEmailVerification(User user)
+		{
+			var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>();
+			if(token.IsRedeemed)
+			{
+				Logger.Error($"Couldn't send email verification to {user} - user was already verified.");
+				return;
+			}
+			EmailHelper.SendEmailVerificationEmail(user.PersonalData.Email, user.Name,
+				$"{DodoServer.DodoServer.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}");
 		}
 
 		public static User CreateTemporaryUser(string email)

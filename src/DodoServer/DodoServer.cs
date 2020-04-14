@@ -1,5 +1,6 @@
 using Common;
 using Common.Config;
+using Dodo;
 using Dodo.Security;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;

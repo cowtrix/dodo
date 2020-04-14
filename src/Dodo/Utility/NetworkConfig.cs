@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.Linq;
 
-namespace DodoServer
+namespace Dodo
 {
 	public struct NetworkConfig
 	{
@@ -12,7 +12,7 @@ namespace DodoServer
 		public int SSLPort;
 		public string Domain;
 		public bool LetsEncryptAutoSetup;
-		internal object HTTPPort;
+		public int HTTPPort;
 
 		public NetworkConfig(string domain, string ip, int sslPort, int httpPort, bool letsEncrypt = false)
 		{

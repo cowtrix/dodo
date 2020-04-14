@@ -14,22 +14,20 @@ namespace Dodo.Utility
 	public static class EmailHelper
 	{
 #if DEBUG
-		public class Email
-		{
-			public DateTime TimeSent;
-			public string TargetName;
-			public string TargetEmail;
-			public string Subject;
-			public string Content;
-		}
-
-		public static List<Email> EmailHistory = new List<Email>();
+		public static List<SendGridMessage> EmailHistory = new List<SendGridMessage>();
 #endif
 
 		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", $"noreply@{Dns.GetHostName()}");
 		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", $"{Dodo.PRODUCT_NAME} SysAdmin");
+		static ConfigVariable<string> m_privacyPolicy = new ConfigVariable<string>("PrivacyPolicyURL", "http://www.todo.com/privacypolicy");
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
 		static SendGridClient m_client;
+
+		static Dictionary<string, string> StandardTemplate => new Dictionary<string, string>()
+		{
+			{ "product_name", Dodo.PRODUCT_NAME },
+			{ "privacy_policy", m_privacyPolicy.Value }
+		};
 
 		static EmailHelper()
 		{
@@ -38,30 +36,35 @@ namespace Dodo.Utility
 
 		public static void SendEmail(string targetEmail, string targetName, string subject, string content)
 		{
-#if DEBUG
-			EmailHistory.Add(
-				new Email 
-				{ 
-					TargetEmail = targetEmail, 
-					TargetName = targetName, 
-					Subject = subject,
-					Content = content,
-					TimeSent = DateTime.UtcNow,
-				});
-			Logger.Warning("Sending of email suppressed due to debug mode");
-			return;
-#endif
 			var from = new EmailAddress(m_emailFrom.Value, m_nameFrom.Value);
 			var to = new EmailAddress(targetEmail, targetName);
-			SendAsync(MailHelper.CreateSingleEmail(from, to, subject, content, content));
+			SendEmail(MailHelper.CreateSingleEmail(from, to, subject, content, content));
 		}
 
-		private static void SendAsync(SendGridMessage msg)
+		public static void SendEmailVerificationEmail(string targetEmail, string targetName, string callback)
 		{
+			var from = new EmailAddress(m_emailFrom.Value, m_nameFrom.Value);
+			var to = new EmailAddress(targetEmail, targetName);
+			var dynamicTemplateData = StandardTemplate;
+			StandardTemplate["name"] = targetName;
+			StandardTemplate["callback"] = callback;
+			SendEmail(MailHelper.CreateSingleTemplateEmail(from, to, "d-abb66e4f174c470abeb5e6a1ecdaac85", dynamicTemplateData));
+		}
+
+		private static void SendEmail(SendGridMessage msg)
+		{
+#if DEBUG
+			Logger.Warning("Sending of email suppressed due to debug mode");
+			EmailHistory.Add(msg);
+			return;
+#endif
 			var t = new Task(async () =>
 			{
-				await m_client.SendEmailAsync(msg);
-				Console.WriteLine("OK");
+				var response = await m_client.SendEmailAsync(msg);
+				if(response.StatusCode != HttpStatusCode.OK)
+				{
+					Logger.Error($"Failed to send email message, error code {response.StatusCode}: {await response.Body.ReadAsStringAsync()}");
+				}
 			});
 			t.Start();
 		}
