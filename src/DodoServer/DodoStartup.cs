@@ -23,7 +23,7 @@ namespace DodoServer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			if(!Environment.IsDevelopment() && DodoServer.NetConfig.LetsEncryptAutoSetup)
+			if (!Environment.IsDevelopment() && DodoServer.NetConfig.LetsEncryptAutoSetup)
 			{
 				services.AddLetsEncrypt(config =>
 				{
@@ -32,7 +32,7 @@ namespace DodoServer
 					config.EmailAddress = DodoServer.DevEmail;
 				});
 			}
-			
+
 			// ICorsService and ICorsPolicyProvider are added by AddControllers... but best to be explicit in case this changes
 			services.AddCors();
 
@@ -85,6 +85,7 @@ namespace DodoServer
 			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
 			{
+				endpoints.MapControllers();
 				endpoints.MapDefaultControllerRoute();
 			});
 

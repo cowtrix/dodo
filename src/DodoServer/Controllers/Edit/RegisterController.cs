@@ -29,11 +29,11 @@ namespace DodoServer.Controllers.Edit
 			ViewData["redirect"] = redirect;
 			try
 			{
-				var client = GetHttpClient(RootURL);
+				var client = GetHttpClient(RootURL, null, false);
 				var registerResponse = await client.PostAsJsonAsync(REGISTER, model);
 				if (!registerResponse.IsSuccessStatusCode)
 				{
-					ModelState.AddModelError("", $"Register failed: {registerResponse.Content}");
+					ModelState.AddModelError("", $"Register failed: {registerResponse.ReasonPhrase}");
 					return View(model);
 				}
 
