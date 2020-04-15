@@ -1,4 +1,3 @@
-using Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +35,8 @@ namespace DodoServer.Controllers.Edit
 				{
 					CookieContainer = cookieContainer,
 				};
-				var client = GetHttpClient(RootURL, cookieContainer);
+				// This needs to go to the login endpoint, which doesn't currently sit under /API
+				var client = GetHttpClient(RootURL, cookieContainer, false);
 				var loginResponse = await client.PostAsJsonAsync(LOGIN, model);
 				if (!loginResponse.IsSuccessStatusCode)
 				{
