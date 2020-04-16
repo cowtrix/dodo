@@ -45,7 +45,7 @@ namespace DodoServer.Controllers.Edit
 			};
 			var rootAddress = DodoServer.NetConfig.FullURI;
 #if DEBUG
-			if (DodoServer.NetConfig.SSLPort != 443)
+			if (DodoServer.NetConfig.SSLPort != 443 && !rootAddress.EndsWith(DodoServer.NetConfig.SSLPort.ToString()))
 			{
 				rootAddress += $":{DodoServer.NetConfig.SSLPort}";
 			}

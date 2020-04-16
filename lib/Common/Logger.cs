@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Common
@@ -16,7 +17,28 @@ namespace Common
 		Debug,
 	}
 
-	public delegate void LogEvent(string message, ELogLevel logLevel);
+	public readonly struct LogMessage
+	{
+		public readonly DateTime Timestamp;
+		public readonly ELogLevel LogLevel;
+		public readonly string Category;
+		public readonly string Message;
+
+		public LogMessage(string message, ELogLevel logLevel, string category, DateTime now) : this()
+		{
+			Message = message;
+			LogLevel = logLevel;
+			Timestamp = now;
+			Category = category;
+		}
+
+		public override string ToString()
+		{
+			return $"{LogLevel}\t{Category}\t{Message}";
+		}
+	}
+
+	public delegate void LogEvent(LogMessage message);
 
 	public static class Logger
 	{
@@ -34,7 +56,8 @@ namespace Common
 		static Logger()
 		{
 			CommandManager.OnPreExecute += GetArgs;
-			CurrentLogLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Info).Value;
+			CurrentLogLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Debug).Value;
+			Info($"Log level is {CurrentLogLevel}");
 		}
 
 		private static void GetArgs(CommandArguments args)
@@ -65,24 +88,24 @@ namespace Common
 			}
 			sb.AppendLine(exception.Message);
 			sb.AppendLine(exception.StackTrace);
-			DoLog(sb.ToString(), ConsoleColor.Red, ConsoleColor.Black, ELogLevel.Error);
+			DoLog(sb.ToString(), ConsoleColor.Red, ConsoleColor.Black, ELogLevel.Error, "EXCEPTION");
 			if (exception.InnerException != null)
 			{
 				Exception(exception.InnerException, "Inner exception: ");
 			}
 		}
 
-		public static void Info(string message)
+		public static void Info(string message, [CallerMemberName]string category = "")
 		{
-			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Info);
+			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Info, category);
 		}
 
-		public static void Debug(string message)
+		public static void Debug(string message, [CallerMemberName]string category = "")
 		{
-			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Debug);
+			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Debug, category);
 		}
 
-		private static void DoLog(string message, ConsoleColor foreground, ConsoleColor background, ELogLevel logLevel)
+		private static void DoLog(string message, ConsoleColor foreground, ConsoleColor background, ELogLevel logLevel, string category)
 		{
 			if (logLevel > CurrentLogLevel)
 			{
@@ -92,18 +115,18 @@ namespace Common
 			ConsoleColor prevBack = Console.BackgroundColor;
 			try
 			{
-				//message = $"[{DateTime.Now.ToLocalTime().ToShortTimeString()}]\t{message}";
+				var msg = new LogMessage(message, logLevel, category, DateTime.Now);
 				Console.ForegroundColor = foreground;
 				Console.BackgroundColor = background;
 				if(logLevel == ELogLevel.Error)
 				{
-					Console.Error.WriteLine(message);
+					Console.Error.WriteLine(msg.ToString());
 				}
 				else
 				{
-					Console.WriteLine(message);
+					Console.WriteLine(msg.ToString());
 				}
-				OnLog?.Invoke(message, logLevel);
+				OnLog?.Invoke(msg);
 			}
 			catch (Exception e)
 			{
@@ -152,14 +175,14 @@ namespace Common
 			return key == confirm || key == ALWAYS;
 		}
 
-		public static void Error(string message, bool nolog = false)
+		public static void Error(string message, bool nolog = false, [CallerMemberName]string category = "")
 		{
-			DoLog(message, ConsoleColor.Red, ConsoleColor.Black, ELogLevel.Error);
+			DoLog(message, ConsoleColor.Red, ConsoleColor.Black, ELogLevel.Error, category);
 		}
 
-		public static void Warning(string message)
+		public static void Warning(string message, [CallerMemberName]string category = "")
 		{
-			DoLog(message, ConsoleColor.Yellow, ConsoleColor.Black, ELogLevel.Warning);
+			DoLog(message, ConsoleColor.Yellow, ConsoleColor.Black, ELogLevel.Warning, category);
 		}
 	}
 }

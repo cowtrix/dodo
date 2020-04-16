@@ -17,7 +17,7 @@ namespace DodoServer.Controllers.Edit
 		[Route("")]
 		public async Task<IActionResult> Index()
 		{
-			return await GetResourcesView<LocalGroup>($"{DodoServer.API_ROOT}{LocalGroupController.RootURL}");
+			return await GetResourcesView<LocalGroup>(LocalGroupController.RootURL);
 		}
 
 		// GET: LocalGroups/Details/0a985dee-0b68-4805-96f5-3abe6f1ae13e
@@ -25,7 +25,7 @@ namespace DodoServer.Controllers.Edit
 		[Route("details/{id}")]
 		public async Task<IActionResult> Details([FromRoute] Guid id)
 		{
-			return await GetResourceView<LocalGroup>($"{DodoServer.API_ROOT}{LocalGroupController.RootURL}", id);
+			return await GetResourceView<LocalGroup>(LocalGroupController.RootURL, id);
 		}
 
 		// GET: LocalGroups/Create
@@ -45,7 +45,7 @@ namespace DodoServer.Controllers.Edit
 			try
 			{
 				if (!ModelState.IsValid) return View(group);
-				var client = GetHttpClient($"{DodoServer.API_ROOT}{LocalGroupController.RootURL}");
+				var client = GetHttpClient(LocalGroupController.RootURL);
 
 				// Currently you can't create a local group as the user needs to have admin on the parent
 				// Local Groups don't have a parent as they are top level entities
@@ -67,7 +67,7 @@ namespace DodoServer.Controllers.Edit
 		[Route("edit/{id}")]
 		public async Task<IActionResult> Edit([FromRoute] Guid id)
 		{
-			return await GetResourceView<LocalGroup>($"{DodoServer.API_ROOT}{LocalGroupController.RootURL}", id);
+			return await GetResourceView<LocalGroup>(LocalGroupController.RootURL, id);
 		}
 
 		// POST: LocalGroups/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
@@ -79,7 +79,7 @@ namespace DodoServer.Controllers.Edit
 			try
 			{
 				if (!ModelState.IsValid) return View(group);
-				var client = GetHttpClient($"{DodoServer.API_ROOT}{LocalGroupController.RootURL}");
+				var client = GetHttpClient(LocalGroupController.RootURL);
 
 				var dto = new LocalGroupDto
 				{
@@ -106,7 +106,7 @@ namespace DodoServer.Controllers.Edit
 		[Route("delete/{id}")]
 		public async Task<IActionResult> Delete([FromRoute] Guid id)
 		{
-			return await GetResourceView<LocalGroup>($"{DodoServer.API_ROOT}{LocalGroupController.RootURL}", id);
+			return await GetResourceView<LocalGroup>(LocalGroupController.RootURL, id);
 		}
 
 		// POST: LocalGroups/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
@@ -117,7 +117,7 @@ namespace DodoServer.Controllers.Edit
 		{
 			try
 			{
-				var client = GetHttpClient($"{DodoServer.API_ROOT}{LocalGroupController.RootURL}");
+				var client = GetHttpClient(LocalGroupController.RootURL);
 
 				var result = await client.DeleteAsync($"{id}");
 				result.EnsureSuccessStatusCode();
@@ -127,7 +127,7 @@ namespace DodoServer.Controllers.Edit
 			catch (Exception e)
 			{
 				ModelState.AddModelError("", e.Message);
-				return await GetResourceView<LocalGroup>($"{DodoServer.API_ROOT}{LocalGroupController.RootURL}", id);
+				return await GetResourceView<LocalGroup>(LocalGroupController.RootURL, id);
 			}
 		}
 	}

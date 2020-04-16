@@ -98,9 +98,8 @@ namespace Common.Config
 				m_sampleData[configVariable.ConfigKey] = configVariable.DefaultValue;
 				File.WriteAllText(m_sampleConfigPath, JsonConvert.SerializeObject(m_sampleData, Formatting.Indented));
 			}
-			catch(Exception e)
+			catch
 			{
-				Logger.Exception(e);
 			}
 		}
 #endif

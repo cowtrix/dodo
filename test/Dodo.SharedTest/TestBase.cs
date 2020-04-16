@@ -37,9 +37,9 @@ namespace SharedTest
 			Logger.OnLog += OnLog;
 		}
 
-		private static void OnLog(string message, ELogLevel logLevel)
+		private static void OnLog(LogMessage message)
 		{
-			Context.WriteLine(message);
+			Context.WriteLine(message.ToString());
 		}
 	
 		/// <summary>
