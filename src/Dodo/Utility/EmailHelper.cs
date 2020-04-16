@@ -31,6 +31,7 @@ namespace Dodo.Utility
 
 		static EmailHelper()
 		{
+			Logger.Debug($"Using SendGrid API Key {m_sendGridAPIKey.Value}");
 			m_client = new SendGridClient(m_sendGridAPIKey.Value);
 		}
 
@@ -65,6 +66,7 @@ namespace Dodo.Utility
 				{
 					Logger.Error($"Failed to send email message, error code {response.StatusCode}: {await response.Body.ReadAsStringAsync()}");
 				}
+				Logger.Debug($"Sent email to SendGrid API: {response.StatusCode}: {await response.Body.ReadAsStringAsync()}");
 			});
 			t.Start();
 		}
