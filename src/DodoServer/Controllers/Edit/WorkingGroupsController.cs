@@ -14,6 +14,7 @@ namespace DodoServer.Controllers.Edit
 	{
 		// GET: LocalGroups
 		[AllowAnonymous]
+		[Route("")]
 		public async Task<IActionResult> Index()
 		{
 			return await GetResourcesView<WorkingGroup>($"{DodoServer.API_ROOT}{WorkingGroupController.RootURL}");
@@ -21,12 +22,14 @@ namespace DodoServer.Controllers.Edit
 
 		// GET: LocalGroups/Details/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[AllowAnonymous]
-		public async Task<IActionResult> Details(Guid id)
+		[Route("details/{id}")]
+		public async Task<IActionResult> Details([FromRoute] Guid id)
 		{
 			return await GetResourceView<WorkingGroup>($"{DodoServer.API_ROOT}{WorkingGroupController.RootURL}", id);
 		}
 
 		// GET: LocalGroups/Create
+		[Route("create")]
 		public IActionResult Create()
 		{
 			return View();
@@ -34,8 +37,9 @@ namespace DodoServer.Controllers.Edit
 
 		// POST: LocalGroups/Create
 		[HttpPost]
+		[Route("create")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(WorkingGroup group)
+		public async Task<IActionResult> Create([FromForm] WorkingGroup group)
 		{
 			try
 			{
@@ -59,15 +63,17 @@ namespace DodoServer.Controllers.Edit
 		}
 
 		// GET: LocalGroups/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
-		public async Task<IActionResult> Edit(Guid id)
+		[Route("edit/{id}")]
+		public async Task<IActionResult> Edit([FromRoute] Guid id)
 		{
 			return await GetResourceView<WorkingGroup>($"{DodoServer.API_ROOT}{WorkingGroupController.RootURL}", id);
 		}
 
 		// POST: LocalGroups/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
+		[Route("edit/{id}")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(Guid id, WorkingGroup group)
+		public async Task<IActionResult> Edit([FromRoute] Guid id, [FromForm] WorkingGroup group)
 		{
 			try
 			{
@@ -95,15 +101,17 @@ namespace DodoServer.Controllers.Edit
 		}
 
 		// GET: LocalGroups/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
-		public async Task<IActionResult> Delete(Guid id)
+		[Route("delete/{id}")]
+		public async Task<IActionResult> Delete([FromRoute] Guid id)
 		{
 			return await GetResourceView<WorkingGroup>($"{DodoServer.API_ROOT}{WorkingGroupController.RootURL}", id);
 		}
 
 		// POST: LocalGroups/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
+		[Route("delete/{id}")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Delete(Guid id, WorkingGroup group)
+		public async Task<IActionResult> Delete([FromRoute] Guid id, [FromForm] WorkingGroup group)
 		{
 			try
 			{

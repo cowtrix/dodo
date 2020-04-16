@@ -3,7 +3,6 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -30,11 +29,11 @@ namespace DodoServer.Controllers.Edit
 			ViewData["redirect"] = redirect;
 			try
 			{
-				var client = GetHttpClient(RootURL);
+				var client = GetHttpClient(RootURL, null, false);
 				var registerResponse = await client.PostAsJsonAsync(REGISTER, model);
 				if (!registerResponse.IsSuccessStatusCode)
 				{
-					ModelState.AddModelError("", $"Registration failed: {await registerResponse.Content.ReadAsStringAsync()}");
+					ModelState.AddModelError("", $"Register failed: {registerResponse.ReasonPhrase}");
 					return View(model);
 				}
 
@@ -48,9 +47,8 @@ namespace DodoServer.Controllers.Edit
 				return Redirect($"{DodoServer.NetConfig.FullURI}/{LOGIN}");
 
 			}
-			catch (Exception e)
+			catch
 			{
-				Logger.Exception(e);
 				return View();
 			}
 		}

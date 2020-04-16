@@ -14,6 +14,7 @@ namespace DodoServer.Controllers.Edit
 	{
 		// GET: Rebellions
 		[AllowAnonymous]
+		[Route("")]
 		public async Task<IActionResult> Index()
 		{
 			return await GetResourcesView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}");
@@ -21,12 +22,14 @@ namespace DodoServer.Controllers.Edit
 
 		// GET: Rebellions/Details/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[AllowAnonymous]
-		public async Task<IActionResult> Details(Guid id)
+		[Route("details/{id}")]
+		public async Task<IActionResult> Details([FromRoute] Guid id)
 		{
 			return await GetResourceView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}", id);
 		}
 
 		// GET: Rebellions/Create
+		[Route("create")]
 		public IActionResult Create()
 		{
 			return View();
@@ -34,8 +37,9 @@ namespace DodoServer.Controllers.Edit
 
 		// POST: Rebellions/Create
 		[HttpPost]
+		[Route("create")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(Rebellion rebellion)
+		public async Task<IActionResult> Create([FromForm] Rebellion rebellion)
 		{
 			try
 			{
@@ -55,15 +59,17 @@ namespace DodoServer.Controllers.Edit
 		}
 
 		// GET: Rebellions/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
-		public async Task<IActionResult> Edit(Guid id)
+		[Route("edit/{id}")]
+		public async Task<IActionResult> Edit([FromRoute] Guid id)
 		{
 			return await GetResourceView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}", id);
 		}
 
 		// POST: Rebellions/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
+		[Route("edit/{id}")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(Guid id, Rebellion rebellion)
+		public async Task<IActionResult> Edit([FromRoute] Guid id, [FromForm] Rebellion rebellion)
 		{
 			try
 			{
@@ -97,15 +103,17 @@ namespace DodoServer.Controllers.Edit
 		}
 
 		// GET: Rebellions/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
-		public async Task<IActionResult> Delete(Guid id)
+		[Route("delete/{id}")]
+		public async Task<IActionResult> Delete([FromRoute] Guid id)
 		{
 			return await GetResourceView<Rebellion>($"{DodoServer.API_ROOT}{RebellionController.RootURL}", id);
 		}
 
 		// POST: Rebellions/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
+		[Route("delete/{id}")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Delete(Guid id, Rebellion rebellion)
+		public async Task<IActionResult> Delete([FromRoute] Guid id, [FromForm] Rebellion rebellion)
 		{
 			try
 			{

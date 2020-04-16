@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DodoServer.Controllers.Edit
 {
 	[Authorize]
+	[Route("edit/[controller]")]
 	public class CrudController : Controller
 	{
-		// DodoURI_Https in DodoServer_config.json must be set to actual IP or localhost (not 0.0.0.0)
-		private static readonly string baseApiUrl = $"{DodoServer.NetConfig.FullURI}/";
-
 		internal async Task<IActionResult> GetResourcesView<T>(string resourceUrl)
 		{
 			var client = GetHttpClient(resourceUrl);
@@ -33,7 +30,10 @@ namespace DodoServer.Controllers.Edit
 			return View(resource);
 		}
 
-		internal HttpClient GetHttpClient(string resourceUrl, CookieContainer cookieContainer = null)
+		internal HttpClient GetHttpClient(
+			string resourceUrl,
+			CookieContainer cookieContainer = null,
+			bool useApiRoot = true)
 		{
 			// Best practice for HttpClient is to use a singleton and not dispose of it in using statement
 			// However, as these are authenticated requests with cookies it is safer to use a new instance
@@ -43,13 +43,21 @@ namespace DodoServer.Controllers.Edit
 			{
 				CookieContainer = cookieContainer,
 			};
+			var rootAddress = DodoServer.NetConfig.FullURI;
+#if DEBUG
+			if (DodoServer.NetConfig.SSLPort != 443)
+			{
+				rootAddress += $":{DodoServer.NetConfig.SSLPort}";
+			}
+#endif
+			rootAddress += useApiRoot ? $"/{DodoServer.API_ROOT}" : "/";
 			var client = new HttpClient(handler)
 			{
-				BaseAddress = new Uri($"{baseApiUrl}{resourceUrl}/"),
+				BaseAddress = new Uri($"{rootAddress}{resourceUrl}/"),
 			};
 			foreach (var cookie in Request.Cookies)
 			{
-				cookieContainer.Add(new Cookie(cookie.Key, cookie.Value, "/", "localhost"));
+				cookieContainer.Add(new Cookie(cookie.Key, cookie.Value, "/", DodoServer.NetConfig.Domain));
 			}
 			return client;
 		}
