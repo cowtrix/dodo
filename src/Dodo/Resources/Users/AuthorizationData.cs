@@ -36,9 +36,9 @@ namespace Dodo.Users
 		public string PasswordHash { get; set; }
 		public string PassphraseHash { get; set; }
 		[JsonProperty]
-		public EncryptedStore<string> PassPhrase;
+		public SymmEncryptedStore<string> PassPhrase;
 		[JsonProperty]
-		public EncryptedStore<string> PrivateKey;
+		public SymmEncryptedStore<string> PrivateKey;
 
 		public AuthorizationData()
 		{
@@ -51,11 +51,11 @@ namespace Dodo.Users
 
 			var passphrase = KeyGenerator.GetUniqueKey(128);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
-			PrivateKey = new EncryptedStore<string>(pv, new Passphrase(passphrase));
+			PrivateKey = new SymmEncryptedStore<string>(pv, new Passphrase(passphrase));
 			PublicKey = pk;
 			PasswordHash = PasswordHasher.HashPassword(password);
 			PassphraseHash = PasswordHasher.HashPassword(passphrase);
-			PassPhrase = new EncryptedStore<string>(passphrase, new Passphrase(password));
+			PassPhrase = new SymmEncryptedStore<string>(passphrase, new Passphrase(password));
 			SecurityStamp = SHA256Utility.SHA256(pv + password);
 		}
 
@@ -80,7 +80,7 @@ namespace Dodo.Users
 			{
 				return false;
 			}
-			PassPhrase = new EncryptedStore<string>(passphrase, newPassword);
+			PassPhrase = new SymmEncryptedStore<string>(passphrase, newPassword);
 			PasswordHash = PasswordHasher.HashPassword(newPassword.Value);
 			if (!ChallengePassword(newPassword.Value, out _))
 			{

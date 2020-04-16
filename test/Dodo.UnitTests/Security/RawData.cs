@@ -19,7 +19,7 @@ namespace Security
 			var password = new Passphrase("password");
 			var data = new TestEncryptedData()
 			{
-				EncryptedString = new EncryptedStore<string>("my encrypted value", password),
+				EncryptedString = new SymmEncryptedStore<string>("my encrypted value", password),
 				EncryptedObject = new MultiSigEncryptedStore<string, TestEncryptedData.InnerClass>(
 					new TestEncryptedData.InnerClass()
 					{

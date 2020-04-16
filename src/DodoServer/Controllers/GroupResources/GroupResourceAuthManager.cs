@@ -57,8 +57,8 @@ namespace DodoResources
 #endif
 
 			// User has a resource creation token, so we consume it and return ok
-			var token = context.User.TokenCollection.GetTokens<ResourceCreationToken>()
-				.FirstOrDefault(t => !t.IsRedeemed && t.Type == typeof(T).Name);
+			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context)
+				.FirstOrDefault(t => !t.IsRedeemed && t.ResourceType == typeof(T).Name);
 			if (token != null)
 			{
 				return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER, token);

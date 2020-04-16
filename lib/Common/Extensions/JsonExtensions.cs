@@ -18,7 +18,7 @@ namespace Common.Extensions
 
 	public static class JsonExtensions
 	{
-		public static JsonSerializerSettings DefaultSettings
+		public static JsonSerializerSettings NetworkSettings
 		{
 			get
 			{
@@ -34,14 +34,15 @@ namespace Common.Extensions
 			}
 		}
 
-		public static JsonSerializerSettings DatabaseSettings
+		public static JsonSerializerSettings StorageSettings
 		{
 			get
 			{
 				var settings = new JsonSerializerSettings()
 				{
-					TypeNameHandling = TypeNameHandling.Auto,
-					Formatting = Formatting.Indented,
+					TypeNameHandling = TypeNameHandling.Objects,
+					DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
+					DateParseHandling = DateParseHandling.DateTimeOffset,
 				};
 				return settings;
 			}

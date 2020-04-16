@@ -1,4 +1,5 @@
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 
 namespace Dodo.Users.Tokens
@@ -9,16 +10,23 @@ namespace Dodo.Users.Tokens
 	/// </summary>
 	public class ResourceCreationToken : RedeemableToken
 	{
+		[JsonProperty]
 		[BsonElement]
-		public string Type { get; private set; }
+		public string ResourceType { get; private set; }
+
+		[JsonIgnore]
+		[BsonIgnore]
+		public override bool Encrypted => true;
+
+		public ResourceCreationToken() { }
 
 		public ResourceCreationToken(Type type)
 		{
-			if(!typeof(DodoResource).IsAssignableFrom(type))
+			if (!typeof(DodoResource).IsAssignableFrom(type))
 			{
 				throw new Exception($"Unexpected type: {type}");
 			}
-			Type = type.Name;
+			ResourceType = type.Name;
 		}
 	}
 }

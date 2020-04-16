@@ -11,6 +11,7 @@ namespace Dodo.Users.Tokens
 	public interface IUserToken : IVerifiable
 	{
 		Guid Guid { get; }
+		bool Encrypted { get; }
 		void OnAdd(User parent);
 	}
 
@@ -20,21 +21,21 @@ namespace Dodo.Users.Tokens
 		typeof(AddAdminToken),
 		typeof(TemporaryUserToken),
 		typeof(VerifyEmailToken),
-		typeof(SysAdminToken),
 		typeof(ResourceCreationToken),
 		typeof(SessionToken)
 		)]
 	public abstract class UserToken : IUserToken
 	{
+		[JsonProperty]
+		[BsonElement]
 		public Guid Guid { get; private set; }
-
-		public UserToken()
-		{
-			Guid = Guid.NewGuid();
-		}
+		[JsonIgnore]
+		[BsonIgnore]
+		public abstract bool Encrypted { get; }
 
 		public virtual void OnAdd(User parent)
 		{
+			Guid = Guid.NewGuid();
 		}
 
 		public bool CanVerify() => true;

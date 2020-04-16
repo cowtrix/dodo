@@ -42,7 +42,7 @@ namespace Security
 		private void CanEncryptAndDecrypt<T>(T data)
 		{
 			var pass = new Passphrase(PasswordGenerator.Generate());
-			var encrypted = new EncryptedStore<T>(data, pass);
+			var encrypted = new SymmEncryptedStore<T>(data, pass);
 			var unencrypted = encrypted.GetValue(pass);
 			Assert.AreEqual(data, unencrypted);
 		}

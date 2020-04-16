@@ -14,7 +14,6 @@ namespace DodoServer.Controllers.Edit
 	[Route(LOGIN)]
 	public class LoginController : CrudController
 	{
-
 		// GET: Login
 		public ActionResult Index(string redirect = null)
 		{

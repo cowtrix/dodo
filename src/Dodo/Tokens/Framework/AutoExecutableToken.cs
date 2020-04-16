@@ -32,7 +32,7 @@ namespace Dodo.Users.Tokens
 
 		protected virtual bool OnExecuted(AccessContext context) => true;
 
-		public virtual void OnRemove(User parent)
+		public virtual void OnRemove(AccessContext parent)
 		{
 		}
 	}

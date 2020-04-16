@@ -97,13 +97,14 @@ namespace SharedTest
 		{
 			var userFactory = ResourceUtility.GetFactory<User>();
 			var user = userFactory.CreateTypedObject(default(AccessContext), schema);
-			context = new AccessContext(user, new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema?.Password))));
+			var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema.Password)));
+			context = new AccessContext(user, passphrase);
 			Assert.IsTrue(context.Challenge());
 
 			// Verify email if flag has been set
 			if(verifyEmail)
 			{
-				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>();
+				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context);
 				Assert.IsNotNull(verifyToken);
 				user.PersonalData.EmailConfirmed = true;
 			}

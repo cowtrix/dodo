@@ -1,54 +1,53 @@
 using Common.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using Resources;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Security.Authentication;
 
 namespace Resources.Security
 {
-
 	/// <summary>
-	/// Symmetrically stores an object of type T in an encrypted form of its JSON representation
+	/// Asymmetrically stores an object of type T in an encrypted form of its JSON representation
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class EncryptedStore<T> : IDecryptable<T>
+	public class AsymmEncryptedStore<T> : IDecryptable<T>
 	{
-		[JsonProperty]
+		const int keySize = 64;
+
 		[BsonElement]
+		[JsonProperty]
+		private byte[] m_token;
+		[BsonElement]
+		[JsonProperty]
 		private string m_encryptedData;
 		[BsonElement]
 		[JsonProperty]
 		private string m_passHash;
 
-		public EncryptedStore() { }
+		public AsymmEncryptedStore() { }
 
-		public EncryptedStore(T value, Passphrase passphrase)
+		public AsymmEncryptedStore(T value, Passphrase publicKey)
 		{
-			if(!value.Equals(default))
+			if (!value.Equals(default))
 			{
-				SetValue(value, passphrase);
+				SetValue(value, publicKey);
 			}
 		}
 
-		public T GetValue(Passphrase passphrase)
+		public T GetValue(Passphrase privateKey)
 		{
-			if(string.IsNullOrEmpty(m_encryptedData))
-			{
-				return default;
-			}
-			return SymmetricSecurity.Decrypt<T>(m_encryptedData, passphrase.Value);
+			return GetValue(privateKey.Value);
 		}
 
-		public T GetValue(string passphrase)
+		public T GetValue(string privateKey)
 		{
 			if (string.IsNullOrEmpty(m_encryptedData))
 			{
 				return default;
 			}
-			return SymmetricSecurity.Decrypt<T>(m_encryptedData, passphrase);
+			var token = AsymmetricSecurity.Decrypt<string>(m_token, privateKey);
+			return SymmetricSecurity.Decrypt<T>(m_encryptedData, token);
 		}
 
 		public bool IsAuthorised(object requester, Passphrase passphrase)
@@ -56,21 +55,25 @@ namespace Resources.Security
 			return string.IsNullOrEmpty(m_passHash) || SHA256Utility.SHA256(passphrase.Value) == m_passHash;
 		}
 
-		public void SetValue(T value, Passphrase passphrase)
+		public void SetValue(T value, Passphrase publicKey)
 		{
-			if(!IsAuthorised(null, passphrase))
+			if (!IsAuthorised(null, publicKey))
 			{
 				throw new AuthenticationException();
 			}
-			if(value.Equals(default))
+			if (value.Equals(default))
 			{
+				m_token = null;
 				m_encryptedData = null;
+				m_passHash = null;
 			}
 			else
 			{
-				m_encryptedData = SymmetricSecurity.Encrypt(value, passphrase.Value);
+				var rawToken = KeyGenerator.GetUniqueKey(keySize) + value.GetHashCode().ToString();
+				m_token = AsymmetricSecurity.Encrypt(rawToken, publicKey.Value);
+				m_encryptedData = SymmetricSecurity.Encrypt(value, rawToken);
+				m_passHash = SHA256Utility.SHA256(rawToken);
 			}
-			m_passHash = SHA256Utility.SHA256(passphrase.Value);
 		}
 
 		public void SetValue(object innerObject, EPermissionLevel view, object requester, Passphrase passphrase)

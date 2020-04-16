@@ -58,7 +58,7 @@ namespace Resources
 		{
 			if (Context.User != null)
 			{
-				foreach (var token in Context.User.TokenCollection.Tokens.OfType<IAutoExecuteToken>())
+				foreach (var token in Context.User.TokenCollection.GetAllTokens<IAutoExecuteToken>(Context))
 				{
 					token.Execute(Context);
 				}

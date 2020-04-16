@@ -4,6 +4,8 @@ using System;
 using Common.Security;
 using Dodo.Utility;
 using System.Net;
+using Newtonsoft.Json;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Users.Tokens
 {
@@ -14,12 +16,15 @@ namespace Dodo.Users.Tokens
 	public class ResetPasswordToken : RedeemableToken, INotificationToken
 	{
 		const int TOKEN_SIZE = 64;
-		public ResourceReference<User> TargetUser { get; set; }
 		public string TemporaryToken { get; set; }
+		[JsonIgnore]
+		[BsonIgnore]
+		public override bool Encrypted => false;
+
+		public ResetPasswordToken() { }
 
 		public ResetPasswordToken(User targetUser)
 		{
-			TargetUser = targetUser;
 			TemporaryToken = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 #if DEBUG
 			Console.WriteLine($"Reset password action added for user {targetUser.AuthData.Username}: {TemporaryToken}");
@@ -31,6 +36,7 @@ namespace Dodo.Users.Tokens
 			EmailHelper.SendEmail(user.PersonalData.Email, user.Name, $"{Dodo.PRODUCT_NAME}: Reset your password",
 				$"You've requested a password reset for your account on {Dns.GetHostName()}." +
 				$"To reset your password, visit the following link: {Dns.GetHostName()}/resetpassword?token={TemporaryToken}");
+			base.OnAdd(user);
 		}
 
 		public string GetNotification(AccessContext context)

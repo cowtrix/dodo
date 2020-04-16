@@ -47,7 +47,7 @@ namespace Common.Localisation
 			foreach(var languageCode in data)
 			{
 				File.WriteAllText(Path.Combine(dirPath, $"{languageCode.Key}.json"),
-					JsonConvert.SerializeObject(languageCode.Value, JsonExtensions.DefaultSettings));
+					JsonConvert.SerializeObject(languageCode.Value, JsonExtensions.NetworkSettings));
 			}
 		}
 
@@ -71,7 +71,7 @@ namespace Common.Localisation
 			{
 				var languageCode = Path.GetFileNameWithoutExtension(translationFile);
 				var phrases = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(translationFile),
-					JsonExtensions.DefaultSettings);
+					JsonExtensions.NetworkSettings);
 				foreach(var phrase in phrases)
 				{
 					if (!Phrases.TryGetValue(phrase.Key, out var localisedString))

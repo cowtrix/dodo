@@ -27,7 +27,7 @@ namespace Security
 			public GeoLocation Location = new GeoLocation(43, 62);
 			public ResourceReference<User> UserReference = new ResourceReference<User>(Guid.NewGuid());
 			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
-			public EncryptedStore<string> EncryptedString;
+			public SymmEncryptedStore<string> EncryptedString;
 			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public MultiSigEncryptedStore<string, InnerClass> EncryptedObject;
 			[View(EPermissionLevel.USER, EPermissionLevel.USER)]

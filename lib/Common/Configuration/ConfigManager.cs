@@ -93,8 +93,15 @@ namespace Common.Config
 		static Dictionary<string, object> m_sampleData = new Dictionary<string, object>();
 		internal static void Register<T>(ConfigVariable<T> configVariable)
 		{
-			m_sampleData[configVariable.ConfigKey] = configVariable.DefaultValue;
-			File.WriteAllText(m_sampleConfigPath, JsonConvert.SerializeObject(m_sampleData, Formatting.Indented));
+			try
+			{
+				m_sampleData[configVariable.ConfigKey] = configVariable.DefaultValue;
+				File.WriteAllText(m_sampleConfigPath, JsonConvert.SerializeObject(m_sampleData, Formatting.Indented));
+			}
+			catch(Exception e)
+			{
+				Logger.Exception(e);
+			}
 		}
 #endif
 	}

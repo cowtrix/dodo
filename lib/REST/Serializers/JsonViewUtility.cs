@@ -129,7 +129,7 @@ namespace Resources
 			// to an object of that type with Json
 			if (ShouldSerializeDirectly(targetType))
 			{
-				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values, JsonExtensions.DefaultSettings), targetType, JsonExtensions.DefaultSettings);
+				var val = JsonConvert.DeserializeObject(JsonConvert.SerializeObject(values, JsonExtensions.NetworkSettings), targetType, JsonExtensions.NetworkSettings);
 				return (T)val;
 			}
 
@@ -212,7 +212,7 @@ namespace Resources
 						var subValues = val.Value as Dictionary<string, object>;
 						if (subValues == null)
 						{
-							subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString(), JsonExtensions.DefaultSettings);
+							subValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(val.Value.ToString(), JsonExtensions.NetworkSettings);
 						}
 						valueToSet = value.PatchObject(subValues, permissionLevel, requester, passphrase);
 					}
@@ -227,8 +227,8 @@ namespace Resources
 				var memberType = targetMember.GetMemberType();
 				if (ShouldSerializeDirectly(memberType) && memberType != valueToSet?.GetType())
 				{
-					var serialized = JsonConvert.SerializeObject(valueToSet, memberType, JsonExtensions.DefaultSettings);
-					valueToSet = JsonConvert.DeserializeObject(serialized, memberType, JsonExtensions.DefaultSettings);
+					var serialized = JsonConvert.SerializeObject(valueToSet, memberType, JsonExtensions.NetworkSettings);
+					valueToSet = JsonConvert.DeserializeObject(serialized, memberType, JsonExtensions.NetworkSettings);
 				}
 				if (typeof(IDecryptable).IsAssignableFrom(targetMember.GetMemberType()))
 				{

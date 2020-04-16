@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Common.Extensions;
 
 namespace Common.Security
 {
@@ -23,7 +24,7 @@ namespace Common.Security
 
 		public static string Encrypt<T>(T objectToEncrypt, string passphrase)
 		{
-			var plainText = JsonConvert.SerializeObject(objectToEncrypt);
+			var plainText = JsonConvert.SerializeObject(objectToEncrypt, JsonExtensions.StorageSettings);
 			// Salt and IV is randomly generated each time, but is preprended to encrypted cipher text
 			// so that the same Salt and IV values can be used when decrypting.
 			var saltStringBytes = GenerateBitsOfRandomEntropy(KeySize);
@@ -91,7 +92,12 @@ namespace Common.Security
 								memoryStream.Close();
 								cryptoStream.Close();
 								var plainText = Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
-								return JsonConvert.DeserializeObject<T>(plainText);
+								/*var obj = JsonConvert.DeserializeObject(plainText, JsonExtensions.StorageSettings);
+								if(obj is Newtonsoft.Json.Linq.JObject jobj)
+								{
+									return jobj.ToObject<T>();
+								}*/
+								return JsonConvert.DeserializeObject<T>(plainText, JsonExtensions.StorageSettings);
 							}
 						}
 					}

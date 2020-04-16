@@ -1,5 +1,6 @@
 {
   "LogLevel": 2,
+  "MongoDBServerURL": "",
   "NetworkConfig": {
     "IP": "0.0.0.0",
     "SSLPort": 5001,
@@ -8,6 +9,5 @@
     "HTTPPort": 5000
   },
   "Dodo_DevEmail": "test@web.com",
-  "MongoDBServerURL": "",
   "ResourceLockTimeout": 10000
 }

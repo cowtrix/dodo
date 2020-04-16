@@ -1,3 +1,4 @@
+using Common;
 using Dodo.Security;
 using Dodo.Users;
 using Dodo.Users.Tokens;
@@ -41,10 +42,11 @@ namespace Dodo
 				return default;
 			}
 
-			var sessionToken = user.TokenCollection.GetTokens<SessionToken>()
-				.SingleOrDefault(t => t.UserToken == userToken);
+			var sessionToken = user.TokenCollection.GetAllTokens<SessionToken>(default)
+				.SingleOrDefault(t => t?.UserKey == userToken);
 			if(sessionToken == null)
 			{
+				Logger.Warning($"Session token was null but user had valid user token - shouldn't really happen.");
 				return default;
 			}
 			var passphrase = sessionToken.EncryptedPassphrase.GetValue(sessionKey);

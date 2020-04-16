@@ -18,6 +18,7 @@ namespace Resources
 	{
 		[View(EPermissionLevel.ADMIN)]
 		[JsonProperty]
+		[BsonElement]
 		public Guid Guid { get; private set; }
 
 		public T GetValue()
@@ -36,6 +37,7 @@ namespace Resources
 		{
 			Guid = guid;
 		}
+
 		public static implicit operator T(ResourceReference<T> d) => d.GetValue();
 		public static implicit operator ResourceReference<T>(T b) => new ResourceReference<T>(b);
 

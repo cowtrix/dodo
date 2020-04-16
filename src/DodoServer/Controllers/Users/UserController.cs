@@ -81,7 +81,7 @@ namespace Dodo.Users
 
 			// Create the claims ID
 			var id = new ClaimsIdentity(AuthConstants.AUTHSCHEME);
-			id.AddClaim(new Claim(AuthConstants.SUBJECT, token.UserToken));
+			id.AddClaim(new Claim(AuthConstants.SUBJECT, token.UserKey));
 			id.AddClaim(new Claim(AuthConstants.KEY, key.Value));
 			var principal = new ClaimsPrincipal(id);
 			var props = new AuthenticationProperties
@@ -105,13 +105,13 @@ namespace Dodo.Users
 			await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
 			using var rscLock = new ResourceLock(Context.User);
 			var user = rscLock.Value as User;
-			var session = user.TokenCollection.GetTokens<SessionToken>()
-					.SingleOrDefault(t => t.UserToken == Context.UserToken);
+			var session = user.TokenCollection.GetAllTokens<SessionToken>(Context)
+					.SingleOrDefault(t => t.UserKey == Context.UserToken);
 			if (session == null)
 			{
 				return BadRequest();
 			}
-			if(!user.TokenCollection.Remove(user, session))
+			if(!user.TokenCollection.Remove(Context, session))
 			{
 				Logger.Error($"Failed to log user {user} out - could not remove session token");
 			}
@@ -149,7 +149,7 @@ namespace Dodo.Users
 				return BadRequest();
 			}
 			var user = UserManager.GetSingle(u =>
-				u.TokenCollection.GetSingleToken<ResetPasswordToken>()?.TemporaryToken == token);
+				u.TokenCollection.GetSingleToken<ResetPasswordToken>(Context)?.TemporaryToken == token);
 			if (user == null)
 			{
 				return BadRequest();
@@ -157,7 +157,7 @@ namespace Dodo.Users
 			using (var rscLock = new ResourceLock(user))
 			{
 				user = rscLock.Value as User;
-				user.TokenCollection.RemoveAll<ResetPasswordToken>(user);
+				user.TokenCollection.RemoveAll<ResetPasswordToken>(Context);
 				user.AuthData = new AuthorizationData(user.AuthData.Username, password);
 				UserManager.Update(user, rscLock);
 			}
@@ -197,7 +197,7 @@ namespace Dodo.Users
 			{
 				return Ok();
 			}
-			var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>();
+			var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context);
 			if (verifyToken == null)
 			{
 				throw new Exception($"Verify token was null for user {Context.User.Guid}");
@@ -234,7 +234,7 @@ namespace Dodo.Users
 			var factory = ResourceUtility.GetFactory<User>();
 			user = factory.CreateTypedObject(default(AccessContext), schema);
 			var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));
-			SendEmailVerification(user);
+			SendEmailVerification(new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)));
 			return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.OWNER, user, passphrase));
 		}
 
@@ -251,7 +251,7 @@ namespace Dodo.Users
 				return BadRequest();
 			}
 			// Check if this is a temporary user (e.g. a new admin activating an email invite to administrate a resource)
-			var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>();
+			var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>(Context);
 			if (tempToken == null)
 			{
 				return Conflict();
@@ -270,19 +270,24 @@ namespace Dodo.Users
 			}
 			tempToken.Redeem(default);
 			UserManager.Update(user, rscLock);
-			SendEmailVerification(user);
+			SendEmailVerification(new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)));
 			return Ok(DodoJsonViewUtility.GenerateJsonView(user, EPermissionLevel.PUBLIC, null, default));
 		}
 
-		private static void SendEmailVerification(User user)
+		private static void SendEmailVerification(AccessContext context)
 		{
-			var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>();
-			if(token.IsRedeemed)
+			var token = context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(context);
+			if(token == null)
 			{
-				Logger.Error($"Couldn't send email verification to {user} - user was already verified.");
+				Logger.Error($"Couldn't send email verification to {context.User} - user was already verified.");
 				return;
 			}
-			EmailHelper.SendEmailVerificationEmail(user.PersonalData.Email, user.Name,
+			if(token.IsRedeemed)
+			{
+				Logger.Error($"Couldn't send email verification to {context.User} - user was already verified.");
+				return;
+			}
+			EmailHelper.SendEmailVerificationEmail(context.User.PersonalData.Email, context.User.Name,
 				$"{DodoServer.DodoServer.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}");
 		}
 

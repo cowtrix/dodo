@@ -1,4 +1,4 @@
-﻿using Common.Security;
+using Common.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
@@ -18,7 +18,7 @@ namespace Resources.Security
 	/// <typeparam name="TVal"></typeparam>
 	public class MultiSigEncryptedStore<TKey, TVal> : IKeyDecryptable<TKey,TVal>
 	{
-		private class Keystore : ConcurrentDictionary<string, EncryptedStore<string>>
+		private class Keystore : ConcurrentDictionary<string, SymmEncryptedStore<string>>
 		{
 			[JsonConstructor]
 			public Keystore() : base() { }
@@ -34,15 +34,15 @@ namespace Resources.Security
 		private Keystore m_keyStore = new Keystore();
 		[JsonProperty]
 		[BsonElement]
-		private EncryptedStore<TVal> m_data;
+		private SymmEncryptedStore<TVal> m_data;
 
 		public MultiSigEncryptedStore() { }
 
 		public MultiSigEncryptedStore(TVal data, TKey key, Passphrase password)
 		{
 			var commonKey = new Passphrase(SHA256Utility.SHA256(Guid.NewGuid().ToString() + key.GetHashCode().ToString() + data?.GetHashCode()));	// Generate a passphrase
-			m_keyStore.TryAdd(SecurityExtensions.GenerateID(key, password), new EncryptedStore<string>(commonKey.Value, password)); // Store the creating key and the passphrase with the given password
-			m_data = new EncryptedStore<TVal>(data, commonKey);	// Encrypt the common data with the common passphrase
+			m_keyStore.TryAdd(SecurityExtensions.GenerateID(key, password), new SymmEncryptedStore<string>(commonKey.Value, password)); // Store the creating key and the passphrase with the given password
+			m_data = new SymmEncryptedStore<TVal>(data, commonKey);	// Encrypt the common data with the common passphrase
 		}
 
 		public TVal GetValue(TKey key, Passphrase password)
@@ -62,7 +62,7 @@ namespace Resources.Security
 				throw new AuthenticationException("You are not authorized to access this resource");
 			}
 			var passPhrase = new Passphrase(unlockPhrase.GetValue(password));
-			m_data = new EncryptedStore<TVal>(data, passPhrase);
+			m_data = new SymmEncryptedStore<TVal>(data, passPhrase);
 		}
 
 		public bool IsAuthorised(TKey key, Passphrase passphrase)
@@ -81,7 +81,7 @@ namespace Resources.Security
 			{
 				m_keyStore.TryRemove(SecurityExtensions.GenerateID(key, ownerPass), out _);
 			}
-			m_keyStore[SecurityExtensions.GenerateID(newKey, newUserPass)] = new EncryptedStore<string>(passPhrase, newUserPass);
+			m_keyStore[SecurityExtensions.GenerateID(newKey, newUserPass)] = new SymmEncryptedStore<string>(passPhrase, newUserPass);
 		}
 
 		public bool TryGetValue(object requester, Passphrase password, out object result)

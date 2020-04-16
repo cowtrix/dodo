@@ -1,4 +1,5 @@
 using Common.Security;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
@@ -7,11 +8,15 @@ namespace Dodo.Users.Tokens
 {
 	public class AddAdminToken : AutoExecutableToken, INotificationToken
 	{
-		[JsonProperty]
+		[JsonProperty(TypeNameHandling = TypeNameHandling.None)]
 		[NotNulResource]
 		public ResourceReference<GroupResource> Resource { get; private set; }
 		[JsonProperty]
 		public byte[] Token { get; private set; }
+		[JsonIgnore]
+		public override bool Encrypted => true;
+
+		public AddAdminToken() { }
 
 		public AddAdminToken(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
 		{
