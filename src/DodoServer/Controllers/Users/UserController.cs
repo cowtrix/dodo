@@ -30,15 +30,15 @@ namespace Dodo.Users
 
 		public class LoginModel
 		{
-			public string username { get; set; }
-			public string password { get; set; }
-			public string redirect { get; set; }
+			public string Username { get; set; }
+			public string Password { get; set; }
+			public string Redirect { get; set; }
 		}
 
 		public class ChangePasswordModel
 		{
-			public string currentpassword { get; set; }
-			public string newpassword { get; set; }
+			public string CurrentPassword { get; set; }
+			public string NewPassword { get; set; }
 		}
 
 		protected override AuthorizationManager<User, UserSchema> AuthManager =>
@@ -47,8 +47,8 @@ namespace Dodo.Users
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
 		{
-			var logstr = $"Login request for {login.username}" + 
-				(string.IsNullOrEmpty(login.redirect) ? "" : $" (redirect: {login.redirect}).");
+			var logstr = $"Login request for {login.Username}" + 
+				(string.IsNullOrEmpty(login.Redirect) ? "" : $" (redirect: {login.Redirect}).");
 			if (Context.User != null)
 			{
 				// User is already logged in
@@ -56,13 +56,13 @@ namespace Dodo.Users
 				return Ok();
 			}
 
-			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.username);
+			var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.Username);
 			if (user == null)
 			{
 				Logger.Debug($"{logstr} User was not found with that username.");
 				return NotFound();
 			}
-			if (!user.AuthData.ChallengePassword(login.password, out var passphrase))
+			if (!user.AuthData.ChallengePassword(login.Password, out var passphrase))
 			{
 				Logger.Debug($"{logstr} User provided incorrect username.");
 				return BadRequest();
@@ -174,14 +174,14 @@ namespace Dodo.Users
 			{
 				return Forbid();
 			}
-			if (!Context.User.AuthData.ChallengePassword(model.currentpassword, out _))
+			if (!Context.User.AuthData.ChallengePassword(model.CurrentPassword, out _))
 			{
 				return Unauthorized();
 			}
 			using (var rscLock = new ResourceLock(Context.User))
 			{
 				var user = rscLock.Value as User;
-				user.AuthData.ChangePassword(new Passphrase(model.currentpassword), new Passphrase(model.newpassword));
+				user.AuthData.ChangePassword(new Passphrase(model.CurrentPassword), new Passphrase(model.NewPassword));
 				UserManager.Update(user, rscLock);
 			}
 			await Logout();

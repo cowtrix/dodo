@@ -105,7 +105,7 @@ namespace RESTTests
 		protected async Task Login(string username, string password)
 		{
 			var response = await m_client.PostAsync($"{UserController.RootURL}/{UserController.LOGIN}",
-				new StringContent(JsonConvert.SerializeObject(new UserController.LoginModel { username = username, password = password }), 
+				new StringContent(JsonConvert.SerializeObject(new UserController.LoginModel { Username = username, Password = password }), 
 				Encoding.UTF8, "application/json"));
 			if (!response.IsSuccessStatusCode)
 			{

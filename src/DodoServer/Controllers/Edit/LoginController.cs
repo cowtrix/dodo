@@ -26,7 +26,7 @@ namespace DodoServer.Controllers.Edit
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Index(LoginModel model)
 		{
-			ViewData["redirect"] = model.redirect;
+			ViewData["redirect"] = model.Redirect;
 			try
 			{
 				var cookieContainer = new CookieContainer();
@@ -55,9 +55,9 @@ namespace DodoServer.Controllers.Edit
 				}
 
 				// Guard against open redirect attack
-				if (Url.IsLocalUrl(model.redirect))
+				if (Url.IsLocalUrl(model.Redirect))
 				{
-					return Redirect(model.redirect);
+					return Redirect(model.Redirect);
 				}
 				return Redirect(DodoServer.NetConfig.FullURI);
 			}
