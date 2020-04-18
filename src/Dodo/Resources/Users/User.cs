@@ -32,18 +32,28 @@ namespace Dodo.Users
 		{
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="context">Unused variable required due to this constructor being called by the Activator class</param>
+		/// <param name="schema"></param>
 		public User(AccessContext context, UserSchema schema) : base(default, schema)
 		{
 			AuthData = new AuthorizationData(schema.Username, schema.Password);
 			PersonalData.Email = schema.Email;
 		}
 
-		public bool Verify(out string error)
+		public override bool VerifyExplicit(out string error)
 		{
 			var um = ResourceUtility.GetManager<User>();
 			if (um.GetSingle(u => u.AuthData.Username == AuthData.Username && u.Guid != Guid) != null)
 			{
 				error = "A user with that username already exists";
+				return false;
+			}
+			if (um.GetSingle(u => u.PersonalData.Email == PersonalData.Email && u.Guid != Guid) != null)
+			{
+				error = "A user with that email already exists";
 				return false;
 			}
 			error = null;

@@ -35,7 +35,16 @@ namespace Common.Extensions
 	{
 		public override bool Verify(object value, out string validationError)
 		{
+			if(value == null)
+			{
+				validationError = null;
+				return true;
+			}
 			var verifiable = value as IVerifiable;
+			if(verifiable != null && !verifiable.VerifyExplicit(out validationError))
+			{
+				return false;
+			}
 			return verifiable.Verify(out validationError);
 		}
 	}
@@ -107,8 +116,7 @@ namespace Common.Extensions
 					return false;
 				}
 			}
-			error = null;
-			return true;
+			return objectToVerify.VerifyExplicit(out error);
 		}
 	}
 
