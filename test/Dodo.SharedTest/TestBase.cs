@@ -1,4 +1,5 @@
 using Common;
+using Common.Config;
 using Common.Extensions;
 using Dodo;
 using Dodo.Rebellions;
@@ -7,6 +8,7 @@ using Dodo.Users;
 using Dodo.Users.Tokens;
 using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Mongo2Go;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Resources;
@@ -23,6 +25,7 @@ namespace SharedTest
 	[TestClass]
 	public abstract class TestBase
 	{
+		private static MongoDbRunner m_runner;
 		protected static TestContext Context;
 		private Random m_random = new Random();
 		protected static PostmanCollection Postman = new PostmanCollection("8888079-57fb4f3e-b2ad-4afe-a429-47a38866c5cd");
@@ -32,8 +35,14 @@ namespace SharedTest
 		[AssemblyInitialize]
 		public static void SetupTests(TestContext testContext)
 		{
-			ResourceUtility.ClearAllManagers();
 			Context = testContext;
+		}
+
+		static TestBase()
+		{
+			m_runner = MongoDbRunner.Start();
+			ConfigManager.SetValue(ResourceUtility.CONFIGKEY_MONGODBSERVERURL, m_runner.ConnectionString);
+			ResourceUtility.ClearAllManagers();
 			Logger.OnLog += OnLog;
 		}
 

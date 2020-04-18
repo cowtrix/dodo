@@ -35,12 +35,6 @@ namespace Common.Config
 			Logger.Debug($"Loaded configuration data from {m_configPath}");
 		}
 
-		public static void SaveToFile()
-		{
-			File.WriteAllText(m_configPath, JsonConvert.SerializeObject(m_data, Formatting.Indented));
-			Logger.Debug($"Saved configuration data to {m_configPath}");
-		}
-
 		public static T GetValue<T>(string key, T defaultValue)
 		{
 			if(!TryGetValue<T>(key, out var result))
@@ -48,6 +42,11 @@ namespace Common.Config
 				return defaultValue;
 			}
 			return result;
+		}
+
+		public static void SetValue<T>(string key, T value)
+		{
+			m_data[key] = value;
 		}
 
 		public static bool TryGetValue<T>(string key, out T result)
@@ -79,13 +78,6 @@ namespace Common.Config
 		internal static bool TryGetValue<T>(ConfigVariable<T> configVariable, out T result)
 		{
 			return TryGetValue<T>(configVariable.ConfigKey, out result);
-		}
-
-		internal static bool SetValue<T>(string configKey, T newVal)
-		{
-			m_data[configKey] = newVal;
-			SaveToFile();
-			return true;
 		}
 
 #if DEBUG

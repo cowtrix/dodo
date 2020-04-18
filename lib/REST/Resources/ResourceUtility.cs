@@ -1,3 +1,4 @@
+using Common;
 using Common.Config;
 using Common.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,8 @@ namespace Resources
 {
 	public static class ResourceUtility
 	{
-		private static ConfigVariable<string> m_databasePath = new ConfigVariable<string>("MongoDBServerURL", "");
+		public const string CONFIGKEY_MONGODBSERVERURL = "MongoDBServerURL";
+		private static ConfigVariable<string> m_databasePath = new ConfigVariable<string>(CONFIGKEY_MONGODBSERVERURL, "");
 		public static ConcurrentDictionary<Type, IResourceManager> ResourceManagers = new ConcurrentDictionary<Type, IResourceManager>();
 		public static ConcurrentDictionary<Type, IResourceFactory> Factories = new ConcurrentDictionary<Type, IResourceFactory>();
 		public static MongoClient MongoDB { get; private set; }
@@ -35,10 +37,12 @@ namespace Resources
 			var mongoDbURL = m_databasePath.Value;
 			if(string.IsNullOrEmpty(mongoDbURL))
 			{
+				Logger.Debug($"Connected to local MongoDB server");
 				MongoDB = new MongoClient();
 			}
 			else
 			{
+				Logger.Debug($"Connected to MongoDB server at {mongoDbURL}");
 				MongoDB = new MongoClient(mongoDbURL);
 			}
 
