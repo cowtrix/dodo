@@ -33,7 +33,7 @@ namespace DodoServer.Controllers.Edit
 				var registerResponse = await client.PostAsJsonAsync(REGISTER, model);
 				if (!registerResponse.IsSuccessStatusCode)
 				{
-					ModelState.AddModelError("", $"Register failed: {registerResponse.ReasonPhrase}");
+					ModelState.AddModelError("", $"Register failed: {registerResponse.ReasonPhrase}\n{await registerResponse.Content.ReadAsStringAsync()}");
 					return View(model);
 				}
 
