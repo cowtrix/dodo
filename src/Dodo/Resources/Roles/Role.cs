@@ -10,8 +10,7 @@ namespace Dodo.Roles
 {
 	public class Role : DodoResource
 	{
-		[NoPatch]
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public string PublicDescription { get; set; }

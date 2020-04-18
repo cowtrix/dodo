@@ -21,6 +21,10 @@ namespace Dodo.Utility
 		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", $"{Dodo.PRODUCT_NAME} SysAdmin");
 		static ConfigVariable<string> m_privacyPolicy = new ConfigVariable<string>("PrivacyPolicyURL", "http://www.todo.com/privacypolicy");
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
+
+		static ConfigVariable<string> m_verifyEmailTemplateGUID = new ConfigVariable<string>($"{nameof(EmailHelper)}_SendGridTemplate_VerifyEmail", "d-abb66e4f174c470abeb5e6a1ecdaac85");
+		static ConfigVariable<string> m_resetPasswordTemplateGUID = new ConfigVariable<string>($"{nameof(EmailHelper)}_SendGridTemplate_ResetPassword", "");
+
 		static SendGridClient m_client;
 
 		static Dictionary<string, string> GetStandardTemplate() => new Dictionary<string, string>()
@@ -42,14 +46,24 @@ namespace Dodo.Utility
 			SendEmail(MailHelper.CreateSingleEmail(from, to, subject, content, content));
 		}
 
+		public static void SendPasswordResetEmail(string targetEmail, string targetName, string callback)
+		{
+			SendCallbackEmail(targetEmail, targetName, callback, m_resetPasswordTemplateGUID.Value);
+		}
+
 		public static void SendEmailVerificationEmail(string targetEmail, string targetName, string callback)
+		{
+			SendCallbackEmail(targetEmail, targetName, callback, m_verifyEmailTemplateGUID.Value);
+		}
+
+		private static void SendCallbackEmail(string targetEmail, string targetName, string callback, string template)
 		{
 			var from = new EmailAddress(m_emailFrom.Value, m_nameFrom.Value);
 			var to = new EmailAddress(targetEmail, targetName);
 			var dynamicTemplateData = GetStandardTemplate();
 			dynamicTemplateData["name"] = targetName;
 			dynamicTemplateData["callback"] = callback;
-			SendEmail(MailHelper.CreateSingleTemplateEmail(from, to, "d-abb66e4f174c470abeb5e6a1ecdaac85", dynamicTemplateData));
+			SendEmail(MailHelper.CreateSingleTemplateEmail(from, to, template, dynamicTemplateData));
 		}
 
 		private static void SendEmail(SendGridMessage msg)

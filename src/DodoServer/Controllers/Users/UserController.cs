@@ -47,7 +47,8 @@ namespace Dodo.Users
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
 		{
-			var logstr = $"Login request for {login.username} (redirect: {login.redirect}).";
+			var logstr = $"Login request for {login.username}" + 
+				(string.IsNullOrEmpty(login.redirect) ? "" : $" (redirect: {login.redirect}).");
 			if (Context.User != null)
 			{
 				// User is already logged in
@@ -116,6 +117,7 @@ namespace Dodo.Users
 				Logger.Error($"Failed to log user {user} out - could not remove session token");
 			}
 			UserManager.Update(user, rscLock);
+			Logger.Debug($"Logged out user {user.AuthData.Username}");
 			return Ok();
 		}
 

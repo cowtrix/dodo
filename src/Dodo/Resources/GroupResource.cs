@@ -53,7 +53,7 @@ namespace Dodo
 		protected IResourceManager ResourceManager => ResourceUtility.GetManagerForResource(this);
 
 		[JsonProperty]
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public ResourceReference<GroupResource> Parent { get; private set; }
 
 		/// <summary>
@@ -62,8 +62,7 @@ namespace Dodo
 		[View(EPermissionLevel.PUBLIC)]
 		public string PublicDescription { get; set; }
 
-		[NoPatch]
-		[View(EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public UserMultiSigStore<AdminData> AdministratorData;
 
 		public TokenCollection SharedTokens = new TokenCollection();

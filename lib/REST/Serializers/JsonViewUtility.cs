@@ -114,6 +114,11 @@ namespace Resources
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
+			if(permissionLevel == EPermissionLevel.SYSTEM)
+			{
+				throw new ArgumentException($"Patch permission level cannot be {nameof(EPermissionLevel.SYSTEM)}." +
+					" Members with this permission level can only be altered from direct code calls.");
+			}
 			// Check for case insensitive duplicates
 			foreach (var key in values.Keys)
 			{
@@ -185,10 +190,6 @@ namespace Resources
 				if (targetMember == null)
 				{
 					continue;
-				}
-				if (targetMember.GetCustomAttribute<NoPatchAttribute>() != null)
-				{
-					throw new SecurityException($"Cannot patch field {targetMember.Name}: NoPatch");
 				}
 				var viewAttr = targetMember.GetCustomAttribute<ViewAttribute>();
 				if (viewAttr == null || viewAttr.EditPermission > permissionLevel)

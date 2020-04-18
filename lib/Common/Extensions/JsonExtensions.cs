@@ -8,14 +8,6 @@ using System.Reflection;
 
 namespace Common.Extensions
 {
-	/// <summary>
-	/// This signifies that a property or field cannot be updated via a PATCH REST command and must be updated
-	/// through some internal method
-	/// </summary>
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-	public class NoPatchAttribute : Attribute { }
-
-
 	public static class JsonExtensions
 	{
 		public static JsonSerializerSettings NetworkSettings

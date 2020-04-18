@@ -59,8 +59,7 @@ namespace Resources
 		/// from it's guid by sending a GET request to /resources/{GUID}
 		/// which will give you its ResourceURL
 		/// </summary>
-		[NoPatch]
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		[JsonProperty]
 		public Guid Guid { get; private set; }
 

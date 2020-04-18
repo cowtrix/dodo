@@ -20,5 +20,8 @@ namespace Resources
 		MEMBER = 2, // A user who is a member of the resource
 		ADMIN = 3,	// An administrator of the resource
 		OWNER = 4,	// An owner of the resource
+
+
+		SYSTEM = byte.MaxValue,	// Cannot patch
 	}
 }

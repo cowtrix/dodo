@@ -31,14 +31,6 @@ namespace Dodo.Users.Tokens
 #endif
 		}
 
-		public override void OnAdd(User user)
-		{
-			EmailHelper.SendEmail(user.PersonalData.Email, user.Name, $"{Dodo.PRODUCT_NAME}: Reset your password",
-				$"You've requested a password reset for your account on {Dns.GetHostName()}." +
-				$"To reset your password, visit the following link: {Dns.GetHostName()}/resetpassword?token={TemporaryToken}");
-			base.OnAdd(user);
-		}
-
 		public string GetNotification(AccessContext context)
 		{
 			return "You've requested your password to be reset. " +

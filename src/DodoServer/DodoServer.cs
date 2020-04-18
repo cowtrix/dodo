@@ -22,8 +22,6 @@ namespace DodoServer
 			new NetworkConfig("localhost", "0.0.0.0", 5001, 5000 ));
 		static ConfigVariable<string> m_devEmail = new ConfigVariable<string>($"{Dodo.Dodo.PRODUCT_NAME}_DevEmail", "test@web.com");
 
-		//public static SessionTokenStore Sessions = new SessionTokenStore();
-
 		public static void Main(string[] args)
 		{
 #if DEBUG
