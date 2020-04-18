@@ -135,8 +135,11 @@ namespace Dodo.Users
 				using (var rscLock = new ResourceLock(targetUser))
 				{
 					targetUser = rscLock.Value as User;
-					targetUser.TokenCollection.Add(targetUser, new ResetPasswordToken(targetUser));
+					var resetToken = new ResetPasswordToken(targetUser);
+					targetUser.TokenCollection.Add(targetUser, resetToken);
 					UserManager.Update(targetUser, rscLock);
+					EmailHelper.SendPasswordResetEmail(targetUser.PersonalData.Email, targetUser.Name,
+						$"{DodoServer.DodoServer.NetConfig.FullURI}/{RootURL}/{RESET_PASSWORD}?token={resetToken.Key}");
 				}
 			}
 			return Ok();
@@ -151,7 +154,7 @@ namespace Dodo.Users
 				return BadRequest();
 			}
 			var user = UserManager.GetSingle(u =>
-				u.TokenCollection.GetSingleToken<ResetPasswordToken>(Context)?.TemporaryToken == token);
+				u.TokenCollection.GetSingleToken<ResetPasswordToken>(Context)?.Key == token);
 			if (user == null)
 			{
 				return BadRequest();

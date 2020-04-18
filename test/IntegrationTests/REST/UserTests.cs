@@ -143,7 +143,7 @@ namespace RESTTests
 				request);
 
 			request = await Request($"{UserController.RootURL}/{UserController.RESET_PASSWORD}", EHTTPRequestType.POST,
-				newPassword, new[] { ( UserController.PARAM_TOKEN, token.TemporaryToken ) },
+				newPassword, new[] { ( UserController.PARAM_TOKEN, token.Key ) },
 				r => r.StatusCode == System.Net.HttpStatusCode.Redirect);
 
 			await Login(user.AuthData.Username, newPassword);

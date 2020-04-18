@@ -16,7 +16,7 @@ namespace Dodo.Users.Tokens
 	public class ResetPasswordToken : RedeemableToken, INotificationToken
 	{
 		const int TOKEN_SIZE = 64;
-		public string TemporaryToken { get; set; }
+		public string Key { get; set; }
 		[JsonIgnore]
 		[BsonIgnore]
 		public override bool Encrypted => false;
@@ -25,9 +25,9 @@ namespace Dodo.Users.Tokens
 
 		public ResetPasswordToken(User targetUser)
 		{
-			TemporaryToken = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+			Key = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 #if DEBUG
-			Console.WriteLine($"Reset password action added for user {targetUser.AuthData.Username}: {TemporaryToken}");
+			Console.WriteLine($"Reset password action added for user {targetUser.AuthData.Username}: {Key}");
 #endif
 		}
 

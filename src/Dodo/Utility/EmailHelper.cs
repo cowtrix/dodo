@@ -23,7 +23,7 @@ namespace Dodo.Utility
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
 
 		static ConfigVariable<string> m_verifyEmailTemplateGUID = new ConfigVariable<string>($"{nameof(EmailHelper)}_SendGridTemplate_VerifyEmail", "d-abb66e4f174c470abeb5e6a1ecdaac85");
-		static ConfigVariable<string> m_resetPasswordTemplateGUID = new ConfigVariable<string>($"{nameof(EmailHelper)}_SendGridTemplate_ResetPassword", "");
+		static ConfigVariable<string> m_resetPasswordTemplateGUID = new ConfigVariable<string>($"{nameof(EmailHelper)}_SendGridTemplate_ResetPassword", "d-43861bc9e0dd44b29b131da9b10a07d1");
 
 		static SendGridClient m_client;
 
