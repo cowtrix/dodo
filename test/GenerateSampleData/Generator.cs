@@ -29,81 +29,81 @@ namespace GenerateSampleData
 			ResourceUtility.ClearAllManagers();
 			var admin1 = GenerateUser(new UserSchema("Rebellion Tom", "tom", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
 
-			var localGroup1 = LocalGroupFactory.CreateObject(admin1context, new LocalGroupSchema("East Random place", SchemaGenerator.SampleMarkdown, SchemaGenerator.RandomLocation));
-			var localGroup2 = LocalGroupFactory.CreateObject(admin1context, new LocalGroupSchema("Random City", SchemaGenerator.SampleMarkdown, SchemaGenerator.RandomLocation));
+			var localGroup1 = LocalGroupFactory.CreateObject(admin1context, new LocalGroupSchema("East Random place", SchemaGenerator.SampleDescription, SchemaGenerator.RandomLocation));
+			var localGroup2 = LocalGroupFactory.CreateObject(admin1context, new LocalGroupSchema("Random City", SchemaGenerator.SampleDescription, SchemaGenerator.RandomLocation));
 
 
 			var amstLocation = new GeoLocation(52.373455, 4.898259);
 			var currentRebellion = RebellionFactory.CreateObject(admin1context,
-				new RebellionSchema("Amsterdam Rebellion", SchemaGenerator.SampleMarkdown, amstLocation, DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
-			var siteOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Occupational Site", typeof(PermanentSite).FullName, currentRebellion.Guid, amstLocation, SchemaGenerator.SampleMarkdown));
-			var actionOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Action", typeof(EventSite).FullName, currentRebellion.Guid, new GeoLocation(amstLocation.ToCoordinate().Latitude + 0.05, amstLocation.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleMarkdown));
-			var march = SiteFactory.CreateObject(admin1context, new SiteSchema("March", typeof(MarchSite).FullName, currentRebellion.Guid, new GeoLocation(amstLocation.ToCoordinate().Latitude - 0.05, amstLocation.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleMarkdown));
-			var sanctuary = SiteFactory.CreateObject(admin1context, new SiteSchema("Sanctuary Site", typeof(PermanentSite).FullName, currentRebellion.Guid, new GeoLocation(amstLocation.ToCoordinate().Latitude - 0.05, amstLocation.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleMarkdown));
-			var evt = SiteFactory.CreateObject(admin1context, new SiteSchema("Event Site", typeof(EventSite).FullName, currentRebellion.Guid, new GeoLocation(amstLocation.ToCoordinate().Latitude - 0.05, amstLocation.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleMarkdown));
+				new RebellionSchema("Amsterdam Rebellion", SchemaGenerator.SampleDescription, amstLocation, DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
+			var siteOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Occupational Site", typeof(PermanentSite).FullName, currentRebellion.Guid, amstLocation, SchemaGenerator.SampleDescription));
+			var actionOccupation = SiteFactory.CreateObject(admin1context, new SiteSchema("Action", typeof(EventSite).FullName, currentRebellion.Guid, new GeoLocation(amstLocation.ToCoordinate().Latitude + 0.05, amstLocation.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription));
+			var march = SiteFactory.CreateObject(admin1context, new SiteSchema("March", typeof(MarchSite).FullName, currentRebellion.Guid, new GeoLocation(amstLocation.ToCoordinate().Latitude - 0.05, amstLocation.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription));
+			var sanctuary = SiteFactory.CreateObject(admin1context, new SiteSchema("Sanctuary Site", typeof(PermanentSite).FullName, currentRebellion.Guid, new GeoLocation(amstLocation.ToCoordinate().Latitude - 0.05, amstLocation.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
+			var evt = SiteFactory.CreateObject(admin1context, new SiteSchema("Event Site", typeof(EventSite).FullName, currentRebellion.Guid, new GeoLocation(amstLocation.ToCoordinate().Latitude - 0.05, amstLocation.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
 
 
 			var actionSupport = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Action Support",
-				SchemaGenerator.SampleMarkdown, currentRebellion.Guid));
+				SchemaGenerator.SampleDescription, currentRebellion.Guid));
 			var rebelRiders = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Rebel Riders",
-				SchemaGenerator.SampleMarkdown, actionSupport.Guid));
+				SchemaGenerator.SampleDescription, actionSupport.Guid));
 			var rebelRiderRole = RoleFactory.CreateObject(admin1context, new RoleSchema("Rebel Rider Team",
-				SchemaGenerator.SampleMarkdown, rebelRiders.Guid));
+				SchemaGenerator.SampleDescription, rebelRiders.Guid));
 
 			var admin2 = GenerateUser(new UserSchema("Action Support Dave", "dave", UNIVERSAL_PASS, "admin2@web.com"), out var admin2context);
 			actionSupport.AddOrUpdateAdmin(admin1context, admin2, admin2context.Passphrase);
 
 			var deescalation = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Non-Violence & De-escalation",
-				SchemaGenerator.SampleMarkdown, actionSupport.Guid));
+				SchemaGenerator.SampleDescription, actionSupport.Guid));
 
 			var firstAid = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("First Aid",
-				SchemaGenerator.SampleMarkdown, actionSupport.Guid));
+				SchemaGenerator.SampleDescription, actionSupport.Guid));
 
 			var worldBuilding = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Worldbuilding & Production",
-				SchemaGenerator.SampleMarkdown, currentRebellion.Guid));
+				SchemaGenerator.SampleDescription, currentRebellion.Guid));
 			var sustenance = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Sustenance",
-				SchemaGenerator.SampleMarkdown, worldBuilding.Guid));
+				SchemaGenerator.SampleDescription, worldBuilding.Guid));
 			var kitchenHelper = RoleFactory.CreateObject(admin1context, new RoleSchema("Kitchen Helper",
-				SchemaGenerator.SampleMarkdown, sustenance.Guid));
+				SchemaGenerator.SampleDescription, sustenance.Guid));
 			var cartCrew = RoleFactory.CreateObject(admin1context, new RoleSchema("Food Cart Crew",
-				SchemaGenerator.SampleMarkdown, sustenance.Guid));
+				SchemaGenerator.SampleDescription, sustenance.Guid));
 
 			var sitebuilding = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Site Building",
-				SchemaGenerator.SampleMarkdown, worldBuilding.Guid));
+				SchemaGenerator.SampleDescription, worldBuilding.Guid));
 			var siteTeam = RoleFactory.CreateObject(admin1context, new RoleSchema("Installation Team",
-				SchemaGenerator.SampleMarkdown, sitebuilding.Guid));
+				SchemaGenerator.SampleDescription, sitebuilding.Guid));
 			var sanitiationTeam = RoleFactory.CreateObject(admin1context, new RoleSchema("Sanitation Team",
-				SchemaGenerator.SampleMarkdown, sitebuilding.Guid));
+				SchemaGenerator.SampleDescription, sitebuilding.Guid));
 			var transportTeam = RoleFactory.CreateObject(admin1context, new RoleSchema("Transport Team",
-				SchemaGenerator.SampleMarkdown, sitebuilding.Guid));
+				SchemaGenerator.SampleDescription, sitebuilding.Guid));
 
 			var mediaandmessaging = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Media & Messaging",
-				SchemaGenerator.SampleMarkdown, currentRebellion.Guid));
+				SchemaGenerator.SampleDescription, currentRebellion.Guid));
 			var spokespeople = RoleFactory.CreateObject(admin1context, new RoleSchema("Spokespeople & Training",
-				SchemaGenerator.SampleMarkdown, mediaandmessaging.Guid));
+				SchemaGenerator.SampleDescription, mediaandmessaging.Guid));
 			var press = RoleFactory.CreateObject(admin1context, new RoleSchema("Press",
-				SchemaGenerator.SampleMarkdown, mediaandmessaging.Guid));
+				SchemaGenerator.SampleDescription, mediaandmessaging.Guid));
 			var video = RoleFactory.CreateObject(admin1context, new RoleSchema("Video",
-				SchemaGenerator.SampleMarkdown, mediaandmessaging.Guid));
+				SchemaGenerator.SampleDescription, mediaandmessaging.Guid));
 			var photography = RoleFactory.CreateObject(admin1context, new RoleSchema("Photography",
-				SchemaGenerator.SampleMarkdown, mediaandmessaging.Guid));
+				SchemaGenerator.SampleDescription, mediaandmessaging.Guid));
 
 			var movementSupp = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Movement Support",
-				SchemaGenerator.SampleMarkdown, currentRebellion.Guid));
+				SchemaGenerator.SampleDescription, currentRebellion.Guid));
 
 			var stewarding = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Stewards",
-				SchemaGenerator.SampleMarkdown, movementSupp.Guid));
+				SchemaGenerator.SampleDescription, movementSupp.Guid));
 			var stewTeam = RoleFactory.CreateObject(admin1context, new RoleSchema("Stewarding Team",
-				SchemaGenerator.SampleMarkdown, stewarding.Guid));
+				SchemaGenerator.SampleDescription, stewarding.Guid));
 
 			var outreach = WorkingGroupFactory.CreateObject(admin1context, new WorkingGroupSchema("Outreach",
-				SchemaGenerator.SampleMarkdown, movementSupp.Guid));
+				SchemaGenerator.SampleDescription, movementSupp.Guid));
 			var welcomeTeam = RoleFactory.CreateObject(admin1context, new RoleSchema("Welcome Team",
-				SchemaGenerator.SampleMarkdown, stewarding.Guid));
+				SchemaGenerator.SampleDescription, stewarding.Guid));
 			var outreachTeam = RoleFactory.CreateObject(admin1context, new RoleSchema("Roving Outreach Team",
-				SchemaGenerator.SampleMarkdown, stewarding.Guid));
+				SchemaGenerator.SampleDescription, stewarding.Guid));
 			var inductions = RoleFactory.CreateObject(admin1context, new RoleSchema("Inductions & Training",
-				SchemaGenerator.SampleMarkdown, stewarding.Guid));
+				SchemaGenerator.SampleDescription, stewarding.Guid));
 		}
 
 		private static User GenerateUser(UserSchema schema, out AccessContext context)

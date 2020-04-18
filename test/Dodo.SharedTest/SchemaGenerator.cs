@@ -35,7 +35,7 @@ namespace Dodo.SharedTest
 		}
 
 		private static Random m_random = new Random();
-		public static string SampleMarkdown => File.ReadAllText(@"resources\SampleMarkdown.md");
+		public static string SampleDescription => "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 		public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
 		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
 		private static string RandomName => StringExtensions.RandomString(32);
@@ -60,7 +60,7 @@ namespace Dodo.SharedTest
 				context,
 				GetRandomWorkinGroup(context));
 			return new RoleSchema(RandomName,
-				SampleMarkdown,
+				SampleDescription,
 				wg.Guid);
 		}
 
@@ -69,7 +69,7 @@ namespace Dodo.SharedTest
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				context,
 				GetRandomRebellion(context));
-			return new SiteSchema(RandomName, typeof(T).FullName, rb.Guid, RandomLocation, SampleMarkdown);
+			return new SiteSchema(RandomName, typeof(T).FullName, rb.Guid, RandomLocation, SampleDescription);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)
@@ -85,7 +85,7 @@ namespace Dodo.SharedTest
 		{
 			var startDate = RandomDate;
 			return new RebellionSchema(RandomName,
-				SampleMarkdown,
+				SampleDescription,
 				RandomLocation,
 				startDate,
 				startDate + TimeSpan.FromDays(m_random.NextDouble() * 14)
@@ -98,7 +98,7 @@ namespace Dodo.SharedTest
 				context,
 				GetRandomRebellion(context));
 			return new WorkingGroupSchema(RandomName,
-				SampleMarkdown,
+				SampleDescription,
 				rsc.Guid
 			);
 		}
@@ -109,7 +109,7 @@ namespace Dodo.SharedTest
 				context,
 				GetRandomRebellion(context));
 			return new LocalGroupSchema(RandomName,
-				SampleMarkdown,
+				SampleDescription,
 				RandomLocation
 			);
 		}

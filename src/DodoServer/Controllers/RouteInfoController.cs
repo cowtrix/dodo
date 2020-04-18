@@ -19,11 +19,6 @@ namespace Resources
 	public class RouteInfoController : Controller
 	{
 		private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
-#if DEBUG
-		static string TableStyle => System.IO.File.ReadAllText(Path.Combine(@"..\..\resources", "EmbeddedCss.css"));
-#else
-		static string TableStyle => System.IO.File.ReadAllText(Path.Combine("resources", "EmbeddedCss.css"));
-#endif
 
 		List<Type> m_documentedTypes = new List<Type>()
 		{
@@ -97,7 +92,6 @@ namespace Resources
 		string CollectionToHtmlTable(IEnumerable<IEnumerable<string>> table)
 		{
 			var sb = new StringBuilder("<!DOCTYPE html><html><body><table>");
-			sb.Append($"<style>{TableStyle}</style>");
 
 			sb.Append("<thead><tr><th>");
 			sb.Append(string.Join("</th><th>", table.First()));
