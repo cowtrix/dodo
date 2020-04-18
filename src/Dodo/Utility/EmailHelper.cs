@@ -55,10 +55,13 @@ namespace Dodo.Utility
 		private static void SendEmail(SendGridMessage msg)
 		{
 #if DEBUG
-			Logger.Warning("Sending of email suppressed due to debug mode");
 			EmailHistory.Add(msg);
-			return;
 #endif
+			if(string.IsNullOrEmpty(m_sendGridAPIKey.Value))
+			{
+				Logger.Error($"No SendGrid API key was set - suppressing email send");
+				return;
+			}
 			var t = new Task(async () =>
 			{
 				var response = await m_client.SendEmailAsync(msg);
