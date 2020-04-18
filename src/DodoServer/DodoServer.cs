@@ -26,6 +26,9 @@ namespace DodoServer
 
 		public static void Main(string[] args)
 		{
+#if DEBUG
+			Logger.Warning($"Running in Debug mode");
+#endif
 			SessionTokenStore.Initialise();
 			CreateHostBuilder(args).Build().Run();
 		}
@@ -35,7 +38,7 @@ namespace DodoServer
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<DodoStartup>();
-					webBuilder.UseUrls($"https://{NetConfig.IP}:{NetConfig.SSLPort}", $"http://{NetConfig.IP}:{NetConfig.HTTPPort}");
+					webBuilder.UseUrls($"https://{NetConfig.Hostname}:{NetConfig.SSLPort}", $"http://{NetConfig.Hostname}:{NetConfig.HTTPPort}");
 					// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2
 					webBuilder.UseKestrel(options =>
 						options.ConfigureEndpointDefaults(defaults =>
