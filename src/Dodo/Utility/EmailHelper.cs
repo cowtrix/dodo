@@ -23,7 +23,7 @@ namespace Dodo.Utility
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
 		static SendGridClient m_client;
 
-		static Dictionary<string, string> StandardTemplate => new Dictionary<string, string>()
+		static Dictionary<string, string> GetStandardTemplate() => new Dictionary<string, string>()
 		{
 			{ "product_name", Dodo.PRODUCT_NAME },
 			{ "privacy_policy", m_privacyPolicy.Value }
@@ -46,9 +46,9 @@ namespace Dodo.Utility
 		{
 			var from = new EmailAddress(m_emailFrom.Value, m_nameFrom.Value);
 			var to = new EmailAddress(targetEmail, targetName);
-			var dynamicTemplateData = StandardTemplate;
-			StandardTemplate["name"] = targetName;
-			StandardTemplate["callback"] = callback;
+			var dynamicTemplateData = GetStandardTemplate();
+			dynamicTemplateData["name"] = targetName;
+			dynamicTemplateData["callback"] = callback;
 			SendEmail(MailHelper.CreateSingleTemplateEmail(from, to, "d-abb66e4f174c470abeb5e6a1ecdaac85", dynamicTemplateData));
 		}
 
@@ -65,11 +65,10 @@ namespace Dodo.Utility
 			var t = new Task(async () =>
 			{
 				var response = await m_client.SendEmailAsync(msg);
-				if(response.StatusCode != HttpStatusCode.OK)
+				if(response.StatusCode != HttpStatusCode.Accepted)
 				{
-					Logger.Error($"Failed to send email message, error code {response.StatusCode}: {await response.Body.ReadAsStringAsync()}");
+					Logger.Error($"Failed to send email message, error code {response.StatusCode}: Body:[{await response.Body.ReadAsStringAsync()}]");
 				}
-				Logger.Debug($"Sent email to SendGrid API: {response.StatusCode}: {await response.Body.ReadAsStringAsync()}");
 			});
 			t.Start();
 		}
