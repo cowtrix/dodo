@@ -6,21 +6,17 @@ namespace Dodo
 	public struct NetworkConfig
 	{
 		[JsonIgnore]
-#if DEBUG
-		public string FullURI => $"https://{Domain}:{SSLPort}";
-#else
 		public string FullURI => $"https://{Domain}";
-#endif
 
-		public string IP;
+		public string Hostname;
 		public int SSLPort;
 		public string Domain;
 		public bool LetsEncryptAutoSetup;
 		public int HTTPPort;
 
-		public NetworkConfig(string domain, string ip, int sslPort, int httpPort, bool letsEncrypt = false)
+		public NetworkConfig(string domain, string hostname, int sslPort, int httpPort, bool letsEncrypt = false)
 		{
-			IP = ip;
+			Hostname = hostname;
 			Domain = domain;
 			SSLPort = sslPort;
 			HTTPPort = httpPort;
