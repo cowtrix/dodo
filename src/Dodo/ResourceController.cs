@@ -108,6 +108,9 @@ namespace Resources
 							case JsonValueKind.Array:
 								result[sub.Key] = sub.Value.EnumerateArray().ToList();
 								break;
+							case JsonValueKind.Null:
+								result[sub.Key] = null;
+								break;
 							default:
 								throw new Exception($"Unsupported JsonValueKind {sub.Value.ValueKind}");
 						}

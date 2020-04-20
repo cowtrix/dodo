@@ -5,22 +5,17 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Resources
+namespace Resources.Location
 {
-	public static class GeocodingService
-	{
-		//private PersistentStore<>
-	}
-
 	/// <summary>
 	/// Represents a geographic location on the Earth's surface
 	/// </summary>
 	[Serializable]
 	public struct GeoLocation : IVerifiable
 	{
+		[BsonIgnore]
+		public LocationData LocationData => LocationManager.GetLocationData(this);
 		public GeoCoordinatePortable.GeoCoordinate ToCoordinate() => new GeoCoordinate(Latitude, Longitude);
-		[JsonProperty]
-		private Guid m_reverseGeocodingKey { get; set; }
 		[JsonProperty]
 		[Range(-90, 90)]
 		public double Latitude { get { return m_lat; } set { m_lat = WrapClamp(value, -90, 90); } }

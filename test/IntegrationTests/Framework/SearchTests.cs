@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Common.Extensions;
+using Resources.Location;
 
 namespace RESTTests
 {

@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using Common;
 using Common.Security;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
+using Resources.Location;
 using Resources.Security;
 
 namespace Security

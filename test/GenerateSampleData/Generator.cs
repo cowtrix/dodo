@@ -8,6 +8,7 @@ using Dodo.Sites;
 using Dodo.Users;
 using Dodo.WorkingGroups;
 using Resources;
+using Resources.Location;
 using Resources.Security;
 using System;
 

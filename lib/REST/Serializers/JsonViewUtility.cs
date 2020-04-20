@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Common;
+using Resources.Location;
 
 namespace Resources
 {
@@ -47,12 +48,17 @@ namespace Resources
 				return null;
 			}
 
+			// Handle composite/primitive object case
+			var targetType = obj.GetType();
+			if (ShouldSerializeDirectly(targetType))
+			{
+				throw new Exception($"Cannot generate JSON view for type {targetType}");
+			}
+
 			var vals = new Dictionary<string, object>();
 
-			// Get fields and properties, filter to what we can view with our permission level
-			var targetType = obj.GetType();
 
-			// Handle composite/primitive object case
+			// Get fields and properties, filter to what we can view with our permission level
 			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
 			allMembers.AddRange(targetType.GetFields());
 			var filteredMembers = allMembers.Where(m =>

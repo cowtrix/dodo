@@ -1,0 +1,34 @@
+using Common.Extensions;
+
+namespace Resources.Location
+{
+	public class LocationData
+	{
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string Country { get; set; }
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string Region { get; set; }
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string Postcode { get; set; }
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string District { get; set; }
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string Place { get; set; }
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string Locality { get; set; }
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string Neighborhood { get; set; }
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string Address { get; set; }
+
+		public override string ToString() =>
+			Address.AppendIfNotNull(", ") +			
+			Neighborhood.AppendIfNotNull(", ") +
+			Locality.AppendIfNotNull(", ") +
+			Place.AppendIfNotNull(", ") +
+			District.AppendIfNotNull(", ") +
+			Postcode.AppendIfNotNull(", ") +
+			Region.AppendIfNotNull(", ") +
+			Country;
+	}
+}

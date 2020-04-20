@@ -4,6 +4,7 @@ using Common.Extensions;
 using Common;
 using Resources.Serializers;
 using Dodo.Resources;
+using Resources.Location;
 
 namespace Dodo.LocalGroups
 {

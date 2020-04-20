@@ -2,6 +2,7 @@ using Common;
 using Common.Extensions;
 using Dodo.Resources;
 using Resources;
+using Resources.Location;
 using System;
 
 namespace Dodo.Sites
