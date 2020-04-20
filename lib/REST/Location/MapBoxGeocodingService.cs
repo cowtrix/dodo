@@ -58,5 +58,27 @@ namespace Resources.Location
 				Address = GetFromFeatures(features, "address"),
 			};
 		}
+
+		public async Task<GeoLocation> GetLocation(string searchString)
+		{
+			var response = await m_httpClient.GetAsync(
+				"/geocoding/v5/mapbox.places/" +    // TODO: change to permanent?
+				$"{searchString}.json" +
+				$"?access_token={ApiKey}");
+			var body = await response.Content.ReadAsStringAsync();
+			if (!response.IsSuccessStatusCode)
+			{
+				Logger.Error($"{nameof(MapBoxGeocodingService)}: {response.StatusCode}\n{body}");
+				return default;
+			}
+			var json = JsonConvert.DeserializeObject<JObject>(body);
+			var firstResult = json.Value<JArray>("features").FirstOrDefault();
+			if(firstResult == null)
+			{
+				return default;
+			}
+			var center = firstResult.Value<JArray>("center");
+			return new GeoLocation(center[1].Value<double>(), center[0].Value<double>());
+		}
 	}
 }

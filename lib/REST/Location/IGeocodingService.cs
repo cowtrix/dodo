@@ -6,5 +6,6 @@ namespace Resources.Location
 	{
 		bool Enabled { get; }
 		Task<LocationData> GetLocationData(GeoLocation location);
+		Task<GeoLocation> GetLocation(string searchString);
 	}
 }

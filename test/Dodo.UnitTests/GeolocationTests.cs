@@ -16,12 +16,6 @@ namespace Dodo.UnitTests
 			LocationManager.ClearCache();
 		}
 
-		class MyClass
-		{
-			[View(EPermissionLevel.PUBLIC)]
-			public GeoLocation Location;
-		}
-
 		[TestMethod]
 		public async Task CanReverseGeocodeFromGeolocation()
 		{
@@ -34,8 +28,16 @@ namespace Dodo.UnitTests
 			Assert.AreEqual("Netherlands", locationData.Country);
 			Assert.AreEqual("Amsterdam", locationData.Place);
 			Assert.AreEqual("1012 EG", locationData.Postcode);
+		}
 
-			var locDataJson = JsonConvert.SerializeObject(JsonViewUtility.GenerateJsonView(new MyClass { Location = location }, EPermissionLevel.PUBLIC, null, default), Common.Extensions.JsonExtensions.NetworkSettings);
+		[TestMethod]
+		public async Task CanGeocodeFromString()
+		{
+			var searchString = "Amsterdam";
+			var expectedLocation = new GeoLocation(52.370216, 4.895168);
+			var location = await LocationManager.GetLocation(searchString);
+			var distance = expectedLocation.ToCoordinate().GetDistanceTo(location.ToCoordinate());
+			Assert.IsTrue(distance < 1000, $"Distance was too high: {distance}m");
 		}
 	}
 

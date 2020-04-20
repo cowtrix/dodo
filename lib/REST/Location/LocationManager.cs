@@ -50,5 +50,10 @@ namespace Resources.Location
 			m_locationCache[location] = data;
 			return data;
 		}
+
+		public static Task<GeoLocation> GetLocation(string searchString)
+		{
+			return m_service.GetLocation(searchString);
+		}
 	}
 }
