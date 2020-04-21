@@ -18,6 +18,7 @@ using DodoResources;
 using DodoTest.Framework.Postman;
 using Resources.Security;
 using Dodo.Utility;
+using Dodo.Resources;
 
 namespace RESTTests
 {
@@ -43,8 +44,8 @@ namespace RESTTests
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
-					(nameof(DistanceFilter.latlong), $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
-					(nameof(DistanceFilter.distance), "20.6"),
+					(nameof(DistanceFilter.LatLong), $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
+					(nameof(DistanceFilter.Distance), "20.6"),
 				});
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
@@ -68,8 +69,8 @@ namespace RESTTests
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
-					(nameof(DateFilter.startdate), $"{resource.StartDate.ToShortDateString()}"),
-					(nameof(DateFilter.enddate), $"{resource.EndDate.ToShortDateString()}")
+					(nameof(DateFilter.StartDate), $"{resource.StartDate.ToShortDateString()}"),
+					(nameof(DateFilter.EndDate), $"{resource.EndDate.ToShortDateString()}")
 				});
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));

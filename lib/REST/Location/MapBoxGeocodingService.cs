@@ -3,6 +3,7 @@ using Common.Config;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace Resources.Location
 		static MapBoxGeocodingService()
 		{
 			m_httpClient = new HttpClient() { BaseAddress = m_baseUrl };
+			Logger.Info($"Using MapBox API Key {ApiKey}");
 		}
 
 		public async Task<LocationData> GetLocationData(GeoLocation location)
@@ -29,7 +31,7 @@ namespace Resources.Location
 			{
 				return arr.FirstOrDefault(j => j.Value<JArray>("place_type").Values<string>().Contains(key))?.Value<string>("text");
 			}
-			if(string.IsNullOrEmpty(ApiKey))
+			if(!Enabled)
 			{
 				Logger.Warning($"No MapBox API Key is set.");
 				return null;
@@ -59,26 +61,74 @@ namespace Resources.Location
 			};
 		}
 
-		public async Task<GeoLocation> GetLocation(string searchString)
+		public async Task<IEnumerable<GeoLocation>> GetLocations(string searchString)
 		{
+			if(!Enabled)
+			{
+				Logger.Warning($"No MapBox API Key is set.");
+				return null;
+			}
+			void SetViaString(LocationData data, string name, JToken context)
+			{
+				switch (name)
+				{
+					case "address":
+						data.Address = context["text"].Value<string>();
+						break;
+					case "neighborhood":
+						data.Neighborhood = context["text"].Value<string>();
+						break;
+					case "locality":
+						data.Locality = context["text"].Value<string>();
+						break;
+					case "place":
+						data.Place = context["text"].Value<string>();
+						break;
+					case "district":
+						data.District = context["text"].Value<string>();
+						break;
+					case "postcode":
+						data.Postcode = context["text"].Value<string>();
+						break;
+					case "region":
+						data.Region = context["text"].Value<string>();
+						break;
+					case "country":
+						data.Country = context["text"].Value<string>();
+						break;
+					default:
+						Logger.Error($"Unexpected context type {name}");
+						break;
+				}
+			}
 			var response = await m_httpClient.GetAsync(
 				"/geocoding/v5/mapbox.places/" +    // TODO: change to permanent?
-				$"{searchString}.json" +
+				$"{Uri.EscapeUriString(searchString)}.json" +
 				$"?access_token={ApiKey}");
 			var body = await response.Content.ReadAsStringAsync();
 			if (!response.IsSuccessStatusCode)
 			{
-				Logger.Error($"{nameof(MapBoxGeocodingService)}: {response.StatusCode}\n{body}");
-				return default;
+				Logger.Error($"{response.StatusCode}\n{body}");
+				return null;
 			}
 			var json = JsonConvert.DeserializeObject<JObject>(body);
-			var firstResult = json.Value<JArray>("features").FirstOrDefault();
-			if(firstResult == null)
+			List<GeoLocation> results = new List<GeoLocation>();
+			foreach(var result in json.Value<JArray>("features").Values<JObject>())
 			{
-				return default;
+				var center = result.Value<JArray>("center");
+				var loc = new GeoLocation(center[1].Value<double>(), center[0].Value<double>());
+				var data = new LocationData();
+				foreach(var context in result.Value<JArray>("context"))
+				{
+					var contextType = context["id"].Value<string>();
+					contextType = contextType.Substring(0, contextType.IndexOf('.'));
+					SetViaString(data, contextType, context);
+				}
+				LocationManager.ForceCache(loc, data);
+				results.Add(loc);
 			}
-			var center = firstResult.Value<JArray>("center");
-			return new GeoLocation(center[1].Value<double>(), center[0].Value<double>());
+			return results;
 		}
+
 	}
 }

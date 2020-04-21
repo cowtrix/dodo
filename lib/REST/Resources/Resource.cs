@@ -13,6 +13,7 @@ namespace Resources
 	public interface IRESTResource : IVerifiable
 	{
 		Guid Guid { get; }
+		uint Revision { get; set; }
 		string Name { get; }
 		void OnDestroy();
 		void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
@@ -44,8 +45,6 @@ namespace Resources
 
 	/// <summary>
 	/// A resource is a component that can be interacted with through REST API calls
-	/// It has a location on the server (given by ResourceURL) that MUST be unique
-	/// It also has a UUID, which can be an alternate accessor using resources/uuid
 	/// </summary>
 	[BsonIgnoreExtraElements(Inherited = true)]
 	public abstract class Resource : IRESTResource
@@ -54,11 +53,6 @@ namespace Resources
 		public const string METADATA = "metadata";
 		public const string METADATA_PERMISSION = "permission";
 
-		/// <summary>
-		/// The GUID of the resource is unique. You can get a resource
-		/// from it's guid by sending a GET request to /resources/{GUID}
-		/// which will give you its ResourceURL
-		/// </summary>
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		[JsonProperty]
 		public Guid Guid { get; private set; }
@@ -67,6 +61,13 @@ namespace Resources
 		[JsonProperty]
 		[UserFriendlyName]
 		public string Name { get; set; }
+
+		/// <summary>
+		/// This should only ever be incremented on ResourceManager.Update()
+		/// </summary>
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[JsonProperty]
+		public uint Revision { get; set; }
 
 		public Resource(ResourceSchemaBase schema)
 		{

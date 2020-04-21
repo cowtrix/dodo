@@ -1,11 +1,15 @@
 using Dodo.Users;
 using Resources.Security;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Resources
 {
 	public static class DodoJsonViewUtility
 	{
+		private static Dictionary<(Guid, uint), Dictionary<string, object>> m_cache = new Dictionary<(Guid, uint), Dictionary<string, object>>();
+
 		/// <summary>
 		/// This will generate a JSON object that represents viewable properties of this object.
 		/// An object is marked as viewable with the ViewAttribute. Fields and properties
@@ -15,6 +19,17 @@ namespace Resources
 		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility,
 			User requester, Passphrase passphrase)
 		{
+			if(obj is IRESTResource resource)
+			{
+				// Try to hit the resource cache
+				if(m_cache.TryGetValue((resource.Guid, resource.Revision), out var cacheVal))
+				{
+					return cacheVal;
+				}
+				var result = JsonViewUtility.GenerateJsonView(obj, visibility, new ResourceReference<User>(requester), passphrase);
+				m_cache[(resource.Guid, resource.Revision)] = result;
+				return result;
+			}
 			return JsonViewUtility.GenerateJsonView(obj, visibility, new ResourceReference<User>(requester), passphrase);
 		}
 
@@ -25,8 +40,7 @@ namespace Resources
 		public static List<Dictionary<string, object>> GenerateJsonViewEnumerable<T>(this IEnumerable<T> obj,
 			EPermissionLevel visibility, User requester, Passphrase passphrase)
 		{
-			return JsonViewUtility.GenerateJsonViewEnumerable(obj, visibility, 
-				new ResourceReference<User>(requester), passphrase);
+			return obj.Select(x => x.GenerateJsonView(visibility, requester, passphrase)).ToList();
 		}
 	}
 }

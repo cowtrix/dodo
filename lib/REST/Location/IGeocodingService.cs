@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Resources.Location
@@ -6,6 +7,6 @@ namespace Resources.Location
 	{
 		bool Enabled { get; }
 		Task<LocationData> GetLocationData(GeoLocation location);
-		Task<GeoLocation> GetLocation(string searchString);
+		Task<IEnumerable<GeoLocation>> GetLocations(string searchString);
 	}
 }

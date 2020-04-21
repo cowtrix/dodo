@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Extensions;
 using System;
 
@@ -12,7 +12,7 @@ namespace Resources
 
 	public interface IResourceFactory 
 	{
-		object CreateObject(object context, ResourceSchemaBase schema);
+		IRESTResource CreateObject(object context, ResourceSchemaBase schema);
 	}
 
 	public abstract class ResourceFactory<TResult, TSchema, TContext> 
@@ -58,7 +58,7 @@ namespace Resources
 			return schema.Verify(out error);
 		}
 
-		public object CreateObject(object context, ResourceSchemaBase schema)
+		public IRESTResource CreateObject(object context, ResourceSchemaBase schema)
 		{
 			return CreateObject((TContext)context, (TSchema)schema);
 		}

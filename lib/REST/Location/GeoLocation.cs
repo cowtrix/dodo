@@ -14,7 +14,21 @@ namespace Resources.Location
 	public struct GeoLocation : IVerifiable
 	{
 		[BsonIgnore]
-		public LocationData LocationData => LocationManager.GetLocationData(this);
+		public LocationData LocationData
+		{
+			get
+			{
+				if(m_data == null)
+				{
+					m_data = LocationManager.GetLocationData(this);
+				}
+				return m_data;
+			}
+		}
+		[JsonIgnore]
+		[BsonElement]
+		private LocationData m_data;
+
 		public GeoCoordinatePortable.GeoCoordinate ToCoordinate() => new GeoCoordinate(Latitude, Longitude);
 		[JsonProperty]
 		[Range(-90, 90)]
@@ -30,6 +44,7 @@ namespace Resources.Location
 		{
 			m_lat = WrapClamp(latitude, -90, 90);
 			m_long = WrapClamp(longitude, -180, 180);
+			m_data = null;
 		}
 
 		private static double WrapClamp(double x, double x_min, double x_max)
@@ -79,7 +94,7 @@ namespace Resources.Location
 
 		public override string ToString()
 		{
-			return $"Lat:{Latitude} Long:{Longitude}";
+			return $"Lat:{Latitude} Long:{Longitude}" + (LocationData != null ? $" {LocationData}" : "");
 		}
 
 		public bool VerifyExplicit(out string error)

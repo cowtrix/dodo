@@ -1,31 +1,31 @@
-﻿using Resources;
+using Resources;
 using System;
 using Dodo;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DodoResources
+namespace Dodo.Resources
 {
-	public class DateFilter
+	public class DateFilter : ISearchFilter
 	{
-		public string startdate { get; set; }
-		public string enddate { get; set; }
+		public string StartDate { get; set; }
+		public string EndDate { get; set; }
 
 		private bool m_generatedData;
 		private DateTime m_startDate;
 		private DateTime m_endDate;
 		private bool m_empty;
 
-		public void GenerateFilterData()
+		public void Initialise()
 		{
 			if (m_generatedData)
 			{
 				return;
 			}
 			m_generatedData = true;
-			m_startDate = string.IsNullOrEmpty(startdate) ? DateTime.MinValue : DateTime.Parse(startdate);
-			m_endDate = string.IsNullOrEmpty(enddate) ? DateTime.MaxValue : DateTime.Parse(enddate);
-			if (string.IsNullOrEmpty(startdate) && string.IsNullOrEmpty(enddate))
+			m_startDate = string.IsNullOrEmpty(StartDate) ? DateTime.MinValue : DateTime.Parse(StartDate);
+			m_endDate = string.IsNullOrEmpty(EndDate) ? DateTime.MaxValue : DateTime.Parse(EndDate);
+			if (string.IsNullOrEmpty(StartDate) && string.IsNullOrEmpty(EndDate))
 			{
 				m_empty = true;
 			}
@@ -33,7 +33,7 @@ namespace DodoResources
 
 		public bool Filter(IRESTResource rsc)
 		{
-			GenerateFilterData();
+			Initialise();
 			if (m_empty)
 			{
 				return true;
@@ -47,7 +47,7 @@ namespace DodoResources
 
 		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
 		{
-			GenerateFilterData();
+			Initialise();
 			if (m_empty || !rsc.Any())
 			{
 				return rsc;
