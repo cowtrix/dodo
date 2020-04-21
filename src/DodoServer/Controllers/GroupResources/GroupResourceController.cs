@@ -102,12 +102,9 @@ namespace DodoResources
 			}
 			try
 			{
-				var sw = new Stopwatch();
-				sw.Start();
-				var resources = DodoResourceUtility.Search<T>(locationFilter, dateFilter, stringFilter, index);
-				var view = resources.Select(rsc => rsc.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase)).ToList();
-				Logger.Debug($"Resource search took {sw.Elapsed}");
-				return Ok(view);
+				var resources = DodoResourceUtility.Search<T>(locationFilter, dateFilter, stringFilter, index, SearchController.ChunkSize);
+				var view = resources.Select(rsc => rsc.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
+				return Ok(view.ToList());
 			}
 			catch (Exception e)
 			{
