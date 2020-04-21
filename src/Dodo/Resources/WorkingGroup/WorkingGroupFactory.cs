@@ -1,4 +1,4 @@
-﻿using Dodo.Resources;
+using Dodo.Resources;
 using Resources;
 using Resources.Serializers;
 using System;

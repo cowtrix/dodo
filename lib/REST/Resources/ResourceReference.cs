@@ -27,7 +27,7 @@ namespace Resources
 		}
 
 		[JsonIgnore]
-		public bool HasValue { get { return GetValue() != null; } }
+		public bool HasValue { get { return Guid != default; } }
 
 		public ResourceReference(T resource)
 		{

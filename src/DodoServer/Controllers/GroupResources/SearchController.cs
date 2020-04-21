@@ -10,7 +10,7 @@ using Dodo.Resources;
 namespace DodoResources
 {
 	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
-	public class SearchController : CustomController<DodoResource, DodoResourceSchemaBase>
+	public class SearchController : CustomController<DodoResource, ResourceSchemaBase>
 	{
 		public const string RootURL = "search";
 		private const int ChunkSize = 10;

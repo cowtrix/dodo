@@ -7,7 +7,7 @@ namespace Dodo
 {
 	public class AuthorizationManager<T, TSchema> 
 		where T: IDodoResource 
-		where TSchema: DodoResourceSchemaBase
+		where TSchema: ResourceSchemaBase
 	{
 		public AuthorizationManager(ControllerContext controllercontext, HttpRequest request)
 		{

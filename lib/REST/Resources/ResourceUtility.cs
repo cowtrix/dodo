@@ -119,6 +119,7 @@ namespace Resources
 		#region Managers
 		public static void ClearAllManagers()
 		{
+			Logger.Warning($"Purging MongoDB database");
 			foreach(var rm in ResourceManagers)
 			{
 				rm.Value.Clear();

@@ -27,7 +27,7 @@ namespace Resources
 	[ApiController]
 	public abstract class ResourceController<T, TSchema> : CustomController<T, TSchema>
 		where T : class, IDodoResource
-		where TSchema : DodoResourceSchemaBase
+		where TSchema : ResourceSchemaBase
 	{
 		public virtual Task<IActionResult> Create([FromBody] TSchema schema)
 		{

@@ -13,7 +13,7 @@ namespace Factory
 {
 	public abstract class FactoryTestBase<T, TSchema> : TestBase
 		where T : IRESTResource
-		where TSchema : DodoResourceSchemaBase
+		where TSchema : ResourceSchemaBase
 	{
 		[TestMethod]
 		public void CanCreateFromSchema()
@@ -30,7 +30,7 @@ namespace Factory
 		{
 			var factory = ResourceUtility.GetFactory<T>();
 			GetRandomUser(out _, out var context);
-			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as DodoResourceSchemaBase;
+			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as ResourceSchemaBase;
 			var badContext = new AccessContext(context.User, new Resources.Security.Passphrase("asbasdbasdb"));
 			AssertX.Throws<Exception>(() => factory.CreateObject(badContext, schema),
 				e => e.Message.Contains("Bad authorisation"));
@@ -41,7 +41,7 @@ namespace Factory
 		{
 			var factory = ResourceUtility.GetFactory<T>();
 			GetRandomUser(out _, out var context);
-			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as DodoResourceSchemaBase;
+			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as ResourceSchemaBase;
 			schema.Name = "Admin - this is an invalid name value";
 			AssertX.Throws<Exception>(() => factory.CreateObject(context, schema),
 				e => e.Message.Contains("Name contains reserved word"));

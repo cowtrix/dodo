@@ -59,7 +59,7 @@ namespace GenerateSampleData
 			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - 1)));
 
 			var currentRebellion = RebellionFactory.CreateObject(context,
-				new RebellionSchema("Amsterdam Rebellion", SchemaGenerator.SampleDescription, location, DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
+				new RebellionSchema($"{city} Rebellion", SchemaGenerator.SampleDescription, location, DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));
 			var siteOccupation = SiteFactory.CreateObject(context, new SiteSchema("Central Occupation", typeof(PermanentSite).FullName, currentRebellion.Guid, location, SchemaGenerator.SampleDescription));
 			var actionOccupation = SiteFactory.CreateObject(context, new SiteSchema("Protest For Nature", typeof(EventSite).FullName, currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude + 0.05, location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription));
 			var march = SiteFactory.CreateObject(context, new SiteSchema("Youth March", typeof(MarchSite).FullName, currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription));

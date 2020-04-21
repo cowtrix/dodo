@@ -39,6 +39,13 @@ namespace Dodo.Sites
 			{
 				throw new Exception(error);
 			}
+			// Add listing to parent resource if needed				
+			using var rscLock = new ResourceLock(newSite.Parent.Guid);
+			{
+				var parent = rscLock.Value as GroupResource;
+				parent.AddChild(newSite);
+				ResourceUtility.GetManager(parent.GetType()).Update(parent, rscLock);
+			}
 			return newSite;
 		}
 

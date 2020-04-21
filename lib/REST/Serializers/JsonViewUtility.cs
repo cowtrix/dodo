@@ -23,6 +23,7 @@ namespace Resources
 	/// </summary>
 	public static class JsonViewUtility
 	{
+		private static Dictionary<(Guid, uint), Dictionary<string, object>> m_cache = new Dictionary<(Guid, uint), Dictionary<string, object>>();
 
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
@@ -46,6 +47,15 @@ namespace Resources
 			if (obj == null)
 			{
 				return null;
+			}
+
+			if (obj is IRESTResource resource)
+			{
+				// Try to hit the resource cache
+				if (m_cache.TryGetValue((resource.Guid, resource.Revision), out var cacheVal))
+				{
+					return cacheVal;
+				}
 			}
 
 			// Handle composite/primitive object case
@@ -87,6 +97,12 @@ namespace Resources
 				var metadata = new Dictionary<string, object>();
 				(obj as Resource).AppendMetadata(metadata, visibility, requester, passphrase);
 				vals.Add(Resource.METADATA, metadata);
+			}
+
+			if (obj is IRESTResource finalRsc)
+			{
+				m_cache[(finalRsc.Guid, finalRsc.Revision)] = vals;
+				return vals;
 			}
 			return vals;
 		}

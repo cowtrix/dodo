@@ -9,12 +9,14 @@ using Resources;
 using Resources.Serializers;
 using Common.Security;
 using Dodo.Users.Tokens;
+using Dodo.Resources;
+using Common;
 
 namespace Dodo
 {
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
-	public abstract class GroupResourceSchemaBase : DodoResourceSchemaBase 
+	public abstract class GroupResourceSchemaBase : ResourceSchemaBase 
 	{
 		public string PublicDescription { get; set; }
 		public Guid Parent { get; set; }
@@ -34,7 +36,7 @@ namespace Dodo
 	/// It can have administrators, which are authorised to edit it.
 	/// It can have members and a public description.
 	/// </summary>
-	public abstract class GroupResource : DodoResource
+	public abstract class GroupResource : DodoResource, IOwnedResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		public class AdminData
@@ -102,7 +104,7 @@ namespace Dodo
 			{
 				return false;
 			}
-			return Parent.GetValue().Guid == targetObject.Guid;
+			return Parent.Guid == targetObject.Guid;
 		}
 
 		public bool IsAdmin(User target, AccessContext requesterContext)
@@ -167,5 +169,9 @@ namespace Dodo
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
+
+		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource => throw new NotSupportedException();
+
+		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource => throw new NotSupportedException();
 	}
 }

@@ -13,7 +13,7 @@ namespace RESTTests
 
 	public abstract class RESTTestBase<T, TSchema> : IntegrationTestBase 
 		where T:DodoResource
-		where TSchema: DodoResourceSchemaBase
+		where TSchema: ResourceSchemaBase
 	{
 		public abstract string ResourceRoot { get; }
 		protected IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,31 @@ namespace Common.Extensions
 {
 	public static class ReflectionExtensions
 	{
+		public static string GetRealTypeName(this Type t)
+		{
+			if (!t.IsGenericType)
+				return t.Name;
+
+			var tildeIndex = t.Name.IndexOf('`');
+			if(tildeIndex < 0)
+			{
+				return t.Name;
+			}
+
+			StringBuilder sb = new StringBuilder();
+			sb.Append(t.Name.Substring(0, tildeIndex));
+			sb.Append('<');
+			bool appendComma = false;
+			foreach (Type arg in t.GetGenericArguments())
+			{
+				if (appendComma) sb.Append(',');
+				sb.Append(GetRealTypeName(arg));
+				appendComma = true;
+			}
+			sb.Append('>');
+			return sb.ToString();
+		}
+
 		public static IEnumerable<Type> GetConcreteClasses<T>() where T:class
 		{
 			if(!typeof(T).IsAbstract && !typeof(T).IsInterface)

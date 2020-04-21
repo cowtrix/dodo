@@ -11,7 +11,7 @@ namespace Resources
 {
 	public abstract class CustomController<T, TSchema> : Controller
 		where T : class, IDodoResource
-		where TSchema : DodoResourceSchemaBase
+		where TSchema : ResourceSchemaBase
 	{
 		protected DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
 		protected virtual AuthorizationManager<T, TSchema> AuthManager =>

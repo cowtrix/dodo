@@ -1,8 +1,11 @@
 using Common.Commands;
 using Common.Config;
+using Common.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -21,7 +24,7 @@ namespace Common
 	{
 		public readonly DateTime Timestamp;
 		public readonly ELogLevel LogLevel;
-		public readonly string Category;
+		public readonly string Source;
 		public readonly string Message;
 
 		public LogMessage(string message, ELogLevel logLevel, string category, DateTime now) : this()
@@ -29,12 +32,12 @@ namespace Common
 			Message = message;
 			LogLevel = logLevel;
 			Timestamp = now;
-			Category = category;
+			Source = category;
 		}
 
 		public override string ToString()
 		{
-			return $"{LogLevel}\t{Category}\t{Message}";
+			return $"{Timestamp}\t{LogLevel}\t[{Source}]\t{Message}";
 		}
 	}
 
@@ -95,14 +98,14 @@ namespace Common
 			}
 		}
 
-		public static void Info(string message, [CallerMemberName]string category = "")
+		public static void Info(string message)
 		{
-			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Info, category);
+			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Info, GetSource());
 		}
 
-		public static void Debug(string message, [CallerMemberName]string category = "")
+		public static void Debug(string message)
 		{
-			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Debug, category);
+			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Debug, GetSource());
 		}
 
 		private static void DoLog(string message, ConsoleColor foreground, ConsoleColor background, ELogLevel logLevel, string category)
@@ -175,14 +178,24 @@ namespace Common
 			return key == confirm || key == ALWAYS;
 		}
 
-		public static void Error(string message, bool nolog = false, [CallerMemberName]string category = "")
+		public static void Error(string message, bool nolog = false)
 		{
-			DoLog(message, ConsoleColor.Red, ConsoleColor.Black, ELogLevel.Error, category);
+			DoLog(message, ConsoleColor.Red, ConsoleColor.Black, ELogLevel.Error, GetSource());
 		}
 
-		public static void Warning(string message, [CallerMemberName]string category = "")
+		public static void Warning(string message)
 		{
-			DoLog(message, ConsoleColor.Yellow, ConsoleColor.Black, ELogLevel.Warning, category);
+			DoLog(message, ConsoleColor.Yellow, ConsoleColor.Black, ELogLevel.Warning, GetSource());
+		}
+
+		static string GetSource()
+		{
+			var topFrame = new StackTrace().GetFrames().FirstOrDefault(f => f.GetMethod().DeclaringType != typeof(Logger)).GetMethod();
+			if(topFrame == null)
+			{
+				return null;
+			}
+			return $"{topFrame.DeclaringType.GetRealTypeName()}.{topFrame.Name}";
 		}
 	}
 }
