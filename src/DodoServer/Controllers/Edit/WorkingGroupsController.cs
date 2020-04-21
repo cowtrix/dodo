@@ -15,9 +15,9 @@ namespace DodoServer.Controllers.Edit
 		// GET: LocalGroups
 		[AllowAnonymous]
 		[Route("")]
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index([FromQuery]int page = 1)
 		{
-			return await GetResourcesView<WorkingGroup>(WorkingGroupController.RootURL);
+			return await GetResourcesView<WorkingGroup>(WorkingGroupController.RootURL, page);
 		}
 
 		// GET: LocalGroups/Details/0a985dee-0b68-4805-96f5-3abe6f1ae13e

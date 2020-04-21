@@ -13,7 +13,7 @@ namespace DodoResources
 	public class SearchController : CustomController<DodoResource, ResourceSchemaBase>
 	{
 		public const string RootURL = "search";
-		private const int ChunkSize = 10;
+		public const int ChunkSize = 10;
 
 		[HttpGet]
 		public virtual async Task<IActionResult> Index(

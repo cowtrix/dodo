@@ -15,9 +15,9 @@ namespace DodoServer.Controllers.Edit
 		// GET: Rebellions
 		[AllowAnonymous]
 		[Route("")]
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index([FromQuery]int page = 1)
 		{
-			return await GetResourcesView<Rebellion>(RebellionController.RootURL);
+			return await GetResourcesView<Rebellion>(RebellionController.RootURL, page);
 		}
 
 		// GET: Rebellions/Details/0a985dee-0b68-4805-96f5-3abe6f1ae13e
