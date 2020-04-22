@@ -1,3 +1,0 @@
-
-export const COPYRIGHT_INFO_COPY = "Extinction Rebellion (XR) is a do-it-together movement. All our design and artwork can be used non-commercially for the purpose of planet saving. This does not mean creating merchandise for fundraising or sending XR a percentage of your sales. We do not endorse or create any merchandise and we will pursue and prosecute anyone who does. The Extinction Symbol was designed in 2011 by street artist ESP, who loans XR usage on the same basis: www.extinctionsymbol.info."
-export const COPYRIGHT_INFO_TITLE = "Copyright info"
