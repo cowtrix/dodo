@@ -30,32 +30,31 @@ namespace Dodo.Resources
 			}
 		}
 
-		public static IEnumerable<IRESTResource> Search(DistanceFilter locationFilter, DateFilter dateFilter, StringFilter stringFilter,
-			int index = 0, int chunkSize = 10)
+		public static IEnumerable<IRESTResource> Search(int index, int chunkSize, params ISearchFilter[] filters)
 		{
-			return Get(rsc =>
-						locationFilter.Filter(rsc) &&
-						dateFilter.Filter(rsc) &&
-						stringFilter.Filter(rsc)
-					).Transpose(x => locationFilter.Mutate(x))
-					.Transpose(x => dateFilter.Mutate(x))
-					.Transpose(x => stringFilter.Mutate(x))
-					.Skip(index)
-					.Take(chunkSize);
+			return SearchInternal<IRESTResource>(Get, index, chunkSize, filters);
 		}
 
-		public static IEnumerable<IRESTResource> Search<T>(DistanceFilter locationFilter, DateFilter dateFilter, StringFilter stringFilter, 
-			int index = 0, int chunkSize = 10)
+		public static IEnumerable<T> Search<T>(int index, int chunkSize, params ISearchFilter[] filters)
 		{
-			return ResourceUtility.GetManager<T>().Get(rsc =>
-						locationFilter.Filter(rsc) &&
-						dateFilter.Filter(rsc) &&
-						stringFilter.Filter(rsc)
-					).Transpose(x => locationFilter.Mutate(x))
-					.Transpose(x => dateFilter.Mutate(x))
-					.Transpose(x => stringFilter.Mutate(x))
-					.Skip(index)
-					.Take(chunkSize);
+			return SearchInternal<T>(ResourceUtility.GetManager(typeof(T)).Get, index, chunkSize, filters);
+		}
+
+		private static IEnumerable<T> SearchInternal<T>(
+			Func<Func<IRESTResource, bool>, Guid?, IEnumerable<IRESTResource>> src, 
+			int index, 
+			int chunkSize, 
+			ISearchFilter[] filters)
+		{
+			return src.Invoke(rsc => filters.All(f => f.Filter(rsc)), null)
+				.Transpose(x =>
+				{
+					Array.ForEach(filters, f => f.Mutate(x));
+					return x;
+				})
+				.Skip(index)
+				.Take(chunkSize)
+				.OfType<T>();
 		}
 	}
 }

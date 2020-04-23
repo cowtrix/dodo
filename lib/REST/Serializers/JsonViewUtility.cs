@@ -92,10 +92,10 @@ namespace Resources
 					vals.Add(memberName, finalObj);
 				}
 			}
-			if (obj is Resource)
+			if (obj is IViewMetadataProvider view)
 			{
 				var metadata = new Dictionary<string, object>();
-				(obj as Resource).AppendMetadata(metadata, visibility, requester, passphrase);
+				view.AppendMetadata(metadata, visibility, requester, passphrase);
 				vals.Add(Resource.METADATA, metadata);
 			}
 

@@ -48,19 +48,37 @@ namespace Common
 		private const string PARAM_Y = "y";
 
 		public static LogEvent OnLog;
-#if DEBUG
-		public static ELogLevel CurrentLogLevel = ELogLevel.Debug;
-#else
-		public static ELogLevel CurrentLogLevel = ELogLevel.Info;
-#endif
+
+		public static ELogLevel CurrentLogLevel
+		{
+			get
+			{
+				return __logLevel;
+			}
+			set
+			{
+				if(__logLevel == value)
+				{
+					return;
+				}
+				if(value < ELogLevel.Info)
+				{
+					Warning($"Can't set log level lower than {nameof(ELogLevel.Info)}");
+					return;
+				}
+				Info($"Set log level to {value}");
+				__logLevel = value;
+			}
+		}
+		private static ELogLevel __logLevel;
 		public static bool PromptUser { get; private set; }
 		private static object m_fileLock = new object();
 
 		static Logger()
 		{
-			CommandManager.OnPreExecute += GetArgs;
+			__logLevel = ELogLevel.Debug;
 			CurrentLogLevel = new ConfigVariable<ELogLevel>("LogLevel", ELogLevel.Debug).Value;
-			Info($"Log level is {CurrentLogLevel}");
+			CommandManager.OnPreExecute += GetArgs;
 		}
 
 		private static void GetArgs(CommandArguments args)

@@ -14,9 +14,7 @@ namespace Resources.Location
 	{
 		static Uri m_baseUrl = new Uri("https://api.mapbox.com");
 		static string ApiKey => ConfigManager.GetValue($"{nameof(MapBoxGeocodingService)}_{nameof(ApiKey)}", "");
-
 		public bool Enabled => !string.IsNullOrEmpty(ApiKey);
-
 		static HttpClient m_httpClient;
 
 		static MapBoxGeocodingService()
@@ -36,6 +34,7 @@ namespace Resources.Location
 				Logger.Warning($"No MapBox API Key is set.");
 				return null;
 			}
+			Logger.Debug($"Executing MapBox API query for {location}");
 			var response = await m_httpClient.GetAsync(
 				"/geocoding/v5/mapbox.places/" +	// TODO: change to permanent?
 				$"{location.Longitude},{location.Latitude}.json" +

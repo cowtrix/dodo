@@ -3,17 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Concurrent;
 
 namespace Resources.Location
 {
 	public static class LocationManager
 	{
 		private static IGeocodingService m_service;
+		private static ConcurrentDictionary<GeoLocation, bool> m_pendingRequests;
 		private static PersistentStore<GeoLocation, LocationData> m_locationCache;
 
 		static LocationManager()
 		{
 			m_service = new MapBoxGeocodingService();
+			m_pendingRequests = new ConcurrentDictionary<GeoLocation, bool>();
 			m_locationCache = new PersistentStore<GeoLocation, LocationData>("geolocation", "locationcache");
 		}
 
@@ -30,12 +33,18 @@ namespace Resources.Location
 			{
 				return data;
 			}
+			if(m_pendingRequests.ContainsKey(location))
+			{
+				return null;
+			}
+			m_pendingRequests.TryAdd(location, true);
 			m_locationCache[location] = null;
 			Task lookup = new Task(async () =>
 			{
 				var locData = await m_service.GetLocationData(location);
-				Logger.Debug($"Set location cache for {location}: {locData}");
 				m_locationCache[location] = locData;
+				m_pendingRequests.TryRemove(location, out _);
+				Logger.Debug($"Set location cache for {location}: {locData}");
 			});
 			lookup.Start();
 			return null;
@@ -43,14 +52,17 @@ namespace Resources.Location
 
 		public static async Task<LocationData> GetLocationDataAsync(GeoLocation location)
 		{
-			if (m_locationCache.TryGetValue(location, out var data))
+			if (m_locationCache.TryGetValue(location, out var locData) && locData != null)
 			{
-				return data;
+				return locData;
 			}
+			m_pendingRequests.TryAdd(location, true);
 			m_locationCache[location] = null;
-			data = await m_service.GetLocationData(location);
-			m_locationCache[location] = data;
-			return data;
+			locData = await m_service.GetLocationData(location);
+			m_locationCache[location] = locData;
+			m_pendingRequests.TryRemove(location, out _);
+			Logger.Debug($"Set location cache for {location}: {locData}");
+			return locData;
 		}
 
 		public static async Task<GeoLocation> GetLocation(string searchString)

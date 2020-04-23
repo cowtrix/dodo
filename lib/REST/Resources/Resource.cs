@@ -10,12 +10,16 @@ using System.Reflection;
 
 namespace Resources
 {
-	public interface IRESTResource : IVerifiable
+	public interface IRESTResource : IVerifiable, IViewMetadataProvider
 	{
 		Guid Guid { get; }
 		uint Revision { get; set; }
 		string Name { get; }
 		void OnDestroy();
+	}
+
+	public interface IViewMetadataProvider
+	{
 		void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase);
 	}
 

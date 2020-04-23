@@ -25,6 +25,7 @@ namespace Resources.Location
 				return m_data;
 			}
 		}
+
 		[JsonIgnore]
 		[BsonElement]
 		private LocationData m_data;

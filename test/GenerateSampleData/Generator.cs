@@ -53,10 +53,10 @@ namespace GenerateSampleData
 
 			// Make local groups
 			LocalGroupFactory.CreateObject(context, new LocalGroupSchema(city, SchemaGenerator.SampleDescription, location));
-			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - 1)));
-			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + 1)));
-			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - 1)));
-			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - 1)));
+			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - .1)));
+			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + .1)));
+			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)));
+			LocalGroupFactory.CreateObject(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)));
 
 			var currentRebellion = RebellionFactory.CreateObject(context,
 				new RebellionSchema($"{city} Rebellion", SchemaGenerator.SampleDescription, location, DateTime.Today - TimeSpan.FromDays(2), DateTime.Today + TimeSpan.FromDays(2)));

@@ -20,6 +20,7 @@ namespace DodoResources
 			[FromQuery]DistanceFilter locationFilter, 
 			[FromQuery]DateFilter dateFilter,
 			[FromQuery]StringFilter stringFilter,
+			[FromQuery]ParentFilter parentFilter,
 			int index = 0)
 		{
 			var req = VerifySearchRequest();
@@ -29,7 +30,7 @@ namespace DodoResources
 			}
 			try
 			{
-				var resources = DodoResourceUtility.Search(locationFilter, dateFilter, stringFilter, index, ChunkSize)
+				var resources = DodoResourceUtility.Search(index, ChunkSize, locationFilter, dateFilter, stringFilter, parentFilter)
 					.Select(rsc => rsc.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 				return Ok(resources.ToList());
 			}
