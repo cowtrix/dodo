@@ -85,6 +85,10 @@ namespace RESTTests.Search
 		[TestMethod]
 		public async virtual Task CanSearchWithDateFilter()
 		{
+			if(!typeof(ITimeBoundResource).IsAssignableFrom(typeof(T)))
+			{
+				Assert.Inconclusive();
+			}
 			GetRandomUser(out _, out var context);
 			var factory = ResourceUtility.GetFactory<T>();
 			var resources = new List<T>();
@@ -93,15 +97,55 @@ namespace RESTTests.Search
 				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random() as ITimeBoundResource;
-			if (resource == null)
-			{
-				Assert.Inconclusive();
-			}
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
 					(nameof(DateFilter.StartDate), $"{resource.StartDate.ToShortDateString()}"),
 					(nameof(DateFilter.EndDate), $"{resource.EndDate.ToShortDateString()}")
+				});
+			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
+			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
+		}
+
+		[TestMethod]
+		public async virtual Task CanSearchWithParentFilter()
+		{
+			if (!typeof(IOwnedResource).IsAssignableFrom(typeof(T)))
+			{
+				Assert.Inconclusive();
+			}
+			GetRandomUser(out _, out var context);
+			var factory = ResourceUtility.GetFactory<T>();
+			var resources = new List<T>();
+			for (var i = 0; i < 1; ++i)
+			{
+				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
+			}
+			var resource = resources.Random() as IOwnedResource;
+			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
+				parameters: new[]
+				{
+					(nameof(ParentFilter.Parent), resource.Parent.Guid.ToString() ),
+				});
+			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
+			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
+		}
+
+		[TestMethod]
+		public async virtual Task CanSearchWithStringFilter()
+		{
+			GetRandomUser(out _, out var context);
+			var factory = ResourceUtility.GetFactory<T>();
+			var resources = new List<T>();
+			for (var i = 0; i < 1; ++i)
+			{
+				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
+			}
+			var resource = resources.Random();
+			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
+				parameters: new[]
+				{
+					(nameof(StringFilter.Search), resource.Name ),
 				});
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
@@ -120,7 +164,6 @@ namespace RESTTests.Search
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET);
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsFalse(sites.Any(x => !guids.Contains(x.Guid.ToString())));
-
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"List all {typeof(T).Name}s" },
 				LastRequest);
