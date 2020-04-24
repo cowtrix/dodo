@@ -2,7 +2,7 @@ using Dodo.SharedTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace Dodo.UnitTests
+namespace UnitTests
 {
 	[TestClass]
 	public class DateTimeTests : BasicObjectTests<DateTime>

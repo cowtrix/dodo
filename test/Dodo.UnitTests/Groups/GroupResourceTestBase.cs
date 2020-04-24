@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Resources.Groups
+namespace Groups
 {
 	public abstract class GroupResourceTestBase<T> : TestBase where T:GroupResource
 	{

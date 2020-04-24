@@ -5,7 +5,7 @@ using SharedTest;
 using System;
 using System.Linq;
 
-namespace Dodo.UnitTests
+namespace UnitTests
 {
 	public abstract class BasicObjectTests<T>
 	{

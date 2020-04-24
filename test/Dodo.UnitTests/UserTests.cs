@@ -1,6 +1,7 @@
 using Common.Extensions;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
+using Dodo.Users;
 using Dodo.Users.Tokens;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -9,7 +10,7 @@ using Resources.Security;
 using SharedTest;
 using System;
 
-namespace Dodo.UnitTests
+namespace UnitTests
 {
 	[TestClass]
 	public class UserTests : TestBase
@@ -46,7 +47,7 @@ namespace Dodo.UnitTests
 		{
 			var user1 = GetRandomUser(out _, out _);
 			AssertX.Throws<Exception>(() =>
-				GenerateUser(new Users.UserSchema("second", user1.AuthData.Username, "[@ssw0rd", "test@web.com"), out _),
+				GenerateUser(new UserSchema("second", user1.AuthData.Username, "[@ssw0rd", "test@web.com"), out _),
 				e => e.Message.Contains("A user with that username already exists"));
 		}
 
@@ -55,7 +56,7 @@ namespace Dodo.UnitTests
 		{
 			var user1 = GetRandomUser(out _, out _);
 			AssertX.Throws<Exception>(() =>
-				GenerateUser(new Users.UserSchema("second", "second", "[@ssw0rd", user1.PersonalData.Email), out _),
+				GenerateUser(new UserSchema("second", "second", "[@ssw0rd", user1.PersonalData.Email), out _),
 				e => e.Message.Contains("A user with that email already exists"));
 		}
 

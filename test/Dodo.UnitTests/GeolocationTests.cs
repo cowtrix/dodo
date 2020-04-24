@@ -5,7 +5,7 @@ using Resources.Location;
 using SharedTest;
 using System.Threading.Tasks;
 
-namespace Dodo.UnitTests
+namespace UnitTests
 {
 	[TestClass]
 	public class GeolocationTests : TestBase

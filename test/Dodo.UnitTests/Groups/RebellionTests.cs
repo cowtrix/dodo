@@ -5,7 +5,7 @@ using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 
-namespace Resources.Groups
+namespace Groups
 {
 	[TestClass]
 	public class RebellionTests : GroupResourceTestBase<Rebellion> 
