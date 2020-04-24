@@ -14,16 +14,18 @@ namespace DodoTest.Framework.Postman
 {
 	public struct PostmanEntryAddress
 	{
-		public string Category;
-		public string Request;
+		public string Category { get; set; }
+		public string Request { get; set; }
 	}
 
 	public class PostmanCollection
 	{
+#if !DEBUG
 		ConfigVariable<string> m_postmanAPIKey = new ConfigVariable<string>("PostmanAPIKey", "");
 		RestClient m_restClient = new RestClient("https://api.getpostman.com");
 		JObject m_collection;
 		string m_guid;
+#endif
 
 		public PostmanCollection(string guid)
 		{

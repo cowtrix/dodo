@@ -9,9 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Groups
+namespace Resources.Groups
 {
-
 	public abstract class GroupResourceTestBase<T> : TestBase where T:GroupResource
 	{
 		protected IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();

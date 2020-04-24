@@ -17,7 +17,7 @@ using Dodo.Users.Tokens;
 
 namespace Resources
 {
-
+	
 	/// <summary>
 	/// This class implements a basic REST handler that can create, get, update and delete a given object.
 	/// This class handles receiving HTTP requests, transforming those requests into corresponding

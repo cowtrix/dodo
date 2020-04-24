@@ -97,7 +97,7 @@ namespace RESTTests
 		}
 
 		[AssemblyCleanup]
-		public static void Finalise()
+		public static void FinaliseIntegrationTestBase()
 		{
 			Postman.Update();
 		}

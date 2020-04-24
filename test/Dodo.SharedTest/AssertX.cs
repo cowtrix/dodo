@@ -8,6 +8,14 @@ namespace SharedTest
 	{
 		public static void Throws<T>(Action action, Func<Exception, bool> exceptionValidator) where T:Exception
 		{
+			if (action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+			if (exceptionValidator == null)
+			{
+				throw new ArgumentNullException(nameof(exceptionValidator));
+			}
 			try
 			{
 				action();
@@ -25,14 +33,22 @@ namespace SharedTest
 
 		public static async Task ThrowsAsync<T>(Task action) where T : Exception
 		{
-			await ThrowsAsync<T>(action, e => true);
+			await ThrowsAsync<T>(action, e => true).ConfigureAwait(true);
 		}
 
 		public static async Task ThrowsAsync<T>(Task action, Func<Exception, bool> exceptionValidator) where T : Exception
 		{
+			if(action == null)
+			{
+				throw new ArgumentNullException(nameof(action));
+			}
+			if(exceptionValidator == null)
+			{
+				throw new ArgumentNullException(nameof(exceptionValidator));
+			}
 			try
 			{
-				await action;
+				await action.ConfigureAwait(true);
 			}
 			catch (T e)
 			{

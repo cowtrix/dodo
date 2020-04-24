@@ -1,7 +1,7 @@
-﻿using Dodo.LocalGroups;
+using Dodo.LocalGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Groups
+namespace Resources.Groups
 {
 	[TestClass]
 	public class LocalGroupTests : GroupResourceTestBase<LocalGroup> { }

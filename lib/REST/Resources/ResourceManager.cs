@@ -189,17 +189,17 @@ namespace Resources
 			Update((T)newObject, locker);
 		}
 
-		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector, Guid? handle = null)
+		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector, Guid? handle)
 		{
 			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle);
 		}
 
-		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector, Guid? handle = null)
+		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector, Guid? handle)
 		{
 			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle);
 		}
 
-		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector, Guid? handle = null)
+		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector, Guid? handle)
 		{
 			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle);
 		}

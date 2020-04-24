@@ -11,7 +11,7 @@ namespace Dodo.Rebellions
 {
 	public class RebellionSerializer : ResourceReferenceSerializer<Rebellion> { }
 
-	public class RebellionSchema : GroupResourceSchemaBase
+	public class RebellionSchema : OwnedResourceSchemaBase
 	{
 		public GeoLocation Location { get; set; }
 		[DataType(DataType.DateTime)]

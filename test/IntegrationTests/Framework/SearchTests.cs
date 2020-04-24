@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 using Common.Extensions;
 using Resources.Location;
 
-namespace RESTTests
+namespace RESTTests.Search
 {
 	[TestClass]
-	public class SearchTests : IntegrationTestBase 
+	public class GenericSearchTests : IntegrationTestBase 
 	{
 		[TestMethod]
 		public async Task CanSearchByLocation()
@@ -36,7 +36,6 @@ namespace RESTTests
 				CreateObject<PermanentSite>(context, new SiteSchema("My Occupation", typeof(PermanentSite).FullName, rebellion.Guid, new GeoLocation(rebellion.Location).Offset(45, 45), "")),
 				};
 			var negGuids = negatives.Select(rsc => rsc.Guid).ToList();
-
 			var request = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{

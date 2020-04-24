@@ -16,19 +16,19 @@ namespace Dodo
 {
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
-	public abstract class GroupResourceSchemaBase : ResourceSchemaBase 
+	public abstract class OwnedResourceSchemaBase : ResourceSchemaBase 
 	{
 		public string PublicDescription { get; set; }
 		public Guid Parent { get; set; }
 
-		public GroupResourceSchemaBase(string name, string publicDescription, Guid parent)
+		public OwnedResourceSchemaBase(string name, string publicDescription, Guid parent)
 			: base(name)
 		{
 			PublicDescription = publicDescription;
 			Parent = parent;
 		}
 
-		public GroupResourceSchemaBase() : base() { }
+		public OwnedResourceSchemaBase() : base() { }
 	}
 
 	/// <summary>
@@ -36,7 +36,8 @@ namespace Dodo
 	/// It can have administrators, which are authorised to edit it.
 	/// It can have members and a public description.
 	/// </summary>
-	public abstract class GroupResource : DodoResource, IOwnedResource
+	public abstract class GroupResource : DodoResource, 
+		IOwnedResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		public class AdminData
@@ -80,7 +81,7 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN)]
 		public bool Published { get; set; }
 
-		public GroupResource(AccessContext context, GroupResourceSchemaBase schema) : base(context, schema)
+		public GroupResource(AccessContext context, OwnedResourceSchemaBase schema) : base(context, schema)
 		{
 			if(schema == null)
 			{

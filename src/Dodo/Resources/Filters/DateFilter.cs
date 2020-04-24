@@ -40,7 +40,7 @@ namespace Dodo.Resources
 			}
 			if (rsc is ITimeBoundResource timeboundResource)
 			{
-				return timeboundResource.StartDate <= m_endDate || timeboundResource.EndDate >= m_startDate;
+				return timeboundResource.StartDate <= m_endDate && timeboundResource.EndDate >= m_startDate;
 			}
 			return false;
 		}

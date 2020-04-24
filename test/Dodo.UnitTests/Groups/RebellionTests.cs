@@ -1,11 +1,11 @@
-﻿using Dodo.Rebellions;
+using Dodo.Rebellions;
 using Dodo.SharedTest;
 using Dodo.Sites;
 using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 
-namespace Groups
+namespace Resources.Groups
 {
 	[TestClass]
 	public class RebellionTests : GroupResourceTestBase<Rebellion> 

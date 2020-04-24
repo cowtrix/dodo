@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DodoTest.Framework
 {
-	public class CompareHelper
+	public static class CompareHelper
 	{
 		public static bool CompareObjects(object inputObjectA, object inputObjectB, string[] ignorePropertiesList)
 		{

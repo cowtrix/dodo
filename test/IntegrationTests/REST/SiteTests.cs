@@ -13,113 +13,40 @@ using Common.Extensions;
 
 namespace RESTTests
 {
-
-	public abstract class SiteTests : GroupResourceTestBase<Site, SiteSchema>
+	public abstract class SiteTests<T> : RESTTestBase<T, SiteSchema> where T:Site
 	{
 		public override string ResourceRoot => SiteController.RootURL;
+	}
 
-		
-
-		/*[TestInitialize]
-		public void Setup()
-		{
-			RegisterUser(out _, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
-			Rebellion = RequestJSON("rebellions/create", Method.POST,
-				new RebellionSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
-		}
-
-		public override object GetCreationSchema(bool unique)
-		{
-			if(unique)
-			{
-				return new SiteSchema("Test Site " + StringExtensions.RandomString(6),
-					typeof(OccupationalSite).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27, 79), "Test description");
-			}
-			return new SiteSchema("Test Site", typeof(OccupationalSite).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27, 79), "Test description");
-		}
-
-		public override object GetPatchSchema()
-		{
-			return new { Name = "New site name", Facilities = new { Toilets = "Free", TalksAndTraining = true } };
-		}
-
-		protected override void CheckPatchedObject(JObject obj)
-		{
-			Assert.AreEqual("New site name", obj.Value<string>("Name"));
-			Assert.AreEqual("Free", obj.Value<JObject>("Facilities").Value<string>("Toilets"));
-			Assert.AreEqual(true, obj.Value<JObject>("Facilities").Value<bool>("TalksAndTraining"));
-			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Update a Site");
-		}
-
-		protected override void CheckCreatedObject(JObject obj)
-		{
-			Assert.AreEqual(Rebellion.Value<string>("GUID"), obj.Value<JObject>("Rebellion").Value<string>("Guid"));
-		}
-
-		protected override void CheckGetObject(JObject obj)
-		{
-			base.CheckGetObject(obj);
-			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Get a Site");
-		}
+	public class EventSiteTests : SiteTests<EventSite>
+	{
+		protected override string PostmanCategory => throw new NotImplementedException();
 
 		[TestMethod]
-		public void CannotCreateAtCreationURL()
+		public async Task CanPatchStartDate()
 		{
-			AssertX.Throws<Exception>(() => RequestJSON(CreationURL, Method.POST,
-				new SiteSchema("Create", typeof(OccupationalSite).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27, 79), "Test description")),
-				e => e.Message.Contains("Reserved Resource URL"));
+			GetRandomUser(out _, out var context);
+			var site = CreateObject<EventSite>(context);
+			var date = SchemaGenerator.RandomDate;
+			await RequestJSON($"{ResourceRoot}/{site.Guid}", EHTTPRequestType.POST, new { startDate = date });
+			var updatedSite = ResourceManager.GetSingle(r => r.Guid == site.Guid) as EventSite;
+			Assert.AreEqual(date, updatedSite.StartDate);
 		}
 
-		[TestMethod]
-		public void CanCreateActionSite()
+		protected override JObject GetPatchObject()
 		{
-			var obj = RequestJSON(CreationURL, Method.POST,
-				new SiteSchema("Test1", typeof(ActionSite).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27, 79), "Test description"));
-			CheckCreatedObject(obj);
-			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Create a new Action Site");
+			var result = new JObject();
+			result["startDate"] = new DateTime(2020, 6, 20);
+			result["endDate"] = new DateTime(2020, 6, 25);
+			result["publicDescription"] = "test 124";
+			return result;
 		}
 
-		[TestMethod]
-		public void CanCreateEventSite()
+		protected override void VerifyPatchedObject(EventSite rsc, JObject patchObj)
 		{
-			var obj = RequestJSON(CreationURL, Method.POST,
-				new SiteSchema("Test1", typeof(Event).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27, 79), "Test description"));
-			CheckCreatedObject(obj);
-			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Create a new Event Site");
+			Assert.AreEqual(rsc.StartDate, new DateTime(2020, 6, 20));
+			Assert.AreEqual(rsc.EndDate, new DateTime(2020, 6, 25));
+			Assert.AreEqual(rsc.PublicDescription, "test 124");
 		}
-
-		[TestMethod]
-		public void CanCreateSanctuarySite()
-		{
-			var obj = RequestJSON(CreationURL, Method.POST,
-				new SiteSchema("Test1", typeof(Sanctuary).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27, 79), "Test description"));
-			CheckCreatedObject(obj);
-			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Create a new Sanctuary Site");
-		}
-
-		[TestMethod]
-		public void CanCreateMarchSite()
-		{
-			var obj = RequestJSON(CreationURL, Method.POST,
-				new SiteSchema("Test1", typeof(March).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27, 79), "Test description"));
-			CheckCreatedObject(obj);
-			m_postman.UpdateExampleJSON(obj.ToString(), "Sites", "Create a new March");
-		}
-
-		[TestMethod]
-		public void CanList()
-		{
-			var objects = new List<JObject>()
-			{
-				RequestJSON(CreationURL, Method.POST, new SiteSchema("Test1", typeof(OccupationalSite).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27, 79.2), "Test description")),
-				RequestJSON(CreationURL, Method.POST, new SiteSchema("Test2", typeof(ActionSite).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(26.9, 79), "Test description")),
-				RequestJSON(CreationURL, Method.POST, new SiteSchema("Test3", typeof(March).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(27.2, 79.1), "Test description")),
-				RequestJSON(CreationURL, Method.POST, new SiteSchema("Test4", typeof(Sanctuary).FullName, Rebellion.Value<Guid>("GUID"), new GeoLocation(26.4, 78.7), "Test description")),
-			};
-			var guids = objects.Select(x => x.Value<string>("GUID"));
-			var list = Request(SiteController.RootURL, Method.GET);
-			Assert.IsTrue(guids.All(guid => list.Content.Contains(guid)));
-			m_postman.UpdateExampleJSON(list.Content, "Sites", "List all Sites");
-		}*/
 	}
 }

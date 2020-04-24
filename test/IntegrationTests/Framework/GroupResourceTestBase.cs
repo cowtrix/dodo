@@ -24,76 +24,9 @@ namespace RESTTests
 {
 	public abstract class GroupResourceTestBase<T, TSchema> : RESTTestBase<T, TSchema> 
 		where T:GroupResource
-		where TSchema:GroupResourceSchemaBase
+		where TSchema:OwnedResourceSchemaBase
 	{
-		[TestMethod]
-		public async virtual Task CanListWithDistanceFilter()
-		{
-			GetRandomUser(out _, out var context);
-			var factory = ResourceUtility.GetFactory<T>();
-			var resources = new List<T>();
-			for (var i = 0; i < 5; ++i)
-			{
-				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
-			}
-			var resource = resources.Random() as ILocationalResource;
-			if (resource == null)
-			{
-				Assert.Inconclusive();
-			}
-			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
-				parameters: new[]
-				{
-					(nameof(DistanceFilter.LatLong), $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
-					(nameof(DistanceFilter.Distance), "20.6"),
-				});
-			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
-			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
-		}
-
-		[TestMethod]
-		public async virtual Task CanListWithDateFilter()
-		{
-			GetRandomUser(out _, out var context);
-			var factory = ResourceUtility.GetFactory<T>();
-			var resources = new List<T>();
-			for (var i = 0; i < 1; ++i)
-			{
-				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
-			}
-			var resource = resources.Random() as ITimeBoundResource;
-			if(resource == null)
-			{
-				Assert.Inconclusive();
-			}
-			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
-				parameters: new[]
-				{
-					(nameof(DateFilter.StartDate), $"{resource.StartDate.ToShortDateString()}"),
-					(nameof(DateFilter.EndDate), $"{resource.EndDate.ToShortDateString()}")
-				});
-			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
-			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
-		}
-
-		[TestMethod]
-		public async virtual Task CanList()
-		{
-			GetRandomUser(out _, out var context);
-			var factory = ResourceUtility.GetFactory<T>();
-			var sites = new List<T>();
-			for (var i = 0; i < 5; ++i)
-			{
-				sites.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
-			}
-			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET);
-			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
-			Assert.IsFalse(sites.Any(x => !guids.Contains(x.Guid.ToString())));
-
-			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"List all {typeof(T).Name}s" },
-				LastRequest);
-		}
+		
 
 		[TestMethod]
 		public override async Task CanCreate()

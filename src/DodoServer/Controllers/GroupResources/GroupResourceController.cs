@@ -10,19 +10,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Common.Security;
 using System.Net;
-using System.Linq;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using Dodo;
-using System.Threading.Tasks;
-using Dodo.Resources;
 using System.Diagnostics;
 
 namespace DodoResources
 {
-	public abstract class GroupResourceController<T, TSchema> : ResourceController<T, TSchema> 
+	public abstract class GroupResourceController<T, TSchema> : SearchableResourceController<T, TSchema> 
 		where T : GroupResource
-		where TSchema : GroupResourceSchemaBase
+		where TSchema : OwnedResourceSchemaBase
 	{
 		public const string ADD_ADMIN = "addadmin";
 		public const string JOIN_GROUP = "join";
@@ -86,49 +83,6 @@ namespace DodoResources
 			target.Members.Remove(req.Requester.User, req.Requester.Passphrase);
 			ResourceManager.Update(target, resourceLock);
 			return Ok();
-		}
-
-		[HttpGet]
-		public virtual async Task<IActionResult> IndexInternal(
-			[FromQuery]DistanceFilter locationFilter,
-			[FromQuery]DateFilter dateFilter,
-			[FromQuery]StringFilter stringFilter,
-			[FromQuery]ParentFilter parentFilter,
-			string parent = null,
-			int index = 0)
-		{
-			var req = VerifySearchRequest();
-			if (!req.IsSuccess)
-			{
-				return req.Error;
-			}
-			try
-			{
-				var resources = DodoResourceUtility.Search<T>(index, SearchController.ChunkSize, locationFilter, dateFilter, stringFilter, parentFilter);
-				var view = resources.Select(rsc => rsc.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
-				return Ok(view.ToList());
-			}
-			catch (Exception e)
-			{
-#if DEBUG
-				return BadRequest(e.Message);
-#else
-				return BadRequest();
-#endif
-			}
-		}
-
-		private ResourceRequest VerifySearchRequest()
-		{
-			if (!Context.Challenge())
-			{
-				return ResourceRequest.ForbidRequest;
-			}
-			if (Context.User == null)
-			{
-				return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.PUBLIC);
-			}
-			return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.USER);
 		}
 	}
 }

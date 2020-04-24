@@ -10,6 +10,7 @@ using Resources;
 using Resources.Location;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -24,6 +25,10 @@ namespace Dodo.SharedTest
 
 		public static ResourceSchemaBase GetRandomSchema(Type type, AccessContext context)
 		{
+			if(type == null)
+			{
+				throw new ArgumentNullException(nameof(type));
+			}
 			if (m_mappings.TryGetValue(type, out var schemaFunc))
 			{
 				return schemaFunc.Invoke(context);
@@ -52,7 +57,7 @@ namespace Dodo.SharedTest
 			{ typeof(EventSite), s => GetRandomSite<EventSite>(s) },
 			{ typeof(MarchSite), s => GetRandomSite<MarchSite>(s) },
 			{ typeof(PermanentSite), s => GetRandomSite<PermanentSite>(s) },
-
+			{ typeof(Site), s => GetRandomSite(s) },
 		};
 
 		public static RoleSchema GetRandomRole(AccessContext context, WorkingGroup wg = null)
@@ -73,10 +78,19 @@ namespace Dodo.SharedTest
 			return new SiteSchema(RandomName, typeof(T).FullName, rb.Guid, RandomLocation, SampleDescription);
 		}
 
+		public static SiteSchema GetRandomSite(AccessContext context, Rebellion rb = null)
+		{
+			var type = new[]
+			{
+				typeof(EventSite), typeof(PermanentSite), typeof(MarchSite),
+			};
+			return new SiteSchema(RandomName, type.Random().FullName, rb.Guid, RandomLocation, SampleDescription);
+		}
+
 		public static UserSchema GetRandomUser(AccessContext context = default)
 		{
 			return new UserSchema(RandomName,
-				RandomName.ToLowerInvariant(),
+				RandomName.ToLower(CultureInfo.CurrentCulture),
 				ValidationExtensions.GenerateStrongPassword(),
 				$"{StringExtensions.RandomString(16)}@{StringExtensions.RandomString(16)}.com"
 			);

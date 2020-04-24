@@ -26,16 +26,15 @@ namespace SharedTest
 	public abstract class TestBase
 	{
 		private static MongoDbRunner m_runner;
-		protected static TestContext Context;
+		private static TestContext m_context;
 		private Random m_random = new Random();
-		protected static PostmanCollection Postman = new PostmanCollection("8888079-57fb4f3e-b2ad-4afe-a429-47a38866c5cd");
-
-		protected IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
+		protected static PostmanCollection Postman { get; private set; } = new PostmanCollection(ConfigManager.GetValue($"{nameof(TestBase)}_PostmanAPIKey", ""));
+		protected static IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
 
 		[AssemblyInitialize]
 		public static void SetupTests(TestContext testContext)
 		{
-			Context = testContext;
+			m_context = testContext;
 		}
 
 		public TestBase()
@@ -52,17 +51,17 @@ namespace SharedTest
 
 		private static void OnLog(LogMessage message)
 		{
-			Context?.WriteLine(message.ToString());
+			m_context?.WriteLine(message.ToString());
 		}
 	
 		/// <summary>
 		///  Gets or sets the test context which provides
 		///  information about and functionality for the current test run.
 		///</summary>
-		public TestContext TestContext
+		public static TestContext TestContext
 		{
-			get { return Context; }
-			set { Context = value; }
+			get { return m_context; }
+			set { m_context = value; }
 		}
 
 		[TestCleanup]
@@ -108,6 +107,10 @@ namespace SharedTest
 
 		public static User GenerateUser(UserSchema schema, out AccessContext context, bool verifyEmail = true)
 		{
+			if(schema == null)
+			{
+				throw new ArgumentNullException(nameof(schema));
+			}
 			var userFactory = ResourceUtility.GetFactory<User>();
 			var user = userFactory.CreateTypedObject(default(AccessContext), schema);
 			var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema.Password)));

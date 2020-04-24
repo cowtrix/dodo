@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
 using Resources.Location;
+using Dodo.Resources;
 
 namespace Dodo.Sites
 {
@@ -67,19 +68,29 @@ namespace Dodo.Sites
 		public EAccessType Electricity;
 	}
 
-	public abstract class Site : GroupResource, ILocationalResource
+	[BsonDiscriminator(RootClass = true)]
+	[BsonKnownTypes(
+		typeof(EventSite),
+		typeof(PermanentSite),
+		typeof(MarchSite)
+		)]
+	public abstract class Site : DodoResource, 
+		ILocationalResource, 
+		IOwnedResource
 	{
 		[View(EPermissionLevel.USER)]
-		[JsonProperty]
 		public EArrestRisk ArrestRisk { get; set; }
 		[View(EPermissionLevel.USER)]
-		[JsonProperty]
 		public SiteFacilities Facilities { get; set; }
-		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
+		public string PublicDescription { get; set; }
+		[View(EPermissionLevel.PUBLIC)]
+		[BsonIgnore]
 		public string Type { get { return GetType().FullName; } }
+		[View(EPermissionLevel.PUBLIC)]
+		public ResourceReference<GroupResource> Parent { get; set; }
 
 		public Site(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
@@ -87,14 +98,10 @@ namespace Dodo.Sites
 			{
 				return;
 			}
+			Parent = new ResourceReference<GroupResource>(schema.Parent);
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();
-		}
-
-		public override bool CanContain(Type type)
-		{
-			return false;
 		}
 	}
 }

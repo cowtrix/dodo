@@ -17,7 +17,7 @@ namespace Dodo.Resources
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
 		public static IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector, Guid? handle = null)
 		{
-			foreach (var rc in ResourceUtility.ResourceManagers)
+			foreach (var rc in ResourceUtility.ResourceManagers.Where(rm => rm.Key != typeof(User)))
 			{
 				if (rc.Key == typeof(User))
 				{

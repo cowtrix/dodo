@@ -10,7 +10,7 @@ namespace DodoResources
 {
 	public class GroupResourceAuthManager<T, TSchema> : AuthorizationManager<T, TSchema>
 		where T : GroupResource
-		where TSchema : GroupResourceSchemaBase
+		where TSchema : OwnedResourceSchemaBase
 	{
 		public GroupResourceAuthManager(ControllerContext controllercontext, HttpRequest request)
 			: base(controllercontext, request)

@@ -7,7 +7,7 @@ namespace Dodo.WorkingGroups
 {
 	public class WorkingGroupSerializer : ResourceReferenceSerializer<WorkingGroup> { }
 
-	public class WorkingGroupSchema : GroupResourceSchemaBase
+	public class WorkingGroupSchema : OwnedResourceSchemaBase
 	{
 		public WorkingGroupSchema()
 		{
