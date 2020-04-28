@@ -2,23 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="linting">
-      <change afterPath="$PROJECT_DIR$/src/app/components/selector/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/components/selector/selector.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/distance.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/selector.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/selector.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/services.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/services.test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/components/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/dialog.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/selector/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/selector/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/selector/selector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/selector/selector.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/distance.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/distance.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/selector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/selector.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/selector.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/selector.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/services.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/services.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/services.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/services.test.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/selector/selector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/selector/selector.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/search/action-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/action-types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/search/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/search/reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/reducer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/search/selectors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/selectors.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/urls.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -48,6 +52,7 @@
           <entry key="json" value="12" />
           <entry key="jsx" value="211" />
           <entry key="scss" value="106" />
+          <entry key="ts" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -60,6 +65,7 @@
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="SCSS" value="106" />
           <entry key="Scratch" value="1" />
+          <entry key="TypeScript" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
@@ -73,7 +79,7 @@
           <entry key="html" value="21" />
           <entry key="js" value="6788" />
           <entry key="json" value="301" />
-          <entry key="jsx" value="8897" />
+          <entry key="jsx" value="8968" />
           <entry key="scss" value="3666" />
           <entry key="txt" value="934" />
         </counts>
@@ -82,7 +88,7 @@
         <counts>
           <entry key="HTML" value="22" />
           <entry key="JSON" value="301" />
-          <entry key="JSX Harmony" value="8897" />
+          <entry key="JSX Harmony" value="8968" />
           <entry key="JavaScript" value="6787" />
           <entry key="PLAIN_TEXT" value="941" />
           <entry key="SCSS" value="3666" />
@@ -90,7 +96,7 @@
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
         <counts>
-          <entry key="git.branch.create.new" value="6" />
+          <entry key="git.branch.create.new" value="9" />
           <entry key="git.branch.merge" value="1" />
         </counts>
       </usages-collector>
@@ -100,11 +106,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/app/domain/search/actions.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="122">
-                  <caret line="10" column="25" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
+                <state relative-caret-position="135">
+                  <caret line="9" selection-start-line="9" selection-end-line="9" />
                   <folding>
                     <element signature="e#0#65#0" expanded="true" />
                   </folding>
@@ -150,11 +156,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="119">
-                  <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
+                <state relative-caret-position="135">
+                  <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
                   <folding>
                     <element signature="e#0#50#0" expanded="true" />
                   </folding>
@@ -184,15 +190,6 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="60">
                   <caret line="6" selection-start-line="6" selection-end-line="6" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/domain/search/selectors.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="270">
-                  <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
                 </state>
               </provider>
             </entry>
@@ -229,7 +226,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="master" />
+        <entry key="$PROJECT_DIR$/.." value="feature/selector-for-mobile" />
       </map>
     </option>
   </component>
@@ -285,8 +282,8 @@
         <option value="$PROJECT_DIR$/src/app/domain/search/selectors.js" />
         <option value="$PROJECT_DIR$/src/app/domain/search/reducer.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/search/actions.js" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" />
       </list>
     </option>
   </component>
@@ -341,13 +338,6 @@
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="dodo" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -365,29 +355,7 @@
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="dodo" type="462c0819:PsiDirectoryNode" />
               <item name="routes" type="462c0819:PsiDirectoryNode" />
-              <item name="site" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="domain" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="domain" type="462c0819:PsiDirectoryNode" />
               <item name="search" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="startup" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -645,7 +613,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586447657772</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="linting">
+      <created>1588077488542</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1588077488542</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -669,7 +644,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="92173000" />
+    <option name="totallyTimeSpent" value="92826000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1680" y="0" width="1920" height="1080" extended-state="0" />
@@ -743,9 +718,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/app/domain/services/api-service.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="235">
@@ -1054,30 +1026,10 @@
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/index.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/container.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/search/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1113,10 +1065,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/search/actions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="10" column="25" selection-start-line="10" selection-start-column="25" selection-end-line="10" selection-end-column="25" />
+        <state relative-caret-position="135">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
           <folding>
             <element signature="e#0#65#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/container.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4236">
+          <caret line="4898" column="12" selection-start-line="4898" selection-start-column="12" selection-end-line="4898" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
           </folding>
         </state>
       </provider>

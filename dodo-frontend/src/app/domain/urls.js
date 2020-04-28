@@ -1,4 +1,4 @@
-const DEV_SERVER = "https://51.77.108.216:5001/api/"
+const DEV_SERVER = "https://www.dodo.ovh/api/"
 
 export const REBELLIONS = DEV_SERVER + "rebellions/"
 export const LOCAL_GROUPS = DEV_SERVER + "localgroups/"
