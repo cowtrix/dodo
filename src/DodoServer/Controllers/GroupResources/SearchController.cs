@@ -6,6 +6,7 @@ using System.Linq;
 using Common.Extensions;
 using System;
 using Dodo.Resources;
+using Common.Config;
 
 namespace DodoResources
 {
@@ -13,7 +14,7 @@ namespace DodoResources
 	public class SearchController : CustomController<DodoResource, ResourceSchemaBase>
 	{
 		public const string RootURL = "search";
-		public const int ChunkSize = 10;
+		public static int ChunkSize => ConfigManager.GetValue($"{nameof(SearchController)}_SearchChunkSize", 100);
 
 		[HttpGet]
 		public virtual async Task<IActionResult> Index(
@@ -21,7 +22,7 @@ namespace DodoResources
 			[FromQuery]DateFilter dateFilter,
 			[FromQuery]StringFilter stringFilter,
 			[FromQuery]ParentFilter parentFilter,
-			int index = 0)
+			int index = 0, int chunkSize = -1)
 		{
 			var req = VerifySearchRequest();
 			if (!req.IsSuccess)
@@ -30,7 +31,7 @@ namespace DodoResources
 			}
 			try
 			{
-				var resources = DodoResourceUtility.Search(index, ChunkSize, locationFilter, dateFilter, stringFilter, parentFilter)
+				var resources = DodoResourceUtility.Search(index, Math.Min(chunkSize, ChunkSize), locationFilter, dateFilter, stringFilter, parentFilter)
 					.Select(rsc => rsc.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 				return Ok(resources.ToList());
 			}
