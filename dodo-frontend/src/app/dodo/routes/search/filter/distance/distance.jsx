@@ -5,7 +5,11 @@ import { Selector } from "./selector"
 
 const eventsTitle = "Event Types..."
 
-export const Events = ({ eventTypes, eventsFiltered, searchFilterEvents }) => (
+export const Distance = ({
+	eventTypes,
+	eventsFiltered,
+	searchFilterEvents
+}) => (
 	<SelectorWrapper
 		title={eventsTitle}
 		content={
@@ -19,7 +23,7 @@ export const Events = ({ eventTypes, eventsFiltered, searchFilterEvents }) => (
 	/>
 )
 
-Events.propTypes = {
+Distance.propTypes = {
 	eventTypes: PropTypes.array,
 	eventsFiltered: PropTypes.array,
 	searchFilterEvents: PropTypes.func

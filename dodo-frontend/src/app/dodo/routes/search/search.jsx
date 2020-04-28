@@ -4,18 +4,9 @@ import { ListContainer, List } from "app/components/events"
 import { SiteMap } from "app/components"
 import { Filter } from "./filter"
 
-const mockParams = {
-	latlong: "79+47",
-	distance: 100000
-}
-
-export const Search = ({
-	searchResults = [],
-	params = mockParams,
-	getSearchResults
-}) => {
+export const Search = ({ searchResults = [], params, getSearchResults }) => {
 	useEffect(() => {
-		getSearchResults(mockParams)
+		getSearchResults(params)
 	}, [params, getSearchResults])
 
 	return (

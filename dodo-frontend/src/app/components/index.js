@@ -14,5 +14,6 @@ export { SiteDetail } from "./site-detail"
 export { SiteInfo } from "./site-info"
 export { DateLayout } from "./date-layout"
 export { Dialog } from "./dialog"
+export { Selector } from "./selector"
 
 export { footer, events }
