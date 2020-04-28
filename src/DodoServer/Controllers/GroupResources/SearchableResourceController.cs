@@ -4,6 +4,7 @@ using System.Linq;
 using Dodo;
 using System.Threading.Tasks;
 using Dodo.Resources;
+using System;
 
 namespace DodoResources
 {
@@ -17,15 +18,14 @@ namespace DodoResources
 			[FromQuery]DateFilter dateFilter,
 			[FromQuery]StringFilter stringFilter,
 			[FromQuery]ParentFilter parentFilter,
-			string parent = null,
-			int index = 0)
+			int index = 0, int chunkSize = int.MaxValue)
 		{
 			var req = VerifySearchRequest();
 			if (!req.IsSuccess)
 			{
 				return req.Error;
 			}
-			var resources = DodoResourceUtility.Search<T>(index, SearchController.ChunkSize, locationFilter, dateFilter, stringFilter, parentFilter);
+			var resources = DodoResourceUtility.Search<T>(index, Math.Min(chunkSize, SearchController.ChunkSize), locationFilter, dateFilter, stringFilter, parentFilter);
 			var view = resources.Select(rsc => rsc.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
 			return Ok(view.ToList());
 		}

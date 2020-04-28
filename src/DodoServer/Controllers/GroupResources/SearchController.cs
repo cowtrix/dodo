@@ -22,7 +22,7 @@ namespace DodoResources
 			[FromQuery]DateFilter dateFilter,
 			[FromQuery]StringFilter stringFilter,
 			[FromQuery]ParentFilter parentFilter,
-			int index = 0, int chunkSize = -1)
+			int index = 0, int chunkSize = int.MaxValue)
 		{
 			var req = VerifySearchRequest();
 			if (!req.IsSuccess)
