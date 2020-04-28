@@ -15,7 +15,7 @@ export const fetchRebellionEvents = memoize(async rebellionId => {
 	const sites = await api(SITES)
 	return sites.filter(
 		site =>
-			site.Parent.guid === rebellionId &&
-			EVENT_SITE_TYPES.includes(site.Type)
+			site.parent.guid === rebellionId &&
+			EVENT_SITE_TYPES.includes(site.type)
 	)
 })

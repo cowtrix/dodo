@@ -10,12 +10,12 @@ export const RebellionDetail = ({ rebellion }) => {
 	return (
 		<DateLayout
 			startDate={
-				rebellion.StartDate ? new Date(rebellion.StartDate) : null
+				rebellion.startDate ? new Date(rebellion.startDate) : null
 			}
-			endDate={rebellion.EndDate ? new Date(rebellion.EndDate) : null}
-			title={<PageTitle title={rebellion.Name} subTitle="Glasgow" />}
+			endDate={rebellion.endDate ? new Date(rebellion.endDate) : null}
+			title={<PageTitle title={rebellion.name} subTitle="Glasgow" />}
 		>
-			<div className={styles.detail}>{rebellion.PublicDescription}</div>
+			<div className={styles.detail}>{rebellion.publicDescription}</div>
 			<div className={styles.join}>
 				<Button
 					as={<Link to={"/rebellion/join"} />}
