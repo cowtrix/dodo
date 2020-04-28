@@ -6,7 +6,7 @@ import { selectors, actions } from "app/domain/search"
 const mapStateToProps = state => ({
 	eventTypes: [
 		...new Set(
-			selectors.searchResults(state).map(result => result.METADATA.TYPE)
+			selectors.searchResults(state).map(result => result.metadata.type)
 		)
 	],
 	eventsFiltered: selectors.eventsFiltered(state)

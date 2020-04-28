@@ -12,13 +12,13 @@ const initialState = {
 	searchResultsFiltered: [],
 	events: [],
 	latlong: "",
-	distance: ""
+	distance: "10000"
 }
 
 export const reducer = (state = initialState, action) => {
 	switch (action.type) {
 		case SEARCH_GET + SUCCESS: {
-			const searchResultsFiltered = action.payload.length
+			const searchResultsFiltered = state.events.length
 				? filterByEvent(action.payload, state.events)
 				: state.searchResults
 			return {

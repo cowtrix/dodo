@@ -4,13 +4,24 @@ import { ListContainer, List } from "app/components/events"
 import { SiteMap } from "app/components"
 import { Filter } from "./filter"
 
-export const Search = ({ searchResults = [], params, getSearchResults }) => {
-	const location = geolocationPositionInstance.coords
-	console.log(location)
+export const Search = ({
+	searchResults = [],
+	latlong,
+	distance,
+	getSearchResults,
+	setLocation,
+	params
+}) => {
+	const success = position => {
+		const loc = position.coords
+		const latlong = loc.latitude + "+" + loc.longitude
+		getSearchResults(distance, latlong)
+	}
 
 	useEffect(() => {
-		getSearchResults(params)
-	}, [params, getSearchResults])
+		navigator.geolocation.getCurrentPosition(success)
+		latlong && distance && getSearchResults(distance, latlong)
+	}, [latlong, distance, getSearchResults])
 
 	return (
 		<Fragment>
@@ -30,5 +41,6 @@ export const Search = ({ searchResults = [], params, getSearchResults }) => {
 Search.propTypes = {
 	getSearchResults: PropTypes.func,
 	params: PropTypes.object,
-	searchResults: PropTypes.array
+	searchResults: PropTypes.array,
+	setLocation: PropTypes.func
 }

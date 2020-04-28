@@ -11,4 +11,4 @@ export const eventsFiltered = state =>
 
 export const distance = state => path(["domain", "search", "distance"], state)
 
-export const location = state => path(["domain", "search", "location"], state)
+export const latlong = state => path(["domain", "search", "latlong"], state)
