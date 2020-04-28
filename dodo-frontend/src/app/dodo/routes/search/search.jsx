@@ -5,6 +5,9 @@ import { SiteMap } from "app/components"
 import { Filter } from "./filter"
 
 export const Search = ({ searchResults = [], params, getSearchResults }) => {
+	const location = geolocationPositionInstance.coords
+	console.log(location)
+
 	useEffect(() => {
 		getSearchResults(params)
 	}, [params, getSearchResults])
