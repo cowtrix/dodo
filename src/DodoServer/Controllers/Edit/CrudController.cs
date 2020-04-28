@@ -12,10 +12,14 @@ namespace DodoServer.Controllers.Edit
 	[Route("edit/[controller]")]
 	public class CrudController : Controller
 	{
-		internal async Task<IActionResult> GetResourcesView<T>(string resourceUrl)
+		internal async Task<IActionResult> GetResourcesView<T>(string resourceUrl, int page)
 		{
+			if(page < 1)
+			{
+				return BadRequest();
+			}
 			var client = GetHttpClient(resourceUrl);
-			var httpResponse = await client.GetAsync(string.Empty);
+			var httpResponse = await client.GetAsync($"?index={(page - 1) * DodoResources.SearchController.ChunkSize}");
 			httpResponse.EnsureSuccessStatusCode();
 			var resources = await httpResponse.Content.ReadAsAsync<IEnumerable<T>>();
 			return View(resources);

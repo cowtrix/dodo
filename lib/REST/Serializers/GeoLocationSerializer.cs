@@ -1,5 +1,6 @@
-﻿using Common;
+using Common;
 using MongoDB.Bson.Serialization;
+using Resources.Location;
 using System;
 
 namespace Resources.Serializers

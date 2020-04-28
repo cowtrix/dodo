@@ -38,8 +38,12 @@ namespace SharedTest
 			Context = testContext;
 		}
 
-		static TestBase()
+		public TestBase()
 		{
+			if(m_runner != null)
+			{
+				return;
+			}
 			m_runner = MongoDbRunner.Start();
 			ConfigManager.SetValue(ResourceUtility.CONFIGKEY_MONGODBSERVERURL, m_runner.ConnectionString);
 			ResourceUtility.ClearAllManagers();
@@ -48,7 +52,7 @@ namespace SharedTest
 
 		private static void OnLog(LogMessage message)
 		{
-			Context.WriteLine(message.ToString());
+			Context?.WriteLine(message.ToString());
 		}
 	
 		/// <summary>
@@ -73,7 +77,7 @@ namespace SharedTest
 			Postman.Update();
 		}
 
-		protected User GetRandomUser(out string password, out AccessContext context, bool verifyEmail = true)
+		public static User GetRandomUser(out string password, out AccessContext context, bool verifyEmail = true)
 		{
 			var schema = (UserSchema)SchemaGenerator.GetRandomSchema<User>(default);
 			password = schema.Password;
@@ -102,7 +106,7 @@ namespace SharedTest
 			return result;
 		}
 
-		protected static User GenerateUser(UserSchema schema, out AccessContext context, bool verifyEmail = true)
+		public static User GenerateUser(UserSchema schema, out AccessContext context, bool verifyEmail = true)
 		{
 			var userFactory = ResourceUtility.GetFactory<User>();
 			var user = userFactory.CreateTypedObject(default(AccessContext), schema);

@@ -2,6 +2,7 @@ using Common;
 using Common.Extensions;
 using Dodo.Resources;
 using Resources;
+using Resources.Location;
 using Resources.Serializers;
 using System;
 using System.ComponentModel.DataAnnotations;

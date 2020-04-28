@@ -8,7 +8,7 @@ namespace Dodo.Roles
 {
 	public class RoleSerializer : ResourceReferenceSerializer<Role> { }
 
-	public class RoleSchema : DodoResourceSchemaBase
+	public class RoleSchema : ResourceSchemaBase
 	{
 		public Guid Parent { get; set; }
 		public string PublicDescription { get; set; }

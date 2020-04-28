@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Common;
+using Resources.Location;
 
 namespace Resources
 {
@@ -22,6 +23,7 @@ namespace Resources
 	/// </summary>
 	public static class JsonViewUtility
 	{
+		private static Dictionary<(Guid, uint), Dictionary<string, object>> m_cache = new Dictionary<(Guid, uint), Dictionary<string, object>>();
 
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
@@ -47,12 +49,26 @@ namespace Resources
 				return null;
 			}
 
-			var vals = new Dictionary<string, object>();
-
-			// Get fields and properties, filter to what we can view with our permission level
-			var targetType = obj.GetType();
+			if (obj is IRESTResource resource)
+			{
+				// Try to hit the resource cache
+				if (m_cache.TryGetValue((resource.Guid, resource.Revision), out var cacheVal))
+				{
+					return cacheVal;
+				}
+			}
 
 			// Handle composite/primitive object case
+			var targetType = obj.GetType();
+			if (ShouldSerializeDirectly(targetType))
+			{
+				throw new Exception($"Cannot generate JSON view for type {targetType}");
+			}
+
+			var vals = new Dictionary<string, object>();
+
+
+			// Get fields and properties, filter to what we can view with our permission level
 			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
 			allMembers.AddRange(targetType.GetFields());
 			var filteredMembers = allMembers.Where(m =>
@@ -81,6 +97,12 @@ namespace Resources
 				var metadata = new Dictionary<string, object>();
 				(obj as Resource).AppendMetadata(metadata, visibility, requester, passphrase);
 				vals.Add(Resource.METADATA, metadata);
+			}
+
+			if (obj is IRESTResource finalRsc)
+			{
+				m_cache[(finalRsc.Guid, finalRsc.Revision)] = vals;
+				return vals;
 			}
 			return vals;
 		}

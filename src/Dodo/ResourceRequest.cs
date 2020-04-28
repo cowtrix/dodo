@@ -14,7 +14,7 @@ namespace Resources
 		public static ResourceRequest NotFoundRequest => new ResourceRequest(new NotFoundResult());
 
 		public readonly IDodoResource Resource;
-		public readonly DodoResourceSchemaBase Schema;
+		public readonly ResourceSchemaBase Schema;
 		public readonly AccessContext Requester;
 		public readonly EHTTPRequestType RequestType;
 		public readonly EPermissionLevel PermissionLevel;
@@ -56,7 +56,7 @@ namespace Resources
 			Error = null;
 		}
 
-		public ResourceRequest(AccessContext context, DodoResourceSchemaBase schema, EHTTPRequestType type, 
+		public ResourceRequest(AccessContext context, ResourceSchemaBase schema, EHTTPRequestType type, 
 			EPermissionLevel permissionLevel, ResourceCreationToken token = null)
 		{
 			Requester = context;

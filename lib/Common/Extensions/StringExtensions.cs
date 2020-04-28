@@ -8,6 +8,14 @@ namespace Common.Extensions
 
 	public static class StringExtensions
 	{
+		public static string AppendIfNotNull(this string str, string toAppend)
+		{
+			if(str == null)
+			{
+				return str;
+			}
+			return str + toAppend;
+		}
 		public static string ToCamelCase(this string str)
 		{
 			if (string.IsNullOrEmpty(str))

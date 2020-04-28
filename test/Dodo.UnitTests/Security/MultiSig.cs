@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Security.Authentication;
 using Common;
@@ -6,6 +6,7 @@ using Common.Security;
 using Dodo.SharedTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
+using Resources.Location;
 using Resources.Security;
 using SharedTest;
 

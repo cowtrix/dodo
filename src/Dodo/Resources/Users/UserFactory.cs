@@ -9,7 +9,7 @@ namespace Dodo.Users
 {
 	public class UserSerializer : ResourceReferenceSerializer<User> { }
 
-	public class UserSchema : DodoResourceSchemaBase
+	public class UserSchema : ResourceSchemaBase
 	{
 		[Username]
 		public string Username { get; set; }

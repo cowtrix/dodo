@@ -35,6 +35,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\DodoServer\DodoServer.csproj" />
     <ProjectReference Include="..\Dodo.SharedTest\Dodo.SharedTest.csproj" />
+    <ProjectReference Include="..\GenerateSampleData\GenerateSampleData.csproj" />
   </ItemGroup>
 
 </Project>

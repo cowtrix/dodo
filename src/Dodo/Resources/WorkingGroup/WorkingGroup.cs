@@ -28,27 +28,13 @@ namespace Dodo.WorkingGroups
 		}
 
 		[View(EPermissionLevel.PUBLIC)]
-		public List<string> Roles
-		{
-			get
-			{
-				return ResourceUtility.GetManager<Role>().Get(role => role.Parent.Guid == Guid)
-					.Select(x => x.Guid.ToString()).ToList();
-			}
-		}
+		public List<Guid> Roles = new List<Guid>();
 
 		/// <summary>
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC)]
-		public List<string> WorkingGroups
-		{
-			get
-			{
-				return ResourceUtility.GetManager<WorkingGroup>().Get(wg => wg?.Parent != null && wg?.Parent.GetValue()?.Guid == Guid)
-					.Select(wg => wg.Guid.ToString()).ToList();
-			}
-		}
+		public List<Guid> WorkingGroups = new List<Guid>();
 
 		public override bool CanContain(Type type)
 		{
@@ -57,6 +43,43 @@ namespace Dodo.WorkingGroups
 				return true;
 			}
 			return false;
+		}
+
+		public override void AddChild<T>(T rsc)
+		{
+			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
+			{
+				if (WorkingGroups.Contains(wg.Guid))
+				{
+					throw new Exception($"Adding duplicated child object {wg.Guid} to {Guid}");
+				}
+				WorkingGroups.Add(wg.Guid);
+			}
+			else if (rsc is Role s && s.Parent.Guid == Guid)
+			{
+				if (Roles.Contains(s.Guid))
+				{
+					throw new Exception($"Adding duplicated child object {s.Guid} to {Guid}");
+				}
+				Roles.Add(s.Guid);
+			}
+			else
+			{
+				throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
+			}
+		}
+
+		public override bool RemoveChild<T>(T rsc)
+		{
+			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
+			{
+				return WorkingGroups.Remove(wg.Guid);
+			}
+			else if (rsc is Role s && s.Parent.Guid == Guid)
+			{
+				return Roles.Remove(s.Guid);
+			}
+			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}
 	}
 }

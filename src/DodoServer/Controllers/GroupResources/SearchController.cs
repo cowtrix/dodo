@@ -5,17 +5,22 @@ using Resources;
 using System.Linq;
 using Common.Extensions;
 using System;
+using Dodo.Resources;
 
 namespace DodoResources
 {
 	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
-	public class SearchController : CustomController<DodoResource, DodoResourceSchemaBase>
+	public class SearchController : CustomController<DodoResource, ResourceSchemaBase>
 	{
 		public const string RootURL = "search";
+		public const int ChunkSize = 10;
 
 		[HttpGet]
 		public virtual async Task<IActionResult> Index(
-			[FromQuery]DistanceFilter locationFilter, [FromQuery]DateFilter dateFilter)
+			[FromQuery]DistanceFilter locationFilter, 
+			[FromQuery]DateFilter dateFilter,
+			[FromQuery]StringFilter stringFilter,
+			int index = 0)
 		{
 			var req = VerifySearchRequest();
 			if (!req.IsSuccess)
@@ -24,11 +29,9 @@ namespace DodoResources
 			}
 			try
 			{
-				var resources = DodoResourceUtility.Get(rsc => locationFilter.Filter(rsc) && dateFilter.Filter(rsc))
-					.Transpose(x => locationFilter.Mutate(x))
-					.Transpose(x => dateFilter.Mutate(x));
-				return Ok(DodoJsonViewUtility.GenerateJsonViewEnumerable(resources, req.PermissionLevel, 
-					req.Requester.User, req.Requester.Passphrase));
+				var resources = DodoResourceUtility.Search(locationFilter, dateFilter, stringFilter, index, ChunkSize)
+					.Select(rsc => rsc.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
+				return Ok(resources.ToList());
 			}
 			catch (Exception e)
 			{
@@ -40,17 +43,6 @@ namespace DodoResources
 			}
 		}
 
-		protected ResourceRequest VerifySearchRequest()
-		{
-			if (!Context.Challenge())
-			{
-				return ResourceRequest.ForbidRequest;
-			}
-			if(Context.User == null)
-			{
-				return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.PUBLIC);
-			}
-			return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.MEMBER);
-		}
+		
 	}
 }

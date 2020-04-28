@@ -1,6 +1,6 @@
-const DEV_SERVER = "https://www.dodo.ovh/api/"
+const apiUrl = process.env.REACT_APP_API_URL || "https://www.dodo.ovh/api/"
 
-export const REBELLIONS = DEV_SERVER + "rebellions/"
-export const LOCAL_GROUPS = DEV_SERVER + "localgroups/"
-export const SITES = DEV_SERVER + "sites/"
-export const SEARCH = DEV_SERVER + "search"
+export const REBELLIONS = apiUrl + "rebellions/"
+export const LOCAL_GROUPS = apiUrl + "localgroups/"
+export const SITES = apiUrl + "sites/"
+export const SEARCH = apiUrl + "search"

@@ -1,9 +1,6 @@
 using Dodo;
-using Dodo.LocalGroups;
-using Dodo.Rebellions;
 using Dodo.SharedTest;
 using Dodo.Users;
-using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 using Resources.Security;
@@ -14,7 +11,7 @@ using System.Text;
 
 namespace Groups
 {
-	
+
 	public abstract class GroupResourceTestBase<T> : TestBase where T:GroupResource
 	{
 		protected IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
@@ -65,11 +62,4 @@ namespace Groups
 			Assert.IsTrue(updatedGroup.IsAdmin(newAdmin, creatorContext));
 		}
 	}
-
-	[TestClass]
-	public class RebellionTests : GroupResourceTestBase<Rebellion> { }
-	[TestClass]
-	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup> { }
-	[TestClass]
-	public class LocalGroupTests : GroupResourceTestBase<LocalGroup> { }
 }

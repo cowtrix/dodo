@@ -27,7 +27,7 @@ namespace Resources
 	[ApiController]
 	public abstract class ResourceController<T, TSchema> : CustomController<T, TSchema>
 		where T : class, IDodoResource
-		where TSchema : DodoResourceSchemaBase
+		where TSchema : ResourceSchemaBase
 	{
 		public virtual Task<IActionResult> Create([FromBody] TSchema schema)
 		{
@@ -107,6 +107,9 @@ namespace Resources
 								break;
 							case JsonValueKind.Array:
 								result[sub.Key] = sub.Value.EnumerateArray().ToList();
+								break;
+							case JsonValueKind.Null:
+								result[sub.Key] = null;
 								break;
 							default:
 								throw new Exception($"Unsupported JsonValueKind {sub.Value.ValueKind}");

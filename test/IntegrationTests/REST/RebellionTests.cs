@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Common;
 using Dodo.WorkingGroups;
 using DodoTest.Framework.Postman;
+using Resources.Location;
 
 namespace RESTTests
 {

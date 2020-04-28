@@ -21,12 +21,6 @@ namespace RESTTests
 	{
 		const string UserCat = "Users";
 
-		[AssemblyInitialize]
-		public static void SetupTests(TestContext testContext)
-		{
-			ResourceUtility.ClearAllManagers();
-		}
-
 		[TestMethod]
 		public async Task CanRegisterNewUser()
 		{

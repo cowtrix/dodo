@@ -5,22 +5,31 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Resources
+namespace Resources.Location
 {
-	public static class GeocodingService
-	{
-		//private PersistentStore<>
-	}
-
 	/// <summary>
 	/// Represents a geographic location on the Earth's surface
 	/// </summary>
 	[Serializable]
 	public struct GeoLocation : IVerifiable
 	{
+		[BsonIgnore]
+		public LocationData LocationData
+		{
+			get
+			{
+				if(m_data == null)
+				{
+					m_data = LocationManager.GetLocationData(this);
+				}
+				return m_data;
+			}
+		}
+		[JsonIgnore]
+		[BsonElement]
+		private LocationData m_data;
+
 		public GeoCoordinatePortable.GeoCoordinate ToCoordinate() => new GeoCoordinate(Latitude, Longitude);
-		[JsonProperty]
-		private Guid m_reverseGeocodingKey { get; set; }
 		[JsonProperty]
 		[Range(-90, 90)]
 		public double Latitude { get { return m_lat; } set { m_lat = WrapClamp(value, -90, 90); } }
@@ -35,6 +44,7 @@ namespace Resources
 		{
 			m_lat = WrapClamp(latitude, -90, 90);
 			m_long = WrapClamp(longitude, -180, 180);
+			m_data = null;
 		}
 
 		private static double WrapClamp(double x, double x_min, double x_max)
@@ -84,7 +94,7 @@ namespace Resources
 
 		public override string ToString()
 		{
-			return $"Lat:{Latitude} Long:{Longitude}";
+			return $"Lat:{Latitude} Long:{Longitude}" + (LocationData != null ? $" {LocationData}" : "");
 		}
 
 		public bool VerifyExplicit(out string error)

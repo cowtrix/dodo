@@ -1,9 +1,9 @@
-import React from 'react'
-import styles from './login.module.scss'
+import React from "react"
+import styles from "./login.module.scss"
+import { useTranslation } from "react-i18next"
 
-const loginText = "SIGN IN"
+export const Login = () => {
+	const { t } = useTranslation("ui")
 
-export const Login = () =>
-	<div className={styles.login}>
-		{loginText}
-	</div>
+	return <div className={styles.login}>{t("header_sign_in_text")}</div>
+}

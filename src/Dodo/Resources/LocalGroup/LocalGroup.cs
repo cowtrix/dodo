@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Dodo.Users;
 using Resources;
 using System;
@@ -6,6 +6,7 @@ using Dodo.Roles;
 using Common.Extensions;
 using Resources.Security;
 using Resources.Serializers;
+using Resources.Location;
 
 namespace Dodo.LocalGroups
 {

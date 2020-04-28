@@ -2,6 +2,7 @@ using Common;
 using Common.Extensions;
 using Dodo.Resources;
 using Resources;
+using Resources.Location;
 using System;
 
 namespace Dodo.Sites
@@ -37,6 +38,13 @@ namespace Dodo.Sites
 			if(!newSite.Verify(out var error))
 			{
 				throw new Exception(error);
+			}
+			// Add listing to parent resource if needed				
+			using var rscLock = new ResourceLock(newSite.Parent.Guid);
+			{
+				var parent = rscLock.Value as GroupResource;
+				parent.AddChild(newSite);
+				ResourceUtility.GetManager(parent.GetType()).Update(parent, rscLock);
 			}
 			return newSite;
 		}

@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using Common;
 using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
+using Resources.Location;
 using Resources.Security;
 using Ryadel.Components.Security;
 

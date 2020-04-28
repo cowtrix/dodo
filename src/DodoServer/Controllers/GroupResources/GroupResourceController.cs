@@ -15,6 +15,8 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Dodo;
 using System.Threading.Tasks;
+using Dodo.Resources;
+using System.Diagnostics;
 
 namespace DodoResources
 {
@@ -88,7 +90,10 @@ namespace DodoResources
 
 		[HttpGet]
 		public virtual async Task<IActionResult> IndexInternal(
-			[FromQuery]DistanceFilter locationFilter, [FromQuery]DateFilter dateFilter)
+			[FromQuery]DistanceFilter locationFilter,
+			[FromQuery]DateFilter dateFilter,
+			[FromQuery]StringFilter stringFilter,
+			int index = 0)
 		{
 			var req = VerifySearchRequest();
 			if (!req.IsSuccess)
@@ -97,13 +102,11 @@ namespace DodoResources
 			}
 			try
 			{
-				var resources = ResourceManager.Get(rsc => locationFilter.Filter(rsc) && dateFilter.Filter(rsc))
-					.Transpose(x => locationFilter.Mutate(x))
-					.Transpose(x => dateFilter.Mutate(x));
-				return Ok(DodoJsonViewUtility.GenerateJsonViewEnumerable(resources, req.PermissionLevel,
-					req.Requester.User, req.Requester.Passphrase));
+				var resources = DodoResourceUtility.Search<T>(locationFilter, dateFilter, stringFilter, index, SearchController.ChunkSize);
+				var view = resources.Select(rsc => rsc.GenerateJsonView(req.PermissionLevel, req.Requester.User, req.Requester.Passphrase));
+				return Ok(view.ToList());
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 #if DEBUG
 				return BadRequest(e.Message);

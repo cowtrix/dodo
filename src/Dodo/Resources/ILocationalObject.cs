@@ -1,5 +1,6 @@
-﻿using Common;
+using Common;
 using Resources;
+using Resources.Location;
 using System;
 
 namespace Dodo

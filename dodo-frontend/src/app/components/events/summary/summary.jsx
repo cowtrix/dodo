@@ -8,21 +8,20 @@ import { Description } from "./description"
 import styles from "./summary.module.scss"
 
 export const Summary = ({
-	Name,
-	location = "Glasgow",
-	StartDate,
-	EndDate,
-	PublicDescription,
-	GUID
+	name,
+	startDate,
+	endDate,
+	publicDescription,
+	guid
 }) => (
 	<li className={styles.eventSummmary}>
-		<Link to={"/rebellion/" + GUID} className={styles.link}>
+		<Link to={"/rebellion/" + guid} className={styles.link}>
 			<DateTile
-				startDate={new Date(StartDate)}
-				endDate={new Date(EndDate)}
+				startDate={new Date(startDate)}
+				endDate={new Date(endDate)}
 			/>
-			<Title title={Name} location={location} />
-			<Description description={PublicDescription} />
+			<Title title={name} location="Glasgow" />
+			<Description description={publicDescription} />
 		</Link>
 	</li>
 )

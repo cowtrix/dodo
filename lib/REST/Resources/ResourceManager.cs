@@ -84,6 +84,7 @@ namespace Resources
 		/// <param name="newObject"></param>
 		public virtual void Add(T newObject)
 		{
+			Logger.Debug($"{typeof(T).Name} ADD: {newObject.Name} ({newObject.Guid})");
 			if (ResourceUtility.GetResourceByGuid(newObject.Guid) != null)
 			{
 				throw new Exception("Conflicting GUID");
@@ -97,6 +98,7 @@ namespace Resources
 		/// <param name="objToDelete"></param>
 		public virtual void Delete(T objToDelete)
 		{
+			Logger.Debug($"{typeof(T).Name} DELETE: {objToDelete.Name} ({objToDelete.Guid})");
 			objToDelete.OnDestroy();
 			MongoDatabase.DeleteOne(x => x.Guid == objToDelete.Guid);
 		}
@@ -108,6 +110,8 @@ namespace Resources
 		/// <param name="locker">The ResourceLock of the object (to guarantee someone else isn't editing it)</param>
 		public virtual void Update(T objToUpdate, ResourceLock locker)
 		{
+			objToUpdate.Revision++;
+			Logger.Debug($"{typeof(T).Name} UPDATE: {objToUpdate.Name} ({objToUpdate.Guid}::{objToUpdate.Revision})");
 			if (locker.Guid != objToUpdate.Guid)
 			{
 				// This should never, ever happen in normal execution of the program
@@ -124,6 +128,7 @@ namespace Resources
 		/// <returns>A resource of type T that satisfies the selector</returns>
 		public virtual T GetSingle(Func<T, bool> selector, Guid? handle = null)
 		{
+			Logger.Debug($"{typeof(T).Name} GETSINGLE: {selector.Method.Name} ({handle})");
 			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle) as T;
 		}
 
@@ -134,6 +139,7 @@ namespace Resources
 		/// <returns>A resource of type T that satisfies the selector</returns>
 		public virtual T GetFirst(Func<T, bool> selector, Guid? handle = null)
 		{
+			Logger.Debug($"{typeof(T).Name} GETFIRST: {selector.Method.Name} ({handle})");
 			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle) as T;
 		}
 
@@ -144,6 +150,7 @@ namespace Resources
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
 		public virtual IEnumerable<T> Get(Func<T, bool> selector, Guid? handle = null)
 		{
+			Logger.Debug($"{typeof(T).Name} GET: {selector.Method.Name} ({handle})");
 			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle).Cast<T>();
 		}
 
@@ -152,6 +159,7 @@ namespace Resources
 		/// </summary>
 		public virtual void Clear()
 		{
+			Logger.Debug($"{typeof(T).Name} CLEAR");
 			MongoDatabase.Database.DropCollection(typeof(T).Name);
 		}
 

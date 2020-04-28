@@ -1,6 +1,7 @@
 using Dodo;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
+using Dodo.Resources;
 using Dodo.SharedTest;
 using Dodo.Sites;
 using DodoResources;
@@ -40,7 +41,7 @@ namespace FilterTests
 			var schema = SchemaGenerator.GetRandomSchema<T>(context);
 			var factory = ResourceUtility.GetFactory<T>();
 			var rsc = factory.CreateTypedObject(context, schema);
-			var filter = new DateFilter() { startdate = rsc.StartDate.ToShortDateString() };
+			var filter = new DateFilter() { StartDate = rsc.StartDate.ToShortDateString() };
 			var manager = ResourceUtility.GetManager(typeof(T));
 			var search = manager.Get(x => filter.Filter(x));
 			Assert.IsTrue(search.Single().Guid == rsc.Guid);
@@ -56,7 +57,7 @@ namespace FilterTests
 			var schema = SchemaGenerator.GetRandomSchema<T>(context);
 			var factory = ResourceUtility.GetFactory<T>();
 			var rsc = factory.CreateTypedObject(context, schema);
-			var filter = new DistanceFilter() { latlong = $"{rsc.Location.Latitude} {rsc.Location.Longitude}", distance = 20 };
+			var filter = new DistanceFilter() { LatLong = $"{rsc.Location.Latitude} {rsc.Location.Longitude}", Distance = 20 };
 			var manager = ResourceUtility.GetManager(typeof(T));
 			var search = manager.Get(x => filter.Filter(x));
 			Assert.IsTrue(search.Single().Guid == rsc.Guid);

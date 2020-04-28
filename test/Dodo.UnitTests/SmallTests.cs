@@ -14,6 +14,7 @@ using Dodo.WorkingGroups;
 namespace Dodo.UnitTests
 {
 
+
 	public abstract class ResourceReferenceTests<T> : TestBase where T : class, IRESTResource
 	{
 		class ResourceRefClass : IVerifiable

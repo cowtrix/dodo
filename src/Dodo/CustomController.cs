@@ -9,9 +9,9 @@ using Dodo.Users.Tokens;
 
 namespace Resources
 {
-	public class CustomController<T, TSchema> : Controller
+	public abstract class CustomController<T, TSchema> : Controller
 		where T : class, IDodoResource
-		where TSchema : DodoResourceSchemaBase
+		where TSchema : ResourceSchemaBase
 	{
 		protected DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
 		protected virtual AuthorizationManager<T, TSchema> AuthManager =>
@@ -30,6 +30,19 @@ namespace Resources
 			} 
 		}
 		private AccessContext? __context = null;
+
+		protected ResourceRequest VerifySearchRequest()
+		{
+			if (!Context.Challenge())
+			{
+				return ResourceRequest.ForbidRequest;
+			}
+			if (Context.User == null)
+			{
+				return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.PUBLIC);
+			}
+			return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.MEMBER);
+		}
 
 		protected ResourceRequest VerifyRequest(Guid id = default, string actionName = null)
 		{
