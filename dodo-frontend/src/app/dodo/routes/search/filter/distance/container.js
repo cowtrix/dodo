@@ -4,14 +4,16 @@ import { Distance } from "./distance"
 import { selectors, actions } from "app/domain/search"
 
 const mapStateToProps = state => ({
-	currentDistance
+	latlong: selectors.latlong(state),
+	distance: selectors.distance(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-	updateDistance: params => search.actions.searchGet(dispatch, params)
+	updateDistance: (distance, latlong) =>
+		actions.searchGet(dispatch, { distance, latlong })
 })
 
-export const EventsConnected = connect(
+export const DistanceConnected = connect(
 	mapStateToProps,
 	mapDispatchToProps
 )(Distance)

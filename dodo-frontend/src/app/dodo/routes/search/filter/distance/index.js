@@ -1,1 +1,1 @@
-export { EventsConnected as Events } from "./container"
+export { DistanceConnected as Distance } from "./container"

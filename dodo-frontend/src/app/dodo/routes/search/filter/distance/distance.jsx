@@ -3,28 +3,24 @@ import PropTypes from "prop-types"
 import { Button, Selector as SelectorWrapper } from "app/components"
 import { Selector } from "./selector"
 
-const eventsTitle = "Event Types..."
+const title = "Distance..."
 
-export const Distance = ({
-	eventTypes,
-	eventsFiltered,
-	searchFilterEvents
-}) => (
+export const Distance = ({ latlong, distance, updateDistance }) => (
 	<SelectorWrapper
-		title={eventsTitle}
+		title={title}
 		content={
 			<Selector
-				placeholder={eventsTitle}
-				eventTypes={eventTypes}
-				eventsFiltered={eventsFiltered}
-				searchFilterEvents={searchFilterEvents}
+				placeholder={title}
+				distance={distance}
+				latlong={latlong}
+				updateDistance={updateDistance}
 			/>
 		}
 	/>
 )
 
 Distance.propTypes = {
-	eventTypes: PropTypes.array,
-	eventsFiltered: PropTypes.array,
-	searchFilterEvents: PropTypes.func
+	latlong: PropTypes.string,
+	distance: PropTypes.string,
+	updateDistance: PropTypes.func
 }
