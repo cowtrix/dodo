@@ -5,4 +5,4 @@ export const getTileColor = (startDate, endDate) => {
 	const endTime = endDate ? endDate.getDate() + endDate.getMonth() : 0
 
 	return COLORS[(startTime + endTime) % COLORS.length]
-};
+}

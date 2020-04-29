@@ -17,7 +17,10 @@ export const filterByWithinDate = ({
 }) =>
 	searchResults
 		.map(result => {
-			if (result.startDate) {
+			if (
+				result.startDate &&
+				result.startDate !== "0001-01-01T00:00:00"
+			) {
 				const startDate = createDate(result.startDate)
 				return startDate > withinStartDate && startDate < withinEndDate
 					? result
