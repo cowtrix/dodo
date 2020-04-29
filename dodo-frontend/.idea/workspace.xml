@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="added distance selector">
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/app/components/tiles/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/tiles/type/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/tiles/type/library.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/tiles/type/type.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/tiles/type/type.module.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/services.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/list/list.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/list/list.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/date-tile/date-tile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/tiles/date/date.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/date-tile/date-tile.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/tiles/date/date.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/date-tile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/tiles/date/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/date-tile/services.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/tiles/date/services.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/summary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/summary/summary.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/distance.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/distance.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/selector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/selector/selector.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/date.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/date.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.module.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/domain/search/action-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/action-types.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/domain/search/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/search/reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/reducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/domain/search/selectors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/selectors.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -47,10 +56,10 @@
           <entry key="env" value="1" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="1" />
-          <entry key="js" value="274" />
-          <entry key="json" value="13" />
-          <entry key="jsx" value="226" />
-          <entry key="scss" value="111" />
+          <entry key="js" value="284" />
+          <entry key="json" value="15" />
+          <entry key="jsx" value="232" />
+          <entry key="scss" value="114" />
           <entry key="ts" value="1" />
         </counts>
       </usages-collector>
@@ -59,12 +68,12 @@
           <entry key="CSS" value="1" />
           <entry key="Enforced Plain Text" value="1" />
           <entry key="HTML" value="1" />
-          <entry key="JSON" value="12" />
-          <entry key="JSX Harmony" value="226" />
-          <entry key="JavaScript" value="273" />
+          <entry key="JSON" value="13" />
+          <entry key="JSX Harmony" value="232" />
+          <entry key="JavaScript" value="283" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="SCSS" value="111" />
-          <entry key="Scratch" value="1" />
+          <entry key="SCSS" value="114" />
+          <entry key="Scratch" value="2" />
           <entry key="TypeScript" value="1" />
         </counts>
       </usages-collector>
@@ -77,26 +86,26 @@
         <counts>
           <entry key="gitignore" value="7" />
           <entry key="html" value="21" />
-          <entry key="js" value="9467" />
-          <entry key="json" value="301" />
-          <entry key="jsx" value="10658" />
-          <entry key="scss" value="3737" />
-          <entry key="txt" value="1053" />
+          <entry key="js" value="9589" />
+          <entry key="json" value="494" />
+          <entry key="jsx" value="11411" />
+          <entry key="scss" value="3835" />
+          <entry key="txt" value="1073" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="22" />
-          <entry key="JSON" value="301" />
-          <entry key="JSX Harmony" value="10658" />
-          <entry key="JavaScript" value="9466" />
-          <entry key="PLAIN_TEXT" value="1060" />
-          <entry key="SCSS" value="3737" />
+          <entry key="JSON" value="494" />
+          <entry key="JSX Harmony" value="11411" />
+          <entry key="JavaScript" value="9588" />
+          <entry key="PLAIN_TEXT" value="1080" />
+          <entry key="SCSS" value="3835" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
         <counts>
-          <entry key="git.branch.create.new" value="9" />
+          <entry key="git.branch.create.new" value="10" />
           <entry key="git.branch.merge" value="2" />
         </counts>
       </usages-collector>
@@ -107,28 +116,169 @@
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx">
+            <entry file="file://$PROJECT_DIR$/src/app/components/tiles/date/date.jsx">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="60">
-                  <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="75">
-                  <caret line="5" column="33" lean-forward="true" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
+                <state relative-caret-position="465">
+                  <caret line="31" column="3" lean-forward="true" selection-start-line="31" selection-start-column="3" selection-end-line="31" selection-end-column="3" />
+                  <folding>
+                    <element signature="e#0#25#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/index.js">
+            <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/type.jsx">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="225">
+                  <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+                  <folding>
+                    <element signature="e#0#25#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/components/events/summary/summary.jsx">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="315">
+                  <caret line="21" column="39" lean-forward="true" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
+                  <folding>
+                    <element signature="e#0#25#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/app/components/events/summary/summary.module.scss">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="195">
+                  <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/library.json">
               <provider selected="true" editor-type-id="text-editor">
                 <state>
-                  <caret column="50" selection-start-column="50" selection-end-column="50" />
+                  <caret column="1" lean-forward="true" selection-start-column="1" selection-end-column="1" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/index.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="15">
+                  <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/components/tiles/date/services.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state>
+                  <caret column="16" lean-forward="true" selection-start-column="16" selection-end-column="58" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/type.module.scss">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="165">
+                  <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/domain/search/selectors.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="300">
+                  <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/domain/rebellions/actions.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state>
+                  <folding>
+                    <element signature="e#0#66#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/domain/search/reducer.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="465">
+                  <caret line="31" column="56" lean-forward="true" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="56" />
+                  <folding>
+                    <element signature="e#0#138#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/domain/search/action-types.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="90">
+                  <caret line="6" column="31" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="31" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/domain/search/index.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="60">
+                  <caret line="6" selection-start-line="6" selection-end-line="6" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/domain/search/actions.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="525">
+                  <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
+                  <folding>
+                    <element signature="e#0#138#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="225">
+                  <caret line="15" column="39" lean-forward="true" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
+                  <folding>
+                    <element signature="e#0#50#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/app/domain/search/services.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="285">
+                  <caret line="19" column="72" selection-start-line="19" selection-start-column="72" selection-end-line="19" selection-end-column="72" />
                 </state>
               </provider>
             </entry>
@@ -136,42 +286,29 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/date.jsx">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="270">
-                  <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
+                <state relative-caret-position="285">
+                  <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
                   <folding>
                     <element signature="e#0#25#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/index.js">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/container.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="285">
-                  <caret line="19" selection-start-line="19" selection-end-line="19" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.module.scss">
-              <provider selected="true" editor-type-id="text-editor" />
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.jsx">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="510">
-                  <caret line="34" column="55" selection-start-line="34" selection-start-column="55" selection-end-line="34" selection-end-column="55" />
-                  <folding>
-                    <element signature="e#0#25#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="75">
+                  <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/services.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state>
+                  <caret column="7" selection-start-column="7" selection-end-column="7" />
                 </state>
               </provider>
             </entry>
@@ -188,58 +325,6 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/domain/search/selectors.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="270">
-                  <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/domain/search/reducer.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="7">
-                  <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
-                  <folding>
-                    <element signature="e#0#139#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/domain/search/index.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="60">
-                  <caret line="6" selection-start-line="6" selection-end-line="6" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/app/domain/search/actions.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="345">
-                  <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/app/domain/search/services.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="16" selection-start-line="16" selection-end-line="16" />
-                </state>
-              </provider>
-            </entry>
-          </file>
         </leaf>
       </split-second>
     </splitter>
@@ -247,6 +332,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>responsive-</find>
+      <find>marchSite</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src</dir>
@@ -256,23 +342,13 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature/selector-for-mobile" />
+        <entry key="$PROJECT_DIR$/.." value="feature/location-distance-search" />
       </map>
     </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/app/components/dialog/dialog.jsx" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/selector/index.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/selector/selector.module.scss" />
-        <option value="$PROJECT_DIR$/src/app/components/dialog/content/content.module.scss" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/container.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/filter.module.scss" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.module.scss" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/index.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/index.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/selector/services.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/selector/selector.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/selector/services.test.js" />
         <option value="$PROJECT_DIR$/src/app/domain/search/services.test.js" />
@@ -281,14 +357,12 @@
         <option value="$PROJECT_DIR$/src/app/components/events/list-container/list-container.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/header/header.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/rebellion/rebellion.jsx" />
-        <option value="$PROJECT_DIR$/src/app/components/events/summary/summary.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/container.js" />
         <option value="$PROJECT_DIR$/src/app/components/events/summary/title/title.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/services/useFetch.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/selector/selector.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/selector/events.jsx" />
-        <option value="$PROJECT_DIR$/src/app/components/index.js" />
         <option value="$PROJECT_DIR$/src/app/components/selector/index.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/dialog.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/selector/selector.jsx" />
@@ -309,11 +383,23 @@
         <option value="$PROJECT_DIR$/src/app/domain/search/selectors.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/index.js" />
-        <option value="$PROJECT_DIR$/src/app/domain/search/services.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/date.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/container.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/search/reducer.js" />
+        <option value="$PROJECT_DIR$/src/app/components/tiles/date/date.module.scss" />
+        <option value="$PROJECT_DIR$/src/app/components/tiles/date/date.jsx" />
+        <option value="$PROJECT_DIR$/src/app/components/tiles/index.js" />
+        <option value="$PROJECT_DIR$/src/app/components/tiles/type/index.js" />
+        <option value="$PROJECT_DIR$/src/app/components/index.js" />
+        <option value="$PROJECT_DIR$/src/app/components/tiles/type/library.json" />
+        <option value="$PROJECT_DIR$/src/app/components/events/summary/summary.jsx" />
+        <option value="$PROJECT_DIR$/src/app/components/tiles/type/type.jsx" />
+        <option value="$PROJECT_DIR$/src/app/components/tiles/type/type.module.scss" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_1.json" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/services.js" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.jsx" />
+        <option value="$PROJECT_DIR$/src/app/domain/search/services.js" />
+        <option value="$PROJECT_DIR$/src/app/components/events/summary/summary.module.scss" />
       </list>
     </option>
   </component>
@@ -374,6 +460,23 @@
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="events" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="events" type="462c0819:PsiDirectoryNode" />
+              <item name="summary" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="dodo" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -410,7 +513,21 @@
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="dodo" type="462c0819:PsiDirectoryNode" />
               <item name="routes" type="462c0819:PsiDirectoryNode" />
-              <item name="site" type="462c0819:PsiDirectoryNode" />
+              <item name="search" type="462c0819:PsiDirectoryNode" />
+              <item name="filter" type="462c0819:PsiDirectoryNode" />
+              <item name="date" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="dodo" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="search" type="462c0819:PsiDirectoryNode" />
+              <item name="filter" type="462c0819:PsiDirectoryNode" />
+              <item name="date" type="462c0819:PsiDirectoryNode" />
+              <item name="selector" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
@@ -448,19 +565,19 @@
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/app/components/selector" />
-      <recent name="$PROJECT_DIR$/src/app/dodo/routes/search/filter" />
-      <recent name="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events" />
-      <recent name="$PROJECT_DIR$/src/app/components/event" />
-      <recent name="$PROJECT_DIR$/src/app/dodo/routes" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/app/dodo/routes/search/filter" />
       <recent name="$PROJECT_DIR$/src/app/components/selector" />
       <recent name="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog" />
       <recent name="$PROJECT_DIR$/src/app/components/modal/dialog-footer" />
       <recent name="$PROJECT_DIR$/src/app/dodo/state" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/app/components/tiles" />
+      <recent name="$PROJECT_DIR$/src/app/components/selector" />
+      <recent name="$PROJECT_DIR$/src/app/dodo/routes/search/filter" />
+      <recent name="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events" />
+      <recent name="$PROJECT_DIR$/src/app/components/event" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -537,7 +654,7 @@
       <updated>1583493760223</updated>
       <workItem from="1583493761271" duration="2437000" />
       <workItem from="1583642768084" duration="18091000" />
-      <workItem from="1588157989586" duration="4489000" />
+      <workItem from="1588157989586" duration="9477000" />
     </task>
     <task id="LOCAL-00001" summary="added header for home page&#10;created rebellions list wrapper">
       <created>1583496162619</created>
@@ -728,7 +845,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588087668972</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="date selector option">
+      <created>1588165903116</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1588165903117</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -752,7 +876,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="112169000" />
+    <option name="totallyTimeSpent" value="117157000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1680" y="0" width="1920" height="1080" extended-state="0" />
@@ -809,7 +933,8 @@
     <MESSAGE value="linting" />
     <MESSAGE value="added browser location for store and search" />
     <MESSAGE value="added distance selector" />
-    <option name="LAST_COMMIT_MESSAGE" value="added distance selector" />
+    <MESSAGE value="date selector option" />
+    <option name="LAST_COMMIT_MESSAGE" value="date selector option" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -831,90 +956,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/app/components/events/summary/summary.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/events/summary/title/title.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/services/useFetch.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="13" lean-forward="true" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="6" lean-forward="true" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/container.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="9" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/selector/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="17" selection-start-column="17" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/button/button.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="20" lean-forward="true" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/dialog/dialog.jsx" />
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/selector/services.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="7" selection-start-column="7" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/store.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="42" selection-start-line="4" selection-start-column="42" selection-end-line="4" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/urls.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/services/url-modifiers.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4236">
@@ -940,6 +981,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1017,23 +1061,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="39" lean-forward="true" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/search/action-types.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="31" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/search/services.test.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1064,17 +1091,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/search/selectors.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/services.test.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/services.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.module.scss">
@@ -1097,20 +1114,145 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/date.jsx">
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
+        <state relative-caret-position="60">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/search/services.js">
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        <state relative-caret-position="75">
+          <caret line="5" column="33" lean-forward="true" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/date/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/date/date.module.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/date/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="16" lean-forward="true" selection-start-column="16" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/library.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" lean-forward="true" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/date/date.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="31" column="3" lean-forward="true" selection-start-line="31" selection-start-column="3" selection-end-line="31" selection-end-column="3" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/type.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_1.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="655">
+          <caret line="2425" column="28" selection-start-line="2425" selection-start-column="19" selection-end-line="2425" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/type.module.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/rebellions/actions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/search/action-types.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="31" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/search/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/search/actions.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
+          <folding>
+            <element signature="e#0#138#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="39" lean-forward="true" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1124,51 +1266,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/search/reducer.js">
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/date.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7">
-          <caret line="33" column="8" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#139#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/search/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/search/actions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="55" selection-start-line="34" selection-start-column="55" selection-end-line="34" selection-end-column="55" />
+        <state relative-caret-position="285">
+          <caret line="19" column="1" selection-start-line="19" selection-start-column="1" selection-end-line="19" selection-end-column="1" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx">
+    <entry file="file://$PROJECT_DIR$/src/app/domain/search/reducer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="465">
+          <caret line="31" column="56" lean-forward="true" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#138#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss">
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="7" selection-start-column="7" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/date/selector/selector.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
-          <caret line="5" column="33" lean-forward="true" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
+          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/search/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="72" selection-start-line="19" selection-start-column="72" selection-end-line="19" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/search/selectors.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/events/summary/summary.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="39" lean-forward="true" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/events/summary/summary.module.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
         </state>
       </provider>
     </entry>

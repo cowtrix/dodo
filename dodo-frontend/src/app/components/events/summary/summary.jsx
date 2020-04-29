@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 
 import { Link } from "react-router-dom"
-import { DateTile } from "../../date-tile"
+import { Date as DateTile, Type } from "../../tiles"
 import { Title } from "./title"
 import { Description } from "./description"
 import styles from "./summary.module.scss"
@@ -12,15 +12,20 @@ export const Summary = ({
 	startDate,
 	endDate,
 	publicDescription,
-	guid
+	guid,
+	metadata
 }) => (
 	<li className={styles.eventSummmary}>
-		<Link to={"/rebellion/" + guid} className={styles.link}>
-			<DateTile
-				startDate={new Date(startDate)}
-				endDate={new Date(endDate)}
-			/>
-			<Title title={name} location="Glasgow" />
+		<Link to={`${metadata.type + "/" + guid}`} className={styles.link}>
+			{startDate ? (
+				<DateTile
+					startDate={new Date(startDate)}
+					endDate={new Date(endDate)}
+				/>
+			) : (
+				<Type type={metadata.type} />
+			)}
+			<Title title={name} location={metadata.type} />
 			<Description description={publicDescription} />
 		</Link>
 	</li>
@@ -31,5 +36,6 @@ Summary.propTypes = {
 	location: PropTypes.string,
 	StartDate: PropTypes.string,
 	EndDate: PropTypes.string,
-	summary: PropTypes.string
+	summary: PropTypes.string,
+	metada: PropTypes.object.isRequired
 }
