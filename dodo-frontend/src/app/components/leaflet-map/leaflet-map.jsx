@@ -24,6 +24,13 @@ const getDefaultCenter = markers => {
 	return [51.5074, 0.1278]
 }
 
+const getLocationInfo = marker => {
+	const { locationData = {} } = marker
+	const { address = "", place = "", postcode = "" } = locationData
+
+	return address ? `${address}, ${place}, ${postcode}` : ""
+}
+
 const MarkerIcon = leaflet.icon({
 	iconUrl: GreenMarker,
 	iconSize: [50, 40],
@@ -47,9 +54,9 @@ export const LeafletMap = ({ markers }) => {
 					key={`${marker.latitude}_${marker.longitude}`}
 					position={[marker.latitude, marker.longitude]}
 				>
-					<Popup>
-						A pretty CSS3 popup. <br /> Easily customizable.
-					</Popup>
+					{marker.locationData && (
+						<Popup>{getLocationInfo(marker)}</Popup>
+					)}
 				</Marker>
 			))}
 		</Map>
