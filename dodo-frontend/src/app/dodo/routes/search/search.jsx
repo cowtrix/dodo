@@ -8,9 +8,7 @@ export const Search = ({
 	searchResults = [],
 	latlong,
 	distance,
-	getSearchResults,
-	setLocation,
-	params
+	getSearchResults
 }) => {
 	const success = position => {
 		const loc = position.coords
@@ -20,7 +18,6 @@ export const Search = ({
 
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(success)
-		latlong && distance && getSearchResults(distance, latlong)
 	}, [latlong, distance, getSearchResults])
 
 	return (

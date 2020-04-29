@@ -1,5 +1,6 @@
 import {
 	SEARCH_FILTER_EVENTS,
+	SEARCH_FILTER_DATE,
 	SEARCH_GET,
 	SEARCH_FILTER_DISTANCE,
 	SEARCH_FILTER_LOCATION
@@ -10,7 +11,9 @@ import { SEARCH } from "../urls"
 import { addParamsToUrl } from "../services"
 
 export const searchGet = (dispatch, params) => {
-	apiAction(dispatch, SEARCH_GET, addParamsToUrl(SEARCH, params))
+	params.distance &&
+		params.latlong &&
+		apiAction(dispatch, SEARCH_GET, addParamsToUrl(SEARCH, params))
 	dispatch({
 		type: SEARCH_FILTER_DISTANCE,
 		payload: params.distance
@@ -23,5 +26,10 @@ export const searchGet = (dispatch, params) => {
 
 export const searchFilterEvents = payload => ({
 	type: SEARCH_FILTER_EVENTS,
+	payload
+})
+
+export const searchFilterDate = payload => ({
+	type: SEARCH_FILTER_DATE,
 	payload
 })
