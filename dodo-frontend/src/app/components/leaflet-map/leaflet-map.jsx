@@ -1,15 +1,15 @@
 import React from "react"
 import leaflet from "leaflet"
+import "leaflet/dist/leaflet.css"
 import { Map, Marker, Popup, TileLayer } from "react-leaflet"
 
 import GreenMarker from "static/xr-pin-shadowed-green.svg"
 
 const TILE_LAYERS = [
 	{
-		url:
-			"https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg",
 		attribution:
-			'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC</a> BY 3.0. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC</a> BY SA.'
+			'© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+		url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 	},
 	{
 		url:
