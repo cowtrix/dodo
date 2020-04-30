@@ -5,6 +5,7 @@ import { search } from "app/domain"
 const mapStateToProps = state => ({
 	latlong: search.selectors.latlong(state),
 	distance: search.selectors.distance(state),
+	initialSearchResults: search.selectors.searchResults(state),
 	searchResults: search.selectors.searchResultsFiltered(state)
 })
 

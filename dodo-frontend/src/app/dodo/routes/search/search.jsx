@@ -8,7 +8,8 @@ export const Search = ({
 	searchResults = [],
 	latlong,
 	distance,
-	getSearchResults
+	getSearchResults,
+	initialSearchResults = []
 }) => {
 	const [defaultMapCenter, setdefaultMapCenter] = useState([])
 
@@ -21,7 +22,7 @@ export const Search = ({
 
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(success)
-	}, [distance, getSearchResults])
+	}, [distance, getSearchResults, initialSearchResults])
 
 	return (
 		<Fragment>

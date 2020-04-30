@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="moved all filter selects to one modal">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/app/components/leaflet-map/markers/markers.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/leaflet-map/markers/markers.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -31,7 +31,7 @@
           <entry key="env" value="1" />
           <entry key="gitignore" value="1" />
           <entry key="html" value="1" />
-          <entry key="js" value="308" />
+          <entry key="js" value="309" />
           <entry key="json" value="17" />
           <entry key="jsx" value="269" />
           <entry key="scss" value="122" />
@@ -46,7 +46,7 @@
           <entry key="HTML" value="1" />
           <entry key="JSON" value="15" />
           <entry key="JSX Harmony" value="269" />
-          <entry key="JavaScript" value="305" />
+          <entry key="JavaScript" value="306" />
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="SCSS" value="122" />
           <entry key="SVG" value="2" />
@@ -63,26 +63,27 @@
         <counts>
           <entry key="gitignore" value="7" />
           <entry key="html" value="21" />
-          <entry key="js" value="9726" />
+          <entry key="js" value="9790" />
           <entry key="json" value="495" />
-          <entry key="jsx" value="13287" />
+          <entry key="jsx" value="13315" />
           <entry key="scss" value="4096" />
-          <entry key="txt" value="1246" />
+          <entry key="txt" value="1273" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
+          <entry key="Enforced Plain Text" value="64" />
           <entry key="HTML" value="22" />
           <entry key="JSON" value="495" />
-          <entry key="JSX Harmony" value="13287" />
+          <entry key="JSX Harmony" value="13315" />
           <entry key="JavaScript" value="9725" />
-          <entry key="PLAIN_TEXT" value="1253" />
+          <entry key="PLAIN_TEXT" value="1280" />
           <entry key="SCSS" value="4096" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
         <counts>
-          <entry key="git.branch.create.new" value="13" />
+          <entry key="git.branch.create.new" value="14" />
           <entry key="git.branch.merge" value="2" />
         </counts>
       </usages-collector>
@@ -90,11 +91,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="27" column="70" selection-start-line="27" selection-start-column="57" selection-end-line="27" selection-end-column="70" />
+            <state relative-caret-position="300">
+              <caret line="24" column="54" selection-start-line="24" selection-start-column="54" selection-end-line="24" selection-end-column="54" />
             </state>
           </provider>
         </entry>
@@ -111,11 +112,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/components/leaflet-map/markers/markers.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
+            <state relative-caret-position="420">
+              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -136,10 +137,15 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/route.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/container.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="20" lean-forward="true" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="20" />
+            <state relative-caret-position="105">
+              <caret line="7" column="62" selection-start-line="7" selection-start-column="62" selection-end-line="7" selection-end-column="62" />
             </state>
           </provider>
         </entry>
@@ -182,18 +188,6 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/home/header/container.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="2" selection-start-line="8" selection-start-column="2" selection-end-line="8" selection-end-column="2" />
-              <folding>
-                <element signature="e#0#37#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
@@ -209,7 +203,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature/move-filter-buttons-to-one-modal" />
+        <entry key="$PROJECT_DIR$/.." value="master" />
       </map>
     </option>
   </component>
@@ -220,7 +214,6 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/index.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/container.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/container.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" />
         <option value="$PROJECT_DIR$/src/app/domain/search/action-types.js" />
         <option value="$PROJECT_DIR$/src/app/domain/search/actions.js" />
         <option value="$PROJECT_DIR$/src/app/domain/search/selectors.js" />
@@ -242,7 +235,6 @@
         <option value="$PROJECT_DIR$/src/app/components/events/summary/summary.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/title-layers/title-layers.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/markers/index.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/markers/popup/index.js" />
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/markers/popup/popup.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" />
@@ -267,6 +259,8 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/home/header/header.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/header/search-bar/search-bar.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/markers/markers.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" />
       </list>
     </option>
   </component>
@@ -322,50 +316,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="leaflet-map" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="leaflet-map" type="462c0819:PsiDirectoryNode" />
-              <item name="markers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="leaflet-map" type="462c0819:PsiDirectoryNode" />
-              <item name="markers" type="462c0819:PsiDirectoryNode" />
-              <item name="popup" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="leaflet-map" type="462c0819:PsiDirectoryNode" />
-              <item name="title-layers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="map" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
@@ -728,7 +678,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588254915990</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="fix map marker problem">
+      <created>1588264382350</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1588264382350</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -752,7 +709,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="130229000" />
+    <option name="totallyTimeSpent" value="130550000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1680" y="0" width="1920" height="1080" extended-state="6" />
@@ -786,7 +743,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added footer title component" />
     <MESSAGE value="added index for footer components" />
     <MESSAGE value="added font awesome library and icon component" />
     <MESSAGE value="added responsive support for header - mobile first" />
@@ -811,7 +767,8 @@
     <MESSAGE value="split map into separate components&#10;added default local location" />
     <MESSAGE value="added site information to markers&#10;created links" />
     <MESSAGE value="moved all filter selects to one modal" />
-    <option name="LAST_COMMIT_MESSAGE" value="moved all filter selects to one modal" />
+    <MESSAGE value="fix map marker problem" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix map marker problem" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1067,9 +1024,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/route.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/home/header/container.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -1120,20 +1074,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/container.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="20" lean-forward="true" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="27" column="70" selection-start-line="27" selection-start-column="57" selection-end-line="27" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/components/leaflet-map/leaflet-map.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
@@ -1146,11 +1086,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/components/leaflet-map/markers/markers.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
+        <state relative-caret-position="420">
+          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/route.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/container.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="62" selection-start-line="7" selection-start-column="62" selection-end-line="7" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="24" column="54" selection-start-line="24" selection-start-column="54" selection-end-line="24" selection-end-column="54" />
         </state>
       </provider>
     </entry>
