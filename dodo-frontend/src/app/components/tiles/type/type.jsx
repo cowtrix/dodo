@@ -1,10 +1,10 @@
 import React from "react"
 import PropTypes from "prop-types"
 import styles from "./type.module.scss"
-import library from "./library"
+import { eventTypes } from "app/libraries"
 
 export const Type = ({ type }) => {
-	const eventType = library[type]
+	const eventType = eventTypes[type]
 	const style = {
 		backgroundColor: eventType.color
 	}
