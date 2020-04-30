@@ -16,7 +16,7 @@ export const Markers = ({ markers }) =>
 	markers.map(marker => (
 		<Marker
 			icon={MarkerIcon}
-			key={`${marker.location.latitude}_${marker.location.longitude}`}
+			key={marker.guid}
 			position={[marker.location.latitude, marker.location.longitude]}
 		>
 			<Popup site={marker} />
