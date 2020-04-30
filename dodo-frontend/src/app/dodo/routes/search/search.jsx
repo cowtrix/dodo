@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { ListContainer, List } from "app/components/events"
 import { SiteMap } from "app/components"
@@ -10,19 +10,22 @@ export const Search = ({
 	distance,
 	getSearchResults
 }) => {
+	const [defaultMapCenter, setdefaultMapCenter] = useState([])
+
 	const success = position => {
 		const loc = position.coords
 		const latlong = loc.latitude + "+" + loc.longitude
+		setdefaultMapCenter([loc.latitude, loc.longitude])
 		getSearchResults(distance, latlong)
 	}
 
 	useEffect(() => {
 		navigator.geolocation.getCurrentPosition(success)
-	}, [latlong, distance, getSearchResults])
+	}, [distance, getSearchResults])
 
 	return (
 		<Fragment>
-			<SiteMap />
+			<SiteMap defaultLocation={defaultMapCenter} sites={searchResults} />
 			<ListContainer
 				content={
 					<Fragment>

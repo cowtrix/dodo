@@ -1,64 +1,37 @@
 import React from "react"
-import leaflet from "leaflet"
+import PropTypes from "prop-types"
 import "leaflet/dist/leaflet.css"
-import { Map, Marker, Popup, TileLayer } from "react-leaflet"
+import { Map } from "react-leaflet"
 
-import GreenMarker from "static/xr-pin-shadowed-green.svg"
+import { TitleLayers } from "./title-layers"
+import { Markers } from "./markers"
 
-const TILE_LAYERS = [
-	{
-		attribution:
-			'© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-		url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-	},
-	{
-		url:
-			"https://maps.rebellion.global/styles/xr_places_non-latin/{z}/{x}/{y}@2x.png"
+const getDefaultCenter = (sites, defaultLocation) => {
+	if (sites && sites.length) {
+		return [sites[0].location.latitude, sites[0].location.longitude]
 	}
-]
-
-const getDefaultCenter = markers => {
-	if (markers && markers.length) {
-		return [markers[0].latitude, markers[0].longitude]
-	}
-	return [51.5074, 0.1278]
+	return defaultLocation.length ? defaultLocation : [51.5074, 0.1278]
 }
 
-const getLocationInfo = marker => {
-	const { locationData = {} } = marker
-	const { address = "", place = "", postcode = "" } = locationData
-
-	return address ? `${address}, ${place}, ${postcode}` : ""
-}
-
-const MarkerIcon = leaflet.icon({
-	iconUrl: GreenMarker,
-	iconSize: [50, 40],
-	iconAnchor: [25, 40],
-	className: "xrMarker"
-})
-
-export const LeafletMap = ({ markers }) => {
+export const LeafletMap = ({
+	sites,
+	height = "400px",
+	defaultLocation = [51.5074, 0.1278]
+}) => {
 	return (
 		<Map
-			center={getDefaultCenter(markers)}
+			center={getDefaultCenter(sites, defaultLocation)}
 			zoom={9}
-			style={{ height: "220px" }}
+			style={{ height: height }}
 		>
-			{TILE_LAYERS.map(tileLayer => (
-				<TileLayer key={tileLayer.url} {...tileLayer} />
-			))}
-			{markers.map(marker => (
-				<Marker
-					icon={MarkerIcon}
-					key={`${marker.latitude}_${marker.longitude}`}
-					position={[marker.latitude, marker.longitude]}
-				>
-					{marker.locationData && (
-						<Popup>{getLocationInfo(marker)}</Popup>
-					)}
-				</Marker>
-			))}
+			<TitleLayers />
+			<Markers markers={sites} height={height} />
 		</Map>
 	)
+}
+
+LeafletMap.propTypes = {
+	markers: PropTypes.array,
+	height: PropTypes.string,
+	defaultLocation: PropTypes.array
 }

@@ -22,8 +22,8 @@ export const Selector = ({
 )
 
 Selector.propTypes = {
-	withinStartDate: PropTypes.instanceOf(Date),
-	withinEndDate: PropTypes.instanceOf(Date),
+	withinStartDate: PropTypes.number,
+	withinEndDate: PropTypes.number,
 	placeholder: PropTypes.string,
 	updateDate: PropTypes.func
 }
