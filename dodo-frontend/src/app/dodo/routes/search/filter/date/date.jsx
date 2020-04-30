@@ -1,20 +1,19 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Button, Selector as SelectorWrapper } from "app/components"
-import { Selector } from "./selector"
+import Select from "react-select"
+import styles from "./date.module.scss"
 
-const title = "Within..."
+import { generateList } from "./services"
+
+const placeholder = "Date..."
 
 export const Date = ({ withinStartDate, withinEndDate, updateDate }) => (
-	<SelectorWrapper
-		title={title}
-		content={
-			<Selector
-				placeholder={title}
-				withinStartDate={withinStartDate}
-				withinEndDate={withinEndDate}
-				updateDate={updateDate}
-			/>
+	<Select
+		placeholder={placeholder}
+		options={generateList(withinStartDate)}
+		className={styles.selector}
+		onChange={value =>
+			updateDate(value.value.withinStartDate, value.value.withinEndDate)
 		}
 	/>
 )
@@ -22,5 +21,6 @@ export const Date = ({ withinStartDate, withinEndDate, updateDate }) => (
 Date.propTypes = {
 	withinStartDate: PropTypes.number,
 	withinEndDate: PropTypes.number,
+	placeholder: PropTypes.string,
 	updateDate: PropTypes.func
 }

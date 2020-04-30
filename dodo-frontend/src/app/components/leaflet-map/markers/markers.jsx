@@ -1,15 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Marker, Popup } from "react-leaflet"
+import { Marker } from "react-leaflet"
 import leaflet from "leaflet"
 import GreenMarker from "static/xr-pin-shadowed-green.svg"
-
-const getLocationInfo = marker => {
-	const { locationData = {} } = marker
-	const { address = "", place = "", postcode = "" } = locationData
-
-	return address ? `${address}, ${place}, ${postcode}` : ""
-}
+import { Popup } from "./popup"
 
 const MarkerIcon = leaflet.icon({
 	iconUrl: GreenMarker,
@@ -18,18 +12,17 @@ const MarkerIcon = leaflet.icon({
 	className: "xrMarker"
 })
 
-export const Markers = ({ markers, height = "400px" }) =>
+export const Markers = ({ markers }) =>
 	markers.map(marker => (
 		<Marker
 			icon={MarkerIcon}
-			key={`${marker.latitude}_${marker.longitude}`}
-			position={[marker.latitude, marker.longitude]}
+			key={`${marker.location.latitude}_${marker.location.longitude}`}
+			position={[marker.location.latitude, marker.location.longitude]}
 		>
-			{marker.locationData && <Popup>{getLocationInfo(marker)}</Popup>}
+			<Popup site={marker} />
 		</Marker>
 	))
 
 Markers.propTypes = {
-	markers: PropTypes.array,
-	height: PropTypes.string
+	markers: PropTypes.array
 }

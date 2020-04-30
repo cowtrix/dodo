@@ -1,20 +1,22 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Button, Selector as SelectorWrapper } from "app/components"
-import { Selector } from "./selector"
+import Select from "react-select"
+import styles from "./events.module.scss"
+import { formatEvents } from "./services"
 
-const eventsTitle = "Event Types..."
+const placeholder = "Event types..."
 
-export const Events = ({ eventTypes, eventsFiltered, searchFilterEvents }) => (
-	<SelectorWrapper
-		title={eventsTitle}
-		content={
-			<Selector
-				placeholder={eventsTitle}
-				eventTypes={eventTypes}
-				eventsFiltered={eventsFiltered}
-				searchFilterEvents={searchFilterEvents}
-			/>
+export const Events = ({ eventTypes, searchFilterEvents, eventsFiltered }) => (
+	<Select
+		placeholder={placeholder}
+		isMulti
+		defaultValue={formatEvents(eventsFiltered)}
+		options={formatEvents(eventTypes)}
+		className={styles.selector}
+		onChange={value =>
+			value
+				? searchFilterEvents(value.map(event => event.value))
+				: searchFilterEvents([])
 		}
 	/>
 )
@@ -22,5 +24,6 @@ export const Events = ({ eventTypes, eventsFiltered, searchFilterEvents }) => (
 Events.propTypes = {
 	eventTypes: PropTypes.array,
 	eventsFiltered: PropTypes.array,
+	placeholder: PropTypes.string,
 	searchFilterEvents: PropTypes.func
 }
