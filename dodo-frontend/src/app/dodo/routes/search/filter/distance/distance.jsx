@@ -1,26 +1,25 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Button, Selector as SelectorWrapper } from "app/components"
-import { Selector } from "./selector"
+import Select from "react-select"
+import styles from "./distance.module.scss"
+import { formatEvents } from "./services"
 
-const title = "Distance..."
+const list = [1, 10, 100, 1000, 10000]
+const placeholder = "Distance..."
 
 export const Distance = ({ latlong, distance, updateDistance }) => (
-	<SelectorWrapper
-		title={title}
-		content={
-			<Selector
-				placeholder={title}
-				distance={distance}
-				latlong={latlong}
-				updateDistance={updateDistance}
-			/>
-		}
+	<Select
+		placeholder={placeholder}
+		defaultValue={distance}
+		options={formatEvents(list)}
+		className={styles.selector}
+		onChange={value => updateDistance(value.value, latlong)}
 	/>
 )
 
 Distance.propTypes = {
-	latlong: PropTypes.string,
-	distance: PropTypes.string,
-	updateDistance: PropTypes.func
+	eventTypes: PropTypes.array,
+	eventsFiltered: PropTypes.array,
+	placeholder: PropTypes.string,
+	searchFilterEvents: PropTypes.func
 }

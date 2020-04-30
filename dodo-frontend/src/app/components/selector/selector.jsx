@@ -9,7 +9,11 @@ export const Selector = ({ title, content }) => {
 	return (
 		<Fragment>
 			<div className={styles.mobile}>
-				<Button variant="primary" onClick={() => setDialogOpen(true)}>
+				<Button
+					variant="primary"
+					onClick={() => setDialogOpen(true)}
+					className={styles.button}
+				>
 					{title}
 				</Button>
 				<Dialog
