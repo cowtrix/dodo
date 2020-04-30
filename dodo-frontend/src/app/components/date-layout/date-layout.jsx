@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-import { DateTile } from "app/components/date-tile"
+import { Date } from "app/components/tiles"
 import styles from "./date-layout.module.scss"
 
 export const DateLayout = ({ startDate, endDate, title, children }) => {
@@ -10,7 +10,7 @@ export const DateLayout = ({ startDate, endDate, title, children }) => {
 			<div className={styles.heading}>
 				{startDate && (
 					<div className={styles.dateTile}>
-						<DateTile startDate={startDate} endDate={endDate} />
+						<Date startDate={startDate} endDate={endDate} />
 					</div>
 				)}
 				<div className={styles.title}>{title}</div>

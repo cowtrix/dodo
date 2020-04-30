@@ -33,9 +33,9 @@ export const Summary = ({
 
 Summary.propTypes = {
 	Name: PropTypes.string,
-	location: PropTypes.string,
+	location: PropTypes.object,
 	StartDate: PropTypes.string,
 	EndDate: PropTypes.string,
-	summary: PropTypes.string,
-	metada: PropTypes.object.isRequired
+	summary: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+	metada: PropTypes.object
 }

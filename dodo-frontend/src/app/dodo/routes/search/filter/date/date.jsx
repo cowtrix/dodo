@@ -20,7 +20,7 @@ export const Date = ({ withinStartDate, withinEndDate, updateDate }) => (
 )
 
 Date.propTypes = {
-	withinStartDate: PropTypes.string,
-	withinEndDate: PropTypes.string,
+	withinStartDate: PropTypes.number,
+	withinEndDate: PropTypes.number,
 	updateDate: PropTypes.func
 }
