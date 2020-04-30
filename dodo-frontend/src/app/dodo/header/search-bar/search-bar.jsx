@@ -3,23 +3,29 @@ import PropTypes from "prop-types"
 import Select from "react-select"
 
 import styles from "./search-bar.module.scss"
-import { useTranslation } from "react-i18next"
+import { api } from "app/domain/services"
 
-export const SearchBar = ({ searchValues }) => {
-	const { t } = useTranslation("ui")
+const placeholder = "Search location..."
 
-	return (
-		<Select
-			className={styles.searchBar}
-			placeholder={t("header_select_placeholder")}
-			noOptionsMessage={({ inputValue }) =>
-				inputValue
-					? t("header_select_no_results__for", { inputValue })
-					: t("header_select_no_results")
-			}
-		/>
-	)
-}
+const mapQuestApi = (key, location) =>
+	`${"http://open.mapquestapi.com/geocoding/v1/address?key=" +
+		key +
+		"&" +
+		"location=" +
+		location}`
+
+const questKey = "PutjB2T72jl2o910ArMCo4CGsOgvjPp4"
+
+export const SearchBar = ({ searchValues }) => (
+	<Select
+		className={styles.searchBar}
+		placeholder={placeholder}
+		onChange={value => {
+			console.log(value.target.value)
+			api(mapQuestApi(questKey, value.target.value))
+		}}
+	/>
+)
 
 SearchBar.propTypes = {
 	searchValues: PropTypes.array

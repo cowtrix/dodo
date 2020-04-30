@@ -16,12 +16,13 @@ const getDefaultCenter = (sites, defaultLocation) => {
 export const LeafletMap = ({
 	sites,
 	height = "400px",
-	defaultLocation = [51.5074, 0.1278]
+	defaultLocation = [51.5074, 0.1278],
+	zoom = 9
 }) => {
 	return (
 		<Map
 			center={getDefaultCenter(sites, defaultLocation)}
-			zoom={9}
+			zoom={zoom}
 			style={{ height: height }}
 		>
 			<TitleLayers />
@@ -33,5 +34,6 @@ export const LeafletMap = ({
 LeafletMap.propTypes = {
 	markers: PropTypes.array,
 	height: PropTypes.string,
-	defaultLocation: PropTypes.array
+	defaultLocation: PropTypes.array,
+	zoom: PropTypes.number
 }
