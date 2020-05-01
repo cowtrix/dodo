@@ -1,12 +1,12 @@
-import { api } from '../services'
-import { REQUEST, FAILURE, SUCCESS } from '../constants'
+import { api } from "../services"
+import { REQUEST, FAILURE, SUCCESS } from "../constants"
 
-export const apiAction = ( dispatch, action, url, method, body, cb ) => {
+export const apiAction = async (dispatch, action, url, method, body, cb) => {
 	dispatch({
 		type: action + REQUEST,
 		payload: {
 			action,
-			url,
+			url
 		}
 	})
 	return api(url, method, body)
@@ -14,7 +14,7 @@ export const apiAction = ( dispatch, action, url, method, body, cb ) => {
 			if (cb) cb(response.success)
 			dispatch({
 				type: action + SUCCESS,
-				payload: response,
+				payload: response
 			})
 		})
 		.catch(error => {
@@ -22,7 +22,7 @@ export const apiAction = ( dispatch, action, url, method, body, cb ) => {
 			if (cb) cb(false)
 			dispatch({
 				type: action + FAILURE,
-				payload: error,
+				payload: error
 			})
 		})
 }

@@ -1,0 +1,9 @@
+@import "~app/styles/styles";
+
+.map {
+	height: 250px;
+
+	@media (min-width: $responsive-breakpoint) {
+		height: 400px;
+	}
+}

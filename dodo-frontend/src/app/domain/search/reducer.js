@@ -28,7 +28,7 @@ export const reducer = (state = initialState, action) => {
 						searchResults: action.payload,
 						events: state.events
 				  })
-				: state.searchResults
+				: action.payload
 			const searchResultsFiltered = filterByWithinDate({
 				searchResults: searchResultsFilteredByEvent,
 				withinStartDate: state.withinStartDate,

@@ -16,5 +16,7 @@ export { SiteInfo } from "./site-info"
 export { DateLayout } from "./date-layout"
 export { Dialog } from "./dialog"
 export { Selector } from "./selector"
+export { Overlay } from "./overlay"
+export { Loader } from "./loader"
 
 export { footer, events, tiles }

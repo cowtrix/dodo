@@ -8,6 +8,6 @@ export const SiteMap = ({ sites = [], defaultLocation, zoom }) => (
 
 SiteMap.propTypes = {
 	sites: PropTypes.array,
-	defaultLocation: PropTypes.object,
+	defaultLocation: PropTypes.array,
 	zoom: PropTypes.number
 }

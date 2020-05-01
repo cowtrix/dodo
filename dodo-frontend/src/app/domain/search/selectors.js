@@ -1,4 +1,5 @@
 import { path } from "ramda"
+import { SEARCH_GET } from "./action-types"
 
 export const searchResults = state =>
 	path(["domain", "search", "searchResults"], state)
@@ -18,3 +19,6 @@ export const withinStartDate = state =>
 
 export const withinEndDate = state =>
 	path(["domain", "search", "withinEndDate"], state)
+
+export const isFetching = state =>
+	path(["domain", "requests", SEARCH_GET, "isFetching"], state)

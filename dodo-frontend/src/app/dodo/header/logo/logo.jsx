@@ -2,7 +2,7 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 
 import { Link } from "react-router-dom"
-import logo from "./XR-logo.svg"
+import logo from "static/XR-logo-full.svg"
 import styles from "./logo.module.scss"
 
 export const Logo = () => {
