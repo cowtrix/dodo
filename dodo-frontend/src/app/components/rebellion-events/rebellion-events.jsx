@@ -18,7 +18,7 @@ export const RebellionEvents = ({ events }) => {
 	return (
 		<div className={styles.RebellionEvents}>
 			<h3>Upcoming Events</h3>
-			<SiteMap sites={events} />
+			<SiteMap sites={events} className={styles.miniMap} />
 			<div className={styles.events}>
 				{events.map(event => (
 					<div key={event.guid} className={styles.event}>
