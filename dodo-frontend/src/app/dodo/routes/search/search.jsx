@@ -28,7 +28,7 @@ export const Search = ({
 			<ListContainer
 				content={
 					<Fragment>
-						<Loader display={isFetchingSearch} />
+						<Loader display={latlong === "" || isFetchingSearch} />
 						<Filter />
 						<List events={searchResults} />
 					</Fragment>
