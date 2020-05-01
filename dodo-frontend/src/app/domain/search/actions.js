@@ -33,3 +33,14 @@ export const searchFilterDate = payload => ({
 	type: SEARCH_FILTER_DATE,
 	payload
 })
+
+export const searchSetCurrentLocation = dispatch => {
+	navigator.geolocation.getCurrentPosition(position => {
+		const loc = position.coords
+		const latLong = loc.latitude + "+" + loc.longitude
+		dispatch({
+			type: SEARCH_FILTER_LOCATION,
+			payload: latLong
+		})
+	})
+}
