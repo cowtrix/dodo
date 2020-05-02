@@ -1,29 +1,34 @@
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { ListContainer, List } from "app/components/events"
-import { SiteMap } from "app/components"
+import { SiteMap, Loader } from "app/components"
 import { Filter } from "./filter"
-
-const mockParams = {
-	latlong: "79+47",
-	distance: 100000
-}
 
 export const Search = ({
 	searchResults = [],
-	params = mockParams,
-	getSearchResults
+	latlong,
+	distance,
+	getSearchResults,
+	isFetchingSearch,
+	searchSetCurrentLocation
 }) => {
 	useEffect(() => {
-		getSearchResults(mockParams)
-	}, [params, getSearchResults])
+		searchSetCurrentLocation()
+	}, [])
+
+	useEffect(() => {
+		if (latlong !== "") {
+			getSearchResults(distance, latlong)
+		}
+	}, [latlong])
 
 	return (
 		<Fragment>
-			<SiteMap />
+			<SiteMap sites={searchResults} />
 			<ListContainer
 				content={
 					<Fragment>
+						<Loader display={latlong === "" || isFetchingSearch} />
 						<Filter />
 						<List events={searchResults} />
 					</Fragment>
@@ -34,7 +39,10 @@ export const Search = ({
 }
 
 Search.propTypes = {
+	isFetchingSearch: PropTypes.bool,
 	getSearchResults: PropTypes.func,
 	params: PropTypes.object,
-	searchResults: PropTypes.array
+	searchResults: PropTypes.array,
+	searchSetCurrentLocation: PropTypes.func,
+	setLocation: PropTypes.func
 }

@@ -10,11 +10,11 @@ import styles from "./site-detail.module.scss"
 export const SiteDetail = ({ site }) => {
 	return (
 		<DateLayout
-			startDate={site.StartDate ? new Date(site.StartDate) : null}
-			endDate={site.EndDate ? new Date(site.EndDate) : null}
-			title={<PageTitle title={site.Name} subTitle="Glasgow" />}
+			startDate={site.startDate ? new Date(site.startDate) : null}
+			endDate={site.endDate ? new Date(site.endDate) : null}
+			title={<PageTitle title={site.name} subTitle="Glasgow" />}
 		>
-			<div>{site.PublicDescription}</div>
+			<div>{site.publicDescription}</div>
 			<div className={styles.attendees}>
 				<Button
 					as={<Link to={"/site/join"} />}

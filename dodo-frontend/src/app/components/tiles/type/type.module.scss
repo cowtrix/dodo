@@ -1,0 +1,20 @@
+@import "~app/styles/styles";
+
+.tile {
+	font-size: 0.8rem;
+	line-height: 1.5;
+	padding: 16px;
+	text-transform: uppercase;
+	width: 60px;
+	margin-right: spacing(5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	@media (min-width: $responsive-breakpoint) {
+		min-height: 80px;
+		font-size: 1.2rem;
+		min-width: 100px;
+		width: 100px;
+	}
+}

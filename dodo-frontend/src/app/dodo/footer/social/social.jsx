@@ -1,16 +1,19 @@
-import React from 'react'
+import React from "react"
+import { useTranslation } from "react-i18next"
+
 import { Title } from "app/components/footer/title"
-import { Buttons } from './buttons'
-import { Link } from 'react-router-dom'
-import styles from './social.module.scss'
+import { Buttons } from "./buttons"
+import { Link } from "react-router-dom"
+import styles from "./social.module.scss"
 
+export const Social = () => {
+	const { t } = useTranslation("ui")
 
-import { socialTitle, socialContactCopy } from './constants'
-
-
-export const Social = () =>
-	<div className={styles.social}>
-		<Title title={socialTitle}/>
-		<Buttons/>
-		<Link to="/">{socialContactCopy}</Link>
-	</div>
+	return (
+		<div className={styles.social}>
+			<Title title={t("social_title")} />
+			<Buttons />
+			<Link to="/">{t("social_contact_copy")}</Link>
+		</div>
+	)
+}
