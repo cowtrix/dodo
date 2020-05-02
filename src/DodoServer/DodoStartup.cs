@@ -3,6 +3,7 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,7 @@ namespace DodoServer
 		{
 			if (!Environment.IsDevelopment() && DodoServer.NetConfig.LetsEncryptAutoSetup)
 			{
+				// Setup SSL certificate with Let's Encrypt
 				services.AddLetsEncrypt(config =>
 				{
 					config.AcceptTermsOfService = true;
@@ -32,6 +34,11 @@ namespace DodoServer
 					config.EmailAddress = DodoServer.DevEmail;
 				});
 			}
+
+			services.AddSpaStaticFiles(configuration =>
+			{
+				configuration.RootPath = DodoServer.ReactPath;
+			});
 
 			// ICorsService and ICorsPolicyProvider are added by AddControllers... but best to be explicit in case this changes
 			services.AddCors();
@@ -63,7 +70,7 @@ namespace DodoServer
 			});
 		}
 
-		public void Configure(IApplicationBuilder app)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			app.UseHttpsRedirection();
 			app.UseRouting();
@@ -81,6 +88,7 @@ namespace DodoServer
 			});
 
 			app.UseStaticFiles();
+			app.UseSpaStaticFiles();
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseEndpoints(endpoints =>
@@ -88,7 +96,14 @@ namespace DodoServer
 				endpoints.MapControllers();
 				endpoints.MapDefaultControllerRoute();
 			});
-
+			app.UseSpa(spa =>
+			{
+				spa.Options.SourcePath = DodoServer.ReactPath;
+				if (env.IsDevelopment())
+				{
+					spa.UseReactDevelopmentServer(npmScript: "start");
+				}
+			});
 		}
 	}
 }

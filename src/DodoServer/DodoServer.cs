@@ -14,13 +14,9 @@ namespace DodoServer
 	{
 		public const string API_ROOT = "api/";
 
-		public static string DevEmail => m_devEmail.Value;
-		public static NetworkConfig NetConfig => m_netConfig.Value;
-
-		// TODO: these values don't load from file if running in IIS
-		static ConfigVariable<NetworkConfig> m_netConfig = new ConfigVariable<NetworkConfig>("NetworkConfig", 
-			new NetworkConfig("localhost", "0.0.0.0", 5001, 5000 ));
-		static ConfigVariable<string> m_devEmail = new ConfigVariable<string>($"{Dodo.Dodo.PRODUCT_NAME}_DevEmail", "test@web.com");
+		public static string DevEmail => ConfigManager.GetValue($"{Dodo.Dodo.PRODUCT_NAME}_DevEmail", "test@web.com");
+		public static NetworkConfig NetConfig => ConfigManager.GetValue("NetworkConfig", new NetworkConfig("localhost", "0.0.0.0", 5001, 5000));
+		public static string ReactPath => ConfigManager.GetValue("ReactPath", "react");
 
 		public static void Main(string[] args)
 		{
