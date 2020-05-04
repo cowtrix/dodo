@@ -50,7 +50,8 @@ namespace Dodo.Resources
 				{
 					FindCount(subDict, ref count, searchValue);
 				}
-				else if (val.Value != null && val.Value.ToString().Contains(searchValue))
+				else if (val.Value != null && val.Value.ToString().ToLowerInvariant()
+					.Contains(searchValue.ToLowerInvariant()))
 				{
 					count++;
 				}
