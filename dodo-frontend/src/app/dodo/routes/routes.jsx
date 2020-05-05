@@ -6,6 +6,7 @@ import { Home, route as home } from "./home"
 import { Search, route as search } from "./search"
 import { Rebellion } from "./rebellion"
 import { Site } from "./site"
+import { Login } from "./login"
 
 export const Routes = () => (
 	<Fragment>
@@ -18,6 +19,7 @@ export const Routes = () => (
 			<Route path={"/site/:siteId"} component={Site} exact />
 			<Route path={home} component={Home} exact />
 			<Route path={search} component={Search} />
+			<Route path={"/login"} component={Login} />
 		</Switch>
 	</Fragment>
 )

@@ -1,0 +1,15 @@
+@import "~app/styles/styles";
+
+.loginForm {
+	display: flex;
+	justify-content: center;
+
+	form {
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		max-width: $application-max-width;
+		flex-grow: 1;
+		flex-direction: column;
+	}
+}
