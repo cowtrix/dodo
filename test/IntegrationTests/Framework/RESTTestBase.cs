@@ -10,7 +10,6 @@ using Resources;
 
 namespace RESTTests
 {
-
 	public abstract class RESTTestBase<T, TSchema> : IntegrationTestBase 
 		where T:DodoResource
 		where TSchema: ResourceSchemaBase

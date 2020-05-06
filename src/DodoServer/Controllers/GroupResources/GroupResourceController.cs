@@ -25,8 +25,7 @@ namespace DodoResources
 		public const string JOIN_GROUP = "join";
 		public const string LEAVE_GROUP = "leave";
 
-		protected override AuthorizationManager<T, TSchema> AuthManager => 
-			new GroupResourceAuthManager<T, TSchema>(this.ControllerContext, Request);
+		protected override AuthorizationService<T, TSchema> AuthManager => new GroupResourceAuthManager<T, TSchema>();
 
 		[HttpPost("{id}/" + ADD_ADMIN)]
 		public IActionResult AddAdministrator(Guid id, [FromBody]string newAdminIdentifier)

@@ -41,8 +41,7 @@ namespace Dodo.Users
 			public string NewPassword { get; set; }
 		}
 
-		protected override AuthorizationManager<User, UserSchema> AuthManager =>
-			new UserAuthManager(this.ControllerContext, Request);
+		protected override AuthorizationService<User, UserSchema> AuthManager => new UserAuthManager();
 
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)
@@ -72,7 +71,7 @@ namespace Dodo.Users
 			var key = new Passphrase(KeyGenerator.GetUniqueKey(SessionToken.KEYSIZE));
 
 			// Create the session token
-			var token = new SessionToken(user, passphrase, key);
+			var token = new SessionToken(user, passphrase, key, Request.HttpContext.Connection.RemoteIpAddress);
 			using (var rscLock = new ResourceLock(user))
 			{
 				user = rscLock.Value as User;

@@ -14,8 +14,7 @@ namespace Resources
 		where TSchema : ResourceSchemaBase
 	{
 		protected DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
-		protected virtual AuthorizationManager<T, TSchema> AuthManager =>
-			new AuthorizationManager<T, TSchema>(this.ControllerContext, Request);
+		protected virtual AuthorizationService<T, TSchema> AuthManager => new AuthorizationService<T, TSchema>();
 
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 

@@ -2,21 +2,27 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Resources;
+using System;
 
 namespace Dodo
 {
-	public class AuthorizationManager<T, TSchema> 
+	public static class AuthorizationManager
+	{
+		public static AuthorizationService<T, TSchema> GetAuthService<T, TSchema>()
+			where T : IDodoResource
+			where TSchema : ResourceSchemaBase
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	public class AuthorizationService<T, TSchema> 
 		where T: IDodoResource 
 		where TSchema: ResourceSchemaBase
 	{
-		public AuthorizationManager(ControllerContext controllercontext, HttpRequest request)
+		public AuthorizationService()
 		{
-			Request = request;
-			ControllerContext = controllercontext;
 		}
-
-		protected HttpRequest Request { get; private set; }
-		protected ControllerContext ControllerContext { get; private set; }
 
 		public virtual ResourceRequest IsAuthorised(AccessContext context, T target, EHTTPRequestType requestType, string action = null)
 		{
