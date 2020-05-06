@@ -8,17 +8,13 @@ export const Search = ({
 	searchResults = [],
 	latlong,
 	distance,
+	search,
 	getSearchResults,
-	isFetchingSearch,
-	searchSetCurrentLocation
+	isFetchingSearch
 }) => {
 	useEffect(() => {
-		searchSetCurrentLocation()
-	}, [])
-
-	useEffect(() => {
 		if (latlong !== "") {
-			getSearchResults(distance, latlong)
+			getSearchResults(distance, latlong, search)
 		}
 	}, [latlong])
 

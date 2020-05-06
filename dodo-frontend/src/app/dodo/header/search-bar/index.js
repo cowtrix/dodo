@@ -1,1 +1,1 @@
-export { SearchBar } from "./search-bar";
+export { SearchBarConnected as SearchBar } from "./container"

@@ -14,6 +14,8 @@ export const distance = state => path(["domain", "search", "distance"], state)
 
 export const latlong = state => path(["domain", "search", "latlong"], state)
 
+export const search = state => path(["domain", "search", "search"], state)
+
 export const withinStartDate = state =>
 	path(["domain", "search", "withinStartDate"], state)
 

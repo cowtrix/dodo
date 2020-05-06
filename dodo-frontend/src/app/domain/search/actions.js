@@ -3,7 +3,8 @@ import {
 	SEARCH_FILTER_DATE,
 	SEARCH_GET,
 	SEARCH_FILTER_DISTANCE,
-	SEARCH_FILTER_LOCATION
+	SEARCH_FILTER_LOCATION,
+	SEARCH_FILTER_SEARCH
 } from "./action-types"
 import { apiAction } from "../factories/api-action"
 import { SEARCH } from "../urls"
@@ -11,17 +12,22 @@ import { SEARCH } from "../urls"
 import { addParamsToUrl } from "../services"
 
 export const searchGet = (dispatch, params) => {
+	apiAction(dispatch, SEARCH_GET, addParamsToUrl(SEARCH, params))
 	params.distance &&
-		params.latlong &&
-		apiAction(dispatch, SEARCH_GET, addParamsToUrl(SEARCH, params))
-	dispatch({
-		type: SEARCH_FILTER_DISTANCE,
-		payload: params.distance
-	})
-	dispatch({
-		type: SEARCH_FILTER_LOCATION,
-		payload: params.latlong
-	})
+		dispatch({
+			type: SEARCH_FILTER_DISTANCE,
+			payload: params.distance
+		})
+	params.latlong &&
+		dispatch({
+			type: SEARCH_FILTER_LOCATION,
+			payload: params.latlong
+		})
+	params.search &&
+		dispatch({
+			type: SEARCH_FILTER_SEARCH,
+			payload: params.search
+		})
 }
 
 export const searchFilterEvents = payload => ({
@@ -31,6 +37,11 @@ export const searchFilterEvents = payload => ({
 
 export const searchFilterDate = payload => ({
 	type: SEARCH_FILTER_DATE,
+	payload
+})
+
+export const searchFilterSearch = payload => ({
+	type: SEARCH_FILTER_SEARCH,
 	payload
 })
 
