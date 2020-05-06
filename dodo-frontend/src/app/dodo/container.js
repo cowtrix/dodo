@@ -1,12 +1,14 @@
 import { connect } from "react-redux"
-import { localGroups } from "../domain/index"
+import { localGroups, search } from "../domain/index"
 import { Dodo } from "./dodo"
 
 const { allLocalGroupsGet } = localGroups.actions
+const { searchSetCurrentLocation } = search.actions
 
 const mapDispatchToProps = dispatch => ({
 	startup: () => {
 		allLocalGroupsGet(dispatch)
+		searchSetCurrentLocation(dispatch)
 	}
 })
 

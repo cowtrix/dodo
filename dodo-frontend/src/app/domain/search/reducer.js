@@ -3,7 +3,8 @@ import {
 	SEARCH_GET,
 	SEARCH_FILTER_LOCATION,
 	SEARCH_FILTER_DISTANCE,
-	SEARCH_FILTER_DATE
+	SEARCH_FILTER_DATE,
+	SEARCH_FILTER_SEARCH
 } from "./action-types"
 import { SUCCESS } from "../constants"
 import { filterByEvent, filterByWithinDate } from "./services"
@@ -17,7 +18,8 @@ const initialState = {
 	latlong: "",
 	distance: "1000",
 	withinStartDate: today.setDate(today.getDate() - 30),
-	withinEndDate: today.setDate(today.getDate() + 30)
+	withinEndDate: today.setDate(today.getDate() + 30),
+	search: ""
 }
 
 export const reducer = (state = initialState, action) => {
@@ -68,6 +70,12 @@ export const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				distance: action.payload
+			}
+		}
+		case SEARCH_FILTER_SEARCH: {
+			return {
+				...state,
+				search: action.payload
 			}
 		}
 		case SEARCH_FILTER_DATE: {

@@ -13,15 +13,17 @@ const MarkerIcon = leaflet.icon({
 })
 
 export const Markers = ({ markers }) =>
-	markers.map(marker => (
-		<Marker
-			icon={MarkerIcon}
-			key={marker.guid}
-			position={[marker.location.latitude, marker.location.longitude]}
-		>
-			<Popup site={marker} />
-		</Marker>
-	))
+	markers.map(marker =>
+		marker.location ? (
+			<Marker
+				icon={MarkerIcon}
+				key={marker.guid}
+				position={[marker.location.latitude, marker.location.longitude]}
+			>
+				<Popup site={marker} />
+			</Marker>
+		) : null
+	)
 
 Markers.propTypes = {
 	markers: PropTypes.array

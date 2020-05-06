@@ -18,5 +18,9 @@
 	"MarchSite": {
 		"id": "MS",
 		"color": "#de9ae8"
+	},
+	"Role": {
+		"id": "R",
+		"color": "#de9ae8"
 	}
 }
