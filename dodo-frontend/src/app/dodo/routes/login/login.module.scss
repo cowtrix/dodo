@@ -1,10 +1,10 @@
 @import "~app/styles/styles";
 
-.loginForm {
+.loginFormWrapper {
 	display: flex;
 	justify-content: center;
 
-	form {
+	.loginForm {
 		display: flex;
 		align-items: center;
 		justify-content: space-around;

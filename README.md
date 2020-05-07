@@ -66,7 +66,7 @@ This will spin up 2 containers:
 
 ### Loading Sample Data
 
-* Convert some windows seperators stuff, run script, convert back
+* Convert some windows separators stuff, run script, convert back
 
 ```
 docker exec -it dodo_dodo_1 sed -i s/resources\\\\SampleMarkdown/resources\\/SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
