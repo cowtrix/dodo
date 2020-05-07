@@ -8,17 +8,13 @@ export const Search = ({
 	searchResults = [],
 	latlong,
 	distance,
+	search,
 	getSearchResults,
-	isFetchingSearch,
-	searchSetCurrentLocation
+	isFetchingSearch
 }) => {
 	useEffect(() => {
-		searchSetCurrentLocation()
-	}, [])
-
-	useEffect(() => {
 		if (latlong !== "") {
-			getSearchResults(distance, latlong)
+			getSearchResults(distance, latlong, search)
 		}
 	}, [latlong])
 
@@ -28,7 +24,7 @@ export const Search = ({
 			<ListContainer
 				content={
 					<Fragment>
-						<Loader display={isFetchingSearch} />
+						<Loader display={latlong === "" || isFetchingSearch} />
 						<Filter />
 						<List events={searchResults} />
 					</Fragment>

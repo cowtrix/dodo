@@ -5,6 +5,7 @@ import { search } from "app/domain"
 const { selectors, actions } = search
 
 const mapStateToProps = state => ({
+	search: selectors.search(state),
 	latlong: selectors.latlong(state),
 	distance: selectors.distance(state),
 	initialSearchResults: selectors.searchResults(state),
@@ -13,9 +14,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	getSearchResults: (distance, latlong) =>
-		actions.searchGet(dispatch, { distance, latlong }),
-	searchSetCurrentLocation: () => actions.searchSetCurrentLocation(dispatch)
+	getSearchResults: (distance, latlong, search) =>
+		actions.searchGet(dispatch, { distance, latlong, search })
 })
 
 export const SearchConnected = connect(

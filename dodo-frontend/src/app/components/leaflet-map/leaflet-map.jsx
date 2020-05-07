@@ -18,11 +18,12 @@ const getDefaultCenter = (sites, defaultLocation) => {
 export const LeafletMap = ({
 	sites,
 	defaultLocation = [51.5074, 0.1278],
-	zoom = 9
+	zoom = 9,
+	className
 }) => {
 	return (
 		<Map
-			className={styles.map}
+			className={`${styles.map} ${className}`}
 			center={getDefaultCenter(sites, defaultLocation)}
 			zoom={zoom}
 		>

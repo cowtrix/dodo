@@ -4,7 +4,7 @@ import styles from "./type.module.scss"
 import { eventTypes } from "app/libraries"
 
 export const Type = ({ type }) => {
-	const eventType = eventTypes[type]
+	const eventType = eventTypes[type] || "Rebellion"
 	const style = {
 		backgroundColor: eventType.color
 	}
