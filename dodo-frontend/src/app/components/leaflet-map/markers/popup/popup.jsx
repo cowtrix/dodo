@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Marker, Popup as LeafletPopup } from "react-leaflet"
+import { Popup as LeafletPopup } from "react-leaflet"
 import { Link } from "react-router-dom"
 
 export const Popup = ({ site }) => (

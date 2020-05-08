@@ -1,4 +1,4 @@
-import React, { Fragment, useState, cloneElement } from "react"
+import React, { Fragment, useState } from "react"
 import { Button, Dialog } from "app/components"
 
 import styles from "./selector.module.scss"

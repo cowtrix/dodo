@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react"
+import React, { Fragment, useEffect } from "react"
 import PropTypes from "prop-types"
 import { ListContainer, List } from "app/components/events"
 import { SiteMap, Loader } from "app/components"
@@ -16,7 +16,7 @@ export const Search = ({
 		if (latlong !== "") {
 			getSearchResults(distance, latlong, search)
 		}
-	}, [latlong])
+	}, [latlong, distance, getSearchResults, search])
 
 	return (
 		<Fragment>
