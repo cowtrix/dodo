@@ -1,32 +1,49 @@
 import React from "react"
 import PropTypes from "prop-types"
-import Select from "react-select"
+import AsyncSelect from "react-select/async"
+import { CustomSelect } from "./custom-select"
 
 import styles from "./search-bar.module.scss"
-import { api } from "app/domain/services"
 
 const placeholder = "Search location..."
 
-const mapQuestApi = (key, location) =>
-	`${"http://open.mapquestapi.com/geocoding/v1/address?key=" +
-		key +
-		"&" +
-		"location=" +
-		location}`
-
-const questKey = "PutjB2T72jl2o910ArMCo4CGsOgvjPp4"
-
-export const SearchBar = ({ searchValues }) => (
-	<Select
-		className={styles.searchBar}
-		placeholder={placeholder}
-		onChange={value => {
-			console.log(value.target.value)
-			api(mapQuestApi(questKey, value.target.value))
-		}}
-	/>
-)
+export const SearchBar = ({
+	searchString,
+	setSearch,
+	searchResults,
+	history
+}) => {
+	return (
+		<AsyncSelect
+			defaultOptions={searchResults.map(result => ({
+				label: result.name,
+				value: result.guid,
+				data: result
+			}))}
+			loadOptions={(search, cb) => {
+				cb(
+					searchResults.map(result => ({
+						label: result.name,
+						value: result.guid,
+						data: result
+					}))
+				)
+			}}
+			className={styles.searchBar}
+			placeholder={placeholder}
+			onInputChange={value => {
+				if (value !== "") {
+					setSearch(value)
+					history.push("/search")
+				}
+			}}
+			formatOptionLabel={CustomSelect}
+		/>
+	)
+}
 
 SearchBar.propTypes = {
-	searchValues: PropTypes.array
+	searchString: PropTypes.string,
+	setSearch: PropTypes.func,
+	searchResults: PropTypes.array
 }
