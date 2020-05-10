@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DodoServer.Controllers.Edit
 {
-	[Authorize]
 	public class RebellionsController : CrudController
 	{
 		// GET: Rebellions

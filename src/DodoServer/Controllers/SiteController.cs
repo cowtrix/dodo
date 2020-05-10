@@ -1,7 +1,7 @@
+using Dodo;
 using Dodo.Sites;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Resources;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +12,8 @@ namespace DodoResources.Sites
 	public class SiteController : SearchableResourceController<Site, SiteSchema>
 	{
 		public const string RootURL = "sites";
+
+		protected override AuthorizationService<Site, SiteSchema> AuthManager => new SiteAuthManager();
 
 		[HttpPost]
 		public override async Task<IActionResult> Create([FromBody] SiteSchema schema)

@@ -15,7 +15,7 @@ namespace RESTTests
 		where TSchema: ResourceSchemaBase
 	{
 		public abstract string ResourceRoot { get; }
-		protected IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
+		protected virtual IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
 		protected abstract string PostmanCategory { get; }
 
 		[TestMethod]
@@ -110,6 +110,10 @@ namespace RESTTests
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Update a {typeof(T).Name}" },
 				LastRequest);
 		}
+
+
+		[TestMethod]
+		public void CanGetResourceManager() => Assert.IsNotNull(ResourceManager);
 
 		protected abstract void VerifyPatchedObject(T rsc, JObject patchObj);
 	}

@@ -9,8 +9,8 @@ namespace Dodo.Sites
 {
 	public sealed class SiteSchema : OwnedResourceSchemaBase
 	{
-		public string Type { get; private set; }
-		public GeoLocation Location { get; private set; }
+		public string Type { get; set; }
+		public GeoLocation Location { get; set; }
 
 		public SiteSchema(string name, string type, Guid parent, GeoLocation location, string description)
 			: base(name, description, parent)

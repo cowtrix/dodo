@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using Common.Security;
 using MongoDB.Bson.Serialization.Attributes;
+using Common;
 
 namespace Dodo.Users.Tokens
 {
@@ -22,6 +23,9 @@ namespace Dodo.Users.Tokens
 		public override void OnAdd(User parent)
 		{
 			Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+#if DEBUG
+			Logger.Info($"DEBUG: generated email verification key {Token} for user {parent}");
+#endif
 			base.OnAdd(parent);
 		}
 
