@@ -256,7 +256,6 @@ namespace Common.Extensions
 		};
 		public static bool NameIsValid(string name, out string error)
 		{
-
 			if (string.IsNullOrEmpty(name) || name.Length < NAME_MIN_LENGTH || name.Length > NAME_MAX_LENGTH)
 			{
 				error = $"Name length must be between {NAME_MIN_LENGTH} and {NAME_MAX_LENGTH} characters long";
@@ -279,7 +278,7 @@ namespace Common.Extensions
 				error = $"Length must be between {NAME_MIN_LENGTH} and {NAME_MAX_LENGTH} characters long";
 				return false;
 			}
-			var rgx = "^[a-zA-Z0-9_]*$";
+			var rgx = "^[a-z0-9_]*$";
 			if(!Regex.IsMatch(slug, rgx))
 			{
 				error = "Username can only contain alphanumeric characters and _";
@@ -364,7 +363,7 @@ namespace Common.Extensions
 			{
 				input = input.Substring(0, NAME_MAX_LENGTH);
 			}
-			return Uri.EscapeUriString(input.Replace(" ", "").ToLowerInvariant());
+			return Regex.Replace(input.ToLowerInvariant(), "[^a-z0-9_]", "");
 		}
 	}
 }

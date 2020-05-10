@@ -15,6 +15,7 @@ namespace RESTTests
 		where T:DodoResource
 		where TSchema: ResourceSchemaBase
 	{
+		public string PostmanTypeName => typeof(T).Name;
 		public abstract string ResourceRoot { get; }
 		protected virtual IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
 		protected abstract string PostmanCategory { get; }
@@ -29,7 +30,7 @@ namespace RESTTests
 			VerifyCreatedObject(resource, resourceObj, schema);
 
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {PostmanTypeName}" },
 				LastRequest, 0, "Get anonymously");
 		}
 
@@ -41,10 +42,6 @@ namespace RESTTests
 			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
 			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			VerifyCreatedObject(resource, resourceObj, schema);
-
-			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
-				LastRequest, 0, "Get anonymously");
 		}
 
 		[TestMethod]
@@ -58,8 +55,8 @@ namespace RESTTests
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
 
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
-				LastRequest, 1, "Get as Owner");
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {PostmanTypeName}" },
+				LastRequest, 2, "Get as Owner");
 		}
 
 		[TestMethod]
@@ -71,10 +68,6 @@ namespace RESTTests
 			await Login(user.AuthData.Username, password);
 			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
-
-			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
-				LastRequest, 2, "Get as Owner");
 		}
 
 		[TestMethod]
@@ -87,7 +80,7 @@ namespace RESTTests
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.USER);
 
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {PostmanTypeName}" },
 				LastRequest, 2, "Get as User");
 		}
 
@@ -99,10 +92,6 @@ namespace RESTTests
 			await Login(user.AuthData.Username, password);
 			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.USER);
-
-			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
-				LastRequest, 2, "Get as User");
 		}
 
 		[TestMethod]
@@ -134,7 +123,7 @@ namespace RESTTests
 			var response = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST,
 				SchemaGenerator.GetRandomSchema<T>(context));
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Create a new {typeof(T).Name}" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Create a new {PostmanTypeName}" },
 				LastRequest);
 		}
 
@@ -148,7 +137,7 @@ namespace RESTTests
 				SchemaGenerator.GetRandomSchema<T>(context));
 			Assert.IsNull(ResourceManager.GetSingle(r => r.Guid == resource.Guid));
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Delete a {typeof(T).Name}" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Delete a {PostmanTypeName}" },
 				LastRequest);
 		}
 
@@ -165,7 +154,7 @@ namespace RESTTests
 			var updatedObj = ResourceManager.GetSingle(r => r.Guid == resource.Guid);
 			VerifyPatchedObject(updatedObj, patch);
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Update a {typeof(T).Name}" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Update a {PostmanTypeName}" },
 				LastRequest);
 		}
 

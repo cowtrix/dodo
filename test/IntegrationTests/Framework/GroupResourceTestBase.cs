@@ -46,7 +46,7 @@ namespace RESTTests
 			VerifyCreatedObject(rsc, response, schema);
 
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Create a new {typeof(T).Name}" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Create a new {PostmanTypeName}" },
 				LastRequest);
 		}
 
@@ -137,7 +137,7 @@ namespace RESTTests
 			Assert.AreEqual(verify[Resource.METADATA]["isMember"].Value<string>(), "true");
 
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Join a {typeof(T).Name}" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Join a {PostmanTypeName}" },
 				joinReq);
 		}
 
@@ -153,7 +153,7 @@ namespace RESTTests
 			Assert.AreEqual(verify[Resource.METADATA]["isMember"].Value<string>(), "false");
 
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Leave a {typeof(T).Name}" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Leave a {PostmanTypeName}" },
 				leaveReq);
 		}
 	}

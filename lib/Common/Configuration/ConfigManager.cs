@@ -16,7 +16,7 @@ namespace Common.Config
 	public static class ConfigManager
 	{
 		// TODO: this is the wrong path if hosting in IIS (maybe use IWebHostEnvironment to get it)
-		private static string m_configPath => Path.GetFullPath($"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
+		public static string ConfigPath => Path.GetFullPath($"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
 		static Dictionary<string, object> m_data = new Dictionary<string, object>();
 
 		static ConfigManager()
@@ -26,13 +26,13 @@ namespace Common.Config
 
 		public static void LoadFromFile()
 		{
-			if (!File.Exists(m_configPath))
+			if (!File.Exists(ConfigPath))
 			{
-				Logger.Warning($"No config file found at {Path.GetFullPath(m_configPath)}");
+				Logger.Warning($"No config file found at {Path.GetFullPath(ConfigPath)}");
 				return;
 			}
-			m_data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(m_configPath));
-			Logger.Debug($"Loaded configuration data from {m_configPath}");
+			m_data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(ConfigPath));
+			Logger.Debug($"Loaded configuration data from {ConfigPath}");
 		}
 
 		public static T GetValue<T>(string key, T defaultValue)

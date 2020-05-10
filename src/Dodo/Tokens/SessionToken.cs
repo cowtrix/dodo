@@ -36,7 +36,7 @@ namespace Dodo.Users.Tokens
 #if DEBUG
 			Address = new IPAddress(0).ToString();
 #else
-			Address = address.ToString();
+			Address = address == null ? new IPAddress(0).ToString() : address.ToString();
 #endif
 			EncryptedPassphrase = new SymmEncryptedStore<string>(passphrase, encryptionKey);
 			SessionTokenStore.SetUser(UserKey, encryptionKey, user.Guid);

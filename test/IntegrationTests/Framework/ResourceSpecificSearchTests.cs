@@ -31,18 +31,21 @@ namespace RESTTests.Search
 	public class EventSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<EventSite>
 	{
 		public override string ResourceRoot => "sites";
+		public override string PostmanCategory => $"{typeof(Site).Name}s";
 	}
 
 	[TestClass]
 	public class PermanentSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<PermanentSite>
 	{
 		public override string ResourceRoot => "sites";
+		public override string PostmanCategory => $"{typeof(Site).Name}s";
 	}
 
 	[TestClass]
 	public class MarchSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<MarchSite>
 	{
 		public override string ResourceRoot => "sites";
+		public override string PostmanCategory => $"{typeof(Site).Name}s";
 	}
 
 	[TestClass]
@@ -53,7 +56,7 @@ namespace RESTTests.Search
 	public abstract class ResourceSpecificSearchTests<T> : IntegrationTestBase where T : IRESTResource
 	{
 		public virtual string ResourceRoot => $"{typeof(T).Name}s";
-		public string PostmanCategory => $"{typeof(T).Name}s";
+		public virtual string PostmanCategory => $"{typeof(T).Name}s";
 		protected virtual ResourceSchemaBase GetSchema(AccessContext context) => SchemaGenerator.GetRandomSchema<T>(context);
 
 		[TestMethod]
@@ -164,7 +167,7 @@ namespace RESTTests.Search
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsFalse(sites.Any(x => !guids.Contains(x.Guid.ToString())));
 			Postman.Update(
-				new PostmanEntryAddress { Category = PostmanCategory, Request = $"List all {typeof(T).Name}s" },
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"List all {PostmanCategory}" },
 				LastRequest);
 		}
 	}
