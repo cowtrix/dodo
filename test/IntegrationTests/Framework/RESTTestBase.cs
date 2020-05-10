@@ -7,6 +7,7 @@ using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Resources;
+using SharedTest;
 
 namespace RESTTests
 {
@@ -19,7 +20,7 @@ namespace RESTTests
 		protected abstract string PostmanCategory { get; }
 
 		[TestMethod]
-		public async virtual Task CanGetAnonymously()
+		public async virtual Task CanGetWithGuidAnonymously()
 		{
 			GetRandomUser(out _, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
@@ -33,7 +34,21 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async virtual Task CanGetAsOwner()
+		public async virtual Task CanGetWithSlugAnonymously()
+		{
+			GetRandomUser(out _, out var context);
+			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
+			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
+			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
+			VerifyCreatedObject(resource, resourceObj, schema);
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
+				LastRequest, 0, "Get anonymously");
+		}
+
+		[TestMethod]
+		public async virtual Task CanGetWithGuidAsOwner()
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
@@ -48,17 +63,60 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async virtual Task CanGetAsUser()
+		public async virtual Task CanGetWithSlugAsOwner()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
+			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
+			await Login(user.AuthData.Username, password);
+			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
+			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
+				LastRequest, 2, "Get as Owner");
+		}
+
+		[TestMethod]
+		public async virtual Task CanGetWithGuidAsUser()
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>();
 			await Login(user.AuthData.Username, password);
-			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.USER);
 
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
 				LastRequest, 2, "Get as User");
+		}
+
+		[TestMethod]
+		public async virtual Task CanGetWithSlugAsUser()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var resource = CreateObject<T>();
+			await Login(user.AuthData.Username, password);
+			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
+			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.USER);
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {typeof(T).Name}" },
+				LastRequest, 2, "Get as User");
+		}
+
+		[TestMethod]
+		public async virtual Task BadGetWithGuidReturns404()
+		{
+			await AssertX.ThrowsAsync<Exception>(Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{Guid.NewGuid()}", EHTTPRequestType.GET),
+				e => e.Message.Contains("Not Found"));
+		}
+
+		[TestMethod]
+		public async virtual Task BadGetWithSlugReturns404()
+		{
+			await AssertX.ThrowsAsync<Exception>(Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/thisisabadslug", EHTTPRequestType.GET),
+				e => e.Message.Contains("Not Found"));
 		}
 
 		protected virtual void VerifyCreatedObject(T rsc, JObject obj, TSchema schema)

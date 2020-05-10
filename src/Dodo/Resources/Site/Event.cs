@@ -12,7 +12,7 @@ namespace Dodo.Sites
 {
 	public class EventSite : Site, ITimeBoundResource
 	{
-		public EventSite() : base(default, default) { }
+		public EventSite() : base() { }
 
 		public EventSite(AccessContext context, SiteSchema schema) : base(context, schema)
 		{

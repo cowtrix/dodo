@@ -120,12 +120,12 @@ namespace Common.Extensions
 		}
 	}
 
-	public class UsernameAttribute : VerifyMemberBase
+	public class SlugAttribute : VerifyMemberBase
 	{
 		public override bool Verify(object value, out string validationError)
 		{
 			var str = value as string;
-			if (!ValidationExtensions.UsernameIsValid(str, out validationError))
+			if (!ValidationExtensions.SlugIsValid(str, out validationError))
 			{
 				return false;
 			}
@@ -272,22 +272,22 @@ namespace Common.Extensions
 			return true;
 		}
 
-		public static bool UsernameIsValid(string username, out string error)
+		public static bool SlugIsValid(string slug, out string error)
 		{
-			if (string.IsNullOrEmpty(username) || username.Length < NAME_MIN_LENGTH || username.Length > NAME_MAX_LENGTH)
+			if (string.IsNullOrEmpty(slug) || slug.Length < NAME_MIN_LENGTH || slug.Length > NAME_MAX_LENGTH)
 			{
-				error = $"Name length must be between {NAME_MIN_LENGTH} and {NAME_MAX_LENGTH} characters long";
+				error = $"Length must be between {NAME_MIN_LENGTH} and {NAME_MAX_LENGTH} characters long";
 				return false;
 			}
 			var rgx = "^[a-zA-Z0-9_]*$";
-			if(!Regex.IsMatch(username, rgx))
+			if(!Regex.IsMatch(slug, rgx))
 			{
 				error = "Username can only contain alphanumeric characters and _";
 				return false;
 			}
-			if(username != username.StripForURL())
+			if(slug != slug.StripForURL())
 			{
-				error = $"Username was invalid, Expected: {username.StripForURL()} Received: {username}";
+				error = $"Username was invalid, Expected: {slug.StripForURL()} Received: {slug}";
 				return false;
 			}
 			error = null;
@@ -352,6 +352,19 @@ namespace Common.Extensions
 			{
 				return true;
 			}
+		}
+
+		public static string StripStringForSlug(string input)
+		{
+			if(string.IsNullOrEmpty(input))
+			{
+				return input;
+			}
+			if(input.Length > NAME_MAX_LENGTH)
+			{
+				input = input.Substring(0, NAME_MAX_LENGTH);
+			}
+			return Uri.EscapeUriString(input.Replace(" ", "").ToLowerInvariant());
 		}
 	}
 }

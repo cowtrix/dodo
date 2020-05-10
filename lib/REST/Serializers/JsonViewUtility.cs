@@ -186,7 +186,7 @@ namespace Resources
 			// Validate that we are able to complete this operation
 			// Really, the client shouldn't ever do a bad request
 			// So any problems here may indicate an attack
-			var validFields = values.Select(kvp => members.FirstOrDefault(x => x.Name == kvp.Key))
+			var validFields = values.Select(kvp => members.FirstOrDefault(x => x.Name.Equals(kvp.Key, StringComparison.OrdinalIgnoreCase)))
 				.Where(member => member != null);
 			if (validFields.Count() != values.Count)
 			{
@@ -207,7 +207,7 @@ namespace Resources
 			// Go through the dictionary and set the values
 			foreach (var val in values)
 			{
-				var targetMember = validFields.FirstOrDefault(x => x.Name == val.Key);
+				var targetMember = validFields.FirstOrDefault(x => x.Name.Equals(val.Key, StringComparison.OrdinalIgnoreCase));
 				if (targetMember == null)
 				{
 					continue;

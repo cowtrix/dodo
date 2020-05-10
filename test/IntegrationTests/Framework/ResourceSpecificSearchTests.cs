@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using Dodo.Resources;
 using Dodo.SharedTest;
 using Dodo.Rebellions;
-using DodoResources.Rebellions;
 using DodoTest.Framework.Postman;
 using Dodo.WorkingGroups;
 using Dodo.Sites;
@@ -100,8 +99,8 @@ namespace RESTTests.Search
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
-					(nameof(DateFilter.StartDate), $"{resource.StartDate.ToShortDateString()}"),
-					(nameof(DateFilter.EndDate), $"{resource.EndDate.ToShortDateString()}")
+					(nameof(DateFilter.StartDate), $"{resource.StartDate}"),
+					(nameof(DateFilter.EndDate), $"{resource.EndDate}")
 				});
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));

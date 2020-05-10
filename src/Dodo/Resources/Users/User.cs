@@ -28,7 +28,7 @@ namespace Dodo.Users
 		public TokenCollection TokenCollection = new TokenCollection();
 		#endregion
 
-		public User() : base(default, default)
+		public User() : base()
 		{
 		}
 

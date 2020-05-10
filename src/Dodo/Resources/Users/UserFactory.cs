@@ -11,7 +11,7 @@ namespace Dodo.Users
 
 	public class UserSchema : ResourceSchemaBase
 	{
-		[Username]
+		[Slug]
 		public string Username { get; set; }
 		[Password]
 		public string Password { get; set; }

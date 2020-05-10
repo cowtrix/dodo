@@ -43,10 +43,10 @@ namespace Resources
 			return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.MEMBER);
 		}
 
-		protected ResourceRequest VerifyRequest(Guid id = default, string actionName = null)
+		protected ResourceRequest VerifyRequest(Guid id, string actionName = null)
 		{
 			var target = ResourceManager.GetSingle(rsc => rsc.Guid == id);
-			if (id != default && target == null)
+			if (target == null)
 			{
 				return ResourceRequest.NotFoundRequest;
 			}
