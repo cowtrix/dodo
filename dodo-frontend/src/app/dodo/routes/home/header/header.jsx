@@ -1,11 +1,8 @@
-import React from 'react'
-import header from './home-header.png'
-import styles from './header.module.scss'
+import React from "react"
+import { SiteMap } from "app/components"
 
+const zoom = 2
 
-const headerAlt = "XR home header image - protests in the streets"
-
-export const Header = () =>
-	<div className={styles.header}>
-		<img src={header} alt={headerAlt} className={styles.headerImage} />
-	</div>
+export const Header = ({ rebellions }) => (
+	<SiteMap sites={rebellions} zoom={zoom} />
+)

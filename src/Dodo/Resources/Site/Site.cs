@@ -74,8 +74,8 @@ namespace Dodo.Sites
 		typeof(PermanentSite),
 		typeof(MarchSite)
 		)]
-	public abstract class Site : DodoResource, 
-		ILocationalResource, 
+	public abstract class Site : DodoResource,
+		ILocationalResource,
 		IOwnedResource
 	{
 		[View(EPermissionLevel.USER)]
@@ -91,6 +91,8 @@ namespace Dodo.Sites
 		public string Type { get { return GetType().FullName; } }
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
+
+		public Site () : base() {}
 
 		public Site(AccessContext context, SiteSchema schema) : base(context, schema)
 		{

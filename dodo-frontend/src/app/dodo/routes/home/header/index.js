@@ -1,1 +1,1 @@
-export { Header } from './header'
+export { HeaderConnected as Header } from "./container"

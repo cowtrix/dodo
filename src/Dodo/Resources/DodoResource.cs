@@ -37,6 +37,8 @@ namespace Dodo
 
 	public abstract class DodoResource : Resource, IDodoResource
 	{
+		public DodoResource() : base() { }
+
 		public DodoResource(AccessContext creator, ResourceSchemaBase schema) : base(schema)
 		{
 			if (creator.User != null)
@@ -44,6 +46,7 @@ namespace Dodo
 				Creator = SecurityExtensions.GenerateID(creator.User, creator.Passphrase);
 			}
 		}
+
 		[View(EPermissionLevel.ADMIN)]
 		public string Creator { get; private set; }
 		public bool IsCreator(AccessContext context)

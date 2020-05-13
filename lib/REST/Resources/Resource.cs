@@ -7,6 +7,7 @@ using Resources.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace Resources
 {
@@ -15,6 +16,7 @@ namespace Resources
 		Guid Guid { get; }
 		uint Revision { get; set; }
 		string Name { get; }
+		string Slug { get; }
 		void OnDestroy();
 	}
 
@@ -53,6 +55,10 @@ namespace Resources
 	[BsonIgnoreExtraElements(Inherited = true)]
 	public abstract class Resource : IRESTResource
 	{
+		[BsonIgnore]
+		[JsonIgnore]
+		protected IResourceManager ResourceManager => ResourceUtility.GetManager(this.GetType());
+
 		public const string TYPE = "type";
 		public const string METADATA = "metadata";
 		public const string METADATA_PERMISSION = "permission";
@@ -66,6 +72,11 @@ namespace Resources
 		[UserFriendlyName]
 		public string Name { get; set; }
 
+		[View(EPermissionLevel.PUBLIC)]
+		[JsonProperty]
+		[Slug]
+		public string Slug { get; set; }
+
 		/// <summary>
 		/// This should only ever be incremented on ResourceManager.Update()
 		/// </summary>
@@ -73,9 +84,21 @@ namespace Resources
 		[JsonProperty]
 		public uint Revision { get; set; }
 
+		public Resource() { }
+
 		public Resource(ResourceSchemaBase schema)
 		{
-			Name = schema?.Name;
+			if(schema == null)
+			{
+				throw new ArgumentNullException(nameof(schema));
+			}
+			Name = schema.Name;
+			Slug = ValidationExtensions.StripStringForSlug(Name);
+			var existingCount = ResourceManager.Get(r => r.Slug == Slug).Count();
+			if (existingCount > 0)
+			{
+				Slug += existingCount + 1;
+			}
 			Guid = Guid.NewGuid();
 		}
 

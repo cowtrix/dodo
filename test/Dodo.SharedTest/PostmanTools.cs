@@ -1,3 +1,5 @@
+//#define POSTMAN
+
 using Common;
 using Common.Config;
 using Common.Extensions;
@@ -20,7 +22,7 @@ namespace DodoTest.Framework.Postman
 
 	public class PostmanCollection
 	{
-#if !DEBUG
+#if POSTMAN
 		ConfigVariable<string> m_postmanAPIKey = new ConfigVariable<string>("PostmanAPIKey", "");
 		RestClient m_restClient = new RestClient("https://api.getpostman.com");
 		JObject m_collection;
@@ -29,7 +31,11 @@ namespace DodoTest.Framework.Postman
 
 		public PostmanCollection(string guid)
 		{
-#if !DEBUG
+#if POSTMAN
+			if(string.IsNullOrEmpty(guid))
+			{
+				throw new ArgumentNullException(nameof(guid));
+			}
 			m_guid = guid;
 			m_restClient.AddDefaultHeader("X-Api-Key", m_postmanAPIKey.Value);
 			var req = new RestRequest($"collections/{m_guid}", Method.GET);
@@ -41,11 +47,11 @@ namespace DodoTest.Framework.Postman
 
 		public void Update(PostmanEntryAddress entry, HttpResponseMessage req, int exampleIndex = 0, string exampleName = null)
 		{
-#if !DEBUG
+#if POSTMAN
 			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
 			var items = m_collection.Value<JObject>("collection").Value<JArray>("item");
-			var cat = items.First(x => x.Value<string>("name") == entry.Category).Value<JArray>("item");
+			var cat = items.First(x => x.Value<string>("name").Replace(" ", "") == entry.Category.Replace(" ", "")).Value<JArray>("item");
 			var item = cat.First(x => x.Value<string>("name").Replace(" ", "") == entry.Request.Replace(" ", ""));
 
 			var requestBody = req.RequestMessage.Content == null ? "" :
@@ -88,7 +94,7 @@ namespace DodoTest.Framework.Postman
 
 		public void Update()
 		{
-#if !DEBUG
+#if POSTMAN
 			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
 			var req = new RestRequest($"collections/{m_guid}", Method.PUT);

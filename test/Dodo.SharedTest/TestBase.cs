@@ -28,7 +28,7 @@ namespace SharedTest
 		private static MongoDbRunner m_runner;
 		private static TestContext m_context;
 		private Random m_random = new Random();
-		protected static PostmanCollection Postman { get; private set; } = new PostmanCollection(ConfigManager.GetValue($"{nameof(TestBase)}_PostmanAPIKey", ""));
+		protected static PostmanCollection Postman { get; private set; } = new PostmanCollection(ConfigManager.GetValue($"{nameof(TestBase)}_PostmanCollection", ""));
 		protected static IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
 
 		[AssemblyInitialize]
@@ -127,5 +127,6 @@ namespace SharedTest
 
 			return user;
 		}
+
 	}
 }

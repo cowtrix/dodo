@@ -8,12 +8,11 @@ using Dodo.Users.Tokens;
 
 namespace DodoResources
 {
-	public class GroupResourceAuthManager<T, TSchema> : AuthorizationManager<T, TSchema>
+	public class GroupResourceAuthManager<T, TSchema> : AuthorizationService<T, TSchema>
 		where T : GroupResource
 		where TSchema : OwnedResourceSchemaBase
 	{
-		public GroupResourceAuthManager(ControllerContext controllercontext, HttpRequest request)
-			: base(controllercontext, request)
+		public GroupResourceAuthManager() : base()
 		{
 		}
 

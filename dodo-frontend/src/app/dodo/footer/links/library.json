@@ -1,18 +1,18 @@
 [
-  {
-    "name": "Extiction Rebellion Home",
-    "route": "/"
-  },
-  {
-    "name": "The Climate Emergency",
-    "route": "/"
-  },
-  {
-    "name": "Donate",
-    "route": "/"
-  },
-  {
-    "name": "Join",
-    "route": "/"
-  }
+	{
+		"translationKey": "footer_menu_link_text_xr_home",
+		"route": "/"
+	},
+	{
+		"translationKey": "footer_menu_link_text_climate_emergency",
+		"route": "/"
+	},
+	{
+		"translationKey": "footer_menu_link_text_donate",
+		"route": "/"
+	},
+	{
+		"translationKey": "footer_menu_link_text_join",
+		"route": "/"
+	}
 ]

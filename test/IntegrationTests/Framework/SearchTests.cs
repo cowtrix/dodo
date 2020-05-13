@@ -14,6 +14,7 @@ using Resources.Location;
 using Dodo.WorkingGroups;
 using System.Collections.Generic;
 using Dodo.SharedTest;
+using Dodo.Roles;
 
 namespace RESTTests.Search
 {
@@ -62,15 +63,14 @@ namespace RESTTests.Search
 					("startDate", startDate.ToString()),
 					("endDate", endDate.ToString())
 				});
-			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
-			foreach (var guid in guids)
+			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
+			foreach (var pos in positives)
 			{
-				if (rebellion1.Guid == Guid.Parse(guid))
-				{
-					continue;
-				}
-				var match = positives.SingleOrDefault(rsc => rsc.Guid == Guid.Parse(guid));
-				Assert.IsNotNull(match, $"Unable to find resource with GUID {guid}");
+				Assert.IsTrue(guids.Contains(pos.Guid));
+			}
+			foreach (var pos in negatives)
+			{
+				Assert.IsFalse(guids.Contains(pos.Guid));
 			}
 		}
 
@@ -100,15 +100,14 @@ namespace RESTTests.Search
 				{
 					("parent", rebellion1.Guid.ToString()),
 				});
-			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
-			foreach (var guid in guids)
+			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
+			foreach (var pos in positives)
 			{
-				if (rebellion1.Guid == Guid.Parse(guid))
-				{
-					continue;
-				}
-				var match = positives.SingleOrDefault(rsc => rsc.Guid == Guid.Parse(guid));
-				Assert.IsNotNull(match, $"Unable to find resource with GUID {guid}");
+				Assert.IsTrue(guids.Contains(pos.Guid));
+			}
+			foreach (var pos in negatives)
+			{
+				Assert.IsFalse(guids.Contains(pos.Guid));
 			}
 		}
 
@@ -124,7 +123,7 @@ namespace RESTTests.Search
 				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, "")),
 				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, "")),
 			};
-			var negativeResults = new List<IRESTResource>()
+			var negatives = new List<IRESTResource>()
 			{
 				rebellion1,
 				CreateObject<Rebellion>(),
@@ -138,15 +137,51 @@ namespace RESTTests.Search
 				{
 					("search", "test"),
 				});
-			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
-			foreach (var guid in guids)
+			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
+			foreach (var pos in positives)
 			{
-				if (rebellion1.Guid == Guid.Parse(guid))
+				Assert.IsTrue(guids.Contains(pos.Guid));
+			}
+			foreach (var pos in negatives)
+			{
+				Assert.IsFalse(guids.Contains(pos.Guid));
+			}
+		}
+
+		[TestMethod]
+		public async Task CanSearchByType()
+		{
+			GetRandomUser(out _, out var context);
+			var rebellion1 = CreateObject<Rebellion>(context);
+			var positives = new List<IOwnedResource>()
+			{
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid)),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid)),
+				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, "")),
+				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, "")),
+			};
+			var negatives = new List<IRESTResource>()
+			{
+				rebellion1,
+				CreateObject<Rebellion>(),
+				CreateObject<LocalGroup>(),
+				CreateObject<LocalGroup>(),
+				CreateObject<Role>(),
+				CreateObject<Role>(),
+			};
+			var request = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
+				new[]
 				{
-					continue;
-				}
-				var match = positives.SingleOrDefault(rsc => rsc.Guid == Guid.Parse(guid));
-				Assert.IsNotNull(match, $"Unable to find resource with GUID {guid}");
+					("types", "workinggroup,eventsite,marchsite"),
+				});
+			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
+			foreach (var pos in positives)
+			{
+				Assert.IsTrue(guids.Contains(pos.Guid));
+			}
+			foreach (var pos in negatives)
+			{
+				Assert.IsFalse(guids.Contains(pos.Guid));
 			}
 		}
 
@@ -173,15 +208,14 @@ namespace RESTTests.Search
 					("latlong", $"{rebellion.Location.Latitude}+{rebellion.Location.Longitude}"),
 					("distance", "60"),
 				});
-			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
-			foreach(var guid in guids)
+			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
+			foreach(var pos in positives)
 			{
-				if(rebellion.Guid == Guid.Parse(guid))
-				{
-					continue;
-				}
-				var match = positives.SingleOrDefault(rsc => rsc.Guid == Guid.Parse(guid));
-				Assert.IsNotNull(match, $"Unable to find resource with GUID {guid}");
+				Assert.IsTrue(guids.Contains(pos.Guid));
+			}
+			foreach (var pos in negatives)
+			{
+				Assert.IsFalse(guids.Contains(pos.Guid));
 			}
 		}
 	}

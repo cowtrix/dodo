@@ -5,6 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources.Security;
 using System;
+using System.Net;
 
 namespace Dodo.Users.Tokens
 {
@@ -18,6 +19,9 @@ namespace Dodo.Users.Tokens
 		public string UserKey { get; set; }
 		[JsonProperty]
 		[BsonElement]
+		public string Address { get; set; }
+		[JsonProperty]
+		[BsonElement]
 		public SymmEncryptedStore<string> EncryptedPassphrase { get; set; }
 		[JsonIgnore]
 		[BsonIgnore]
@@ -26,9 +30,14 @@ namespace Dodo.Users.Tokens
 		[BsonConstructor]
 		public SessionToken() { }
 
-		public SessionToken(User user, string passphrase, Passphrase encryptionKey) : base(DateTime.Now + SessionExpiryTime)
+		public SessionToken(User user, string passphrase, Passphrase encryptionKey, IPAddress address) : base(DateTime.Now + SessionExpiryTime)
 		{
 			UserKey = KeyGenerator.GetUniqueKey(KEYSIZE);
+#if DEBUG
+			Address = new IPAddress(0).ToString();
+#else
+			Address = address == null ? new IPAddress(0).ToString() : address.ToString();
+#endif
 			EncryptedPassphrase = new SymmEncryptedStore<string>(passphrase, encryptionKey);
 			SessionTokenStore.SetUser(UserKey, encryptionKey, user.Guid);
 		}

@@ -5,7 +5,6 @@ using Dodo.Resources;
 using Dodo.SharedTest;
 using Dodo.Sites;
 using Dodo.WorkingGroups;
-using GenerateSampleData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 using Resources.Location;
@@ -13,7 +12,6 @@ using SharedTest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SearchTests
 {
@@ -50,7 +48,7 @@ namespace SearchTests
 		[TestMethod]
 		public void FilterByDate()
 		{
-			var startDate = SchemaGenerator.RandomDate;
+			var startDate = SchemaGenerator.RandomDate.ToUniversalTime();
 			var endDate = startDate + TimeSpan.FromDays(7);
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test", "",

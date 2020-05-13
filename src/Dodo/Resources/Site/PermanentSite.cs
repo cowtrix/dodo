@@ -9,6 +9,7 @@ namespace Dodo.Sites
 {
 	public class PermanentSite : Site
 	{
+		public PermanentSite() : base() { }
 		public PermanentSite(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
 		}

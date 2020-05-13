@@ -1,12 +1,20 @@
 import React from "react"
+import { useTranslation } from "react-i18next"
+
 import { Link } from "react-router-dom"
-import logo from "./XR-logo.svg"
+import logo from "static/XR-logo-full.svg"
 import styles from "./logo.module.scss"
 
-const logoAlt = "Extinction rebellion logo"
+export const Logo = () => {
+	const { t } = useTranslation("ui")
 
-export const Logo = () => (
-	<Link to="/" className={styles.logoContainer}>
-		<img src={logo} alt={logoAlt} className={styles.logo} />
-	</Link>
-)
+	return (
+		<Link to="/" className={styles.logoContainer}>
+			<img
+				src={logo}
+				alt={t("header_logo_alt")}
+				className={styles.logo}
+			/>
+		</Link>
+	)
+}

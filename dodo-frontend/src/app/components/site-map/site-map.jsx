@@ -1,18 +1,18 @@
-import React from "react";
-import { Map } from "app/components/index";
+import React from "react"
+import PropTypes from "prop-types"
+import { LeafletMap } from "app/components/leaflet-map"
 
-export const SiteMap = ({ sites = [], height = "220px" }) => {
-	const markers = sites.map(site => site.Location);
+export const SiteMap = ({ sites = [], defaultLocation, zoom, className }) => (
+	<LeafletMap
+		sites={sites}
+		defaultLocation={defaultLocation}
+		zoom={zoom}
+		className={className}
+	/>
+)
 
-	return (
-		<Map
-			isMarkerShown
-			googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
-			loadingElement={<div style={{ height: "100%" }} />}
-			containerElement={<div style={{ height }} />}
-			mapElement={<div style={{ height: "100%" }} />}
-			options={{ fullscreenControl: false, zoomControl: false }}
-			markers={markers}
-		/>
-	);
-};
+SiteMap.propTypes = {
+	sites: PropTypes.array,
+	defaultLocation: PropTypes.array,
+	zoom: PropTypes.number
+}

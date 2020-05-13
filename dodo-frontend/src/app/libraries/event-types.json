@@ -1,0 +1,26 @@
+{
+	"LocalGroup": {
+		"id": "LG",
+		"color": "#d6b1b1"
+	},
+	"Rebellion": {
+		"id": "RB",
+		"color": "#de9ae8"
+	},
+	"PermanentSite": {
+		"id": "PS",
+		"color": "#8dd7cf"
+	},
+	"EventSite": {
+		"id": "ES",
+		"color": "#fbe192"
+	},
+	"MarchSite": {
+		"id": "MS",
+		"color": "#de9ae8"
+	},
+	"Role": {
+		"id": "R",
+		"color": "#de9ae8"
+	}
+}

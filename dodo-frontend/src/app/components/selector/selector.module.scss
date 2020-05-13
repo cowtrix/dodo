@@ -1,0 +1,22 @@
+@import "~app/styles/styles";
+
+.mobile {
+	@media (min-width: $responsive-breakpoint) {
+		display: none;
+	}
+}
+
+.desktop {
+	display: none;
+
+	@media (min-width: $responsive-breakpoint) {
+		display: flex;
+		flex-grow: 1;
+	}
+}
+
+.button {
+	width: 100%;
+	margin-bottom: spacing(4);
+	font-size: 1.2rem;
+}

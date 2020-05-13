@@ -10,7 +10,7 @@ namespace Dodo.Sites
 {
 	public class MarchSite : EventSite, ITimeBoundResource
 	{
-		public MarchSite() : base(default, default) { }
+		public MarchSite() : base() { }
 		public MarchSite(AccessContext context, SiteSchema schema) : base(context, schema)
 		{
 		}

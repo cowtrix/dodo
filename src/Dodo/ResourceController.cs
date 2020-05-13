@@ -155,9 +155,17 @@ namespace Resources
 		}
 
 		[HttpGet("{id}")]
-		public virtual async Task<IActionResult> Get(Guid id)
+		public virtual async Task<IActionResult> Get(string id)
 		{
-			var req = VerifyRequest(id);
+			if(!Guid.TryParse(id, out var guid))
+			{
+				var rsc = ResourceManager.GetSingle(r => r.Slug == id);
+				if (rsc != null)
+				{
+					guid = rsc.Guid;
+				}
+			}
+			var req = VerifyRequest(guid);
 			if (!req.IsSuccess)
 			{
 				return req.Error;

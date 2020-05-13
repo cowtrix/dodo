@@ -14,8 +14,7 @@ namespace Resources
 		where TSchema : ResourceSchemaBase
 	{
 		protected DodoUserManager UserManager => ResourceUtility.GetManager<User>() as DodoUserManager;
-		protected virtual AuthorizationManager<T, TSchema> AuthManager =>
-			new AuthorizationManager<T, TSchema>(this.ControllerContext, Request);
+		protected virtual AuthorizationService<T, TSchema> AuthManager => new AuthorizationService<T, TSchema>();
 
 		protected IResourceManager<T> ResourceManager { get { return ResourceUtility.GetManager<T>(); } }
 
@@ -44,10 +43,10 @@ namespace Resources
 			return new ResourceRequest(Context, null, EHTTPRequestType.GET, EPermissionLevel.MEMBER);
 		}
 
-		protected ResourceRequest VerifyRequest(Guid id = default, string actionName = null)
+		protected ResourceRequest VerifyRequest(Guid id, string actionName = null)
 		{
 			var target = ResourceManager.GetSingle(rsc => rsc.Guid == id);
-			if (id != default && target == null)
+			if (target == null)
 			{
 				return ResourceRequest.NotFoundRequest;
 			}

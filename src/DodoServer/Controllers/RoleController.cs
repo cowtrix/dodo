@@ -12,8 +12,7 @@ namespace DodoResources.Roles
 	{
 		public const string RootURL = "roles";
 
-		protected override AuthorizationManager<Role, RoleSchema> AuthManager => 
-			new RoleAuthManager(this.ControllerContext, Request);
+		protected override AuthorizationService<Role, RoleSchema> AuthManager => new RoleAuthManager();
 
 		[HttpPost]
 		public override async Task<IActionResult> Create([FromBody] RoleSchema schema)

@@ -1,10 +1,11 @@
 import * as footer from "./footer/title"
 import * as events from "./events"
+import * as tiles from "./tiles"
 
 export { Map } from "./map"
 export { SubHeader } from "./sub-header"
 export { Icon } from "./icon"
-export { DateTile } from "./date-tile"
+export { Date } from "./tiles/date"
 export { Button } from "./button"
 export { RebellionDetail } from "./rebellion-detail"
 export { RebellionEvents } from "./rebellion-events"
@@ -14,5 +15,8 @@ export { SiteDetail } from "./site-detail"
 export { SiteInfo } from "./site-info"
 export { DateLayout } from "./date-layout"
 export { Dialog } from "./dialog"
+export { Selector } from "./selector"
+export { Overlay } from "./overlay"
+export { Loader } from "./loader"
 
-export { footer, events }
+export { footer, events, tiles }

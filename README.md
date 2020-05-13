@@ -46,6 +46,7 @@ Dodo uses [SendGrid](https://sendgrid.com/) to manage and send emails. To link y
 ### 3 - Set up your SSL Certificate
 
 // TODO: rewrite after ASP.NET
+
 Dodo expects to load a `.pfx` file containing the SSL certificate it will use to validate HTTPS connections. The relative path to this certificate is defined with the `SSLCertificatePath` configuration variable.
 
 ### 3 - Launch the server
@@ -71,7 +72,7 @@ This will spin up 2 containers:
 docker exec -it dodo_dodo_1 sed -i s/resources\\\\SampleMarkdown/resources\\/SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
 docker exec -it dodo_dodo_1 dotnet run --project /app/test/GenerateSampleData/GenerateSampleData.csproj
 docker exec -it dodo_dodo_1 sed -i s/resources\\/SampleMarkdown/resources\\\\SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
-``
+```
 
 * See results https://localhost:5001/api/rebellions/
 
