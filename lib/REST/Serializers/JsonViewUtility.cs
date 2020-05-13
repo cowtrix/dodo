@@ -43,67 +43,70 @@ namespace Resources
 		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility,
 			object requester, Passphrase passphrase)
 		{
-			if (obj == null)
+			lock (obj)
 			{
-				return null;
-			}
-
-			if (obj is IRESTResource resource)
-			{
-				// Try to hit the resource cache
-				if (m_cache.TryGetValue((resource.Guid, resource.Revision), out var cacheVal))
+				if (obj == null)
 				{
-					return cacheVal;
+					return null;
 				}
-			}
 
-			// Handle composite/primitive object case
-			var targetType = obj.GetType();
-			if (ShouldSerializeDirectly(targetType))
-			{
-				throw new Exception($"Cannot generate JSON view for type {targetType}");
-			}
-
-			var vals = new Dictionary<string, object>();
-
-
-			// Get fields and properties, filter to what we can view with our permission level
-			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
-			allMembers.AddRange(targetType.GetFields());
-			var filteredMembers = allMembers.Where(m =>
-			{
-				var attr = m.GetCustomAttribute<ViewAttribute>();
-				if (attr == null || attr.ViewPermission > visibility)
+				if (obj is IRESTResource resource)
 				{
-					return false;
+					// Try to hit the resource cache
+					if (m_cache.TryGetValue((resource.Guid, resource.Revision), out var cacheVal))
+					{
+						return cacheVal;
+					}
 				}
-				return true;
-			});
 
-			foreach (var member in filteredMembers)
-			{
-				var memberName = member.Name.ToCamelCase();
-				var targetPropValue = member.GetValue(obj);
-				var memberType = member.GetMemberType();
-				var finalObj = GetObject(targetPropValue, memberType, requester, visibility, passphrase);
-				if (finalObj != null)
+				// Handle composite/primitive object case
+				var targetType = obj.GetType();
+				if (ShouldSerializeDirectly(targetType))
 				{
-					vals.Add(memberName, finalObj);
+					throw new Exception($"Cannot generate JSON view for type {targetType}");
 				}
-			}
-			if (obj is IViewMetadataProvider view)
-			{
-				var metadata = new Dictionary<string, object>();
-				view.AppendMetadata(metadata, visibility, requester, passphrase);
-				vals.Add(Resource.METADATA, metadata);
-			}
 
-			if (obj is IRESTResource finalRsc)
-			{
-				m_cache[(finalRsc.Guid, finalRsc.Revision)] = vals;
+				var vals = new Dictionary<string, object>();
+
+
+				// Get fields and properties, filter to what we can view with our permission level
+				var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
+				allMembers.AddRange(targetType.GetFields());
+				var filteredMembers = allMembers.Where(m =>
+				{
+					var attr = m.GetCustomAttribute<ViewAttribute>();
+					if (attr == null || attr.ViewPermission > visibility)
+					{
+						return false;
+					}
+					return true;
+				});
+
+				foreach (var member in filteredMembers)
+				{
+					var memberName = member.Name.ToCamelCase();
+					var targetPropValue = member.GetValue(obj);
+					var memberType = member.GetMemberType();
+					var finalObj = GetObject(targetPropValue, memberType, requester, visibility, passphrase);
+					if (finalObj != null)
+					{
+						vals.Add(memberName, finalObj);
+					}
+				}
+				if (obj is IViewMetadataProvider view)
+				{
+					var metadata = new Dictionary<string, object>();
+					view.AppendMetadata(metadata, visibility, requester, passphrase);
+					vals.Add(Resource.METADATA, metadata);
+				}
+
+				if (obj is IRESTResource finalRsc)
+				{
+					m_cache[(finalRsc.Guid, finalRsc.Revision)] = vals;
+					return vals;
+				}
 				return vals;
 			}
-			return vals;
 		}
 
 		/// <summary>

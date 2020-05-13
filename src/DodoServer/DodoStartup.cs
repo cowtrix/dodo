@@ -40,9 +40,10 @@ namespace DodoServer
 				configuration.RootPath = DodoServer.ReactPath;
 			});
 
+#if DEBUG
 			// ICorsService and ICorsPolicyProvider are added by AddControllers... but best to be explicit in case this changes
 			services.AddCors();
-
+#endif
 			services.AddControllersWithViews();
 
 			services.AddAuthentication(config =>
@@ -72,7 +73,6 @@ namespace DodoServer
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			app.UseHttpsRedirection();
 			app.UseRouting();
 
 			// CORS must be called after UseRouting and before UseEndpoints to function correctly
@@ -99,11 +99,8 @@ namespace DodoServer
 			app.UseSpa(spa =>
 			{
 				spa.Options.SourcePath = DodoServer.ReactPath;
-				if (env.IsDevelopment())
-				{
-					spa.UseReactDevelopmentServer(npmScript: "start");
-				}
 			});
+			app.UseHttpsRedirection();
 		}
 	}
 }

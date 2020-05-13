@@ -5,6 +5,7 @@ using Dodo.Security;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace DodoServer
@@ -16,7 +17,7 @@ namespace DodoServer
 
 		public static string DevEmail => ConfigManager.GetValue($"{Dodo.Dodo.PRODUCT_NAME}_DevEmail", "test@web.com");
 		public static NetworkConfig NetConfig => ConfigManager.GetValue("NetworkConfig", new NetworkConfig("localhost", "0.0.0.0", 5001, 5000));
-		public static string ReactPath => ConfigManager.GetValue("ReactPath", "react");
+		public static string ReactPath => ConfigManager.GetValue("ReactPath", Path.GetFullPath(@"..\..\dodo-frontend\build"));
 
 		public static void Main(string[] args)
 		{
