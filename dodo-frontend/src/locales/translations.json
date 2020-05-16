@@ -1,11 +1,11 @@
 {
 	"en": {
 		"ui": {
-			"header_logo_alt": "Extinction rebellion logo",
+			"header_logo_alt": "Extinction Rebellion logo",
 			"header_select_placeholder": "Search...",
 			"header_select_no_results": "No results",
 			"header_select_no_results__for": "No results for {{inputValue}}",
-			"header_sign_in_text": "SIGN IN",
+			"header_sign_in_text": "Sign In",
 			"location_search_copy": "SEARCH IN MY LOCATION",
 			"rebellions_header_copy": "{{count}} EVENTS HAPPENING ACROSS THE WORLD",
 			"copyright_info_title": "Copyright info",
