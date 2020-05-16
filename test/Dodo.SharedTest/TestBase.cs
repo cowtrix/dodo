@@ -74,6 +74,8 @@ namespace SharedTest
 		public static void Finalise()
 		{
 			Postman.Update();
+			m_runner?.Dispose();
+			m_runner = null;
 		}
 
 		public static User GetRandomUser(out string password, out AccessContext context, bool verifyEmail = true)

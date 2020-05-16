@@ -33,6 +33,10 @@ namespace UnitTests
 		[TestMethod]
 		public async Task CanGeocodeFromString()
 		{
+			if (!LocationManager.Enabled)
+			{
+				Assert.Inconclusive();
+			}
 			var searchString = "Amsterdam";
 			var expectedLocation = new GeoLocation(52.370216, 4.895168);
 			var location = await LocationManager.GetLocation(searchString);

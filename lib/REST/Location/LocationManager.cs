@@ -29,6 +29,10 @@ namespace Resources.Location
 
 		public static LocationData GetLocationData(GeoLocation location)
 		{
+			if(!m_service.Enabled)
+			{
+				return default;
+			}
 			if(m_locationCache.TryGetValue(location, out var data) && data != null)
 			{
 				return data;

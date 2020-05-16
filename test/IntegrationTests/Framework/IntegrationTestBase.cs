@@ -99,7 +99,7 @@ namespace RESTTests
 		[AssemblyCleanup]
 		public static void FinaliseIntegrationTestBase()
 		{
-			Postman.Update();
+			Finalise();
 		}
 
 		protected async Task Login(string username, string password)
