@@ -37,7 +37,8 @@ namespace Dodo
 	/// It can have members and a public description.
 	/// </summary>
 	public abstract class GroupResource : DodoResource, 
-		IOwnedResource
+		IOwnedResource,
+		IMediaResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		public class AdminData
@@ -80,6 +81,10 @@ namespace Dodo
 
 		[View(EPermissionLevel.ADMIN)]
 		public bool Published { get; set; }
+
+		public string VideoEmbedURL { get; set; }
+
+		public string PhotoEmbedURL { get; set; }
 
 		public GroupResource(AccessContext context, OwnedResourceSchemaBase schema) : base(context, schema)
 		{
