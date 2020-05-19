@@ -77,7 +77,7 @@ namespace DodoServer
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			app.UseRouting();
-
+			app.UseHttpsRedirection();
 #if DEBUG
 			// CORS must be called after UseRouting and before UseEndpoints to function correctly
 			// The `Access-Control-Allow-Origin` header will not be added to normal GET responses
@@ -121,7 +121,6 @@ namespace DodoServer
 					await next.Invoke();
 				});
 			});
-			app.UseHttpsRedirection();
 		}
 	}
 }
