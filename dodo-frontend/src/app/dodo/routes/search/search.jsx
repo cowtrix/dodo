@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect, useState } from "react"
+import React, { Fragment, useEffect } from "react"
 import PropTypes from "prop-types"
-import { ListContainer, List } from "app/components/events"
+import { Container, List } from "app/components/events"
 import { SiteMap, Loader } from "app/components"
 import { Filter } from "./filter"
 
@@ -21,7 +21,7 @@ export const Search = ({
 	return (
 		<Fragment>
 			<SiteMap sites={searchResults} />
-			<ListContainer
+			<Container
 				content={
 					<Fragment>
 						<Loader display={latlong === "" || isFetchingSearch} />

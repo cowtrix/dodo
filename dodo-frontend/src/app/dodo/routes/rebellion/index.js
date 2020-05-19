@@ -1,1 +1,0 @@
-export { Rebellion } from './rebellion'

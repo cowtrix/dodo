@@ -5,6 +5,5 @@ export const api = (url, method = "get", body) =>
 		headers: {
 			"Content-Type": "application/json",
 			Accept: "application/json"
-		},
-		credentials: "include"
+		}
 	}).then(resp => resp.json())
