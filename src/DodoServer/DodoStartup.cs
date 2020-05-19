@@ -1,8 +1,11 @@
+using Common;
 using Dodo;
 using Dodo.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,6 +78,7 @@ namespace DodoServer
 		{
 			app.UseRouting();
 
+#if DEBUG
 			// CORS must be called after UseRouting and before UseEndpoints to function correctly
 			// The `Access-Control-Allow-Origin` header will not be added to normal GET responses
 			// An `Origin` header must be on the request (for a different domain) for CORS to run
@@ -86,6 +90,7 @@ namespace DodoServer
 				.AllowAnyMethod()
 				.AllowAnyHeader();
 			});
+#endif
 
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
@@ -99,6 +104,22 @@ namespace DodoServer
 			app.UseSpa(spa =>
 			{
 				spa.Options.SourcePath = DodoServer.ReactPath;
+				spa.ApplicationBuilder.Use(async (context, next) =>
+				{
+					if(context.Request.Scheme != "https")
+					{
+						context.Request.Scheme = "https";
+						if(context.Request.Host.Port.HasValue)
+						{
+							context.Request.Host = new HostString(context.Request.Host.Host, DodoServer.NetConfig.SSLPort);
+						}
+						context.Response.StatusCode = (int)System.Net.HttpStatusCode.MovedPermanently;
+						context.Response.Headers.Add("Location", context.Request.GetEncodedUrl());
+						await context.Response.WriteAsync("Redirect");
+						return;
+					}
+					await next.Invoke();
+				});
 			});
 			app.UseHttpsRedirection();
 		}

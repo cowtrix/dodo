@@ -1,24 +1,15 @@
 using Common;
 using Common.Config;
-using Common.Extensions;
 using Dodo;
-using Dodo.Rebellions;
 using Dodo.SharedTest;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mongo2Go;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Resources;
 using Resources.Security;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 
 namespace SharedTest
 {

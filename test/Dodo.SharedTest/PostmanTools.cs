@@ -41,7 +41,6 @@ namespace DodoTest.Framework.Postman
 			var req = new RestRequest($"collections/{m_guid}", Method.GET);
 			var response = m_restClient.Execute(req);
 			m_collection = JsonConvert.DeserializeObject<JObject>(response.Content);
-			File.WriteAllText("postmancollection_before.json", m_collection.ToString());
 #endif
 		}
 
