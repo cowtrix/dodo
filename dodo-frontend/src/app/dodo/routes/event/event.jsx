@@ -3,25 +3,26 @@ import PropTypes from "prop-types"
 
 import { ContentPage, RebellionDetail, RebellionEvents } from "app/components"
 
-export const Rebellion = ({ match, getRebellion, rebellion }) => {
-	const { rebellionId } = match.params
+export const Event = ({ match, getEvent, event }) => {
+	console.log(match)
+	const { eventId, eventType } = match.params
 
 	useEffect(() => {
-		getRebellion(rebellionId)
+		getEvent(eventType, eventId)
 	}, [])
 
-	if (!rebellion) {
+	if (!event) {
 		return <div>Loading</div>
 	}
 
 	return (
 		<ContentPage sideBar={<RebellionEvents events={[]} />}>
-			<RebellionDetail rebellion={rebellion} />
+			<RebellionDetail rebellion={event} />
 		</ContentPage>
 	)
 }
 
-Rebellion.propTypes = {
+Event.propTypes = {
 	match: PropTypes.object.isRequired,
 	getRebellion: PropTypes.func,
 	rebellion: PropTypes.object

@@ -1,43 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="removed unused imports">
-      <change afterPath="$PROJECT_DIR$/src/app/domain/event/action-types.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/domain/event/actions.js" afterDir="false" />
+    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/container/container.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/container/container.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/container/container.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/container/container.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/container/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/container/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/components/events/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/list-container/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/container/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/list-container/list-container.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/container/container.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/list-container/list-container.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/events/container/container.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/container.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/header/container.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/header/header.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/header/header.module.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/header/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/home.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/container.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/header/container.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/header/header.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/header/header.module.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/header/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/rebellions/rebellions.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/home/route.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/services.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/services.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/services.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/services.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/site-info/rebellion-info.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/site-info/rebellion-info.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/rebellion/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/event/container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/rebellion/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/event/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/rebellion/rebellion.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/event/event.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/route.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/site/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/site/site.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/event/action-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/event/action-types.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/event/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/event/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/event/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/event/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/domain/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/local-groups/action-types.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/local-groups/actions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/local-groups/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/local-groups/reducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/rebellions/action-types.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/rebellions/actions.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/rebellions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/event/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/rebellions/selectors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/event/selectors.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/domain/requests-reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/requests-reducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/search/services.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/services.test.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/services/api-service.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/services/api-service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/services/memoize.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/services/rebellion.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/services/site.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/services/useFetch.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/domain/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/urls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/reducer.js" afterDir="false" />
     </list>
@@ -68,9 +57,9 @@
           <entry key="env" value="2" />
           <entry key="gitignore" value="2" />
           <entry key="html" value="3" />
-          <entry key="js" value="409" />
+          <entry key="js" value="411" />
           <entry key="json" value="19" />
-          <entry key="jsx" value="324" />
+          <entry key="jsx" value="329" />
           <entry key="scss" value="138" />
           <entry key="svg" value="5" />
           <entry key="ts" value="1" />
@@ -82,8 +71,8 @@
           <entry key="Enforced Plain Text" value="5" />
           <entry key="HTML" value="3" />
           <entry key="JSON" value="17" />
-          <entry key="JSX Harmony" value="324" />
-          <entry key="JavaScript" value="404" />
+          <entry key="JSX Harmony" value="329" />
+          <entry key="JavaScript" value="406" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="SCSS" value="138" />
           <entry key="SVG" value="5" />
@@ -102,9 +91,9 @@
           <entry key="html" value="21" />
           <entry key="js" value="11386" />
           <entry key="json" value="504" />
-          <entry key="jsx" value="17112" />
+          <entry key="jsx" value="17123" />
           <entry key="scss" value="4471" />
-          <entry key="txt" value="1303" />
+          <entry key="txt" value="1474" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -112,9 +101,9 @@
           <entry key="Enforced Plain Text" value="65" />
           <entry key="HTML" value="22" />
           <entry key="JSON" value="504" />
-          <entry key="JSX Harmony" value="17112" />
+          <entry key="JSX Harmony" value="17123" />
           <entry key="JavaScript" value="11320" />
-          <entry key="PLAIN_TEXT" value="1310" />
+          <entry key="PLAIN_TEXT" value="1481" />
           <entry key="SCSS" value="4471" />
         </counts>
       </usages-collector>
@@ -129,36 +118,52 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/event/event.jsx">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/routes.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-              <folding>
-                <element signature="e#0#40#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="90">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/routes.jsx">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/components/rebellion-detail/rebellion-detail.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            <state relative-caret-position="435">
+              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
               <folding>
-                <element signature="e#0#39#0" expanded="true" />
+                <element signature="e#0#25#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/domain/services/rebellion.js">
+        <entry file="file://$PROJECT_DIR$/src/app/components/site-detail/site-detail.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="24" column="17" lean-forward="true" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/components/site-info/rebellion-info.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="7" column="54" selection-start-line="7" selection-start-column="54" selection-end-line="7" selection-end-column="54" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/app/components/site-info/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <folding>
-                <element signature="e#0#51#0" expanded="true" />
-              </folding>
+              <caret column="38" lean-forward="true" selection-start-column="38" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -183,18 +188,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/event/container.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="43" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="43" />
-              <folding>
-                <element signature="e#0#37#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/domain/factories/api-action.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
@@ -202,15 +195,6 @@
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/domain/factories/api-reducer.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="37" column="54" selection-start-line="37" selection-start-column="54" selection-end-line="37" selection-end-column="54" />
             </state>
           </provider>
         </entry>
@@ -237,8 +221,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/app/components/overlay/index.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/header/logo/logo.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/overlay/overlay.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/events/list-container/list-container.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/loader/index.js" />
@@ -288,6 +270,8 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/event/event.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/factories/api-reducer.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" />
+        <option value="$PROJECT_DIR$/src/app/components/site-info/rebellion-info.jsx" />
+        <option value="$PROJECT_DIR$/src/app/components/site-info/index.js" />
       </list>
     </option>
   </component>
@@ -349,30 +333,24 @@
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="dodo" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="site-detail" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="dodo" type="462c0819:PsiDirectoryNode" />
-              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="site-info" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="domain" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="domain" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="site-map" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
@@ -492,7 +470,7 @@
       <workItem from="1583642768084" duration="18091000" />
       <workItem from="1588157989586" duration="9477000" />
       <workItem from="1588239105601" duration="11187000" />
-      <workItem from="1589290510770" duration="7089000" />
+      <workItem from="1589290510770" duration="7361000" />
     </task>
     <task id="LOCAL-00001" summary="added header for home page&#10;created rebellions list wrapper">
       <created>1583496162619</created>
@@ -753,7 +731,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589895032171</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Pushed all state to domain rather than usefetch&#10;Removed initial homepage&#10;Moved all site / rebellion content to one macrocomponent (for now) event">
+      <created>1589897181383</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1589897181383</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -777,7 +762,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="167564000" />
+    <option name="totallyTimeSpent" value="167836000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
@@ -811,7 +796,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added font awesome library and icon component" />
     <MESSAGE value="added responsive support for header - mobile first" />
     <MESSAGE value="added footer" />
     <MESSAGE value="added header to rebellions on homepage&#10;moved routing to app" />
@@ -836,7 +820,8 @@
     <MESSAGE value="moved all filter selects to one modal" />
     <MESSAGE value="fix map marker problem" />
     <MESSAGE value="removed unused imports" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed unused imports" />
+    <MESSAGE value="Pushed all state to domain rather than usefetch&#10;Removed initial homepage&#10;Moved all site / rebellion content to one macrocomponent (for now) event" />
+    <option name="LAST_COMMIT_MESSAGE" value="Pushed all state to domain rather than usefetch&#10;Removed initial homepage&#10;Moved all site / rebellion content to one macrocomponent (for now) event" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -861,31 +846,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="13" lean-forward="true" selection-start-column="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/factories/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/store.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -1209,19 +1169,7 @@
     <entry file="file://$PROJECT_DIR$/src/app/domain/services/useFetch.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/services/rebellion.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/services/login.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/services/index.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/site/site.jsx">
@@ -1240,13 +1188,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/services/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/services/rebellion.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/routes.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        <state relative-caret-position="90">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/rebellion-detail/rebellion-detail.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
           <folding>
-            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#0#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/site-info/site-info.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/site-detail/site-detail.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="17" lean-forward="true" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/site-info/rebellion-info.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="7" column="54" selection-start-line="7" selection-start-column="54" selection-end-line="7" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/site-info/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="38" lean-forward="true" selection-start-column="38" selection-end-column="38" />
         </state>
       </provider>
     </entry>

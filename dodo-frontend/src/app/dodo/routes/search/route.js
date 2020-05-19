@@ -1,1 +1,1 @@
-export const route = '/search'
+export const route = "/"

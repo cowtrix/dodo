@@ -1,15 +1,11 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
-import { fetchRebellion } from "app/domain/services/rebellion"
-import { useFetch } from "app/domain/services/useFetch"
 import { Button } from "app/components/button"
 
 import styles from "./site-info.module.scss"
 
-export const RebellionInfo = ({ rebellionId }) => {
-	const rebellion = useFetch(fetchRebellion, rebellionId)
-
+export const RebellionInfo = ({ rebellionId, rebellion }) => {
 	if (!rebellion) {
 		return <div>Loading</div>
 	}
