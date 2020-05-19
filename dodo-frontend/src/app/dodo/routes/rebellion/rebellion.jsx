@@ -1,12 +1,6 @@
 import React, { useEffect } from "react"
 import PropTypes from "prop-types"
 
-import { useFetch } from "app/domain/services/useFetch"
-import {
-	fetchRebellion,
-	fetchRebellionEvents
-} from "app/domain/services/rebellion"
-
 import { ContentPage, RebellionDetail, RebellionEvents } from "app/components"
 
 export const Rebellion = ({ match, getRebellion, rebellion }) => {
