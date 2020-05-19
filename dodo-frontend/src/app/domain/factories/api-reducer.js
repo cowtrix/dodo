@@ -1,30 +1,33 @@
-import { FAILURE, REQUEST, SUCCESS } from '../constants'
+import { FAILURE, REQUEST, SUCCESS } from "../constants"
 
-const initialStateFactory = (actionType) => ({
+const initialStateFactory = actionType => ({
 	isFetching: false,
-	hasErrored: false,
+	hasErrored: false
 })
 
-export const apiReducerFactory = (actionType) => (state = initialStateFactory(actionType), action) => {
+export const apiReducerFactory = actionType => (
+	state = initialStateFactory(actionType),
+	action
+) => {
 	switch (action.type) {
-		case actionType + REQUEST : {
+		case actionType + REQUEST: {
 			return {
 				...state,
-				isFetching: true,
+				isFetching: true
 			}
 		}
-		case actionType + SUCCESS : {
+		case actionType + SUCCESS: {
 			return {
 				...state,
-				isFetching: false,
+				isFetching: false
 			}
 		}
-		case actionType + FAILURE : {
+		case actionType + FAILURE: {
 			return {
 				...state,
 				isFetching: false,
 				hasErrored: true,
-				error: action.payload,
+				error: action.payload
 			}
 		}
 		default:
@@ -32,12 +35,10 @@ export const apiReducerFactory = (actionType) => (state = initialStateFactory(ac
 	}
 }
 
-export const reducerFactory = (actionType) => (state = [], action) => {
+export const reducerFactory = actionType => (state = [], action) => {
 	switch (action.type) {
-		case actionType + SUCCESS : {
-			return ([
-				...action.payload,
-			])
+		case actionType + SUCCESS: {
+			return action.payload
 		}
 		default:
 			return state

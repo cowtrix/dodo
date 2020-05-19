@@ -1,13 +1,13 @@
 import React from "react"
 import PropTypes from "prop-types"
-import styles from "./list-container.module.scss"
+import styles from "./container.module.scss"
 
-export const ListContainer = ({ content }) => (
+export const Container = ({ content }) => (
 	<div className={styles.wrapper}>
 		<div className={styles.eventListContainer}>{content}</div>
 	</div>
 )
 
-ListContainer.propTypes = {
+Container.propTypes = {
 	content: PropTypes.node
 }
