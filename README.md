@@ -1,6 +1,6 @@
-Dodo is a tool for organising Rebellions. A Rebellion is a peaceful, occupational protest. 
-Its purpose is to allow Rebels to map out the organisational structure of their protest 
-team, support internal communications, recruit volunteers into open roles, and broadcast 
+Dodo is a tool for organising Rebellions. A Rebellion is a peaceful, occupational protest.
+Its purpose is to allow Rebels to map out the organisational structure of their protest
+team, support internal communications, recruit volunteers into open roles, and broadcast
 information about the status of the Rebellion.
 
 **Read the [Specification Document](https://docs.google.com/document/d/1yjUkmxTiSCRLJ7weWW5JxJRUwE2LFJmo2SnO-Fwxggk/)** for more information on project goals.
@@ -19,7 +19,7 @@ information about the status of the Rebellion.
 
 # Getting Started
 
-## Building From Source 
+## Building From Source
 
 Dodo is built on .NET Core 3.0. To build from source, you must install the SDK from [here](https://dotnet.microsoft.com/download/dotnet-core/3.0).
 
@@ -27,7 +27,7 @@ From the root directory, run `dotnet build`. The project will be output in the `
 
 ## System Requirements
 
-Dodo is compatible with Linux and Windows. It requires the .NET Core 3.0 runtime, which you can install for your operating system from [here](https://dotnet.microsoft.com/download/dotnet-core/3.0). 
+Dodo is compatible with Linux and Windows. It requires the .NET Core 3.0 runtime, which you can install for your operating system from [here](https://dotnet.microsoft.com/download/dotnet-core/3.0).
 
 ## Configuring Your Server
 
@@ -53,7 +53,6 @@ Dodo expects to load a `.pfx` file containing the SSL certificate it will use to
 
 You're ready to go! Just run the executable Dodo.executable
 
-
 ## Docker
 
 ```
@@ -61,12 +60,13 @@ docker-compose up
 ```
 
 This will spin up 2 containers:
-* dodo_dodo_1: dotnet webapp listening at https://localhost:5001/
-* dodo_mongo_1: Mongo DB listening at `mongodb://root:example@localhost:27017`
+
+-   dodo_dodo_1: dotnet webapp listening at https://localhost:5001/
+-   dodo_mongo_1: Mongo DB listening at `mongodb://root:example@localhost:27017`
 
 ### Loading Sample Data
 
-* Convert some windows seperators stuff, run script, convert back
+-   Convert some windows separators stuff, run script, convert back
 
 ```
 docker exec -it dodo_dodo_1 sed -i s/resources\\\\SampleMarkdown/resources\\/SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
@@ -74,13 +74,13 @@ docker exec -it dodo_dodo_1 dotnet run --project /app/test/GenerateSampleData/Ge
 docker exec -it dodo_dodo_1 sed -i s/resources\\/SampleMarkdown/resources\\\\SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
 ```
 
-* See results https://localhost:5001/api/rebellions/
+-   See results https://localhost:5001/api/rebellions/
 
 # Security
 
 Dodo is designed to be highly secure. The developers acknowledge that protest is a politically sensitive activity in many countries, and that individuals should be assured that their information is protected. The philosophy behind the security decisions of Dodo is to encrypt all relational information. This means that even in a threat scenario where the server data is compromised, an attacker will not be able to create any connection between individual users and activity, except where that information is explicitly published by the user. **This security infrastructure results in some caveats that any systems adminstrator should be aware of:**
 
-- Systems administrators do not have access to a lot of the information stored on the Dodo server. Wherever possible, only the user concerned will have access to information. This includes but is not limited to:
-  - Whether or not a user is an administrator of a given resource.
-  - Whether or not a user is a member of a given group.
-- When a user resets their password, they will lose access to any secure resources. This means that users will have to be re-added as administrators to any groups if they forget their password.
+-   Systems administrators do not have access to a lot of the information stored on the Dodo server. Wherever possible, only the user concerned will have access to information. This includes but is not limited to:
+    -   Whether or not a user is an administrator of a given resource.
+    -   Whether or not a user is a member of a given group.
+-   When a user resets their password, they will lose access to any secure resources. This means that users will have to be re-added as administrators to any groups if they forget their password.
