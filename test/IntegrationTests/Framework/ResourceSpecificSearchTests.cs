@@ -30,21 +30,21 @@ namespace RESTTests.Search
 	[TestClass]
 	public class EventSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<EventSite>
 	{
-		public override string ResourceRoot => "sites";
+		public override string ResourceRoot => "site";
 		public override string PostmanCategory => $"{typeof(Site).Name}s";
 	}
 
 	[TestClass]
 	public class PermanentSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<PermanentSite>
 	{
-		public override string ResourceRoot => "sites";
+		public override string ResourceRoot => "site";
 		public override string PostmanCategory => $"{typeof(Site).Name}s";
 	}
 
 	[TestClass]
 	public class MarchSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<MarchSite>
 	{
-		public override string ResourceRoot => "sites";
+		public override string ResourceRoot => "site";
 		public override string PostmanCategory => $"{typeof(Site).Name}s";
 	}
 
@@ -55,7 +55,7 @@ namespace RESTTests.Search
 
 	public abstract class ResourceSpecificSearchTests<T> : IntegrationTestBase where T : IRESTResource
 	{
-		public virtual string ResourceRoot => $"{typeof(T).Name}s";
+		public virtual string ResourceRoot => typeof(T).Name;
 		public virtual string PostmanCategory => $"{typeof(T).Name}s";
 		protected virtual ResourceSchemaBase GetSchema(AccessContext context) => SchemaGenerator.GetRandomSchema<T>(context);
 

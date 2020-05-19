@@ -9,7 +9,7 @@ namespace DodoResources.LocalGroups
 	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class LocalGroupController : GroupResourceController<LocalGroup, LocalGroupSchema>
 	{
-		public const string RootURL = "localgroups";
+		public const string RootURL = "localgroup";
 
 		[HttpPost]
 		public override async Task<IActionResult> Create([FromBody] LocalGroupSchema schema)

@@ -10,7 +10,7 @@ namespace DodoResources.Roles
 	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class RoleController : ResourceController<Role, RoleSchema>
 	{
-		public const string RootURL = "roles";
+		public const string RootURL = "role";
 
 		protected override AuthorizationService<Role, RoleSchema> AuthManager => new RoleAuthManager();
 

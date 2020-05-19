@@ -15,7 +15,7 @@ namespace DodoResources.WorkingGroups
 	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class WorkingGroupController : GroupResourceController<WorkingGroup, WorkingGroupSchema>
 	{
-		public const string RootURL = "workinggroups";
+		public const string RootURL = "workinggroup";
 
 		[HttpPost]
 		public override async Task<IActionResult> Create([FromBody] WorkingGroupSchema schema)

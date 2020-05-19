@@ -16,7 +16,7 @@ namespace DodoResources.Rebellions
 	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class RebellionController : GroupResourceController<Rebellion, RebellionSchema>
 	{
-		public const string RootURL = "rebellions";
+		public const string RootURL = "rebellion";
 
 		[HttpPost]
 		public override async Task<IActionResult> Create([FromBody] RebellionSchema schema)

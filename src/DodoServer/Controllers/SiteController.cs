@@ -11,7 +11,7 @@ namespace DodoResources.Sites
 	[Route(DodoServer.DodoServer.API_ROOT + RootURL)]
 	public class SiteController : SearchableResourceController<Site, SiteSchema>
 	{
-		public const string RootURL = "sites";
+		public const string RootURL = "site";
 
 		protected override AuthorizationService<Site, SiteSchema> AuthManager => new SiteAuthManager();
 
