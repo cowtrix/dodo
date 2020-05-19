@@ -76,7 +76,8 @@ namespace Dodo.Sites
 		)]
 	public abstract class Site : DodoResource,
 		ILocationalResource,
-		IOwnedResource
+		IOwnedResource,
+		IMediaResource
 	{
 		[View(EPermissionLevel.USER)]
 		public EArrestRisk ArrestRisk { get; set; }
@@ -91,6 +92,10 @@ namespace Dodo.Sites
 		public string Type { get { return GetType().FullName; } }
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
+		[View(EPermissionLevel.PUBLIC)]
+		public string VideoEmbedURL { get; set; }
+		[View(EPermissionLevel.PUBLIC)]
+		public string PhotoEmbedURL { get; set; }
 
 		public Site () : base() {}
 
