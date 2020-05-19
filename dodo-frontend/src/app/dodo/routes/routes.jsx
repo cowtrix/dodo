@@ -9,7 +9,12 @@ import { Login } from "./login"
 export const Routes = () => (
 	<Fragment>
 		<Switch>
-			<Route path={"/:eventType/:eventId"} component={Event} exact />
+			<Route
+				path={"/:eventType/:eventId"}
+				component={Event}
+				exact
+				strict
+			/>
 			<Route path={search} component={Search} exact />
 			<Route path={"/login"} component={Login} exact />
 		</Switch>
