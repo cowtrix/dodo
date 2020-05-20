@@ -6,10 +6,6 @@
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: spacing(6);
-
-	@media (min-width: $responsive-breakpoint) {
-		padding-left: 130px;
-	}
 }
 
 .heading {
@@ -27,13 +23,9 @@
 }
 
 .title {
-  flex-grow: 1;
+	flex-grow: 1;
 }
 
 .dateTile {
 	margin-right: 0;
-	@media (min-width: $responsive-breakpoint) {
-		margin-right: spacing(6);
-		margin-left: -130px;
-	}
 }

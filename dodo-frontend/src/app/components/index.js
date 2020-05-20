@@ -18,5 +18,6 @@ export { Dialog } from "./dialog"
 export { Selector } from "./selector"
 export { Overlay } from "./overlay"
 export { Loader } from "./loader"
+export { PageTitle } from "./page-title"
 
 export { footer, events, tiles }

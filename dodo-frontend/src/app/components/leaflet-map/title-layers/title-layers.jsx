@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React from "react"
 import { TileLayer } from "react-leaflet"
 
 const TILE_LAYERS = [
