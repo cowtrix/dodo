@@ -1,9 +1,13 @@
 using Common;
 using Common.Config;
 using Dodo;
+using Dodo.Rebellions;
+using Dodo.Roles;
 using Dodo.SharedTest;
+using Dodo.Sites;
 using Dodo.Users;
 using Dodo.Users.Tokens;
+using Dodo.WorkingGroups;
 using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mongo2Go;
@@ -30,7 +34,7 @@ namespace SharedTest
 
 		public TestBase()
 		{
-			if(m_runner != null)
+			if (m_runner != null)
 			{
 				return;
 			}
@@ -44,7 +48,7 @@ namespace SharedTest
 		{
 			m_context?.WriteLine(message.ToString());
 		}
-	
+
 		/// <summary>
 		///  Gets or sets the test context which provides
 		///  information about and functionality for the current test run.
@@ -76,18 +80,35 @@ namespace SharedTest
 			return GenerateUser(schema, out context, verifyEmail);
 		}
 
-		protected virtual T CreateObject<T>(AccessContext context = default, ResourceSchemaBase schema = null) where T: IRESTResource
+		protected virtual T CreateObject<T>(AccessContext context = default, ResourceSchemaBase schema = null) where T : IRESTResource
 		{
 			if (context.User == null)
 			{
 				GetRandomUser(out var password, out context, true); ;
 			}
-			if(schema == null)
+			if (schema == null)
 			{
 				schema = SchemaGenerator.GetRandomSchema<T>(context);
 			}
 			var factory = ResourceUtility.GetFactory<T>();
-			return factory.CreateTypedObject(context, schema);
+			var obj = factory.CreateTypedObject(context, schema);
+			if (obj is Rebellion rebellion)
+			{
+				// Add some working groups, sites
+				CreateObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
+				CreateObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
+
+				CreateObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+				CreateObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+			}
+			else if (obj is WorkingGroup wg && !(wg.Parent.GetValue() is Rebellion))
+			{
+				CreateObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, wg));
+				CreateObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, wg));
+				CreateObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
+				CreateObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
+			}
+			return obj;
 		}
 
 		long LongRandom(long min, long max)
@@ -100,7 +121,7 @@ namespace SharedTest
 
 		public static User GenerateUser(UserSchema schema, out AccessContext context, bool verifyEmail = true)
 		{
-			if(schema == null)
+			if (schema == null)
 			{
 				throw new ArgumentNullException(nameof(schema));
 			}
@@ -111,7 +132,7 @@ namespace SharedTest
 			Assert.IsTrue(context.Challenge());
 
 			// Verify email if flag has been set
-			if(verifyEmail)
+			if (verifyEmail)
 			{
 				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context);
 				Assert.IsNotNull(verifyToken);

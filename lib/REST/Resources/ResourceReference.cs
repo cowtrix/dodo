@@ -11,7 +11,7 @@ namespace Resources
 	public interface IResourceReference : IVerifiable
 	{
 		Guid Guid { get; }
-		bool HasValue { get; }
+		bool HasValue();
 	}
 
 	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
@@ -30,8 +30,7 @@ namespace Resources
 			return ResourceUtility.GetResourceByGuid<T>(Guid);
 		}
 
-		[JsonIgnore]
-		public bool HasValue { get { return Guid != default; } }
+		public bool HasValue() => Guid != default;
 
 		public ResourceReference(T resource)
 		{

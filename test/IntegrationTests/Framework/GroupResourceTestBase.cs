@@ -26,8 +26,6 @@ namespace RESTTests
 		where T:GroupResource
 		where TSchema:OwnedResourceSchemaBase
 	{
-		
-
 		[TestMethod]
 		public override async Task CanCreate()
 		{

@@ -107,7 +107,7 @@ namespace Dodo
 		/// <returns></returns>
 		public bool IsChildOf(GroupResource targetObject)
 		{
-			if(!Parent.HasValue)
+			if(!Parent.HasValue())
 			{
 				return false;
 			}

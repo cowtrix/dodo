@@ -98,8 +98,18 @@ namespace Dodo.SharedTest
 
 		public static RebellionSchema GetRandomRebellion(AccessContext context)
 		{
+			var rebellionNames = new[]
+			{
+				"London Uprising",
+				"Paris Spring Rebellion",
+				"Amsterdam Rebellion",
+				"Sydney Week of Anger",
+				"New York United",
+				"L.A. Occupation",
+				"Mexico City Resists"
+			};
 			var startDate = RandomDate;
-			return new RebellionSchema(RandomName,
+			return new RebellionSchema(rebellionNames.Random(),
 				SampleDescription,
 				RandomLocation,
 				startDate,
@@ -109,21 +119,43 @@ namespace Dodo.SharedTest
 
 		public static WorkingGroupSchema GetRandomWorkinGroup(AccessContext context, GroupResource rsc = null)
 		{
+			var workingGroups = new[]
+			{
+				( "Action Design", "Gives advice on the design of how the whole action/actions are working, helps local groups with training and direction where needed. Keeps an over all eye on the functioning of actions, taking live feedback and helping groups to respond. Ensures Arrestee Support included in any action planning" ),
+				( "Disability", "Ensures accessibility is embedded into the design and implementation of Actions, and focusing on the wellbeing of our disabled Rebels and the public."),
+				( "First Aid", "To find enough first aiders for the Rebellion. This is a specialised skill that we cannot provide, and must look outside of the movement to provide." ),
+				( "Legal Observers", "To organise trainings for those wanting to be Legal Observers, to coordinate them on the ground, and to ensure a non-partial relationship with LOs and protesters."),
+				( "Police Liaison", "Gaining necessary information about an action, communicating it with the police and vice versa. Main priority is to protect organisers, by being the point of communication police should direct any questions or discussion topics to, rather than organisers themselves." ),
+				( "Site Design & Build", "Draw together the skilled crew, the equipment, the content & procedures/briefing for sites and programmes which Tell the Truth and support rebels to rebel non-violently in safety"),
+				("Arts", "Arrange, acquire structures needed for sites - incl stages - and ensure transport, safe rigging, use and de-rigging Design layout of sites & location of structures in consideration of production needs and action strategy Design look/feel of sites in consideration of Art/Messaging strategy"),
+				("Sustenance", "Create sort maintain and manage recycling/waste streams (system and team) at rebellion sites. Create/locate and maintain toilets, manage the appropriate disposal of effluent."),
+				("Transport & Storage", "Sourcing and installing kitchens - Sourcing food - Finding and scheduling cooking teams - Coordinate with RSO sustenance team - plan food provision in advance"),
+				("Families", "Fixed overnight camping oversight - coordinating in with safety, cleanliess, stewarding etc to ensure a safe and healthy environment. Maintains contact with RSO Accomodation team to give information to rebels on the ground about what indoor accomodation is available around the city."),
+				("Sanctuaries", "Provide a safe and restorative space for holistic, healing group workshops and therapies."),
+				("Spokespeople & Training", "Ensures accessibility is embedded into the design and implementation of Production and create safe area for disabled camping and a disabled hub. Ensure coordination & communication with all coordination areas and with disabled people in the run up to and during the rebellion"),
+				("Press", "To liaise with media on the ground and in back office. Working with actions teams to collect information for press releases, make sure media alerted to specific actions. Communicating with media points on the ground each morning and eve to receive updates. Arranging media appearances for spokes/notables. Current mandate in SOS system. "),
+				("Leafletting & Outreach", "Creates and maintains an ongoing rota of all roles throughout the rebellion. Processes rota updates from sites and updates spreadsheet accordingly. "),
+				("Organisational Systems Tech", " Reactive LINK person needed at each site to be available on a WhatsApp chat for: updates of sites and as an emergency point of contact.Also to hold a signposting role for others in the site with a limited list of contacts they can call on. Not a large role and could be shared. Non/low arrestable person preferred"),
+				("Project Weaver Team", "Creates and manages the inter-site organisational system, creates educational materials on the system, provides advice on its use by regions and MoM groups, create lines of communication between groups where this is failing ")
+
+			};
 			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				context,
 				GetRandomRebellion(context));
-			return new WorkingGroupSchema(RandomName,
-				SampleDescription,
-				rsc.Guid
-			);
+			var rand = workingGroups.Random();
+			return new WorkingGroupSchema(rand.Item1, rand.Item2, rsc.Guid);
 		}
 
 		public static LocalGroupSchema GetRandomLocalGroup(AccessContext context, GroupResource rsc = null)
 		{
+			var localGroups = new[]
+			{
+				"Paris", "Rome", "London", "New York", "Sydney", "Amsterdam", "Dublin", "Chicago", "Mexico City", "Santiago", "Istanbul", "Moscow"
+			};
 			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				context,
 				GetRandomRebellion(context));
-			return new LocalGroupSchema(RandomName,
+			return new LocalGroupSchema(localGroups.Random(),
 				SampleDescription,
 				RandomLocation
 			);

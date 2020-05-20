@@ -25,7 +25,7 @@ namespace Dodo
 	{
 		public override bool Verify(object value, out string validationError)
 		{
-			if (value is IResourceReference rscRef && rscRef.HasValue)
+			if (value is IResourceReference rscRef && rscRef.HasValue())
 			{
 				validationError = null;
 				return true;
@@ -59,7 +59,7 @@ namespace Dodo
 		}
 		public override void OnDestroy()
 		{
-			if (this is IOwnedResource owned && owned.Parent.HasValue)
+			if (this is IOwnedResource owned && owned.Parent.HasValue())
 			{
 				// Remove listing from parent resource if needed				
 				using var rscLock = new ResourceLock(owned.Parent.Guid);

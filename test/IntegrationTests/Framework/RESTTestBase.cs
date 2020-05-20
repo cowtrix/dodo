@@ -25,7 +25,7 @@ namespace RESTTests
 		{
 			GetRandomUser(out _, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
-			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
+			var resource = CreateObject<T>(context, schema);
 			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
 			VerifyCreatedObject(resource, resourceObj, schema);
 
@@ -39,7 +39,7 @@ namespace RESTTests
 		{
 			GetRandomUser(out _, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
-			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
+			var resource = CreateObject<T>(context, schema);
 			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			VerifyCreatedObject(resource, resourceObj, schema);
 		}
@@ -49,7 +49,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
-			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
+			var resource = CreateObject<T>(context, schema);
 			await Login(user.AuthData.Username, password);
 			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
@@ -64,7 +64,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
-			var resource = ResourceUtility.GetFactory<T>().CreateTypedObject(context, schema);
+			var resource = CreateObject<T>(context, schema);
 			await Login(user.AuthData.Username, password);
 			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);

@@ -27,7 +27,7 @@ namespace Dodo.Resources
 		protected override TResult CreateObjectInternal(AccessContext context, TSchema schema)
 		{
 			var rsc = base.CreateObjectInternal(context, schema);
-			if(rsc is IOwnedResource owned && owned.Parent.HasValue)
+			if(rsc is IOwnedResource owned && owned.Parent.HasValue())
 			{
 				// Add listing to parent resource if needed				
 				using var rscLock = new ResourceLock(owned.Parent.Guid);
