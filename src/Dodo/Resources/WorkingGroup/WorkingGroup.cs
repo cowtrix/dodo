@@ -11,6 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.WorkingGroups
 {
@@ -24,17 +25,37 @@ namespace Dodo.WorkingGroups
 	{
 		public WorkingGroup(AccessContext context, WorkingGroupSchema schema) : base(context, schema)
 		{
-
 		}
 
-		[View(EPermissionLevel.PUBLIC)]
-		public List<Guid> Roles = new List<Guid>();
+		[BsonElement]
+		private List<Guid> m_roles = new List<Guid>();
+		[BsonElement]
+		private List<Guid> m_workingGroups = new List<Guid>();
 
 		/// <summary>
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC)]
-		public List<Guid> WorkingGroups = new List<Guid>();
+		public IEnumerable<WorkingGroup> WorkingGroups
+		{
+			get
+			{
+				var rm = ResourceUtility.GetManager<WorkingGroup>();
+				return m_workingGroups.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
+					.Where(rsc => rsc != null);
+			}
+		}
+
+		[View(EPermissionLevel.PUBLIC)]
+		public IEnumerable<Role> Roles
+		{
+			get
+			{
+				var rm = ResourceUtility.GetManager<Role>();
+				return m_roles.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
+					.Where(rsc => rsc != null);
+			}
+		}
 
 		public override bool CanContain(Type type)
 		{
@@ -49,19 +70,19 @@ namespace Dodo.WorkingGroups
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				if (WorkingGroups.Contains(wg.Guid))
+				if (m_workingGroups.Contains(wg.Guid))
 				{
 					throw new Exception($"Adding duplicated child object {wg.Guid} to {Guid}");
 				}
-				WorkingGroups.Add(wg.Guid);
+				m_workingGroups.Add(wg.Guid);
 			}
 			else if (rsc is Role s && s.Parent.Guid == Guid)
 			{
-				if (Roles.Contains(s.Guid))
+				if (m_roles.Contains(s.Guid))
 				{
 					throw new Exception($"Adding duplicated child object {s.Guid} to {Guid}");
 				}
-				Roles.Add(s.Guid);
+				m_roles.Add(s.Guid);
 			}
 			else
 			{
@@ -73,11 +94,11 @@ namespace Dodo.WorkingGroups
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				return WorkingGroups.Remove(wg.Guid);
+				return m_workingGroups.Remove(wg.Guid);
 			}
 			else if (rsc is Role s && s.Parent.Guid == Guid)
 			{
-				return Roles.Remove(s.Guid);
+				return m_roles.Remove(s.Guid);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}

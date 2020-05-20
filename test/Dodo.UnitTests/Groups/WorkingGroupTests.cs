@@ -3,6 +3,7 @@ using Dodo.SharedTest;
 using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
+using System.Linq;
 
 namespace Groups
 {
@@ -19,10 +20,10 @@ namespace Groups
 			var subWgSchema = SchemaGenerator.GetRandomSchema<WorkingGroup>(creatorContext) as WorkingGroupSchema;
 			subWgSchema.Parent = baseWg.Guid;
 			var subWg = ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(creatorContext, subWgSchema);
-			Assert.IsTrue((subWg.Parent.GetValue() as WorkingGroup).WorkingGroups.Contains(subWg.Guid),
+			Assert.IsTrue((subWg.Parent.GetValue() as WorkingGroup).WorkingGroups.Any(g => g.Guid == subWg.Guid),
 				"Working Group was not included in Rebellion list after creation");
 			ResourceUtility.GetManager<WorkingGroup>().Delete(subWg);
-			Assert.IsFalse((subWg.Parent.GetValue() as WorkingGroup).WorkingGroups.Contains(subWg.Guid),
+			Assert.IsFalse((subWg.Parent.GetValue() as WorkingGroup).WorkingGroups.Any(g => g.Guid == subWg.Guid),
 				"Working Group was not renoved from Rebellion list after deletion");
 		}
 
@@ -32,10 +33,10 @@ namespace Groups
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
 			var role = ResourceUtility.GetFactory<Role>().CreateTypedObject(creatorContext, 
 				SchemaGenerator.GetRandomSchema<Role>(creatorContext));
-			Assert.IsTrue((role.Parent.GetValue() as WorkingGroup).Roles.Contains(role.Guid),
+			Assert.IsTrue((role.Parent.GetValue() as WorkingGroup).Roles.Any(g => g.Guid == role.Guid),
 				"Working Group was not included in Rebellion list after creation");
 			ResourceUtility.GetManager<Role>().Delete(role);
-			Assert.IsFalse((role.Parent.GetValue() as WorkingGroup).Roles.Contains(role.Guid),
+			Assert.IsFalse((role.Parent.GetValue() as WorkingGroup).Roles.Any(g => g.Guid == role.Guid),
 				"Working Group was not renoved from Rebellion list after deletion");
 		}
 	}
