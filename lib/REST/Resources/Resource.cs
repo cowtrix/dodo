@@ -59,7 +59,7 @@ namespace Resources
 		[JsonIgnore]
 		protected IResourceManager ResourceManager => ResourceUtility.GetManager(this.GetType());
 
-		public const string TYPE = "type";
+		public const string METADATA_TYPE = "type";
 		public const string METADATA = "metadata";
 		public const string METADATA_PERMISSION = "permission";
 
@@ -94,10 +94,13 @@ namespace Resources
 			}
 			Name = schema.Name;
 			Slug = ValidationExtensions.StripStringForSlug(Name);
-			var existingCount = ResourceManager.Get(r => r.Slug == Slug).Count();
-			if (existingCount > 0)
+			if(ResourceManager.Get(r => r.Slug == Slug).Any())
 			{
-				Slug += existingCount + 1;
+				var existingCount = ResourceManager.Get(r => r.Slug.StartsWith(Slug)).Count();
+				if (existingCount > 0)
+				{
+					Slug += existingCount;
+				}
 			}
 			Guid = Guid.NewGuid();
 		}
@@ -126,7 +129,7 @@ namespace Resources
 			object requester, Passphrase passphrase )
 		{
 			view.Add(METADATA_PERMISSION, permissionLevel.GetName());
-			view.Add(TYPE, GetType().Name);
+			view.Add(METADATA_TYPE, GetType().Name);
 		}
 
 		public bool CanVerify()

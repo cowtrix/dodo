@@ -62,7 +62,8 @@ namespace Resources
 			// Create an index of the GUID
 			var indexOptions = new CreateIndexOptions();
 			var indexKeys = Builders<T>.IndexKeys
-				.Ascending(rsc => rsc.Guid);
+				.Ascending(rsc => rsc.Guid)
+				.Ascending(rsc => rsc.Slug);
 			var indexModel = new CreateIndexModel<T>(indexKeys, indexOptions);
 			MongoDatabase.Indexes.CreateOne(indexModel);
 		}
@@ -88,6 +89,10 @@ namespace Resources
 			if (ResourceUtility.GetResourceByGuid(newObject.Guid) != null)
 			{
 				throw new Exception("Conflicting GUID");
+			}
+			if (ResourceUtility.GetResourceBySlug(newObject.Slug) != null)
+			{
+				throw new Exception("Conflicting slug");
 			}
 			MongoDatabase.InsertOne(newObject);
 		}

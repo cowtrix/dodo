@@ -115,6 +115,26 @@ namespace Resources
 			}
 			return result;
 		}
+
+		public static T GetResourceBySlug<T>(this string slug, Guid? handle = null) where T : class, IRESTResource
+		{
+			T result;
+			foreach (var rm in ResourceManagers)
+			{
+				result = (T)rm.Value.GetSingle(x => x.Slug == slug, handle);
+				if (result != null)
+				{
+					return result;
+				}
+			}
+			return null;
+		}
+
+		public static IRESTResource GetResourceBySlug(this string slug, Guid? handle = null)
+		{
+			return GetResourceBySlug<IRESTResource>(slug, handle);
+		}
+
 		#endregion
 		#region Managers
 		public static void ClearAllManagers()
