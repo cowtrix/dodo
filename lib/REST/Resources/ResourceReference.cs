@@ -16,10 +16,14 @@ namespace Resources
 
 	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
 	{
-		[View(EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		[BsonElement]
 		public Guid Guid { get; private set; }
+		[View(EPermissionLevel.PUBLIC)]
+		[JsonProperty]
+		[BsonElement]
+		public string Slug { get; private set; }
 
 		public T GetValue()
 		{
@@ -32,10 +36,13 @@ namespace Resources
 		public ResourceReference(T resource)
 		{
 			Guid = resource != null ? resource.Guid : default;
+			Slug = resource != null ? resource.Slug : default;
 		}
-		public ResourceReference(Guid guid)
+
+		public ResourceReference(Guid guid, string slug)
 		{
 			Guid = guid;
+			Slug = slug;
 		}
 
 		public static implicit operator T(ResourceReference<T> d) => d.GetValue();

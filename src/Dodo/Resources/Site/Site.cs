@@ -90,12 +90,9 @@ namespace Dodo.Sites
 		[View(EPermissionLevel.PUBLIC)]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
-		[BsonIgnore]
-		public string Type { get { return GetType().FullName; } }
-		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
-		public string VideoEmbedURL { get; set; }
+		public string VideoEmbedURL { get; set; } = "My video site";
 		[View(EPermissionLevel.PUBLIC)]
 		public string PhotoEmbedURL { get; set; }
 
@@ -107,7 +104,8 @@ namespace Dodo.Sites
 			{
 				return;
 			}
-			Parent = new ResourceReference<GroupResource>(schema.Parent);
+			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
+			Parent = new ResourceReference<GroupResource>(group);
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();
@@ -116,8 +114,8 @@ namespace Dodo.Sites
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
-			view[METADATA_TYPE] = typeof(Site).Name;
-			view.Add(METADATA_SITE_TYPE, GetType().Name);
+			view[METADATA_TYPE] = typeof(Site).Name.ToLowerInvariant();
+			view.Add(METADATA_SITE_TYPE, GetType().Name.ToLowerInvariant());
 		}
 	}
 }

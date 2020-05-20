@@ -2,15 +2,15 @@ namespace Resources
 {
 	public static class PermissionLevel
 	{
-		public const string PUBLIC = "PUBLIC";
+		public static string PUBLIC => nameof(EPermissionLevel.PUBLIC).ToLowerInvariant();
 		public static EPermissionLevel Public => EPermissionLevel.PUBLIC;
-		public const string USER = "USER";
+		public static string USER => nameof(EPermissionLevel.USER).ToLowerInvariant();
 		public static EPermissionLevel Member => EPermissionLevel.MEMBER;
-		public const string MEMBER = "MEMBER";
+		public static string MEMBER => nameof(EPermissionLevel.MEMBER).ToLowerInvariant();
 		public static EPermissionLevel Admin => EPermissionLevel.ADMIN;
-		public const string ADMIN = "ADMIN";
+		public static string ADMIN => nameof(EPermissionLevel.ADMIN).ToLowerInvariant();
 		public static EPermissionLevel Owner => EPermissionLevel.OWNER;
-		public const string OWNER = "OWNER";
+		public static string OWNER => nameof(EPermissionLevel.OWNER).ToLowerInvariant();
 	}
 
 	public enum EPermissionLevel

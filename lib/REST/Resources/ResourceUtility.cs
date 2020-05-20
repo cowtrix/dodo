@@ -81,6 +81,10 @@ namespace Resources
 
 		public static T GetResourceByGuid<T>(this Guid guid, Guid? handle = null) where T : class, IRESTResource
 		{
+			if(guid == default)
+			{
+				return default;
+			}
 			T result;
 			foreach(var rm in ResourceManagers)
 			{

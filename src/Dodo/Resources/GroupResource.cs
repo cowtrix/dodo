@@ -92,7 +92,8 @@ namespace Dodo
 			{
 				return;
 			}
-			Parent = new ResourceReference<GroupResource>(schema.Parent);
+			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
+			Parent = new ResourceReference<GroupResource>(group);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			GroupPublicKey = pk;
 			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(context.User, pv), context);

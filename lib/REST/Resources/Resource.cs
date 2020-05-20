@@ -128,8 +128,8 @@ namespace Resources
 		public virtual void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase )
 		{
-			view.Add(METADATA_PERMISSION, permissionLevel.GetName());
-			view.Add(METADATA_TYPE, GetType().Name);
+			view.Add(METADATA_PERMISSION, permissionLevel.GetName().ToLowerInvariant());
+			view.Add(METADATA_TYPE, GetType().Name.ToLowerInvariant());
 		}
 
 		public bool CanVerify()
