@@ -6,6 +6,11 @@ $rebellions-list-background: white;
 	display: flex;
 	justify-content: center;
 	position: relative;
+
+	@media (min-width: $responsive-breakpoint) {
+		margin-top: -spacing(10);
+		z-index: 999999999;
+	}
 }
 
 .eventListContainer {
@@ -14,6 +19,7 @@ $rebellions-list-background: white;
 	flex-direction: column;
 	padding: spacing(6) spacing(2);
 	flex-grow: 1;
+	min-height: 100px;
 
 	@media (min-width: $responsive-breakpoint) {
 		border: 1px solid grey;
