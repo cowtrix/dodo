@@ -4,13 +4,14 @@ import PropTypes from "prop-types"
 import { Container } from "app/components/events"
 import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
 import styles from "./event.module.scss"
+import { List } from "app/components/events"
 
 export const Event = ({ match, getEvent, event, isLoading }) => {
 	const { eventId, eventType } = match.params
 
 	useEffect(() => {
 		getEvent(eventType, eventId)
-	}, [])
+	}, [match])
 
 	const { location } = event
 	const defaultLocation = event.location
@@ -19,7 +20,10 @@ export const Event = ({ match, getEvent, event, isLoading }) => {
 
 	return (
 		<Fragment>
-			<SiteMap defaultLocation={defaultLocation} />
+			<SiteMap
+				defaultLocation={defaultLocation}
+				sites={event.sites && [...event.sites, ...event.workingGroups]}
+			/>
 			<Container
 				content={
 					<Fragment>
@@ -48,6 +52,8 @@ export const Event = ({ match, getEvent, event, isLoading }) => {
 										{event.publicDescription}
 									</div>
 								</DateLayout>
+								<List events={event.sites} />
+								<List events={event.workingGroups} />
 							</div>
 						)}
 					</Fragment>

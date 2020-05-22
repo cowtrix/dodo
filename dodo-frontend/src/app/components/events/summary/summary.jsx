@@ -16,7 +16,10 @@ export const Summary = ({
 	metadata
 }) => (
 	<li className={styles.eventSummmary}>
-		<Link to={`${metadata.type + "/" + guid}`} className={styles.link}>
+		<Link
+			to={`${"/" + metadata.type + "/" + guid}`}
+			className={styles.link}
+		>
 			{startDate ? (
 				<DateTile
 					startDate={new Date(startDate)}
