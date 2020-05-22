@@ -1,29 +1,64 @@
-import React, { useEffect } from "react"
+import React, { Fragment, useEffect } from "react"
 import PropTypes from "prop-types"
 
-import { ContentPage, RebellionDetail, RebellionEvents } from "app/components"
+import { Container } from "app/components/events"
+import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
+import styles from "./event.module.scss"
 
-export const Event = ({ match, getEvent, event }) => {
-	console.log(match)
+export const Event = ({ match, getEvent, event, isLoading }) => {
 	const { eventId, eventType } = match.params
 
 	useEffect(() => {
 		getEvent(eventType, eventId)
 	}, [])
 
-	if (!event) {
-		return <div>Loading</div>
-	}
+	const { location } = event
+	const defaultLocation = event.location
+		? [location.latitude, location.longitude]
+		: []
 
 	return (
-		<ContentPage sideBar={<RebellionEvents events={[]} />}>
-			<RebellionDetail rebellion={event} />
-		</ContentPage>
+		<Fragment>
+			<SiteMap defaultLocation={defaultLocation} />
+			<Container
+				content={
+					<Fragment>
+						<Loader display={isLoading} />
+						{event.metadata && !isLoading && (
+							<div className={styles.event}>
+								<DateLayout
+									startDate={
+										event.startDate
+											? new Date(event.startDate)
+											: null
+									}
+									endDate={
+										event.endDate
+											? new Date(event.endDate)
+											: null
+									}
+									title={
+										<PageTitle
+											title={event.name}
+											subTitle={event.metadata.type}
+										/>
+									}
+								>
+									<div className={styles.detail}>
+										{event.publicDescription}
+									</div>
+								</DateLayout>
+							</div>
+						)}
+					</Fragment>
+				}
+			/>
+		</Fragment>
 	)
 }
 
 Event.propTypes = {
 	match: PropTypes.object.isRequired,
-	getRebellion: PropTypes.func,
-	rebellion: PropTypes.object
+	getEvent: PropTypes.func,
+	event: PropTypes.object
 }

@@ -4,7 +4,8 @@ import { Event } from "./event"
 import { event } from "app/domain"
 
 const mapStateToProps = state => ({
-	event: event.selectors.currentEvent(state)
+	event: event.selectors.currentEvent(state),
+	isLoading: event.selectors.eventLoading(state)
 })
 
 const mapDispatchToProps = dispatch => ({
