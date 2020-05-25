@@ -34,7 +34,7 @@ export const SearchBar = ({
 			onInputChange={value => {
 				if (value !== "") {
 					setSearch(value)
-					history.push("/search")
+					history.push("/")
 				}
 			}}
 			formatOptionLabel={CustomSelect}
