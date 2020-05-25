@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Dodo.Rebellions;
 using Dodo.Resources;
 using Dodo.Users;
@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Dodo.WorkingGroups
 {
-	public class WorkingGroupManager : DodoResourceManager<WorkingGroup>
+	public class WorkingGroupManager : DodoResourceManager<WorkingGroup>, ISearchableResourceManager
 	{
 	}
 }

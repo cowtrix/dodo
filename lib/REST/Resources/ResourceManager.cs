@@ -24,6 +24,8 @@ namespace Resources
 		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector, Guid? handle = null);
 	}
 
+	public interface ISearchableResourceManager { }
+
 	public interface IResourceManager<T> : IResourceManager
 	{
 		void Add(T newObject);

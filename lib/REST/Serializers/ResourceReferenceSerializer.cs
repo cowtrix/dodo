@@ -17,8 +17,11 @@ namespace Resources.Serializers
 			Guid guid = context.Reader.ReadBinaryData().AsGuid;
 			context.Reader.ReadName();
 			string slug = context.Reader.ReadString();
+			context.Reader.ReadName();
+			string type = context.Reader.ReadString();
 			context.Reader.ReadEndDocument();
-			return new ResourceReference<T>(guid, slug);
+			
+			return new ResourceReference<T>(guid, slug, type);
 		}
 
 		public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, ResourceReference<T> value)
@@ -28,6 +31,8 @@ namespace Resources.Serializers
 			context.Writer.WriteBinaryData(value.Guid);
 			context.Writer.WriteName(nameof(value.Slug));
 			context.Writer.WriteString(value.Slug ?? string.Empty);
+			context.Writer.WriteName(nameof(value.Type));
+			context.Writer.WriteString(value.Type ?? string.Empty);
 			context.Writer.WriteEndDocument();
 		}
 

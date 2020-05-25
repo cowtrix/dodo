@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Dodo.Sites
 {
-	public class SiteManager : DodoResourceManager<Site>, IResourceManager<EventSite>, IResourceManager<MarchSite>, IResourceManager<PermanentSite>
+	public class SiteManager : DodoResourceManager<Site>, IResourceManager<EventSite>, IResourceManager<MarchSite>, IResourceManager<PermanentSite>, ISearchableResourceManager
 	{
 		public void Add(PermanentSite newObject) => base.Add(newObject);
 		public void Delete(PermanentSite objToDelete) => base.Delete(objToDelete);

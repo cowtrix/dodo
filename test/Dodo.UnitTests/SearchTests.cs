@@ -28,9 +28,9 @@ namespace SearchTests
 			var goodResults = new List<ILocationalResource>()
 			{
 				rebellion,
-				CreateObject<PermanentSite>(context, new SiteSchema("Test Site 1", typeof(PermanentSite).FullName, rebellion.Guid, new GeoLocation(TrueLocation.Latitude + .1, TrueLocation.Longitude), "")),
-				CreateObject<EventSite>(context, new SiteSchema("Test Site 2", typeof(EventSite).FullName, rebellion.Guid, new GeoLocation(TrueLocation.Latitude - .1, TrueLocation.Longitude +.1), "")),
-				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", TrueLocation))
+				CreateObject<PermanentSite>(context, new SiteSchema("Test Site 1", typeof(PermanentSite).FullName, rebellion.Guid, new GeoLocation(TrueLocation.Latitude + .1, TrueLocation.Longitude), ""), false),
+				CreateObject<EventSite>(context, new SiteSchema("Test Site 2", typeof(EventSite).FullName, rebellion.Guid, new GeoLocation(TrueLocation.Latitude - .1, TrueLocation.Longitude +.1), ""), false),
+				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", TrueLocation), false)
 			};
 			var negativeResults = new List<ILocationalResource>()
 			{
@@ -53,7 +53,7 @@ namespace SearchTests
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test", "",
 				SchemaGenerator.RandomLocation, startDate + TimeSpan.FromDays(1), endDate + TimeSpan.FromDays(4)));
-			var evt1 = CreateObject<EventSite>();
+			var evt1 = CreateObject<EventSite>(seed: false);
 			using (var rscLock = new ResourceLock(evt1))
 			{
 				evt1.StartDate = startDate + TimeSpan.FromDays(1);
@@ -61,7 +61,7 @@ namespace SearchTests
 				ResourceUtility.GetManager<Site>().Update(evt1, rscLock);
 			}
 			evt1 = ResourceUtility.GetManager<Site>().GetSingle(r => r.Guid == evt1.Guid) as EventSite;
-			var evt2 = CreateObject<MarchSite>();
+			var evt2 = CreateObject<MarchSite>(seed: false);
 			using (var rscLock = new ResourceLock(evt2))
 			{
 				evt2.StartDate = endDate - TimeSpan.FromDays(1);
@@ -91,13 +91,13 @@ namespace SearchTests
 		public void FilterByParent()
 		{
 			GetRandomUser(out _, out var context);
-			var rebellion1 = CreateObject<Rebellion>(context);
+			var rebellion1 = CreateObject<Rebellion>(context, seed: false);
 			var goodResults = new List<IOwnedResource>()
 			{
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid)),
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid)),
-				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, "")),
-				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, "")),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid), false),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid), false),
+				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
+				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
 			};
 			var negativeResults = new List<IRESTResource>()
 			{
@@ -109,6 +109,9 @@ namespace SearchTests
 				CreateObject<WorkingGroup>(),
 			};
 			var result = DodoResourceUtility.Search(0, 100, new ParentFilter() { Parent = rebellion1.Guid });
+
+			var notFound = result.Where(r => !goodResults.Contains(r)).ToList();
+
 			Assert.AreEqual(goodResults.Count, result.Count());
 			Assert.IsTrue(result.All(r => goodResults.Contains(r)));
 			Assert.IsFalse(result.All(r => negativeResults.Contains(r)));
@@ -121,10 +124,10 @@ namespace SearchTests
 			var rebellion1 = CreateObject<Rebellion>(context);
 			var goodResults = new List<IOwnedResource>()
 			{
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid)),
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid)),
-				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, "")),
-				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, "")),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid), false),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid), false),
+				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
+				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
 			};
 			var negativeResults = new List<IRESTResource>()
 			{
@@ -136,6 +139,7 @@ namespace SearchTests
 				CreateObject<WorkingGroup>(),
 			};
 			var result = DodoResourceUtility.Search(0, 100, new StringFilter() { Search = "Test" });
+
 			Assert.AreEqual(goodResults.Count, result.Count());
 			Assert.IsTrue(result.All(r => goodResults.Contains(r)));
 			Assert.IsFalse(result.All(r => negativeResults.Contains(r)));

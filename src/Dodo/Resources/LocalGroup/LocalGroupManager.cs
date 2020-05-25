@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Dodo.Resources;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Dodo.LocalGroups
 {
-	public class LocalGroupManager : DodoResourceManager<LocalGroup>
+	public class LocalGroupManager : DodoResourceManager<LocalGroup>, ISearchableResourceManager
 	{
 	}
 }

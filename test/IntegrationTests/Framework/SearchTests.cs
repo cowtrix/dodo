@@ -28,8 +28,8 @@ namespace RESTTests.Search
 			var endDate = startDate + TimeSpan.FromDays(7);
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test", "",
-				SchemaGenerator.RandomLocation, startDate + TimeSpan.FromDays(1), endDate + TimeSpan.FromDays(4)));
-			var evt1 = CreateObject<EventSite>();
+				SchemaGenerator.RandomLocation, startDate + TimeSpan.FromDays(1), endDate + TimeSpan.FromDays(4)), false);
+			var evt1 = CreateObject<EventSite>(seed: false);
 			using (var rscLock = new ResourceLock(evt1))
 			{
 				evt1.StartDate = startDate + TimeSpan.FromDays(1);
@@ -37,7 +37,7 @@ namespace RESTTests.Search
 				ResourceUtility.GetManager<Site>().Update(evt1, rscLock);
 			}
 			evt1 = ResourceUtility.GetManager<Site>().GetSingle(r => r.Guid == evt1.Guid) as EventSite;
-			var evt2 = CreateObject<MarchSite>();
+			var evt2 = CreateObject<MarchSite>(seed: false);
 			using (var rscLock = new ResourceLock(evt2))
 			{
 				evt2.StartDate = endDate - TimeSpan.FromDays(1);
@@ -52,10 +52,10 @@ namespace RESTTests.Search
 			};
 			var negatives = new List<IRESTResource>()
 			{
-				CreateObject<Rebellion>(),
-				CreateObject<PermanentSite>(),
-				CreateObject<EventSite>(),
-				CreateObject<LocalGroup>()
+				CreateObject<Rebellion>(seed: false),
+				CreateObject<PermanentSite>(seed: false),
+				CreateObject<EventSite>(seed: false),
+				CreateObject<LocalGroup>(seed: false)
 			};
 			var request = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
 				new[]

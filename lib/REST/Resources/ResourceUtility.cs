@@ -109,7 +109,7 @@ namespace Resources
 				return new[] { GetResourceByGuid<T>(guid) };
 			}
 			var result = new List<T>();
-			foreach (var rm in ResourceManagers)
+			foreach (var rm in ResourceManagers.Where(rm => rm is ISearchableResourceManager))
 			{
 				if (!typeof(T).IsAssignableFrom(rm.Key))
 				{

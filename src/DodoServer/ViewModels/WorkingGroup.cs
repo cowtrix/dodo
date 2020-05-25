@@ -9,6 +9,5 @@ namespace DodoServer.ViewModels
 	{
 		public List<string> Roles { get; set; }
 		public List<string> WorkingGroups { get; set; }
-
 	}
 }
