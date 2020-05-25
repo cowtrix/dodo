@@ -16,7 +16,7 @@ export const Search = ({
 		if (latlong !== "") {
 			getSearchResults(distance, latlong, search)
 		}
-	}, [latlong])
+	}, [latlong, distance, getSearchResults, search])
 
 	return (
 		<Fragment>
