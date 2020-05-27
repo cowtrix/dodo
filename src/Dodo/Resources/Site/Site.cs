@@ -114,7 +114,7 @@ namespace Dodo.Sites
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
-			view[METADATA_TYPE] = typeof(Site).Name.ToLowerInvariant();
+			view[METADATA_TYPE] = typeof(Site).Name.GetName();
 			view.Add(METADATA_SITE_TYPE, GetType().Name.ToLowerInvariant());
 		}
 	}

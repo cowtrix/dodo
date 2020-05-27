@@ -1,13 +1,8 @@
-using Resources.Security;
-using Dodo.Rebellions;
-using Dodo.Users;
 using Common;
-using System;
-using Resources;
-using Newtonsoft.Json;
 
 namespace Dodo.Sites
 {
+	[Name("March")]
 	public class MarchSite : EventSite, ITimeBoundResource
 	{
 		public MarchSite() : base() { }

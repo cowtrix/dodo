@@ -1,15 +1,12 @@
-using Resources.Security;
-using Dodo.Rebellions;
-using Dodo.Users;
 using Common;
 using System;
 using Resources;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Sites
 {
+	[Name("Event")]
 	public class EventSite : Site, ITimeBoundResource
 	{
 		public EventSite() : base() { }
