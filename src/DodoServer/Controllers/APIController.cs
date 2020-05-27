@@ -8,6 +8,7 @@ using Dodo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Dodo.Users;
 
 namespace DodoServer
 {
@@ -19,8 +20,9 @@ namespace DodoServer
 		{
 			MetadataObject = new
 			{
-				ResourceTypes = ReflectionExtensions.GetConcreteClasses<IDodoResource>().
-				Select(t => new { Name = t.GetName(), Type = t.Name }).ToList(),
+				ResourceTypes = ReflectionExtensions.GetConcreteClasses<IDodoResource>()
+					.Where(t => t != typeof(User))
+					.Select(t => new { Name = t.GetName(), Type = t.Name }).ToList(),
 			};
 		}
 
