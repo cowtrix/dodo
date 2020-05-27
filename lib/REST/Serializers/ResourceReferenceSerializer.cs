@@ -19,9 +19,10 @@ namespace Resources.Serializers
 			string slug = context.Reader.ReadString();
 			context.Reader.ReadName();
 			string type = context.Reader.ReadString();
+			context.Reader.ReadName();
+			string name = context.Reader.ReadString();
 			context.Reader.ReadEndDocument();
-			
-			return new ResourceReference<T>(guid, slug, type);
+			return new ResourceReference<T>(guid, slug, type, name);
 		}
 
 		public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, ResourceReference<T> value)
@@ -33,6 +34,8 @@ namespace Resources.Serializers
 			context.Writer.WriteString(value.Slug ?? string.Empty);
 			context.Writer.WriteName(nameof(value.Type));
 			context.Writer.WriteString(value.Type ?? string.Empty);
+			context.Writer.WriteName(nameof(value.Name));
+			context.Writer.WriteString(value.Name ?? string.Empty);
 			context.Writer.WriteEndDocument();
 		}
 

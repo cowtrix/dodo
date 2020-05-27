@@ -28,6 +28,10 @@ namespace Resources
 		[JsonProperty]
 		[BsonElement]
 		public string Type { get; private set; }
+		[View(EPermissionLevel.PUBLIC)]
+		[JsonProperty]
+		[BsonElement]
+		public string Name { get; private set; }
 
 		public T GetValue()
 		{
@@ -41,13 +45,15 @@ namespace Resources
 			Guid = resource != null ? resource.Guid : default;
 			Slug = resource != null ? resource.Slug : default;
 			Type = resource?.GetType().Name;
+			Name = resource?.Name;
 		}
 
-		public ResourceReference(Guid guid, string slug, string type)
+		public ResourceReference(Guid guid, string slug, string type, string name)
 		{
 			Guid = guid;
 			Slug = slug;
 			Type = type;
+			Name = name;
 		}
 
 		public static implicit operator T(ResourceReference<T> d) => d.GetValue();
