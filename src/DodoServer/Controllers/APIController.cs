@@ -22,7 +22,7 @@ namespace DodoServer
 			{
 				ResourceTypes = ReflectionExtensions.GetConcreteClasses<IDodoResource>()
 					.Where(t => t != typeof(User))
-					.Select(t => new { Name = t.GetName(), Type = t.Name }).ToList(),
+					.Select(t => new { label = t.GetName(), value = t.Name.ToCamelCase() }).ToList(),
 			};
 		}
 
