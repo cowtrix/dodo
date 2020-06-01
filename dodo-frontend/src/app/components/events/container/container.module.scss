@@ -8,7 +8,7 @@ $rebellions-list-background: white;
 	position: relative;
 
 	@media (min-width: $responsive-breakpoint) {
-		margin-top: -spacing(10);
+		margin-top: - spacing(10);
 		z-index: 999999999;
 	}
 }
@@ -25,7 +25,6 @@ $rebellions-list-background: white;
 		border: 1px solid grey;
 		padding: spacing(10) spacing(8) 0;
 		position: relative;
-		top: -spacing(9);
 		max-width: $application-max-width;
 		margin: 0 spacing(7);
 	}
