@@ -1,6 +1,5 @@
 import {
 	SEARCH_FILTER_EVENTS,
-	SEARCH_FILTER_DATE,
 	SEARCH_GET,
 	SEARCH_FILTER_DISTANCE,
 	SEARCH_FILTER_LOCATION,
@@ -24,26 +23,16 @@ export const searchGet = (dispatch, params) => {
 			payload: params.latlong
 		})
 	params.search &&
-		dispatch({
-			type: SEARCH_FILTER_SEARCH,
-			payload: params.search
-		})
+	dispatch({
+		type: SEARCH_FILTER_SEARCH,
+		payload: params.search
+	})
+	params.eventTypes &&
+	dispatch({
+		type: SEARCH_FILTER_EVENTS,
+		payload: params.eventTypes
+	})
 }
-
-export const searchFilterEvents = payload => ({
-	type: SEARCH_FILTER_EVENTS,
-	payload
-})
-
-export const searchFilterDate = payload => ({
-	type: SEARCH_FILTER_DATE,
-	payload
-})
-
-export const searchFilterSearch = payload => ({
-	type: SEARCH_FILTER_SEARCH,
-	payload
-})
 
 export const searchSetCurrentLocation = dispatch => {
 	navigator.geolocation.getCurrentPosition(position => {

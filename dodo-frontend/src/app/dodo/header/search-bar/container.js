@@ -8,7 +8,7 @@ const { actions, selectors } = search
 
 const mapStateToProps = state => ({
 	searchString: selectors.search(state),
-	searchResults: selectors.searchResultsFiltered(state)
+	searchResults: selectors.searchResults(state)
 })
 
 const mapDispatchToProps = dispatch => ({

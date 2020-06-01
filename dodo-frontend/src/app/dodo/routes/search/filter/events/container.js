@@ -4,12 +4,8 @@ import { Events } from "./events"
 import { selectors, actions } from "app/domain/search"
 
 const mapStateToProps = state => ({
-	eventTypes: [
-		...new Set(
-			selectors.searchResultsFiltered(state).map(result => result.metadata.type)
-		)
-	],
-	eventsFiltered: selectors.eventsFiltered(state)
+	eventTypes: selectors.events(state),
+	searchParams: selectors.searchParams(state)
 })
 
 const mapDispatchToProps = dispatch => ({

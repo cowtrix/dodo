@@ -6,18 +6,14 @@ import { formatEvents } from "./services"
 
 const placeholder = "Event types..."
 
-export const Events = ({ eventTypes, searchFilterEvents, eventsFiltered }) => (
+export const Events = ({ eventTypes, searchParams, searchByEvent }) => (
 	<Select
 		placeholder={placeholder}
 		isMulti
-		defaultValue={formatEvents(eventsFiltered)}
+		defaultValue={formatEvents(eventTypes)}
 		options={formatEvents(eventTypes)}
 		className={styles.selector}
-		onChange={value =>
-			value
-				? searchFilterEvents(value.map(event => event.value))
-				: searchFilterEvents([])
-		}
+		onChange={value => searchByEvent({ ...searchParams, events: value.map(event => event.value) })}
 	/>
 )
 
