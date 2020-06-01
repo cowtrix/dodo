@@ -20,7 +20,7 @@ namespace DodoServer
 		{
 			MetadataObject = new
 			{
-				ResourceTypes = ReflectionExtensions.GetConcreteClasses<IDodoResource>()
+				resourceTypes = ReflectionExtensions.GetConcreteClasses<IDodoResource>()
 					.Where(t => t != typeof(User))
 					.Select(t => new { label = t.GetName(), value = t.Name.ToCamelCase() }).ToList(),
 			};
