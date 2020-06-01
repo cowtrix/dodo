@@ -43,7 +43,7 @@ namespace Dodo.Sites
 		[View(EPermissionLevel.PUBLIC)]
 		public bool Kitchen;
 		[View(EPermissionLevel.PUBLIC)]
-		public bool DisabledAccess;
+		public bool DisabilityFriendly;
 		[View(EPermissionLevel.PUBLIC)]
 		public EAccessType OutdoorCamping;
 		[View(EPermissionLevel.PUBLIC)]
