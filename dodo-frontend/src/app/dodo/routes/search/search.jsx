@@ -5,18 +5,16 @@ import { SiteMap, Loader } from "app/components"
 import { Filter } from "./filter"
 
 export const Search = ({
-	searchResults = [],
-	latlong,
-	distance,
-	search,
+	searchResults,
+	searchParams,
 	getSearchResults,
 	isFetchingSearch
 }) => {
 	useEffect(() => {
-		if (latlong !== "") {
-			getSearchResults(distance, latlong, search)
+		if (searchParams.latlong !== "") {
+			getSearchResults(searchParams)
 		}
-	}, [latlong, distance, getSearchResults, search])
+	}, [searchParams.distance, searchParams.latlong])
 
 	return (
 		<Fragment>
@@ -24,7 +22,7 @@ export const Search = ({
 			<Container
 				content={
 					<Fragment>
-						<Loader display={latlong === "" || isFetchingSearch} />
+						<Loader display={!searchParams.latlong.length || isFetchingSearch} />
 						<Filter />
 						<List events={searchResults} />
 					</Fragment>
