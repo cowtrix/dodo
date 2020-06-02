@@ -1,5 +1,5 @@
 import React from "react"
-import { TileLayer } from "react-leaflet"
+import { TileLayer, LayersControl } from "react-leaflet"
 
 const TILE_LAYERS = [
 	{
@@ -14,6 +14,6 @@ const TILE_LAYERS = [
 ]
 
 export const TitleLayers = () =>
-	TILE_LAYERS.map(tileLayer => (
-		<TileLayer key={tileLayer.url} {...tileLayer} />
-	))
+		TILE_LAYERS.map(tileLayer =>
+				<TileLayer key={tileLayer.url} {...tileLayer} position="topright" />
+		)
