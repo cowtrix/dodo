@@ -1,100 +1,66 @@
 import {
-	SEARCH_FILTER_EVENTS,
+	SEARCH_FILTER_TYPES,
 	SEARCH_GET,
 	SEARCH_FILTER_LOCATION,
 	SEARCH_FILTER_DISTANCE,
-	SEARCH_FILTER_DATE,
 	SEARCH_FILTER_SEARCH
 } from "./action-types"
-import { SUCCESS } from "../constants"
-import { filterByEvent, filterByWithinDate } from "./services"
 
-const today = new Date()
+import { SUCCESS } from "../constants"
 
 const initialState = {
 	searchResults: [],
-	searchResultsFiltered: [],
-	events: [],
-	latlong: "",
-	distance: "1000",
-	withinStartDate: today.setDate(today.getDate() - 30),
-	withinEndDate: today.setDate(today.getDate() + 30),
-	search: ""
+	searchParams: {
+		types: [],
+		latlong: "",
+		distance: "1000",
+		search: "",
+		page: "",
+	}
 }
 
 export const reducer = (state = initialState, action) => {
 	switch (action.type) {
 		case SEARCH_GET + SUCCESS: {
-			const searchResultsFilteredByEvent = state.events.length
-				? filterByEvent({
-						searchResults: action.payload,
-						events: state.events
-				  })
-				: action.payload
-			const searchResultsFiltered = filterByWithinDate({
-				searchResults: searchResultsFilteredByEvent,
-				withinStartDate: state.withinStartDate,
-				withinEndDate: state.withinEndDate
-			})
 			return {
 				...state,
-				searchResults: action.payload,
-				searchResultsFiltered
-			}
-		}
-		case SEARCH_FILTER_EVENTS: {
-			const searchResultsFilteredByEvent = action.payload.length
-				? filterByEvent({
-						searchResults: state.searchResults,
-						events: action.payload
-				  })
-				: state.searchResults
-			const searchResultsFiltered = filterByWithinDate({
-				searchResults: searchResultsFilteredByEvent,
-				withinStartDate: state.withinStartDate,
-				withinEndDate: state.withinEndDate
-			})
-			return {
-				...state,
-				events: action.payload,
-				searchResultsFiltered
+				searchResults: [ ...action.payload ],
 			}
 		}
 		case SEARCH_FILTER_LOCATION: {
 			return {
 				...state,
-				latlong: action.payload
+				searchParams:  {
+					...state.searchParams,
+					latlong: action.payload
+			}
 			}
 		}
 		case SEARCH_FILTER_DISTANCE: {
 			return {
 				...state,
-				distance: action.payload
+				searchParams: {
+					...state.searchParams,
+					distance: action.payload
+				}
 			}
 		}
 		case SEARCH_FILTER_SEARCH: {
 			return {
 				...state,
-				search: action.payload
+				searchParams: {
+					...state.searchParams,
+					search: action.payload
+				}
 			}
 		}
-		case SEARCH_FILTER_DATE: {
-			const searchResultsFilteredByEvent = state.events.length
-				? filterByEvent({
-						searchResults: state.searchResults,
-						events: state.events
-				  })
-				: state.searchResults
-			const searchResultsFiltered = filterByWithinDate({
-				searchResults: searchResultsFilteredByEvent,
-				withinStartDate: action.payload.withinStartDate,
-				withinEndDate: action.payload.withinEndDate
-			})
+		case SEARCH_FILTER_TYPES: {
 			return {
 				...state,
-				withinStartDate: action.payload.withinStartDate,
-				withinEndDate: action.payload.withinEndDate,
-				searchResultsFiltered
+				searchParams: {
+					...state.searchParams,
+					types: action.payload
+				}
 			}
 		}
 

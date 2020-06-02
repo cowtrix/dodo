@@ -1,22 +1,6 @@
 $font-size: 1rem;
 $responsive-breakpoint: 760px;
 
-@font-face {
-	font-family: "fucxed_capsregular";
-	src: url("./fonts/fucxedcaps-v2-webfont.woff2") format("woff2"),
-		url("./fonts/fucxedcaps-v2-webfont.woff") format("woff");
-	font-weight: normal;
-	font-style: normal;
-}
-
-body {
-	font-family: Arial;
-}
-
-* {
-	box-sizing: border-box;
-}
-
 $xsmall-spacing-unit: 3px;
 
 @function spacing($multiple, $unit: $xsmall-spacing-unit) {
@@ -33,9 +17,8 @@ $color-text: #212121;
 $color-text-light: #6a6a6a;
 $color-dark-grey: #4b5c6b;
 $color-light-grey: #dfe6ed;
+$extinction-rebellion-green: #22A73D;
 
-ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
+$standard-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+$title-font: "fucxed_capsregular";

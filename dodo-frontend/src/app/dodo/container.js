@@ -1,12 +1,14 @@
 import { connect } from "react-redux"
-import { localGroups, search } from "../domain/index"
+import { search, event } from "../domain"
 import { Dodo } from "./dodo"
 
 const { searchSetCurrentLocation } = search.actions
+const { eventTypesGet } = event.actions
 
 const mapDispatchToProps = dispatch => ({
 	startup: () => {
 		searchSetCurrentLocation(dispatch)
+		eventTypesGet(dispatch)
 	}
 })
 

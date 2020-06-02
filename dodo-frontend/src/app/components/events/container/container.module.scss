@@ -17,13 +17,11 @@ $rebellions-list-background: white;
 	display: flex;
 	background: $rebellions-list-background;
 	flex-direction: column;
-	padding: spacing(6) spacing(2);
 	flex-grow: 1;
 	min-height: 100px;
 
 	@media (min-width: $responsive-breakpoint) {
 		border: 1px solid grey;
-		padding: spacing(10) spacing(8) 0;
 		position: relative;
 		max-width: $application-max-width;
 		margin: 0 spacing(7);

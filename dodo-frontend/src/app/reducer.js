@@ -1,15 +1,16 @@
 import { combineReducers } from "redux"
-import { reducerFactory } from "./domain/factories"
 import { search, requestsReducer, event } from "./domain"
+import { reducer as appReducer } from './dodo/redux'
 
-const { EVENT_GET } = event.actionTypes
 
 const searchReducer = search.reducer
+const eventReducer = event.reducer
 
 export const store = combineReducers({
+	app: appReducer,
 	domain: combineReducers({
-		currentEvent: reducerFactory(EVENT_GET),
 		search: searchReducer,
-		requests: requestsReducer
+		requests: requestsReducer,
+		events: eventReducer,
 	})
 })
