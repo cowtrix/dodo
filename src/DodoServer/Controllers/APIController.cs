@@ -39,6 +39,7 @@ namespace DodoServer
 				resourceTypes = ReflectionExtensions.GetConcreteClasses<IDodoResource>()
 					.Where(t => t != typeof(User))
 					.Select(t => new { label = t.GetName(), value = t.Name.ToCamelCase(), displayColor = m_displayColors[t] }).ToList(),
+				indexVideoEmbed = "https://www.youtube.com/watch?v=d4QDM_Isi24"
 			};
 		}
 
