@@ -1,6 +1,8 @@
 @import "~app/styles/styles";
 
 .login {
+	font-family: $title-font;
+	font-size: 1.2rem;
 	display: flex;
 	align-items: center;
 	cursor: pointer;
@@ -8,6 +10,7 @@
 	right: 0;
 	padding: spacing(8);
 	text-transform: uppercase;
+	text-decoration: none;
 	color: #000000;
 	:visited {
 		color: #000000;
@@ -19,6 +22,5 @@
 	@media (min-width: $responsive-breakpoint) {
 		position: relative;
 		padding: 0 spacing(16);
-		padding-bottom: spacing(5);
 	}
 }

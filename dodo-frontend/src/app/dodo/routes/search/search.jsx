@@ -5,6 +5,8 @@ import { SiteMap, Loader } from "app/components"
 import { Filter } from "./filter"
 
 export const Search = ({
+	centerMap,
+	setCenterMap,
 	searchResults,
 	searchParams,
 	getSearchResults,
@@ -14,11 +16,15 @@ export const Search = ({
 		if (searchParams.latlong !== "") {
 			getSearchResults(searchParams)
 		}
-	}, [searchParams.distance, searchParams.latlong])
+	}, [searchParams.distance, searchParams.latlong, searchParams.search])
 
 	return (
 		<Fragment>
-			<SiteMap sites={searchResults} />
+			<SiteMap
+				centerMap={centerMap}
+				setCenterMap={setCenterMap}
+				sites={searchResults}
+			/>
 			<Container
 				content={
 					<Fragment>

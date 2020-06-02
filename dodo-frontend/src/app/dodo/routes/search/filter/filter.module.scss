@@ -19,18 +19,8 @@
 		margin-bottom: spacing(4);
 
 		> div {
-			margin-left: spacing(7);
-			margin-right: spacing(7);
-		}
-
-		:first-child {
-			margin-left: spacing(0);
-			margin-right: spacing(0);
-		}
-
-		:last-child {
-			margin-left: spacing(0);
-			margin-right: spacing(0);
+			margin-left: spacing(6);
+			margin-right: spacing(6);
 		}
 	}
 }

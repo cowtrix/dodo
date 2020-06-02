@@ -1,5 +1,5 @@
 import {
-	SEARCH_FILTER_EVENTS,
+	SEARCH_FILTER_TYPES,
 	SEARCH_GET,
 	SEARCH_FILTER_DISTANCE,
 	SEARCH_FILTER_LOCATION,
@@ -11,7 +11,15 @@ import { SEARCH } from "../urls"
 import { addParamsToUrl } from "../services"
 
 export const searchGet = (dispatch, params) => {
-	apiAction(dispatch, SEARCH_GET, addParamsToUrl(SEARCH, params))
+
+	const parseTypes = params =>
+		params.types ? ({
+			...params,
+			types: params.types.map(type => type.value)
+		}) :
+			params
+
+	apiAction(dispatch, SEARCH_GET, addParamsToUrl(SEARCH, parseTypes(params)))
 	params.distance &&
 		dispatch({
 			type: SEARCH_FILTER_DISTANCE,
@@ -27,10 +35,10 @@ export const searchGet = (dispatch, params) => {
 		type: SEARCH_FILTER_SEARCH,
 		payload: params.search
 	})
-	params.eventTypes &&
+	params.types.length &&
 	dispatch({
-		type: SEARCH_FILTER_EVENTS,
-		payload: params.eventTypes
+		type: SEARCH_FILTER_TYPES,
+		payload: params.types
 	})
 }
 

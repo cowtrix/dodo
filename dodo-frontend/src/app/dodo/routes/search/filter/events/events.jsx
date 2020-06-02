@@ -2,24 +2,21 @@ import React from "react"
 import PropTypes from "prop-types"
 import Select from "react-select"
 import styles from "./events.module.scss"
-import { formatEvents } from "./services"
 
 const placeholder = "Event types..."
 
-export const Events = ({ eventTypes, searchParams, searchByEvent }) => (
+export const Events = ({ eventTypes, searchParams, search }) => (
 	<Select
 		placeholder={placeholder}
 		isMulti
-		defaultValue={formatEvents(eventTypes)}
-		options={formatEvents(eventTypes)}
+		options={eventTypes}
 		className={styles.selector}
-		onChange={value => searchByEvent({ ...searchParams, events: value.map(event => event.value) })}
+		onChange={value => search({ ...searchParams, types: value && value.length ? value : [] })}
 	/>
 )
 
 Events.propTypes = {
 	eventTypes: PropTypes.array,
-	eventsFiltered: PropTypes.array,
-	placeholder: PropTypes.string,
-	searchFilterEvents: PropTypes.func
+	searchParams: PropTypes.object,
+	search: PropTypes.func
 }
