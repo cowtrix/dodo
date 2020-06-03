@@ -3,6 +3,11 @@
 .eventList {
 	display: flex;
 	flex-direction: column;
+	padding: spacing(6) spacing(2);
+
+	@media (min-width: $responsive-breakpoint) {
+		padding: spacing(10) spacing(8) 0;
+	}
 
 
 	li {

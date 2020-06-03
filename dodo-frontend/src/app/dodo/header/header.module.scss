@@ -1,10 +1,15 @@
 @import "~app/styles/styles";
 
+$header-height: 100px;
+
 .wrapper {
+	height: $header-height;
 	display: flex;
 	justify-content: center;
 	position: relative;
 	z-index: 999;
+	background: $extinction-rebellion-green;
+	box-shadow: $standard-box-shadow;
 }
 
 .header {

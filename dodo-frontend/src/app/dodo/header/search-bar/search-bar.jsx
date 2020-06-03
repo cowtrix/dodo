@@ -7,40 +7,35 @@ import styles from "./search-bar.module.scss"
 
 const placeholder = "Search location..."
 
-export const SearchBar = ({
-	searchString,
-	setSearch,
-	searchResults,
-	history
-}) => {
-	return (
-		<AsyncSelect
-			defaultOptions={searchResults.map(result => ({
-				label: result.name,
-				value: result.guid,
-				data: result
-			}))}
-			loadOptions={(search, cb) => {
-				cb(
-					searchResults.map(result => ({
-						label: result.name,
-						value: result.guid,
-						data: result
-					}))
-				)
-			}}
-			className={styles.searchBar}
-			placeholder={placeholder}
-			onInputChange={value => {
-				if (value !== "") {
-					setSearch(value)
-					history.push("/")
-				}
-			}}
-			formatOptionLabel={CustomSelect}
-		/>
-	)
-}
+export const SearchBar = (
+	{
+		searchString,
+		search,
+		searchResults,
+		history,
+		searchParams,
+	}) =>
+	<AsyncSelect
+		defaultOptions={searchResults.map(result => ({
+			label: result.name,
+			value: result.guid,
+			data: result
+		}))}
+		loadOptions={(search, cb) => {
+			cb(
+				searchResults.map(result => ({
+					label: result.name,
+					value: result.guid,
+					data: result
+				}))
+			)
+		}}
+		className={styles.searchBar}
+		placeholder={placeholder}
+		onInputChange={value => search({ ...searchParams, search: value })}
+		formatOptionLabel={CustomSelect}
+	/>
+
 
 SearchBar.propTypes = {
 	searchString: PropTypes.string,

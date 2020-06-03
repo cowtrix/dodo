@@ -2,7 +2,6 @@ import * as footer from "./footer/title"
 import * as events from "./events"
 import * as tiles from "./tiles"
 
-export { Map } from "./map"
 export { SubHeader } from "./sub-header"
 export { Icon } from "./icon"
 export { Date } from "./tiles/date"
