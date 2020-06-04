@@ -1,16 +1,16 @@
 import React, { Fragment } from "react"
 import PropTypes from "prop-types"
-import { Summary } from "../summary"
+import { Summary } from "../resources/summary/index"
 
 import styles from "./list.module.scss"
 
-export const List = ({ events = [], title, resourceTypes }) =>
-	events.length ?
+export const List = ({ resources = [], title, resourceTypes }) =>
+	resources.length ?
 		<Fragment>
-			<h3 className={styles.title}>{title}</h3>
+			{title ? <h3 className={styles.title}>{title}</h3> : null}
 			<div className={styles.listBox}>
 				<ul className={styles.eventList}>
-					{events.map(event => (
+					{resources.map(event => (
 						<Summary {...event} key={event.guid} resourceTypes={resourceTypes}/>
 					))}
 				</ul>
@@ -19,6 +19,7 @@ export const List = ({ events = [], title, resourceTypes }) =>
 		: null
 
 List.propTypes = {
-	events: PropTypes.array,
+	title: PropTypes.string,
+	resources: PropTypes.array,
 	resourceTypes: PropTypes.array
 }

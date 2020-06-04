@@ -18,5 +18,8 @@ export { Selector } from "./selector"
 export { Overlay } from "./overlay"
 export { Loader } from "./loader"
 export { PageTitle } from "./page-title"
+export { List } from './list'
+export { CenterMap } from './center-map'
+
 
 export { footer, events, tiles }

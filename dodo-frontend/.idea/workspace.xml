@@ -2,76 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/components/resources/list/list.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/components/resources/summary/summary.module.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/domain/resources/action-types.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/domain/resources/reducer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/domain/resources/selectors.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/search.module.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/container/container.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/container/container.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/container/container.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/container/container.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/container/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/container/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/description/description.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/description/description.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/description/description.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/description/description.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/description/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/description/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/center-map/center-map.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/center-map/center-map.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/center-map/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/center-map/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/countdown/countdown.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/countdown/countdown.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/countdown/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/countdown/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/dates/dates.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/dates/dates.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/dates/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/dates/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/dates/services.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/dates/services.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/header.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/header.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/title/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/title/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/title/title.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/title/title.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/list/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/list/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/list/list.module.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/sign-up-button/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/sign-up-button/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/sign-up-button/sign-up-button.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/sign-up-button/sign-up-button.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/sign-up-button/sign-up-button.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/sign-up-button/sign-up-button.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/description/description.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/description/description.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/description/description.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/description/description.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/description/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/description/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/summary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/summary.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/summary.module.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/tile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/tile/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/tile/tile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/tile/tile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/tile/tile.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/tile/tile.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/title/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/title/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/title/title.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/title/title.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/events/summary/title/title.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/summary/title/title.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/button/button.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/button/button.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/button/button.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/button/button.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/center-map/center-map.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/center-map/center-map.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/header/countdown/countdown.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/countdown/countdown.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/events/list/list.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/list/list.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/components/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/tiles/type/type.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/tiles/type/type.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/dodo.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/dodo.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/header/header.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/header/header.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/header/login/login.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/header/login/login.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/header/logo/logo.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/header/logo/logo.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/event/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/event/event-content/event-content.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/event/event-content/event-content.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/event/event-content/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/event/event.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/event/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/services.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/distance/services.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/event/action-types.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/event/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/resources/actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/event/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/resources/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/event/reducer.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/event/selectors.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/requests-reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/requests-reducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/search/selectors.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/selectors.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/search/services.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/search/services.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/reducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/reducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/locales/translations.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/locales/translations.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/resources/header/center-map/center-map.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/center-map/center-map.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/resources/header/center-map/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/center-map/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/resources/header/header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/header/header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/resources/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/resources/list/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/list/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/resources/list/list.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/list/list.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -100,10 +46,10 @@
           <entry key="env" value="2" />
           <entry key="gitignore" value="2" />
           <entry key="html" value="3" />
-          <entry key="js" value="591" />
+          <entry key="js" value="596" />
           <entry key="json" value="25" />
-          <entry key="jsx" value="476" />
-          <entry key="scss" value="209" />
+          <entry key="jsx" value="479" />
+          <entry key="scss" value="214" />
           <entry key="svg" value="9" />
           <entry key="ts" value="1" />
         </counts>
@@ -114,10 +60,10 @@
           <entry key="Enforced Plain Text" value="5" />
           <entry key="HTML" value="3" />
           <entry key="JSON" value="22" />
-          <entry key="JSX Harmony" value="476" />
-          <entry key="JavaScript" value="586" />
+          <entry key="JSX Harmony" value="479" />
+          <entry key="JavaScript" value="591" />
           <entry key="PLAIN_TEXT" value="4" />
-          <entry key="SCSS" value="209" />
+          <entry key="SCSS" value="214" />
           <entry key="SVG" value="9" />
           <entry key="Scratch" value="3" />
           <entry key="TypeScript" value="1" />
@@ -132,11 +78,11 @@
         <counts>
           <entry key="gitignore" value="7" />
           <entry key="html" value="21" />
-          <entry key="js" value="14656" />
+          <entry key="js" value="14672" />
           <entry key="json" value="520" />
-          <entry key="jsx" value="23939" />
-          <entry key="scss" value="6697" />
-          <entry key="txt" value="1942" />
+          <entry key="jsx" value="24137" />
+          <entry key="scss" value="6850" />
+          <entry key="txt" value="1989" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -144,10 +90,10 @@
           <entry key="Enforced Plain Text" value="65" />
           <entry key="HTML" value="22" />
           <entry key="JSON" value="520" />
-          <entry key="JSX Harmony" value="23939" />
-          <entry key="JavaScript" value="14590" />
-          <entry key="PLAIN_TEXT" value="1949" />
-          <entry key="SCSS" value="6697" />
+          <entry key="JSX Harmony" value="24137" />
+          <entry key="JavaScript" value="14606" />
+          <entry key="PLAIN_TEXT" value="1996" />
+          <entry key="SCSS" value="6850" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
@@ -163,7 +109,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-204">
+            <state relative-caret-position="366">
+              <caret line="36" column="51" selection-start-line="36" selection-start-column="51" selection-end-line="36" selection-end-column="51" />
               <folding>
                 <element signature="e#0#50#0" expanded="true" />
               </folding>
@@ -171,89 +118,80 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/app/components/selector/selector.module.scss">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.module.scss">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="1" lean-forward="true" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="315">
+              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/components/selector/selector.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/components/dialog/dialog.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#25#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/components/selector/selector.module.scss">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="34" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/app/components/resources/list/list.jsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="64" selection-start-line="9" selection-start-column="64" selection-end-line="9" selection-end-column="64" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.module.scss">
-          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+            <state relative-caret-position="75">
+              <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/components/resources/header/center-map/center-map.module.scss">
+        <entry file="file://$PROJECT_DIR$/src/app/components/center-map/index.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/components/resources/header/header.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+            <state relative-caret-position="30">
+              <caret line="2" column="44" lean-forward="true" selection-start-line="2" selection-start-column="44" selection-end-line="2" selection-end-column="44" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/components/button/button.module.scss">
+        <entry file="file://$PROJECT_DIR$/src/app/components/center-map/center-map.module.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+            <state relative-caret-position="105">
+              <caret line="7" column="9" lean-forward="true" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/index.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/container.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -290,10 +228,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/app/components/events/description/description.jsx" />
-        <option value="$PROJECT_DIR$/src/app/components/events/sign-up-button/index.js" />
-        <option value="$PROJECT_DIR$/src/app/components/events/index.js" />
-        <option value="$PROJECT_DIR$/src/app/components/events/sign-up-button/sign-up-button.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/events/sign-up-button/sign-up-button.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/tiles/date/date.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/events/summary/tile/tiles.jsx" />
@@ -332,15 +266,19 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/container.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.module.scss" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
-        <option value="$PROJECT_DIR$/src/app/components/resources/header/header.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/resources/header/countdown/countdown.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/button/button.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/button/button.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/resources/header/center-map/center-map.module.scss" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/dialog/dialog.jsx" />
-        <option value="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/resources/list/list.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss" />
+        <option value="$PROJECT_DIR$/src/app/components/index.js" />
+        <option value="$PROJECT_DIR$/src/app/components/resources/header/header.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/search.module.scss" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" />
+        <option value="$PROJECT_DIR$/src/app/components/selector/selector.module.scss" />
       </list>
     </option>
   </component>
@@ -403,7 +341,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="center-map" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
@@ -411,8 +349,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="list" type="462c0819:PsiDirectoryNode" />
+              <item name="selector" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
@@ -438,21 +375,6 @@
               <item name="routes" type="462c0819:PsiDirectoryNode" />
               <item name="search" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="domain" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="domain" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -475,11 +397,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/app/components" />
       <recent name="$PROJECT_DIR$/src/app/components/events/header/dates" />
       <recent name="$PROJECT_DIR$/src/app/dodo/routes/event/event-content" />
       <recent name="$PROJECT_DIR$/src/app/domain" />
       <recent name="$PROJECT_DIR$/src/static" />
-      <recent name="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/app/domain" />
@@ -566,13 +488,6 @@
       <workItem from="1588157989586" duration="9477000" />
       <workItem from="1588239105601" duration="11187000" />
       <workItem from="1589290510770" duration="19807000" />
-    </task>
-    <task id="LOCAL-00001" summary="added header for home page&#10;created rebellions list wrapper">
-      <created>1583496162619</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1583496162619</updated>
     </task>
     <task id="LOCAL-00002" summary="pulled some jsx out of index files">
       <created>1585575087664</created>
@@ -910,7 +825,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591282033436</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="renamed events to dialog&#10;implemented new styles">
+      <created>1591285286483</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1591285286484</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -934,7 +856,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="227382000" />
+    <option name="totallyTimeSpent" value="228668000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
@@ -968,7 +890,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added dialog component and children" />
     <MESSAGE value="updated events components" />
     <MESSAGE value="added event filter to application" />
     <MESSAGE value="linting" />
@@ -993,7 +914,8 @@
     <MESSAGE value="added components for rebellion header" />
     <MESSAGE value="added countdown and styles" />
     <MESSAGE value="updated styles to reflect new designs" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated styles to reflect new designs" />
+    <MESSAGE value="renamed events to dialog&#10;implemented new styles" />
+    <option name="LAST_COMMIT_MESSAGE" value="renamed events to dialog&#10;implemented new styles" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1014,56 +936,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/app/components/tiles/type/type.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/resources/summary/title/title.module.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="29" selection-start-line="5" selection-start-column="29" selection-end-line="5" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/dodo.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/header/header.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/header/header.module.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="42" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/header/login/login.module.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/header/login/login.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1093,13 +965,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
           <caret line="33" column="18" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/resources/list/list.module.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -1308,16 +1173,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/resources/header/header.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="40" lean-forward="true" selection-start-line="15" selection-start-column="40" selection-end-line="15" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/components/resources/summary/summary.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="258">
@@ -1338,15 +1193,6 @@
     <entry file="file://$PROJECT_DIR$/src/app/components/resources/header/header.module.scss">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/resources/header/center-map/center-map.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/components/button/button.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -1364,38 +1210,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/resources/header/center-map/center-map.module.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-204">
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.module.scss">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss">
+    <entry file="file://$PROJECT_DIR$/src/app/components/dialog/dialog.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        <state relative-caret-position="360">
+          <caret line="24" column="13" lean-forward="true" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1408,30 +1232,112 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/dialog/dialog.jsx">
+    <entry file="file://$PROJECT_DIR$/src/app/components/list/list.module.scss">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
-          <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+          <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/list/list.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/resources/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="18" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/center-map/center-map.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/selector/selector.module.scss">
+    <entry file="file://$PROJECT_DIR$/src/app/components/resources/header/header.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="34" selection-start-line="3" selection-start-column="34" selection-end-line="3" selection-end-column="34" />
+        <state relative-caret-position="30">
+          <caret line="2" column="44" lean-forward="true" selection-start-line="2" selection-start-column="44" selection-end-line="2" selection-end-column="44" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/resources/list/list.jsx">
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/container.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="64" selection-start-line="9" selection-start-column="64" selection-end-line="9" selection-end-column="64" />
+        <state>
           <folding>
-            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/center-map/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/center-map/center-map.module.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="9" lean-forward="true" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.module.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/filter.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.module.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="1" lean-forward="true" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="366">
+          <caret line="36" column="51" selection-start-line="36" selection-start-column="51" selection-end-line="36" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/selector/selector.module.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
         </state>
       </provider>
     </entry>

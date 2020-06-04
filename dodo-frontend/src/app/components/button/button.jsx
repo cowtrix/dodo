@@ -12,7 +12,7 @@ export const Button = ({
 }) => {
 	const buttonProps = {
 		...props,
-		className: `${styles.button} ${styles[variant]} ${className}`
+		className: `${className} ${styles[variant]} ${styles.button}`
 	}
 
 	return React.cloneElement(as, buttonProps, children)
