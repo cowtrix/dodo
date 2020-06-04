@@ -52,15 +52,15 @@ namespace SearchTests
 			var endDate = startDate + TimeSpan.FromDays(7);
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test", "",
-				SchemaGenerator.RandomLocation, startDate + TimeSpan.FromDays(1), endDate + TimeSpan.FromDays(4)));
+				SchemaGenerator.RandomLocation, startDate + TimeSpan.FromDays(1), endDate + TimeSpan.FromDays(4)), seed:false);
 			var evt1 = CreateObject<EventSite>(seed: false);
 			using (var rscLock = new ResourceLock(evt1))
 			{
+				evt1.Name = "test";
 				evt1.StartDate = startDate + TimeSpan.FromDays(1);
-				evt1.EndDate = startDate + TimeSpan.FromHours(4);
+				evt1.EndDate = evt1.StartDate + TimeSpan.FromHours(4);
 				ResourceUtility.GetManager<Site>().Update(evt1, rscLock);
 			}
-			evt1 = ResourceUtility.GetManager<Site>().GetSingle(r => r.Guid == evt1.Guid) as EventSite;
 			var evt2 = CreateObject<MarchSite>(seed: false);
 			using (var rscLock = new ResourceLock(evt2))
 			{
@@ -68,23 +68,32 @@ namespace SearchTests
 				evt2.EndDate = evt2.StartDate + TimeSpan.FromHours(4);
 				ResourceUtility.GetManager<Site>().Update(evt2, rscLock);
 			}
-			var goodResults = new List<ITimeBoundResource>()
+			var positives = new List<ITimeBoundResource>()
 			{
 				rebellion1,
 				evt1,
 				evt2,
 			};
-			var negativeResults = new List<IRESTResource>()
+			var negatives = new List<IRESTResource>()
 			{
 				CreateObject<Rebellion>(),
 				CreateObject<PermanentSite>(),
 				CreateObject<EventSite>(),
 				CreateObject<LocalGroup>()
 			};
-			var result = DodoResourceUtility.Search(0, 100, new DateFilter() { StartDate = startDate.ToString(), EndDate = endDate.ToString() });
-			Assert.AreEqual(goodResults.Count, result.Count());
-			Assert.IsTrue(result.All(r => goodResults.Contains(r)));
-			Assert.IsFalse(result.All(r => negativeResults.Contains(r)));
+			var guids = DodoResourceUtility.Search(0, 100, new DateFilter() { StartDate = startDate.ToString(), EndDate = endDate.ToString() })
+				.Select(r => r.Guid).ToList();
+			var allResources = ResourceUtility.ResourceManagers.SelectMany(rm => rm.Value.Get(r => true)).ToList();
+			foreach (var pos in positives)
+			{
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
+			}
+			foreach (var neg in negatives)
+			{
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
+			}
 		}
 
 		[TestMethod]
@@ -92,14 +101,14 @@ namespace SearchTests
 		{
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context, seed: false);
-			var goodResults = new List<IOwnedResource>()
+			var positives = new List<IOwnedResource>()
 			{
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid), false),
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid), false),
 				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
 				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
 			};
-			var negativeResults = new List<IRESTResource>()
+			var negatives = new List<IRESTResource>()
 			{
 				rebellion1,
 				CreateObject<Rebellion>(),
@@ -108,13 +117,18 @@ namespace SearchTests
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};
-			var result = DodoResourceUtility.Search(0, 100, new ParentFilter() { Parent = rebellion1.Guid });
-
-			var notFound = result.Where(r => !goodResults.Contains(r)).ToList();
-
-			Assert.AreEqual(goodResults.Count, result.Count());
-			Assert.IsTrue(result.All(r => goodResults.Contains(r)));
-			Assert.IsFalse(result.All(r => negativeResults.Contains(r)));
+			var guids = DodoResourceUtility.Search(0, 100, new ParentFilter() { Parent = rebellion1.Guid })
+				.Select(r => r.Guid);
+			foreach (var pos in positives)
+			{
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
+			}
+			foreach (var neg in negatives)
+			{
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
+			}
 		}
 
 		[TestMethod]
@@ -122,14 +136,14 @@ namespace SearchTests
 		{
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context);
-			var goodResults = new List<IOwnedResource>()
+			var positives = new List<IOwnedResource>()
 			{
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid), false),
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid), false),
 				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
 				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
 			};
-			var negativeResults = new List<IRESTResource>()
+			var negatives = new List<IRESTResource>()
 			{
 				rebellion1,
 				CreateObject<Rebellion>(),
@@ -138,11 +152,18 @@ namespace SearchTests
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};
-			var result = DodoResourceUtility.Search(0, 100, new StringFilter() { Search = "Test" });
-
-			Assert.AreEqual(goodResults.Count, result.Count());
-			Assert.IsTrue(result.All(r => goodResults.Contains(r)));
-			Assert.IsFalse(result.All(r => negativeResults.Contains(r)));
+			var guids = DodoResourceUtility.Search(0, 100, new StringFilter() { Search = "Test" })
+				.Select(r => r.Guid);
+			foreach (var pos in positives)
+			{
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
+			}
+			foreach (var neg in negatives)
+			{
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
+			}
 		}
 	}
 }

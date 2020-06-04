@@ -49,11 +49,27 @@ namespace Dodo.Rebellions
 
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-		public DateTime StartDate { get; set; }
+		public DateTime StartDate
+		{
+			get
+			{
+				return __startDate;
+			}
+			set
+			{
+				__startDate = value.ToUniversalTime();
+				if (EndDate < StartDate)
+				{
+					EndDate = StartDate + TimeSpan.FromHours(1);
+				}
+			}
+		}
+		private DateTime __startDate;
 
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-		public DateTime EndDate { get; set; }
+		public DateTime EndDate { get { return __endDate; } set { __endDate = value.ToUniversalTime(); } }
+		private DateTime __endDate;
 
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; }

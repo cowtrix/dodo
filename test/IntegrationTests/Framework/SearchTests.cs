@@ -29,26 +29,26 @@ namespace RESTTests.Search
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test", "",
 				SchemaGenerator.RandomLocation, startDate + TimeSpan.FromDays(1), endDate + TimeSpan.FromDays(4)), false);
-			var evt1 = CreateObject<EventSite>(seed: false);
-			using (var rscLock = new ResourceLock(evt1))
+			var eventSite = CreateObject<EventSite>(seed: false);
+			using (var rscLock = new ResourceLock(eventSite))
 			{
-				evt1.StartDate = startDate + TimeSpan.FromDays(1);
-				evt1.EndDate = startDate + TimeSpan.FromHours(4);
-				ResourceUtility.GetManager<Site>().Update(evt1, rscLock);
+				eventSite.StartDate = startDate + TimeSpan.FromDays(1);
+				eventSite.EndDate = eventSite.StartDate + TimeSpan.FromHours(4);
+				ResourceUtility.GetManager<Site>().Update(eventSite, rscLock);
 			}
-			evt1 = ResourceUtility.GetManager<Site>().GetSingle(r => r.Guid == evt1.Guid) as EventSite;
-			var evt2 = CreateObject<MarchSite>(seed: false);
-			using (var rscLock = new ResourceLock(evt2))
+			eventSite = ResourceUtility.GetManager<Site>().GetSingle(r => r.Guid == eventSite.Guid) as EventSite;
+			var marchSite = CreateObject<MarchSite>(seed: false);
+			using (var rscLock = new ResourceLock(marchSite))
 			{
-				evt2.StartDate = endDate - TimeSpan.FromDays(1);
-				evt2.EndDate = evt2.StartDate + TimeSpan.FromHours(4);
-				ResourceUtility.GetManager<Site>().Update(evt2, rscLock);
+				marchSite.StartDate = endDate - TimeSpan.FromDays(1);
+				marchSite.EndDate = marchSite.StartDate + TimeSpan.FromHours(4);
+				ResourceUtility.GetManager<Site>().Update(marchSite, rscLock);
 			}
 			var positives = new List<ITimeBoundResource>()
 			{
 				rebellion1,
-				evt1,
-				evt2,
+				eventSite,
+				marchSite,
 			};
 			var negatives = new List<IRESTResource>()
 			{
@@ -66,11 +66,13 @@ namespace RESTTests.Search
 			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
 			foreach (var pos in positives)
 			{
-				Assert.IsTrue(guids.Contains(pos.Guid));
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
 			}
-			foreach (var pos in negatives)
+			foreach (var neg in negatives)
 			{
-				Assert.IsFalse(guids.Contains(pos.Guid));
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
 			}
 		}
 
@@ -101,13 +103,15 @@ namespace RESTTests.Search
 					("parent", rebellion1.Guid.ToString()),
 				});
 			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
-			foreach (var pos in positives)
+			foreach(var pos in positives)
 			{
-				Assert.IsTrue(guids.Contains(pos.Guid));
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
 			}
-			foreach (var pos in negatives)
+			foreach (var neg in negatives)
 			{
-				Assert.IsFalse(guids.Contains(pos.Guid));
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
 			}
 		}
 
@@ -140,11 +144,13 @@ namespace RESTTests.Search
 			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
 			foreach (var pos in positives)
 			{
-				Assert.IsTrue(guids.Contains(pos.Guid));
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
 			}
-			foreach (var pos in negatives)
+			foreach (var neg in negatives)
 			{
-				Assert.IsFalse(guids.Contains(pos.Guid));
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
 			}
 		}
 
@@ -177,11 +183,13 @@ namespace RESTTests.Search
 			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
 			foreach (var pos in positives)
 			{
-				Assert.IsTrue(guids.Contains(pos.Guid));
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
 			}
-			foreach (var pos in negatives)
+			foreach (var neg in negatives)
 			{
-				Assert.IsFalse(guids.Contains(pos.Guid));
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
 			}
 		}
 
@@ -209,13 +217,15 @@ namespace RESTTests.Search
 					("distance", "60"),
 				});
 			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
-			foreach(var pos in positives)
+			foreach (var pos in positives)
 			{
-				Assert.IsTrue(guids.Contains(pos.Guid));
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
 			}
-			foreach (var pos in negatives)
+			foreach (var neg in negatives)
 			{
-				Assert.IsFalse(guids.Contains(pos.Guid));
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
 			}
 		}
 	}
