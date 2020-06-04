@@ -13,7 +13,9 @@ namespace Dodo.Users
 		[Email]
 		[View(EPermissionLevel.OWNER)]
 		public string Email;
-
+		[View(EPermissionLevel.OWNER)]
 		public bool EmailConfirmed { get; set; }
+		[View(EPermissionLevel.OWNER)]
+		public ResourceReference<LocalGroup> LocalGroup { get; set; }
 	}
 }

@@ -80,7 +80,7 @@ namespace SharedTest
 			return GenerateUser(schema, out context, verifyEmail);
 		}
 
-		protected virtual T CreateObject<T>(AccessContext context = default, ResourceSchemaBase schema = null, bool seed = true) where T : IRESTResource
+		protected virtual T CreateObject<T>(AccessContext context = default, ResourceSchemaBase schema = null, bool seed = true, bool publish = true) where T : IRESTResource
 		{
 			if (context.User == null)
 			{
@@ -92,6 +92,10 @@ namespace SharedTest
 			}
 			var factory = ResourceUtility.GetFactory<T>();
 			var obj = factory.CreateTypedObject(context, schema);
+			if(publish && obj is IPublicResource pubRsc)
+			{
+				pubRsc.Publish();
+			}
 			if(seed)
 			{
 				if (obj is Rebellion rebellion)

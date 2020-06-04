@@ -47,6 +47,8 @@ namespace Dodo.Resources
 			ISearchFilter[] filters)
 		{
 			return src.Invoke(rsc => filters.All(f => f.Filter(rsc)), null)
+				.Cast<IPublicResource>()
+				.Where(rsc => rsc.IsPublished)
 				.Transpose(x =>
 				{
 					Array.ForEach(filters, f => f.Mutate(x));

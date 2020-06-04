@@ -8,16 +8,19 @@ using System.Collections.Generic;
 
 namespace Dodo.Roles
 {
-	public class Role : DodoResource, IOwnedResource
+	public class Role : DodoResource, IOwnedResource, IPublicResource
 	{
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public string PublicDescription { get; set; }
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.MEMBER)]
 		public string MemberDescription { get; set; }
 		[View(EPermissionLevel.ADMIN)]
 		public string AdminDescription { get; set; }
+		[View(EPermissionLevel.ADMIN)]
+		public bool IsPublished { get; set; }
+
 		[View(EPermissionLevel.USER)]
 		public UserCollection RoleHolders;
 

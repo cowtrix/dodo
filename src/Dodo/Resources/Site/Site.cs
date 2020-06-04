@@ -77,10 +77,9 @@ namespace Dodo.Sites
 	public abstract class Site : DodoResource,
 		ILocationalResource,
 		IOwnedResource,
-		IMediaResource
+		IVideoResource,
+		IPublicResource
 	{
-		private const string METADATA_SITE_TYPE = "site_type";
-
 		[View(EPermissionLevel.USER)]
 		public EArrestRisk ArrestRisk { get; set; }
 		[View(EPermissionLevel.USER)]
@@ -92,9 +91,9 @@ namespace Dodo.Sites
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
-		public string VideoEmbedURL { get; set; } = "https://www.youtube.com/watch?v=d4QDM_Isi24";
-		[View(EPermissionLevel.PUBLIC)]
-		public string PhotoEmbedURL { get; set; }
+		public string VideoEmbedURL { get; set; } = "https://www.youtube.com/embed/d4QDM_Isi24";
+		[View(EPermissionLevel.ADMIN)]
+		public bool IsPublished { get; set; }
 
 		public Site () : base() {}
 
@@ -109,13 +108,6 @@ namespace Dodo.Sites
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();
-		}
-
-		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
-		{
-			base.AppendMetadata(view, permissionLevel, requester, passphrase);
-			view[METADATA_TYPE] = typeof(Site).Name.GetName();
-			view.Add(METADATA_SITE_TYPE, GetType().Name.ToLowerInvariant());
 		}
 	}
 }

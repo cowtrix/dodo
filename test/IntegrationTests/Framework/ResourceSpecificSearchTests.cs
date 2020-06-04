@@ -67,7 +67,7 @@ namespace RESTTests.Search
 			var resources = new List<T>();
 			for (var i = 0; i < 5; ++i)
 			{
-				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
+				resources.Add(CreateObject<T>(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random() as ILocationalResource;
 			if (resource == null)
@@ -92,11 +92,10 @@ namespace RESTTests.Search
 				Assert.Inconclusive();
 			}
 			GetRandomUser(out _, out var context);
-			var factory = ResourceUtility.GetFactory<T>();
 			var resources = new List<T>();
 			for (var i = 0; i < 1; ++i)
 			{
-				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
+				resources.Add(CreateObject<T>(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random() as ITimeBoundResource;
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
@@ -117,11 +116,10 @@ namespace RESTTests.Search
 				Assert.Inconclusive();
 			}
 			GetRandomUser(out _, out var context);
-			var factory = ResourceUtility.GetFactory<T>();
 			var resources = new List<T>();
 			for (var i = 0; i < 1; ++i)
 			{
-				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
+				resources.Add(CreateObject<T>(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random() as IOwnedResource;
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
@@ -137,11 +135,10 @@ namespace RESTTests.Search
 		public async virtual Task CanSearchWithStringFilter()
 		{
 			GetRandomUser(out _, out var context);
-			var factory = ResourceUtility.GetFactory<T>();
 			var resources = new List<T>();
 			for (var i = 0; i < 1; ++i)
 			{
-				resources.Add(factory.CreateTypedObject(context, SchemaGenerator.GetRandomSchema<T>(context)));
+				resources.Add(CreateObject<T>(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random();
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
@@ -157,11 +154,10 @@ namespace RESTTests.Search
 		public async virtual Task CanSearch()
 		{
 			GetRandomUser(out _, out var context);
-			var factory = ResourceUtility.GetFactory<T>();
 			var sites = new List<T>();
 			for (var i = 0; i < 5; ++i)
 			{
-				sites.Add(factory.CreateTypedObject(context, GetSchema(context)));
+				sites.Add(CreateObject<T>(context, GetSchema(context)));
 			}
 			var list = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET);
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
