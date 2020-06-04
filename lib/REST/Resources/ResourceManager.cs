@@ -117,13 +117,17 @@ namespace Resources
 		/// <param name="locker">The ResourceLock of the object (to guarantee someone else isn't editing it)</param>
 		public virtual void Update(T objToUpdate, ResourceLock locker)
 		{
-			objToUpdate.Revision++;
-			Logger.Debug($"{typeof(T).Name} UPDATE: {objToUpdate.Name} ({objToUpdate.Guid}::{objToUpdate.Revision})");
 			if (locker.Guid != objToUpdate.Guid)
 			{
 				// This should never, ever happen in normal execution of the program
 				throw new Exception("Locker GUID mismatch");
 			}
+			if(!objToUpdate.Verify(out var error))
+			{
+				throw new Exception(error);
+			}
+			objToUpdate.Revision++;
+			Logger.Debug($"{typeof(T).Name} UPDATE: {objToUpdate.Name} ({objToUpdate.Guid}::{objToUpdate.Revision})");
 			MongoDatabase.ReplaceOne(x => x.Guid == objToUpdate.Guid, objToUpdate);
 		}
 
