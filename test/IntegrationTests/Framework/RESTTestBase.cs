@@ -158,6 +158,15 @@ namespace RESTTests
 				LastRequest);
 		}
 
+		[TestMethod]
+		public virtual async Task CanPublish()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var resource = CreateObject<T>(context) as IPublicResource;
+			resource.Publish();
+			resource = ResourceManager.GetSingle(rsc => rsc.Guid == resource.Guid) as IPublicResource;
+			Assert.IsTrue(resource.IsPublished);
+		}
 
 		[TestMethod]
 		public void CanGetResourceManager() => Assert.IsNotNull(ResourceManager);

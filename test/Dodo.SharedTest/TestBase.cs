@@ -94,7 +94,7 @@ namespace SharedTest
 			var obj = factory.CreateTypedObject(context, schema);
 			if(publish && obj is IPublicResource pubRsc)
 			{
-				pubRsc.Publish();
+				obj = (T)pubRsc.Publish();
 			}
 			if(seed)
 			{

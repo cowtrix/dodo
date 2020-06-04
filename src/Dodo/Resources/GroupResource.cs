@@ -77,8 +77,6 @@ namespace Dodo
 
 		[View(EPermissionLevel.MEMBER)]
 		public string GroupPublicKey { get; private set; }
-
-		[View(EPermissionLevel.ADMIN)]
 		public bool IsPublished { get; set; }
 
 		public GroupResource(AccessContext context, OwnedResourceSchemaBase schema) : base(context, schema)
