@@ -1,9 +1,9 @@
 import { connect } from "react-redux"
-import { search, event } from "../domain"
+import { search, resources } from "../domain"
 import { Dodo } from "./dodo"
 
 const { searchSetCurrentLocation } = search.actions
-const { eventTypesGet } = event.actions
+const { eventTypesGet } = resources.actions
 
 const mapDispatchToProps = dispatch => ({
 	startup: () => {

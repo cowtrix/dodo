@@ -1,0 +1,22 @@
+@import "~app/styles/styles";
+
+.titleContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+
+	@media (min-width: $responsive-breakpoint) {
+		flex: none;
+		width: 220px;
+	}
+
+}
+
+.title {
+	font-size: 1rem;
+	font-weight: bold;
+}
+
+.location {
+	font-size: 0.8rem;
+}

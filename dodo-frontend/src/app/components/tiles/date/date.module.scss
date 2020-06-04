@@ -3,10 +3,9 @@
 .tile {
 	font-size: 0.6rem;
 	line-height: 1.5;
-	padding: 16px;
-	text-align: center;
 	text-transform: uppercase;
-	width: 60px;
+	width: 85px;
+	height: 85px;
 	margin-right: spacing(5);
 
 	@media (min-width: $responsive-breakpoint) {
