@@ -4,5 +4,5 @@ import { EVENT_GET, EVENT_TYPES_GET } from './action-types'
 
 export const reducer = combineReducers({
 	currentEvent: reducerFactory(EVENT_GET),
-	eventTypes: reducerFactory(EVENT_TYPES_GET)
+	resourceTypes: reducerFactory(EVENT_TYPES_GET)
 })

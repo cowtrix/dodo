@@ -29,6 +29,17 @@
 	color: white;
 }
 
+.cta {
+	display:flex;
+	flex-direction: column;
+	width: 100%;
+	background: $extinction-rebellion-green;
+	padding: spacing(6) spacing(5) spacing(5);
+	h1 {
+		font-size: 2rem;
+	}
+}
+
 .outline {
 	background-color: white;
 	color: $color-secondary;

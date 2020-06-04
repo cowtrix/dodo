@@ -5,7 +5,7 @@ import { selectors, actions } from "app/domain/search"
 import { selectors as eventSelectors } from 'app/domain/event'
 
 const mapStateToProps = state => ({
-	eventTypes: eventSelectors.eventTypes(state),
+	resourceTypes: eventSelectors.resourceTypes(state),
 	searchParams: selectors.searchParams(state)
 })
 

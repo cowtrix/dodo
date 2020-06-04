@@ -4,7 +4,7 @@ import { Container } from "app/components/events"
 import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
 import { EventContent } from './event-content'
 
-export const Event = ({ match, getEvent, event, isLoading, centerMap, setCenterMap }) => {
+export const Event = ({ match, getEvent, event, isLoading, centerMap, setCenterMap, resourceTypes }) => {
 	const { eventId, eventType } = match.params
 
 	useEffect(() => {
@@ -24,13 +24,12 @@ export const Event = ({ match, getEvent, event, isLoading, centerMap, setCenterM
 				center={defaultLocation}
 				sites={event.sites && [...event.sites, ...event.workingGroups]}
 			/>
-			<button onClick={() => setCenterMap(true)} >SET MAP</button>
 			<Container
 				content={
 					<Fragment>
 						<Loader display={isLoading} />
 						{event.metadata && !isLoading && (
-							<EventContent event={event} setCenterMap={setCenterMap}/>
+							<EventContent event={event} setCenterMap={setCenterMap} resourceTypes={resourceTypes}/>
 						)}
 					</Fragment>
 				}
@@ -42,5 +41,6 @@ export const Event = ({ match, getEvent, event, isLoading, centerMap, setCenterM
 Event.propTypes = {
 	match: PropTypes.object.isRequired,
 	getEvent: PropTypes.func,
-	event: PropTypes.object
+	event: PropTypes.object,
+	resourceTypes: PropTypes.array,
 }

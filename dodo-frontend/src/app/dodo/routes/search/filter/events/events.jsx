@@ -16,7 +16,7 @@ export const Events = ({ eventTypes, searchParams, search }) => (
 )
 
 Events.propTypes = {
-	eventTypes: PropTypes.array,
+	resourceTypes: PropTypes.array,
 	searchParams: PropTypes.object,
 	search: PropTypes.func
 }

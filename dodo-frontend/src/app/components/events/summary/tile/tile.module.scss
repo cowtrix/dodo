@@ -1,5 +1,6 @@
 @import "~app/styles/styles";
 
+
 .tile {
 	font-size: 0.6rem;
 	line-height: 1.5;
@@ -7,14 +8,14 @@
 	width: 85px;
 	height: 85px;
 	margin-right: spacing(5);
+	background-image: url("../../../../../static/xr-logo.svg");
+	background-size: 90%;
+	background-repeat: no-repeat;
+	background-position: center;
 
 	@media (min-width: $responsive-breakpoint) {
 		font-size: 1rem;
 		flex: none;
 		width: 100px;
 	}
-}
-
-.monthDate {
-	font-weight: bold;
 }

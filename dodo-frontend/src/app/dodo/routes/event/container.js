@@ -10,7 +10,8 @@ const { setCenterMap } = actions
 const mapStateToProps = state => ({
 	centerMap: centerMap(state),
 	event: event.selectors.currentEvent(state),
-	isLoading: event.selectors.eventLoading(state)
+	isLoading: event.selectors.eventLoading(state),
+	resourceTypes: event.selectors.resourceTypes(state)
 })
 
 const mapDispatchToProps = dispatch => ({
