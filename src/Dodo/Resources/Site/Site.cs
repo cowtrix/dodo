@@ -92,6 +92,7 @@ namespace Dodo.Sites
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public string VideoEmbedURL { get; set; } = "https://www.youtube.com/embed/d4QDM_Isi24";
+		[View(EPermissionLevel.ADMIN)]
 		public bool IsPublished { get; set; }
 
 		public Site () : base() {}

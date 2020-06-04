@@ -76,13 +76,5 @@ namespace Dodo
 			}
 			base.OnDestroy();
 		}
-		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
-		{
-			if (this is IPublicResource pub)
-			{
-				view.Add(METADATA_PUBLISHED, pub.IsPublished);
-			}
-			base.AppendMetadata(view, permissionLevel, requester, passphrase);
-		}
 	}
 }

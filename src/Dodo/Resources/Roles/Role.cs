@@ -18,6 +18,7 @@ namespace Dodo.Roles
 		public string MemberDescription { get; set; }
 		[View(EPermissionLevel.ADMIN)]
 		public string AdminDescription { get; set; }
+		[View(EPermissionLevel.ADMIN)]
 		public bool IsPublished { get; set; }
 
 		[View(EPermissionLevel.USER)]
