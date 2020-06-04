@@ -56,8 +56,8 @@ const mockResult = [
 	}
 ]
 
-describe("format event", () => {
-	it("should take an array of results and filter them by event", () => {
+describe("format resources", () => {
+	it("should take an array of results and filter them by resources", () => {
 		expect(filterByEvent(mockResults, mockEvents)).toEqual(mockResult)
 	})
 })

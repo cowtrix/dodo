@@ -2,7 +2,7 @@ import { connect } from "react-redux"
 import { Events } from "./events"
 
 import { selectors, actions } from "app/domain/search"
-import { selectors as eventSelectors } from 'app/domain/event'
+import { selectors as eventSelectors } from 'app/domain/resources'
 
 const mapStateToProps = state => ({
 	resourceTypes: eventSelectors.resourceTypes(state),

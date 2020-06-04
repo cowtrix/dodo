@@ -3,7 +3,7 @@
 .titleContainer {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-evenly;
+	justify-content: flex-start;
 
 	@media (min-width: $responsive-breakpoint) {
 		flex: none;

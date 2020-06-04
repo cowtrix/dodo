@@ -17,4 +17,4 @@ export const search = state => path(["domain", "search", "searchParams", "search
 export const searchParams = state => path(["domain", "search", "searchParams"], state)
 
 export const isFetching = state =>
-	path(["domain", "requests", SEARCH_GET, "isFetching"], state)
+	path(["requests", SEARCH_GET, "isFetching"], state)

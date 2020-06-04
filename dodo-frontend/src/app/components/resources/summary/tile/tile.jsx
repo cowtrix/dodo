@@ -9,8 +9,6 @@ export const Tile = ({ type, resourceTypes = [] }) => {
 
 	const eventColor = resourceTypes.filter(resType => type !== resType.label).displayColor
 
-console.log(type, resourceTypes)
-
 	const tileStyles = {
 		color: "black",
 		backgroundColor: '#' + eventColor

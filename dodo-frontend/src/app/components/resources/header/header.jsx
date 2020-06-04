@@ -7,15 +7,15 @@ import { Dates } from './dates'
 
 import styles from './header.module.scss'
 
-export const Header = ({ event, setCenterMap }) =>
+export const Header = ({ resource, setCenterMap }) =>
 	<div className={styles.header}>
 		<div className={styles.headerLeft}>
-			<Title name={event.name}/>
-			<Dates startDate={event.startDate} endDate={event.endDate} />
+			<Title name={resource.name}/>
+			<Dates startDate={resource.startDate} endDate={resource.endDate} />
 		</div>
 		<div className={styles.headerRight}>
 			<CenterMap setCenterMap={setCenterMap} />
-			<Countdown startDate={event.startDate} />
+			<Countdown startDate={resource.startDate} />
 		</div>
 	</div>
 

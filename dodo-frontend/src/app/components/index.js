@@ -1,5 +1,5 @@
 import * as footer from "./footer/title"
-import * as events from "./events"
+import * as events from "./resources"
 import * as tiles from "./tiles"
 
 export { SubHeader } from "./sub-header"

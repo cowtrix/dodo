@@ -3,7 +3,7 @@ import { Route } from "react-router-dom"
 import { Switch } from "react-router"
 
 import { Search, route as search } from "./search"
-import { Event } from "./event"
+import { Event } from "./resource"
 import { Login } from "./login"
 
 export const Routes = () => (

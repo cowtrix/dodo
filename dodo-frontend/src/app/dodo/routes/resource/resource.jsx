@@ -2,17 +2,17 @@ import React, { Fragment, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Container } from "app/components/events"
 import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
-import { EventContent } from './event-content'
+import { ResourceContent } from './resource-content'
 
-export const Event = ({ match, getEvent, event, isLoading, centerMap, setCenterMap, resourceTypes }) => {
+export const Resource = ({ match, getResource, resource, isLoading, centerMap, setCenterMap, resourceTypes }) => {
 	const { eventId, eventType } = match.params
 
 	useEffect(() => {
-		getEvent(eventType, eventId)
+		getResource(eventType, eventId)
 	}, [match])
 
-	const { location } = event
-	const defaultLocation = event.location
+	const { location } = resource
+	const defaultLocation = resource.location
 		? [location.latitude, location.longitude]
 		: []
 
@@ -22,14 +22,14 @@ export const Event = ({ match, getEvent, event, isLoading, centerMap, setCenterM
 				centerMap={centerMap}
 				setCenterMap={setCenterMap}
 				center={defaultLocation}
-				sites={event.sites && [...event.sites, ...event.workingGroups]}
+				sites={resource.sites && [...resource.sites, ...resource.workingGroups]}
 			/>
 			<Container
 				content={
 					<Fragment>
 						<Loader display={isLoading} />
-						{event.metadata && !isLoading && (
-							<EventContent event={event} setCenterMap={setCenterMap} resourceTypes={resourceTypes}/>
+						{resource.metadata && !isLoading && (
+							<ResourceContent resource={resource} setCenterMap={setCenterMap} resourceTypes={resourceTypes}/>
 						)}
 					</Fragment>
 				}
@@ -38,9 +38,9 @@ export const Event = ({ match, getEvent, event, isLoading, centerMap, setCenterM
 	)
 }
 
-Event.propTypes = {
+Resource.propTypes = {
 	match: PropTypes.object.isRequired,
-	getEvent: PropTypes.func,
+	getResource: PropTypes.func,
 	event: PropTypes.object,
 	resourceTypes: PropTypes.array,
 }
