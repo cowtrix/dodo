@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Loader, DateLayout, PageTitle } from "app/components"
-import { List, Header, Description, SignUpButton } from "app/components/resources"
+import { List, Header, Description, SignUpButton, Video } from "app/components/resources"
 
 import styles from './resource-content.module.scss'
 
@@ -12,6 +12,7 @@ const VOLUNTEER_NOW = "Volunteer now with a working group"
 export const ResourceContent = ({ resource, setCenterMap, resourceTypes}) =>
 	<div className={styles.resource}>
 		<Header resource={resource} setCenterMap={setCenterMap} />
+		<Video videoEmbedURL={resource.videoEmbedURL} />
 		<Description description={resource.publicDescription} />
 		<SignUpButton />
 		<List resources={resource.resources} title={COME_TO_EVENT} resourceTypes={resourceTypes} />

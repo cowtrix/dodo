@@ -7,9 +7,13 @@ export const Dates = ({ startDate, endDate}) => {
 	const dateOptions = { day: "2-digit", month: "long", year: "numeric"}
 
 	return (
-		<h3>
-			{dateFormatted(startDate, dateOptions)} - {dateFormatted(endDate, dateOptions)}
-		</h3>
+		startDate ?
+			<h3>
+			{startDate === endDate ?
+				dateFormatted(startDate, dateOptions) :
+				`${dateFormatted(startDate, dateOptions) + ' - ' + dateFormatted(endDate, dateOptions)}`}
+		</h3> :
+			null
 	)
 }
 

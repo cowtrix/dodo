@@ -15,7 +15,7 @@ export const Header = ({ resource, setCenterMap }) =>
 		</div>
 		<div className={styles.headerRight}>
 			<CenterMap setCenterMap={setCenterMap} />
-			<Countdown startDate={resource.startDate} />
+			<Countdown startDate={resource.startDate} name={resource.name} />
 		</div>
 	</div>
 

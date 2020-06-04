@@ -9,7 +9,7 @@ const generateTimeLeft = (date) => {
 	return (rebellionStart - today)
 }
 
-export const Countdown = ({ startDate }) => {
+export const Countdown = ({ startDate, name }) => {
 
 	const [time, setTime] = useState(Date.now())
 
@@ -33,14 +33,15 @@ export const Countdown = ({ startDate }) => {
 	const seconds = Math.floor((timeLeft % _minute) / _second)
 
 	return (
-		<div className={styles.countdown}>
+		startDate ? <div className={styles.countdown}>
 			<h2>
-				The rebellion begins in
+				{name} begins in
 			</h2>
 			<h2>
 				{days} days, {hours} hours, {minutes} minutes, {seconds} seconds
 			</h2>
-		</div>
+		</div> :
+			null
 	)
 }
 
