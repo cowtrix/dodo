@@ -1,5 +1,6 @@
 using System;
 using Common;
+using Common.Extensions;
 using Common.Security;
 using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,7 +27,7 @@ namespace Security
 			public int IntValue = 12345;
 			[View(EPermissionLevel.OWNER)]
 			public GeoLocation Location = new GeoLocation(43, 62);
-			public ResourceReference<User> UserReference = new ResourceReference<User>(Guid.NewGuid(), "asdadw", typeof(User).Name, "asdadw");
+			public ResourceReference<User> UserReference = new ResourceReference<User>(Guid.NewGuid(), "asdadw", typeof(User).Name.ToCamelCase(), "asdadw");
 			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public SymmEncryptedStore<string> EncryptedString;
 			[View(EPermissionLevel.USER, EPermissionLevel.USER)]

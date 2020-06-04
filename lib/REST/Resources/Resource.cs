@@ -129,7 +129,7 @@ namespace Resources
 			object requester, Passphrase passphrase )
 		{
 			view.Add(METADATA_PERMISSION, permissionLevel.GetName().ToLowerInvariant());
-			view.Add(METADATA_TYPE, GetType().Name.ToLowerInvariant());
+			view.Add(METADATA_TYPE, GetType().Name.ToCamelCase());
 		}
 
 		public bool CanVerify()

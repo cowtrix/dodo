@@ -44,7 +44,7 @@ namespace Resources
 		{
 			Guid = resource != null ? resource.Guid : default;
 			Slug = resource != null ? resource.Slug : default;
-			Type = resource?.GetType().Name;
+			Type = resource?.GetType().Name.ToCamelCase();
 			Name = resource?.Name;
 		}
 
