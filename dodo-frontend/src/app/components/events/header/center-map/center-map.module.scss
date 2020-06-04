@@ -1,0 +1,19 @@
+@import "~app/styles/styles";
+
+.button {
+	display: flex;
+	justify-content: flex-end;
+	margin: spacing(3) spacing(4) 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	@media (min-width: $responsive-breakpoint) {
+		position: relative;
+	}
+
+	svg {
+		margin-left: spacing(2);
+		width: 1rem!important;
+	}
+}

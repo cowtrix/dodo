@@ -1,6 +1,8 @@
 @import "~app/styles/styles";
 
 .mobile {
+	padding: spacing(8) spacing(10) spacing(10);
+
 	@media (min-width: $responsive-breakpoint) {
 		display: none;
 	}
