@@ -1,0 +1,28 @@
+@import "~app/styles/styles";
+
+.header {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	background: $extinction-rebellion-green;
+	padding: spacing(10) spacing(3) spacing(3);
+
+
+	@media (min-width: $responsive-breakpoint) {
+		padding: 0;
+		flex-direction: row;
+	}
+}
+
+.headerRight {
+	display: flex;
+	flex-direction: column;
+}
+
+.headerLeft {
+	padding-bottom: spacing(2);
+
+	@media (min-width: $responsive-breakpoint) {
+		padding: spacing(8) spacing(10) spacing(10);
+	}
+}
