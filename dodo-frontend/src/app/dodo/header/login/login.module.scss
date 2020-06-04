@@ -1,14 +1,14 @@
 @import "~app/styles/styles";
 
 .login {
+	font-size: 1rem;
 	font-family: $title-font;
-	font-size: 1.2rem;
 	display: flex;
 	align-items: center;
 	cursor: pointer;
 	position: absolute;
 	right: 0;
-	padding: spacing(8);
+	padding: spacing(6);
 	text-transform: uppercase;
 	text-decoration: none;
 	color: #000000;
@@ -20,6 +20,7 @@
 	}
 
 	@media (min-width: $responsive-breakpoint) {
+		font-size: 1.2rem;
 		position: relative;
 		padding: 0 spacing(16);
 	}

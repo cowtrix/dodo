@@ -1,5 +1,5 @@
 import * as footer from "./footer/title"
-import * as events from "./events"
+import * as events from "./resources"
 import * as tiles from "./tiles"
 
 export { SubHeader } from "./sub-header"
@@ -18,5 +18,8 @@ export { Selector } from "./selector"
 export { Overlay } from "./overlay"
 export { Loader } from "./loader"
 export { PageTitle } from "./page-title"
+export { List } from './list'
+export { CenterMap } from './center-map'
+
 
 export { footer, events, tiles }

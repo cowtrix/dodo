@@ -1,0 +1,36 @@
+@import "~app/styles/styles";
+
+.eventSummmary {
+	display: flex;
+}
+
+.link {
+	display: flex;
+	line-height: 1.2;
+	text-decoration: none;
+	justify-content: space-between;
+	align-items: stretch;
+	color: inherit;
+	width: 100%;
+}
+
+.summaryLeft {
+	display: flex;
+	justify-content: flex-start;
+	align-items: stretch;
+	color: inherit;
+}
+
+.summaryRight {
+	display: flex;
+	align-items: center;
+	margin-right: spacing(8);
+	svg {
+		opacity: 0.2;
+	}
+
+
+	@media (min-width: $responsive-breakpoint) {
+		display: none;
+	}
+}

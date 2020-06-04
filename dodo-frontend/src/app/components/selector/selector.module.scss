@@ -1,6 +1,10 @@
 @import "~app/styles/styles";
 
 .mobile {
+	padding: spacing(4) spacing(3) 0;
+	display: flex;
+	flex-grow: 0.5;
+
 	@media (min-width: $responsive-breakpoint) {
 		display: none;
 	}
@@ -12,6 +16,7 @@
 	@media (min-width: $responsive-breakpoint) {
 		display: flex;
 		flex-grow: 1;
+		align-items: center;
 	}
 }
 
