@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Common.Extensions;
 using Common;
 using System;
+using System.Collections.Generic;
 
 namespace Dodo
 {
@@ -37,6 +38,7 @@ namespace Dodo
 
 	public abstract class DodoResource : Resource, IDodoResource
 	{
+		private const string METADATA_PUBLISHED = "published";
 		public DodoResource() : base() { }
 
 		public DodoResource(AccessContext creator, ResourceSchemaBase schema) : base(schema)
@@ -73,6 +75,14 @@ namespace Dodo
 				}
 			}
 			base.OnDestroy();
+		}
+		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
+		{
+			if (this is IPublicResource pub)
+			{
+				view.Add(METADATA_PUBLISHED, pub.IsPublished);
+			}
+			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 	}
 }
