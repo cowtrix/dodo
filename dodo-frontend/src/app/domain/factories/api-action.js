@@ -1,7 +1,7 @@
 import { api } from "../services"
 import { REQUEST, FAILURE, SUCCESS } from "../constants"
 
-export const apiAction = async (dispatch, action, url, cb, method, body) => {
+export const apiAction = async (dispatch, action, url, cb, abortSignal, method, body) => {
 	dispatch({
 		type: action + REQUEST,
 		payload: {
@@ -9,7 +9,7 @@ export const apiAction = async (dispatch, action, url, cb, method, body) => {
 			url
 		}
 	})
-	return api(url, method, body)
+	return api(url, method, body, abortSignal)
 		.then(response => {
 			if (cb) cb(response)
 			dispatch({
