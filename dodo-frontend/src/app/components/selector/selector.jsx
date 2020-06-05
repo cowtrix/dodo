@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react"
-import { Button, Dialog } from "app/components"
+import { Button, Dialog, Icon } from "app/components"
 
 import styles from "./selector.module.scss"
 
@@ -10,10 +10,11 @@ export const Selector = ({ title, content }) => {
 		<Fragment>
 			<div className={styles.mobile}>
 				<Button
-					variant="primary"
+					variant="link"
 					onClick={() => setDialogOpen(true)}
 					className={styles.button}
 				>
+					<Icon icon="sliders-h"/>
 					{title}
 				</Button>
 				<Dialog

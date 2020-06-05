@@ -13,7 +13,7 @@ const initialState = {
 	searchParams: {
 		types: [],
 		latlong: "",
-		distance: "1000",
+		distance: "",
 		search: "",
 		page: "",
 	}
