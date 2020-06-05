@@ -92,7 +92,7 @@ namespace Resources
 			{
 				throw new Exception("Conflicting GUID");
 			}
-			if (ResourceUtility.GetResourceBySlug(newObject.Slug) != null)
+			if (Get(r => r.Slug == newObject.Slug).Any())
 			{
 				throw new Exception("Conflicting slug");
 			}
