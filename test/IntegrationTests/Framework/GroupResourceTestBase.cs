@@ -2,23 +2,12 @@ using Common.Extensions;
 using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
-using RestSharp;
 using Resources;
-using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using SharedTest;
-using Dodo.Rebellions;
 using Dodo.SharedTest;
-using System.Collections.Generic;
-using Dodo.Users;
 using Dodo.Users.Tokens;
-using DodoResources;
 using DodoTest.Framework.Postman;
-using Resources.Security;
-using Dodo.Utility;
-using Dodo.Resources;
 
 namespace RESTTests
 {
@@ -39,7 +28,6 @@ namespace RESTTests
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var response = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST, schema);
 			user = UserManager.GetSingle(u => u.Guid == user.Guid);
-			//Assert.IsTrue(user.TokenCollection.GetTokens<ResourceCreationToken>().Single().IsRedeemed);
 			var rsc = ResourceManager.GetSingle(r => r.Guid.ToString() == response.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			VerifyCreatedObject(rsc, response, schema);
 

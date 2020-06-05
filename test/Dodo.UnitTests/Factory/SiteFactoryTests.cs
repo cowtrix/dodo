@@ -1,22 +1,17 @@
 using Dodo;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources.Security;
 
 namespace Factory
 {
 	[TestClass]
-	public class EventSiteFactoryTests : FactoryTestBase<EventSite, SiteSchema>
+	public class EventSiteFactoryTests : FactoryTestBase<Event, LocationResourceSchema>
 	{
 	}
 
 	[TestClass]
-	public class SanctuarySiteFactoryTests : FactoryTestBase<MarchSite, SiteSchema>
-	{
-	}
-
-	[TestClass]
-	public class OccupationSiteFactoryTests : FactoryTestBase<PermanentSite, SiteSchema>
+	public class SiteFactoryTests : FactoryTestBase<Site, LocationResourceSchema>
 	{
 	}
 }

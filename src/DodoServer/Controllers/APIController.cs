@@ -11,9 +11,10 @@ using Dodo.Users;
 using Dodo.Rebellions;
 using Dodo.LocalGroups;
 using Dodo.WorkingGroups;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Dodo.Roles;
 using Common.Config;
+using Resources;
 
 namespace DodoServer
 {
@@ -26,9 +27,8 @@ namespace DodoServer
 			{ typeof(Rebellion),		"22A73D" },
 			{ typeof(LocalGroup),		"71D0F1" },
 			{ typeof(WorkingGroup),		"FFC113" },
-			{ typeof(EventSite),		"ED9BC4" },
-			{ typeof(MarchSite),		"ED9BC4" },
-			{ typeof(PermanentSite),	"22A73D" },
+			{ typeof(Event),		"ED9BC4" },
+			{ typeof(Site),	"22A73D" },
 			{ typeof(Role),				"E53D33" },
 		};
 
@@ -38,7 +38,13 @@ namespace DodoServer
 			{
 				resourceTypes = ReflectionExtensions.GetConcreteClasses<IDodoResource>()
 					.Where(t => t != typeof(User))
-					.Select(t => new { label = t.GetName(), value = t.Name.ToCamelCase(), displayColor = m_displayColors[t] }).ToList(),
+					.Select(t => new
+					{
+						label = t.GetName(),
+						value = t.Name.ToCamelCase(),
+						displayColor = m_displayColors[t],
+						schema = JsonViewUtility.GetSchema(t)
+					}).ToList(),
 				indexVideoEmbed = ConfigManager.GetValue("IndexVideoEmbedURL", "https://www.youtube.com/embed/d4QDM_Isi24"),
 			};
 		}

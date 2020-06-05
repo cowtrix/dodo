@@ -3,7 +3,7 @@ using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Resources;
 using Dodo.SharedTest;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
@@ -22,21 +22,22 @@ namespace SearchTests
 		public void FilterByLocation()
 		{
 			GeoLocation TrueLocation = new GeoLocation(52.428, 4.9500000000000455);
-
+			var baseDate = SchemaGenerator.RandomDate;
 			GetRandomUser(out _, out var context);
 			var rebellion = CreateObject<Rebellion>(context, new RebellionSchema("Test", "", TrueLocation, SchemaGenerator.RandomDate, SchemaGenerator.RandomDate));
 			var goodResults = new List<ILocationalResource>()
 			{
 				rebellion,
-				CreateObject<PermanentSite>(context, new SiteSchema("Test Site 1", typeof(PermanentSite).FullName, rebellion.Guid, new GeoLocation(TrueLocation.Latitude + .1, TrueLocation.Longitude), ""), false),
-				CreateObject<EventSite>(context, new SiteSchema("Test Site 2", typeof(EventSite).FullName, rebellion.Guid, new GeoLocation(TrueLocation.Latitude - .1, TrueLocation.Longitude +.1), ""), false),
+				CreateObject<Site>(context, new SiteSchema("Test Site 1", rebellion.Guid, new GeoLocation(TrueLocation.Latitude + .1, TrueLocation.Longitude), ""), false),
+				CreateObject<Event>(context, new EventSchema("Test Site 2", rebellion.Guid, new GeoLocation(TrueLocation.Latitude - .1, TrueLocation.Longitude +.1), "", baseDate, baseDate), false),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", TrueLocation), false)
 			};
+			
 			var negativeResults = new List<ILocationalResource>()
 			{
 				CreateObject<Rebellion>(),
-				CreateObject<PermanentSite>(context, new SiteSchema("Test Site 1", typeof(PermanentSite).FullName, rebellion.Guid, new GeoLocation(TrueLocation.Longitude + .1, TrueLocation.Latitude), "")),
-				CreateObject<EventSite>(context, new SiteSchema("Test Site 2", typeof(EventSite).FullName, rebellion.Guid, new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1), "")),
+				CreateObject<Site>(context, new SiteSchema("Test Site 1", rebellion.Guid, new GeoLocation(TrueLocation.Longitude + .1, TrueLocation.Latitude), "")),
+				CreateObject<Event>(context, new EventSchema("Test Site 2", rebellion.Guid, new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1), "", baseDate, baseDate)),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1)))
 			};
 			var result = DodoResourceUtility.Search(0, 100, new DistanceFilter() { LatLong = $"{TrueLocation.Latitude} {TrueLocation.Longitude}", Distance = 100 });
@@ -53,20 +54,20 @@ namespace SearchTests
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test", "",
 				SchemaGenerator.RandomLocation, startDate + TimeSpan.FromDays(1), endDate + TimeSpan.FromDays(4)), seed:false);
-			var evt1 = CreateObject<EventSite>(seed: false);
+			var evt1 = CreateObject<Event>(seed: false);
 			using (var rscLock = new ResourceLock(evt1))
 			{
 				evt1.Name = "test";
 				evt1.StartDate = startDate + TimeSpan.FromDays(1);
 				evt1.EndDate = evt1.StartDate + TimeSpan.FromHours(4);
-				ResourceUtility.GetManager<Site>().Update(evt1, rscLock);
+				ResourceUtility.GetManager<LocationResourceBase>().Update(evt1, rscLock);
 			}
-			var evt2 = CreateObject<MarchSite>(seed: false);
+			var evt2 = CreateObject<Event>(seed: false);
 			using (var rscLock = new ResourceLock(evt2))
 			{
 				evt2.StartDate = endDate - TimeSpan.FromDays(1);
 				evt2.EndDate = evt2.StartDate + TimeSpan.FromHours(4);
-				ResourceUtility.GetManager<Site>().Update(evt2, rscLock);
+				ResourceUtility.GetManager<LocationResourceBase>().Update(evt2, rscLock);
 			}
 			var positives = new List<ITimeBoundResource>()
 			{
@@ -77,8 +78,8 @@ namespace SearchTests
 			var negatives = new List<IRESTResource>()
 			{
 				CreateObject<Rebellion>(),
-				CreateObject<PermanentSite>(),
-				CreateObject<EventSite>(),
+				CreateObject<Site>(),
+				CreateObject<Event>(),
 				CreateObject<LocalGroup>()
 			};
 			var guids = DodoResourceUtility.Search(0, 100, new DateFilter() { StartDate = startDate.ToString(), EndDate = endDate.ToString() })
@@ -105,15 +106,15 @@ namespace SearchTests
 			{
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid), false),
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid), false),
-				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
-				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
+				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.EndDate), false),
+				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.EndDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
 				rebellion1,
 				CreateObject<Rebellion>(),
-				CreateObject<PermanentSite>(),
-				CreateObject<EventSite>(),
+				CreateObject<Site>(),
+				CreateObject<Event>(),
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};
@@ -140,15 +141,15 @@ namespace SearchTests
 			{
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid), false),
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid), false),
-				CreateObject<Site>(context, new SiteSchema("Test Event Site", typeof(EventSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
-				CreateObject<Site>(context, new SiteSchema("Test March Site", typeof(MarchSite).FullName, rebellion1.Guid, SchemaGenerator.RandomLocation, ""), false),
+				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
 				rebellion1,
 				CreateObject<Rebellion>(),
-				CreateObject<PermanentSite>(),
-				CreateObject<EventSite>(),
+				CreateObject<Site>(),
+				CreateObject<Event>(),
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};

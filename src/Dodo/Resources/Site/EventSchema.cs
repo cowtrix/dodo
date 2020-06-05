@@ -4,15 +4,39 @@ using Resources;
 using Newtonsoft.Json;
 using MongoDB.Bson.Serialization.Attributes;
 using Common.Extensions;
+using System.ComponentModel.DataAnnotations;
+using Resources.Location;
 
-namespace Dodo.Sites
+namespace Dodo.LocationResources
 {
-	[Name("Event")]
-	public class EventSite : Site, ITimeBoundResource
+	public class EventSchema : LocationResourceSchema
 	{
-		public EventSite() : base() { }
+		[DataType(DataType.DateTime)]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
+		public DateTime StartDate { get; set; }
+		[DataType(DataType.DateTime)]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
+		public DateTime EndDate { get; set; }
 
-		public EventSite(AccessContext context, SiteSchema schema) : base(context, schema)
+		public EventSchema()
+		{
+		}
+
+		public EventSchema(string name, Guid parent, GeoLocation location, string description, DateTime start, DateTime end)
+			: base(name, parent, location, description)
+		{
+			Location = location;
+			StartDate = start;
+			EndDate = end;
+		}
+	}
+
+	[Name("Event")]
+	public class Event : LocationResourceBase, ITimeBoundResource
+	{
+		public Event() : base() { }
+
+		public Event(AccessContext context, EventSchema schema) : base(context, schema)
 		{
 		}
 

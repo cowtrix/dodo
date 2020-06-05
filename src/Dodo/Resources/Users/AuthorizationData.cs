@@ -1,3 +1,4 @@
+using Common.Config;
 using Common.Extensions;
 using Common.Security;
 using Microsoft.Extensions.Options;
@@ -16,7 +17,9 @@ namespace Dodo.Users
 		///     (password changed, login removed)
 		/// </summary>
 		public string SecurityStamp { get; set; }
-		public virtual bool TwoFactorEnabled { get; set; }
+
+		public static int MaxFailedLoginAttempts => ConfigManager.GetValue($"{nameof(AuthorizationData)}_MaxLogonAttempts", 5);
+		public static TimeSpan LockoutTime => ConfigManager.GetValue($"{nameof(AuthorizationData)}_LockoutTime", TimeSpan.FromHours(1));
 		public virtual DateTime? LockoutEndDateUtc { get; set; }
 		public virtual bool LockoutEnabled { get; set; }
 		public virtual int AccessFailedCount { get; set; }
@@ -35,6 +38,8 @@ namespace Dodo.Users
 		/// </summary>
 		public string PasswordHash { get; set; }
 		public string PassphraseHash { get; set; }
+		
+
 		[JsonProperty]
 		public SymmEncryptedStore<string> PassPhrase;
 		[JsonProperty]

@@ -1,7 +1,7 @@
 using Common;
 using Common.Extensions;
 using Resources.Security;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Dodo.Users;
 using Dodo.WorkingGroups;
 using Resources;
@@ -37,11 +37,11 @@ namespace Dodo.Rebellions
 		}
 
 		[View(EPermissionLevel.PUBLIC)]
-		public IEnumerable<Site> Sites
+		public IEnumerable<LocationResourceBase> Sites
 		{
 			get
 			{
-				var rm = ResourceUtility.GetManager<Site>();
+				var rm = ResourceUtility.GetManager<LocationResourceBase>();
 				return m_sites.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
 					.Where(rsc => rsc != null);
 			}
@@ -83,7 +83,7 @@ namespace Dodo.Rebellions
 
 		public override bool CanContain(Type type)
 		{
-			if (type == typeof(WorkingGroup) || type == typeof(Site))
+			if (type == typeof(WorkingGroup) || type == typeof(LocationResourceBase))
 			{
 				return true;
 			}
@@ -100,7 +100,7 @@ namespace Dodo.Rebellions
 				}
 				m_workingGroups.Add(wg.Guid);
 			}
-			else if (rsc is Site s && s.Parent.Guid == Guid)
+			else if (rsc is LocationResourceBase s && s.Parent.Guid == Guid)
 			{
 				if (m_sites.Contains(s.Guid))
 				{
@@ -120,7 +120,7 @@ namespace Dodo.Rebellions
 			{
 				return m_workingGroups.Remove(wg.Guid);
 			}
-			else if (rsc is Site s && s.Parent.Guid == Guid)
+			else if (rsc is LocationResourceBase s && s.Parent.Guid == Guid)
 			{
 				return m_sites.Remove(s.Guid);
 			}

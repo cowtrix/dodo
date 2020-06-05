@@ -35,7 +35,7 @@ namespace Dodo.WorkingGroups
 		/// <summary>
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public IEnumerable<WorkingGroup> WorkingGroups
 		{
 			get
@@ -46,7 +46,7 @@ namespace Dodo.WorkingGroups
 			}
 		}
 
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public IEnumerable<Role> Roles
 		{
 			get

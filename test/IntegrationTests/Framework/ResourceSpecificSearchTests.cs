@@ -12,7 +12,7 @@ using Dodo.SharedTest;
 using Dodo.Rebellions;
 using DodoTest.Framework.Postman;
 using Dodo.WorkingGroups;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Dodo.LocalGroups;
 
 namespace RESTTests.Search
@@ -28,24 +28,15 @@ namespace RESTTests.Search
 	}
 
 	[TestClass]
-	public class EventSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<EventSite>
+	public class EventSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<Event>
 	{
-		public override string ResourceRoot => "site";
-		public override string PostmanCategory => $"{typeof(Site).Name}s";
+		public override string PostmanCategory => "Sites";
 	}
 
 	[TestClass]
-	public class PermanentSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<PermanentSite>
+	public class PermanentSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<Site>
 	{
-		public override string ResourceRoot => "site";
-		public override string PostmanCategory => $"{typeof(Site).Name}s";
-	}
-
-	[TestClass]
-	public class MarchSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<MarchSite>
-	{
-		public override string ResourceRoot => "site";
-		public override string PostmanCategory => $"{typeof(Site).Name}s";
+		public override string PostmanCategory => "Sites";
 	}
 
 	[TestClass]

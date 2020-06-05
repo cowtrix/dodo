@@ -1,5 +1,6 @@
 using Dodo.SharedTest;
-using Dodo.Sites;
+using Dodo.LocationResources;
+using DodoResources.Sites;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Resources;
@@ -9,17 +10,21 @@ using System.Threading.Tasks;
 namespace RESTTests
 {
 	[TestClass]
-	public class EventSiteTests : SiteTests<EventSite>
+	public class EventSiteTests : SiteTests<Event>
 	{
+		public override string ResourceRoot => EventController.RootURL;
+
+		protected override string PostmanCategory => "Events";
+
 		[TestMethod]
 		public async Task CanPatchStartDate()
 		{
 			GetRandomUser(out var pass, out var context);
 			await Login(context.User.AuthData.Username, pass);
-			var site = CreateObject<EventSite>(context);
+			var site = CreateObject<Event>(context);
 			var date = SchemaGenerator.RandomDate;
 			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { startDate = date });
-			var updatedSite = ResourceManager.GetSingle(r => r.Guid == site.Guid) as EventSite;
+			var updatedSite = ResourceManager.GetSingle(r => r.Guid == site.Guid) as Event;
 			Assert.IsTrue(date.ToUniversalTime() - updatedSite.StartDate.ToUniversalTime() < TimeSpan.FromMinutes(1));
 		}
 
@@ -28,10 +33,10 @@ namespace RESTTests
 		{
 			GetRandomUser(out var pass, out var context);
 			await Login(context.User.AuthData.Username, pass);
-			var site = CreateObject<EventSite>(context);
+			var site = CreateObject<Event>(context);
 			var date = SchemaGenerator.RandomDate;
 			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { endDate = date });
-			var updatedSite = ResourceManager.GetSingle(r => r.Guid == site.Guid) as EventSite;
+			var updatedSite = ResourceManager.GetSingle(r => r.Guid == site.Guid) as Event;
 			Assert.IsTrue(date.ToUniversalTime() - updatedSite.EndDate.ToUniversalTime() < TimeSpan.FromMinutes(1));
 		}
 
@@ -44,7 +49,7 @@ namespace RESTTests
 			return result;
 		}
 
-		protected override void VerifyPatchedObject(EventSite rsc, JObject patchObj)
+		protected override void VerifyPatchedObject(Event rsc, JObject patchObj)
 		{
 			Assert.IsTrue(rsc.StartDate.ToUniversalTime() - new DateTime(2020, 6, 20).ToUniversalTime() < TimeSpan.FromMinutes(1));
 			Assert.IsTrue(rsc.EndDate.ToUniversalTime() - new DateTime(2020, 6, 25).ToUniversalTime() < TimeSpan.FromMinutes(1));

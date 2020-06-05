@@ -1,16 +1,18 @@
-﻿using Dodo;
-using Dodo.Sites;
+using Dodo;
+using Dodo.LocationResources;
 using Resources;
 
 namespace DodoResources.Sites
 {
-	public class SiteAuthManager : AuthorizationService<Site, SiteSchema>
+	public class SiteAuthManager<T, TSchema> : AuthorizationService<T, TSchema>
+		where T : LocationResourceBase
+		where TSchema : LocationResourceSchema
 	{
 		public SiteAuthManager() : base()
 		{
 		}
 
-		protected override ResourceRequest CanCreate(AccessContext context, SiteSchema target)
+		protected override ResourceRequest CanCreate(AccessContext context, TSchema target)
 		{
 			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as GroupResource;
 			if (parent == null)

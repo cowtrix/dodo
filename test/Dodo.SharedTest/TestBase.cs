@@ -4,7 +4,7 @@ using Dodo;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.SharedTest;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using Dodo.WorkingGroups;
@@ -109,8 +109,8 @@ namespace SharedTest
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
 
-					CreateNewObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
-					CreateNewObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+					CreateNewObject<LocationResourceBase>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+					CreateNewObject<LocationResourceBase>(context, SchemaGenerator.GetRandomSite(context, rebellion));
 				}
 				else if (obj is WorkingGroup wg)
 				{

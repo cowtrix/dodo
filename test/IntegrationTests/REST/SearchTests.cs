@@ -3,7 +3,7 @@ using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Resources;
 using Dodo.SharedTest;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using DodoResources;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;

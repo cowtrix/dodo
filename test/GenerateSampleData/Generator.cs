@@ -4,7 +4,7 @@ using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Roles;
 using Dodo.SharedTest;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Dodo.Users;
 using Dodo.WorkingGroups;
 using Resources;
@@ -56,11 +56,11 @@ namespace GenerateSampleData
 			var rootDate = DateTime.Today + TimeSpan.FromDays(rnd.Next(365));
 			var currentRebellion = TestBase.CreateNewObject<Rebellion>(context,
 				new RebellionSchema($"{city} Rebellion", SchemaGenerator.SampleDescription, location, rootDate - TimeSpan.FromDays(2), rootDate + TimeSpan.FromDays(2)));
-			var siteOccupation = TestBase.CreateNewObject<PermanentSite>(context, new SiteSchema("Central Occupation", typeof(PermanentSite).FullName, currentRebellion.Guid, location, SchemaGenerator.SampleDescription), seed: false);
-			var actionOccupation = TestBase.CreateNewObject<EventSite>(context, new SiteSchema("Protest For Nature", typeof(EventSite).FullName, currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude + 0.05, location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription));
-			var march = TestBase.CreateNewObject<MarchSite>(context, new SiteSchema("Youth March", typeof(MarchSite).FullName, currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription));
-			var sanctuary = TestBase.CreateNewObject<PermanentSite>(context, new SiteSchema("Second Occupation", typeof(PermanentSite).FullName, currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
-			var evt = TestBase.CreateNewObject<EventSite>(context, new SiteSchema("Activism Workshop", typeof(EventSite).FullName, currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
+			var siteOccupation = TestBase.CreateNewObject<Site>(context, new SiteSchema("Central Occupation", currentRebellion.Guid, location, SchemaGenerator.SampleDescription), seed: false);
+			var actionOccupation = TestBase.CreateNewObject<Event>(context, new EventSchema("Protest For Nature", currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude + 0.05, location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, currentRebellion.StartDate + TimeSpan.FromDays(1), currentRebellion.StartDate + TimeSpan.FromDays(1) + TimeSpan.FromHours(4)));
+			var march = TestBase.CreateNewObject<Event>(context, new EventSchema("Youth March", currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, currentRebellion.StartDate + TimeSpan.FromDays(1), currentRebellion.StartDate + TimeSpan.FromDays(1) + TimeSpan.FromHours(4)));
+			var sanctuary = TestBase.CreateNewObject<Site>(context, new SiteSchema("Second Occupation", currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
+			var evt = TestBase.CreateNewObject<Event>(context, new EventSchema("Activism Workshop", currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription, currentRebellion.StartDate + TimeSpan.FromDays(1), currentRebellion.StartDate + TimeSpan.FromDays(1) + TimeSpan.FromHours(4)));
 
 
 			var actionSupport = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Action Support",

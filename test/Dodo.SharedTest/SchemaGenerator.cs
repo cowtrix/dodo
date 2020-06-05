@@ -3,7 +3,7 @@ using Common.Extensions;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Roles;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Dodo.Users;
 using Dodo.WorkingGroups;
 using Resources;
@@ -54,10 +54,9 @@ namespace Dodo.SharedTest
 			{ typeof(WorkingGroup), wg => GetRandomWorkinGroup(wg) },
 			{ typeof(LocalGroup), lg => GetRandomLocalGroup(lg) },
 			{ typeof(Role), r => GetRandomRole(r) },
-			{ typeof(EventSite), s => GetRandomSite<EventSite>(s) },
-			{ typeof(MarchSite), s => GetRandomSite<MarchSite>(s) },
-			{ typeof(PermanentSite), s => GetRandomSite<PermanentSite>(s) },
+			{ typeof(Event), s => GetRandomEvent(s) },
 			{ typeof(Site), s => GetRandomSite(s) },
+			{ typeof(LocationResourceBase), s => GetRandomSite(s) },
 		};
 
 		public static RoleSchema GetRandomRole(AccessContext context, WorkingGroup wg = null)
@@ -70,21 +69,21 @@ namespace Dodo.SharedTest
 				wg.Guid);
 		}
 
-		public static SiteSchema GetRandomSite<T>(AccessContext context, Rebellion rb = null) where T:Site
+		public static EventSchema GetRandomEvent(AccessContext context, Rebellion rb = null)
 		{
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				context,
 				GetRandomRebellion(context));
-			return new SiteSchema(RandomName, typeof(T).FullName, rb.Guid, RandomLocation, SampleDescription);
+			var date = RandomDate;
+			return new EventSchema(RandomName, rb.Guid, RandomLocation, SampleDescription, date, date + TimeSpan.FromHours(4));
 		}
 
 		public static SiteSchema GetRandomSite(AccessContext context, Rebellion rb = null)
 		{
-			var type = new[]
-			{
-				typeof(EventSite), typeof(PermanentSite), typeof(MarchSite),
-			};
-			return new SiteSchema(RandomName, type.Random().FullName, rb.Guid, RandomLocation, SampleDescription);
+			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
+				context,
+				GetRandomRebellion(context));
+			return new SiteSchema(RandomName, rb.Guid, RandomLocation, SampleDescription);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)

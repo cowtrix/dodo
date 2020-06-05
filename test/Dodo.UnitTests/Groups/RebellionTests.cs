@@ -1,6 +1,6 @@
 using Dodo.Rebellions;
 using Dodo.SharedTest;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
@@ -28,11 +28,11 @@ namespace Groups
 		public void CanAddAndRemoveSite()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var eventSite = ResourceUtility.GetFactory<EventSite>()
-				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<EventSite>(creatorContext));
+			var eventSite = ResourceUtility.GetFactory<Event>()
+				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<Event>(creatorContext));
 			Assert.IsTrue((eventSite.Parent.GetValue() as Rebellion).Sites.Any(s => s.Guid == eventSite.Guid),
 				"Site was not included in Rebellion list after creation");
-			ResourceUtility.GetManager<Site>().Delete(eventSite);
+			ResourceUtility.GetManager<LocationResourceBase>().Delete(eventSite);
 			Assert.IsFalse((eventSite.Parent.GetValue() as Rebellion).WorkingGroups.Any(s => s.Guid == eventSite.Guid),
 				"Site was not renoved from Rebellion list after deletion");
 		}

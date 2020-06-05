@@ -1,5 +1,5 @@
 using Dodo;
-using Dodo.Sites;
+using Dodo.LocationResources;
 using DodoResources.Sites;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +8,7 @@ using Resources;
 
 namespace RESTTests
 {
-	public abstract class SiteTests<T> : RESTTestBase<T, SiteSchema> where T:Site
+	public abstract class SiteTests<T> : RESTTestBase<T, LocationResourceSchema> where T:LocationResourceBase
 	{
-		public override string ResourceRoot => SiteController.RootURL;
-		protected override string PostmanCategory => "Sites";
 	}
 }
