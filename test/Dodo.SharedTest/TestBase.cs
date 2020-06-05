@@ -82,6 +82,11 @@ namespace SharedTest
 
 		protected virtual T CreateObject<T>(AccessContext context = default, ResourceSchemaBase schema = null, bool seed = true, bool publish = true) where T : IRESTResource
 		{
+			return CreateNewObject<T>(context, schema, seed, publish);
+		}
+
+		public static T CreateNewObject<T>(AccessContext context = default, ResourceSchemaBase schema = null, bool seed = true, bool publish = true) where T : IRESTResource
+		{
 			if (context.User == null)
 			{
 				GetRandomUser(out var password, out context, true); ;
@@ -92,30 +97,30 @@ namespace SharedTest
 			}
 			var factory = ResourceUtility.GetFactory<T>();
 			var obj = factory.CreateTypedObject(context, schema);
-			if(publish && obj is IPublicResource pubRsc)
+			if (publish && obj is IPublicResource pubRsc)
 			{
 				obj = (T)pubRsc.Publish();
 			}
-			if(seed)
+			if (seed)
 			{
 				if (obj is Rebellion rebellion)
 				{
 					// Add some working groups, sites
-					CreateObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
-					CreateObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
+					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
+					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
 
-					CreateObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
-					CreateObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+					CreateNewObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+					CreateNewObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
 				}
 				else if (obj is WorkingGroup wg)
 				{
-					if(!(wg.Parent.GetValue() is Rebellion))
+					if (!(wg.Parent.GetValue() is Rebellion))
 					{
-						CreateObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, wg));
-						CreateObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, wg));
+						CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, wg));
+						CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, wg));
 					}
-					CreateObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
-					CreateObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
+					CreateNewObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
+					CreateNewObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
 				}
 			}
 			return obj;

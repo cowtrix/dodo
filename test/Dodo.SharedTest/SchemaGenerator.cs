@@ -41,7 +41,7 @@ namespace Dodo.SharedTest
 		}
 
 		private static Random m_random = new Random();
-		public static string SampleDescription => "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+		public static string SampleDescription => "We are unprepared for the danger our future holds. We face floods, wildfires, extreme weather, crop failure, mass displacement and the breakdown of society. The time for denial is over. It is time to act.\nConventional approaches of voting, lobbying, petitions and protest have failed because powerful political and economic interests prevent change. Our strategy is therefore one of non-violent, disruptive civil disobedience – a rebellion.\nHistorical evidence shows that we need the involvement of 3.5% of the population to succeed – in the UK that’s about 2 million people.\nHelp XR mobilise and donate here: https://rebellion.earth/donate/\nExtinction Rebellion: https://rebellion.earth/\nInternational: https://rebellion.global/\n1. #TellTheTruth \n2. #ActNow \n3. #BeyondPolitics";
 		public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
 		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
 		private static string RandomName => StringExtensions.RandomString(32);
