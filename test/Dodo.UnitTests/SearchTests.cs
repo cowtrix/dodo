@@ -60,14 +60,14 @@ namespace SearchTests
 				evt1.Name = "test";
 				evt1.StartDate = startDate + TimeSpan.FromDays(1);
 				evt1.EndDate = evt1.StartDate + TimeSpan.FromHours(4);
-				ResourceUtility.GetManager<LocationResourceBase>().Update(evt1, rscLock);
+				ResourceUtility.GetManager<Event>().Update(evt1, rscLock);
 			}
 			var evt2 = CreateObject<Event>(seed: false);
 			using (var rscLock = new ResourceLock(evt2))
 			{
 				evt2.StartDate = endDate - TimeSpan.FromDays(1);
 				evt2.EndDate = evt2.StartDate + TimeSpan.FromHours(4);
-				ResourceUtility.GetManager<LocationResourceBase>().Update(evt2, rscLock);
+				ResourceUtility.GetManager<Event>().Update(evt2, rscLock);
 			}
 			var positives = new List<ITimeBoundResource>()
 			{
@@ -139,10 +139,10 @@ namespace SearchTests
 			var rebellion1 = CreateObject<Rebellion>(context);
 			var positives = new List<IOwnedResource>()
 			{
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid), false),
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid), false),
-				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
-				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working asfafsd 1", "", rebellion1.Guid), false),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("asfafsd Working Group 2", "", rebellion1.Guid), false),
+				CreateObject<Event>(context, new EventSchema("Test asfafsd Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema("Test March asfafsd", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
@@ -153,7 +153,7 @@ namespace SearchTests
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};
-			var guids = DodoResourceUtility.Search(0, 100, new StringFilter() { Search = "Test" })
+			var guids = DodoResourceUtility.Search(0, 100, new StringFilter() { Search = "asfafsd" })
 				.Select(r => r.Guid);
 			foreach (var pos in positives)
 			{

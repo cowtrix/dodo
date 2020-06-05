@@ -24,8 +24,10 @@ namespace Dodo.Rebellions
 		private List<Guid> m_workingGroups = new List<Guid>();
 		[BsonElement]
 		private List<Guid> m_sites = new List<Guid>();
+		[BsonElement]
+		private List<Guid> m_events = new List<Guid>();
 
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public IEnumerable<WorkingGroup> WorkingGroups 
 		{ 
 			get 
@@ -36,13 +38,24 @@ namespace Dodo.Rebellions
  			}
 		}
 
-		[View(EPermissionLevel.PUBLIC)]
-		public IEnumerable<LocationResourceBase> Sites
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public IEnumerable<Site> Sites
 		{
 			get
 			{
-				var rm = ResourceUtility.GetManager<LocationResourceBase>();
+				var rm = ResourceUtility.GetManager<Site>();
 				return m_sites.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
+					.Where(rsc => rsc != null);
+			}
+		}
+
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public IEnumerable<Event> Events
+		{
+			get
+			{
+				var rm = ResourceUtility.GetManager<Event>();
+				return m_events.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
 					.Where(rsc => rsc != null);
 			}
 		}
@@ -100,13 +113,21 @@ namespace Dodo.Rebellions
 				}
 				m_workingGroups.Add(wg.Guid);
 			}
-			else if (rsc is LocationResourceBase s && s.Parent.Guid == Guid)
+			else if (rsc is Site s && s.Parent.Guid == Guid)
 			{
 				if (m_sites.Contains(s.Guid))
 				{
 					throw new Exception($"Adding duplicated child object {s.Guid} to {Guid}");
 				}
 				m_sites.Add(s.Guid);
+			}
+			else if (rsc is Event e && e.Parent.Guid == Guid)
+			{
+				if (m_events.Contains(e.Guid))
+				{
+					throw new Exception($"Adding duplicated child object {e.Guid} to {Guid}");
+				}
+				m_events.Add(e.Guid);
 			}
 			else
 			{
@@ -120,9 +141,13 @@ namespace Dodo.Rebellions
 			{
 				return m_workingGroups.Remove(wg.Guid);
 			}
-			else if (rsc is LocationResourceBase s && s.Parent.Guid == Guid)
+			else if (rsc is Site s && s.Parent.Guid == Guid)
 			{
 				return m_sites.Remove(s.Guid);
+			}
+			else if (rsc is Event e && e.Parent.Guid == Guid)
+			{
+				return m_events.Remove(e.Guid);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}

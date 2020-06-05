@@ -28,11 +28,24 @@ namespace Groups
 		public void CanAddAndRemoveSite()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var eventSite = ResourceUtility.GetFactory<Event>()
-				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<Event>(creatorContext));
+			var eventSite = ResourceUtility.GetFactory<Site>()
+				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<Site>(creatorContext));
 			Assert.IsTrue((eventSite.Parent.GetValue() as Rebellion).Sites.Any(s => s.Guid == eventSite.Guid),
 				"Site was not included in Rebellion list after creation");
-			ResourceUtility.GetManager<LocationResourceBase>().Delete(eventSite);
+			ResourceUtility.GetManager<Site>().Delete(eventSite);
+			Assert.IsFalse((eventSite.Parent.GetValue() as Rebellion).WorkingGroups.Any(s => s.Guid == eventSite.Guid),
+				"Site was not renoved from Rebellion list after deletion");
+		}
+
+		[TestMethod]
+		public void CanAddAndRemoveEvent()
+		{
+			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
+			var eventSite = ResourceUtility.GetFactory<Event>()
+				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<Event>(creatorContext));
+			Assert.IsTrue((eventSite.Parent.GetValue() as Rebellion).Events.Any(s => s.Guid == eventSite.Guid),
+				"Site was not included in Rebellion list after creation");
+			ResourceUtility.GetManager<Event>().Delete(eventSite);
 			Assert.IsFalse((eventSite.Parent.GetValue() as Rebellion).WorkingGroups.Any(s => s.Guid == eventSite.Guid),
 				"Site was not renoved from Rebellion list after deletion");
 		}

@@ -34,15 +34,15 @@ namespace RESTTests.Search
 			{
 				eventSite.StartDate = startDate + TimeSpan.FromDays(1);
 				eventSite.EndDate = eventSite.StartDate + TimeSpan.FromHours(4);
-				ResourceUtility.GetManager<LocationResourceBase>().Update(eventSite, rscLock);
+				ResourceUtility.GetManager<Event>().Update(eventSite, rscLock);
 			}
-			eventSite = ResourceUtility.GetManager<LocationResourceBase>().GetSingle(r => r.Guid == eventSite.Guid) as Event;
+			eventSite = ResourceUtility.GetManager<Event>().GetSingle(r => r.Guid == eventSite.Guid) as Event;
 			var marchSite = CreateObject<Event>(seed: false);
 			using (var rscLock = new ResourceLock(marchSite))
 			{
 				marchSite.StartDate = endDate - TimeSpan.FromDays(1);
 				marchSite.EndDate = marchSite.StartDate + TimeSpan.FromHours(4);
-				ResourceUtility.GetManager<LocationResourceBase>().Update(marchSite, rscLock);
+				ResourceUtility.GetManager<Event>().Update(marchSite, rscLock);
 			}
 			var positives = new List<ITimeBoundResource>()
 			{
@@ -122,10 +122,10 @@ namespace RESTTests.Search
 			var rebellion1 = CreateObject<Rebellion>(context);
 			var positives = new List<IOwnedResource>()
 			{
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid)),
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid)),
-				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
-				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("asdacasdadw Working Group 1", "", rebellion1.Guid)),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("asdacasdadw Working Group 2", "", rebellion1.Guid)),
+				CreateObject<Event>(context, new EventSchema("Test Event asdacasdadw", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema("Test asdacasdadw Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
@@ -139,7 +139,7 @@ namespace RESTTests.Search
 			var request = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
-					("search", "test"),
+					("search", "asdacasdadw"),
 				});
 			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
 			foreach (var pos in positives)
@@ -178,7 +178,7 @@ namespace RESTTests.Search
 			var request = await RequestJSON<JArray>($"{DodoServer.DodoServer.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
-					("types", "workinggroup,eventsite,marchsite"),
+					("types", $"{nameof(WorkingGroup).ToLowerInvariant()},{nameof(Event).ToLowerInvariant()}"),
 				});
 			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
 			foreach (var pos in positives)

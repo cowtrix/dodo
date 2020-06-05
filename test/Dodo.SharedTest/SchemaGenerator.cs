@@ -59,7 +59,7 @@ namespace Dodo.SharedTest
 			{ typeof(LocationResourceBase), s => GetRandomSite(s) },
 		};
 
-		public static RoleSchema GetRandomRole(AccessContext context, WorkingGroup wg = null)
+		public static RoleSchema GetRandomRole(AccessContext context, GroupResource wg = null)
 		{
 			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(
 				context,
@@ -69,7 +69,7 @@ namespace Dodo.SharedTest
 				wg.Guid);
 		}
 
-		public static EventSchema GetRandomEvent(AccessContext context, Rebellion rb = null)
+		public static EventSchema GetRandomEvent(AccessContext context, GroupResource rb = null)
 		{
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				context,

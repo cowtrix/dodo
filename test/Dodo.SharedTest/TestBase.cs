@@ -14,6 +14,7 @@ using Mongo2Go;
 using Resources;
 using Resources.Security;
 using System;
+using Dodo.LocalGroups;
 
 namespace SharedTest
 {
@@ -109,8 +110,11 @@ namespace SharedTest
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
 
-					CreateNewObject<LocationResourceBase>(context, SchemaGenerator.GetRandomSite(context, rebellion));
-					CreateNewObject<LocationResourceBase>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+					CreateNewObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+					CreateNewObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
+
+					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, rebellion));
+					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, rebellion));
 				}
 				else if (obj is WorkingGroup wg)
 				{
@@ -121,6 +125,11 @@ namespace SharedTest
 					}
 					CreateNewObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
 					CreateNewObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
+				}
+				else if (obj is LocalGroup lg)
+				{
+					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
+					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 				}
 			}
 			return obj;
