@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/components/resources/parent-link/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/components/resources/video/video.jsx" afterDir="false" />
+    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="added parent link">
+      <change afterPath="$PROJECT_DIR$/src/app/components/resources/parent-link/parent-link.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/resources/parent-link/parent-link.module.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/resources/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/components/button/button.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/button/button.module.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -36,7 +37,7 @@
           <entry key="html" value="3" />
           <entry key="js" value="600" />
           <entry key="json" value="25" />
-          <entry key="jsx" value="491" />
+          <entry key="jsx" value="492" />
           <entry key="scss" value="220" />
           <entry key="svg" value="9" />
           <entry key="ts" value="1" />
@@ -48,7 +49,7 @@
           <entry key="Enforced Plain Text" value="5" />
           <entry key="HTML" value="3" />
           <entry key="JSON" value="22" />
-          <entry key="JSX Harmony" value="491" />
+          <entry key="JSX Harmony" value="492" />
           <entry key="JavaScript" value="595" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="SCSS" value="220" />
@@ -68,9 +69,9 @@
           <entry key="html" value="21" />
           <entry key="js" value="14701" />
           <entry key="json" value="520" />
-          <entry key="jsx" value="24813" />
+          <entry key="jsx" value="24822" />
           <entry key="scss" value="7251" />
-          <entry key="txt" value="2049" />
+          <entry key="txt" value="2069" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -78,9 +79,9 @@
           <entry key="Enforced Plain Text" value="65" />
           <entry key="HTML" value="22" />
           <entry key="JSON" value="520" />
-          <entry key="JSX Harmony" value="24813" />
+          <entry key="JSX Harmony" value="24822" />
           <entry key="JavaScript" value="14635" />
-          <entry key="PLAIN_TEXT" value="2056" />
+          <entry key="PLAIN_TEXT" value="2076" />
           <entry key="SCSS" value="7251" />
         </counts>
       </usages-collector>
@@ -117,6 +118,15 @@
               </provider>
             </entry>
           </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="30">
+                  <caret line="2" column="51" selection-start-line="2" selection-start-column="51" selection-end-line="2" selection-end-column="51" />
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/app/components/list/list.jsx">
               <provider selected="true" editor-type-id="text-editor">
@@ -145,7 +155,7 @@
             <entry file="file://$PROJECT_DIR$/src/app/components/button/button.jsx">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="210">
-                  <caret line="14" column="64" lean-forward="true" selection-start-line="14" selection-start-column="64" selection-end-line="14" selection-end-column="64" />
+                  <caret line="14" column="64" selection-start-line="14" selection-start-column="64" selection-end-line="14" selection-end-column="64" />
                   <folding>
                     <element signature="e#0#25#0" expanded="true" />
                   </folding>
@@ -171,11 +181,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/app/components/resources/parent-link/parent-link.module.scss">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="165">
-                  <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+                <state relative-caret-position="315">
+                  <caret line="21" column="14" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
                 </state>
               </provider>
             </entry>
@@ -263,7 +273,6 @@
         <option value="$PROJECT_DIR$/src/app/domain/resources/selectors.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/container.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.module.scss" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/resources/header/countdown/countdown.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/button/button.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/resources/header/center-map/center-map.module.scss" />
@@ -287,6 +296,7 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/resources/parent-link/parent-link.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/resources/parent-link/parent-link.module.scss" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
       </list>
     </option>
   </component>
@@ -348,48 +358,6 @@
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="button" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="list" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="parent-link" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="summary" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="dodo" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -416,15 +384,7 @@
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="dodo" type="462c0819:PsiDirectoryNode" />
               <item name="routes" type="462c0819:PsiDirectoryNode" />
-              <item name="resource" type="462c0819:PsiDirectoryNode" />
-              <item name="resource-content" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="styles" type="462c0819:PsiDirectoryNode" />
+              <item name="search" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -539,13 +499,6 @@
       <workItem from="1588157989586" duration="9477000" />
       <workItem from="1588239105601" duration="11187000" />
       <workItem from="1589290510770" duration="19807000" />
-    </task>
-    <task id="LOCAL-00004" summary="added font awesome library and icon component">
-      <created>1585668155081</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1585668155081</updated>
     </task>
     <task id="LOCAL-00005" summary="added responsive support for header - mobile first">
       <created>1585668196507</created>
@@ -883,7 +836,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591287803546</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="added parent link">
+      <created>1591290002313</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1591290002313</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -907,7 +867,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="232074000" />
+    <option name="totallyTimeSpent" value="232690000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
@@ -941,7 +901,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="linting" />
     <MESSAGE value="added browser location for store and search" />
     <MESSAGE value="added distance selector" />
     <MESSAGE value="date selector option" />
@@ -966,7 +925,8 @@
     <MESSAGE value="renamed events to dialog&#10;implemented new styles" />
     <MESSAGE value="Added center map to search page" />
     <MESSAGE value="added video component" />
-    <option name="LAST_COMMIT_MESSAGE" value="added video component" />
+    <MESSAGE value="added parent link" />
+    <option name="LAST_COMMIT_MESSAGE" value="added parent link" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1260,16 +1220,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="10" column="15" selection-start-line="10" selection-start-column="15" selection-end-line="10" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/components/resources/video/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1362,7 +1312,7 @@
     <entry file="file://$PROJECT_DIR$/src/app/components/button/button.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
-          <caret line="14" column="64" lean-forward="true" selection-start-line="14" selection-start-column="64" selection-end-line="14" selection-end-column="64" />
+          <caret line="14" column="64" selection-start-line="14" selection-start-column="64" selection-end-line="14" selection-end-column="64" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
@@ -1388,8 +1338,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/components/resources/parent-link/parent-link.module.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+        <state relative-caret-position="315">
+          <caret line="21" column="14" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="51" selection-start-line="2" selection-start-column="51" selection-end-line="2" selection-end-column="51" />
         </state>
       </provider>
     </entry>
