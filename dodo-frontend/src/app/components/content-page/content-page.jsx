@@ -6,7 +6,7 @@ export const ContentPage = ({ children, sideBar }) => (
 	<div className={styles.contentPage}>
 		<div className={styles.page}>
 			<div className={styles.content}>{children}</div>
-			<div className={styles.sideBar}>{sideBar}</div>
+			{sideBar && <div className={styles.sideBar}>{sideBar}</div>}
 		</div>
 	</div>
 )
