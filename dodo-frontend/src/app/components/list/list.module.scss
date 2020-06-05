@@ -1,0 +1,47 @@
+@import "~app/styles/styles";
+
+.listBox {
+	padding: 0 spacing(2);
+	margin-bottom: spacing(5);
+
+	@media (min-width: $responsive-breakpoint) {
+		padding: 0 spacing(10);
+	}
+}
+
+.eventList {
+	display: flex;
+	flex-direction: column;
+	box-shadow: $standard-box-shadow;
+	padding: 0 spacing(3);
+
+	@media (min-width: $responsive-breakpoint) {
+		padding: 0 spacing(8) 0;
+	}
+
+
+	li {
+		flex-direction: row;
+		border-bottom: 1px solid $color-light-grey;
+		padding: spacing(6) 0 spacing(3);
+
+		@media (min-width: $responsive-breakpoint) {
+			padding: spacing(7) 0;
+			border-bottom: 1px solid $color-light-grey;
+		}
+	}
+
+	>:last-child {
+		border: none;
+	}
+}
+
+.title {
+	padding: 0 spacing(5) spacing(4);
+
+
+	@media (min-width: $responsive-breakpoint) {
+		padding: spacing(4) spacing(10) spacing(8);
+		font-size: 2rem;
+	}
+}

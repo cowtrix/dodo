@@ -13,8 +13,8 @@ const mockResult = [
 	}
 ]
 
-describe("format event", () => {
-	it("should take an array of event and format them for the select component", () => {
+describe("format resources", () => {
+	it("should take an array of resources and format them for the select component", () => {
 		expect(formatEvents(mockEvents)).toEqual(mockResult)
 	})
 })

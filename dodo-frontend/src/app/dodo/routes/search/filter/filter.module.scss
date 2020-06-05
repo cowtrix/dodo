@@ -3,24 +3,22 @@
 .filter {
 	display: flex;
 	justify-content: space-between;
-	flex-grow: 1;
+	flex-grow: 0.5;
 	flex-direction: column;
 
-	> div {
-		margin-bottom: spacing(7);
-	}
-
-	:last-child {
-		margin-bottom: 0;
-	}
+	 > div {
+		 margin-bottom: spacing(5);
+	 }
 
 	@media (min-width: $responsive-breakpoint) {
 		flex-direction: row;
-		margin-bottom: spacing(4);
+		padding: spacing(4) spacing(3);
 
 		> div {
-			margin-left: spacing(6);
-			margin-right: spacing(6);
+			margin-bottom: 0;
+			margin-left: spacing(3);
+			margin-right: spacing(3);
 		}
+
 	}
 }

@@ -7,7 +7,6 @@
 	cursor: pointer;
 	text-decoration: none;
 	border-radius: 4px;
-	justify-content: center;
 	align-items: center;
 }
 
@@ -18,8 +17,7 @@
 	background: inherit;
 	border: none;
 	padding: 0;
-	margin: 0;
-	display: flex;
+	margin: inherit;
 	align-items: center;
 }
 
@@ -27,6 +25,17 @@
 	background-color: $color-primary;
 	border: solid 1px $color-primary;
 	color: white;
+}
+
+.cta {
+	display:flex;
+	flex-direction: column;
+	width: 100%;
+	background: $extinction-rebellion-green;
+	padding: spacing(6) spacing(5) spacing(5);
+	h1 {
+		font-size: 2rem;
+	}
 }
 
 .outline {

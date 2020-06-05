@@ -1,8 +1,11 @@
 import React, { Fragment, useEffect } from "react"
 import PropTypes from "prop-types"
-import { Container, List } from "app/components/events"
-import { SiteMap, Loader } from "app/components"
+import { Container } from "app/components/resources"
+import { SiteMap, Loader, CenterMap, List } from "app/components"
 import { Filter } from "./filter"
+
+import styles from './search.module.scss'
+
 
 export const Search = ({
 	centerMap,
@@ -29,8 +32,11 @@ export const Search = ({
 				content={
 					<Fragment>
 						<Loader display={!searchParams.latlong.length || isFetchingSearch} />
-						<Filter />
-						<List events={searchResults} />
+						<div className={styles.searchHeader}>
+							<Filter />
+							<CenterMap setCenterMap={setCenterMap}/>
+						</div>
+						<List resources={searchResults} />
 					</Fragment>
 				}
 			/>
