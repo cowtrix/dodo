@@ -10,6 +10,16 @@ namespace Common.Extensions
 {
 	public static class ReflectionExtensions
 	{
+		public static IEnumerable<Type> InheritanceHierarchy(this Type t)
+		{
+			var currentType = t;
+			while(currentType != null)
+			{
+				yield return currentType;
+				currentType = currentType.BaseType;
+			}
+		}
+
 		public static string GetRealTypeName(this Type t)
 		{
 			if (!t.IsGenericType)

@@ -13,7 +13,7 @@ using Resources.Location;
 namespace Resources
 {
 	[AttributeUsage(AttributeTargets.Struct)]
-	public class ViewClassAttribute : Attribute 
+	public class ViewClassAttribute : Attribute
 	{
 	}
 
@@ -33,6 +33,55 @@ namespace Resources
 			typeof(GeoLocation),
 			typeof(IResourceReference)
 		};
+
+		public static Dictionary<string, object> GetSchema(Type targetType)
+		{
+			var vals = new Dictionary<string, object>();
+
+			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
+			allMembers.AddRange(targetType.GetFields());
+			foreach (var member in allMembers)
+			{
+				var attr = member.GetCustomAttribute<ViewAttribute>();
+				if (attr == null || attr.ViewPermission > EPermissionLevel.ADMIN)
+				{
+					continue;
+				}
+				var memberType = member.GetMemberType();
+				if(typeof(IDecryptable).IsAssignableFrom(memberType))
+				{
+					memberType = memberType.InheritanceHierarchy().First(t => t.IsGenericType).GetGenericArguments().First();
+				}
+
+				var memberName = member.Name.ToCamelCase();
+
+				if (!ShouldSerializeDirectly(memberType))
+				{
+					var subObjSchema = GetSchema(memberType);
+					if (subObjSchema.Any())
+					{
+						vals.Add(memberName,
+						new
+						{
+							type = memberType.GetRealTypeName(),
+							view = attr.ViewPermission.ToString().ToLowerInvariant(),
+							edit = attr.EditPermission.ToString().ToLowerInvariant(),
+							schema = subObjSchema,
+						});
+						continue;
+					}
+				}
+
+				vals.Add(memberName,
+				new
+				{
+					type = memberType.GetRealTypeName(),
+					view = attr.ViewPermission.ToString().ToLowerInvariant(),
+					edit = attr.EditPermission.ToString().ToLowerInvariant(),
+				});
+			}
+			return vals;
+		}
 
 		/// <summary>
 		/// This will generate a JSON object that represents viewable properties of this object.
@@ -138,7 +187,7 @@ namespace Resources
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
-			if(permissionLevel == EPermissionLevel.SYSTEM)
+			if (permissionLevel == EPermissionLevel.SYSTEM)
 			{
 				throw new ArgumentException($"Patch permission level cannot be {nameof(EPermissionLevel.SYSTEM)}." +
 					" Members with this permission level can only be altered from direct code calls.");
@@ -146,7 +195,7 @@ namespace Resources
 			// Check for case insensitive duplicates
 			foreach (var key in values.Keys)
 			{
-				if(values.Keys.Count(k => string.Equals(key, k, StringComparison.OrdinalIgnoreCase)) != 1)
+				if (values.Keys.Count(k => string.Equals(key, k, StringComparison.OrdinalIgnoreCase)) != 1)
 				{
 					throw new Exception($"Duplicate key {key} - field names are case insensitive and must be unique.");
 				}
@@ -162,9 +211,9 @@ namespace Resources
 				return (T)val;
 			}
 
-			if(targetType.IsValueType)
+			if (targetType.IsValueType)
 			{
-				throw new Exception("Cannot patch immutable struct - you must pass the full object. " + 
+				throw new Exception("Cannot patch immutable struct - you must pass the full object. " +
 					"Add the [ViewClass] attribute to your struct.");
 			}
 
@@ -230,7 +279,7 @@ namespace Resources
 					// Auth is incorrect, but that should have been picked up before
 					throw new Exception("Unexpected authorization failure on " + targetMember.Name);
 				}
-				if(!string.IsNullOrEmpty(val.Value.ToString()))
+				if (!string.IsNullOrEmpty(val.Value.ToString()))
 				{
 					try
 					{
