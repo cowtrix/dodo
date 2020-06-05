@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react"
 import PropTypes from "prop-types"
-import { Container } from "app/components/events"
+import { Container } from "app/components/resources"
 import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
 import { ResourceContent } from './resource-content'
 

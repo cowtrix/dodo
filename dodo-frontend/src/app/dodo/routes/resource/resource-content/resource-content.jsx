@@ -4,6 +4,7 @@ import { Loader, DateLayout, PageTitle } from "app/components"
 import { List, Header, Description, SignUpButton, Video } from "app/components/resources"
 
 import styles from './resource-content.module.scss'
+import { ParentLink } from '../../../../components/resources/parent-link'
 
 const JOIN_US_SITES = "Join us at a protest site"
 const COME_TO_EVENT = "Come to an resources"
@@ -12,6 +13,7 @@ const VOLUNTEER_NOW = "Volunteer now with a working group"
 export const ResourceContent = ({ resource, setCenterMap, resourceTypes}) =>
 	<div className={styles.resource}>
 		<Header resource={resource} setCenterMap={setCenterMap} />
+		<ParentLink parent={resource.parent}/>
 		<Video videoEmbedURL={resource.videoEmbedURL} />
 		<Description description={resource.publicDescription} />
 		<SignUpButton />
