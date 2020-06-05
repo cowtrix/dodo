@@ -9,7 +9,7 @@ import { Markers } from "./markers"
 import styles from "./leaflet-map.module.scss"
 
 const getDefaultCenter = (sites, location) => {
-	if (sites && sites.length) {
+	if (sites && sites.length && sites[0].location) {
 		return [sites[0].location.latitude, sites[0].location.longitude]
 	}
 	return location && location.length ? location : [51.5074, 0.1278]
