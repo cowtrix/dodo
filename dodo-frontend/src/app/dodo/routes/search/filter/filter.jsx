@@ -14,7 +14,6 @@ export const Filter = () => (
 		content={
 			<div className={styles.filter}>
 				<Events />
-				<Distance />
 			</div>
 		}
 	/>
