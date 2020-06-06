@@ -13,7 +13,7 @@ namespace Dodo.Controllers.Edit
 	[Route(UserService.REGISTER)]
 	public class RegisterController : CustomController
 	{
-		protected UserService UserService => new UserService(Context, HttpContext, new UserAuthManager());
+		protected UserService UserService => new UserService(Context, HttpContext, new UserAuthService());
 
 		[HttpGet]
 		public ActionResult Index(string token = null, string redirect = null)

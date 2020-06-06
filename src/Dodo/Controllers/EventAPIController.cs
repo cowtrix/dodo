@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace DodoResources.Sites
 {
 	[Route(Dodo.Dodo.API_ROOT + RootURL)]
-	public class EventController : SearchableResourceController<Event, EventSchema>
+	public class EventAPIController : SearchableResourceController<Event, EventSchema>
 	{
 		public const string RootURL = "event";
 

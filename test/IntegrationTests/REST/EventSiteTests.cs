@@ -12,7 +12,7 @@ namespace RESTTests
 	[TestClass]
 	public class EventSiteTests : SiteTests<Event>
 	{
-		public override string ResourceRoot => EventController.RootURL;
+		public override string ResourceRoot => EventAPIController.RootURL;
 
 		protected override string PostmanCategory => "Events";
 

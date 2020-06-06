@@ -17,7 +17,7 @@ using System.Diagnostics;
 
 namespace DodoResources
 {
-	public abstract class GroupResourceController<T, TSchema> : SearchableResourceController<T, TSchema> 
+	public abstract class GroupResourceAPIController<T, TSchema> : SearchableResourceController<T, TSchema> 
 		where T : GroupResource
 		where TSchema : OwnedResourceSchemaBase
 	{

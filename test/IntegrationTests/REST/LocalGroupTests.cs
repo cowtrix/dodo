@@ -15,7 +15,7 @@ namespace RESTTests
 	[TestClass]
 	public class LocalGroupTests : GroupResourceTestBase<LocalGroup, LocalGroupSchema>
 	{
-		public override string ResourceRoot => LocalGroupController.RootURL;
+		public override string ResourceRoot => LocalGroupAPIController.RootURL;
 
 		protected override string PostmanCategory => "Local Groups";
 

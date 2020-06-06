@@ -57,7 +57,7 @@ namespace RESTTests.Search
 				CreateObject<Event>(seed: false),
 				CreateObject<LocalGroup>(seed: false)
 			};
-			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
+			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
 					("startDate", startDate.ToString()),
@@ -97,7 +97,7 @@ namespace RESTTests.Search
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};
-			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
+			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
 					("parent", rebellion1.Guid.ToString()),
@@ -136,7 +136,7 @@ namespace RESTTests.Search
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};
-			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
+			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
 					("search", "asdacasdadw"),
@@ -175,7 +175,7 @@ namespace RESTTests.Search
 				CreateObject<Role>(),
 				CreateObject<Role>(),
 			};
-			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
+			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
 					("types", $"{nameof(WorkingGroup).ToLowerInvariant()},{nameof(Event).ToLowerInvariant()}"),
@@ -210,7 +210,7 @@ namespace RESTTests.Search
 				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid, new GeoLocation(rebellion1.Location).Offset(-45, -45), "", rebellion1.StartDate, rebellion1.StartDate), false),
 				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid, new GeoLocation(rebellion1.Location).Offset(-45, -45), "", rebellion1.StartDate, rebellion1.StartDate), false),
 				};
-			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchController.RootURL}", EHTTPRequestType.GET, null,
+			var request = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
 					("latlong", $"{rebellion1.Location.Latitude}+{rebellion1.Location.Longitude}"),

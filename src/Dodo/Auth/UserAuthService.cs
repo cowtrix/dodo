@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Dodo.Users
 {
-	public class UserAuthManager : AuthorizationService<User, UserSchema>
+	public class UserAuthService : AuthorizationService<User, UserSchema>
 	{
-		public UserAuthManager() : base()
+		public UserAuthService() : base()
 		{
 		}
 

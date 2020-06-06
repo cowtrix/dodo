@@ -11,10 +11,10 @@ namespace Dodo.Users
 	[Route(RootURL)]
 	public class UserAPIController : CrudResourceAPIController<User, UserSchema>
 	{
-		protected UserService UserService => new UserService(Context, HttpContext, new UserAuthManager());
+		protected UserService UserService => new UserService(Context, HttpContext, new UserAuthService());
 
 		protected override AuthorizationService<User, UserSchema> AuthService => 
-			new UserAuthManager() as AuthorizationService<User, UserSchema>;
+			new UserAuthService() as AuthorizationService<User, UserSchema>;
 
 		[HttpPost(LOGIN)]
 		public async Task<IActionResult> Login([FromBody] LoginModel login)

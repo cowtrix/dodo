@@ -11,10 +11,10 @@ using Common.Config;
 namespace DodoResources
 {
 	[Route(Dodo.Dodo.API_ROOT + RootURL)]
-	public class SearchController : CustomController
+	public class SearchAPIController : CustomController
 	{
 		public const string RootURL = "search";
-		public static int ChunkSize => ConfigManager.GetValue($"{nameof(SearchController)}_SearchChunkSize", 25);
+		public static int ChunkSize => ConfigManager.GetValue($"{nameof(SearchAPIController)}_SearchChunkSize", 25);
 
 		[HttpGet]
 		public virtual async Task<IActionResult> Index(

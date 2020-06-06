@@ -8,7 +8,7 @@ namespace RESTTests
 	[TestClass]
 	public class RoleTests : RESTTestBase<Role, RoleSchema>
 	{
-		public override string ResourceRoot => RoleController.RootURL;
+		public override string ResourceRoot => RoleAPIController.RootURL;
 
 		protected override string PostmanCategory => "Roles";
 

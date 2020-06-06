@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DodoResources.Roles
 {
-	public class RoleAuthManager : AuthorizationService<Role, RoleSchema>
+	public class RoleAuthService : AuthorizationService<Role, RoleSchema>
 	{
-		public RoleAuthManager() : base()
+		public RoleAuthService() : base()
 		{
 		}
 

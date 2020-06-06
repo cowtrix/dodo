@@ -10,7 +10,7 @@ namespace DodoResources.Sites
 {
 
 	[Route(Dodo.Dodo.API_ROOT + RootURL)]
-	public class SiteController : SearchableResourceController<Site, SiteSchema>
+	public class SiteAPIController : SearchableResourceController<Site, SiteSchema>
 	{
 		public const string RootURL = "site";
 
