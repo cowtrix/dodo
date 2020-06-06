@@ -14,12 +14,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Dodo.Users;
 using System.Net;
+using Dodo.Models;
+using DodoServer;
 
 namespace RESTTests
 {
 	public abstract class IntegrationTestBase : TestBase
 	{
-		protected string URL => DodoServer.DodoServer.NetConfig.FullURI;
+		protected string URL => Dodo.Dodo.NetConfig.FullURI;
 
 		private readonly TestServer m_server;
 		private readonly HttpClient m_client;
@@ -31,8 +33,8 @@ namespace RESTTests
 		{
 			m_cookies = new CookieContainer();	
 			m_server = new TestServer(new WebHostBuilder()
-				.UseStartup<DodoServer.DodoStartup>()
-				.UseUrls($"{DodoServer.DodoServer.NetConfig.Domain}:{DodoServer.DodoServer.NetConfig.SSLPort}"));
+				.UseStartup<DodoStartup>()
+				.UseUrls($"{Dodo.Dodo.NetConfig.Domain}:{Dodo.Dodo.NetConfig.SSLPort}"));
 
 			m_client = m_server.CreateClient();
 			m_client.BaseAddress = new Uri(m_client.BaseAddress.ToString().Replace("http", "https"));
@@ -105,7 +107,7 @@ namespace RESTTests
 		protected async Task Login(string username, string password)
 		{
 			var response = await m_client.PostAsync($"{UserController.RootURL}/{UserController.LOGIN}",
-				new StringContent(JsonConvert.SerializeObject(new UserController.LoginModel { Username = username, Password = password }), 
+				new StringContent(JsonConvert.SerializeObject(new LoginModel { Username = username, Password = password }), 
 				Encoding.UTF8, "application/json"));
 			if (!response.IsSuccessStatusCode)
 			{

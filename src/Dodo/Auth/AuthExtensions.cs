@@ -22,7 +22,7 @@ namespace Dodo
 		public static AccessContext GetContext(this ClaimsPrincipal claims)
 		{
 			// Make sure we have the info needed
-			if (claims.Identity == null || !claims.Identity.IsAuthenticated)
+			if (claims == null || claims.Identity == null || !claims.Identity.IsAuthenticated)
 			{
 				return default;
 			}

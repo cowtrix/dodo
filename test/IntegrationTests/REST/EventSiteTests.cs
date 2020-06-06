@@ -23,7 +23,7 @@ namespace RESTTests
 			await Login(context.User.AuthData.Username, pass);
 			var site = CreateObject<Event>(context);
 			var date = SchemaGenerator.RandomDate;
-			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { startDate = date });
+			await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { startDate = date });
 			var updatedSite = ResourceManager.GetSingle(r => r.Guid == site.Guid) as Event;
 			Assert.IsTrue(date.ToUniversalTime() - updatedSite.StartDate.ToUniversalTime() < TimeSpan.FromMinutes(1));
 		}
@@ -35,7 +35,7 @@ namespace RESTTests
 			await Login(context.User.AuthData.Username, pass);
 			var site = CreateObject<Event>(context);
 			var date = SchemaGenerator.RandomDate;
-			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { endDate = date });
+			await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { endDate = date });
 			var updatedSite = ResourceManager.GetSingle(r => r.Guid == site.Guid) as Event;
 			Assert.IsTrue(date.ToUniversalTime() - updatedSite.EndDate.ToUniversalTime() < TimeSpan.FromMinutes(1));
 		}

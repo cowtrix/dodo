@@ -26,7 +26,7 @@ namespace RESTTests
 			GetRandomUser(out _, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var resource = CreateObject<T>(context, schema);
-			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
 			VerifyCreatedObject(resource, resourceObj, schema);
 
 			Postman.Update(
@@ -40,7 +40,7 @@ namespace RESTTests
 			GetRandomUser(out _, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var resource = CreateObject<T>(context, schema);
-			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			VerifyCreatedObject(resource, resourceObj, schema);
 		}
 
@@ -51,7 +51,7 @@ namespace RESTTests
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var resource = CreateObject<T>(context, schema);
 			await Login(user.AuthData.Username, password);
-			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
 
 			Postman.Update(
@@ -66,7 +66,7 @@ namespace RESTTests
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var resource = CreateObject<T>(context, schema);
 			await Login(user.AuthData.Username, password);
-			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
 		}
 
@@ -76,7 +76,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>();
 			await Login(user.AuthData.Username, password);
-			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.USER);
 
 			Postman.Update(
@@ -90,21 +90,21 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>();
 			await Login(user.AuthData.Username, password);
-			var resourceObj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
+			var resourceObj = await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.USER);
 		}
 
 		[TestMethod]
 		public async virtual Task BadGetWithGuidReturns404()
 		{
-			await AssertX.ThrowsAsync<Exception>(Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{Guid.NewGuid()}", EHTTPRequestType.GET),
+			await AssertX.ThrowsAsync<Exception>(Request($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{Guid.NewGuid()}", EHTTPRequestType.GET),
 				e => e.Message.Contains("Not Found"));
 		}
 
 		[TestMethod]
 		public async virtual Task BadGetWithSlugReturns404()
 		{
-			await AssertX.ThrowsAsync<Exception>(Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/thisisabadslug", EHTTPRequestType.GET),
+			await AssertX.ThrowsAsync<Exception>(Request($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/thisisabadslug", EHTTPRequestType.GET),
 				e => e.Message.Contains("Not Found"));
 		}
 
@@ -120,7 +120,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			await Login(user.AuthData.Username, password);
-			var response = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST,
+			var response = await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST,
 				SchemaGenerator.GetRandomSchema<T>(context));
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Create a new {PostmanTypeName}" },
@@ -133,7 +133,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
-			await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.DELETE,
+			await Request($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.DELETE,
 				SchemaGenerator.GetRandomSchema<T>(context));
 			Assert.IsNull(ResourceManager.GetSingle(r => r.Guid == resource.Guid));
 			Postman.Update(
@@ -150,7 +150,7 @@ namespace RESTTests
 			var resource = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
 			var patch = GetPatchObject();
-			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.PATCH,	patch);
+			await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.PATCH,	patch);
 			var updatedObj = ResourceManager.GetSingle(r => r.Guid == resource.Guid);
 			VerifyPatchedObject(updatedObj, patch);
 			Postman.Update(

@@ -1,18 +1,12 @@
-using Common;
 using Dodo;
 using Dodo.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.IO;
 
 namespace DodoServer
 {
@@ -29,13 +23,13 @@ namespace DodoServer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			if (!Environment.IsDevelopment() && DodoServer.NetConfig.LetsEncryptAutoSetup)
+			if (!Environment.IsDevelopment() && Dodo.Dodo.NetConfig.LetsEncryptAutoSetup)
 			{
 				// Setup SSL certificate with Let's Encrypt
 				services.AddLetsEncrypt(config =>
 				{
 					config.AcceptTermsOfService = true;
-					config.DomainNames = new[] { DodoServer.NetConfig.Domain };
+					config.DomainNames = new[] { Dodo.Dodo.NetConfig.Domain };
 					config.EmailAddress = DodoServer.DevEmail;
 				});
 			}
@@ -69,7 +63,7 @@ namespace DodoServer
 			services.AddHttpsRedirection(options =>
 			{
 				options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-				options.HttpsPort = DodoServer.NetConfig.SSLPort;
+				options.HttpsPort = global::Dodo.Dodo.NetConfig.SSLPort;
 			});
 		}
 

@@ -1,19 +1,5 @@
 {
-	"LogLevel": 3,
-	"MongoDBServerURL": "",
-	"NetworkConfig": {
-		"Hostname": "0.0.0.0",
-		"SSLPort": 5001,
-		"Domain": "localhost",
-		"LetsEncryptAutoSetup": false,
-		"HTTPPort": 5000
-	},
-	"Dodo_DevEmail": "test@web.com",
-	"ResourceLockTimeout": 10000,
-	"Email_FromEmail": "noreply@Dodo.com",
-	"Email_FromName": "Dodo SysAdmin",
-	"PrivacyPolicyURL": "http://www.todo.com/privacypolicy",
-	"SendGrid_APIKey": "",
-	"EmailHelper_SendGridTemplate_VerifyEmail": "d-abb66e4f174c470abeb5e6a1ecdaac85",
-	"EmailHelper_SendGridTemplate_ResetPassword": "d-43861bc9e0dd44b29b131da9b10a07d1"
+  "LogLevel": 3,
+  "MongoDBServerURL": "",
+  "ResourceLockTimeout": 10000
 }

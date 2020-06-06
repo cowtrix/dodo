@@ -59,7 +59,7 @@ namespace RESTTests
 
 			await Login(user.AuthData.Username, password);
 			var patch = GetPatchObject();
-			await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{rebellion.Guid}", EHTTPRequestType.PATCH, patch);
+			await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{rebellion.Guid}", EHTTPRequestType.PATCH, patch);
 			var updatedObj = ResourceManager.GetSingle(r => r.Guid == rebellion.Guid);
 			VerifyPatchedObject(updatedObj, patch);
 		}

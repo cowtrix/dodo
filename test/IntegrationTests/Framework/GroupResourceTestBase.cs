@@ -26,7 +26,7 @@ namespace RESTTests
 			}
 			await Login(user.AuthData.Username, password);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
-			var response = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST, schema);
+			var response = await RequestJSON($"{Dodo.Dodo.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST, schema);
 			user = UserManager.GetSingle(u => u.Guid == user.Guid);
 			var rsc = ResourceManager.GetSingle(r => r.Guid.ToString() == response.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			VerifyCreatedObject(rsc, response, schema);
@@ -42,7 +42,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var group = CreateObject<T>(context);
 			await Login(user.AuthData.Username, password);
-			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			var obj = await RequestJSON($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.OWNER,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
 		}
@@ -58,16 +58,16 @@ namespace RESTTests
 			await Login(user1.AuthData.Username, user1Password);
 
 			var user2 = GetRandomUser(out var user2Password, out var user2Context);
-			var apiReq = await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin", 
+			var apiReq = await Request($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin", 
 				EHTTPRequestType.POST, user2.Guid);
 
-			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			var obj = await RequestJSON($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(GroupResource.AdminData.Administrators).ToCamelCase()).Values<JToken>()
 				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() == user2.Guid.ToString()));
 			await Logout();
 
 			await Login(user2.AuthData.Username, user2Password);
-			obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			obj = await RequestJSON($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.ADMIN,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
 
@@ -88,10 +88,10 @@ namespace RESTTests
 			await Login(user1.AuthData.Username, user1Password);
 
 			var user2Email = "myUser2@email.com";
-			var apiReq = await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin",
+			var apiReq = await Request($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin",
 				EHTTPRequestType.POST, user2Email);
 
-			var obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			var obj = await RequestJSON($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(GroupResource.AdminData.Administrators).ToCamelCase()).Values<JToken>()
 				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() != user1.Guid.ToString()));
 			await Logout();
@@ -118,8 +118,8 @@ namespace RESTTests
 			var group = CreateObject<T>();
 			var user = GetRandomUser(out var password, out var context);
 			await Login(user.AuthData.Username, password);
-			var joinReq = await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/join", EHTTPRequestType.POST);
-			var verify = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			var joinReq = await Request($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}/join", EHTTPRequestType.POST);
+			var verify = await RequestJSON($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(verify[Resource.METADATA]["isMember"].Value<string>(), "true");
 
 			Postman.Update(
@@ -133,9 +133,9 @@ namespace RESTTests
 			var group = CreateObject<T>();
 			var user = GetRandomUser(out var password, out var context);
 			await Login(user.AuthData.Username, password);
-			await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/join", EHTTPRequestType.POST);
-			var leaveReq = await Request($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}/leave", EHTTPRequestType.POST);
-			var verify = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			await Request($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}/join", EHTTPRequestType.POST);
+			var leaveReq = await Request($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}/leave", EHTTPRequestType.POST);
+			var verify = await RequestJSON($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(verify[Resource.METADATA]["isMember"].Value<string>(), "false");
 
 			Postman.Update(
