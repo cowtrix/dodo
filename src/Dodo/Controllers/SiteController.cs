@@ -14,11 +14,14 @@ namespace DodoResources.Sites
 	{
 		public const string RootURL = "site";
 
+		protected override AuthorizationService<Site, SiteSchema> AuthService =>
+			new OwnedResourceAuthService<Site, SiteSchema>();
+
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] SiteSchema schema)
 		{
 			var result = await PublicService.Create(schema);
-			return result.Result;
+			return result.ActionResult;
 		}
 	}
 }

@@ -21,27 +21,29 @@ namespace DodoResources
 		where T : GroupResource
 		where TSchema : OwnedResourceSchemaBase
 	{
-		protected GroupResourceService<T, TSchema> GroupService => new GroupResourceService<T, TSchema>(Context, HttpContext);
+		protected GroupResourceService<T, TSchema> GroupService => 
+			new GroupResourceService<T, TSchema>(Context, HttpContext, AuthService);
+		protected override AuthorizationService<T, TSchema> AuthService => new GroupResourceAuthService<T, TSchema>();
 
 		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.ADD_ADMIN)]
 		public IActionResult AddAdministrator(Guid id, [FromBody]string newAdminIdentifier)
 		{
 			var result = GroupService.AddAdministrator(id, newAdminIdentifier);
-			return result.Result;
+			return result.ActionResult;
 		}
 
 		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.JOIN_GROUP)]
 		public IActionResult JoinGroup(Guid id)
 		{
 			var result = GroupService.JoinGroup(id);
-			return result.Result;
+			return result.ActionResult;
 		}
 
 		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.LEAVE_GROUP)]
 		public IActionResult LeaveGroup(Guid id)
 		{
 			var result = GroupService.LeaveGroup(id);
-			return result.Result;
+			return result.ActionResult;
 		}
 	}
 }

@@ -10,17 +10,16 @@ public class ResourceServiceBase<T, TSchema>
 {
 	protected AccessContext Context { get; private set; }
 	protected HttpContext HttpContext { get; private set; }
+	public AuthorizationService<T, TSchema> AuthService { get; private set; }
+
 	protected virtual IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
 	protected virtual IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
-	public virtual AuthorizationService<T, TSchema> AuthManager => new AuthorizationService<T, TSchema>();
-
-	public ResourceServiceBase(AccessContext context, HttpContext httpContext)
+	public ResourceServiceBase(AccessContext context, HttpContext httpContext, AuthorizationService<T, TSchema> authService)
 	{
 		Context = context;
 		HttpContext = httpContext;
+		AuthService = authService;
 	}
-
-	
 
 	protected IRequestResult VerifyRequest(Guid id, EHTTPRequestType type, string actionName = null)
 	{
@@ -33,7 +32,7 @@ public class ResourceServiceBase<T, TSchema>
 		{
 			return ResourceRequestError.ForbidRequest();
 		}
-		return AuthManager.IsAuthorised(Context, target, type, actionName);
+		return AuthService.IsAuthorised(Context, target, type, actionName);
 	}
 
 	protected IRequestResult VerifyRequest(TSchema schema)
@@ -42,6 +41,6 @@ public class ResourceServiceBase<T, TSchema>
 		{
 			return ResourceRequestError.ForbidRequest();
 		}
-		return AuthManager.IsAuthorised(Context, schema, EHTTPRequestType.POST);
+		return AuthService.IsAuthorised(Context, schema, EHTTPRequestType.POST);
 	}
 }

@@ -17,7 +17,7 @@ namespace Dodo.Controllers.Edit
 		where T : DodoResource, IPublicResource
 		where TSchema : ResourceSchemaBase
 	{
-		protected abstract PublicResourceAPIController<T, TSchema> RESTController { get; }
+		protected abstract CrudResourceAPIController<T, TSchema> RESTController { get; }
 
 		// GET: Rebellions/Create
 		[Route("create")]

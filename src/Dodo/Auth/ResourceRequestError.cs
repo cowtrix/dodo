@@ -14,11 +14,11 @@ namespace Resources
 
 		public bool IsSuccess => false;
 
-		public IActionResult Result { get; private set; }
+		public IActionResult ActionResult { get; private set; }
 
 		public ResourceRequestError(IActionResult result)
 		{
-			Result = result;
+			ActionResult = result;
 		}
 	}
 }

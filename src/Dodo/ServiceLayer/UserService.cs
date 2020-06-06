@@ -27,7 +27,8 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 	public const string PARAM_TOKEN = "token";
 	public const string VERIFY_EMAIL = "verifyemail";
 
-	public UserService(AccessContext context, HttpContext httpContext) : base(context, httpContext)
+	public UserService(AccessContext context, HttpContext httpContext, AuthorizationService<User, UserSchema> auth)
+		: base(context, httpContext, auth)
 	{
 	}
 
@@ -77,8 +78,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(1))
 		};
 		// issue authentication cookie with subject ID and username
-		//await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
-		throw new Exception("fix me");
+		await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
 		Logger.Debug($"{logstr} Request was successful, created new session token {token.Guid} (expires {token.ExpiryDate})");
 		return new OkRequestResult();
 	}
@@ -210,7 +210,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return request;
 		}
-		var req = (ResourceActionRequest)request;
+		var req = (ResourceCreationRequest)request;
 		var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username || x.PersonalData.Email == schema.Email);
 		if (user != null)
 		{
@@ -220,8 +220,12 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		user = factory.CreateTypedObject(default(AccessContext), schema);
 		var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));
 		SendEmailVerification(new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)));
-		req.Result = user;
-		return req;
+		return new ResourceCreationRequest(
+			new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)),
+			schema, EHTTPRequestType.POST, EPermissionLevel.OWNER)
+			{ 
+				Result = user 
+			};
 	}
 
 	public async Task<IRequestResult> CreateWithToken(string token, UserSchema schema)

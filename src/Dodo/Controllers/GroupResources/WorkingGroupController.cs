@@ -20,7 +20,7 @@ namespace DodoResources.WorkingGroups
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] WorkingGroupSchema schema)
 		{
-			return (await PublicService.Create(schema)).Result;
+			return (await PublicService.Create(schema)).ActionResult;
 		}
 	}
 }

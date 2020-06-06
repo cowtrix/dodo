@@ -8,7 +8,7 @@ using System;
 
 namespace DodoResources
 {
-	public abstract class SearchableResourceController<T, TSchema> : PublicResourceAPIController<T, TSchema>
+	public abstract class SearchableResourceController<T, TSchema> : CrudResourceAPIController<T, TSchema>
 		where T : DodoResource, IPublicResource
 		where TSchema : ResourceSchemaBase
 	{

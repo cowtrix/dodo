@@ -10,11 +10,14 @@ namespace DodoResources.Sites
 	{
 		public const string RootURL = "event";
 
+		protected override AuthorizationService<Event, EventSchema> AuthService => 
+			new OwnedResourceAuthService<Event, EventSchema>();
+
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] EventSchema schema)
 		{
 			var result = await PublicService.Create(schema);
-			return result.Result;
+			return result.ActionResult;
 		}
 	}
 }

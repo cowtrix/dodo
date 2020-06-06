@@ -13,7 +13,7 @@ namespace Dodo.Controllers.Edit
 	[Route(UserService.REGISTER)]
 	public class RegisterController : CustomController
 	{
-		protected UserService UserService => new UserService(Context, HttpContext);
+		protected UserService UserService => new UserService(Context, HttpContext, new UserAuthManager());
 
 		[HttpGet]
 		public ActionResult Index(string token = null, string redirect = null)
@@ -36,7 +36,7 @@ namespace Dodo.Controllers.Edit
 				if (!result.IsSuccess)
 				{
 					//ModelState.AddModelError(result.GetType(), $"{result.}");
-					return result.Result;
+					return result.ActionResult;
 				}
 				// Guard against open redirect attack
 				if (Url.IsLocalUrl(redirect))

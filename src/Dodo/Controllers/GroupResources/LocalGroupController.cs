@@ -14,7 +14,7 @@ namespace DodoResources.LocalGroups
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] LocalGroupSchema schema)
 		{
-			return (await PublicService.Create(schema)).Result;
+			return (await PublicService.Create(schema)).ActionResult;
 		}
 	}
 }

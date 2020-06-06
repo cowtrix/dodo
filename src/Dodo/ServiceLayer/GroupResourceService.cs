@@ -17,11 +17,10 @@ namespace DodoResources
 		public const string JOIN_GROUP = "join";
 		public const string LEAVE_GROUP = "leave";
 
-		public GroupResourceService(AccessContext context, HttpContext httpContext) : base(context, httpContext)
+		public GroupResourceService(AccessContext context, HttpContext httpContext, AuthorizationService<T, TSchema> auth) 
+			: base(context, httpContext, auth)
 		{
 		}
-
-		public override AuthorizationService<T, TSchema> AuthManager => new GroupResourceAuthManager<T, TSchema>();
 
 		public IRequestResult AddAdministrator(Guid id, string newAdminIdentifier)
 		{
@@ -42,7 +41,7 @@ namespace DodoResources
 				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier) ??
 					UserService.CreateTemporaryUser(newAdminIdentifier);
 			}
-			var resource = reqResult.Result as T;
+			var resource = req.Result as T;
 			if(resource.AddAdmin(req.AccessContext, targetUser))
 			{
 				return new OkRequestResult();
@@ -52,7 +51,7 @@ namespace DodoResources
 
 		public IRequestResult JoinGroup(Guid id)
 		{
-			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, ADD_ADMIN);
+			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, JOIN_GROUP);
 			if (!reqResult.IsSuccess)
 			{
 				return reqResult;
@@ -68,7 +67,7 @@ namespace DodoResources
 		[HttpPost("{id}/" + LEAVE_GROUP)]
 		public IRequestResult LeaveGroup(Guid id)
 		{
-			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, ADD_ADMIN);
+			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, LEAVE_GROUP);
 			if (!reqResult.IsSuccess)
 			{
 				return reqResult;

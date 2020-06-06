@@ -22,7 +22,7 @@ namespace Resources
 
 		public bool IsSuccess => true;
 
-		IActionResult IRequestResult.Result => 
-			new OkObjectResult(DodoJsonViewUtility.GenerateJsonView(Result, EPermissionLevel.OWNER, AccessContext.User, AccessContext.Passphrase));
+		public IActionResult ActionResult => 
+			new OkObjectResult(DodoJsonViewUtility.GenerateJsonView(Result, PermissionLevel, AccessContext.User, AccessContext.Passphrase));
 	}
 }

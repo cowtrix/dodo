@@ -17,28 +17,30 @@ using Dodo.Users.Tokens;
 
 namespace Resources
 {
-	public abstract class PublicResourceAPIController<T, TSchema> : CustomController
-		where T : DodoResource, IPublicResource
+	public abstract class CrudResourceAPIController<T, TSchema> : CustomController
+		where T : DodoResource
 		where TSchema : ResourceSchemaBase
 	{
-		protected PublicResourceService<T, TSchema> PublicService => new PublicResourceService<T, TSchema>(Context, HttpContext);
+		protected CrudResourceServiceBase<T, TSchema> PublicService => 
+			new CrudResourceServiceBase<T, TSchema>(Context, HttpContext, AuthService);
+		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
 
 		[HttpPatch("{id}")]
 		public virtual async Task<IActionResult> Update(Guid id, [FromBody]Dictionary<string, JsonElement> rawValues)
 		{
-			return (await PublicService.Update(id, rawValues)).Result;
+			return (await PublicService.Update(id, rawValues)).ActionResult;
 		}
 
 		[HttpDelete("{id}")]
 		public virtual async Task<IActionResult> Delete(Guid id)
 		{
-			return (await PublicService.Delete(id)).Result;
+			return (await PublicService.Delete(id)).ActionResult;
 		}
 
 		[HttpGet("{id}")]
 		public virtual async Task<IActionResult> Get(string id)
 		{
-			return (await PublicService.Get(id)).Result;
+			return (await PublicService.Get(id)).ActionResult;
 		}
 
 	}

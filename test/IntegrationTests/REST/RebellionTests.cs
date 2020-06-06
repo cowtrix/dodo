@@ -21,7 +21,7 @@ namespace RESTTests
 	{
 		public static DateTime DefaultStart => new DateTime(2019, 10, 7, 0, 0, 0, DateTimeKind.Utc);
 		public static DateTime DefaultEnd => new DateTime(2019, 10, 14, 0, 0, 0, DateTimeKind.Utc);
-		public override string ResourceRoot => RebellionController.RootURL;
+		public override string ResourceRoot => RebellionAPIController.RootURL;
 		protected override string PostmanCategory => "Rebellions";
 
 		protected override void VerifyCreatedObject(Rebellion rebellion, JObject obj, RebellionSchema schema)
@@ -59,7 +59,7 @@ namespace RESTTests
 
 			await Login(user.AuthData.Username, password);
 			var patch = GetPatchObject();
-			await RequestJSON($"{Dodo.DodoServer.API_ROOT}{ResourceRoot}/{rebellion.Guid}", EHTTPRequestType.PATCH, patch);
+			await RequestJSON($"{Dodo.Dodo.API_ROOT}{ResourceRoot}/{rebellion.Guid}", EHTTPRequestType.PATCH, patch);
 			var updatedObj = ResourceManager.GetSingle(r => r.Guid == rebellion.Guid);
 			VerifyPatchedObject(updatedObj, patch);
 		}

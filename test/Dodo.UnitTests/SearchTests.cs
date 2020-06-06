@@ -25,7 +25,7 @@ namespace SearchTests
 			var baseDate = SchemaGenerator.RandomDate;
 			GetRandomUser(out _, out var context);
 			var rebellion = CreateObject<Rebellion>(context, new RebellionSchema("Test", "", TrueLocation, SchemaGenerator.RandomDate, SchemaGenerator.RandomDate));
-			var goodResults = new List<ILocationalResource>()
+			var positives = new List<ILocationalResource>()
 			{
 				rebellion,
 				CreateObject<Site>(context, new SiteSchema("Test Site 1", rebellion.Guid, new GeoLocation(TrueLocation.Latitude + .1, TrueLocation.Longitude), ""), false),
@@ -33,17 +33,25 @@ namespace SearchTests
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", TrueLocation), false)
 			};
 			
-			var negativeResults = new List<ILocationalResource>()
+			var negatives = new List<ILocationalResource>()
 			{
 				CreateObject<Rebellion>(),
 				CreateObject<Site>(context, new SiteSchema("Test Site 1", rebellion.Guid, new GeoLocation(TrueLocation.Longitude + .1, TrueLocation.Latitude), "")),
 				CreateObject<Event>(context, new EventSchema("Test Site 2", rebellion.Guid, new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1), "", baseDate, baseDate)),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1)))
 			};
-			var result = DodoResourceUtility.Search(0, 100, new DistanceFilter() { LatLong = $"{TrueLocation.Latitude} {TrueLocation.Longitude}", Distance = 100 });
-			Assert.AreEqual(goodResults.Count, result.Count());
-			Assert.IsTrue(result.All(r => goodResults.Contains(r)));
-			Assert.IsFalse(result.All(r => negativeResults.Contains(r)));
+			var guids = DodoResourceUtility.Search(0, 100, new DistanceFilter() { LatLong = $"{TrueLocation.Latitude} {TrueLocation.Longitude}", Distance = 100 })
+				.Select(r => r.Guid);
+			foreach (var pos in positives)
+			{
+				Assert.IsTrue(guids.Contains(pos.Guid),
+					$"Results did not contain expected resource: {pos.GetType()}");
+			}
+			foreach (var neg in negatives)
+			{
+				Assert.IsFalse(guids.Contains(neg.Guid),
+					$"Results contained unexpected resource: {neg.GetType()}");
+			}
 		}
 
 		[TestMethod]

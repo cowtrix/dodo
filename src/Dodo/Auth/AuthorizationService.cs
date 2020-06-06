@@ -6,16 +6,6 @@ using System;
 
 namespace Dodo
 {
-	public static class AuthorizationManager
-	{
-		public static AuthorizationService<T, TSchema> GetAuthService<T, TSchema>()
-			where T : IDodoResource
-			where TSchema : ResourceSchemaBase
-		{
-			throw new NotImplementedException();
-		}
-	}
-
 	public class AuthorizationService<T, TSchema> 
 		where T: IDodoResource 
 		where TSchema: ResourceSchemaBase

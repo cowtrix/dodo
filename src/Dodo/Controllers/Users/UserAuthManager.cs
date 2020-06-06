@@ -19,27 +19,27 @@ namespace Dodo.Users
 			return EPermissionLevel.PUBLIC;
 		}
 
-		public override ResourceRequest IsAuthorised(AccessContext context, User target, EHTTPRequestType requestType, string action)
+		public override IRequestResult IsAuthorised(AccessContext context, User target, EHTTPRequestType requestType, string action)
 		{
 			var permission = GetPermission(context, target);
 			if(permission != EPermissionLevel.OWNER)
 			{
 				if (context.User == null)
 				{
-					return ResourceRequest.ForbidRequest;
+					return ResourceRequestError.ForbidRequest();
 				}
-				return ResourceRequest.UnauthorizedRequest;
+				return ResourceRequestError.UnauthorizedRequest();
 			}
-			return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+			return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
 		}
 
-		protected override ResourceRequest CanCreate(AccessContext context, UserSchema target)
+		protected override IRequestResult CanCreate(AccessContext context, UserSchema target)
 		{
 			if(context.User == null)
 			{
-				return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+				return new ResourceCreationRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
 			}
-			return ResourceRequest.BadRequest;
+			return ResourceRequestError.BadRequest();
 		}
 	}
 }

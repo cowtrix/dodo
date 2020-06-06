@@ -1,18 +1,18 @@
-using Resources;
-using Dodo.Roles;
 using Dodo;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Dodo.LocationResources;
+using Resources;
 
-namespace DodoResources.Roles
+namespace DodoResources.Sites
 {
-	public class RoleAuthManager : AuthorizationService<Role, RoleSchema>
+	public class OwnedResourceAuthService<T, TSchema> : AuthorizationService<T, TSchema>
+		where T : IOwnedResource
+		where TSchema : OwnedResourceSchemaBase
 	{
-		public RoleAuthManager() : base()
+		public OwnedResourceAuthService() : base()
 		{
 		}
 
-		protected override IRequestResult CanCreate(AccessContext context, RoleSchema target)
+		protected override IRequestResult CanCreate(AccessContext context, TSchema target)
 		{
 			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as GroupResource;
 			if (parent == null)

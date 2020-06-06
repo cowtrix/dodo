@@ -8,7 +8,7 @@ namespace Resources
 
 		public object Content { get; set; }
 
-		public IActionResult Result
+		public IActionResult ActionResult
 		{
 			get
 			{

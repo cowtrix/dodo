@@ -10,11 +10,12 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-public class PublicResourceService<T, TSchema> : ResourceServiceBase<T, TSchema>
-	where T : DodoResource, IPublicResource
+public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchema>
+	where T : DodoResource
 	where TSchema : ResourceSchemaBase
 {
-	public PublicResourceService(AccessContext context, HttpContext httpContext) : base(context, httpContext)
+	public CrudResourceServiceBase(AccessContext context, HttpContext httpContext, AuthorizationService<T, TSchema> auth) 
+		: base(context, httpContext, auth)
 	{
 	}
 

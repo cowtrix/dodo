@@ -14,7 +14,7 @@ using Dodo.Rebellions;
 namespace DodoResources.Rebellions
 {
 	[Route(Dodo.Dodo.API_ROOT + RootURL)]
-	public class RebellionController : GroupResourceController<Rebellion, RebellionSchema>
+	public class RebellionAPIController : GroupResourceController<Rebellion, RebellionSchema>
 	{
 		public const string RootURL = "rebellion";
 
@@ -22,7 +22,7 @@ namespace DodoResources.Rebellions
 		public async Task<IActionResult> Create([FromBody] RebellionSchema schema)
 		{
 			var result = await PublicService.Create(schema);
-			return result.Result;
+			return result.ActionResult;
 		}
 	}
 }

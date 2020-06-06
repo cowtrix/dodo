@@ -24,7 +24,7 @@ namespace RESTTests
 		[TestMethod]
 		public async Task CanRegisterNewUser()
 		{
-			var response = await Request($"{UserAPIController.RootURL}/{UserAPIController.REGISTER}", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
+			var response = await Request($"{UserService.RootURL}/{UserService.REGISTER}", EHTTPRequestType.POST, SchemaGenerator.GetRandomUser());
 			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Register a new user" },
@@ -49,7 +49,7 @@ namespace RESTTests
 					}
 				}
 			};
-			var response = await Request($"{UserAPIController.RootURL}/{user.Guid}", EHTTPRequestType.PATCH, patchObj);
+			var response = await Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.PATCH, patchObj);
 			Assert.IsTrue(response.IsSuccessStatusCode);
 			user = ResourceUtility.GetManager<User>().GetSingle(x => x.Guid == user.Guid);
 			Assert.AreEqual(newName, user.Name);
@@ -67,7 +67,7 @@ namespace RESTTests
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Login" },
 				LastRequest);
-			var response = await Request($"{UserAPIController.RootURL}/{user.Guid}", EHTTPRequestType.GET);
+			var response = await Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.GET);
 			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
 		}
 
@@ -76,9 +76,9 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out _);
 			await Login(user.AuthData.Username, password);
-			await Request($"{UserAPIController.RootURL}/{user.Guid}", EHTTPRequestType.GET);
+			await Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.GET);
 			await Logout();
-			await AssertX.ThrowsAsync<Exception>(Request($"{UserAPIController.RootURL}/{user.Guid}", EHTTPRequestType.GET),
+			await AssertX.ThrowsAsync<Exception>(Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.GET),
 				e => e.Message.Contains("StatusCode: 302, ReasonPhrase: 'Found'"));
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Logout" },
@@ -90,7 +90,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out _);
 			await Login(user.AuthData.Username, password);
-			await Request($"{UserAPIController.RootURL}/{user.Guid}", EHTTPRequestType.DELETE);
+			await Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.DELETE);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Delete a User" },
 				LastRequest);
@@ -108,7 +108,7 @@ namespace RESTTests
 		public async virtual Task CannotGetAnonymously()
 		{
 			var user = GetRandomUser(out _, out _);
-			await AssertX.ThrowsAsync<Exception>(RequestJSON($"{UserAPIController.RootURL}/{user.Guid.ToString()}", EHTTPRequestType.GET));
+			await AssertX.ThrowsAsync<Exception>(RequestJSON($"{UserService.RootURL}/{user.Guid.ToString()}", EHTTPRequestType.GET));
 		}
 
 		[TestMethod]
@@ -116,7 +116,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			await Login(user.AuthData.Username, password);
-			await RequestJSON($"{UserAPIController.RootURL}/{user.Guid.ToString()}", EHTTPRequestType.GET);
+			await RequestJSON($"{UserService.RootURL}/{user.Guid.ToString()}", EHTTPRequestType.GET);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Get a User" },
 				LastRequest);
@@ -126,7 +126,7 @@ namespace RESTTests
 		public async Task CanResetPassword()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			var request = await Request($"{UserAPIController.RootURL}/{UserAPIController.RESET_PASSWORD}", EHTTPRequestType.GET,
+			var request = await Request($"{UserService.RootURL}/{UserService.RESET_PASSWORD}", EHTTPRequestType.GET,
 				null, new[] { ( "email", user.PersonalData.Email) } );
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			user = UserManager.GetSingle(u => u.Guid == user.Guid);
@@ -136,9 +136,8 @@ namespace RESTTests
 				new PostmanEntryAddress { Category = UserCat, Request = "Request a Password Reset Token" },
 				request);
 
-			request = await Request($"{UserAPIController.RootURL}/{UserAPIController.RESET_PASSWORD}", EHTTPRequestType.POST,
-				newPassword, new[] { ( UserAPIController.PARAM_TOKEN, token.Key ) },
-				r => r.StatusCode == System.Net.HttpStatusCode.Redirect);
+			request = await Request($"{UserService.RootURL}/{UserService.RESET_PASSWORD}", EHTTPRequestType.POST,
+				newPassword, new[] { ( UserService.PARAM_TOKEN, token.Key ) });
 
 			await Login(user.AuthData.Username, newPassword);
 			Postman.Update(
@@ -152,7 +151,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			await Login(user.AuthData.Username, password);
-			var req = await Request($"{UserAPIController.RootURL}/{UserAPIController.CHANGE_PASSWORD}", EHTTPRequestType.POST, new { currentpassword = password, newpassword = newPassword });
+			var req = await Request($"{UserService.RootURL}/{UserService.CHANGE_PASSWORD}", EHTTPRequestType.POST, new { currentpassword = password, newpassword = newPassword });
 			await Login(user.AuthData.Username, newPassword);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Change your password" },
@@ -167,9 +166,8 @@ namespace RESTTests
 			Assert.IsNotNull(token);
 			Assert.IsNotNull(token.Token);
 			await Login(user.AuthData.Username, password);
-			var request = await Request($"{UserAPIController.RootURL}/{UserAPIController.VERIFY_EMAIL}", EHTTPRequestType.GET,
-				null, new[] { ("token", token.Token) },
-				r => r.StatusCode == System.Net.HttpStatusCode.Redirect);
+			var request = await Request($"{UserService.RootURL}/{UserService.VERIFY_EMAIL}", EHTTPRequestType.GET,
+				null, new[] { ("token", token.Token) });
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Redeem an Email Verification Token" },
 				LastRequest);
