@@ -12,9 +12,9 @@ namespace DodoResources.LocalGroups
 		public const string RootURL = "localgroup";
 
 		[HttpPost]
-		public override async Task<IActionResult> Create([FromBody] LocalGroupSchema schema)
+		public async Task<IActionResult> Create([FromBody] LocalGroupSchema schema)
 		{
-			return await CreateInternal(schema);
+			return (await PublicService.Create(schema)).Result;
 		}
 	}
 }

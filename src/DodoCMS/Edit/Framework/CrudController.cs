@@ -13,11 +13,11 @@ using Resources;
 namespace Dodo.Controllers.Edit
 {
 	[Route("edit/[controller]")]
-	public abstract class CrudController<T, TSchema> : CustomController<T, TSchema>
-		where T : class, IDodoResource
+	public abstract class CrudController<T, TSchema> : CustomController
+		where T : DodoResource, IPublicResource
 		where TSchema : ResourceSchemaBase
 	{
-		protected abstract ResourceController<T, TSchema> RESTController { get; }
+		protected abstract PublicResourceAPIController<T, TSchema> RESTController { get; }
 
 		// GET: Rebellions/Create
 		[Route("create")]

@@ -8,16 +8,14 @@ namespace DodoResources.Roles
 {
 
 	[Route(Dodo.Dodo.API_ROOT + RootURL)]
-	public class RoleController : ResourceController<Role, RoleSchema>
+	public class RoleController : PublicResourceAPIController<Role, RoleSchema>
 	{
 		public const string RootURL = "role";
 
-		protected override AuthorizationService<Role, RoleSchema> AuthManager => new RoleAuthManager();
-
 		[HttpPost]
-		public override async Task<IActionResult> Create([FromBody] RoleSchema schema)
+		public async Task<IActionResult> Create([FromBody] RoleSchema schema)
 		{
-			return await CreateInternal(schema);
+			return (await PublicService.Create(schema)).Result;
 		}
 	}
 }

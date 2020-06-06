@@ -21,67 +21,27 @@ namespace DodoResources
 		where T : GroupResource
 		where TSchema : OwnedResourceSchemaBase
 	{
-		public const string ADD_ADMIN = "addadmin";
-		public const string JOIN_GROUP = "join";
-		public const string LEAVE_GROUP = "leave";
+		protected GroupResourceService<T, TSchema> GroupService => new GroupResourceService<T, TSchema>(Context, HttpContext);
 
-		protected override AuthorizationService<T, TSchema> AuthManager => new GroupResourceAuthManager<T, TSchema>();
-
-		[HttpPost("{id}/" + ADD_ADMIN)]
+		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.ADD_ADMIN)]
 		public IActionResult AddAdministrator(Guid id, [FromBody]string newAdminIdentifier)
 		{
-			var req = VerifyRequest(id, ADD_ADMIN);
-			if (!req.IsSuccess)
-			{
-				return req.Error;
-			}
-			var userManager = UserManager;
-			User targetUser = null;
-			if(Guid.TryParse(newAdminIdentifier, out var newAdminGuid))
-			{
-				targetUser = userManager.GetSingle(x => x.Guid == newAdminGuid);
-			}
-			else if(ValidationExtensions.EmailIsValid(newAdminIdentifier))
-			{
-				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier) ??
-					UserController.CreateTemporaryUser(newAdminIdentifier);
-			}
-			var resource = req.Resource as T;
-			if(resource.AddAdmin(req.Requester, targetUser))
-			{
-				return Ok();
-			}
-			return BadRequest();
+			var result = GroupService.AddAdministrator(id, newAdminIdentifier);
+			return result.Result;
 		}
 
-		[HttpPost("{id}/" + JOIN_GROUP)]
+		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.JOIN_GROUP)]
 		public IActionResult JoinGroup(Guid id)
 		{
-			var req = VerifyRequest(id, JOIN_GROUP);
-			if (!req.IsSuccess)
-			{
-				return req.Error;
-			}
-			using var resourceLock = new ResourceLock(id);
-			var target = resourceLock.Value as T;
-			target.Members.Add(req.Requester.User, req.Requester.Passphrase);
-			ResourceManager.Update(target, resourceLock);
-			return Ok();
+			var result = GroupService.JoinGroup(id);
+			return result.Result;
 		}
 
-		[HttpPost("{id}/" + LEAVE_GROUP)]
+		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.LEAVE_GROUP)]
 		public IActionResult LeaveGroup(Guid id)
 		{
-			var req = VerifyRequest(id, LEAVE_GROUP);
-			if (!req.IsSuccess)
-			{
-				return req.Error;
-			}
-			using var resourceLock = new ResourceLock(id);
-			var target = resourceLock.Value as T;
-			target.Members.Remove(req.Requester.User, req.Requester.Passphrase);
-			ResourceManager.Update(target, resourceLock);
-			return Ok();
+			var result = GroupService.LeaveGroup(id);
+			return result.Result;
 		}
 	}
 }

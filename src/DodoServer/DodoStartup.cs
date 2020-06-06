@@ -49,8 +49,8 @@ namespace DodoServer
 			})
 			.AddCookie(AuthConstants.AUTHSCHEME, config =>
 			{
-				config.LogoutPath = $"/{UserController.LOGOUT}";
-				config.LoginPath = $"/{UserController.LOGIN}";
+				config.LogoutPath = $"/{UserService.LOGOUT}";
+				config.LoginPath = $"/{UserService.LOGIN}";
 				config.AccessDeniedPath = config.LoginPath;
 				config.ExpireTimeSpan = TimeSpan.FromDays(1);
 				config.SlidingExpiration = true;

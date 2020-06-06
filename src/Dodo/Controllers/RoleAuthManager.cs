@@ -12,12 +12,12 @@ namespace DodoResources.Roles
 		{
 		}
 
-		protected override ResourceRequest CanCreate(AccessContext context, RoleSchema target)
+		protected override IRequestResult CanCreate(AccessContext context, RoleSchema target)
 		{
 			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as GroupResource;
 			if (parent == null)
 			{
-				return ResourceRequest.BadRequest;
+				return ResourceRequestError.BadRequest();
 			}
 			if (!parent.IsAdmin(context.User, context))
 			{

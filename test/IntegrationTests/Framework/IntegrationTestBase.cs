@@ -106,7 +106,7 @@ namespace RESTTests
 
 		protected async Task Login(string username, string password)
 		{
-			var response = await m_client.PostAsync($"{UserController.RootURL}/{UserController.LOGIN}",
+			var response = await m_client.PostAsync($"{UserService.RootURL}/{UserService.LOGIN}",
 				new StringContent(JsonConvert.SerializeObject(new LoginModel { Username = username, Password = password }), 
 				Encoding.UTF8, "application/json"));
 			if (!response.IsSuccessStatusCode)
@@ -120,7 +120,7 @@ namespace RESTTests
 
 		protected async Task Logout()
 		{
-			var response = await m_client.GetAsync($"{UserController.RootURL}/{UserController.LOGOUT}");
+			var response = await m_client.GetAsync($"{UserService.RootURL}/{UserService.LOGOUT}");
 			if (!response.IsSuccessStatusCode)
 			{
 				throw new Exception(response.ToString());

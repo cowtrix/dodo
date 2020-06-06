@@ -3,16 +3,19 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Resources;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Dodo.Controllers.Edit
 {
-	[Route("register")]
-	public class RegisterController : Controller
+	[Route(UserService.REGISTER)]
+	public class RegisterController : CustomController
 	{
-		// GET: Login
+		protected UserService UserService => new UserService(Context, HttpContext);
+
+		[HttpGet]
 		public ActionResult Index(string token = null, string redirect = null)
 		{
 			ViewData["redirect"] = redirect;
@@ -29,21 +32,20 @@ namespace Dodo.Controllers.Edit
 			ViewData["token"] = token;
 			try
 			{
-				var userController = new UserController();
-				var result = await userController.Register(model, token);
-				if(!(result is OkResult))
+				var result = await UserService.Register(model, token);
+				if (!result.IsSuccess)
 				{
 					//ModelState.AddModelError(result.GetType(), $"{result.}");
-					return View(result);
+					return result.Result;
 				}
 				// Guard against open redirect attack
 				if (Url.IsLocalUrl(redirect))
 				{
 					// As redirect is user provided we should not trust it
 					// Ensure redirect is URL encoded when used as a query string parameter
-					return base.Redirect(QueryHelpers.AddQueryString($"{(Dodo.NetConfig.FullURI)}/{UserController.LOGIN}", "redirect", redirect));
+					return base.Redirect(QueryHelpers.AddQueryString($"{(Dodo.NetConfig.FullURI)}/{UserService.LOGIN}", "redirect", redirect));
 				}
-				return Redirect($"{Dodo.NetConfig.FullURI}/{UserController.LOGIN}");
+				return Redirect($"{Dodo.NetConfig.FullURI}/{UserService.LOGIN}");
 			}
 			catch
 			{
@@ -51,4 +53,5 @@ namespace Dodo.Controllers.Edit
 			}
 		}
 	}
+
 }

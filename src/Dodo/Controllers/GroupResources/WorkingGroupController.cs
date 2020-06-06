@@ -18,9 +18,9 @@ namespace DodoResources.WorkingGroups
 		public const string RootURL = "workinggroup";
 
 		[HttpPost]
-		public override async Task<IActionResult> Create([FromBody] WorkingGroupSchema schema)
+		public async Task<IActionResult> Create([FromBody] WorkingGroupSchema schema)
 		{
-			return await CreateInternal(schema);
+			return (await PublicService.Create(schema)).Result;
 		}
 	}
 }

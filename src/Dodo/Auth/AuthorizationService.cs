@@ -24,11 +24,11 @@ namespace Dodo
 		{
 		}
 
-		public virtual ResourceRequest IsAuthorised(AccessContext context, T target, EHTTPRequestType requestType, string action = null)
+		public virtual IRequestResult IsAuthorised(AccessContext context, T target, EHTTPRequestType requestType, string action = null)
 		{
 			if (target != null && !(target is T))
 			{
-				return ResourceRequest.BadRequest;
+				return ResourceRequestError.BadRequest();
 			}
 			switch(requestType)
 			{
@@ -45,64 +45,64 @@ namespace Dodo
 			}
 		}
 
-		public virtual ResourceRequest IsAuthorised(AccessContext context, TSchema schema, EHTTPRequestType requestType)
+		public virtual IRequestResult IsAuthorised(AccessContext context, TSchema schema, EHTTPRequestType requestType)
 		{
 			if (requestType != EHTTPRequestType.POST)
 			{
-				return ResourceRequest.BadRequest;
+				return ResourceRequestError.BadRequest();
 			}
 			return CanCreate(context, schema);
 		}
 
-		protected virtual ResourceRequest CanPost(AccessContext context, T target, string action = null)
+		protected virtual IRequestResult CanPost(AccessContext context, T target, string action = null)
 		{
 			if(context.User == null)
 			{
-				return ResourceRequest.ForbidRequest;
+				return ResourceRequestError.ForbidRequest();
 			}
-			return ResourceRequest.UnauthorizedRequest;
+			return ResourceRequestError.UnauthorizedRequest();
 		}
 
-		protected virtual ResourceRequest CanGet(AccessContext context, T target, string action = null)
+		protected virtual IRequestResult CanGet(AccessContext context, T target, string action = null)
 		{
-			return new ResourceRequest(context, target, EHTTPRequestType.GET, GetPermission(context, target));
+			return new ResourceActionRequest(context, target, EHTTPRequestType.GET, GetPermission(context, target), action);
 		}
 
-		protected virtual ResourceRequest CanDelete(AccessContext context, T target)
+		protected virtual IRequestResult CanDelete(AccessContext context, T target)
 		{
 			var permission = GetPermission(context, target);
 			if(permission >= EPermissionLevel.OWNER)
 			{
-				return new ResourceRequest(context, target, EHTTPRequestType.DELETE, permission);
+				return new ResourceActionRequest(context, target, EHTTPRequestType.DELETE, permission);
 			}
 			if(context.User == null)
 			{
-				return ResourceRequest.ForbidRequest;
+				return ResourceRequestError.ForbidRequest();
 			}
-			return ResourceRequest.UnauthorizedRequest;
+			return ResourceRequestError.UnauthorizedRequest();
 		}
 
-		protected virtual ResourceRequest CanEdit(AccessContext context, T target)
+		protected virtual IRequestResult CanEdit(AccessContext context, T target)
 		{
 			var permission = GetPermission(context, target);
 			if (permission >= EPermissionLevel.ADMIN)
 			{
-				return new ResourceRequest(context, target, EHTTPRequestType.PATCH, permission);
+				return new ResourceActionRequest(context, target, EHTTPRequestType.PATCH, permission);
 			}
 			if (context.User == null)
 			{
-				return ResourceRequest.ForbidRequest;
+				return ResourceRequestError.ForbidRequest();
 			}
-			return ResourceRequest.UnauthorizedRequest;
+			return ResourceRequestError.UnauthorizedRequest();
 		}
 
-		protected virtual ResourceRequest CanCreate(AccessContext context, TSchema target)
+		protected virtual IRequestResult CanCreate(AccessContext context, TSchema target)
 		{
 			if (context.User == null)
 			{
-				return ResourceRequest.ForbidRequest;
+				return ResourceRequestError.ForbidRequest();
 			}
-			return ResourceRequest.UnauthorizedRequest;
+			return ResourceRequestError.UnauthorizedRequest();
 		}
 
 		protected virtual EPermissionLevel GetPermission(AccessContext context, T target)

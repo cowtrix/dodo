@@ -19,9 +19,10 @@ namespace DodoResources.Rebellions
 		public const string RootURL = "rebellion";
 
 		[HttpPost]
-		public override async Task<IActionResult> Create([FromBody] RebellionSchema schema)
+		public async Task<IActionResult> Create([FromBody] RebellionSchema schema)
 		{
-			return await CreateInternal(schema);
+			var result = await PublicService.Create(schema);
+			return result.Result;
 		}
 	}
 }

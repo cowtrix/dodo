@@ -37,11 +37,11 @@ namespace DodoResources
 			return EPermissionLevel.USER;
 		}
 
-		protected override ResourceRequest CanCreate(AccessContext context, TSchema target)
+		protected override IRequestResult CanCreate(AccessContext context, TSchema schema)
 		{
 			if (context.User == null)
 			{
-				return ResourceRequest.ForbidRequest;
+				return ResourceRequestError.ForbidRequest();
 			}
 
 #if DEBUG
@@ -51,7 +51,7 @@ namespace DodoResources
 				typeof(T) == typeof(Dodo.WorkingGroups.WorkingGroup)
 			)
 			{
-				return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+				return new ResourceCreationRequest(context, schema, EHTTPRequestType.POST, EPermissionLevel.OWNER);
 			}
 #endif
 
@@ -60,23 +60,23 @@ namespace DodoResources
 				.FirstOrDefault(t => !t.IsRedeemed && t.ResourceType == typeof(T).Name);
 			if (token != null)
 			{
-				return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER, token);
+				return new ResourceCreationRequest(context, schema, EHTTPRequestType.POST, EPermissionLevel.OWNER, token);
 			}
 
 			// Test if user has admin on parent
-			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as GroupResource;
+			var parent = ResourceUtility.GetResourceByGuid(schema.Parent) as GroupResource;
 			if (parent == null)
 			{
-				return ResourceRequest.BadRequest;
+				return ResourceRequestError.BadRequest();
 			}
 			if (!parent.IsAdmin(context.User, context))
 			{
-				return ResourceRequest.ForbidRequest;
+				return ResourceRequestError.ForbidRequest();
 			}
-			return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+			return new ResourceCreationRequest(context, schema, EHTTPRequestType.POST, EPermissionLevel.OWNER);
 		}
 
-		protected override ResourceRequest CanPost(AccessContext context, T target, string action = null)
+		protected override IRequestResult CanPost(AccessContext context, T target, string action = null)
 		{
 			if (action.Contains('?'))
 			{
@@ -84,21 +84,21 @@ namespace DodoResources
 			}
 			switch (action)
 			{
-				case GroupResourceController<T, TSchema>.ADD_ADMIN:
+				case GroupResourceService<T, TSchema>.ADD_ADMIN:
 					if (target.IsAdmin(context.User, context))
 					{
-						return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
+						return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
 					}
 					break;
-				case GroupResourceController<T, TSchema>.JOIN_GROUP:
-				case GroupResourceController<T, TSchema>.LEAVE_GROUP:
+				case GroupResourceService<T, TSchema>.JOIN_GROUP:
+				case GroupResourceService<T, TSchema>.LEAVE_GROUP:
 					if (context.User != null)
 					{
-						return new ResourceRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
+						return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
 					}
-					return ResourceRequest.ForbidRequest;
+					return ResourceRequestError.ForbidRequest();
 			}
-			return ResourceRequest.UnauthorizedRequest;
+			return ResourceRequestError.UnauthorizedRequest();
 		}
 	}
 }

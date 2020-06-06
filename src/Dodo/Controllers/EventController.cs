@@ -1,21 +1,17 @@
 using Dodo;
 using Dodo.LocationResources;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DodoResources.Sites
 {
-
 	[Route(Dodo.Dodo.API_ROOT + RootURL)]
-	public class SiteController : SearchableResourceController<Site, SiteSchema>
+	public class EventController : SearchableResourceController<Event, EventSchema>
 	{
-		public const string RootURL = "site";
+		public const string RootURL = "event";
 
 		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] SiteSchema schema)
+		public async Task<IActionResult> Create([FromBody] EventSchema schema)
 		{
 			var result = await PublicService.Create(schema);
 			return result.Result;
