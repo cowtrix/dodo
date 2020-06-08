@@ -6,7 +6,7 @@ using Resources.Security;
 
 namespace Dodo.Users.Tokens
 {
-	public class AddAdminToken : AutoExecutableToken, INotificationToken
+	public class UserAddedAsAdminToken : AutoExecutableToken, INotificationToken
 	{
 		[JsonProperty(TypeNameHandling = TypeNameHandling.None)]
 		[NotNulResource]
@@ -15,13 +15,16 @@ namespace Dodo.Users.Tokens
 		public byte[] Token { get; private set; }
 		[JsonIgnore]
 		public override bool Encrypted => true;
+		[JsonProperty]
+		private Notification m_notification;
 
-		public AddAdminToken() { }
+		public UserAddedAsAdminToken() { }
 
-		public AddAdminToken(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
+		public UserAddedAsAdminToken(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
 		{
 			Resource = new ResourceReference<GroupResource>(resource);
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
+			m_notification = new Notification(resource.Name, $"You have been added as an Administrator to {Resource.Name}");
 		}
 
 		protected override bool OnExecuted(AccessContext context)
@@ -38,9 +41,9 @@ namespace Dodo.Users.Tokens
 			return true;
 		}
 
-		public string GetNotification(AccessContext context)
+		public Notification GetNotification(AccessContext context)
 		{
-			return $"You have been added as an Administrator to {Resource.GetValue().Name}";
+			return m_notification;
 		}
 	}
 }

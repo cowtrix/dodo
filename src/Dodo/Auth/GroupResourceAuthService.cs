@@ -43,20 +43,8 @@ namespace DodoResources
 			{
 				return ResourceRequestError.ForbidRequest();
 			}
-
-#if DEBUG
-			if (
-				typeof(T) == typeof(Dodo.Rebellions.Rebellion) ||
-				typeof(T) == typeof(Dodo.LocalGroups.LocalGroup) ||
-				typeof(T) == typeof(Dodo.WorkingGroups.WorkingGroup)
-			)
-			{
-				return new ResourceCreationRequest(context, schema, EHTTPRequestType.POST, EPermissionLevel.OWNER);
-			}
-#endif
-
 			// User has a resource creation token, so we consume it and return ok
-			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context)
+			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context, EPermissionLevel.OWNER)
 				.FirstOrDefault(t => !t.IsRedeemed && t.ResourceType == typeof(T).Name);
 			if (token != null)
 			{

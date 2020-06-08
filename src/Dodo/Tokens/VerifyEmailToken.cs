@@ -19,16 +19,19 @@ namespace Dodo.Users.Tokens
 		[JsonIgnore]
 		[BsonIgnore]
 		public override bool Encrypted => true;
+		[JsonProperty]
+		private Notification m_notification;
 
-		public override void OnAdd(User parent)
+		public override void OnAdd(ITokenOwner parent)
 		{
 			Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 #if DEBUG
 			Logger.Info($"DEBUG: generated email verification key {Token} for user {parent}");
 #endif
+			m_notification = new Notification("Your Account", "You should check your email and verify your email address with us.");
 			base.OnAdd(parent);
 		}
 
-		public string GetNotification(AccessContext context) => "You should check your email and verify your email address with us.";
+		public Notification GetNotification(AccessContext context) => m_notification;
 	}
 }

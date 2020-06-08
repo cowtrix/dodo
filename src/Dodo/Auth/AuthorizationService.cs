@@ -1,14 +1,10 @@
-using Dodo.Users;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Resources;
-using System;
 
 namespace Dodo
 {
-	public class AuthorizationService<T, TSchema> 
-		where T: IDodoResource 
-		where TSchema: ResourceSchemaBase
+	public class AuthorizationService<T, TSchema>
+		where T : IDodoResource
+		where TSchema : ResourceSchemaBase
 	{
 		public AuthorizationService()
 		{
@@ -20,7 +16,7 @@ namespace Dodo
 			{
 				return ResourceRequestError.BadRequest();
 			}
-			switch(requestType)
+			switch (requestType)
 			{
 				case EHTTPRequestType.GET:
 					return CanGet(context, target, action);
@@ -46,7 +42,7 @@ namespace Dodo
 
 		protected virtual IRequestResult CanPost(AccessContext context, T target, string action = null)
 		{
-			if(context.User == null)
+			if (context.User == null)
 			{
 				return ResourceRequestError.ForbidRequest();
 			}
@@ -61,11 +57,11 @@ namespace Dodo
 		protected virtual IRequestResult CanDelete(AccessContext context, T target)
 		{
 			var permission = GetPermission(context, target);
-			if(permission >= EPermissionLevel.OWNER)
+			if (permission >= EPermissionLevel.OWNER)
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.DELETE, permission);
 			}
-			if(context.User == null)
+			if (context.User == null)
 			{
 				return ResourceRequestError.ForbidRequest();
 			}
@@ -97,11 +93,11 @@ namespace Dodo
 
 		protected virtual EPermissionLevel GetPermission(AccessContext context, T target)
 		{
-			if(target != null && target.IsCreator(context))
+			if (target != null && target.IsCreator(context))
 			{
 				return EPermissionLevel.OWNER;
 			}
-			if(context.User != null)
+			if (context.User != null)
 			{
 				return EPermissionLevel.USER;
 			}

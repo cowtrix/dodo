@@ -12,6 +12,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using MongoDB.Bson.Serialization.Attributes;
 using Resources.Location;
+using Dodo.Users.Tokens;
 
 namespace Dodo.Rebellions
 {

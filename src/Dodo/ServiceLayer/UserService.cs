@@ -92,7 +92,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
 		using var rscLock = new ResourceLock(Context.User);
 		var user = rscLock.Value as User;
-		var session = user.TokenCollection.GetAllTokens<SessionToken>(Context)
+		var session = user.TokenCollection.GetAllTokens<SessionToken>(Context, EPermissionLevel.OWNER)
 				.SingleOrDefault(t => t.UserKey == Context.UserToken);
 		if (session == null)
 		{

@@ -8,23 +8,23 @@ using Common.Extensions;
 
 namespace Dodo.Users.Tokens
 {
-	public interface IUserToken : IVerifiable
+	public interface IToken : IVerifiable
 	{
 		Guid Guid { get; }
 		bool Encrypted { get; }
-		void OnAdd(User parent);
+		void OnAdd(ITokenOwner parent);
 	}
 
 	[BsonDiscriminator(RootClass = true)]
 	[BsonKnownTypes(
 		typeof(ResetPasswordToken),
-		typeof(AddAdminToken),
+		typeof(UserAddedAsAdminToken),
 		typeof(TemporaryUserToken),
 		typeof(VerifyEmailToken),
 		typeof(ResourceCreationToken),
 		typeof(SessionToken)
 		)]
-	public abstract class UserToken : IUserToken
+	public abstract class Token : IToken
 	{
 		[JsonProperty]
 		[BsonElement]
@@ -33,7 +33,7 @@ namespace Dodo.Users.Tokens
 		[BsonIgnore]
 		public abstract bool Encrypted { get; }
 
-		public virtual void OnAdd(User parent)
+		public virtual void OnAdd(ITokenOwner parent)
 		{
 			Guid = Guid.NewGuid();
 		}

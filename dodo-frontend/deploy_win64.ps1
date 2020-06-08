@@ -1,10 +1,3 @@
-# assumes npm installed
-# install dependencies
-npm install @fortawesome/fontawesome-svg-core
-npm install @types/googlemaps
-npm install @types/markerclustererplus
-npm install typescript@>=2.8.0
-
 $p = Get-Process -Name "node"
 if($p)
 {
@@ -13,6 +6,5 @@ if($p)
 }
 
 #build and run
+npm i
 npm run-script build
-npm install -g serve
-serve build -l tcp://www.dodo.ovh:80

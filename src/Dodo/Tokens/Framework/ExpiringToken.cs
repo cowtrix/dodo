@@ -5,7 +5,7 @@ using System;
 
 namespace Dodo.Users.Tokens
 {
-	public abstract class ExpiringToken : UserToken, IRemovableToken
+	public abstract class ExpiringToken : Token, IRemovableToken
 	{
 		[JsonIgnore]
 		[BsonIgnore]

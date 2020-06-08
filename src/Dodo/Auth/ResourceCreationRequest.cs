@@ -1,11 +1,12 @@
 using Dodo;
 using Dodo.Users.Tokens;
+using System;
 
 namespace Resources
 {
 	public class ResourceCreationRequest : ResourceRequest
 	{
-		public readonly ResourceCreationToken Token;
+		public readonly Guid Token;
 		public readonly ResourceSchemaBase Schema;
 
 		public ResourceCreationRequest(AccessContext context,
@@ -16,7 +17,7 @@ namespace Resources
 			: base (context, type, permissionLevel)
 		{
 			Schema = schema;
-			Token = token;
+			Token = token.Guid;
 		}
 	}
 }

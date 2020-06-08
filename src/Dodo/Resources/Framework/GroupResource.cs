@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Common.Extensions;
 using Resources.Security;
 using Dodo.Users;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Resources;
 using Resources.Serializers;
@@ -14,6 +13,7 @@ using Common;
 
 namespace Dodo
 {
+
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
 	public abstract class OwnedResourceSchemaBase : ResourceSchemaBase 
@@ -37,7 +37,7 @@ namespace Dodo
 	/// It can have members and a public description.
 	/// </summary>
 	public abstract class GroupResource : DodoResource, 
-		IOwnedResource, IPublicResource
+		IOwnedResource, IPublicResource, ITokenOwner
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		public class AdminData
@@ -45,7 +45,6 @@ namespace Dodo
 			[View(EPermissionLevel.ADMIN)]
 			public List<ResourceReference<User>> Administrators = new List<ResourceReference<User>>();
 			public string GroupPrivateKey { get; private set; }
-
 			public AdminData(User firstAdmin, string privateKey)
 			{
 				Administrators.Add(firstAdmin);
@@ -53,32 +52,25 @@ namespace Dodo
 			}
 		}
 
-		protected IResourceManager ResourceManager => ResourceUtility.GetManagerForResource(this);
-
-		[JsonProperty]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public ResourceReference<GroupResource> Parent { get; private set; }
-
 		/// <summary>
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC)]
 		public string PublicDescription { get; set; }
-
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public UserMultiSigStore<AdminData> AdministratorData;
-
-		public TokenCollection SharedTokens = new TokenCollection();
-
-		public SecureUserStore Members = new SecureUserStore();
-
 		[View(EPermissionLevel.PUBLIC)]
 		public int MemberCount { get { return Members.Count; } }
-
 		[View(EPermissionLevel.MEMBER)]
 		public string GroupPublicKey { get; private set; }
 		[View(EPermissionLevel.ADMIN)]
 		public bool IsPublished { get; set; }
+
+		public TokenCollection SharedTokens = new TokenCollection();
+
+		public SecureUserStore Members = new SecureUserStore();
 
 		public GroupResource(AccessContext context, OwnedResourceSchemaBase schema) : base(context, schema)
 		{
@@ -131,7 +123,7 @@ namespace Dodo
 			}
 			using (var userLock = new ResourceLock(newAdmin))
 			{
-				newAdmin.TokenCollection.Add(newAdmin, new AddAdminToken(this, temporaryPass, newAdmin.AuthData.PublicKey));
+				newAdmin.TokenCollection.Add(newAdmin, new UserAddedAsAdminToken(this, temporaryPass, newAdmin.AuthData.PublicKey), EPermissionLevel.OWNER);
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;
@@ -157,6 +149,7 @@ namespace Dodo
 			}
 			adminList.Add(newAdmin);
 			AdministratorData.SetValue(adminData, newAdmin, newPass);
+			SharedTokens.Add(this, new GroupAdminAddedToken(context.User, newAdmin), EPermissionLevel.ADMIN);
 			return true;
 		}
 
@@ -168,6 +161,8 @@ namespace Dodo
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
+			var notifications = SharedTokens.GetNotifications((AccessContext)requester, permissionLevel);
+			view.Add(METADATA_NOTIFICATIONS_KEY, notifications);
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 

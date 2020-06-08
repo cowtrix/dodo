@@ -39,6 +39,7 @@ namespace Dodo
 	public abstract class DodoResource : Resource, IDodoResource
 	{
 		private const string METADATA_PUBLISHED = "published";
+		public const string METADATA_NOTIFICATIONS_KEY = "notifications";
 		public DodoResource() : base() { }
 
 		public DodoResource(AccessContext creator, ResourceSchemaBase schema) : base(schema)

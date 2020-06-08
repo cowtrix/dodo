@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Users.Tokens
 {
-	public abstract class AutoExecutableToken : UserToken, IAutoExecuteToken, IRemovableToken
+	public abstract class AutoExecutableToken : Token, IAutoExecuteToken, IRemovableToken
 	{
 		[BsonElement]
 		public bool HasExecuted { get; private set; }

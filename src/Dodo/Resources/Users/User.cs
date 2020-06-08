@@ -12,11 +12,10 @@ using Dodo.Users.Tokens;
 
 namespace Dodo.Users
 {
-	public class User : DodoResource, IVerifiable
+	public class User : DodoResource, IVerifiable, ITokenOwner
 	{
 		public const string ADMIN_OF_KEY = "adminOf";
 		public const string ROLES_HELD_KEY = "roles";
-		public const string NOTIFICATIONS_KEY = "notifications";
 
 		#region Data
 		[View(EPermissionLevel.USER)]
@@ -76,10 +75,8 @@ namespace Dodo.Users
 			}
 			if(permissionLevel == EPermissionLevel.OWNER)
 			{
-				var notifications = TokenCollection.GetAllTokens<INotificationToken>(accessContext)
-					.Select(x => new Notification { Message = x.GetNotification(accessContext), GUID = x.Guid })
-					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
-				view.Add(NOTIFICATIONS_KEY, notifications);
+				var notifications = TokenCollection.GetNotifications(accessContext, permissionLevel);
+				view.Add(METADATA_NOTIFICATIONS_KEY, notifications);
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}

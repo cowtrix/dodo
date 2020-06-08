@@ -27,7 +27,7 @@ namespace Resources
 		{
 			if (Context.User != null)
 			{
-				foreach (var token in Context.User.TokenCollection.GetAllTokens<IAutoExecuteToken>(Context))
+				foreach (var token in Context.User.TokenCollection.GetAllTokens<IAutoExecuteToken>(Context, EPermissionLevel.OWNER))
 				{
 					token.Execute(Context);
 				}

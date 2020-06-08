@@ -26,13 +26,13 @@ namespace Resources
 		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
 
 		[HttpPatch("{id}")]
-		public virtual async Task<IActionResult> Update(Guid id, [FromBody]Dictionary<string, JsonElement> rawValues)
+		public virtual async Task<IActionResult> Update(string id, [FromBody]Dictionary<string, JsonElement> rawValues)
 		{
 			return (await PublicService.Update(id, rawValues)).ActionResult;
 		}
 
 		[HttpDelete("{id}")]
-		public virtual async Task<IActionResult> Delete(Guid id)
+		public virtual async Task<IActionResult> Delete(string id)
 		{
 			return (await PublicService.Delete(id)).ActionResult;
 		}

@@ -1,10 +1,7 @@
 using Common;
-using Common.Extensions;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
 using Resources;
-using Resources.Security;
 using System;
 
 namespace Dodo.Users.Tokens
@@ -16,23 +13,26 @@ namespace Dodo.Users.Tokens
 		)]
 	public abstract class TokenEntry
 	{
-		public ResourceReference<User> Owner;
+		public ResourceReference<ITokenOwner> Owner;
 		public Guid Guid;
 		public bool Removed;
 
 		[BsonIgnore]
 		public Type Type => Type.GetType(m_typeName);
+		[BsonIgnore]
+		public EPermissionLevel PermissionLevel { get; private set; }
 		[BsonElement]
 		private string m_typeName;
 
-		public TokenEntry(User targetUser, UserToken token)
+		public TokenEntry(ITokenOwner owner, Token token, EPermissionLevel permissionLevel)
 		{
-			if(token == null || targetUser == null)
+			if(token == null || owner == null)
 			{
 				throw new ArgumentNullException();
 			}
-			Owner = targetUser;
+			Owner = new ResourceReference<ITokenOwner>(owner);
 			Guid = token.Guid;
+			PermissionLevel = permissionLevel;
 			m_typeName = token.GetType().FullName;
 			if (!BsonClassMap.IsClassMapRegistered(token.GetType()))
 			{
@@ -41,41 +41,6 @@ namespace Dodo.Users.Tokens
 			}
 		}
 
-		public abstract UserToken GetToken(AccessContext context);
-	}
-
-	public class PlainTokenEntry : TokenEntry
-	{
-		[BsonElement]
-		[JsonProperty]
-		private string m_token { get; set; }
-
-		public PlainTokenEntry(User targetUser, UserToken token) : base(targetUser, token)
-		{
-			m_token = JsonConvert.SerializeObject(token, JsonExtensions.StorageSettings);
-		}
-
-		public override UserToken GetToken(AccessContext context) => JsonConvert.DeserializeObject(m_token, JsonExtensions.StorageSettings) as UserToken;
-	}
-
-	public class EncryptedTokenEntry : TokenEntry
-	{
-		[BsonElement]
-		private AsymmEncryptedStore<UserToken> m_data;
-
-		public EncryptedTokenEntry(User targetUser, UserToken token) : base(targetUser, token)
-		{
-			m_data = new AsymmEncryptedStore<UserToken>(token, new Passphrase(targetUser.AuthData.PublicKey));
-		}
-
-		public override UserToken GetToken(AccessContext context)
-		{
-			if(context.User == null)
-			{
-				return null;
-			}
-			var pk = context.User.AuthData.PrivateKey.GetValue(context.Passphrase);
-			return m_data.GetValue(pk);
-		}
+		public abstract Token GetToken(AccessContext context);
 	}
 }

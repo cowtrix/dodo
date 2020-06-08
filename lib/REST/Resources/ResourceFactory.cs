@@ -20,26 +20,6 @@ namespace Resources
 		where TResult : class, IRESTResource
 		where TSchema : ResourceSchemaBase
 	{
-		public TResult CreateObject(TContext context, TSchema schema)
-		{
-			if(!ValidateSchema(context, schema, out var error))
-			{
-				throw new Exception(error);
-			}
-			var newResource = CreateObjectInternal(context, schema);
-			if(newResource == null)
-			{
-				throw new Exception($"Failed to create resource of type {typeof(TResult)} from schema {schema?.GetType()}");
-			}
-			if(!newResource.Verify(out error))
-			{
-				throw new Exception(error);
-			}
-			ResourceUtility.Register(newResource);
-			Logger.Debug($"Created new resource {newResource.GetType().Name}: {newResource.Guid}");
-			return newResource;
-		}
-
 		protected virtual TResult CreateObjectInternal(TContext context, TSchema schema)
 		{
 			return (TResult)Activator.CreateInstance(typeof(TResult), context, schema);

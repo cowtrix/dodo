@@ -1,10 +1,10 @@
-﻿namespace Dodo.Users.Tokens
+namespace Dodo.Users.Tokens
 {
 	/// <summary>
 	/// Tokens implementing this interface can provide a notification to the user
 	/// </summary>
-	public interface INotificationToken : IUserToken
+	public interface INotificationToken : IToken
 	{
-		string GetNotification(AccessContext context);
+		Notification GetNotification(AccessContext context);
 	}
 }

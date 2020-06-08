@@ -22,7 +22,7 @@ namespace DodoResources
 		{
 		}
 
-		public IRequestResult AddAdministrator(Guid id, string newAdminIdentifier)
+		public IRequestResult AddAdministrator(string id, string newAdminIdentifier)
 		{
 			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, ADD_ADMIN);
 			if (!reqResult.IsSuccess)
@@ -49,7 +49,7 @@ namespace DodoResources
 			return ResourceRequestError.BadRequest();
 		}
 
-		public IRequestResult JoinGroup(Guid id)
+		public IRequestResult JoinGroup(string id)
 		{
 			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, JOIN_GROUP);
 			if (!reqResult.IsSuccess)
@@ -57,7 +57,7 @@ namespace DodoResources
 				return reqResult;
 			}
 			var req = (ResourceActionRequest)reqResult;
-			using var resourceLock = new ResourceLock(id);
+			using var resourceLock = new ResourceLock(req.Result);
 			var target = resourceLock.Value as T;
 			target.Members.Add(req.AccessContext.User, req.AccessContext.Passphrase);
 			ResourceManager.Update(target, resourceLock);
@@ -65,7 +65,7 @@ namespace DodoResources
 		}
 
 		[HttpPost("{id}/" + LEAVE_GROUP)]
-		public IRequestResult LeaveGroup(Guid id)
+		public IRequestResult LeaveGroup(string id)
 		{
 			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, LEAVE_GROUP);
 			if (!reqResult.IsSuccess)
@@ -73,7 +73,7 @@ namespace DodoResources
 				return reqResult;
 			}
 			var req = (ResourceActionRequest)reqResult;
-			using var resourceLock = new ResourceLock(id);
+			using var resourceLock = new ResourceLock(req.Result);
 			var target = resourceLock.Value as T;
 			target.Members.Remove(req.AccessContext.User, req.AccessContext.Passphrase);
 			ResourceManager.Update(target, resourceLock);

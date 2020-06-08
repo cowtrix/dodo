@@ -20,21 +20,24 @@ namespace Dodo.Users.Tokens
 		[JsonIgnore]
 		[BsonIgnore]
 		public override bool Encrypted => false;
+		[JsonProperty]
+		private Notification m_notification;
 
 		public ResetPasswordToken() { }
 
 		public ResetPasswordToken(User targetUser)
 		{
 			Key = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+			m_notification = new Notification("Your Account", "You've requested your password to be reset. " +
+				"Check your email and click the link there. If this wasn't you, change your password immediately.");
 #if DEBUG
 			Console.WriteLine($"Reset password action added for user {targetUser.AuthData.Username}: {Key}");
 #endif
 		}
 
-		public string GetNotification(AccessContext context)
+		public Notification GetNotification(AccessContext context)
 		{
-			return "You've requested your password to be reset. " +
-				"Check your email and click the link there. If this wasn't you, change your password immediately.";
+			return m_notification;
 		}
 	}
 

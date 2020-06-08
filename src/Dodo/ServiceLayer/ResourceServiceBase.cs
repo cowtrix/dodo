@@ -21,9 +21,17 @@ public class ResourceServiceBase<T, TSchema>
 		AuthService = authService;
 	}
 
-	protected IRequestResult VerifyRequest(Guid id, EHTTPRequestType type, string actionName = null)
+	protected IRequestResult VerifyRequest(string id, EHTTPRequestType type, string actionName = null)
 	{
-		var target = ResourceManager.GetSingle(rsc => rsc.Guid == id);
+		T target;
+		if(Guid.TryParse(id, out var guid))
+		{
+			target = ResourceManager.GetSingle(rsc => rsc.Guid == guid);
+		}
+		else
+		{
+			target = ResourceManager.GetSingle(rsc => rsc.Slug == id);
+		}
 		if (target == null)
 		{
 			return ResourceRequestError.NotFoundRequest();

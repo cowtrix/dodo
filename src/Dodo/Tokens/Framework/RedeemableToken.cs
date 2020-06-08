@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Dodo.Users.Tokens
 {
 
-	public abstract class RedeemableToken : UserToken, IRedeemableToken, IRemovableToken
+	public abstract class RedeemableToken : Token, IRedeemableToken, IRemovableToken
 	{
 		[BsonElement]
 		public bool IsRedeemed { get; private set; }

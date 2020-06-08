@@ -38,7 +38,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 				using (var rscLock = new ResourceLock(req.AccessContext.User))
 				{
 					var user = rscLock.Value as User;
-					var token = user.TokenCollection.GetToken<ResourceCreationToken>(Context, req.Token.Guid);
+					var token = user.TokenCollection.GetToken<ResourceCreationToken>(Context, req.Token);
 					if (token == null)
 					{
 						throw new Exception("Resource creation token was missing");
@@ -49,6 +49,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 							"is attempting to exploit creation of multiple resources.");
 					}
 					token.Redeem(Context);
+					token.Target = new ResourceReference<IRESTResource>(createdObject);
 					UserManager.Update(user, rscLock);
 				}
 			}
@@ -62,7 +63,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		return req;
 	}
 
-	public virtual async Task<IRequestResult> Update(Guid id, Dictionary<string, JsonElement> rawValues)
+	public virtual async Task<IRequestResult> Update(string id, Dictionary<string, JsonElement> rawValues)
 	{
 		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
 		if (!request.IsSuccess)
@@ -130,7 +131,34 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		return req;
 	}
 
-	public virtual async Task<IRequestResult> Delete(Guid id)
+	public virtual async Task<IRequestResult> Update(string id, Dictionary<string, object> values)
+	{
+		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
+		if (!request.IsSuccess)
+		{
+			return request;
+		}
+		var req = (ResourceActionRequest)request;
+		T target;
+		using (var resourceLock = new ResourceLock(req.Result))
+		{
+			target = resourceLock.Value as T;
+			if (target == null)
+			{
+				return ResourceRequestError.NotFoundRequest();
+			}
+			var jsonSettings = new JsonSerializerSettings()
+			{
+				TypeNameHandling = TypeNameHandling.All
+			};
+			target.PatchObject(values, req.PermissionLevel, req.AccessContext.User, req.AccessContext.Passphrase);
+			ResourceManager.Update(target, resourceLock);
+		}
+		req.Result = target;
+		return req;
+	}
+
+	public virtual async Task<IRequestResult> Delete(string id)
 	{
 		var request = VerifyRequest(id, EHTTPRequestType.DELETE);
 		if (!request.IsSuccess)
@@ -144,15 +172,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> Get(string id)
 	{
-		if (!Guid.TryParse(id, out var guid))
-		{
-			var rsc = ResourceManager.GetSingle(r => r.Slug == id);
-			if (rsc != null)
-			{
-				guid = rsc.Guid;
-			}
-		}
-		return VerifyRequest(guid, EHTTPRequestType.GET);
+		return VerifyRequest(id, EHTTPRequestType.GET);
 	}
 
 	protected virtual void OnCreation(AccessContext Context, T user)

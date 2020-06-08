@@ -1,5 +1,6 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using Resources;
 using System;
 
 namespace Dodo.Users.Tokens
@@ -17,6 +18,8 @@ namespace Dodo.Users.Tokens
 		[JsonIgnore]
 		[BsonIgnore]
 		public override bool Encrypted => true;
+
+		public ResourceReference<IRESTResource> Target { get; set; }
 
 		public ResourceCreationToken() { }
 

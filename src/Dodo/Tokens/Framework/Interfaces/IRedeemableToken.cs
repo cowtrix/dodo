@@ -4,7 +4,7 @@ namespace Dodo.Users.Tokens
 	/// Tokens implementing this interface can be redeemed a single time by the user
 	/// with the user's authentication details
 	/// </summary>
-	public interface IRedeemableToken : IUserToken
+	public interface IRedeemableToken : IToken
 	{
 		bool IsRedeemed	{ get; }
 		bool Redeem(AccessContext context);
@@ -14,7 +14,7 @@ namespace Dodo.Users.Tokens
 	/// Tokens implementing this interface will be automtically executed when the user connects
 	/// with authentication details
 	/// </summary>
-	public interface IAutoExecuteToken : IUserToken
+	public interface IAutoExecuteToken : IToken
 	{
 		bool HasExecuted { get; }
 		bool Execute(AccessContext context);

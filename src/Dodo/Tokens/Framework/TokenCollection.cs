@@ -11,18 +11,28 @@ using Common.Security;
 
 namespace Dodo.Users.Tokens
 {
+	public interface ITokenOwner : IRESTResource
+	{
+		string PublicKey { get; }
+	}
+
 	/// <summary>
 	/// This collection enforces some restrictions on tokens, e.g. there can only be
 	/// one instance of some tokens in a list
 	/// </summary>
 	public class TokenCollection
 	{
+		public List<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel) => 
+			GetAllTokens<INotificationToken>(accessContext, permissionLevel)
+					.Select(x => x.GetNotification(accessContext))
+					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
+
 		[BsonElement]
 		private List<TokenEntry> m_tokens = new List<TokenEntry>();
 		[BsonIgnore]
 		public int Count => m_tokens.Count;
 
-		public void Add<T>(User parent, T token) where T: UserToken
+		public void Add<T>(ITokenOwner parent, T token, EPermissionLevel permissionLevel) where T: Token
 		{
 			if(token == null)
 			{
@@ -43,7 +53,7 @@ namespace Dodo.Users.Tokens
 			{
 				throw new Exception($"Token type {token.GetType()} is not falling through to the base .OnAdd()");
 			}
-			var newEntry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token) : (TokenEntry)new PlainTokenEntry(parent, token);
+			var newEntry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token, permissionLevel) : (TokenEntry)new PlainTokenEntry(parent, token, permissionLevel);
 			m_tokens.Add(newEntry);
 		}
 
@@ -64,7 +74,7 @@ namespace Dodo.Users.Tokens
 
 		public bool Remove(AccessContext context, Func<IRemovableToken, bool> removeWhere)
 		{
-			var toRemove = GetAllTokens<IRemovableToken>(context).Where(t => removeWhere(t));
+			var toRemove = GetAllTokens<IRemovableToken>(context, EPermissionLevel.OWNER).Where(t => removeWhere(t));
 			if(!toRemove.Any())
 			{
 				return false;
@@ -77,7 +87,7 @@ namespace Dodo.Users.Tokens
 			return true;
 		}
 
-		public bool HasToken<T>() where T: class, IUserToken
+		public bool HasToken<T>() where T: class, IToken
 		{
 			return HasToken(typeof(T));
 		}
@@ -87,25 +97,25 @@ namespace Dodo.Users.Tokens
 			return m_tokens.Any(mt => mt.Type.IsAssignableFrom(t));
 		}
 
-		public T GetSingleToken<T>(AccessContext context) where T: class, IUserToken
+		public T GetSingleToken<T>(AccessContext context) where T: class, IToken
 		{
 			return GetSingleToken(context, typeof(T)) as T;
 		}
 
-		public IUserToken GetSingleToken(AccessContext context, Type tokenType)
+		public IToken GetSingleToken(AccessContext context, Type tokenType)
 		{
 			return GetAllTokens(context).SingleOrDefault(pa => tokenType.IsAssignableFrom(pa.GetType()));
 		}
 
-		public IEnumerable<T> GetAllTokens<T>(AccessContext context) where T : class, IUserToken
+		public IEnumerable<T> GetAllTokens<T>(AccessContext context, EPermissionLevel permissionLevel) where T : class, IToken
 		{
-			foreach (var token in m_tokens.Where(t => typeof(T).IsAssignableFrom(t.Type)))
+			foreach (var token in m_tokens.Where(t => t.PermissionLevel <= permissionLevel && typeof(T).IsAssignableFrom(t.Type)))
 			{
 				yield return token.GetToken(context) as T;
 			}
 		}
 
-		public IEnumerable<IUserToken> GetAllTokens(AccessContext context)
+		public IEnumerable<IToken> GetAllTokens(AccessContext context)
 		{
 			foreach (var entry in m_tokens)
 			{
@@ -117,12 +127,12 @@ namespace Dodo.Users.Tokens
 			}
 		}
 
-		public T GetToken<T>(AccessContext context, Guid guid) where T : class, IUserToken
+		public T GetToken<T>(AccessContext context, Guid guid) where T : class, IToken
 		{
 			return GetToken(context, guid) as T;
 		}
 
-		public IUserToken GetToken(AccessContext context, Guid guid)
+		public IToken GetToken(AccessContext context, Guid guid)
 		{
 			var token = m_tokens.SingleOrDefault(mt => mt.Guid == guid);
 			var pk = context.User.AuthData.PrivateKey.GetValue(context.Passphrase);
