@@ -14,13 +14,8 @@ namespace Dodo.Users.Tokens
 			m_data = new AsymmEncryptedStore<Token>(token, new Passphrase(owner.PublicKey));
 		}
 
-		public override Token GetToken(AccessContext context)
+		public override Token GetToken(Passphrase pk)
 		{
-			if(context.User == null)
-			{
-				return null;
-			}
-			var pk = context.User.AuthData.PrivateKey.GetValue(context.Passphrase);
 			return m_data.GetValue(pk);
 		}
 	}

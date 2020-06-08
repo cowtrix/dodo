@@ -1,19 +1,33 @@
 using Dodo.Users;
 using Newtonsoft.Json;
 using Dodo.Users.Tokens;
+using Common;
 
 namespace Dodo
 {
-	public class GroupAdminAddedToken : Token, INotificationToken
+	public class EncryptedNotificationToken : Token, INotificationToken
 	{
 		public override bool Encrypted => true;
 		[JsonProperty]
 		Notification m_notification;
 		public Notification GetNotification(AccessContext context) => m_notification;
 
-		public GroupAdminAddedToken(User existingAdmin, User newAdmin)
+		public EncryptedNotificationToken(string source, string message, bool canDelete)
 		{
-			m_notification = new Notification("", $"Administrator @{existingAdmin.AuthData.Username} added new Administrator @{newAdmin.AuthData.Username}");
+			m_notification = new Notification(source, message, canDelete);
+		}
+	}
+
+	public class SimpleNotificationToken : Token, INotificationToken
+	{
+		public override bool Encrypted => false;
+		[JsonProperty]
+		Notification m_notification;
+		public Notification GetNotification(AccessContext context) => m_notification;
+
+		public SimpleNotificationToken(string source, string message, bool canDelete)
+		{
+			m_notification = new Notification(source, message, canDelete);
 		}
 	}
 }

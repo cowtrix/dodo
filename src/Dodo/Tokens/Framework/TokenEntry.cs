@@ -2,6 +2,7 @@ using Common;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using Resources;
+using Resources.Security;
 using System;
 
 namespace Dodo.Users.Tokens
@@ -41,6 +42,15 @@ namespace Dodo.Users.Tokens
 			}
 		}
 
-		public abstract Token GetToken(AccessContext context);
+		public abstract Token GetToken(Passphrase privateKey);
+
+		public Token GetToken(AccessContext context)
+		{
+			if (context.User == null)
+			{
+				return null;
+			}
+			return GetToken(new Passphrase(context.User.AuthData.PrivateKey.GetValue(context.Passphrase)));
+		}
 	}
 }

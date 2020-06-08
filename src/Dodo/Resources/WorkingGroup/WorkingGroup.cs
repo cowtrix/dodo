@@ -88,17 +88,18 @@ namespace Dodo.WorkingGroups
 			{
 				throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 			}
+			base.AddChild(rsc);
 		}
 
 		public override bool RemoveChild<T>(T rsc)
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				return m_workingGroups.Remove(wg.Guid);
+				return m_workingGroups.Remove(wg.Guid) && base.RemoveChild(rsc);
 			}
 			else if (rsc is Role s && s.Parent.Guid == Guid)
 			{
-				return m_roles.Remove(s.Guid);
+				return m_roles.Remove(s.Guid) && base.RemoveChild(rsc);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}

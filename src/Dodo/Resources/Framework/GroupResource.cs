@@ -10,10 +10,10 @@ using Common.Security;
 using Dodo.Users.Tokens;
 using Dodo.Resources;
 using Common;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo
 {
-
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
 	public abstract class OwnedResourceSchemaBase : ResourceSchemaBase 
@@ -64,7 +64,8 @@ namespace Dodo
 		[View(EPermissionLevel.PUBLIC)]
 		public int MemberCount { get { return Members.Count; } }
 		[View(EPermissionLevel.MEMBER)]
-		public string GroupPublicKey { get; private set; }
+		[BsonElement]
+		public string PublicKey { get; private set; }
 		[View(EPermissionLevel.ADMIN)]
 		public bool IsPublished { get; set; }
 
@@ -81,7 +82,7 @@ namespace Dodo
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
 			Parent = new ResourceReference<GroupResource>(group);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
-			GroupPublicKey = pk;
+			PublicKey = pk;
 			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(context.User, pv), context);
 			PublicDescription = schema.PublicDescription;
 		}
@@ -149,25 +150,55 @@ namespace Dodo
 			}
 			adminList.Add(newAdmin);
 			AdministratorData.SetValue(adminData, newAdmin, newPass);
-			SharedTokens.Add(this, new GroupAdminAddedToken(context.User, newAdmin), EPermissionLevel.ADMIN);
+			SharedTokens.Add(this, new EncryptedNotificationToken(Name,
+				$"Administrator @{context.User.AuthData.Username} added new Administrator @{newAdmin.AuthData.Username}",
+				false), EPermissionLevel.ADMIN);
 			return true;
 		}
 
 		public abstract bool CanContain(Type type);
 
+		/// <summary>
+		/// We append several things to a group's metadata. 
+		/// `isMember` - whether the requesting user is a member of the group.
+		/// `notifications` - a collection of notifications that this user is allowed to view
+		/// </summary>
+		/// <param name="view"></param>
+		/// <param name="permissionLevel"></param>
+		/// <param name="requester"></param>
+		/// <param name="passphrase"></param>
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
-			var notifications = SharedTokens.GetNotifications((AccessContext)requester, permissionLevel);
+			Passphrase pass;
+			if(permissionLevel >= EPermissionLevel.ADMIN)
+			{
+				// Unlock encrypted administrator tokens
+				pass = new Passphrase(AdministratorData.GetValue(user, passphrase).GroupPrivateKey);
+			}
+			else
+			{
+				pass = new Passphrase(user.AuthData.PrivateKey.GetValue(passphrase));
+			}
+			var notifications = SharedTokens.GetNotifications((AccessContext)requester, pass, permissionLevel);
 			view.Add(METADATA_NOTIFICATIONS_KEY, notifications);
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 
-		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource => throw new NotSupportedException();
+		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
+		{
+			SharedTokens.Add(this, new SimpleNotificationToken(Name,
+				$"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", true));
+		}
 
-		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource => throw new NotSupportedException();
+		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource
+		{
+			SharedTokens.Add(this, new SimpleNotificationToken(Name,
+				$"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", true));
+			return true;
+		}
 	}
 }

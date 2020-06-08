@@ -2,6 +2,7 @@ using Common.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
+using Resources.Security;
 
 namespace Dodo.Users.Tokens
 {
@@ -16,6 +17,6 @@ namespace Dodo.Users.Tokens
 			m_token = JsonConvert.SerializeObject(token, JsonExtensions.StorageSettings);
 		}
 
-		public override Token GetToken(AccessContext context) => JsonConvert.DeserializeObject(m_token, JsonExtensions.StorageSettings) as Token;
+		public override Token GetToken(Passphrase context) => JsonConvert.DeserializeObject(m_token, JsonExtensions.StorageSettings) as Token;
 	}
 }

@@ -42,7 +42,7 @@ namespace Dodo
 				return default;
 			}
 
-			var sessionToken = user.TokenCollection.GetAllTokens<SessionToken>(default, EPermissionLevel.OWNER)
+			var sessionToken = user.TokenCollection.GetAllTokens<SessionToken>(default(AccessContext), EPermissionLevel.OWNER)
 				.SingleOrDefault(t => t?.UserKey == userToken);
 			if(sessionToken == null)
 			{

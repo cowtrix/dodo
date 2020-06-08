@@ -22,8 +22,8 @@ namespace Dodo.Users.Tokens
 	/// </summary>
 	public class TokenCollection
 	{
-		public List<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel) => 
-			GetAllTokens<INotificationToken>(accessContext, permissionLevel)
+		public List<Notification> GetNotifications(AccessContext accessContext, Passphrase privateKey, EPermissionLevel permissionLevel) => 
+			GetAllTokens<INotificationToken>(privateKey, permissionLevel)
 					.Select(x => x.GetNotification(accessContext))
 					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
 
@@ -32,7 +32,7 @@ namespace Dodo.Users.Tokens
 		[BsonIgnore]
 		public int Count => m_tokens.Count;
 
-		public void Add<T>(ITokenOwner parent, T token, EPermissionLevel permissionLevel) where T: Token
+		public void Add<T>(ITokenOwner parent, T token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER) where T: Token
 		{
 			if(token == null)
 			{
@@ -109,9 +109,14 @@ namespace Dodo.Users.Tokens
 
 		public IEnumerable<T> GetAllTokens<T>(AccessContext context, EPermissionLevel permissionLevel) where T : class, IToken
 		{
+			return GetAllTokens<T>(new Passphrase(context.User.AuthData.PrivateKey.GetValue(context.Passphrase)), permissionLevel);
+		}
+
+		public IEnumerable<T> GetAllTokens<T>(Passphrase privateKey, EPermissionLevel permissionLevel) where T : class, IToken
+		{
 			foreach (var token in m_tokens.Where(t => t.PermissionLevel <= permissionLevel && typeof(T).IsAssignableFrom(t.Type)))
 			{
-				yield return token.GetToken(context) as T;
+				yield return token.GetToken(privateKey) as T;
 			}
 		}
 

@@ -60,7 +60,8 @@ namespace Dodo
 			}
 			return Creator == SecurityExtensions.GenerateID(context.User, context.Passphrase);
 		}
-		public override void OnDestroy()
+
+		public virtual void OnDestroy()
 		{
 			if (this is IOwnedResource owned && owned.Parent.HasValue())
 			{
@@ -75,7 +76,6 @@ namespace Dodo
 					ResourceUtility.GetManager(parent.GetType()).Update(parent, rscLock);
 				}
 			}
-			base.OnDestroy();
 		}
 	}
 }

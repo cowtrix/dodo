@@ -84,17 +84,18 @@ namespace Dodo.LocalGroups
 			{
 				throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 			}
+			base.AddChild(rsc);
 		}
 
 		public override bool RemoveChild<T>(T rsc)
 		{
 			if (rsc is Role role && role.Parent.Guid == Guid)
 			{
-				return m_roles.Remove(role.Guid);
+				return m_roles.Remove(role.Guid) && base.RemoveChild(rsc);
 			}
 			else if (rsc is Event s && s.Parent.Guid == Guid)
 			{
-				return m_events.Remove(s.Guid);
+				return m_events.Remove(s.Guid) && base.RemoveChild(rsc);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}

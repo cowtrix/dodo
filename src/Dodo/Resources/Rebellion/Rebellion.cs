@@ -134,21 +134,22 @@ namespace Dodo.Rebellions
 			{
 				throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 			}
+			base.AddChild(rsc);
 		}
 
 		public override bool RemoveChild<T>(T rsc)
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				return m_workingGroups.Remove(wg.Guid);
+				return m_workingGroups.Remove(wg.Guid) && base.RemoveChild(rsc);
 			}
 			else if (rsc is Site s && s.Parent.Guid == Guid)
 			{
-				return m_sites.Remove(s.Guid);
+				return m_sites.Remove(s.Guid) && base.RemoveChild(rsc);
 			}
 			else if (rsc is Event e && e.Parent.Guid == Guid)
 			{
-				return m_events.Remove(e.Guid);
+				return m_events.Remove(e.Guid) && base.RemoveChild(rsc);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}

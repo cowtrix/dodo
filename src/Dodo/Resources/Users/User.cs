@@ -9,6 +9,7 @@ using Dodo.WorkingGroups;
 using Resources;
 using System.Security.Principal;
 using Dodo.Users.Tokens;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Users
 {
@@ -25,6 +26,8 @@ namespace Dodo.Users
 		[VerifyObject]
 		public AuthorizationData AuthData;
 		public TokenCollection TokenCollection = new TokenCollection();
+		[BsonIgnore]
+		public string PublicKey => AuthData.PublicKey;
 		#endregion
 
 		public User() : base()
@@ -75,7 +78,7 @@ namespace Dodo.Users
 			}
 			if(permissionLevel == EPermissionLevel.OWNER)
 			{
-				var notifications = TokenCollection.GetNotifications(accessContext, permissionLevel);
+				var notifications = TokenCollection.GetNotifications(accessContext, new Passphrase(requesterUser.AuthData.PrivateKey.GetValue(passphrase)), permissionLevel);
 				view.Add(METADATA_NOTIFICATIONS_KEY, notifications);
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
