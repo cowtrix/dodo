@@ -31,7 +31,7 @@ export const Search = ({
 			<Container
 				content={
 					<Fragment>
-						<Loader display={!searchParams.latlong.length || isFetchingSearch} />
+						<Loader display={isFetchingSearch} />
 						<div className={styles.searchHeader}>
 							<Filter />
 							<CenterMap setCenterMap={setCenterMap}/>

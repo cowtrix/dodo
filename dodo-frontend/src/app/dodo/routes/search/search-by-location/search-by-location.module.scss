@@ -1,0 +1,15 @@
+@import "~app/styles/styles";
+
+.searchByLocation {
+	margin-bottom: spacing(4);
+	opacity: 0.5;
+	margin-left: spacing(5);
+	font-size: 1rem;
+	padding: spacing(4) spacing(3) 0;
+
+	svg {
+		width: spacing(5);
+		height: spacing(7);
+	}
+}
+

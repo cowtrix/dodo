@@ -3,7 +3,7 @@
 .filter {
 	display: flex;
 	justify-content: space-between;
-	flex-grow: 0.5;
+	flex-grow: 1;
 	flex-direction: column;
 
 	 > div {
@@ -12,6 +12,7 @@
 
 	@media (min-width: $responsive-breakpoint) {
 		flex-direction: row;
+		flex-grow: 0.5;
 		padding: spacing(4) spacing(3);
 
 		> div {

@@ -4,7 +4,7 @@ import { store } from '../store'
 
 import styles from './app.module.scss'
 import { Dodo } from "./dodo";
-import { initiateFontAwesomeLibrary } from './startup'
+import { initiateFontAwesomeLibrary } from './font-awesome-library'
 
 
 export const App = () => {

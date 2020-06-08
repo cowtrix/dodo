@@ -13,7 +13,7 @@ const initialState = {
 	searchParams: {
 		types: [],
 		latlong: "",
-		distance: "1000",
+		distance: "250",
 		search: "",
 		page: "",
 	}
@@ -24,16 +24,16 @@ export const reducer = (state = initialState, action) => {
 		case SEARCH_GET + SUCCESS: {
 			return {
 				...state,
-				searchResults: [ ...action.payload ],
+				searchResults: [...action.payload],
 			}
 		}
 		case SEARCH_FILTER_LOCATION: {
 			return {
 				...state,
-				searchParams:  {
+				searchParams: {
 					...state.searchParams,
 					latlong: action.payload
-			}
+				}
 			}
 		}
 		case SEARCH_FILTER_DISTANCE: {

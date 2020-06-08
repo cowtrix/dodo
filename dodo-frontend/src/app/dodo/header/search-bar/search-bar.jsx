@@ -1,40 +1,28 @@
 import React from "react"
 import PropTypes from "prop-types"
 import AsyncSelect from "react-select/async"
-import { CustomSelect } from "./custom-select"
+import { Redirect, withRouter } from 'react-router-dom'
+
 
 import styles from "./search-bar.module.scss"
 
 const placeholder = "Search location..."
 
-export const SearchBar = (
+export const SearchBar = withRouter((
 	{
 		searchString,
 		search,
-		searchResults,
 		history,
-		searchParams,
 	}) =>
 	<AsyncSelect
-		defaultOptions={searchResults.map(result => ({
-			label: result.name,
-			value: result.guid,
-			data: result
-		}))}
-		loadOptions={(search, cb) => {
-			cb(
-				searchResults.map(result => ({
-					label: result.name,
-					value: result.guid,
-					data: result
-				}))
-			)
-		}}
 		className={styles.searchBar}
 		placeholder={placeholder}
-		onInputChange={value => search({ ...searchParams, search: value })}
-		formatOptionLabel={CustomSelect}
-	/>
+		onInputChange={value => {
+			search({ search: value })
+			history.push("/")
+		}}
+		menuIsOpen={false}
+	/>)
 
 
 SearchBar.propTypes = {

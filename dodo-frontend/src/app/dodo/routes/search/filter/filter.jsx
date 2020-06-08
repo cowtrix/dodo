@@ -6,7 +6,7 @@ import { Distance } from "./distance"
 
 import styles from "./filter.module.scss"
 
-const title = "Filter..."
+const title = "Filter results..."
 
 export const Filter = () => (
 	<Selector
@@ -14,7 +14,6 @@ export const Filter = () => (
 		content={
 			<div className={styles.filter}>
 				<Events />
-				<Distance />
 			</div>
 		}
 	/>

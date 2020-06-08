@@ -23,5 +23,13 @@
 .button {
 	width: 100%;
 	margin-bottom: spacing(4);
-	font-size: 1.2rem;
+	opacity: 0.5;
+	margin-left: spacing(5);
+	font-size: 1rem;
+
+	svg {
+		width: spacing(5);
+		height: spacing(7);
+		margin-right: spacing(2);
+	}
 }
