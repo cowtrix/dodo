@@ -19,7 +19,7 @@ export const Summary = (
 		metadata,
 		resourceTypes,
 		parent,
-	}) => (
+	}) =>
 	<li className={styles.eventSummmary}>
 		<Link
 			to={`${"/" + metadata.type + "/" + guid}`}
@@ -35,7 +35,6 @@ export const Summary = (
 			</div>
 		</Link>
 	</li>
-)
 
 Summary.propTypes = {
 	Name: PropTypes.string,
