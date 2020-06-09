@@ -45,3 +45,12 @@
 		font-size: 2rem;
 	}
 }
+
+.button {
+	display: flex;
+	text-decoration: underline;
+	width: 100%;
+	justify-content: center;
+	color: $color-dark-grey;
+	padding: spacing(1) spacing(2) spacing(3);
+}
