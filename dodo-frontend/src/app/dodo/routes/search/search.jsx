@@ -17,6 +17,7 @@ export const Search = (
 		searchParams,
 		getSearchResults,
 		isFetchingSearch,
+		resourceTypes,
 	}) => {
 	return (
 		<Fragment>
@@ -39,7 +40,7 @@ export const Search = (
 								setCenterMap={setCenterMap}
 							/>
 						</div>
-						<List resources={searchResults}/>
+						<List resources={searchResults} resourceTypes={resourceTypes}/>
 					</Fragment>
 				}
 			/>

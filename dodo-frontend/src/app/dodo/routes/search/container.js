@@ -13,7 +13,8 @@ const mapStateToProps = state => ({
 	searchParams: selectors.searchParams(state),
 	searchResults: selectors.searchResults(state),
 	isFetchingSearch: selectors.isFetching(state),
-	homeVideo: resources.selectors.homeVideo(state)
+	homeVideo: resources.selectors.homeVideo(state),
+	resourceTypes: resources.selectors.resourceTypes(state)
 })
 
 const mapDispatchToProps = dispatch => ({
