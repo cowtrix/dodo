@@ -25,7 +25,7 @@ namespace Dodo.SharedTest
 
 		public static ResourceSchemaBase GetRandomSchema(Type type, AccessContext context)
 		{
-			if(type == null)
+			if (type == null)
 			{
 				throw new ArgumentNullException(nameof(type));
 			}
@@ -44,7 +44,7 @@ namespace Dodo.SharedTest
 		public static string SampleDescription => "We are unprepared for the danger our future holds. We face floods, wildfires, extreme weather, crop failure, mass displacement and the breakdown of society. The time for denial is over. It is time to act.\nConventional approaches of voting, lobbying, petitions and protest have failed because powerful political and economic interests prevent change. Our strategy is therefore one of non-violent, disruptive civil disobedience – a rebellion.\nHistorical evidence shows that we need the involvement of 3.5% of the population to succeed – in the UK that’s about 2 million people.\nHelp XR mobilise and donate here: https://rebellion.earth/donate/\nExtinction Rebellion: https://rebellion.earth/\nInternational: https://rebellion.global/\n1. #TellTheTruth \n2. #ActNow \n3. #BeyondPolitics";
 		public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
 		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
-		private static string RandomName => StringExtensions.RandomString(32);
+		private static string RandomName<T>() => m_nameGenerators[typeof(T)].Invoke();
 
 		private static Dictionary<Type, Func<AccessContext, ResourceSchemaBase>> m_mappings =
 			new Dictionary<Type, Func<AccessContext, ResourceSchemaBase>>()
@@ -59,11 +59,36 @@ namespace Dodo.SharedTest
 			{ typeof(LocationResourceBase), s => GetRandomSite(s) },
 		};
 
+
+		static string[] m_peopleStrings = new[] { "Dave", "Smith", "John", "Todd", "Jane", "Mary", "Bob", "Suzie", "Raj", "Evan", "Ankara", "Boris", "Roger", "Davies", "White" };
+		static string[] m_eventStrings = new[] { "March For Justice", "Protest Against Extinction", "Stop The Destruction Of Nature", "Youth March", "Lessons in Activism Workshop", "NVDA Training",
+			"Know Your Rights Training", "Sign-Making Workshop", "Kid's Climate Lesson" };
+		static string[] m_siteStrings = new[] { "Central Occupation", "Government Camp", "Burning Earth", "Youth Camp", "Occupation Site", "Central Hub",
+			"Secondary Occupation", "Campsite", "Sanctuary Space" };
+		static string[] m_roleStrings = new[] { "External Coordinator", "Internal Coordinator", "Organiser", "Driver", "Trainer", "Assistant",
+			"General Team Member", "Rebellion Link", "Integration Coordinator" };
+		static string[] m_wgStrings = new[] { "Rebel Riders", "Sustenance", "Police Liason", "Media and Messaging", "Press", "Photos",
+			"Reactive", "Action Support", "Action Design" };
+		static string[] m_lgStrings = new[] { "Test Local Group" };
+		static string[] m_rebellionStrings = new[] { "Summer Rebellion", "Highway Rebellion", "Week of Rage", "Fortnight of Disruption", "Wave of Rebellion", "Summer Uprising" };
+
+		private static Dictionary<Type, Func<string>> m_nameGenerators =
+			new Dictionary<Type, Func<string>>()
+		{
+			{ typeof(User), () => $"{m_peopleStrings.Random()} {m_peopleStrings.Random()}" },
+			{ typeof(Rebellion), () => m_rebellionStrings.Random() },
+			{ typeof(WorkingGroup), () => m_wgStrings.Random() },
+			{ typeof(LocalGroup), () => m_lgStrings.Random() },
+			{ typeof(Role), () => m_roleStrings.Random() },
+			{ typeof(Event), () => m_eventStrings.Random() },
+			{ typeof(Site), () => m_siteStrings.Random() },
+		};
+
 		public static RoleSchema GetRandomRole(AccessContext context, GroupResource wg = null)
 		{
 			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomWorkinGroup(context)));
-			return new RoleSchema(RandomName,
+			return new RoleSchema(RandomName<Role>(),
 				SampleDescription,
 				wg.Guid);
 		}
@@ -73,20 +98,21 @@ namespace Dodo.SharedTest
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomRebellion(context)));
 			var date = RandomDate;
-			return new EventSchema(RandomName, rb.Guid, RandomLocation, SampleDescription, date, date + TimeSpan.FromHours(4));
+			return new EventSchema(RandomName<Event>(), rb.Guid, RandomLocation, SampleDescription, date, date + TimeSpan.FromHours(4));
 		}
 
 		public static SiteSchema GetRandomSite(AccessContext context, Rebellion rb = null)
 		{
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomRebellion(context)));
-			return new SiteSchema(RandomName, rb.Guid, RandomLocation, SampleDescription);
+			return new SiteSchema(RandomName<Site>(), rb.Guid, RandomLocation, SampleDescription);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)
 		{
-			return new UserSchema(RandomName,
-				RandomName.ToLower(CultureInfo.CurrentCulture),
+			var nm = RandomName<User>();
+			return new UserSchema(nm,
+				ValidationExtensions.StripStringForSlug(nm),
 				ValidationExtensions.GenerateStrongPassword(),
 				$"{StringExtensions.RandomString(16)}@{StringExtensions.RandomString(16)}.com"
 			);
