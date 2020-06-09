@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Dodo.Rebellions;
 using Dodo.LocalGroups;
 using Dodo.LocationResources;
+using Common.Config;
 
 namespace Dodo.Resources
 {
@@ -20,7 +21,7 @@ namespace Dodo.Resources
 			typeof(LocalGroup),
 			typeof(Rebellion),
 		};
-		private const int TransitionDistance = 1000;
+		private int TransitionDistance => ConfigManager.GetValue($"{nameof(DistanceFilter)}_{nameof(TransitionDistance)}", 10000);
 
 		public string LatLong { get; set; }
 		public double? Distance { get; set; }
@@ -82,7 +83,7 @@ namespace Dodo.Resources
 			}
 			else
 			{
-				return rsc.OrderByDescending(rsc => m_priority.IndexOf(rsc.GetType()))
+				return rsc.OrderBy(rsc => m_priority.IndexOf(rsc.GetType()))
 					.ThenBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
 			}
 		}

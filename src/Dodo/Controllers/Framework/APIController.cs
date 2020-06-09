@@ -27,8 +27,8 @@ namespace Dodo
 			{ typeof(Rebellion),		"22A73D" },
 			{ typeof(LocalGroup),		"71D0F1" },
 			{ typeof(WorkingGroup),		"FFC113" },
-			{ typeof(Event),		"ED9BC4" },
-			{ typeof(Site),	"22A73D" },
+			{ typeof(Event),			"ED9BC4" },
+			{ typeof(Site),				"22A73D" },
 			{ typeof(Role),				"E53D33" },
 		};
 
