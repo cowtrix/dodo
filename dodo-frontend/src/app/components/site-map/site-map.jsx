@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import { LeafletMap } from "app/components/leaflet-map"
 
-export const SiteMap = ({ sites = [], center, zoom, className, centerMap, setCenterMap, getSearchResults, searchParams }) => (
+export const SiteMap = ({ sites = [], center, zoom, className, centerMap, setCenterMap, getSearchResults, searchParams, setSearchParams }) => (
 	<LeafletMap
 		centerMap={centerMap}
 		setCenterMap={setCenterMap}
@@ -12,6 +12,7 @@ export const SiteMap = ({ sites = [], center, zoom, className, centerMap, setCen
 		className={className}
 		getSearchResults={getSearchResults}
 		searchParams={searchParams}
+		setSearchParams={setSearchParams}
 	/>
 )
 

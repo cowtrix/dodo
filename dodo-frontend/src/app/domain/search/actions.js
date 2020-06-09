@@ -42,3 +42,26 @@ export const searchGet = (dispatch, params, cb) => {
 	})
 }
 
+export const setSearchParams = (dispatch, params) => {
+	params.distance &&
+	dispatch({
+		type: SEARCH_FILTER_DISTANCE,
+		payload: params.distance
+	})
+	params.latlong &&
+	dispatch({
+		type: SEARCH_FILTER_LOCATION,
+		payload: params.latlong
+	})
+	params.search &&
+	dispatch({
+		type: SEARCH_FILTER_SEARCH,
+		payload: params.search
+	})
+	params.types && params.types.length &&
+	dispatch({
+		type: SEARCH_FILTER_TYPES,
+		payload: params.types
+	})
+}
+
