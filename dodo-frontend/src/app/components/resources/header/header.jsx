@@ -7,8 +7,8 @@ import { Dates } from './dates'
 
 import styles from './header.module.scss'
 
-export const Header = ({ resource, setCenterMap }) =>
-	<div className={styles.header}>
+export const Header = ({ resource, setCenterMap, resourceColor }) =>
+	<div className={styles.header} style={{ backgroundColor: resourceColor }}>
 		<div className={styles.headerLeft}>
 			<Title name={resource.name}/>
 			<Dates startDate={resource.startDate} endDate={resource.endDate} />
@@ -20,5 +20,7 @@ export const Header = ({ resource, setCenterMap }) =>
 	</div>
 
 Header.propTypes = {
-	event: PropTypes.object
+	resource: PropTypes.object,
+	setCenterMap: PropTypes.func,
+	resourceColor: PropTypes.string
 }
