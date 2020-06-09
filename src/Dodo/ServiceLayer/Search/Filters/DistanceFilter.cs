@@ -10,18 +10,12 @@ using Dodo.LocalGroups;
 using Dodo.LocationResources;
 using Common.Config;
 using Common;
+using System.Reflection;
 
 namespace Dodo.Resources
 {
 	public class DistanceFilter : ISearchFilter
 	{
-		static List<Type> m_priority = new List<Type>()
-		{
-			typeof(Site),
-			typeof(Event),
-			typeof(LocalGroup),
-			typeof(Rebellion),
-		};
 		private int TransitionDistance => ConfigManager.GetValue($"{nameof(DistanceFilter)}_{nameof(TransitionDistance)}", 100);
 
 		public string LatLong { get; set; }
@@ -84,7 +78,7 @@ namespace Dodo.Resources
 			}
 			else
 			{
-				return rsc.OrderBy(rsc => m_priority.IndexOf(rsc.GetType()))
+				return rsc.OrderBy(rsc => rsc.GetType().GetCustomAttribute<SearchPriority>()?.Priority)
 					.ThenBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
 			}
 		}

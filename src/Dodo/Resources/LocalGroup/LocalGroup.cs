@@ -16,6 +16,7 @@ using Dodo.Users.Tokens;
 namespace Dodo.LocalGroups
 {
 	[Name("Local Group")]
+	[SearchPriority(1)]
 	public class LocalGroup : GroupResource, ILocationalResource
 	{
 		[BsonElement]

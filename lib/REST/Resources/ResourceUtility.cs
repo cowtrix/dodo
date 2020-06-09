@@ -10,6 +10,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Resources
 {
@@ -54,8 +55,8 @@ namespace Resources
 				Register(typeArg, newManager);
 			}
 
-			types = ReflectionExtensions.GetConcreteClasses<IResourceFactory>();
-			foreach (var t in types)
+			var factories = ReflectionExtensions.GetConcreteClasses<IResourceFactory>();
+			foreach (var t in factories)
 			{
 				var newFactory = Activator.CreateInstance(t) as IResourceFactory;
 				var typeArg = newFactory.GetType().BaseType.GetGenericArguments().First();
@@ -86,7 +87,7 @@ namespace Resources
 				return default;
 			}
 			T result;
-			foreach(var rm in ResourceManagers)
+			foreach(var rm in ResourceManagers.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
 			{
 				result = (T)rm.Value.GetSingle(x => x.Guid == guid, handle);
 				if(result != null)
@@ -109,7 +110,8 @@ namespace Resources
 				return new[] { GetResourceByGuid<T>(guid) };
 			}
 			var result = new List<T>();
-			foreach (var rm in ResourceManagers.Where(rm => rm is ISearchableResourceManager))
+			foreach (var rm in ResourceManagers.Where(rm => typeof(IPublicResource).IsAssignableFrom(rm.Key))
+				.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
 			{
 				if (!typeof(T).IsAssignableFrom(rm.Key))
 				{
@@ -123,7 +125,7 @@ namespace Resources
 		public static T GetResourceBySlug<T>(this string slug, Guid? handle = null) where T : class, IRESTResource
 		{
 			T result;
-			foreach (var rm in ResourceManagers)
+			foreach (var rm in ResourceManagers.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
 			{
 				result = (T)rm.Value.GetSingle(x => x.Slug == slug, handle);
 				if (result != null)

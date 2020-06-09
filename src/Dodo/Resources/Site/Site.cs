@@ -1,4 +1,5 @@
 using Common;
+using Resources;
 using Resources.Location;
 using System;
 
@@ -17,6 +18,7 @@ namespace Dodo.LocationResources
 	}
 
 	[Name("Site")]
+	[SearchPriority(2)]
 	public class Site : LocationResourceBase
 	{
 		public Site() : base() { }

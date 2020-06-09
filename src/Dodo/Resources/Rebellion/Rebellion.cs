@@ -17,6 +17,7 @@ using Dodo.Users.Tokens;
 namespace Dodo.Rebellions
 {
 	[Name("Rebellion")]
+	[SearchPriority(0)]
 	public class Rebellion : GroupResource, ILocationalResource, ITimeBoundResource
 	{
 		public const string ROOT = "rebellions";

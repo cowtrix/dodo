@@ -5,6 +5,7 @@ using Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Dodo.Resources
 {
@@ -15,9 +16,11 @@ namespace Dodo.Resources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
-		public static IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector, Guid? handle = null)
+		private static IEnumerable<IRESTResource> Search(Func<IRESTResource, bool> selector, Guid? handle = null)
 		{
-			foreach (var rc in ResourceUtility.ResourceManagers.Where(rm => rm.Key != typeof(User)))
+			foreach (var rc in ResourceUtility.ResourceManagers
+				.Where(rm => typeof(IPublicResource).IsAssignableFrom(rm.Key))
+				.OrderByDescending(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
 			{
 				if (rc.Key == typeof(User))
 				{
@@ -32,7 +35,7 @@ namespace Dodo.Resources
 
 		public static IEnumerable<IRESTResource> Search(int index, int chunkSize, params ISearchFilter[] filters)
 		{
-			return SearchInternal<IRESTResource>(Get, index, chunkSize, filters);
+			return SearchInternal<IRESTResource>(Search, index, chunkSize, filters);
 		}
 
 		public static IEnumerable<T> Search<T>(int index, int chunkSize, params ISearchFilter[] filters)
@@ -47,7 +50,7 @@ namespace Dodo.Resources
 			ISearchFilter[] filters)
 		{
 			return src.Invoke(rsc => filters.All(f => f.Filter(rsc)), null)
-				.Cast<IPublicResource>()
+				.OfType<IPublicResource>()
 				.Where(rsc => rsc.IsPublished)
 				.Transpose(x =>
 				{

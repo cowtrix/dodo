@@ -32,6 +32,7 @@ namespace Dodo.LocationResources
 	}
 
 	[Name("Event")]
+	[SearchPriority(2)]
 	public class Event : LocationResourceBase, ITimeBoundResource
 	{
 		public Event() : base() { }

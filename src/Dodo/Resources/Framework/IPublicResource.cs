@@ -2,10 +2,6 @@ using Resources;
 
 namespace Dodo
 {
-	public interface IPublicResource : IDodoResource
-	{
-		bool IsPublished { get; set; }
-	}
 
 	public static class PublishResourceExtensions
 	{
