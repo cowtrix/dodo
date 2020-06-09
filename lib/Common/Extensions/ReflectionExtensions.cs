@@ -20,25 +20,26 @@ namespace Common.Extensions
 			}
 		}
 
-		public static string GetRealTypeName(this Type t)
+		public static string GetRealTypeName(this Type t, bool fullyQualify = false)
 		{
+			var typeName = fullyQualify ? $"{t.Namespace}.{t.Name}" : t.Name;
 			if (!t.IsGenericType)
-				return t.Name;
+				return typeName;
 
-			var tildeIndex = t.Name.IndexOf('`');
+			var tildeIndex = typeName.IndexOf('`');
 			if(tildeIndex < 0)
 			{
-				return t.Name;
+				return typeName;
 			}
 
 			StringBuilder sb = new StringBuilder();
-			sb.Append(t.Name.Substring(0, tildeIndex));
+			sb.Append(typeName.Substring(0, tildeIndex));
 			sb.Append('<');
 			bool appendComma = false;
 			foreach (Type arg in t.GetGenericArguments())
 			{
 				if (appendComma) sb.Append(',');
-				sb.Append(GetRealTypeName(arg));
+				sb.Append(GetRealTypeName(arg, fullyQualify));
 				appendComma = true;
 			}
 			sb.Append('>');

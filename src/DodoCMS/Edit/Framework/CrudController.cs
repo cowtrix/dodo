@@ -30,7 +30,7 @@ namespace Dodo.Controllers.Edit
 			}
 			var tokens = Context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(Context, EPermissionLevel.OWNER)
 				.Where(t => t.ResourceType == typeof(T).Name && !t.IsRedeemed);
-			if(!tokens.Any())
+			if(!tokens.Any() && Context.User.TokenCollection.GetSingleToken<SysadminToken>(Context) == null)
 			{
 				return Unauthorized("You must request permission to create this resource.");
 			}

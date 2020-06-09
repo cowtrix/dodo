@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common.Extensions;
 using System.Collections.Generic;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Dodo.SharedTest;
 using Dodo.Rebellions;
 using DodoTest.Framework.Postman;
@@ -65,7 +65,7 @@ namespace RESTTests.Search
 			{
 				Assert.Inconclusive();
 			}
-			var list = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
+			var list = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
 					(nameof(DistanceFilter.LatLong), $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
@@ -89,7 +89,7 @@ namespace RESTTests.Search
 				resources.Add(CreateObject<T>(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random() as ITimeBoundResource;
-			var list = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
+			var list = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
 					(nameof(DateFilter.StartDate), $"{resource.StartDate}"),
@@ -113,7 +113,7 @@ namespace RESTTests.Search
 				resources.Add(CreateObject<T>(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random() as IOwnedResource;
-			var list = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
+			var list = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
 					(nameof(ParentFilter.Parent), resource.Parent.Guid.ToString() ),
@@ -132,7 +132,7 @@ namespace RESTTests.Search
 				resources.Add(CreateObject<T>(context, SchemaGenerator.GetRandomSchema<T>(context)));
 			}
 			var resource = resources.Random();
-			var list = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
+			var list = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
 				parameters: new[]
 				{
 					(nameof(StringFilter.Search), resource.Name ),
@@ -150,7 +150,7 @@ namespace RESTTests.Search
 			{
 				sites.Add(CreateObject<T>(context, GetSchema(context)));
 			}
-			var list = await RequestJSON<JArray>($"{Dodo.Dodo.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET);
+			var list = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET);
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsFalse(sites.Any(x => !guids.Contains(x.Guid.ToString())));
 			Postman.Update(

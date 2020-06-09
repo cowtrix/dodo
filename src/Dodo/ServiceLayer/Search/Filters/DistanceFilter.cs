@@ -12,7 +12,7 @@ using Common.Config;
 using Common;
 using System.Reflection;
 
-namespace Dodo.Resources
+namespace Dodo.DodoResources
 {
 	public class DistanceFilter : ISearchFilter
 	{

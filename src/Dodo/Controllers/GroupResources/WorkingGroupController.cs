@@ -12,7 +12,7 @@ using Dodo.WorkingGroups;
 
 namespace DodoResources.WorkingGroups
 {
-	[Route(Dodo.Dodo.API_ROOT + RootURL)]
+	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class WorkingGroupController : GroupResourceAPIController<WorkingGroup, WorkingGroupSchema>
 	{
 		public const string RootURL = "workinggroup";

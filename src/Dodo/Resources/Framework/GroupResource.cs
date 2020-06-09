@@ -8,7 +8,7 @@ using Resources;
 using Resources.Serializers;
 using Common.Security;
 using Dodo.Users.Tokens;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Common;
 using MongoDB.Bson.Serialization.Attributes;
 

@@ -1,7 +1,7 @@
 using Resources;
 using System.Collections.Generic;
 
-namespace Dodo.Resources
+namespace Dodo.DodoResources
 {
 	public interface ISearchFilter
 	{

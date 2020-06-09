@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Http;
 using Resources;
 
-namespace Dodo.Resources
+namespace Dodo.DodoResources
 {
 	public abstract class DodoResourceManager<T> : ResourceManager<T> where T : class, IDodoResource
 	{
-		protected override string MongoDBDatabaseName => Dodo.PRODUCT_NAME;
+		protected override string MongoDBDatabaseName => DodoApp.PRODUCT_NAME;
 	}
 }

@@ -43,9 +43,9 @@ namespace Dodo.Controllers.Edit
 				{
 					// As redirect is user provided we should not trust it
 					// Ensure redirect is URL encoded when used as a query string parameter
-					return base.Redirect(QueryHelpers.AddQueryString($"{(Dodo.NetConfig.FullURI)}/{UserService.LOGIN}", "redirect", redirect));
+					return base.Redirect(QueryHelpers.AddQueryString($"{(DodoApp.NetConfig.FullURI)}/{UserService.LOGIN}", "redirect", redirect));
 				}
-				return Redirect($"{Dodo.NetConfig.FullURI}/{UserService.LOGIN}");
+				return Redirect($"{DodoApp.NetConfig.FullURI}/{UserService.LOGIN}");
 			}
 			catch
 			{

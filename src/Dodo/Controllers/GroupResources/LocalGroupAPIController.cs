@@ -6,7 +6,7 @@ using Dodo.LocalGroups;
 
 namespace DodoResources.LocalGroups
 {
-	[Route(Dodo.Dodo.API_ROOT + RootURL)]
+	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class LocalGroupAPIController : GroupResourceAPIController<LocalGroup, LocalGroupSchema>
 	{
 		public const string RootURL = "localgroup";

@@ -1,4 +1,4 @@
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Dodo.Users;
 using Resources.Security;
 using System;

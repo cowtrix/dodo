@@ -5,12 +5,12 @@ using System.ComponentModel.DataAnnotations;
 namespace Dodo.ViewModels
 {
 	/// <summary>
-	/// Base View Model for working / local group containing both read-only and writable properties
+	/// View Model for rebellion containing both read-only and writable properties
 	/// </summary>
-	public class Group
+	public class Rebellion
 	{
-		[DisplayName("Group ID")]
-		public Guid Guid { get; set; }
+		[DisplayName("Rebellion ID")]
+		public Guid GUID { get; set; }
 
 		[Required]
 		[MaxLength(64)]
@@ -24,5 +24,12 @@ namespace Dodo.ViewModels
 		[DisplayName("Member Count")]
 		public int MemberCount { get; set; }
 
+		public Location Location { get; set; }
+
+		[DisplayName("Start Date")]
+		public DateTimeOffset StartDate { get; set; }
+
+		[DisplayName("End Date")]
+		public DateTimeOffset EndDate { get; set; }
 	}
 }

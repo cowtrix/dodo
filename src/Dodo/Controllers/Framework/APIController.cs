@@ -18,7 +18,7 @@ using Resources;
 
 namespace Dodo
 {
-	[Route(Dodo.API_ROOT)]
+	[Route(DodoApp.API_ROOT)]
 	[AllowAnonymous]
 	public class APIController : Controller
 	{
@@ -43,7 +43,7 @@ namespace Dodo
 						label = t.GetName(),
 						value = t.Name.ToCamelCase(),
 						displayColor = m_displayColors[t],
-						schema = JsonViewUtility.GetSchema(t)
+						schema = JsonViewUtility.GetJsonSchema(t)
 					}).ToList(),
 				indexVideoEmbed = ConfigManager.GetValue("IndexVideoEmbedURL", "https://www.youtube.com/embed/d4QDM_Isi24"),
 			};

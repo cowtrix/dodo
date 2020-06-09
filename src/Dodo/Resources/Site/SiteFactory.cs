@@ -1,4 +1,4 @@
-using Dodo.Resources;
+using Dodo.DodoResources;
 
 namespace Dodo.LocationResources
 {

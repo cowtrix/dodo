@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\DodoAOT\DodoAOT.csproj" />
 		<ProjectReference Include="..\DodoCMS\DodoCMS.csproj" />
 		<ProjectReference Include="..\Dodo\Dodo.csproj" />
 	</ItemGroup>

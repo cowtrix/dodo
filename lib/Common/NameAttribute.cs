@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 
 namespace Common
@@ -41,6 +41,20 @@ namespace Common
 			if (nameAttr == null)
 			{
 				return type.Name;
+			}
+			return nameAttr.Name;
+		}
+
+		public static string GetName(this MemberInfo member)
+		{
+			if (member == null)
+			{
+				return null;
+			}
+			var nameAttr = member.GetCustomAttribute<NameAttribute>();
+			if (nameAttr == null)
+			{
+				return member.Name;
 			}
 			return nameAttr.Name;
 		}

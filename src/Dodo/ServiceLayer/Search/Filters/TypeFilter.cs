@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Dodo.Resources
+namespace Dodo.DodoResources
 {
 	public class TypeFilter : ISearchFilter
 	{

@@ -1,6 +1,6 @@
 using Common;
 using Dodo.Rebellions;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
 using Resources;

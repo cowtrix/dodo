@@ -9,7 +9,6 @@ namespace Dodo.Users
 		public string Source { get; set; }
 		public string Message { get; set; }
 		public Guid Guid { get; set; }
-		public bool Seen { get; set; }
 		public bool CanDelete { get; set; }
 
 		public Notification(string source, string message, bool canDelete = false)

@@ -21,7 +21,7 @@ namespace RESTTests
 {
 	public abstract class IntegrationTestBase : TestBase
 	{
-		protected string URL => Dodo.Dodo.NetConfig.FullURI;
+		protected string URL => Dodo.DodoApp.NetConfig.FullURI;
 
 		private readonly TestServer m_server;
 		private readonly HttpClient m_client;
@@ -34,7 +34,7 @@ namespace RESTTests
 			m_cookies = new CookieContainer();	
 			m_server = new TestServer(new WebHostBuilder()
 				.UseStartup<DodoStartup>()
-				.UseUrls($"{Dodo.Dodo.NetConfig.Domain}:{Dodo.Dodo.NetConfig.SSLPort}"));
+				.UseUrls($"{Dodo.DodoApp.NetConfig.Domain}:{Dodo.DodoApp.NetConfig.SSLPort}"));
 
 			m_client = m_server.CreateClient();
 			m_client.BaseAddress = new Uri(m_client.BaseAddress.ToString().Replace("http", "https"));

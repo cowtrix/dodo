@@ -21,6 +21,7 @@ namespace Dodo.WorkingGroups
 	/// Working Groups can have child Working Groups. A Working Group can only have a single parent Working Group.
 	/// </summary>
 	[Name("Working Group")]
+	[SearchPriority(3)]
 	public class WorkingGroup : GroupResource
 	{
 		public WorkingGroup(AccessContext context, WorkingGroupSchema schema) : base(context, schema)

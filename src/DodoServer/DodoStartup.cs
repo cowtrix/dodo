@@ -23,13 +23,13 @@ namespace DodoServer
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			if (!Environment.IsDevelopment() && Dodo.Dodo.NetConfig.LetsEncryptAutoSetup)
+			if (!Environment.IsDevelopment() && Dodo.DodoApp.NetConfig.LetsEncryptAutoSetup)
 			{
 				// Setup SSL certificate with Let's Encrypt
 				services.AddLetsEncrypt(config =>
 				{
 					config.AcceptTermsOfService = true;
-					config.DomainNames = new[] { Dodo.Dodo.NetConfig.Domain };
+					config.DomainNames = new[] { Dodo.DodoApp.NetConfig.Domain };
 					config.EmailAddress = DodoServer.DevEmail;
 				});
 			}
@@ -63,7 +63,7 @@ namespace DodoServer
 			services.AddHttpsRedirection(options =>
 			{
 				options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-				options.HttpsPort = global::Dodo.Dodo.NetConfig.SSLPort;
+				options.HttpsPort = global::Dodo.DodoApp.NetConfig.SSLPort;
 			});
 		}
 

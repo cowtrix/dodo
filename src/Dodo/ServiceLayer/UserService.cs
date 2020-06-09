@@ -123,7 +123,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 				targetUser.TokenCollection.Add(targetUser, resetToken);
 				UserManager.Update(targetUser, rscLock);
 				EmailHelper.SendPasswordResetEmail(targetUser.PersonalData.Email, targetUser.Name,
-					$"{Dodo.Dodo.NetConfig.FullURI}/{RootURL}/{RESET_PASSWORD}?token={resetToken.Key}");
+					$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{RESET_PASSWORD}?token={resetToken.Key}");
 			}
 		}
 		return new OkRequestResult();
@@ -280,7 +280,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return;
 		}
 		EmailHelper.SendEmailVerificationEmail(context.User.PersonalData.Email, context.User.Name,
-			$"{Dodo.Dodo.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}");
+			$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}");
 	}
 
 	public static User CreateTemporaryUser(string email)
@@ -298,8 +298,8 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			ResourceUtility.GetManager<User>().Update(newUser, rscLock);
 		}
 		EmailHelper.SendEmail(email, "New Rebel",
-			$"You've been invited to create an account on {Dodo.Dodo.PRODUCT_NAME}",
-			$"To create your account, please following the following link:\n\n{Dodo.Dodo.NetConfig.FullURI}/{RootURL}/{REGISTER}?token={token}");
+			$"You've been invited to create an account on {Dodo.DodoApp.PRODUCT_NAME}",
+			$"To create your account, please following the following link:\n\n{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{REGISTER}?token={token}");
 		return newUser;
 	}
 }

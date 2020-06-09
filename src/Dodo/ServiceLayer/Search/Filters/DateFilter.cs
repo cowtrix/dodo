@@ -4,7 +4,7 @@ using Dodo;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Dodo.Resources
+namespace Dodo.DodoResources
 {
 	public class DateFilter : ISearchFilter
 	{

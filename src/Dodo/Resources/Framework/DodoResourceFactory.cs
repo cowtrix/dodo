@@ -5,7 +5,7 @@ using Dodo.Users.Tokens;
 using Resources;
 using System;
 
-namespace Dodo.Resources
+namespace Dodo.DodoResources
 {
 	public abstract class DodoResourceFactory<TResult, TSchema> : ResourceFactory<TResult, TSchema, ResourceCreationRequest>
 		where TResult : DodoResource

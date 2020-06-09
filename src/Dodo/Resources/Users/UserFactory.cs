@@ -1,5 +1,5 @@
 using Common.Extensions;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Dodo.Users.Tokens;
 using Resources;
 using Resources.Serializers;

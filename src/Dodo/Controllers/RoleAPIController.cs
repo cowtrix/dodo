@@ -8,7 +8,7 @@ using DodoResources.Sites;
 namespace DodoResources.Roles
 {
 
-	[Route(Dodo.Dodo.API_ROOT + RootURL)]
+	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class RoleAPIController : CrudResourceAPIController<Role, RoleSchema>
 	{
 		public const string RootURL = "role";

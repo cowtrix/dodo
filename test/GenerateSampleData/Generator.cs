@@ -13,6 +13,7 @@ using Resources.Security;
 using SharedTest;
 using System;
 using System.Threading.Tasks;
+using Dodo.Users.Tokens;
 
 namespace GenerateSampleData
 {
@@ -34,7 +35,12 @@ namespace GenerateSampleData
 		public static async Task Generate()
 		{
 			ResourceUtility.ClearAllManagers();
-			GenerateUser(new UserSchema("Rebellion Tom", "tom", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
+			var sysAdmin = GenerateUser(new UserSchema("Rebellion Tom", "test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
+			using (var rscLock = new ResourceLock(sysAdmin))
+			{
+				sysAdmin.TokenCollection.Add(sysAdmin, new SysadminToken());
+				ResourceUtility.GetManager<User>().Update(sysAdmin, rscLock);
+			}
 			foreach(var city in m_cities)
 			{
 				await GenerateRebellion(city, admin1context);

@@ -1,0 +1,83 @@
+@model IEnumerable<Dodo.ViewModels.RebellionViewModel>
+
+@{
+	ViewData["Title"] = "Rebellions";
+	var loggedIn = true == User?.Identity?.IsAuthenticated;
+}
+
+<h1>Rebellions</h1>
+
+@if (loggedIn)
+{
+	<p>
+		<a asp-action="Create">Create New</a>
+	</p>
+}
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.StartDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.EndDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.MemberCount)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Location)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.StartDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.EndDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.MemberCount)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Location)
+				</td>
+				<td>
+					@if (loggedIn)
+					{
+						<text>
+							@Html.ActionLink("Edit", "Edit", new { id = item.Guid }) |
+						</text>
+					}
+					@Html.ActionLink("Details", "Details", new { id = item.Guid })
+					@if (loggedIn)
+					{
+						<text>
+							| @Html.ActionLink("Delete", "Delete", new { id = item.Guid })
+						</text>
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+@if (loggedIn)
+{
+	<a asp-controller="User" asp-action="Logout">Log out</a>
+}
+else
+{
+	<a asp-controller="Login" asp-action="Index" asp-route-redirect="/edit/rebellions">Log in to create/edit/delete</a>
+}

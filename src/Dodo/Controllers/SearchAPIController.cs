@@ -5,12 +5,12 @@ using Resources;
 using System.Linq;
 using Common.Extensions;
 using System;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Common.Config;
 
 namespace DodoResources
 {
-	[Route(Dodo.Dodo.API_ROOT + RootURL)]
+	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class SearchAPIController : CustomController
 	{
 		public const string RootURL = "search";

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using Dodo;
 using System.Threading.Tasks;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using System;
 
 namespace DodoResources

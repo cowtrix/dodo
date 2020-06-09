@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DodoResources.Sites
 {
 
-	[Route(Dodo.Dodo.API_ROOT + RootURL)]
+	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class SiteAPIController : SearchableResourceController<Site, SiteSchema>
 	{
 		public const string RootURL = "site";

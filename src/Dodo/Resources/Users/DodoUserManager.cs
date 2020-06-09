@@ -1,6 +1,6 @@
 using Common.Extensions;
 using Resources.Security;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Resources;
 using System;
 using Dodo.Users.Tokens;

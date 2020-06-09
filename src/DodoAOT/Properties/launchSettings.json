@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DodoAOT": {
+      "commandName": "Project",
+      "commandLineArgs": "$(SolutionDir)src\\DodoCMS\\ViewModels"
+    }
+  }
+}

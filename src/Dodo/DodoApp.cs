@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Dodo
 {
-	public static class Dodo
+	public static class DodoApp
 	{
 		public const string PRODUCT_NAME = "Dodo";
 		public const string API_ROOT = "api/";

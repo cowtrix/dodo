@@ -9,7 +9,7 @@ namespace DodoServer
 {
 	public static class DodoServer
 	{
-		public static string DevEmail => ConfigManager.GetValue($"{Dodo.Dodo.PRODUCT_NAME}_DevEmail", "test@web.com");
+		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", "test@web.com");
 		public static string ReactPath => ConfigManager.GetValue("ReactPath", Path.GetFullPath(@"..\..\dodo-frontend\build"));
 
 		public static void Main(string[] args)
@@ -26,7 +26,7 @@ namespace DodoServer
 				.ConfigureWebHostDefaults((System.Action<IWebHostBuilder>)(webBuilder =>
 				{
 					webBuilder.UseStartup<DodoStartup>();
-					webBuilder.UseUrls($"https://{(global::Dodo.Dodo.NetConfig.Hostname)}:{(global::Dodo.Dodo.NetConfig.SSLPort)}", $"http://{(global::Dodo.Dodo.NetConfig.Hostname)}:{(global::Dodo.Dodo.NetConfig.HTTPPort)}");
+					webBuilder.UseUrls($"https://{(global::Dodo.DodoApp.NetConfig.Hostname)}:{(global::Dodo.DodoApp.NetConfig.SSLPort)}", $"http://{(global::Dodo.DodoApp.NetConfig.Hostname)}:{(global::Dodo.DodoApp.NetConfig.HTTPPort)}");
 					// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2
 					webBuilder.UseKestrel(options =>
 						options.ConfigureEndpointDefaults(defaults =>

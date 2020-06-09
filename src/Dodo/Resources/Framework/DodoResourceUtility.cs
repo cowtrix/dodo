@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Dodo.Resources
+namespace Dodo.DodoResources
 {
 	public static class DodoResourceUtility
 	{
@@ -20,7 +20,7 @@ namespace Dodo.Resources
 		{
 			foreach (var rc in ResourceUtility.ResourceManagers
 				.Where(rm => typeof(IPublicResource).IsAssignableFrom(rm.Key))
-				.OrderByDescending(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
+				.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
 			{
 				if (rc.Key == typeof(User))
 				{

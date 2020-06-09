@@ -3,7 +3,7 @@ using System;
 using Common.Extensions;
 using Common;
 using Resources.Serializers;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Resources.Location;
 
 namespace Dodo.LocalGroups

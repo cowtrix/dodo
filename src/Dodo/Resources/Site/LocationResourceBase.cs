@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
 using Resources.Location;
-using Dodo.Resources;
+using Dodo.DodoResources;
 
 namespace Dodo.LocationResources
 {
@@ -80,18 +80,22 @@ namespace Dodo.LocationResources
 		IPublicResource
 	{
 		[View(EPermissionLevel.USER)]
+		[Name("Arrest Risk")]
 		public EArrestRisk ArrestRisk { get; set; }
 		[View(EPermissionLevel.USER)]
 		public SiteFacilities Facilities { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
+		[Name("Public Description")]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
+		[Name("Video Embed URL")]
 		public string VideoEmbedURL { get; set; } = "https://www.youtube.com/embed/d4QDM_Isi24";
 		[View(EPermissionLevel.ADMIN)]
+		[Name("Published")]
 		public bool IsPublished { get; set; }
 
 		public LocationResourceBase () : base() {}

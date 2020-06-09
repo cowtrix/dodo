@@ -1,7 +1,7 @@
 using Dodo;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
-using Dodo.Resources;
+using Dodo.DodoResources;
 using Dodo.SharedTest;
 using Dodo.LocationResources;
 using DodoResources;

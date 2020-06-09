@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 namespace Dodo.Roles
 {
+	[SearchPriority(4)]
 	public class Role : DodoResource, IOwnedResource, IPublicResource
 	{
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]

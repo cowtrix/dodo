@@ -17,8 +17,8 @@ namespace Dodo.Utility
 		public static List<SendGridMessage> EmailHistory = new List<SendGridMessage>();
 #endif
 
-		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", $"noreply@{Dodo.PRODUCT_NAME}.com");
-		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", $"{Dodo.PRODUCT_NAME} SysAdmin");
+		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", $"noreply@{DodoApp.PRODUCT_NAME}.com");
+		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", $"{DodoApp.PRODUCT_NAME} SysAdmin");
 		static ConfigVariable<string> m_privacyPolicy = new ConfigVariable<string>("PrivacyPolicyURL", "http://www.todo.com/privacypolicy");
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
 
@@ -29,7 +29,7 @@ namespace Dodo.Utility
 
 		static Dictionary<string, string> GetStandardTemplate() => new Dictionary<string, string>()
 		{
-			{ "product_name", Dodo.PRODUCT_NAME },
+			{ "product_name", DodoApp.PRODUCT_NAME },
 			{ "privacy_policy", m_privacyPolicy.Value }
 		};
 

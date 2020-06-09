@@ -34,7 +34,7 @@ namespace Resources
 			typeof(IResourceReference)
 		};
 
-		public static Dictionary<string, object> GetSchema(Type targetType)
+		public static Dictionary<string, object> GetJsonSchema(Type targetType)
 		{
 			var vals = new Dictionary<string, object>();
 
@@ -57,7 +57,7 @@ namespace Resources
 
 				if (!ShouldSerializeDirectly(memberType))
 				{
-					var subObjSchema = GetSchema(memberType);
+					var subObjSchema = GetJsonSchema(memberType);
 					if (subObjSchema.Any())
 					{
 						vals.Add(memberName,
@@ -366,7 +366,7 @@ namespace Resources
 			return targetPropValue.GenerateJsonView(visibility, requester, passphrase);
 		}
 
-		private static bool ShouldSerializeDirectly(Type targetType)
+		public static bool ShouldSerializeDirectly(Type targetType)
 		{
 			var viewAttr = targetType.GetCustomAttribute<ViewClassAttribute>();
 			if (viewAttr != null)
