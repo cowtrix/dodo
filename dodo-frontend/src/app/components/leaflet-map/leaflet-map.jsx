@@ -8,12 +8,10 @@ import { Markers } from "./markers"
 
 import styles from "./leaflet-map.module.scss"
 
-const getDefaultCenter = (sites = [], location) => {
-	if (sites.length) {
-		const sitesWithLocation = sites.filter(site => site.location)
-		return [sitesWithLocation[0].location.latitude, sitesWithLocation[0].location.longitude]
-	}
-	return location && location.length ? location : [51.5074, 0.1278]
+const getDefaultCenter = (sites = [], location = []) => {
+	const sitesWithLocation = sites.length && sites.filter(site => site.location)
+	const firstSiteLocation = sitesWithLocation.length && [sitesWithLocation[0].location.latitude, sitesWithLocation[0].location.longitude]
+	return firstSiteLocation ? firstSiteLocation : location.length ? location : [51.5074, 0.1278]
 }
 
 export const LeafletMap = (

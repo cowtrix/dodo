@@ -18,8 +18,10 @@ export const SearchBar = withRouter((
 		className={styles.searchBar}
 		placeholder={placeholder}
 		onInputChange={value => {
-			search({ search: value })
-			history.push("/")
+			if(value.length) {
+				search({ search: value })
+				value.length && history.push("/")
+			}
 		}}
 		menuIsOpen={false}
 	/>)
