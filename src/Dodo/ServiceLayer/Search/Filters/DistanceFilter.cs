@@ -9,6 +9,7 @@ using Dodo.Rebellions;
 using Dodo.LocalGroups;
 using Dodo.LocationResources;
 using Common.Config;
+using Common;
 
 namespace Dodo.Resources
 {
@@ -79,10 +80,12 @@ namespace Dodo.Resources
 
 			if (Distance < TransitionDistance)
 			{
+				Logger.Warning("Searching unordered");
 				return rsc.OrderBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
 			}
 			else
 			{
+				Logger.Warning("Searching with priority");
 				return rsc.OrderBy(rsc => m_priority.IndexOf(rsc.GetType()))
 					.ThenBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
 			}

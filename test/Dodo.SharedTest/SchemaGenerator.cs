@@ -75,7 +75,7 @@ namespace Dodo.SharedTest
 		private static Dictionary<Type, Func<string>> m_nameGenerators =
 			new Dictionary<Type, Func<string>>()
 		{
-			{ typeof(User), () => $"{m_peopleStrings.Random()} {m_peopleStrings.Random()}" },
+			{ typeof(User), () => $"{m_peopleStrings.Random()} {m_peopleStrings.Random()} {StringExtensions.RandomString(6)}" },
 			{ typeof(Rebellion), () => m_rebellionStrings.Random() },
 			{ typeof(WorkingGroup), () => m_wgStrings.Random() },
 			{ typeof(LocalGroup), () => m_lgStrings.Random() },
