@@ -22,7 +22,9 @@ namespace Dodo.Users.Tokens
 		typeof(TemporaryUserToken),
 		typeof(VerifyEmailToken),
 		typeof(ResourceCreationToken),
-		typeof(SessionToken)
+		typeof(SessionToken),
+		typeof(EncryptedNotificationToken),
+		typeof(SimpleNotificationToken)
 		)]
 	public abstract class Token : IToken
 	{

@@ -217,12 +217,12 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return ResourceRequestError.Conflict();
 		}
 		var factory = ResourceUtility.GetFactory<User>();
-		user = factory.CreateTypedObject(default(AccessContext), schema);
+		user = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));
 		var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));
 		SendEmailVerification(new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)));
 		return new ResourceCreationRequest(
 			new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)),
-			schema, EHTTPRequestType.POST, EPermissionLevel.OWNER)
+			schema)
 			{ 
 				Result = user 
 			};
@@ -289,7 +289,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var schema = new UserSchema("TEMPORARY", Guid.NewGuid().ToString().Replace("-", ""),
 			temporaryPassword.Value, email);
 		var factory = ResourceUtility.GetFactory<User>();
-		var newUser = factory.CreateTypedObject(default(AccessContext), schema);
+		var newUser = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));
 		var token = KeyGenerator.GetUniqueKey(32);
 		var tokenChallenge = PasswordHasher.HashPassword(token);
 		using (var rscLock = new ResourceLock(newUser))

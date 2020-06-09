@@ -16,6 +16,10 @@ namespace Dodo.Users.Tokens
 
 		public override Token GetToken(Passphrase pk)
 		{
+			if(pk.Equals(default(Passphrase)))
+			{
+				return default;
+			}
 			return m_data.GetValue(pk);
 		}
 	}

@@ -43,12 +43,13 @@ namespace DodoResources
 			{
 				return ResourceRequestError.ForbidRequest();
 			}
+
 			// User has a resource creation token, so we consume it and return ok
 			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context, EPermissionLevel.OWNER)
 				.FirstOrDefault(t => !t.IsRedeemed && t.ResourceType == typeof(T).Name);
 			if (token != null)
 			{
-				return new ResourceCreationRequest(context, schema, EHTTPRequestType.POST, EPermissionLevel.OWNER, token);
+				return new ResourceCreationRequest(context, schema, token);
 			}
 
 			// Test if user has admin on parent
@@ -61,7 +62,7 @@ namespace DodoResources
 			{
 				return ResourceRequestError.ForbidRequest();
 			}
-			return new ResourceCreationRequest(context, schema, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+			return new ResourceCreationRequest(context, schema);
 		}
 
 		protected override IRequestResult CanPost(AccessContext context, T target, string action = null)

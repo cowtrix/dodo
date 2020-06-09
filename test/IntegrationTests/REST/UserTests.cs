@@ -35,7 +35,7 @@ namespace RESTTests
 		public async Task CanUpdateProfile()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			var lg = new LocalGroupFactory().CreateObject(context, SchemaGenerator.GetRandomLocalGroup(context));
+			var lg = CreateObject<LocalGroup>(context, SchemaGenerator.GetRandomLocalGroup(context));
 			await Login(user.AuthData.Username, password);
 			const string newName = "My New Name";
 			var patchObj = new

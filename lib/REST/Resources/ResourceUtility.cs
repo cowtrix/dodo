@@ -189,7 +189,6 @@ namespace Resources
 			return GetFactory(typeof(T)) as IResourceFactory<T>;
 		}
 
-		
 		public static IResourceFactory GetFactory(Type type)
 		{
 			if(Factories.TryGetValue(type, out var factory))

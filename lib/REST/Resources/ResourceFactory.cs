@@ -4,48 +4,61 @@ using System;
 
 namespace Resources
 {
+	public interface ICreationContext : IVerifiable
+	{
+		ResourceSchemaBase GetSchema();
+	}
+
 	public interface IResourceFactory<T> : IResourceFactory
 	{
 		Type SchemaType { get; }
-		T CreateTypedObject(object context, ResourceSchemaBase schema);
+		T CreateTypedObject(ICreationContext context);
 	}
 
 	public interface IResourceFactory 
 	{
-		IRESTResource CreateObject(object context, ResourceSchemaBase schema);
+		IRESTResource CreateObject(ICreationContext context);
 	}
 
 	public abstract class ResourceFactory<TResult, TSchema, TContext> 
 		: IResourceFactory<TResult>
 		where TResult : class, IRESTResource
 		where TSchema : ResourceSchemaBase
+		where TContext: ICreationContext
 	{
-		protected virtual TResult CreateObjectInternal(TContext context, TSchema schema)
-		{
-			return (TResult)Activator.CreateInstance(typeof(TResult), context, schema);
-		}
+		protected abstract TResult CreateObjectInternal(TContext context);
 
-		protected virtual bool ValidateSchema(TContext context, ResourceSchemaBase schema, out string error)
+		protected virtual bool ValidateSchema(TContext context, out string error)
 		{
-			if (schema == null)
+			if (context == null)
 			{
-				throw new NullReferenceException("Schema cannot be null");
+				error = "Schema cannot be null";
+				return false;
 			}
-			if (!(schema is TSchema))
+			if (!(context is TContext))
 			{
-				throw new InvalidCastException($"Incorrect schema type. Expected: {typeof(TSchema).FullName}\t Actual: {schema.GetType().FullName}");
+				error = $"Incorrect context type. Expected: {typeof(TContext).FullName}\t Actual: {context.GetType().FullName}";
+				return false;
 			}
-			return schema.Verify(out error);
+			return context.Verify(out error);
 		}
 
-		public IRESTResource CreateObject(object context, ResourceSchemaBase schema)
+		public IRESTResource CreateObject(ICreationContext context)
 		{
-			return CreateObject((TContext)context, (TSchema)schema);
+			if (!ValidateSchema((TContext)context, out var error))
+			{
+				throw new Exception(error);
+			}
+			return CreateObjectInternal((TContext)context);
 		}
 
-		public TResult CreateTypedObject(object context, ResourceSchemaBase schema)
+		public TResult CreateTypedObject(ICreationContext context)
 		{
-			var obj = CreateObject(context, schema);
+			if(!(context is TContext))
+			{
+				throw new InvalidCastException($"Incorrect context: {context?.GetType()}");
+			}
+			var obj = CreateObject((TContext)context);
 			if(!(obj is TResult typedObj))
 			{
 				throw new Exception($"Could not create object: Generated incorrect type {obj.GetType()}");

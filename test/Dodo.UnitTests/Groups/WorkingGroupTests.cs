@@ -14,12 +14,11 @@ namespace Groups
 		public void CanAddAndRemoveSubWorkingGroup()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var baseWg = ResourceUtility.GetFactory<WorkingGroup>()
-				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<WorkingGroup>(creatorContext));
+			var baseWg = CreateObject<WorkingGroup>(creatorContext, SchemaGenerator.GetRandomSchema<WorkingGroup>(creatorContext));
 
 			var subWgSchema = SchemaGenerator.GetRandomSchema<WorkingGroup>(creatorContext) as WorkingGroupSchema;
 			subWgSchema.Parent = baseWg.Guid;
-			var subWg = ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(creatorContext, subWgSchema);
+			var subWg = CreateObject<WorkingGroup>(creatorContext, subWgSchema);
 			Assert.IsTrue((subWg.Parent.GetValue() as WorkingGroup).WorkingGroups.Any(g => g.Guid == subWg.Guid),
 				"Working Group was not included in Rebellion list after creation");
 			ResourceUtility.GetManager<WorkingGroup>().Delete(subWg);
@@ -31,7 +30,7 @@ namespace Groups
 		public void CanAddAndRemoveRoles()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var role = ResourceUtility.GetFactory<Role>().CreateTypedObject(creatorContext, 
+			var role = CreateObject<Role>(creatorContext, 
 				SchemaGenerator.GetRandomSchema<Role>(creatorContext));
 			Assert.IsTrue((role.Parent.GetValue() as WorkingGroup).Roles.Any(g => g.Guid == role.Guid),
 				"Working Group was not included in Rebellion list after creation");

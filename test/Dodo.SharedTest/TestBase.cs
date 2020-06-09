@@ -97,7 +97,7 @@ namespace SharedTest
 				schema = SchemaGenerator.GetRandomSchema<T>(context);
 			}
 			var factory = ResourceUtility.GetFactory<T>();
-			var obj = factory.CreateTypedObject(context, schema);
+			var obj = factory.CreateTypedObject(new ResourceCreationRequest(context, schema));
 			if (publish && obj is IPublicResource pubRsc)
 			{
 				obj = (T)pubRsc.Publish();
@@ -118,7 +118,7 @@ namespace SharedTest
 				}
 				else if (obj is WorkingGroup wg)
 				{
-					if (!(wg.Parent.GetValue() is Rebellion))
+					if (wg.Parent.Type == nameof(Rebellion))
 					{
 						CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, wg));
 						CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, wg));
@@ -150,7 +150,7 @@ namespace SharedTest
 				throw new ArgumentNullException(nameof(schema));
 			}
 			var userFactory = ResourceUtility.GetFactory<User>();
-			var user = userFactory.CreateTypedObject(default(AccessContext), schema);
+			var user = userFactory.CreateTypedObject(new ResourceCreationRequest(default, schema));
 			var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema.Password)));
 			context = new AccessContext(user, passphrase);
 			Assert.IsTrue(context.Challenge());

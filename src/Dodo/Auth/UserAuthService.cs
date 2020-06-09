@@ -37,7 +37,7 @@ namespace Dodo.Users
 		{
 			if(context.User == null)
 			{
-				return new ResourceCreationRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+				return new ResourceCreationRequest(context, target);
 			}
 			return ResourceRequestError.BadRequest();
 		}

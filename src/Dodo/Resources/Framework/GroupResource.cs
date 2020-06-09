@@ -171,6 +171,7 @@ namespace Dodo
 			object requester, Passphrase passphrase)
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
+			var context = new AccessContext(user, passphrase);
 			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
 			Passphrase pass;
@@ -181,9 +182,9 @@ namespace Dodo
 			}
 			else
 			{
-				pass = new Passphrase(user.AuthData.PrivateKey.GetValue(passphrase));
+				pass = passphrase;
 			}
-			var notifications = SharedTokens.GetNotifications((AccessContext)requester, pass, permissionLevel);
+			var notifications = SharedTokens.GetNotifications(context, pass, permissionLevel);
 			view.Add(METADATA_NOTIFICATIONS_KEY, notifications);
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}

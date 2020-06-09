@@ -4,22 +4,25 @@ using Dodo.Users;
 using Dodo.Users.Tokens;
 using Resources;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dodo.Resources
 {
-	public abstract class DodoResourceFactory<TResult, TSchema> : ResourceFactory<TResult, TSchema, AccessContext>
-		where TResult : class, IRESTResource
+	public abstract class DodoResourceFactory<TResult, TSchema> : ResourceFactory<TResult, TSchema, ResourceCreationRequest>
+		where TResult : DodoResource
 		where TSchema : ResourceSchemaBase
 	{
-		protected override bool ValidateSchema(AccessContext context, ResourceSchemaBase schemaBase, out string error)
+		protected override bool ValidateSchema(ResourceCreationRequest request, out string error)
 		{
-			if (!base.ValidateSchema(context, schemaBase, out error))
+			if (!base.ValidateSchema(request, out error))
 			{
 				return false;
 			}
-			if (!context.Challenge())
+			if(request.Schema == null)
+			{
+				error = "Schema cannot be null";
+				return false;
+			}
+			if (!request.AccessContext.Challenge())
 			{
 				error = "Bad authorisation";
 				return false;
@@ -27,29 +30,9 @@ namespace Dodo.Resources
 			return true;
 		}
 
-		public TResult CreateObject(ResourceCreationRequest request)
+		protected override TResult CreateObjectInternal(ResourceCreationRequest request)
 		{
-			if (!ValidateSchema(request.AccessContext, request.Schema, out var error))
-			{
-				throw new Exception(error);
-			}
-			var newResource = CreateObjectInternal(request);
-			if (newResource == null)
-			{
-				throw new Exception($"Failed to create resource of type {typeof(TResult)} from schema {request?.Schema?.GetType()}");
-			}
-			if (!newResource.Verify(out error))
-			{
-				throw new Exception(error);
-			}
-			ResourceUtility.Register(newResource);
-			Logger.Debug($"Created new resource {newResource.GetType().Name}: {newResource.Guid}");
-			return newResource;
-		}
-
-		protected TResult CreateObjectInternal(ResourceCreationRequest request)
-		{
-			if (request.Token != null)
+			if (request.Token != default)
 			{
 				using (var rscLock = new ResourceLock(request.AccessContext.User))
 				{
@@ -58,9 +41,18 @@ namespace Dodo.Resources
 					ResourceUtility.GetManager<User>().Update(creator, rscLock);
 				}
 			}
-
-			var rsc = base.CreateObjectInternal(request.AccessContext, request.Schema as TSchema);
-			if (rsc is IOwnedResource owned && owned.Parent.HasValue())
+			var newResource = (TResult)Activator.CreateInstance(typeof(TResult), request.AccessContext, request.Schema);
+			if (newResource == null)
+			{
+				throw new Exception($"Failed to create resource of type {typeof(TResult)} from context {request?.GetType()}");
+			}
+			if (!newResource.Verify(out var error))
+			{
+				throw new Exception(error);
+			}
+			ResourceUtility.Register(newResource);
+			Logger.Debug($"Created new resource {newResource.GetType().Name}: {newResource.Guid}");
+			if (newResource is IOwnedResource owned && owned.Parent.HasValue())
 			{
 				// Add listing to parent resource if needed
 				using var rscLock = new ResourceLock(owned.Parent.Guid);
@@ -70,8 +62,7 @@ namespace Dodo.Resources
 					ResourceUtility.GetManager(parent.GetType()).Update(parent, rscLock);
 				}
 			}
-
-			return rsc;
+			return newResource;
 		}
 	}
 }

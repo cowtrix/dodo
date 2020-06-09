@@ -35,24 +35,25 @@ namespace Dodo.Users
 
 	public class UserFactory : DodoResourceFactory<User, UserSchema>
 	{
-		protected override bool ValidateSchema(AccessContext context, ResourceSchemaBase schema, out string error)
+		protected override bool ValidateSchema(ResourceCreationRequest request, out string error)
 		{
-			if (schema == null)
+			if (request.Schema == null)
 			{
 				throw new NullReferenceException("Schema cannot be null");
 			}
-			if (!(schema is UserSchema))
+			if (!(request.Schema is UserSchema))
 			{
-				throw new InvalidCastException($"Incorrect schema type. Expected: {typeof(UserSchema).FullName}\t Actual: {schema.GetType().FullName}");
+				throw new InvalidCastException($"Incorrect schema type. Expected: {typeof(UserSchema).FullName}\t Actual: {request.Schema.GetType().FullName}");
 			}
-			error = null;
-			return true;
+			return request.Verify(out error);
 		}
 
-		protected override User CreateObjectInternal(AccessContext context, UserSchema schema)
+		protected override User CreateObjectInternal(ResourceCreationRequest request)
 		{
-			var user = base.CreateObjectInternal(context, schema);
+			var user = base.CreateObjectInternal(request);
+			using var rscLock = new ResourceLock(user);
 			user.TokenCollection.Add(user, new VerifyEmailToken());
+			ResourceUtility.GetManager<User>().Update(user, rscLock);
 			return user;
 		}
 	}

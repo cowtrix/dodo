@@ -15,8 +15,7 @@ namespace Groups
 		public void CanAddAndRemoveSubWorkingGroup()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var newWg = ResourceUtility.GetFactory<WorkingGroup>()
-				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<WorkingGroup>(creatorContext));
+			var newWg = CreateObject<WorkingGroup>(creatorContext, SchemaGenerator.GetRandomSchema<WorkingGroup>(creatorContext));
 			Assert.IsTrue((newWg.Parent.GetValue() as Rebellion).WorkingGroups.Any(s => s.Guid == newWg.Guid),
 				"Working Group was not included in Rebellion list after creation");
 			ResourceUtility.GetManager<WorkingGroup>().Delete(newWg);
@@ -28,8 +27,7 @@ namespace Groups
 		public void CanAddAndRemoveSite()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var eventSite = ResourceUtility.GetFactory<Site>()
-				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<Site>(creatorContext));
+			var eventSite = CreateObject<Site>(creatorContext, SchemaGenerator.GetRandomSchema<Site>(creatorContext));
 			Assert.IsTrue((eventSite.Parent.GetValue() as Rebellion).Sites.Any(s => s.Guid == eventSite.Guid),
 				"Site was not included in Rebellion list after creation");
 			ResourceUtility.GetManager<Site>().Delete(eventSite);
@@ -41,8 +39,7 @@ namespace Groups
 		public void CanAddAndRemoveEvent()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var eventSite = ResourceUtility.GetFactory<Event>()
-				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<Event>(creatorContext));
+			var eventSite = CreateObject<Event>(creatorContext, SchemaGenerator.GetRandomSchema<Event>(creatorContext));
 			Assert.IsTrue((eventSite.Parent.GetValue() as Rebellion).Events.Any(s => s.Guid == eventSite.Guid),
 				"Site was not included in Rebellion list after creation");
 			ResourceUtility.GetManager<Event>().Delete(eventSite);

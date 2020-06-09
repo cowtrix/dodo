@@ -23,7 +23,7 @@ namespace DodoResources.Roles
 			{
 				return ResourceRequestError.ForbidRequest();
 			}
-			return new ResourceCreationRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+			return new ResourceCreationRequest(context, target);
 		}
 	}
 }

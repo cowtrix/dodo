@@ -7,11 +7,12 @@ using Resources.Security;
 using SharedTest;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Groups
 {
-	public abstract class GroupResourceTestBase<T> : TestBase where T:GroupResource
+	public abstract class GroupResourceTestBase<T> : TestBase where T : GroupResource
 	{
 		protected IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
 
@@ -20,7 +21,7 @@ namespace Groups
 		public void CanJoinAndLeave()
 		{
 			var creator = GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var newGroup = ResourceUtility.GetFactory<T>().CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
+			var newGroup = CreateObject<T>(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
 
 			// Join
 			var user = GenerateUser(SchemaGenerator.GetRandomUser(default), out var joinerContext);
@@ -51,13 +52,13 @@ namespace Groups
 		public void CanAddAdmin()
 		{
 			var creator = GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var newGroup = ResourceUtility.GetFactory<T>()
-				.CreateTypedObject(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
+			var newGroup = CreateObject<T>(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
 
 			// Add
 			var newAdmin = GenerateUser(SchemaGenerator.GetRandomUser(default), out var newAdminContext);
 			newGroup.AddAdmin(creatorContext, newAdmin);
 			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
+			var all = ResourceManager.Get(r => true).ToList();
 			Assert.IsTrue(updatedGroup.IsAdmin(newAdmin, creatorContext));
 		}
 	}

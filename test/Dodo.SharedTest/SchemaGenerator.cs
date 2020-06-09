@@ -62,8 +62,7 @@ namespace Dodo.SharedTest
 		public static RoleSchema GetRandomRole(AccessContext context, GroupResource wg = null)
 		{
 			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(
-				context,
-				GetRandomWorkinGroup(context));
+				new ResourceCreationRequest(context, GetRandomWorkinGroup(context)));
 			return new RoleSchema(RandomName,
 				SampleDescription,
 				wg.Guid);
@@ -72,8 +71,7 @@ namespace Dodo.SharedTest
 		public static EventSchema GetRandomEvent(AccessContext context, GroupResource rb = null)
 		{
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
-				context,
-				GetRandomRebellion(context));
+				new ResourceCreationRequest(context, GetRandomRebellion(context)));
 			var date = RandomDate;
 			return new EventSchema(RandomName, rb.Guid, RandomLocation, SampleDescription, date, date + TimeSpan.FromHours(4));
 		}
@@ -81,8 +79,7 @@ namespace Dodo.SharedTest
 		public static SiteSchema GetRandomSite(AccessContext context, Rebellion rb = null)
 		{
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
-				context,
-				GetRandomRebellion(context));
+				new ResourceCreationRequest(context, GetRandomRebellion(context)));
 			return new SiteSchema(RandomName, rb.Guid, RandomLocation, SampleDescription);
 		}
 
@@ -139,8 +136,7 @@ namespace Dodo.SharedTest
 
 			};
 			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
-				context,
-				GetRandomRebellion(context));
+				new ResourceCreationRequest(context, GetRandomRebellion(context)));
 			var rand = workingGroups.Random();
 			return new WorkingGroupSchema(rand.Item1, rand.Item2, rsc.Guid);
 		}
@@ -152,8 +148,7 @@ namespace Dodo.SharedTest
 				"Paris", "Rome", "London", "New York", "Sydney", "Amsterdam", "Dublin", "Chicago", "Mexico City", "Santiago", "Istanbul", "Moscow"
 			};
 			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
-				context,
-				GetRandomRebellion(context));
+				new ResourceCreationRequest(context, GetRandomRebellion(context)));
 			return new LocalGroupSchema(localGroups.Random(),
 				SampleDescription,
 				RandomLocation

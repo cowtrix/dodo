@@ -1,23 +1,31 @@
+using Common.Extensions;
 using Dodo;
 using Dodo.Users.Tokens;
 using System;
 
 namespace Resources
 {
-	public class ResourceCreationRequest : ResourceRequest
+	public class ResourceCreationRequest : ResourceRequest, ICreationContext
 	{
 		public readonly Guid Token;
 		public readonly ResourceSchemaBase Schema;
 
 		public ResourceCreationRequest(AccessContext context,
 			ResourceSchemaBase schema,
-			EHTTPRequestType type,
-			EPermissionLevel permissionLevel,
 			ResourceCreationToken token = null)
-			: base (context, type, permissionLevel)
+			: base (context, EHTTPRequestType.POST, EPermissionLevel.OWNER)
 		{
 			Schema = schema;
-			Token = token.Guid;
+			if(token != null)
+			{
+				Token = token.Guid;
+			}
 		}
+
+		public bool CanVerify() => true;
+
+		public ResourceSchemaBase GetSchema() => Schema;
+
+		public bool VerifyExplicit(out string error) => Schema.Verify(out error);
 	}
 }

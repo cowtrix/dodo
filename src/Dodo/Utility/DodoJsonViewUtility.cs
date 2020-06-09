@@ -1,3 +1,4 @@
+using Dodo.Resources;
 using Dodo.Users;
 using Resources.Security;
 using System;
@@ -8,7 +9,6 @@ namespace Resources
 {
 	public static class DodoJsonViewUtility
 	{
-		
 		/// <summary>
 		/// This will generate a JSON object that represents viewable properties of this object.
 		/// An object is marked as viewable with the ViewAttribute. Fields and properties

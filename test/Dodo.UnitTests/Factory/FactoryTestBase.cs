@@ -21,7 +21,8 @@ namespace Factory
 			var factory = ResourceUtility.GetFactory(typeof(T));
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context);
-			var newObj = (T)factory.CreateObject(context, schema);
+			var req = new ResourceCreationRequest(context, schema);
+			var newObj = (T)factory.CreateObject(req);
 			VerifyCreatedObject(newObj, schema);
 		}
 
@@ -32,7 +33,7 @@ namespace Factory
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as ResourceSchemaBase;
 			var badContext = new AccessContext(context.User, new Resources.Security.Passphrase("asbasdbasdb"));
-			AssertX.Throws<Exception>(() => factory.CreateObject(badContext, schema),
+			AssertX.Throws<Exception>(() => factory.CreateObject(new ResourceCreationRequest(badContext, schema)),
 				e => e.Message.Contains("Bad authorisation"));
 		}
 
@@ -43,7 +44,7 @@ namespace Factory
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as ResourceSchemaBase;
 			schema.Name = "Admin - this is an invalid name value";
-			AssertX.Throws<Exception>(() => factory.CreateObject(context, schema),
+			AssertX.Throws<Exception>(() => factory.CreateObject(new ResourceCreationRequest(context, schema)),
 				e => e.Message.Contains("Name contains reserved word"));
 		}
 

@@ -8,9 +8,12 @@ using System.Reflection;
 using System;
 using Common.Extensions;
 using Common.Security;
+using Resources.Serializers;
 
 namespace Dodo.Users.Tokens
 {
+	public class ITokenOwnerSerializer : ResourceReferenceSerializer<ITokenOwner> { }
+
 	public interface ITokenOwner : IRESTResource
 	{
 		string PublicKey { get; }
@@ -104,30 +107,34 @@ namespace Dodo.Users.Tokens
 
 		public IToken GetSingleToken(AccessContext context, Type tokenType)
 		{
-			return GetAllTokens(context).SingleOrDefault(pa => tokenType.IsAssignableFrom(pa.GetType()));
+			return GetAllTokens(new Passphrase(context.User?.AuthData.PrivateKey.GetValue(context.Passphrase)), EPermissionLevel.SYSTEM)
+				.SingleOrDefault(pa => tokenType.IsAssignableFrom(pa.GetType()));
 		}
 
 		public IEnumerable<T> GetAllTokens<T>(AccessContext context, EPermissionLevel permissionLevel) where T : class, IToken
 		{
-			return GetAllTokens<T>(new Passphrase(context.User.AuthData.PrivateKey.GetValue(context.Passphrase)), permissionLevel);
+			return GetAllTokens<T>(new Passphrase(context.User?.AuthData.PrivateKey.GetValue(context.Passphrase)), permissionLevel);
 		}
+
+		public IEnumerable<IToken> GetAllTokens(AccessContext context, EPermissionLevel permissionLevel)
+		{
+			return GetAllTokens(new Passphrase(context.User?.AuthData.PrivateKey.GetValue(context.Passphrase)), permissionLevel);
+		}
+
 
 		public IEnumerable<T> GetAllTokens<T>(Passphrase privateKey, EPermissionLevel permissionLevel) where T : class, IToken
 		{
-			foreach (var token in m_tokens.Where(t => t.PermissionLevel <= permissionLevel && typeof(T).IsAssignableFrom(t.Type)))
-			{
-				yield return token.GetToken(privateKey) as T;
-			}
+			return GetAllTokens(privateKey, permissionLevel).OfType<T>();
 		}
 
-		public IEnumerable<IToken> GetAllTokens(AccessContext context)
+		public IEnumerable<IToken> GetAllTokens(Passphrase privateKey, EPermissionLevel permissionLevel)
 		{
-			foreach (var entry in m_tokens)
+			foreach (var token in m_tokens.Where(t => t.PermissionLevel <= permissionLevel))
 			{
-				var token = entry.GetToken(context);
-				if(token != null)
+				var t = token.GetToken(privateKey);
+				if (t != null)
 				{
-					yield return token;
+					yield return t;
 				}
 			}
 		}

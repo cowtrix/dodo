@@ -31,8 +31,8 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		T createdObject;
 		try
 		{
-			createdObject = factory.CreateObject(req.AccessContext, schema) as T;
-			if (req.Token != null && req.AccessContext.User != null)
+			createdObject = factory.CreateObject(req) as T;
+			if (req.Token != default && req.AccessContext.User != null)
 			{
 				// The user consumed a resource creation token to make this resource
 				using (var rscLock = new ResourceLock(req.AccessContext.User))
@@ -53,7 +53,6 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 					UserManager.Update(user, rscLock);
 				}
 			}
-			OnCreation(req.AccessContext, createdObject);
 		}
 		catch (Exception e)
 		{
@@ -173,9 +172,5 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 	public virtual async Task<IRequestResult> Get(string id)
 	{
 		return VerifyRequest(id, EHTTPRequestType.GET);
-	}
-
-	protected virtual void OnCreation(AccessContext Context, T user)
-	{
 	}
 }

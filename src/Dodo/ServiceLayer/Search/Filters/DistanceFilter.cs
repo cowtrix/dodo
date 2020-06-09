@@ -5,11 +5,23 @@ using System;
 using Dodo;
 using GeoCoordinatePortable;
 using System.Collections.Generic;
+using Dodo.Rebellions;
+using Dodo.LocalGroups;
+using Dodo.LocationResources;
 
 namespace Dodo.Resources
 {
 	public class DistanceFilter : ISearchFilter
 	{
+		static List<Type> m_priority = new List<Type>()
+		{
+			typeof(Site),
+			typeof(Event),
+			typeof(LocalGroup),
+			typeof(Rebellion),
+		};
+		private const int TransitionDistance = 1000;
+
 		public string LatLong { get; set; }
 		public double? Distance { get; set; }
 
@@ -63,7 +75,16 @@ namespace Dodo.Resources
 				return rsc;
 			}
 			if (null == m_coordinate) return rsc;
-			return rsc.OrderBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
+
+			if (Distance < TransitionDistance)
+			{
+				return rsc.OrderBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
+			}
+			else
+			{
+				return rsc.OrderByDescending(rsc => m_priority.IndexOf(rsc.GetType()))
+					.ThenBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
+			}
 		}
 	}
 }
