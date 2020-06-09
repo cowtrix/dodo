@@ -37,7 +37,7 @@ namespace Dodo
 			MetadataObject = new
 			{
 				resourceTypes = ReflectionExtensions.GetConcreteClasses<IDodoResource>()
-					.Where(t => typeof(ILocationalResource).IsAssignableFrom(t))
+					.Where(t => typeof(IPublicResource).IsAssignableFrom(t))
 					.Select(t => new
 					{
 						label = t.GetName(),
