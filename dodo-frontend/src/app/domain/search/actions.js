@@ -10,7 +10,7 @@ import { SEARCH } from "../urls"
 
 import { addParamsToUrl } from "../services"
 
-export const searchGet = (dispatch, params) => {
+export const searchGet = (dispatch, params, cb) => {
 
 	const parseTypes = params =>
 		params.types ? ({
@@ -19,7 +19,7 @@ export const searchGet = (dispatch, params) => {
 		}) :
 			params
 
-	apiAction(dispatch, SEARCH_GET, addParamsToUrl(SEARCH, parseTypes(params)))
+	apiAction(dispatch, SEARCH_GET, addParamsToUrl(SEARCH, parseTypes(params)), cb, true)
 	params.distance &&
 		dispatch({
 			type: SEARCH_FILTER_DISTANCE,
@@ -42,13 +42,3 @@ export const searchGet = (dispatch, params) => {
 	})
 }
 
-export const searchSetCurrentLocation = dispatch => {
-	navigator.geolocation.getCurrentPosition(position => {
-		const loc = position.coords
-		const latLong = loc.latitude + "+" + loc.longitude
-		dispatch({
-			type: SEARCH_FILTER_LOCATION,
-			payload: latLong
-		})
-	})
-}

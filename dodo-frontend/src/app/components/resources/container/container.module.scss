@@ -19,6 +19,7 @@ $rebellions-list-background: white;
 	flex-direction: column;
 	flex-grow: 1;
 	min-height: 100px;
+	width: 100%;
 
 	@media (min-width: $responsive-breakpoint) {
 		border: 1px solid grey;

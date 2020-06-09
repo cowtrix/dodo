@@ -4,12 +4,18 @@ import { Container } from "app/components/resources"
 import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
 import { ResourceContent } from './resource-content'
 
-export const Resource = ({ match, getResource, resource, isLoading, centerMap, setCenterMap, resourceTypes }) => {
+export const Resource = ({ match, getResource, resource, isLoading, centerMap, setCenterMap, resourceTypes = [] }) => {
 	const { eventId, eventType } = match.params
 
 	useEffect(() => {
 		getResource(eventType, eventId)
 	}, [match])
+
+
+	const resourceColor =
+		resource.metadata &&
+		resourceTypes.length &&
+		 '#' + resourceTypes.find(resType => resource.metadata.type === resType.value).displayColor
 
 	const { location } = resource
 	const defaultLocation = resource.location
@@ -29,7 +35,12 @@ export const Resource = ({ match, getResource, resource, isLoading, centerMap, s
 					<Fragment>
 						<Loader display={isLoading} />
 						{resource.metadata && !isLoading && (
-							<ResourceContent resource={resource} setCenterMap={setCenterMap} resourceTypes={resourceTypes}/>
+							<ResourceContent
+								resource={resource}
+								setCenterMap={setCenterMap}
+								resourceTypes={resourceTypes}
+								resourceColor={resourceColor}
+							/>
 						)}
 					</Fragment>
 				}

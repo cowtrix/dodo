@@ -8,29 +8,46 @@ import { Markers } from "./markers"
 
 import styles from "./leaflet-map.module.scss"
 
-const getDefaultCenter = (sites, location) => {
-	if (sites && sites.length && sites[0].location) {
-		return [sites[0].location.latitude, sites[0].location.longitude]
+const getDefaultCenter = (sites = [], location) => {
+	if (sites.length) {
+		const sitesWithLocation = sites.filter(site => site.location)
+		return [sitesWithLocation[0].location.latitude, sitesWithLocation[0].location.longitude]
 	}
 	return location && location.length ? location : [51.5074, 0.1278]
 }
 
-export const LeafletMap = ({
-	sites,
-	center,
-	zoom = 9,
-	className,
-	centerMap,
-	setCenterMap,
-}) => {
+export const LeafletMap = (
+	{
+		sites,
+		center,
+		zoom = 9,
+		className,
+		centerMap,
+		setCenterMap,
+		getSearchResults = () => {},
+		searchParams,
+	}) => {
 
- const [mapCenter, setMapCenter] = useState(getDefaultCenter(sites, center))
+	const [mapCenter, setMapCenter] = useState(getDefaultCenter(sites, center))
+	const [userInitiated, setUserInitiated] = useState(false)
 
 	useEffect(() => {
-		setMapCenter(getDefaultCenter(sites, center))
-		setCenterMap(false)
-	}, [centerMap, center])
+		if (setCenterMap) {
+			setMapCenter(getDefaultCenter(sites, center))
+			setCenterMap(false)
+		}
+	}, [centerMap])
 
+
+	const setNewSearchParams = (e) => {
+		if (userInitiated) {
+			const newSearchCenter = e.target.getCenter()
+			const newSearchDistance = e.target.getZoom()
+			const metersPerPx = (156543.03392 * Math.cos(newSearchCenter.lat * Math.PI / 180) / Math.pow(2, newSearchDistance)) / 2
+			getSearchResults({ ...searchParams, distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng })
+			setUserInitiated(false)
+		}
+	}
 
 	return (
 		<Map
@@ -38,9 +55,12 @@ export const LeafletMap = ({
 			center={mapCenter}
 			zoom={zoom}
 			viewport={mapCenter}
+			onZoomanim={() => setUserInitiated(true)}
+			onMousedown={() => setUserInitiated(true)}
+			onMoveend={setNewSearchParams}
 		>
 			<TitleLayers/>
-			<Markers markers={sites} />
+			<Markers markers={sites}/>
 		</Map>
 	)
 }

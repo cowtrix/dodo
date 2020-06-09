@@ -1,6 +1,6 @@
 import { connect } from "react-redux"
 import { Search } from "./search"
-import { search } from "app/domain"
+import { search, resources } from "app/domain"
 import { actions as appActions, selectors as appSelectors } from 'app/dodo/redux'
 
 const { centerMap } = appSelectors
@@ -12,13 +12,15 @@ const mapStateToProps = state => ({
 	centerMap: centerMap(state),
 	searchParams: selectors.searchParams(state),
 	searchResults: selectors.searchResults(state),
-	isFetchingSearch: selectors.isFetching(state)
+	isFetchingSearch: selectors.isFetching(state),
+	homeVideo: resources.selectors.homeVideo(state),
+	resourceTypes: resources.selectors.resourceTypes(state)
 })
 
 const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
-	getSearchResults: (searchParams) =>
-		actions.searchGet(dispatch, searchParams)
+	getSearchResults: (searchParams, cb) =>
+		actions.searchGet(dispatch, searchParams, cb),
 })
 
 export const SearchConnected = connect(

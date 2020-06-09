@@ -5,5 +5,7 @@ export const currentResource = state => path(["domain", "resources", "currentRes
 
 export const resourceTypes = state => path(["domain", "resources", "resources", "resourceTypes"], state)
 
+export const homeVideo = state => path(["domain", "resources", "resources", "indexVideoEmbed"], state)
+
 export const resourceLoading = state =>
 	path(["requests", RESOURCE_GET, "isFetching"], state)
