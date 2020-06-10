@@ -23,27 +23,29 @@ export const LeafletMap = (
 		centerMap,
 		setCenterMap,
 		getSearchResults = () => {},
-		searchParams,
+		setSearchParams
 	}) => {
 
 	const [mapCenter, setMapCenter] = useState(getDefaultCenter(sites, center))
 	const [userInitiated, setUserInitiated] = useState(false)
 
 	useEffect(() => {
-		if (setCenterMap) {
+		if (centerMap) {
 			setMapCenter(getDefaultCenter(sites, center))
 			setCenterMap(false)
 		}
 	}, [centerMap])
 
-
 	const setNewSearchParams = (e) => {
+		const newSearchCenter = e.target.getCenter()
+		const newSearchDistance = e.target.getZoom()
+		const metersPerPx = (156543.03392 * Math.cos(newSearchCenter.lat * Math.PI / 180) / Math.pow(2, newSearchDistance)) / 2
 		if (userInitiated) {
-			const newSearchCenter = e.target.getCenter()
-			const newSearchDistance = e.target.getZoom()
-			const metersPerPx = (156543.03392 * Math.cos(newSearchCenter.lat * Math.PI / 180) / Math.pow(2, newSearchDistance)) / 2
-			getSearchResults({ ...searchParams, distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng })
+			getSearchResults({ distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng })
 			setUserInitiated(false)
+		}
+		else {
+			setSearchParams({ distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng })
 		}
 	}
 
@@ -66,5 +68,6 @@ export const LeafletMap = (
 LeafletMap.propTypes = {
 	markers: PropTypes.array,
 	location: PropTypes.array,
-	zoom: PropTypes.number
+	zoom: PropTypes.number,
+	setSearchParams: PropTypes.func
 }

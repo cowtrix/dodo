@@ -11,11 +11,11 @@ export const apiAction = async (dispatch, action, url, cb, abortSignal, method, 
 	})
 	return api(url, method, body, abortSignal)
 		.then(response => {
-			if (cb) cb(response)
 			dispatch({
 				type: action + SUCCESS,
 				payload: response
 			})
+			if (cb) cb(response)
 		})
 		.catch(error => {
 			console.log(error)

@@ -3,6 +3,8 @@ import { SearchBar } from "./search-bar"
 import { withRouter } from "react-router-dom"
 
 import { search } from "app/domain"
+import { actions as appActions } from 'app/dodo/redux'
+
 
 const { actions, selectors } = search
 
@@ -11,8 +13,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	search: searchParams =>
-		actions.searchGet(dispatch, searchParams)
+	setCenterMap: (centerMap) => dispatch(appActions.setCenterMap(centerMap)),
+	search: (searchParams, cb) =>
+		actions.searchGet(dispatch, searchParams, cb)
 })
 
 export const SearchBarConnected = withRouter(

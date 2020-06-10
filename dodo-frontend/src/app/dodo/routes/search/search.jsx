@@ -18,6 +18,7 @@ export const Search = (
 		getSearchResults,
 		isFetchingSearch,
 		resourceTypes,
+		setSearchParams,
 	}) => {
 	return (
 		<Fragment>
@@ -27,6 +28,7 @@ export const Search = (
 				sites={searchResults}
 				getSearchResults={getSearchResults}
 				searchParams={searchParams}
+				setSearchParams={setSearchParams}
 			/>
 			<Container
 				content={
@@ -55,6 +57,6 @@ Search.propTypes = {
 	params: PropTypes.object,
 	searchResults: PropTypes.array,
 	searchSetCurrentLocation: PropTypes.func,
-	setLocation: PropTypes.func,
+	setSearchParams: PropTypes.func,
 	centerMap: PropTypes.func,
 }
