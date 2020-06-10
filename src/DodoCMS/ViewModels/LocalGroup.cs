@@ -1,5 +1,6 @@
-// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on 10/06/2020 14:46:57
+// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on 10/06/2020 18:03:21
 using System.ComponentModel;
+using Dodo.Controllers.Edit;
 using Dodo.LocalGroups;
 using Resources;
 namespace Dodo.ViewModels

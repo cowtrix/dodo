@@ -34,6 +34,25 @@ namespace Resources
 			typeof(IResourceReference)
 		};
 
+		public static T CopyByValue<T>(this object obj) where T : new()
+		{
+			var newT = new T();
+			var sourceType = obj.GetType();
+			foreach (var prop in typeof(T).GetProperties())
+			{
+				var name = prop.Name;
+				var sourceProp = sourceType.GetProperty(name);
+				object value = sourceProp.GetValue(obj);
+				if (value.GetType() != sourceProp.PropertyType)
+				{
+					value = typeof(JsonViewUtility).GetMethod(nameof(CopyByValue)).MakeGenericMethod(sourceProp.PropertyType)
+						.Invoke(null, new [] { value });
+				}
+				prop.SetValue(newT, value);
+			}
+			return newT;
+		}
+
 		public static Dictionary<string, object> GetJsonSchema(Type targetType)
 		{
 			var vals = new Dictionary<string, object>();
@@ -48,7 +67,7 @@ namespace Resources
 					continue;
 				}
 				var memberType = member.GetMemberType();
-				if(typeof(IDecryptable).IsAssignableFrom(memberType))
+				if (typeof(IDecryptable).IsAssignableFrom(memberType))
 				{
 					memberType = memberType.InheritanceHierarchy().First(t => t.IsGenericType).GetGenericArguments().First();
 				}

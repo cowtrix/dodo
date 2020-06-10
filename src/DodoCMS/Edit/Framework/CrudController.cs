@@ -13,9 +13,10 @@ using Resources;
 namespace Dodo.Controllers.Edit
 {
 	[Route("edit/[controller]")]
-	public abstract class CrudController<T, TSchema> : CustomController
-		where T : DodoResource, IPublicResource
+	public abstract class CrudController<T, TSchema, TViewModel> : CustomController
+		where T : DodoResource, IPublicResource, new()
 		where TSchema : ResourceSchemaBase
+		where TViewModel : new()
 	{
 		protected virtual CrudResourceServiceBase<T, TSchema> CrudService => new CrudResourceServiceBase<T, TSchema>(Context, HttpContext, AuthService);
 		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
@@ -53,7 +54,8 @@ namespace Dodo.Controllers.Edit
 				{
 					return request.ActionResult;
 				}
-				return RedirectToAction(nameof(Edit));
+				var creationReq = request as ResourceCreationRequest;
+				return RedirectToAction(nameof(Edit), new { id = creationReq.Result.Slug });
 			}
 			catch (Exception e)
 			{
@@ -71,7 +73,8 @@ namespace Dodo.Controllers.Edit
 				return result.ActionResult;
 			}
 			var getResult = result as ResourceActionRequest;
-			ViewData["original"] = getResult.Result;
+			var view = 
+			ViewData["original"] = getResult.Result.CopyByValue<TViewModel>();
 			return View(getResult.Result);
 		}
 
@@ -79,7 +82,7 @@ namespace Dodo.Controllers.Edit
 		[HttpPost]
 		[Route("edit/{id}")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit([FromRoute] string id, [FromForm] T modified)
+		public async Task<IActionResult> Edit([FromRoute] string id, [FromForm] TViewModel modified)
 		{
 			try
 			{

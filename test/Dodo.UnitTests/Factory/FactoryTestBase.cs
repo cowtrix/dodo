@@ -43,9 +43,9 @@ namespace Factory
 			var factory = ResourceUtility.GetFactory<T>();
 			GetRandomUser(out _, out var context);
 			var schema = (TSchema)SchemaGenerator.GetRandomSchema<T>(context) as ResourceSchemaBase;
-			schema.Name = "Admin - this is an invalid name value";
+			schema.Name = "$";
 			AssertX.Throws<Exception>(() => factory.CreateObject(new ResourceCreationRequest(context, schema)),
-				e => e.Message.Contains("Name contains reserved word"));
+				e => e.Message.Contains("Name length must be between"));
 		}
 
 		protected virtual void VerifyCreatedObject(T obj, TSchema schema)

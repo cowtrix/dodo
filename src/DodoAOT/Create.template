@@ -2,22 +2,21 @@
 
 @{
 	// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on {DateTime.Now}\r\n
-	ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create A New {NAME}";
 }
 
-<h1>Create</h1>
-
-<h4>Local Group</h4>
-<hr />
+<h4 class="title">Create a New {NAME}</h4>
 <div class="row">
-	<div class="col-md-4">
-		<form asp-action="Create">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			{BODY}
-			<div class="form-group">
-				<input type="submit" value="Create" class="btn btn-primary" />
-			</div>
-		</form>
+	<div class="card" style="width:100%;">		
+		<div class="card-body">
+			<form asp-action="Create">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+{BODY}
+				<div class="form-group">
+					<input type="submit" value="Create" class="btn btn-primary" />
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 

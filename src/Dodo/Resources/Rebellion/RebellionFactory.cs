@@ -13,10 +13,15 @@ namespace Dodo.Rebellions
 
 	public class RebellionSchema : OwnedResourceSchemaBase
 	{
+		[View]
 		public GeoLocation Location { get; set; }
+
+		[View]
 		[DataType(DataType.DateTime)]
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime StartDate { get; set; }
+
+		[View]
 		[DataType(DataType.DateTime)]
 		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime EndDate { get; set; }

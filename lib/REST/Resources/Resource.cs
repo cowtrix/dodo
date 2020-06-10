@@ -27,6 +27,7 @@ namespace Resources
 
 	public abstract class ResourceSchemaBase : IVerifiable
 	{
+		[View]
 		[UserFriendlyName]
 		public string Name { get; set; }
 

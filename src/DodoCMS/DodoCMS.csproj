@@ -1,15 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="ViewModels_old\**" />
-    <EmbeddedResource Remove="ViewModels_old\**" />
-    <None Remove="ViewModels_old\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Dodo\Dodo.csproj" />

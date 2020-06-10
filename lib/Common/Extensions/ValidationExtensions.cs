@@ -252,7 +252,7 @@ namespace Common.Extensions
 
 		static IList<string> m_reservedWords = new List<string>()
 		{
-			"COORDINATOR", "ADMIN",
+			//"COORDINATOR", "ADMIN",
 		};
 		public static bool NameIsValid(string name, out string error)
 		{

@@ -11,6 +11,7 @@ using Dodo.Users.Tokens;
 using Dodo.DodoResources;
 using Common;
 using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel;
 
 namespace Dodo
 {
@@ -18,7 +19,10 @@ namespace Dodo
 
 	public abstract class OwnedResourceSchemaBase : ResourceSchemaBase 
 	{
+		[View]
+		[DisplayName("Public Description")]
 		public string PublicDescription { get; set; }
+
 		public Guid Parent { get; set; }
 
 		public OwnedResourceSchemaBase(string name, string publicDescription, Guid parent)

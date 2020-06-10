@@ -12,6 +12,7 @@ namespace Dodo.LocalGroups
 
 	public class LocalGroupSchema : OwnedResourceSchemaBase
 	{
+		[View]
 		public GeoLocation Location { get; set; }
 
 		public LocalGroupSchema()

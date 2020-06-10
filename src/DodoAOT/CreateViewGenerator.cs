@@ -17,19 +17,27 @@ namespace DodoAOT
 		{
 			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
 			allMembers.AddRange(targetType.GetFields());
-			foreach (var member in allMembers)
+			foreach (var member in allMembers.OrderBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
 			{
+				var viewAttr = member.GetCustomAttribute<ViewAttribute>();
+				if(viewAttr == null)
+				{
+					continue;
+				}
 				var memberType = member.GetMemberType();
 				var typeName = memberType.GetRealTypeName(true);
 				var memberName = member.Name;
 
 				if (!memberType.IsPrimitive && !memberType.Namespace.StartsWith(nameof(System)))
 				{
-					yield return new string('\t', indentLevel) + $"<div class=\"object-group\">";
-					foreach(var line in BuildClass(memberType, indentLevel + 1, $"{prefix}{memberName}."))
+					yield return new string('\t', indentLevel) + $"<div class=\"card\">";
+					yield return new string('\t', indentLevel + 1) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
+					yield return new string('\t', indentLevel + 2) + $"<div class=\"card-body\">";
+					foreach (var line in BuildClass(memberType, indentLevel + 3, $"{prefix}{memberName}."))
 					{
 						yield return line;
 					}
+					yield return new string('\t', indentLevel + 2) + $"</div>";
 					yield return new string('\t', indentLevel) + $"</div>";
 				}
 				else
@@ -48,9 +56,9 @@ namespace DodoAOT
 			var schemaType = ResourceUtility.GetFactory(resourceType).SchemaType;
 			var template = File.ReadAllText("Create.template");
 			template = template.Replace("{SCHEMA_TYPE}", schemaType.FullName);
-
+			template = template.Replace("{NAME}", resourceType.GetName());
 			var view = new StringBuilder();
-			foreach (var line in BuildClass(schemaType, 2, ""))
+			foreach (var line in BuildClass(schemaType, 4, ""))
 			{
 				view.AppendLine(line);
 			}

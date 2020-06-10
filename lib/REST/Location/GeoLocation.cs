@@ -1,3 +1,4 @@
+using Common;
 using Common.Extensions;
 using GeoCoordinatePortable;
 using MongoDB.Bson.Serialization.Attributes;
@@ -14,6 +15,8 @@ namespace Resources.Location
 	public struct GeoLocation : IVerifiable
 	{
 		[BsonIgnore]
+		[Name("Address")]
+		[View]
 		public LocationData LocationData
 		{
 			get
@@ -33,11 +36,13 @@ namespace Resources.Location
 		public GeoCoordinatePortable.GeoCoordinate ToCoordinate() => new GeoCoordinate(Latitude, Longitude);
 		[JsonProperty]
 		[Range(-90, 90)]
+		[View]
 		public double Latitude { get { return m_lat; } set { m_lat = WrapClamp(value, -90, 90); } }
 		private double m_lat;
 
 		[JsonProperty]
 		[Range(-180, 180)]
+		[View]
 		public double Longitude { get { return m_long; } set { m_long = WrapClamp(value, -180, 180); } }
 		private double m_long;
 

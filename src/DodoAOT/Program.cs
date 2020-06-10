@@ -48,11 +48,11 @@ namespace DodoAOT
 				new[]
 				{
 					typeof(Rebellion),
-					//typeof(LocalGroup),
-					//typeof(WorkingGroup),
-					//typeof(Role),
-					//typeof(Event),
-					//typeof(Site)
+					typeof(LocalGroup),
+					typeof(WorkingGroup),
+					typeof(Role),
+					typeof(Event),
+					typeof(Site)
 				})
 			{
 				var folderPath = Path.Combine(viewPath, rmType.Name);

@@ -1,41 +1,92 @@
 @model Dodo.LocalGroups.LocalGroupSchema
 
 @{
-	ViewData["Title"] = "Create";
+	// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on {DateTime.Now}\r\n
+	ViewData["Title"] = "Create A New Local Group";
 }
 
-<h1>Create</h1>
-
-<h4>Local Group</h4>
-<hr />
+<h4 class="title">Create a New Local Group</h4>
 <div class="row">
-	<div class="col-md-4">
-		<form asp-action="Create">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<div class="form-group">
-				<label asp-for="Name" class="control-label"></label>
-				<input asp-for="Name" class="form-control" />
-				<span asp-validation-for="Name" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="PublicDescription" class="control-label"></label>
-				<textarea asp-for="PublicDescription" class="form-control"></textarea>
-				<span asp-validation-for="PublicDescription" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Location.Latitude" class="control-label"></label>
-				<input asp-for="Location.Latitude" class="form-control" />
-				<span asp-validation-for="Location.Latitude" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Location.Longitude" class="control-label"></label>
-				<input asp-for="Location.Longitude" class="form-control" />
-				<span asp-validation-for="Location.Longitude" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<input type="submit" value="Create" class="btn btn-primary" />
-			</div>
-		</form>
+	<div class="card" style="width:100%;">		
+		<div class="card-body">
+			<form asp-action="Create">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-group">
+					<label asp-for="Name" class="control-label"></label>
+					<input asp-for="Name" class="form-control" />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="PublicDescription" class="control-label"></label>
+					<input asp-for="PublicDescription" class="form-control" />
+					<span asp-validation-for="PublicDescription" class="text-danger"></span>
+				</div>
+				<div class="card">
+					<h5 class="card-title">Location</h5>
+						<div class="card-body">
+							<div class="card">
+								<h5 class="card-title">Address</h5>
+									<div class="card-body">
+										<div class="form-group">
+											<label asp-for="Location.LocationData.Country" class="control-label"></label>
+											<input asp-for="Location.LocationData.Country" class="form-control" />
+											<span asp-validation-for="Location.LocationData.Country" class="text-danger"></span>
+										</div>
+										<div class="form-group">
+											<label asp-for="Location.LocationData.Region" class="control-label"></label>
+											<input asp-for="Location.LocationData.Region" class="form-control" />
+											<span asp-validation-for="Location.LocationData.Region" class="text-danger"></span>
+										</div>
+										<div class="form-group">
+											<label asp-for="Location.LocationData.Postcode" class="control-label"></label>
+											<input asp-for="Location.LocationData.Postcode" class="form-control" />
+											<span asp-validation-for="Location.LocationData.Postcode" class="text-danger"></span>
+										</div>
+										<div class="form-group">
+											<label asp-for="Location.LocationData.District" class="control-label"></label>
+											<input asp-for="Location.LocationData.District" class="form-control" />
+											<span asp-validation-for="Location.LocationData.District" class="text-danger"></span>
+										</div>
+										<div class="form-group">
+											<label asp-for="Location.LocationData.Place" class="control-label"></label>
+											<input asp-for="Location.LocationData.Place" class="form-control" />
+											<span asp-validation-for="Location.LocationData.Place" class="text-danger"></span>
+										</div>
+										<div class="form-group">
+											<label asp-for="Location.LocationData.Locality" class="control-label"></label>
+											<input asp-for="Location.LocationData.Locality" class="form-control" />
+											<span asp-validation-for="Location.LocationData.Locality" class="text-danger"></span>
+										</div>
+										<div class="form-group">
+											<label asp-for="Location.LocationData.Neighborhood" class="control-label"></label>
+											<input asp-for="Location.LocationData.Neighborhood" class="form-control" />
+											<span asp-validation-for="Location.LocationData.Neighborhood" class="text-danger"></span>
+										</div>
+										<div class="form-group">
+											<label asp-for="Location.LocationData.Address" class="control-label"></label>
+											<input asp-for="Location.LocationData.Address" class="form-control" />
+											<span asp-validation-for="Location.LocationData.Address" class="text-danger"></span>
+										</div>
+									</div>
+							</div>
+							<div class="form-group">
+								<label asp-for="Location.Latitude" class="control-label"></label>
+								<input asp-for="Location.Latitude" class="form-control" />
+								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Location.Longitude" class="control-label"></label>
+								<input asp-for="Location.Longitude" class="form-control" />
+								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
+							</div>
+						</div>
+				</div>
+
+				<div class="form-group">
+					<input type="submit" value="Create" class="btn btn-primary" />
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 

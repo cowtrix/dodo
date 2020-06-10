@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Resources
 {
@@ -17,6 +17,10 @@ namespace Resources
 			}
 			ViewPermission = viewPermission;
 			EditPermission = editPermission;
+		}
+
+		public ViewAttribute() : this(EPermissionLevel.PUBLIC, EPermissionLevel.PUBLIC)
+		{
 		}
 	}
 }
