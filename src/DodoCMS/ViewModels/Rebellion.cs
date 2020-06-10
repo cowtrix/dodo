@@ -1,4 +1,4 @@
-// This is generated code. DO NOT MODIFY. This code was generated on 09/06/2020 23:28:53
+// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on 10/06/2020 14:46:57
 using System.ComponentModel;
 using Dodo.Rebellions;
 using Resources;

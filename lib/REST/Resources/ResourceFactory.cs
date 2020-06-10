@@ -17,6 +17,7 @@ namespace Resources
 
 	public interface IResourceFactory 
 	{
+		Type SchemaType { get; }
 		IRESTResource CreateObject(ICreationContext context);
 	}
 

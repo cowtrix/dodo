@@ -11,6 +11,6 @@ namespace Dodo
 		public const string PRODUCT_NAME = "Dodo";
 		public const string API_ROOT = "api/";
 		private static CommandReader m_commandReader = new CommandReader();
-		public static NetworkConfig NetConfig => ConfigManager.GetValue("NetworkConfig", new NetworkConfig("localhost", "0.0.0.0", 5001, 5000));
+		public static NetworkConfig NetConfig => ConfigManager.GetValue("NetworkConfig", new NetworkConfig("localhost", "localhost", 5001, 5000));
 	}
 }

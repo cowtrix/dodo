@@ -2,7 +2,7 @@
   "profiles": {
     "DodoAOT": {
       "commandName": "Project",
-      "commandLineArgs": "$(SolutionDir)src\\DodoCMS\\ViewModels"
+      "commandLineArgs": "/viewmodels:\"$(SolutionDir)src\\DodoCMS\\ViewModels\" /views:\"$(SolutionDir)src\\DodoServer\\Views\""
     }
   }
 }
