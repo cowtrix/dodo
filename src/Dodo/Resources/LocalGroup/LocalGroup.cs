@@ -46,6 +46,8 @@ namespace Dodo.LocalGroups
 			}
 		}
 
+		public LocalGroup() : base() { }
+
 		public LocalGroup(AccessContext context, LocalGroupSchema schema) : base(context, schema)
 		{
 			Location = schema.Location;

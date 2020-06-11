@@ -25,6 +25,8 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.USER)]
 		public UserCollection RoleHolders;
 
+		public Role() : base() { }
+
 		public Role(AccessContext context, RoleSchema schema) : base(context, schema)
 		{
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);

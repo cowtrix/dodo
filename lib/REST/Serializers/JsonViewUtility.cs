@@ -34,19 +34,32 @@ namespace Resources
 			typeof(IResourceReference)
 		};
 
-		public static T CopyByValue<T>(this object obj) where T : new()
+		public static T CopyByValue<T>(this object obj, object requester, Passphrase passphrase) where T:class
 		{
-			var newT = new T();
+			var newT = Activator.CreateInstance<T>() as T;
 			var sourceType = obj.GetType();
-			foreach (var prop in typeof(T).GetProperties())
+			if(obj is IDecryptable decryptable)
+			{
+				if(!decryptable.TryGetValue(requester, passphrase, out obj))
+				{
+					// User wasn't authorised
+					throw new SecurityException("Bad authorization");
+				}
+				sourceType = obj.GetType();
+			}
+			foreach (var prop in typeof(T).GetPropertiesAndFields(p => p.CanWrite, f => true))
 			{
 				var name = prop.Name;
-				var sourceProp = sourceType.GetProperty(name);
+				var sourceProp = sourceType.GetPropertiesAndFields(p => p.Name == name, f => f.Name == name).Single();
 				object value = sourceProp.GetValue(obj);
-				if (value.GetType() != sourceProp.PropertyType)
+				if(value == null)
 				{
-					value = typeof(JsonViewUtility).GetMethod(nameof(CopyByValue)).MakeGenericMethod(sourceProp.PropertyType)
-						.Invoke(null, new [] { value });
+					continue;
+				}
+				if (value.GetType() != prop.GetMemberType())
+				{
+					value = typeof(JsonViewUtility).GetMethod(nameof(CopyByValue)).MakeGenericMethod(prop.GetMemberType())
+						.Invoke(null, new [] { value, requester, passphrase });
 				}
 				prop.SetValue(newT, value);
 			}
@@ -190,6 +203,39 @@ namespace Resources
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values)
 		{
 			return PatchObject(targetObject, values, EPermissionLevel.OWNER, null, default);
+		}
+
+		public static T PatchObject<T>(this T targetObject, object value, EPermissionLevel permissionLevel,
+			object requester, Passphrase passphrase)
+		{
+			return PatchObject(targetObject, ViewToPatch(value, permissionLevel), permissionLevel, requester, passphrase);
+		}
+
+		public static Dictionary<string, object> ViewToPatch(object obj, EPermissionLevel permissionLevel)
+		{
+			if(obj is Dictionary<string, object> dict)
+			{
+				return dict;
+			}
+			var patch = new Dictionary<string, object>();
+			foreach(var member in obj.GetType().GetPropertiesAndFields(p => true, f => true))
+			{
+				var viewAttr = member.GetCustomAttribute<ViewAttribute>();
+				if(viewAttr == null || permissionLevel < viewAttr.EditPermission)
+				{
+					continue;
+				}
+				var value = member.GetValue(obj);
+				if (!ShouldSerializeDirectly(member.GetMemberType()))
+				{
+					patch[member.Name] = ViewToPatch(value, permissionLevel);
+				}
+				else
+				{
+					patch[member.Name] = value;
+				}
+			}
+			return patch;
 		}
 
 		/// <summary>

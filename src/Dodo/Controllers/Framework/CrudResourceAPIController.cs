@@ -28,7 +28,41 @@ namespace Resources
 		[HttpPatch("{id}")]
 		public virtual async Task<IActionResult> Update(string id, [FromBody]Dictionary<string, JsonElement> rawValues)
 		{
-			return (await PublicService.Update(id, rawValues)).ActionResult;
+			// This function will just flatten out the nested objects we can be sent
+			Dictionary<string, object> Flatten(Dictionary<string, JsonElement> jsonDict)
+			{
+				var result = new Dictionary<string, object>();
+				foreach (var sub in jsonDict)
+				{
+					if (sub.Value.ValueKind == JsonValueKind.Object)
+					{
+						result[sub.Key] =
+							Flatten(System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(sub.Value.GetRawText()));
+					}
+					else
+					{
+						switch (sub.Value.ValueKind)
+						{
+							case JsonValueKind.String:
+								result[sub.Key] = sub.Value.GetString();
+								break;
+							case JsonValueKind.Number:
+								result[sub.Key] = sub.Value.GetDouble();
+								break;
+							case JsonValueKind.Array:
+								result[sub.Key] = sub.Value.EnumerateArray().ToList();
+								break;
+							case JsonValueKind.Null:
+								result[sub.Key] = null;
+								break;
+							default:
+								throw new Exception($"Unsupported JsonValueKind {sub.Value.ValueKind}");
+						}
+					}
+				}
+				return result;
+			}
+			return (await PublicService.Update(id, Flatten(rawValues))).ActionResult;
 		}
 
 		[HttpDelete("{id}")]

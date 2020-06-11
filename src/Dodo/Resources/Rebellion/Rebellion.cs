@@ -89,6 +89,8 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; }
 
+		public Rebellion() : base() { }
+
 		public Rebellion(AccessContext context, RebellionSchema schema) : base(context, schema)
 		{
 			Location = schema.Location;

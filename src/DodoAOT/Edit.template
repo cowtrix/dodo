@@ -1,0 +1,25 @@
+@model Dodo.ViewModels.{TYPE}ViewModel;
+
+@{
+	ViewData["Title"] = "Edit {NAME}";
+}
+
+<h4 class="title">Edit {NAME}</h4>
+<div class="row">
+	<div class="card" style="width:100%;">		
+		<div class="card-body">
+			<form asp-action="Edit">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+{BODY}
+				<div class="form-group">
+					<input type="submit" value="Create" class="btn btn-primary" />
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>
+

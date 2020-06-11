@@ -11,7 +11,7 @@ using System.IO;
 
 namespace DodoAOT
 {
-	public static class CreateViewGenerator
+	public static class EditViewGenerator
 	{
 		private static IEnumerable<string> BuildClass(Type targetType, int indentLevel, string prefix)
 		{
@@ -19,7 +19,7 @@ namespace DodoAOT
 				.OrderBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
 			{
 				var viewAttr = member.GetCustomAttribute<ViewAttribute>();
-				if(viewAttr == null)
+				if (viewAttr == null)
 				{
 					continue;
 				}
@@ -43,7 +43,7 @@ namespace DodoAOT
 				{
 					yield return new string('\t', indentLevel) + $"<div class=\"form-group\">";
 					yield return new string('\t', indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"control-label\"></label>";
-					yield return new string('\t', indentLevel + 1) + $"<input asp-for=\"{prefix}{memberName}\" class=\"form-control\" />";
+					yield return new string('\t', indentLevel + 1) + $"<input asp-for=\"{prefix}{memberName}\" class=\"form-control\" {(viewAttr.EditPermission <= EPermissionLevel.ADMIN ? "" : $"readonly")}/>";
 					yield return new string('\t', indentLevel + 1) + $"<span asp-validation-for=\"{prefix}{memberName}\" class=\"text-danger\"></span>";
 					yield return new string('\t', indentLevel) + $"</div>";
 				}
@@ -52,12 +52,11 @@ namespace DodoAOT
 
 		public static string Generate(Type resourceType)
 		{
-			var schemaType = ResourceUtility.GetFactory(resourceType).SchemaType;
-			var template = File.ReadAllText("Create.template");
-			template = template.Replace("{SCHEMA_TYPE}", schemaType.FullName);
+			var template = File.ReadAllText("Edit.template");
+			template = template.Replace("{TYPE}", resourceType.Name);
 			template = template.Replace("{NAME}", resourceType.GetName());
 			var view = new StringBuilder();
-			foreach (var line in BuildClass(schemaType, 4, ""))
+			foreach (var line in BuildClass(resourceType, 4, ""))
 			{
 				view.AppendLine(line);
 			}

@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DodoCMS\DodoCMS.csproj" />
     <ProjectReference Include="..\..\src\Dodo\Dodo.csproj" />
   </ItemGroup>
 

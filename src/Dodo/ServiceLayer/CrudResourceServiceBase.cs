@@ -62,75 +62,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		return req;
 	}
 
-	public virtual async Task<IRequestResult> Update(string id, Dictionary<string, JsonElement> rawValues)
-	{
-		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
-		if (!request.IsSuccess)
-		{
-			return request;
-		}
-		var req = (ResourceActionRequest)request;
-
-		// This function will just flatten out the nested objects we can be sent
-		Dictionary<string, object> Flatten(Dictionary<string, JsonElement> jsonDict)
-		{
-			var result = new Dictionary<string, object>();
-			foreach (var sub in jsonDict)
-			{
-				if (sub.Value.ValueKind == JsonValueKind.Object)
-				{
-					result[sub.Key] =
-						Flatten(System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(sub.Value.GetRawText()));
-				}
-				else
-				{
-					switch (sub.Value.ValueKind)
-					{
-						case JsonValueKind.String:
-							result[sub.Key] = sub.Value.GetString();
-							break;
-						case JsonValueKind.Number:
-							result[sub.Key] = sub.Value.GetDouble();
-							break;
-						case JsonValueKind.Array:
-							result[sub.Key] = sub.Value.EnumerateArray().ToList();
-							break;
-						case JsonValueKind.Null:
-							result[sub.Key] = null;
-							break;
-						default:
-							throw new Exception($"Unsupported JsonValueKind {sub.Value.ValueKind}");
-					}
-				}
-			}
-			return result;
-		}
-
-		T target;
-		using (var resourceLock = new ResourceLock(req.Result))
-		{
-			target = resourceLock.Value as T;
-			if (target == null)
-			{
-				return ResourceRequestError.NotFoundRequest();
-			}
-			var values = Flatten(rawValues);
-			if (values == null)
-			{
-				return ResourceRequestError.BadRequest("Invalid JSON body");
-			}
-			var jsonSettings = new JsonSerializerSettings()
-			{
-				TypeNameHandling = TypeNameHandling.All
-			};
-			target.PatchObject(values, req.PermissionLevel, req.AccessContext.User, req.AccessContext.Passphrase);
-			ResourceManager.Update(target, resourceLock);
-		}
-		req.Result = target;
-		return req;
-	}
-
-	public virtual async Task<IRequestResult> Update(string id, Dictionary<string, object> values)
+	public virtual async Task<IRequestResult> Update(string id, object values)
 	{
 		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
 		if (!request.IsSuccess)

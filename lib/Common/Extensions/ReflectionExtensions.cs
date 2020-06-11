@@ -22,6 +22,19 @@ namespace Common.Extensions
 
 		public static string GetRealTypeName(this Type t, bool fullyQualify = false)
 		{
+			if(t == typeof(string))
+			{
+				return "string";
+			}
+			if (t == typeof(int))
+			{
+				return "int";
+			}
+			if (t == typeof(uint))
+			{
+				return "uint";
+			}
+
 			var typeName = fullyQualify ? $"{t.Namespace}.{t.Name}" : t.Name;
 			if (!t.IsGenericType)
 				return typeName;
@@ -96,6 +109,18 @@ namespace Common.Extensions
 			else if (member is FieldInfo)
 				return (member as FieldInfo).GetValue(target);
 			return null;
+		}
+
+		public static IEnumerable<MemberInfo> GetPropertiesAndFields(this Type t, Func<PropertyInfo, bool> propSelector, Func<FieldInfo, bool> fieldSelector)
+		{
+			foreach(var p in t.GetProperties().Where(p => propSelector(p)))
+			{
+				yield return p;
+			}
+			foreach(var f in t.GetFields().Where(f => fieldSelector(f)))
+			{
+				yield return f;
+			}
 		}
 	}
 }

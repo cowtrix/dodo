@@ -64,7 +64,7 @@ namespace Dodo
 		[View(EPermissionLevel.PUBLIC)]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		public UserMultiSigStore<AdminData> AdministratorData;
+		public UserMultiSigStore<AdminData> AdministratorData { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public int MemberCount { get { return Members.Count; } }
 		[View(EPermissionLevel.MEMBER)]
@@ -76,6 +76,8 @@ namespace Dodo
 		public TokenCollection SharedTokens = new TokenCollection();
 
 		public SecureUserStore Members = new SecureUserStore();
+
+		public GroupResource() : base() { }
 
 		public GroupResource(AccessContext context, OwnedResourceSchemaBase schema) : base(context, schema)
 		{

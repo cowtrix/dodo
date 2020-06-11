@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dodo;
+using Dodo.Users;
 using Dodo.Users.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +13,20 @@ using Resources;
 
 namespace Dodo.Controllers.Edit
 {
+	public interface IViewModel
+	{
+		uint Revision { get; }
+	}
+
 	[Route("edit/[controller]")]
 	public abstract class CrudController<T, TSchema, TViewModel> : CustomController
-		where T : DodoResource, IPublicResource, new()
+		where T : DodoResource, IPublicResource
 		where TSchema : ResourceSchemaBase
-		where TViewModel : new()
+		where TViewModel : class, IViewModel
 	{
 		protected virtual CrudResourceServiceBase<T, TSchema> CrudService => new CrudResourceServiceBase<T, TSchema>(Context, HttpContext, AuthService);
 		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
+		protected TViewModel ViewModel(T rsc) => rsc.CopyByValue<TViewModel>(new ResourceReference<User>(Context.User), Context.Passphrase);
 
 		[Route("create")]
 		public IActionResult Create()
@@ -43,6 +50,11 @@ namespace Dodo.Controllers.Edit
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create([FromForm] TSchema schema)
 		{
+			if (Context.User == null)
+			{
+				// redirect to login
+				return Forbid();
+			}
 			try
 			{
 				if (!ModelState.IsValid) 
@@ -67,23 +79,31 @@ namespace Dodo.Controllers.Edit
 		[Route("edit/{id}")]
 		public async Task<IActionResult> Edit([FromRoute] string id)
 		{
+			if (Context.User == null)
+			{
+				// redirect to login
+				return Forbid();
+			}
 			var result = await CrudService.Get(id);
 			if(!result.IsSuccess)
 			{
 				return result.ActionResult;
 			}
 			var getResult = result as ResourceActionRequest;
-			var view = 
-			ViewData["original"] = getResult.Result.CopyByValue<TViewModel>();
-			return View(getResult.Result);
+			var model = ViewModel(getResult.Result as T);
+			return View(model);
 		}
 
-		// POST: LocalGroups/Edit/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
 		[Route("edit/{id}")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit([FromRoute] string id, [FromForm] TViewModel modified)
 		{
+			if (Context.User == null)
+			{
+				// redirect to login
+				return Forbid();
+			}
 			try
 			{
 				if (!ModelState.IsValid) 
@@ -91,10 +111,11 @@ namespace Dodo.Controllers.Edit
 					return View(modified); 
 				}
 
-				var original = ViewData["original"];
-				//var patch = JsonViewUtility.GeneratePatch(modified, original);
-				//var result = (await CrudService.Update(id, patch));
-
+				var result = await CrudService.Update(id, modified);
+				if (!result.IsSuccess)
+				{
+					return result.ActionResult;
+				}
 				return RedirectToAction(nameof(Edit));
 			}
 			catch (Exception e)
@@ -104,10 +125,14 @@ namespace Dodo.Controllers.Edit
 			}
 		}
 
-		// GET: LocalGroups/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[Route("delete/{id}")]
 		public async Task<IActionResult> Delete([FromRoute] string id)
 		{
+			if (Context.User == null)
+			{
+				// redirect to login
+				return Forbid();
+			}
 			var result = (await CrudService.Get(id.ToString()));
 			if(!result.IsSuccess)
 			{
@@ -123,6 +148,11 @@ namespace Dodo.Controllers.Edit
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Delete([FromRoute] string id, [FromForm] T rsc)
 		{
+			if (Context.User == null)
+			{
+				// redirect to login
+				return Forbid();
+			}
 			try
 			{
 				var request = (await CrudService.Delete(id.ToString()));

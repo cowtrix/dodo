@@ -24,6 +24,8 @@ namespace Dodo.WorkingGroups
 	[SearchPriority(3)]
 	public class WorkingGroup : GroupResource
 	{
+		public WorkingGroup() : base() { }
+
 		public WorkingGroup(AccessContext context, WorkingGroupSchema schema) : base(context, schema)
 		{
 		}

@@ -1,39 +1,19 @@
-@model Dodo.ViewModels.LocalGroupViewModel
+@model Dodo.ViewModels.LocalGroupViewModel;
 
 @{
-	ViewData["Title"] = "Delete";
+	ViewData["Title"] = "Delete Local Group";
 }
 
-<h1>Delete</h1>
+<h1>Delete Local Group</h1>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-	<h4>Local Group</h4>
-	<hr />
 	<dl class="row">
 		<dt class="col-sm-2">
 			@Html.DisplayNameFor(model => model.Name)
 		</dt>
 		<dd class="col-sm-10">
 			@Html.DisplayFor(model => model.Name)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.MemberCount)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.MemberCount)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.PublicDescription)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.PublicDescription)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Guid)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Guid)
 		</dd>
 	</dl>
 

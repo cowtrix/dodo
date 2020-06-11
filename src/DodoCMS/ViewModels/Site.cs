@@ -1,12 +1,21 @@
-// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on 10/06/2020 18:03:21
+// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on 11/06/2020 00:49:27
 using System.ComponentModel;
 using Dodo.Controllers.Edit;
 using Dodo.LocationResources;
 using Resources;
 namespace Dodo.ViewModels
 {
-	public class SiteViewModel
+	public class SiteViewModel : IViewModel
 	{
+		[DisplayName("Name")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		public string Name { get; set; }
+		[DisplayName("Slug")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		public string Slug { get; set; }
+		[DisplayName("Revision")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public uint Revision { get; set; }
 		[DisplayName("Arrest Risk")]
 		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
 		public Dodo.LocationResources.EArrestRisk ArrestRisk { get; set; }
@@ -69,30 +78,15 @@ namespace Dodo.ViewModels
 		public Resources.Location.GeoLocation Location { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		public System.String PublicDescription { get; set; }
+		public string PublicDescription { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public Resources.ResourceReference<Dodo.GroupResource> Parent { get; set; }
 		[DisplayName("Video Embed URL")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		public System.String VideoEmbedURL { get; set; }
+		public string VideoEmbedURL { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }
-		[DisplayName("Creator")]
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		public System.String Creator { get; set; }
-		[DisplayName("Guid")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public System.Guid Guid { get; set; }
-		[DisplayName("Name")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		public System.String Name { get; set; }
-		[DisplayName("Slug")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		public System.String Slug { get; set; }
-		[DisplayName("Revision")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public System.UInt32 Revision { get; set; }
 	}
 }

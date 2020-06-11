@@ -20,14 +20,13 @@ namespace DodoAOT
 				$"using {key.Namespace};\r\n" +
 				"using Resources;\r\n" +
 				"namespace Dodo.ViewModels\r\n{\r\n" +
-				$"\tpublic class {key.Name}ViewModel\r\n\t{{\r\n";
+				$"\tpublic class {key.Name}ViewModel : IViewModel\r\n\t{{\r\n";
 		}
 
 		private static IEnumerable<string> BuildClass(Type targetType, int indentLevel)
 		{
-			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
-			allMembers.AddRange(targetType.GetFields());
-			foreach (var member in allMembers)
+			foreach (var member in targetType.GetPropertiesAndFields(p => p.CanRead && p.CanWrite, f => true)
+				.OrderBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
 			{
 				var attr = member.GetCustomAttribute<ViewAttribute>();
 				if (attr == null || attr.ViewPermission > EPermissionLevel.ADMIN)
@@ -58,64 +57,6 @@ namespace DodoAOT
 			}
 		}
 
-		/*private static IEnumerable<string> BuildObjToViewConversion(Type targetType)
-		{
-			int indentLevel = 2;
-			yield return new string('\t', indentLevel) + $"public static class {targetType.Name}ViewConvertUtility";
-			yield return new string('\t', indentLevel) + "{";
-			yield return new string('\t', indentLevel + 1) + $"public static IViewModel<{targetType.Name}> Convert (this {targetType.Name} obj)";
-			yield return new string('\t', indentLevel + 1) + "{";
-			yield return new string('\t', indentLevel + 2) + $"return new {targetType.Name}ViewModel () {{";
-			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
-			allMembers.AddRange(targetType.GetFields());
-			foreach (var member in allMembers)
-			{
-				var attr = member.GetCustomAttribute<ViewAttribute>();
-				if (attr == null || attr.ViewPermission > EPermissionLevel.ADMIN)
-				{
-					continue;
-				}
-				var memberType = member.GetMemberType();
-				if (typeof(IDecryptable).IsAssignableFrom(memberType))
-				{
-					memberType = memberType.InheritanceHierarchy().First(t => t.IsGenericType).GetGenericArguments().First();
-				}
-				var typeName = memberType.GetRealTypeName(true);
-				var memberName = member.Name;
-				yield return new string('\t', indentLevel + 3) + $"{memberName} = {memberName},";
-			}
-			yield return new string('\t', indentLevel + 2) + $"}}";
-			yield return new string('\t', indentLevel + 1) + $"}}";
-			yield return new string('\t', indentLevel) + $"}}";
-		}
-
-		private static IEnumerable<string> BuildViewToObjConversion(Type targetType)
-		{
-			int indentLevel = 1;
-			yield return new string('\t', indentLevel) + $"public {targetType.Name} Convert (IViewModel<{targetType.Name}> view)";
-			yield return new string('\t', indentLevel) + "{";
-			yield return new string('\t', indentLevel + 1) + $"return new {targetType.Name} () {{";
-			var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
-			allMembers.AddRange(targetType.GetFields());
-			foreach (var member in allMembers)
-			{
-				var attr = member.GetCustomAttribute<ViewAttribute>();
-				if (attr == null || attr.ViewPermission > EPermissionLevel.ADMIN)
-				{
-					continue;
-				}
-				var memberType = member.GetMemberType();
-				if (typeof(IDecryptable).IsAssignableFrom(memberType))
-				{
-					memberType = memberType.InheritanceHierarchy().First(t => t.IsGenericType).GetGenericArguments().First();
-				}
-				var typeName = memberType.GetRealTypeName(true);
-				var memberName = member.Name;
-				yield return new string('\t', indentLevel + 2) + $"{memberName} = {memberName},";
-			}
-			yield return new string('\t', indentLevel) + $"}}";
-		}*/
-
 		public static string Generate(Type type)
 		{
 			var sb = new StringBuilder();
@@ -124,19 +65,8 @@ namespace DodoAOT
 			{
 				sb.AppendLine(line);
 			}
-			/*foreach (var line in BuildViewToObjConversion(type))
-			{
-				sb.AppendLine(line);
-			}*/
 			sb.AppendLine("\t}");
-
-			/*foreach (var line in BuildObjToViewConversion(type))
-			{
-				sb.AppendLine(line);
-			}*/
-
 			sb.AppendLine("}");
-
 			return sb.ToString();
 		}
 	}
