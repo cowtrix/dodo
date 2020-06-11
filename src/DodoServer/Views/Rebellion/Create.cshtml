@@ -1,7 +1,7 @@
 @model Dodo.Rebellions.RebellionSchema
 
 @{
-	// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on {DateTime.Now}\r\n
+	// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n
 	ViewData["Title"] = "Create A New Rebellion";
 }
 
@@ -11,39 +11,39 @@
 		<div class="card-body">
 			<form asp-action="Create">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="Name" class="control-label"></label>
-					<input asp-for="Name" class="form-control" />
+					<input  asp-for="Name" class="form-control" />
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="PublicDescription" class="control-label"></label>
-					<input asp-for="PublicDescription" class="form-control" />
+					<input  asp-for="PublicDescription" class="form-control" />
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
 				<div class="card">
 					<h5 class="card-title">Location</h5>
 						<div class="card-body">
-							<div class="form-group">
+							<div class="form-group-row">
 								<label asp-for="Location.Latitude" class="control-label"></label>
-								<input asp-for="Location.Latitude" class="form-control" />
+								<input  asp-for="Location.Latitude" class="form-control" />
 								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
 							</div>
-							<div class="form-group">
+							<div class="form-group-row">
 								<label asp-for="Location.Longitude" class="control-label"></label>
-								<input asp-for="Location.Longitude" class="form-control" />
+								<input  asp-for="Location.Longitude" class="form-control" />
 								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
 							</div>
 						</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="StartDate" class="control-label"></label>
-					<input asp-for="StartDate" class="form-control" />
+					<input  asp-for="StartDate" class="form-control" />
 					<span asp-validation-for="StartDate" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="EndDate" class="control-label"></label>
-					<input asp-for="EndDate" class="form-control" />
+					<input  asp-for="EndDate" class="form-control" />
 					<span asp-validation-for="EndDate" class="text-danger"></span>
 				</div>
 

@@ -127,6 +127,11 @@ namespace Resources
 				throw new Exception(error);
 			}
 			objToUpdate.Revision++;
+			var existing = GetSingle(r => r.Guid == locker.Guid);
+			if (existing.Revision >= objToUpdate.Revision)
+			{
+				throw new Exception($"Error updating resource - a newer edit (Revision number {existing.Revision}) exists. Please refresh and make your change again.");
+			}
 			Logger.Debug($"{typeof(T).Name} UPDATE: {objToUpdate.Name} ({objToUpdate.Guid}::{objToUpdate.Revision})");
 			MongoDatabase.ReplaceOne(x => x.Guid == objToUpdate.Guid, objToUpdate);
 		}

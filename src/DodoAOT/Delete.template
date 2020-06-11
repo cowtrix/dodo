@@ -1,6 +1,7 @@
 @model Dodo.ViewModels.{TYPE}ViewModel;
 
 @{
+	// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n
 	ViewData["Title"] = "Delete {NAME}";
 }
 

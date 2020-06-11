@@ -1,6 +1,7 @@
 @model Dodo.ViewModels.WorkingGroupViewModel;
 
 @{
+	// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n
 	ViewData["Title"] = "Edit Working Group";
 }
 
@@ -10,24 +11,24 @@
 		<div class="card-body">
 			<form asp-action="Edit">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="Name" class="control-label"></label>
-					<input asp-for="Name" class="form-control" />
+					<input  asp-for="Name" class="form-control" />
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="Slug" class="control-label"></label>
-					<input asp-for="Slug" class="form-control" />
+					<input  asp-for="Slug" class="form-control" />
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="Revision" class="control-label"></label>
-					<input asp-for="Revision" class="form-control" readonly/>
+					<input  asp-for="Revision" class="form-control" />
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="PublicDescription" class="control-label"></label>
-					<input asp-for="PublicDescription" class="form-control" />
+					<input  asp-for="PublicDescription" class="form-control" />
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
 				<div class="card">
@@ -35,14 +36,14 @@
 						<div class="card-body">
 						</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="IsPublished" class="control-label"></label>
-					<input asp-for="IsPublished" class="form-control" />
+					<input  asp-for="IsPublished" class="form-control" />
 					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
 
 				<div class="form-group">
-					<input type="submit" value="Create" class="btn btn-primary" />
+					<input type="submit" value="Save" class="btn btn-primary" />
 				</div>
 			</form>
 		</div>

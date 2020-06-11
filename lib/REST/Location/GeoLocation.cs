@@ -12,7 +12,7 @@ namespace Resources.Location
 	/// Represents a geographic location on the Earth's surface
 	/// </summary>
 	[Serializable]
-	public struct GeoLocation : IVerifiable
+	public class GeoLocation : IVerifiable
 	{
 		[BsonIgnore]
 		[Name("Address")]
@@ -56,6 +56,10 @@ namespace Resources.Location
 		private static double WrapClamp(double x, double x_min, double x_max)
 		{
 			return (((x - x_min) % (x_max - x_min)) + (x_max - x_min)) % (x_max - x_min) + x_min;
+		}
+
+		public GeoLocation()
+		{
 		}
 
 		public GeoLocation(GeoLocation location) : 

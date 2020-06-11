@@ -1,7 +1,7 @@
 @model {SCHEMA_TYPE}
 
 @{
-	// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on {DateTime.Now}\r\n
+	// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n
 	ViewData["Title"] = "Create A New {NAME}";
 }
 

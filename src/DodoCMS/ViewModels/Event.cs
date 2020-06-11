@@ -1,4 +1,4 @@
-// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on 11/06/2020 00:49:27
+// This is generated code from the DodoAOT project. DO NOT MODIFY.
 using System.ComponentModel;
 using Dodo.Controllers.Edit;
 using Dodo.LocationResources;

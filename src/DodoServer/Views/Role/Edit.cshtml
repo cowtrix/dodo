@@ -1,6 +1,7 @@
 @model Dodo.ViewModels.RoleViewModel;
 
 @{
+	// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n
 	ViewData["Title"] = "Edit Role";
 }
 
@@ -10,64 +11,64 @@
 		<div class="card-body">
 			<form asp-action="Edit">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="Name" class="control-label"></label>
-					<input asp-for="Name" class="form-control" />
+					<input  asp-for="Name" class="form-control" />
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="Slug" class="control-label"></label>
-					<input asp-for="Slug" class="form-control" />
+					<input  asp-for="Slug" class="form-control" />
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="Revision" class="control-label"></label>
-					<input asp-for="Revision" class="form-control" readonly/>
+					<input  asp-for="Revision" class="form-control" />
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="card">
 					<h5 class="card-title">Parent</h5>
 						<div class="card-body">
-							<div class="form-group">
+							<div class="form-group-row">
 								<label asp-for="Parent.Guid" class="control-label"></label>
-								<input asp-for="Parent.Guid" class="form-control" />
+								<input  asp-for="Parent.Guid" class="form-control" />
 								<span asp-validation-for="Parent.Guid" class="text-danger"></span>
 							</div>
-							<div class="form-group">
+							<div class="form-group-row">
 								<label asp-for="Parent.Slug" class="control-label"></label>
-								<input asp-for="Parent.Slug" class="form-control" />
+								<input  asp-for="Parent.Slug" class="form-control" />
 								<span asp-validation-for="Parent.Slug" class="text-danger"></span>
 							</div>
-							<div class="form-group">
+							<div class="form-group-row">
 								<label asp-for="Parent.Type" class="control-label"></label>
-								<input asp-for="Parent.Type" class="form-control" />
+								<input  asp-for="Parent.Type" class="form-control" />
 								<span asp-validation-for="Parent.Type" class="text-danger"></span>
 							</div>
-							<div class="form-group">
+							<div class="form-group-row">
 								<label asp-for="Parent.Name" class="control-label"></label>
-								<input asp-for="Parent.Name" class="form-control" />
+								<input  asp-for="Parent.Name" class="form-control" />
 								<span asp-validation-for="Parent.Name" class="text-danger"></span>
 							</div>
 						</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="PublicDescription" class="control-label"></label>
-					<input asp-for="PublicDescription" class="form-control" />
+					<input  asp-for="PublicDescription" class="form-control" />
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="MemberDescription" class="control-label"></label>
-					<input asp-for="MemberDescription" class="form-control" />
+					<input  asp-for="MemberDescription" class="form-control" />
 					<span asp-validation-for="MemberDescription" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="AdminDescription" class="control-label"></label>
-					<input asp-for="AdminDescription" class="form-control" />
+					<input  asp-for="AdminDescription" class="form-control" />
 					<span asp-validation-for="AdminDescription" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group-row">
 					<label asp-for="IsPublished" class="control-label"></label>
-					<input asp-for="IsPublished" class="form-control" />
+					<input  asp-for="IsPublished" class="form-control" />
 					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
 				<div class="card">
@@ -77,7 +78,7 @@
 				</div>
 
 				<div class="form-group">
-					<input type="submit" value="Create" class="btn btn-primary" />
+					<input type="submit" value="Save" class="btn btn-primary" />
 				</div>
 			</form>
 		</div>

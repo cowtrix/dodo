@@ -7,6 +7,7 @@ using Dodo.Roles;
 using Dodo.LocationResources;
 using Dodo;
 using Common.Commands;
+using Common;
 
 namespace DodoAOT
 {
@@ -15,6 +16,7 @@ namespace DodoAOT
 	{
 		static void Main(string[] args)
 		{
+			Logger.Info($"Generating AOT");
 			var parsedArgs = new CommandArguments(args);
 			var viewModelPath = Path.GetFullPath(parsedArgs.MustGetValue<string>("viewmodels"));
 			if (!Directory.Exists(viewModelPath))

@@ -33,4 +33,8 @@
     <ProjectReference Include="..\Dodo\Dodo.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet run --no-build --project $(ProjectPath) -- /viewmodels:&quot;$(SolutionDir)src\DodoCMS\ViewModels&quot; /views:&quot;$(SolutionDir)src\DodoServer\Views&quot;" />
+  </Target>
+
 </Project>

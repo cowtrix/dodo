@@ -14,7 +14,7 @@ namespace DodoAOT
 	{
 		private static string GetHeader(Type key)
 		{
-			return $"// This is generated code from the DodoAOT project. DO NOT MODIFY. This code was generated on {DateTime.Now}\r\n" +
+			return $"// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n" +
 				"using System.ComponentModel;\r\n" +
 				"using Dodo.Controllers.Edit;\r\n" +
 				$"using {key.Namespace};\r\n" +
