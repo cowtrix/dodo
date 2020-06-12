@@ -85,7 +85,18 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="card" style="width:100%;">		
+		<div class="card-body">
+			<form asp-action="Delete">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="submit" value="Delete" class="btn btn-danger" />
+			</form>
+		</div>
+	</div>
+</div>
+
 <div>
-	<a asp-action="Index">Back to List</a>
+	<a asp-action="View">View Role</a>
 </div>
 

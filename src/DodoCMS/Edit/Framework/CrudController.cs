@@ -142,6 +142,11 @@ namespace Dodo.Controllers.Edit
 			return View(modReq.Result);
 		}
 
+		public async Task<IActionResult> View([FromRoute] string id)
+		{
+			return Redirect($"{typeof(T)}/{id}");
+		}
+
 		// POST: LocalGroups/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
 		[Route("delete/{id}")]

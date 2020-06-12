@@ -7,17 +7,11 @@
 
   <ItemGroup>
     <None Remove="Create.template" />
-    <None Remove="Delete.template" />
     <None Remove="Edit.template" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Edit.template">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Delete.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
