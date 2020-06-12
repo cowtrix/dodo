@@ -7,6 +7,9 @@ namespace Dodo.ViewModels
 {
 	public class LocalGroupViewModel : IViewModel
 	{
+		[DisplayName("Guid")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public System.Guid Guid { get; set; }
 		[DisplayName("Name")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string Name { get; set; }
@@ -28,6 +31,12 @@ namespace Dodo.ViewModels
 		[DisplayName("AdministratorData")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public AdminDataViewModel AdministratorData { get; set; }
+		[DisplayName("MemberCount")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		public int MemberCount { get; set; }
+		[DisplayName("PublicKey")]
+		[View(EPermissionLevel.MEMBER, EPermissionLevel.ADMIN)]
+		public string PublicKey { get; set; }
 		[DisplayName("IsPublished")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }

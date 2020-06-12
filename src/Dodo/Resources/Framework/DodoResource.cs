@@ -50,7 +50,6 @@ namespace Dodo
 			}
 		}
 
-		[View(EPermissionLevel.ADMIN)]
 		public string Creator { get; private set; }
 		public bool IsCreator(AccessContext context)
 		{

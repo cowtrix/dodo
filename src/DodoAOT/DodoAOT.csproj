@@ -27,6 +27,12 @@
     <ProjectReference Include="..\Dodo\Dodo.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Delete.template">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="dotnet run --no-build --project $(ProjectPath) -- /viewmodels:&quot;$(SolutionDir)src\DodoCMS\ViewModels&quot; /views:&quot;$(SolutionDir)src\DodoServer\Views&quot;" />
   </Target>

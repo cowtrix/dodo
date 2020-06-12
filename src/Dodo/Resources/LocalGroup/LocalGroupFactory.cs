@@ -10,7 +10,7 @@ namespace Dodo.LocalGroups
 {
 	public class LocalGroupSerializer : ResourceReferenceSerializer<LocalGroup> { }
 
-	public class LocalGroupSchema : OwnedResourceSchemaBase
+	public class LocalGroupSchema : DescribedResourceSchemaBase
 	{
 		[View]
 		public GeoLocation Location { get; set; }
@@ -20,7 +20,7 @@ namespace Dodo.LocalGroups
 		}
 
 		public LocalGroupSchema(string name, string description, GeoLocation location) 
-			: base(name, description, default)
+			: base(name, description)
 		{
 			Location = location;
 		}

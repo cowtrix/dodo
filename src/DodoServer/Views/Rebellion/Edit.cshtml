@@ -12,56 +12,103 @@
 			<form asp-action="Edit">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 				<div class="form-group-row">
+					<label asp-for="Guid" class="control-label"></label>
+					<input  readonly asp-for="Guid" class="form-control"/>
+					<span asp-validation-for="Guid" class="text-danger"></span>
+				</div>
+				<div class="form-group-row">
 					<label asp-for="Name" class="control-label"></label>
-					<input  asp-for="Name" class="form-control" />
+					<input  asp-for="Name" class="form-control"/>
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control" />
+					<input  asp-for="Slug" class="form-control"/>
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="Revision" class="control-label"></label>
-					<input  asp-for="Revision" class="form-control" />
+					<input  readonly asp-for="Revision" class="form-control"/>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="PublicDescription" class="control-label"></label>
-					<input  asp-for="PublicDescription" class="form-control" />
+					<input  asp-for="PublicDescription" class="form-control"/>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
 				<div class="card">
 					<h5 class="card-title">AdministratorData</h5>
 						<div class="card-body">
+							<div class="form-group-row">
+								<label asp-for="AdministratorData.Administrators" class="control-label"></label>
+								<input  readonly asp-for="AdministratorData.Administrators" class="form-control"/>
+								<span asp-validation-for="AdministratorData.Administrators" class="text-danger"></span>
+							</div>
 						</div>
 				</div>
 				<div class="form-group-row">
+					<label asp-for="MemberCount" class="control-label"></label>
+					<input  readonly asp-for="MemberCount" class="form-control"/>
+					<span asp-validation-for="MemberCount" class="text-danger"></span>
+				</div>
+				<div class="form-group-row">
+					<label asp-for="PublicKey" class="control-label"></label>
+					<input  readonly asp-for="PublicKey" class="form-control"/>
+					<span asp-validation-for="PublicKey" class="text-danger"></span>
+				</div>
+				<div class="form-group-row">
 					<label asp-for="IsPublished" class="control-label"></label>
-					<input  asp-for="IsPublished" class="form-control" />
+					<input  asp-for="IsPublished" class="form-control"/>
 					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="StartDate" class="control-label"></label>
-					<input  asp-for="StartDate" class="form-control" />
+					<input  asp-for="StartDate" class="form-control"/>
 					<span asp-validation-for="StartDate" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="EndDate" class="control-label"></label>
-					<input  asp-for="EndDate" class="form-control" />
+					<input  asp-for="EndDate" class="form-control"/>
 					<span asp-validation-for="EndDate" class="text-danger"></span>
 				</div>
 				<div class="card">
 					<h5 class="card-title">Location</h5>
 						<div class="card-body">
+							<address>
+								<strong>Address</strong>
+								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
+									<br>@Model.Location.LocationData.Address
+								}
+								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Neighborhood)) {
+									<br>@Model.Location.LocationData.Neighborhood
+								}
+								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Locality)) {
+									<br>@Model.Location.LocationData.Locality
+								}
+								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Place)) {
+									<br>@Model.Location.LocationData.Place
+								}
+								@if (!string.IsNullOrEmpty(Model.Location.LocationData.District)) {
+									<br>@Model.Location.LocationData.District
+								}
+								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Postcode)) {
+									<br>@Model.Location.LocationData.Postcode
+								}
+								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Region)) {
+									<br>@Model.Location.LocationData.Region
+								}
+								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Country)) {
+									<br>@Model.Location.LocationData.Country
+								}
+							</address>
 							<div class="form-group-row">
 								<label asp-for="Location.Latitude" class="control-label"></label>
-								<input  asp-for="Location.Latitude" class="form-control" />
+								<input  asp-for="Location.Latitude" class="form-control"/>
 								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
 							</div>
 							<div class="form-group-row">
 								<label asp-for="Location.Longitude" class="control-label"></label>
-								<input  asp-for="Location.Longitude" class="form-control" />
+								<input  asp-for="Location.Longitude" class="form-control"/>
 								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
 							</div>
 						</div>
@@ -80,13 +127,13 @@
 		<div class="card-body">
 			<form asp-action="Delete">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<input type="submit" value="Delete" class="btn btn-danger" />
+				<a href="Delete/@Model.Slug" class="btn btn-danger">Delete</a>
 			</form>
 		</div>
 	</div>
 </div>
 
 <div>
-	<a asp-action="View">View Rebellion</a>
+	<a href="../../Rebellion/@Model.Slug">View Rebellion</a>
 </div>
 

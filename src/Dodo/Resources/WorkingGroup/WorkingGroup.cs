@@ -22,12 +22,14 @@ namespace Dodo.WorkingGroups
 	/// </summary>
 	[Name("Working Group")]
 	[SearchPriority(3)]
-	public class WorkingGroup : GroupResource
+	public class WorkingGroup : GroupResource, IOwnedResource
 	{
 		public WorkingGroup() : base() { }
 
 		public WorkingGroup(AccessContext context, WorkingGroupSchema schema) : base(context, schema)
 		{
+			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
+			Parent = new ResourceReference<GroupResource>(group);
 		}
 
 		[BsonElement]
@@ -59,6 +61,9 @@ namespace Dodo.WorkingGroups
 					.Where(rsc => rsc != null);
 			}
 		}
+
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public ResourceReference<GroupResource> Parent { get; private set; }
 
 		public override bool CanContain(Type type)
 		{

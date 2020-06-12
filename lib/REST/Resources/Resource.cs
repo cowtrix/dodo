@@ -64,8 +64,8 @@ namespace Resources
 		public const string METADATA = "metadata";
 		public const string METADATA_PERMISSION = "permission";
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		[JsonProperty]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public Guid Guid { get; private set; }
 
 		[View(EPermissionLevel.PUBLIC)]

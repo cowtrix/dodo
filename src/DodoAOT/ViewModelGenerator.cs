@@ -25,7 +25,7 @@ namespace DodoAOT
 
 		private static IEnumerable<string> BuildClass(Type targetType, int indentLevel)
 		{
-			foreach (var member in targetType.GetPropertiesAndFields(p => p.CanRead && p.CanWrite, f => true)
+			foreach (var member in targetType.GetPropertiesAndFields(p => p.CanRead, f => true)
 				.OrderBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
 			{
 				var attr = member.GetCustomAttribute<ViewAttribute>();
@@ -34,6 +34,10 @@ namespace DodoAOT
 					continue;
 				}
 				var memberType = member.GetMemberType();
+				if(memberType.IsInterface)
+				{
+					continue;
+				}
 				if (typeof(IDecryptable).IsAssignableFrom(memberType))
 				{
 					memberType = memberType.InheritanceHierarchy().First(t => t.IsGenericType).GetGenericArguments().First();

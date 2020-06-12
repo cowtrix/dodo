@@ -16,6 +16,7 @@ namespace Dodo.Controllers.Edit
 	public interface IViewModel
 	{
 		uint Revision { get; }
+		Guid Guid { get; }
 	}
 
 	[Route("edit/[controller]")]
@@ -76,7 +77,7 @@ namespace Dodo.Controllers.Edit
 			}
 		}
 
-		[Route("edit/{id}")]
+		[Route("{id}")]
 		public async Task<IActionResult> Edit([FromRoute] string id)
 		{
 			if (Context.User == null)
@@ -95,7 +96,7 @@ namespace Dodo.Controllers.Edit
 		}
 
 		[HttpPost]
-		[Route("edit/{id}")]
+		[Route("{id}")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit([FromRoute] string id, [FromForm] TViewModel modified)
 		{
@@ -125,33 +126,30 @@ namespace Dodo.Controllers.Edit
 			}
 		}
 
+		[HttpGet]
 		[Route("delete/{id}")]
-		public async Task<IActionResult> Delete([FromRoute] string id)
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Delete([FromRoute]string id)
 		{
 			if (Context.User == null)
 			{
 				// redirect to login
 				return Forbid();
 			}
-			var result = (await CrudService.Get(id.ToString()));
-			if(!result.IsSuccess)
+			var result = await CrudService.Get(id);
+			if (!result.IsSuccess)
 			{
 				return result.ActionResult;
 			}
-			var modReq = result as ResourceActionRequest;
-			return View(modReq.Result);
+			var getResult = result as ResourceActionRequest;
+			var model = ViewModel(getResult.Result as T);
+			return View(model);
 		}
 
-		public async Task<IActionResult> View([FromRoute] string id)
-		{
-			return Redirect($"{typeof(T)}/{id}");
-		}
-
-		// POST: LocalGroups/Delete/0a985dee-0b68-4805-96f5-3abe6f1ae13e
 		[HttpPost]
 		[Route("delete/{id}")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Delete([FromRoute] string id, [FromForm] T rsc)
+		public async Task<IActionResult> Delete(TViewModel view)
 		{
 			if (Context.User == null)
 			{
@@ -160,13 +158,13 @@ namespace Dodo.Controllers.Edit
 			}
 			try
 			{
-				var request = (await CrudService.Delete(id.ToString()));
-				return RedirectToAction(nameof(Index));
+				var request = (await CrudService.Delete(view.Guid.ToString()));
+				return Redirect(Dodo.DodoApp.NetConfig.FullURI);
 			}
 			catch (Exception e)
 			{
-				ModelState.AddModelError("", e.Message);
-				return View(rsc);
+				ModelState.AddModelError("Unable to delete resource", e.Message);
+				return RedirectToAction(nameof(Edit));
 			}
 		}
 	}

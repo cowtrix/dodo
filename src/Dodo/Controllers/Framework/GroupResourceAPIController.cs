@@ -19,7 +19,7 @@ namespace DodoResources
 {
 	public abstract class GroupResourceAPIController<T, TSchema> : SearchableResourceController<T, TSchema> 
 		where T : GroupResource
-		where TSchema : OwnedResourceSchemaBase
+		where TSchema : DescribedResourceSchemaBase
 	{
 		protected GroupResourceService<T, TSchema> GroupService => 
 			new GroupResourceService<T, TSchema>(Context, HttpContext, AuthService);

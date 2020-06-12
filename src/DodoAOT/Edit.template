@@ -25,13 +25,13 @@
 		<div class="card-body">
 			<form asp-action="Delete">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<input type="submit" value="Delete" class="btn btn-danger" />
+				<a href="Delete/@Model.Slug" class="btn btn-danger">Delete</a>
 			</form>
 		</div>
 	</div>
 </div>
 
 <div>
-	<a asp-action="View">View {NAME}</a>
+	<a href="../../{TYPE}/@Model.Slug">View {NAME}</a>
 </div>
 

@@ -11,7 +11,7 @@ namespace DodoResources
 {
 	public class GroupResourceService<T, TSchema> : ResourceServiceBase<T, TSchema>
 		where T : GroupResource
-		where TSchema : OwnedResourceSchemaBase
+		where TSchema : DescribedResourceSchemaBase
 	{
 		public const string ADD_ADMIN = "addadmin";
 		public const string JOIN_GROUP = "join";

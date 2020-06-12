@@ -7,6 +7,9 @@ namespace Dodo.ViewModels
 {
 	public class EventViewModel : IViewModel
 	{
+		[DisplayName("Guid")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public System.Guid Guid { get; set; }
 		[DisplayName("Name")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string Name { get; set; }

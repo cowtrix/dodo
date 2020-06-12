@@ -17,16 +17,12 @@ namespace Dodo
 {
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
-	public abstract class OwnedResourceSchemaBase : ResourceSchemaBase 
+	public abstract class OwnedResourceSchemaBase : DescribedResourceSchemaBase
 	{
-		[View]
-		[DisplayName("Public Description")]
-		public string PublicDescription { get; set; }
-
 		public Guid Parent { get; set; }
 
 		public OwnedResourceSchemaBase(string name, string publicDescription, Guid parent)
-			: base(name)
+			: base(name, publicDescription)
 		{
 			PublicDescription = publicDescription;
 			Parent = parent;
@@ -35,13 +31,27 @@ namespace Dodo
 		public OwnedResourceSchemaBase() : base() { }
 	}
 
+	public abstract class DescribedResourceSchemaBase : ResourceSchemaBase
+	{
+		[View]
+		[DisplayName("Public Description")]
+		public string PublicDescription { get; set; }
+
+		public DescribedResourceSchemaBase(string name, string publicDescription)
+			: base(name)
+		{
+			PublicDescription = publicDescription;
+		}
+
+		public DescribedResourceSchemaBase() : base() { }
+	}
+
 	/// <summary>
 	/// A group resource is either a Rebellion, Working Group or a Local Group.
 	/// It can have administrators, which are authorised to edit it.
 	/// It can have members and a public description.
 	/// </summary>
-	public abstract class GroupResource : DodoResource, 
-		IOwnedResource, IPublicResource, ITokenOwner
+	public abstract class GroupResource : DodoResource, IPublicResource, ITokenOwner
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		public class AdminData
@@ -56,8 +66,6 @@ namespace Dodo
 			}
 		}
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public ResourceReference<GroupResource> Parent { get; private set; }
 		/// <summary>
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
@@ -79,32 +87,16 @@ namespace Dodo
 
 		public GroupResource() : base() { }
 
-		public GroupResource(AccessContext context, OwnedResourceSchemaBase schema) : base(context, schema)
+		public GroupResource(AccessContext context, DescribedResourceSchemaBase schema) : base(context, schema)
 		{
 			if(schema == null)
 			{
 				return;
 			}
-			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
-			Parent = new ResourceReference<GroupResource>(group);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			PublicKey = pk;
 			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(context.User, pv), context);
 			PublicDescription = schema.PublicDescription;
-		}
-
-		/// <summary>
-		/// Is this object a child of the target object
-		/// </summary>
-		/// <param name="targetObject"></param>
-		/// <returns></returns>
-		public bool IsChildOf(GroupResource targetObject)
-		{
-			if(!Parent.HasValue())
-			{
-				return false;
-			}
-			return Parent.Guid == targetObject.Guid;
 		}
 
 		public bool IsAdmin(User target, AccessContext requesterContext)

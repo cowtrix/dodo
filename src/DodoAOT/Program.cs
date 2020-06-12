@@ -70,6 +70,10 @@ namespace DodoAOT
 				{
 					fs.Write(EditViewGenerator.Generate(rmType));
 				}
+				using (var fs = new StreamWriter(Path.Combine(folderPath, $"Delete.cshtml")))
+				{
+					fs.Write(DeleteViewGenerator.Generate(rmType));
+				}
 			}
 		}
 	}

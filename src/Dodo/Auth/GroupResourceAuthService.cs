@@ -10,7 +10,7 @@ namespace DodoResources
 {
 	public class GroupResourceAuthService<T, TSchema> : AuthorizationService<T, TSchema>
 		where T : GroupResource
-		where TSchema : OwnedResourceSchemaBase
+		where TSchema : DescribedResourceSchemaBase
 	{
 		public GroupResourceAuthService() : base()
 		{
@@ -53,16 +53,20 @@ namespace DodoResources
 			}
 
 			// Test if user has admin on parent
-			var parent = ResourceUtility.GetResourceByGuid(schema.Parent) as GroupResource;
-			if (parent == null)
+			if(schema is OwnedResourceSchemaBase owned)
 			{
-				return ResourceRequestError.BadRequest();
+				var parent = ResourceUtility.GetResourceByGuid(owned.Parent) as GroupResource;
+				if (parent == null)
+				{
+					return ResourceRequestError.BadRequest();
+				}
+				if (!parent.IsAdmin(context.User, context))
+				{
+					return ResourceRequestError.UnauthorizedRequest();
+				}
+				return new ResourceCreationRequest(context, schema);
 			}
-			if (!parent.IsAdmin(context.User, context))
-			{
-				return ResourceRequestError.ForbidRequest();
-			}
-			return new ResourceCreationRequest(context, schema);
+			return ResourceRequestError.UnauthorizedRequest();
 		}
 
 		protected override IRequestResult CanPost(AccessContext context, T target, string action = null)

@@ -13,7 +13,7 @@ namespace RESTTests
 {
 	public abstract class GroupResourceTestBase<T, TSchema> : RESTTestBase<T, TSchema> 
 		where T:GroupResource
-		where TSchema:OwnedResourceSchemaBase
+		where TSchema:DescribedResourceSchemaBase
 	{
 		[TestMethod]
 		public override async Task CanCreate()

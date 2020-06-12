@@ -50,7 +50,16 @@ namespace Resources
 			foreach (var prop in typeof(T).GetPropertiesAndFields(p => p.CanWrite, f => true))
 			{
 				var name = prop.Name;
-				var sourceProp = sourceType.GetPropertiesAndFields(p => p.Name == name, f => f.Name == name).Single();
+				var sourcePropCandidates = sourceType.GetPropertiesAndFields(p => p.Name == name, f => f.Name == name);
+				if(!sourcePropCandidates.Any())
+				{
+					throw new Exception($"Failed to find property {name} in {sourceType}");
+				}
+				else if (sourcePropCandidates.Count() > 1)
+				{
+					throw new Exception($"Ambigious property match for {name} in {sourceType}");
+				}
+				var sourceProp = sourcePropCandidates.Single();
 				object value = sourceProp.GetValue(obj);
 				if(value == null)
 				{

@@ -12,18 +12,23 @@
 			<form asp-action="Edit">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 				<div class="form-group-row">
+					<label asp-for="Guid" class="control-label"></label>
+					<input  readonly asp-for="Guid" class="form-control"/>
+					<span asp-validation-for="Guid" class="text-danger"></span>
+				</div>
+				<div class="form-group-row">
 					<label asp-for="Name" class="control-label"></label>
-					<input  asp-for="Name" class="form-control" />
+					<input  asp-for="Name" class="form-control"/>
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control" />
+					<input  asp-for="Slug" class="form-control"/>
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="Revision" class="control-label"></label>
-					<input  asp-for="Revision" class="form-control" />
+					<input  readonly asp-for="Revision" class="form-control"/>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="card">
@@ -31,50 +36,50 @@
 						<div class="card-body">
 							<div class="form-group-row">
 								<label asp-for="Parent.Guid" class="control-label"></label>
-								<input  asp-for="Parent.Guid" class="form-control" />
+								<input  readonly asp-for="Parent.Guid" class="form-control"/>
 								<span asp-validation-for="Parent.Guid" class="text-danger"></span>
 							</div>
 							<div class="form-group-row">
 								<label asp-for="Parent.Slug" class="control-label"></label>
-								<input  asp-for="Parent.Slug" class="form-control" />
+								<input  readonly asp-for="Parent.Slug" class="form-control"/>
 								<span asp-validation-for="Parent.Slug" class="text-danger"></span>
 							</div>
 							<div class="form-group-row">
 								<label asp-for="Parent.Type" class="control-label"></label>
-								<input  asp-for="Parent.Type" class="form-control" />
+								<input  readonly asp-for="Parent.Type" class="form-control"/>
 								<span asp-validation-for="Parent.Type" class="text-danger"></span>
 							</div>
 							<div class="form-group-row">
 								<label asp-for="Parent.Name" class="control-label"></label>
-								<input  asp-for="Parent.Name" class="form-control" />
+								<input  readonly asp-for="Parent.Name" class="form-control"/>
 								<span asp-validation-for="Parent.Name" class="text-danger"></span>
 							</div>
 						</div>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="PublicDescription" class="control-label"></label>
-					<input  asp-for="PublicDescription" class="form-control" />
+					<input  asp-for="PublicDescription" class="form-control"/>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="MemberDescription" class="control-label"></label>
-					<input  asp-for="MemberDescription" class="form-control" />
+					<input  asp-for="MemberDescription" class="form-control"/>
 					<span asp-validation-for="MemberDescription" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="AdminDescription" class="control-label"></label>
-					<input  asp-for="AdminDescription" class="form-control" />
+					<input  asp-for="AdminDescription" class="form-control"/>
 					<span asp-validation-for="AdminDescription" class="text-danger"></span>
 				</div>
 				<div class="form-group-row">
 					<label asp-for="IsPublished" class="control-label"></label>
-					<input  asp-for="IsPublished" class="form-control" />
+					<input  asp-for="IsPublished" class="form-control"/>
 					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
-				<div class="card">
-					<h5 class="card-title">RoleHolders</h5>
-						<div class="card-body">
-						</div>
+				<div class="form-group-row">
+					<label asp-for="RoleHolders" class="control-label"></label>
+					<input  asp-for="RoleHolders" class="form-control"/>
+					<span asp-validation-for="RoleHolders" class="text-danger"></span>
 				</div>
 
 				<div class="form-group">
@@ -90,13 +95,13 @@
 		<div class="card-body">
 			<form asp-action="Delete">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<input type="submit" value="Delete" class="btn btn-danger" />
+				<a href="Delete/@Model.Slug" class="btn btn-danger">Delete</a>
 			</form>
 		</div>
 	</div>
 </div>
 
 <div>
-	<a asp-action="View">View Role</a>
+	<a href="../../Role/@Model.Slug">View Role</a>
 </div>
 
