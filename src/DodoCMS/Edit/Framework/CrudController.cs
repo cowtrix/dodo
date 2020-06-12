@@ -127,8 +127,7 @@ namespace Dodo.Controllers.Edit
 		}
 
 		[HttpGet]
-		[Route("delete/{id}")]
-		[ValidateAntiForgeryToken]
+		[Route("{id}/delete")]
 		public async Task<IActionResult> Delete([FromRoute]string id)
 		{
 			if (Context.User == null)

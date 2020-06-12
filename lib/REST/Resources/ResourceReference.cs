@@ -11,6 +11,9 @@ namespace Resources
 	public interface IResourceReference : IVerifiable
 	{
 		Guid Guid { get; }
+		string Slug { get; }
+		string Type { get; }
+		string Name { get; }
 		bool HasValue();
 	}
 

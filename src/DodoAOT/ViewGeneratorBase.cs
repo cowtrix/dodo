@@ -7,6 +7,7 @@ using Common.Extensions;
 using Common;
 using Resources.Location;
 using Resources.Security;
+using Dodo.Users;
 
 namespace DodoAOT
 {
@@ -16,10 +17,35 @@ namespace DodoAOT
 		private static Dictionary<Type, CustomTypeCallback> m_customTypeCallback = new Dictionary<Type, CustomTypeCallback>()
 		{
 			//{ typeof(GeoLocation), GetLocationEditor },
-			{ typeof(LocationData), GetLocationData }
+			{ typeof(LocationData), LocationDataView },
+			{ typeof(Dodo.GroupResource.AdminData), AdminDataView },
+			{ typeof(IResourceReference), RefView },
 		};
 
-		private static IEnumerable<string> GetLocationData(string prefix, MemberInfo member, int indentLevel)
+		private static IEnumerable<string> RefView(string prefix, MemberInfo member, int indentLevel)
+		{
+			yield return Indent(indentLevel) + $"<div class=\"card\">";
+			yield return Indent(indentLevel) + $"<label>@{prefix}{nameof(IResourceReference.Name)}</label>";
+			yield return Indent(indentLevel) + $"<label>@{prefix}{nameof(IResourceReference.Slug)}</label>";
+			yield return Indent(indentLevel) + $"<label>@{prefix}{nameof(IResourceReference.Guid)}</label>";
+			yield return Indent(indentLevel) + $"<label>@{prefix}{nameof(IResourceReference.Type)}</label>";
+			yield return Indent(indentLevel + 2) + $"</div>";
+		}
+
+		private static IEnumerable<string> AdminDataView(string prefix, MemberInfo member, int indentLevel)
+		{
+			yield return Indent(indentLevel) + $"<div class=\"card\">";
+			yield return Indent(indentLevel + 1) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
+			yield return Indent(indentLevel + 2) + $"<div class=\"card-body\">";
+			yield return Indent(indentLevel + 2) + $"@foreach(var admin in Model.{prefix}{member.Name}.Administrators) {{";
+			// iterate admin array
+			foreach (var l in RefView("admin.", member, indentLevel + 3)) yield return l;
+			yield return Indent(indentLevel + 2) + "}";
+			yield return Indent(indentLevel + 2) + $"</div>";
+			yield return Indent(indentLevel) + $"</div>";
+		}
+
+		private static IEnumerable<string> LocationDataView(string prefix, MemberInfo member, int indentLevel)
 		{
 			var name = member.Name;
 			IEnumerable<string> labelIfNotNull(string fieldName)
@@ -57,7 +83,7 @@ namespace DodoAOT
 					continue;
 				}
 				var memberType = member.GetMemberType();
-				if(memberType.IsInterface)
+				if (memberType.IsInterface)
 				{
 					continue;
 				}
@@ -67,7 +93,7 @@ namespace DodoAOT
 				}
 				var typeName = memberType.GetRealTypeName(true);
 				var memberName = member.Name;
-				
+
 				if (m_customTypeCallback.TryGetValue(memberType, out var callback))
 				{
 					foreach (var line in callback(prefix, member, indentLevel))
@@ -82,8 +108,8 @@ namespace DodoAOT
 				if (!memberType.IsPrimitive && !memberType.Namespace.StartsWith(nameof(System)))
 				{
 					yield return Indent(indentLevel) + $"<div class=\"card\">";
-					yield return Indent(indentLevel + 1) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
-					yield return Indent(indentLevel + 2) + $"<div class=\"card-body\">";
+					yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
+					yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
 					foreach (var line in BuildClass(memberType, indentLevel + 3, $"{prefix}{memberName}.", isReadonly))
 					{
 						yield return line;
@@ -98,11 +124,11 @@ namespace DodoAOT
 					{
 						inputExtras += "type=\"password\"";
 					}
-					if(isReadonly)
+					if (isReadonly)
 					{
 						inputExtras += " readonly";
 					}
-					yield return Indent(indentLevel) + $"<div class=\"form-group-row\">";
+					yield return Indent(indentLevel) + $"<div class=\"form-group\">";
 					yield return Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"control-label\"></label>";
 					yield return Indent(indentLevel + 1) + $"<input {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"form-control\"/>";
 					yield return Indent(indentLevel + 1) + $"<span asp-validation-for=\"{prefix}{memberName}\" class=\"text-danger\"></span>";

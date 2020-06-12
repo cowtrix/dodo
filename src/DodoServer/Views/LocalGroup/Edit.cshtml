@@ -11,27 +11,27 @@
 		<div class="card-body">
 			<form asp-action="Edit">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="Guid" class="control-label"></label>
 					<input  readonly asp-for="Guid" class="form-control"/>
 					<span asp-validation-for="Guid" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="Name" class="control-label"></label>
 					<input  asp-for="Name" class="form-control"/>
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="Slug" class="control-label"></label>
 					<input  asp-for="Slug" class="form-control"/>
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
 					<input  readonly asp-for="Revision" class="form-control"/>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="PublicDescription" class="control-label"></label>
 					<input  asp-for="PublicDescription" class="form-control"/>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
@@ -39,31 +39,34 @@
 				<div class="card">
 					<h5 class="card-title">AdministratorData</h5>
 						<div class="card-body">
-							<div class="form-group-row">
-								<label asp-for="AdministratorData.Administrators" class="control-label"></label>
-								<input  readonly asp-for="AdministratorData.Administrators" class="form-control"/>
-								<span asp-validation-for="AdministratorData.Administrators" class="text-danger"></span>
-							</div>
+						@foreach(var admin in Model.AdministratorData.Administrators) {
+							<div class="card">
+							<label>@admin.Name</label>
+							<label>@admin.Slug</label>
+							<label>@admin.Guid</label>
+							<label>@admin.Type</label>
+									</div>
+						}
 						</div>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="MemberCount" class="control-label"></label>
 					<input  readonly asp-for="MemberCount" class="form-control"/>
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="PublicKey" class="control-label"></label>
 					<input  readonly asp-for="PublicKey" class="form-control"/>
 					<span asp-validation-for="PublicKey" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="IsPublished" class="control-label"></label>
 					<input  asp-for="IsPublished" class="form-control"/>
 					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
 				<div class="card">
-					<h5 class="card-title">Location</h5>
-						<div class="card-body">
+					<div class="card-body">
+						<h5 class="card-title">Location</h5>
 							<address>
 								<strong>Address</strong>
 								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
@@ -91,12 +94,12 @@
 									<br>@Model.Location.LocationData.Country
 								}
 							</address>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Location.Latitude" class="control-label"></label>
 								<input  asp-for="Location.Latitude" class="form-control"/>
 								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Location.Longitude" class="control-label"></label>
 								<input  asp-for="Location.Longitude" class="form-control"/>
 								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
@@ -117,7 +120,7 @@
 		<div class="card-body">
 			<form asp-action="Delete">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<a href="Delete/@Model.Slug" class="btn btn-danger">Delete</a>
+				<a href="@Model.Slug/delete" class="btn btn-danger">Delete</a>
 			</form>
 		</div>
 	</div>

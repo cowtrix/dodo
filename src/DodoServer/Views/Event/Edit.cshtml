@@ -11,119 +11,119 @@
 		<div class="card-body">
 			<form asp-action="Edit">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="Guid" class="control-label"></label>
 					<input  readonly asp-for="Guid" class="form-control"/>
 					<span asp-validation-for="Guid" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="Name" class="control-label"></label>
 					<input  asp-for="Name" class="form-control"/>
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="Slug" class="control-label"></label>
 					<input  asp-for="Slug" class="form-control"/>
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
 					<input  readonly asp-for="Revision" class="form-control"/>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="card">
-					<h5 class="card-title">Arrest Risk</h5>
-						<div class="card-body">
+					<div class="card-body">
+						<h5 class="card-title">Arrest Risk</h5>
 						</div>
 				</div>
 				<div class="card">
-					<h5 class="card-title">Facilities</h5>
-						<div class="card-body">
+					<div class="card-body">
+						<h5 class="card-title">Facilities</h5>
 							<div class="card">
-								<h5 class="card-title">Toilets</h5>
-									<div class="card-body">
+								<div class="card-body">
+									<h5 class="card-title">Toilets</h5>
 									</div>
 							</div>
 							<div class="card">
-								<h5 class="card-title">Bathrooms</h5>
-									<div class="card-body">
+								<div class="card-body">
+									<h5 class="card-title">Bathrooms</h5>
 									</div>
 							</div>
 							<div class="card">
-								<h5 class="card-title">Food</h5>
-									<div class="card-body">
+								<div class="card-body">
+									<h5 class="card-title">Food</h5>
 									</div>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Facilities.Kitchen" class="control-label"></label>
 								<input  asp-for="Facilities.Kitchen" class="form-control"/>
 								<span asp-validation-for="Facilities.Kitchen" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Facilities.DisabilityFriendly" class="control-label"></label>
 								<input  asp-for="Facilities.DisabilityFriendly" class="form-control"/>
 								<span asp-validation-for="Facilities.DisabilityFriendly" class="text-danger"></span>
 							</div>
 							<div class="card">
-								<h5 class="card-title">OutdoorCamping</h5>
-									<div class="card-body">
+								<div class="card-body">
+									<h5 class="card-title">OutdoorCamping</h5>
 									</div>
 							</div>
 							<div class="card">
-								<h5 class="card-title">IndoorCamping</h5>
-									<div class="card-body">
+								<div class="card-body">
+									<h5 class="card-title">IndoorCamping</h5>
 									</div>
 							</div>
 							<div class="card">
-								<h5 class="card-title">Accomodation</h5>
-									<div class="card-body">
+								<div class="card-body">
+									<h5 class="card-title">Accomodation</h5>
 									</div>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Facilities.Inductions" class="control-label"></label>
 								<input  asp-for="Facilities.Inductions" class="form-control"/>
 								<span asp-validation-for="Facilities.Inductions" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Facilities.TalksAndTraining" class="control-label"></label>
 								<input  asp-for="Facilities.TalksAndTraining" class="form-control"/>
 								<span asp-validation-for="Facilities.TalksAndTraining" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Facilities.Welfare" class="control-label"></label>
 								<input  asp-for="Facilities.Welfare" class="form-control"/>
 								<span asp-validation-for="Facilities.Welfare" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Facilities.AffinityGroupFormation" class="control-label"></label>
 								<input  asp-for="Facilities.AffinityGroupFormation" class="form-control"/>
 								<span asp-validation-for="Facilities.AffinityGroupFormation" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Facilities.VolunteersNeeded" class="control-label"></label>
 								<input  asp-for="Facilities.VolunteersNeeded" class="form-control"/>
 								<span asp-validation-for="Facilities.VolunteersNeeded" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Facilities.FamilyFriendly" class="control-label"></label>
 								<input  asp-for="Facilities.FamilyFriendly" class="form-control"/>
 								<span asp-validation-for="Facilities.FamilyFriendly" class="text-danger"></span>
 							</div>
 							<div class="card">
-								<h5 class="card-title">Internet</h5>
-									<div class="card-body">
+								<div class="card-body">
+									<h5 class="card-title">Internet</h5>
 									</div>
 							</div>
 							<div class="card">
-								<h5 class="card-title">Electricity</h5>
-									<div class="card-body">
+								<div class="card-body">
+									<h5 class="card-title">Electricity</h5>
 									</div>
 							</div>
 						</div>
 				</div>
 				<div class="card">
-					<h5 class="card-title">Location</h5>
-						<div class="card-body">
+					<div class="card-body">
+						<h5 class="card-title">Location</h5>
 							<address>
 								<strong>Address</strong>
 								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
@@ -151,64 +151,64 @@
 									<br>@Model.Location.LocationData.Country
 								}
 							</address>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Location.Latitude" class="control-label"></label>
 								<input  asp-for="Location.Latitude" class="form-control"/>
 								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Location.Longitude" class="control-label"></label>
 								<input  asp-for="Location.Longitude" class="form-control"/>
 								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
 							</div>
 						</div>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="PublicDescription" class="control-label"></label>
 					<input  asp-for="PublicDescription" class="form-control"/>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
 				<div class="card">
-					<h5 class="card-title">Parent</h5>
-						<div class="card-body">
-							<div class="form-group-row">
+					<div class="card-body">
+						<h5 class="card-title">Parent</h5>
+							<div class="form-group">
 								<label asp-for="Parent.Guid" class="control-label"></label>
 								<input  asp-for="Parent.Guid" class="form-control"/>
 								<span asp-validation-for="Parent.Guid" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Parent.Slug" class="control-label"></label>
 								<input  asp-for="Parent.Slug" class="form-control"/>
 								<span asp-validation-for="Parent.Slug" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Parent.Type" class="control-label"></label>
 								<input  asp-for="Parent.Type" class="form-control"/>
 								<span asp-validation-for="Parent.Type" class="text-danger"></span>
 							</div>
-							<div class="form-group-row">
+							<div class="form-group">
 								<label asp-for="Parent.Name" class="control-label"></label>
 								<input  asp-for="Parent.Name" class="form-control"/>
 								<span asp-validation-for="Parent.Name" class="text-danger"></span>
 							</div>
 						</div>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="VideoEmbedURL" class="control-label"></label>
 					<input  asp-for="VideoEmbedURL" class="form-control"/>
 					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="IsPublished" class="control-label"></label>
 					<input  asp-for="IsPublished" class="form-control"/>
 					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="StartDate" class="control-label"></label>
 					<input  asp-for="StartDate" class="form-control"/>
 					<span asp-validation-for="StartDate" class="text-danger"></span>
 				</div>
-				<div class="form-group-row">
+				<div class="form-group">
 					<label asp-for="EndDate" class="control-label"></label>
 					<input  asp-for="EndDate" class="form-control"/>
 					<span asp-validation-for="EndDate" class="text-danger"></span>
@@ -227,7 +227,7 @@
 		<div class="card-body">
 			<form asp-action="Delete">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<a href="Delete/@Model.Slug" class="btn btn-danger">Delete</a>
+				<a href="@Model.Slug/delete" class="btn btn-danger">Delete</a>
 			</form>
 		</div>
 	</div>
