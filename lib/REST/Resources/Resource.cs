@@ -143,5 +143,7 @@ namespace Resources
 			error = null;
 			return true;
 		}
+
+		public override string ToString() => $"[{Guid.ToString().Substring(0, 6)}] {Name}";
 	}
 }

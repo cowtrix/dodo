@@ -131,6 +131,7 @@ namespace SharedTest
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 				}
+				obj = ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);
 			}
 			return obj;
 		}

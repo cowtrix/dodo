@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -43,6 +43,7 @@ namespace Resources
 		}
 
 		public Guid Guid { get; private set; }
+		public Guid Handle { get; private set; }
 
 		public ResourceLock(Guid resource) : this(ResourceUtility.GetResourceByGuid(resource))
 		{
@@ -54,13 +55,14 @@ namespace Resources
 			{
 				return;
 			}
-			var handle = Guid.NewGuid();
-			while (IsLocked(resource.Guid, handle) || !m_locks.TryAdd(resource.Guid, handle))
+			Logger.Debug($"Locking resource {resource}");
+			Handle = Guid.NewGuid();
+			while (IsLocked(resource.Guid, Handle) || !m_locks.TryAdd(resource.Guid, Handle))
 			{
 				Thread.Sleep(10);
 			}
 			Guid = resource.Guid;
-			Value = ResourceUtility.GetResourceByGuid(Guid, handle);
+			Value = ResourceUtility.GetResourceByGuid(Guid, Handle);
 		}
 
 		#region IDisposable Support
