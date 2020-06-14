@@ -33,8 +33,4 @@
     </None>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if ($(ConfigurationName) == &quot;Debug&quot;)&#xD;&#xA;{&#xD;&#xA;dotnet run --no-build --project $(ProjectPath) -- /viewmodels:&quot;$(SolutionDir)src\DodoCMS\ViewModels&quot; /views:&quot;$(SolutionDir)src\DodoServer\Views&quot;&#xD;&#xA;}" />
-  </Target>
-
 </Project>
