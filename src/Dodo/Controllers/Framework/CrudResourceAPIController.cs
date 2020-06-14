@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using Common.Extensions;
 using Dodo.Users.Tokens;
+using Common.Config;
 
 namespace Resources
 {
@@ -21,7 +22,7 @@ namespace Resources
 		where T : DodoResource
 		where TSchema : ResourceSchemaBase
 	{
-		protected CrudResourceServiceBase<T, TSchema> PublicService => 
+		protected CrudResourceServiceBase<T, TSchema> PublicService =>
 			new CrudResourceServiceBase<T, TSchema>(Context, HttpContext, AuthService);
 		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
 
@@ -78,20 +79,27 @@ namespace Resources
 		}
 
 		[HttpGet("{id}/notifications")]
-		public virtual async Task<IActionResult> GetNotifications(string id)
+		public virtual async Task<IActionResult> GetNotifications(string id, int page = 1)
 		{
-			if(typeof(INotificationResource).IsAssignableFrom(typeof(T)))
+			int chunkSize = ConfigManager.GetValue($"Notifications_ChunkSize", 25);
+			if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
 			{
 				return BadRequest();
 			}
 			var request = await PublicService.Get(id);
-			if(!request.IsSuccess)
+			if (!request.IsSuccess)
 			{
 				return request.ActionResult;
 			}
 			var actionReq = request as ResourceActionRequest;
 			var notificationProvider = actionReq.Result as INotificationResource;
-			return Ok(notificationProvider.GetNotifications(actionReq.AccessContext, actionReq.PermissionLevel));
+			var notifications = notificationProvider.GetNotifications(actionReq.AccessContext, actionReq.PermissionLevel);
+			return Ok(
+				new { 
+					notifications = notifications.Skip((page - 1) * chunkSize).Take(chunkSize), 
+					totalCount = notifications.Count(),
+					chunkSize = chunkSize
+				});
 		}
 	}
 }
