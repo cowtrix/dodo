@@ -54,7 +54,7 @@ namespace Dodo.LocalGroups
 		}
 
 		[View(EPermissionLevel.PUBLIC)]
-		public GeoLocation Location { get; private set; }
+		public GeoLocation Location { get; set; } = new GeoLocation();
 
 		public override bool CanContain(Type type)
 		{

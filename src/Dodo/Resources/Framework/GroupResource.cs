@@ -1,57 +1,24 @@
 using System;
 using System.Collections.Generic;
-using Common.Extensions;
 using Resources.Security;
 using Dodo.Users;
-using Microsoft.AspNetCore.Http;
 using Resources;
 using Resources.Serializers;
 using Common.Security;
 using Dodo.Users.Tokens;
-using Dodo.DodoResources;
 using Common;
 using MongoDB.Bson.Serialization.Attributes;
-using System.ComponentModel;
 
 namespace Dodo
 {
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
-
-	public abstract class OwnedResourceSchemaBase : DescribedResourceSchemaBase
-	{
-		public Guid Parent { get; set; }
-
-		public OwnedResourceSchemaBase(string name, string publicDescription, Guid parent)
-			: base(name, publicDescription)
-		{
-			PublicDescription = publicDescription;
-			Parent = parent;
-		}
-
-		public OwnedResourceSchemaBase() : base() { }
-	}
-
-	public abstract class DescribedResourceSchemaBase : ResourceSchemaBase
-	{
-		[View]
-		[DisplayName("Public Description")]
-		public string PublicDescription { get; set; }
-
-		public DescribedResourceSchemaBase(string name, string publicDescription)
-			: base(name)
-		{
-			PublicDescription = publicDescription;
-		}
-
-		public DescribedResourceSchemaBase() : base() { }
-	}
 
 	/// <summary>
 	/// A group resource is either a Rebellion, Working Group or a Local Group.
 	/// It can have administrators, which are authorised to edit it.
 	/// It can have members and a public description.
 	/// </summary>
-	public abstract class GroupResource : DodoResource, IPublicResource, ITokenOwner
+	public abstract class GroupResource : DodoResource, IPublicResource, ITokenOwner, INotificationResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		public class AdminData
@@ -70,6 +37,7 @@ namespace Dodo
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC)]
+		[Name("Public Description")]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public UserMultiSigStore<AdminData> AdministratorData { get; set; }
@@ -169,21 +137,8 @@ namespace Dodo
 			object requester, Passphrase passphrase)
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
-			var context = new AccessContext(user, passphrase);
 			var isMember = Members.IsAuthorised(user, passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
-			Passphrase pass;
-			if(permissionLevel >= EPermissionLevel.ADMIN)
-			{
-				// Unlock encrypted administrator tokens
-				pass = new Passphrase(AdministratorData.GetValue(user, passphrase).GroupPrivateKey);
-			}
-			else
-			{
-				pass = passphrase;
-			}
-			var notifications = SharedTokens.GetNotifications(context, pass, permissionLevel);
-			view.Add(METADATA_NOTIFICATIONS_KEY, notifications);
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 
@@ -198,6 +153,21 @@ namespace Dodo
 			SharedTokens.Add(this, new SimpleNotificationToken(Name,
 				$"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", true));
 			return true;
+		}
+
+		public IEnumerable<Notification> GetNotifications(AccessContext context, EPermissionLevel permissionLevel)
+		{
+			Passphrase pass;
+			if (permissionLevel >= EPermissionLevel.ADMIN)
+			{
+				// Unlock encrypted administrator tokens
+				pass = new Passphrase(AdministratorData.GetValue(context.User, context.Passphrase).GroupPrivateKey);
+			}
+			else
+			{
+				pass = context.Passphrase;
+			}
+			return SharedTokens.GetNotifications(context, pass, permissionLevel);
 		}
 	}
 }

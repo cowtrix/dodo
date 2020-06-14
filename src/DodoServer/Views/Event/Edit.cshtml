@@ -31,28 +31,28 @@
 					<input  readonly asp-for="Revision" class="form-control"/>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Arrest Risk</h5>
-						</div>
+				<div class="form-group">
+					<label asp-for="ArrestRisk" class="control-label"></label>
+					<input  asp-for="ArrestRisk" class="form-control"/>
+					<span asp-validation-for="ArrestRisk" class="text-danger"></span>
 				</div>
 				<div class="card">
 					<div class="card-body">
 						<h5 class="card-title">Facilities</h5>
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">Toilets</h5>
-									</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Toilets" class="control-label"></label>
+								<input  asp-for="Facilities.Toilets" class="form-control"/>
+								<span asp-validation-for="Facilities.Toilets" class="text-danger"></span>
 							</div>
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">Bathrooms</h5>
-									</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Bathrooms" class="control-label"></label>
+								<input  asp-for="Facilities.Bathrooms" class="form-control"/>
+								<span asp-validation-for="Facilities.Bathrooms" class="text-danger"></span>
 							</div>
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">Food</h5>
-									</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Food" class="control-label"></label>
+								<input  asp-for="Facilities.Food" class="form-control"/>
+								<span asp-validation-for="Facilities.Food" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<label asp-for="Facilities.Kitchen" class="control-label"></label>
@@ -64,20 +64,20 @@
 								<input  asp-for="Facilities.DisabilityFriendly" class="form-control"/>
 								<span asp-validation-for="Facilities.DisabilityFriendly" class="text-danger"></span>
 							</div>
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">OutdoorCamping</h5>
-									</div>
+							<div class="form-group">
+								<label asp-for="Facilities.OutdoorCamping" class="control-label"></label>
+								<input  asp-for="Facilities.OutdoorCamping" class="form-control"/>
+								<span asp-validation-for="Facilities.OutdoorCamping" class="text-danger"></span>
 							</div>
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">IndoorCamping</h5>
-									</div>
+							<div class="form-group">
+								<label asp-for="Facilities.IndoorCamping" class="control-label"></label>
+								<input  asp-for="Facilities.IndoorCamping" class="form-control"/>
+								<span asp-validation-for="Facilities.IndoorCamping" class="text-danger"></span>
 							</div>
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">Accomodation</h5>
-									</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Accomodation" class="control-label"></label>
+								<input  asp-for="Facilities.Accomodation" class="form-control"/>
+								<span asp-validation-for="Facilities.Accomodation" class="text-danger"></span>
 							</div>
 							<div class="form-group">
 								<label asp-for="Facilities.Inductions" class="control-label"></label>
@@ -109,15 +109,15 @@
 								<input  asp-for="Facilities.FamilyFriendly" class="form-control"/>
 								<span asp-validation-for="Facilities.FamilyFriendly" class="text-danger"></span>
 							</div>
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">Internet</h5>
-									</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Internet" class="control-label"></label>
+								<input  asp-for="Facilities.Internet" class="form-control"/>
+								<span asp-validation-for="Facilities.Internet" class="text-danger"></span>
 							</div>
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">Electricity</h5>
-									</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Electricity" class="control-label"></label>
+								<input  asp-for="Facilities.Electricity" class="form-control"/>
+								<span asp-validation-for="Facilities.Electricity" class="text-danger"></span>
 							</div>
 						</div>
 				</div>
@@ -126,30 +126,32 @@
 						<h5 class="card-title">Location</h5>
 							<address>
 								<strong>Address</strong>
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
-									<br>@Model.Location.LocationData.Address
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Neighborhood)) {
-									<br>@Model.Location.LocationData.Neighborhood
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Locality)) {
-									<br>@Model.Location.LocationData.Locality
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Place)) {
-									<br>@Model.Location.LocationData.Place
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.District)) {
-									<br>@Model.Location.LocationData.District
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Postcode)) {
-									<br>@Model.Location.LocationData.Postcode
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Region)) {
-									<br>@Model.Location.LocationData.Region
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Country)) {
-									<br>@Model.Location.LocationData.Country
-								}
+								@if (!@Model.Location.LocationData.IsEmpty) {
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
+										<br>@Model.Location.LocationData.Address
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Neighborhood)) {
+										<br>@Model.Location.LocationData.Neighborhood
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Locality)) {
+										<br>@Model.Location.LocationData.Locality
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Place)) {
+										<br>@Model.Location.LocationData.Place
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.District)) {
+										<br>@Model.Location.LocationData.District
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Postcode)) {
+										<br>@Model.Location.LocationData.Postcode
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Region)) {
+										<br>@Model.Location.LocationData.Region
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Country)) {
+										<br>@Model.Location.LocationData.Country
+									}
+								} else {  @Html.Raw("<br>"); @Html.Label("None"); }
 							</address>
 							<div class="form-group">
 								<label asp-for="Location.Latitude" class="control-label"></label>
@@ -168,30 +170,10 @@
 					<input  asp-for="PublicDescription" class="form-control"/>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Parent</h5>
-							<div class="form-group">
-								<label asp-for="Parent.Guid" class="control-label"></label>
-								<input  asp-for="Parent.Guid" class="form-control"/>
-								<span asp-validation-for="Parent.Guid" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Parent.Slug" class="control-label"></label>
-								<input  asp-for="Parent.Slug" class="form-control"/>
-								<span asp-validation-for="Parent.Slug" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Parent.Type" class="control-label"></label>
-								<input  asp-for="Parent.Type" class="form-control"/>
-								<span asp-validation-for="Parent.Type" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Parent.Name" class="control-label"></label>
-								<input  asp-for="Parent.Name" class="form-control"/>
-								<span asp-validation-for="Parent.Name" class="text-danger"></span>
-							</div>
-						</div>
+				<div class="form-group">
+					<label class="control-label">Parent</label>
+					<input class="sr-only" asp-for="Parent.Type"/>
+					<a class="btn btn-primary" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug">@Model.Parent.Name</a>
 				</div>
 				<div class="form-group">
 					<label asp-for="VideoEmbedURL" class="control-label"></label>

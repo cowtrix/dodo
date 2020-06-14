@@ -85,7 +85,7 @@ namespace Dodo.LocationResources
 		[View(EPermissionLevel.USER)]
 		public SiteFacilities Facilities { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
-		public GeoLocation Location { get; set; }
+		public GeoLocation Location { get; set; } = new GeoLocation();
 		[View(EPermissionLevel.PUBLIC)]
 		[Name("Public Description")]
 		public string PublicDescription { get; set; }

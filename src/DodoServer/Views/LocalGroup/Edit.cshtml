@@ -41,11 +41,8 @@
 						<div class="card-body">
 						@foreach(var admin in Model.AdministratorData.Administrators) {
 							<div class="card">
-							<label>@admin.Name</label>
-							<label>@admin.Slug</label>
-							<label>@admin.Guid</label>
-							<label>@admin.Type</label>
-									</div>
+								<a class="btn btn-primary" role="button" href="admin.Type/admin.Slug">admin.Name</a>
+							</div>
 						}
 						</div>
 				</div>
@@ -69,30 +66,32 @@
 						<h5 class="card-title">Location</h5>
 							<address>
 								<strong>Address</strong>
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
-									<br>@Model.Location.LocationData.Address
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Neighborhood)) {
-									<br>@Model.Location.LocationData.Neighborhood
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Locality)) {
-									<br>@Model.Location.LocationData.Locality
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Place)) {
-									<br>@Model.Location.LocationData.Place
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.District)) {
-									<br>@Model.Location.LocationData.District
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Postcode)) {
-									<br>@Model.Location.LocationData.Postcode
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Region)) {
-									<br>@Model.Location.LocationData.Region
-								}
-								@if (!string.IsNullOrEmpty(Model.Location.LocationData.Country)) {
-									<br>@Model.Location.LocationData.Country
-								}
+								@if (!@Model.Location.LocationData.IsEmpty) {
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
+										<br>@Model.Location.LocationData.Address
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Neighborhood)) {
+										<br>@Model.Location.LocationData.Neighborhood
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Locality)) {
+										<br>@Model.Location.LocationData.Locality
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Place)) {
+										<br>@Model.Location.LocationData.Place
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.District)) {
+										<br>@Model.Location.LocationData.District
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Postcode)) {
+										<br>@Model.Location.LocationData.Postcode
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Region)) {
+										<br>@Model.Location.LocationData.Region
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Country)) {
+										<br>@Model.Location.LocationData.Country
+									}
+								} else {  @Html.Raw("<br>"); @Html.Label("None"); }
 							</address>
 							<div class="form-group">
 								<label asp-for="Location.Latitude" class="control-label"></label>

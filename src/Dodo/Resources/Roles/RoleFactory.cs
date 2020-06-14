@@ -6,7 +6,7 @@ using System;
 
 namespace Dodo.Roles
 {
-	public class RoleSerializer : ResourceReferenceSerializer<Role> { }
+	//public class RoleSerializer : ResourceReferenceSerializer<Role> { }
 
 	public class RoleSchema : OwnedResourceSchemaBase
 	{

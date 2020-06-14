@@ -17,7 +17,7 @@ namespace Resources
 		bool HasValue();
 	}
 
-	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
+	public class ResourceReference<T> : IResourceReference where T : class, IRESTResource
 	{
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
@@ -43,6 +43,8 @@ namespace Resources
 
 		public bool HasValue() => Guid != default;
 
+		public ResourceReference() { }
+
 		public ResourceReference(T resource)
 		{
 			Guid = resource != null ? resource.Guid : default;
@@ -57,6 +59,10 @@ namespace Resources
 			Slug = slug;
 			Type = type;
 			Name = name;
+		}
+
+		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)
+		{
 		}
 
 		public static implicit operator T(ResourceReference<T> d) => d.GetValue();

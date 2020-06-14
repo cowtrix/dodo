@@ -13,7 +13,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Users
 {
-	public class User : DodoResource, IVerifiable, ITokenOwner
+	public class User : DodoResource, IVerifiable, ITokenOwner, INotificationResource
 	{
 		public const string ADMIN_OF_KEY = "adminOf";
 		public const string ROLES_HELD_KEY = "roles";
@@ -76,12 +76,13 @@ namespace Dodo.Users
 				});
 				view.Add(ROLES_HELD_KEY, ResourceUtility.GetManager<Role>().Get(r => r.RoleHolders.IsAuthorised(this, passphrase)).Select(r => r.Guid));
 			}
-			if(permissionLevel == EPermissionLevel.OWNER)
-			{
-				var notifications = TokenCollection.GetNotifications(accessContext, new Passphrase(requesterUser.AuthData.PrivateKey.GetValue(passphrase)), permissionLevel);
-				view.Add(METADATA_NOTIFICATIONS_KEY, notifications);
-			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
+		}
+
+		public IEnumerable<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel)
+		{
+			return TokenCollection.GetNotifications(accessContext, 
+				new Passphrase(accessContext.User.AuthData.PrivateKey.GetValue(accessContext.Passphrase)), permissionLevel);
 		}
 	}
 }

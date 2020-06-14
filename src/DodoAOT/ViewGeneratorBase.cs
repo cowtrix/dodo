@@ -24,22 +24,31 @@ namespace DodoAOT
 
 		private static IEnumerable<string> RefView(string prefix, MemberInfo member, int indentLevel)
 		{
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			yield return Indent(indentLevel) + $"<label>@{prefix}{nameof(IResourceReference.Name)}</label>";
-			yield return Indent(indentLevel) + $"<label>@{prefix}{nameof(IResourceReference.Slug)}</label>";
-			yield return Indent(indentLevel) + $"<label>@{prefix}{nameof(IResourceReference.Guid)}</label>";
-			yield return Indent(indentLevel) + $"<label>@{prefix}{nameof(IResourceReference.Type)}</label>";
-			yield return Indent(indentLevel + 2) + $"</div>";
+			var nameStr = $"@Model.{prefix}{member?.Name}.{nameof(IResourceReference.Name)}";
+			var urlStr = $"@Model.{prefix}{member?.Name}.{nameof(IResourceReference.Type)}/@Model.{prefix}{member?.Name}.{nameof(IResourceReference.Slug)}";
+			yield return Indent(indentLevel) + $"<div class=\"form-group\">";
+			yield return Indent(indentLevel + 1) + $"<label class=\"control-label\">{member.GetName()}</label>";
+			yield return Indent(indentLevel + 1) + $"<input class=\"sr-only\" asp-for=\"{prefix}{member?.Name}.{nameof(IResourceReference.Type)}\"/>";
+			yield return Indent(indentLevel + 1) + $"<a class=\"btn btn-primary\" role=\"button\" href=\"../../{urlStr}\">{nameStr}</a>";
+			yield return Indent(indentLevel) + $"</div>";
 		}
 
 		private static IEnumerable<string> AdminDataView(string prefix, MemberInfo member, int indentLevel)
 		{
+			IEnumerable<string> refInLoop(string prefix, int indentLevel)
+			{
+				var nameStr = $"{prefix}{nameof(IResourceReference.Name)}";
+				var urlStr = $"{prefix}{nameof(IResourceReference.Type)}/{prefix}{nameof(IResourceReference.Slug)}";
+				yield return Indent(indentLevel) + $"<div class=\"card\">";
+				yield return Indent(indentLevel + 1) + $"<a class=\"btn btn-primary\" role=\"button\" href=\"{urlStr}\">{nameStr}</a>";
+				yield return Indent(indentLevel) + $"</div>";
+			}
 			yield return Indent(indentLevel) + $"<div class=\"card\">";
 			yield return Indent(indentLevel + 1) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
 			yield return Indent(indentLevel + 2) + $"<div class=\"card-body\">";
 			yield return Indent(indentLevel + 2) + $"@foreach(var admin in Model.{prefix}{member.Name}.Administrators) {{";
 			// iterate admin array
-			foreach (var l in RefView("admin.", member, indentLevel + 3)) yield return l;
+			foreach (var l in refInLoop("admin.", indentLevel + 3)) yield return l;
 			yield return Indent(indentLevel + 2) + "}";
 			yield return Indent(indentLevel + 2) + $"</div>";
 			yield return Indent(indentLevel) + $"</div>";
@@ -48,22 +57,28 @@ namespace DodoAOT
 		private static IEnumerable<string> LocationDataView(string prefix, MemberInfo member, int indentLevel)
 		{
 			var name = member.Name;
-			IEnumerable<string> labelIfNotNull(string fieldName)
+			IEnumerable<string> labelIfNotNull(string fieldName, int indent)
 			{
-				yield return Indent(indentLevel + 1) + $"@if (!string.IsNullOrEmpty(Model.{prefix}{name}.{fieldName})) {{";
-				yield return Indent(indentLevel + 2) + $"<br>@Model.{prefix}{name}.{fieldName}";
-				yield return Indent(indentLevel + 1) + "}";
+				yield return Indent(indent) + $"@if (!string.IsNullOrEmpty(Model.{prefix}{name}.{fieldName})) {{";
+				yield return Indent(indent + 1) + $"<br>@Model.{prefix}{name}.{fieldName}";
+				yield return Indent(indent) + "}";
 			}
 			yield return Indent(indentLevel) + $"<address>";
 			yield return Indent(indentLevel + 1) + $"<strong>Address</strong>";
-			foreach (var l in labelIfNotNull(nameof(LocationData.Address))) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Neighborhood))) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Locality))) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Place))) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.District))) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Postcode))) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Region))) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Country))) yield return l;
+
+			//early return
+			yield return Indent(indentLevel + 1) + $"@if (!@Model.{prefix}{name}.IsEmpty) {{";
+
+			foreach (var l in labelIfNotNull(nameof(LocationData.Address), indentLevel + 2)) yield return l;
+			foreach (var l in labelIfNotNull(nameof(LocationData.Neighborhood), indentLevel + 2)) yield return l;
+			foreach (var l in labelIfNotNull(nameof(LocationData.Locality), indentLevel + 2)) yield return l;
+			foreach (var l in labelIfNotNull(nameof(LocationData.Place), indentLevel + 2)) yield return l;
+			foreach (var l in labelIfNotNull(nameof(LocationData.District), indentLevel + 2)) yield return l;
+			foreach (var l in labelIfNotNull(nameof(LocationData.Postcode), indentLevel + 2)) yield return l;
+			foreach (var l in labelIfNotNull(nameof(LocationData.Region), indentLevel + 2)) yield return l;
+			foreach (var l in labelIfNotNull(nameof(LocationData.Country), indentLevel + 2)) yield return l;
+
+			yield return Indent(indentLevel + 1) + "} else {  @Html.Raw(\"<br>\"); @Html.Label(\"None\"); }";
 			yield return Indent(indentLevel) + $"</address>";
 		}
 
@@ -94,7 +109,8 @@ namespace DodoAOT
 				var typeName = memberType.GetRealTypeName(true);
 				var memberName = member.Name;
 
-				if (m_customTypeCallback.TryGetValue(memberType, out var callback))
+				var callback = m_customTypeCallback.FirstOrDefault(kvp => kvp.Key.IsAssignableFrom(memberType)).Value;
+				if (callback != null)
 				{
 					foreach (var line in callback(prefix, member, indentLevel))
 					{
@@ -105,7 +121,7 @@ namespace DodoAOT
 
 				bool isReadonly = forcereadonly || viewAttr.EditPermission > EPermissionLevel.ADMIN || (member is PropertyInfo p && !p.CanWrite);
 
-				if (!memberType.IsPrimitive && !memberType.Namespace.StartsWith(nameof(System)))
+				if (!memberType.IsPrimitive && !memberType.IsEnum && !memberType.Namespace.StartsWith(nameof(System)))
 				{
 					yield return Indent(indentLevel) + $"<div class=\"card\">";
 					yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
@@ -119,6 +135,11 @@ namespace DodoAOT
 				}
 				else
 				{
+					string inputType = "input";
+					if (member.GetCustomAttribute<DescriptionAttribute>() != null)
+					{
+						inputType = "textarea";
+					}
 					string inputExtras = "";
 					if (member.GetCustomAttribute<PasswordAttribute>() != null)
 					{
@@ -130,7 +151,7 @@ namespace DodoAOT
 					}
 					yield return Indent(indentLevel) + $"<div class=\"form-group\">";
 					yield return Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"control-label\"></label>";
-					yield return Indent(indentLevel + 1) + $"<input {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"form-control\"/>";
+					yield return Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"form-control\"/>";
 					yield return Indent(indentLevel + 1) + $"<span asp-validation-for=\"{prefix}{memberName}\" class=\"text-danger\"></span>";
 					yield return Indent(indentLevel) + $"</div>";
 				}

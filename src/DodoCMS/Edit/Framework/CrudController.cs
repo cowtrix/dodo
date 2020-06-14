@@ -22,15 +22,15 @@ namespace Dodo.Controllers.Edit
 	[Route("edit/[controller]")]
 	public abstract class CrudController<T, TSchema, TViewModel> : CustomController
 		where T : DodoResource, IPublicResource
-		where TSchema : ResourceSchemaBase
-		where TViewModel : class, IViewModel
+		where TSchema : ResourceSchemaBase, new()
+		where TViewModel : class, IViewModel, new()
 	{
 		protected virtual CrudResourceServiceBase<T, TSchema> CrudService => new CrudResourceServiceBase<T, TSchema>(Context, HttpContext, AuthService);
 		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
 		protected TViewModel ViewModel(T rsc) => rsc.CopyByValue<TViewModel>(new ResourceReference<User>(Context.User), Context.Passphrase);
 
 		[Route("create")]
-		public IActionResult Create()
+		public IActionResult Create([FromQuery] string parent = null)
 		{
 			if(Context.User == null)
 			{
@@ -43,7 +43,26 @@ namespace Dodo.Controllers.Edit
 			{
 				return Unauthorized("You must request permission to create this resource.");
 			}
-			return View();
+			var schema = new TSchema();
+			if(schema is OwnedResourceSchemaBase owned)
+			{
+				IRESTResource rsc; 
+				if(Guid.TryParse(parent, out var guid))
+				{
+					rsc = ResourceUtility.GetResourceByGuid(guid);
+				}
+				else
+				{
+					rsc = ResourceUtility.GetResourceBySlug(parent);
+				}
+				if(rsc == null)
+				{
+					return BadRequest($"No parent resource found with ID {parent}");
+				}
+				owned.Parent = rsc.Guid;
+				ViewData["Parent"] = rsc.Guid;
+			}
+			return View(schema);
 		}
 
 		[HttpPost]

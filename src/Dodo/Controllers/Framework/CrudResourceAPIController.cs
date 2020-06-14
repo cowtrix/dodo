@@ -77,5 +77,21 @@ namespace Resources
 			return (await PublicService.Get(id)).ActionResult;
 		}
 
+		[HttpGet("{id}/notifications")]
+		public virtual async Task<IActionResult> GetNotifications(string id)
+		{
+			if(typeof(INotificationResource).IsAssignableFrom(typeof(T)))
+			{
+				return BadRequest();
+			}
+			var request = await PublicService.Get(id);
+			if(!request.IsSuccess)
+			{
+				return request.ActionResult;
+			}
+			var actionReq = request as ResourceActionRequest;
+			var notificationProvider = actionReq.Result as INotificationResource;
+			return Ok(notificationProvider.GetNotifications(actionReq.AccessContext, actionReq.PermissionLevel));
+		}
 	}
 }

@@ -21,16 +21,72 @@
 					<input  asp-for="PublicDescription" class="form-control"/>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
+				<div class="form-group">
+					<label class="control-label">Parent Resource</label>
+					<input class="sr-only" asp-for="ParentReference.Type"/>
+					<a class="btn btn-primary" role="button" href="../../@Model.ParentReference.Type/@Model.ParentReference.Slug">@Model.ParentReference.Name</a>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Location</h5>
+							<address>
+								<strong>Address</strong>
+								@if (!@Model.Location.LocationData.IsEmpty) {
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
+										<br>@Model.Location.LocationData.Address
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Neighborhood)) {
+										<br>@Model.Location.LocationData.Neighborhood
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Locality)) {
+										<br>@Model.Location.LocationData.Locality
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Place)) {
+										<br>@Model.Location.LocationData.Place
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.District)) {
+										<br>@Model.Location.LocationData.District
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Postcode)) {
+										<br>@Model.Location.LocationData.Postcode
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Region)) {
+										<br>@Model.Location.LocationData.Region
+									}
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Country)) {
+										<br>@Model.Location.LocationData.Country
+									}
+								} else {  @Html.Raw("<br>"); @Html.Label("None"); }
+							</address>
+							<div class="form-group">
+								<label asp-for="Location.Latitude" class="control-label"></label>
+								<input  asp-for="Location.Latitude" class="form-control"/>
+								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Location.Longitude" class="control-label"></label>
+								<input  asp-for="Location.Longitude" class="form-control"/>
+								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
+							</div>
+						</div>
+				</div>
+				<div class="form-group">
+					<label asp-for="StartDate" class="control-label"></label>
+					<input  asp-for="StartDate" class="form-control"/>
+					<span asp-validation-for="StartDate" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="EndDate" class="control-label"></label>
+					<input  asp-for="EndDate" class="form-control"/>
+					<span asp-validation-for="EndDate" class="text-danger"></span>
+				</div>
 
 				<div class="form-group">
-					<input type="submit" value="Create" class="btn btn-primary" />
+					<div class="card-body">
+						<input type="submit" value="Create" class="btn btn-primary" />
+					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
-
-<div>
-	<a asp-action="Index">Back to List</a>
-</div>
-

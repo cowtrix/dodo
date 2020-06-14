@@ -87,7 +87,7 @@ namespace Dodo.Rebellions
 		private DateTime __endDate;
 
 		[View(EPermissionLevel.PUBLIC)]
-		public GeoLocation Location { get; set; }
+		public GeoLocation Location { get; set; } = new GeoLocation();
 
 		public Rebellion() : base() { }
 

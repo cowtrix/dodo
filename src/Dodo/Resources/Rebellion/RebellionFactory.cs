@@ -9,12 +9,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dodo.Rebellions
 {
-	public class RebellionSerializer : ResourceReferenceSerializer<Rebellion> { }
+	//public class RebellionSerializer : ResourceReferenceSerializer<Rebellion> { }
 
 	public class RebellionSchema : DescribedResourceSchemaBase
 	{
 		[View]
-		public GeoLocation Location { get; set; }
+		public GeoLocation Location { get; set; } = new GeoLocation();
 
 		[View]
 		[DataType(DataType.DateTime)]

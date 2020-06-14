@@ -31,30 +31,10 @@
 					<input  readonly asp-for="Revision" class="form-control"/>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Parent</h5>
-							<div class="form-group">
-								<label asp-for="Parent.Guid" class="control-label"></label>
-								<input  readonly asp-for="Parent.Guid" class="form-control"/>
-								<span asp-validation-for="Parent.Guid" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Parent.Slug" class="control-label"></label>
-								<input  readonly asp-for="Parent.Slug" class="form-control"/>
-								<span asp-validation-for="Parent.Slug" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Parent.Type" class="control-label"></label>
-								<input  readonly asp-for="Parent.Type" class="form-control"/>
-								<span asp-validation-for="Parent.Type" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Parent.Name" class="control-label"></label>
-								<input  readonly asp-for="Parent.Name" class="form-control"/>
-								<span asp-validation-for="Parent.Name" class="text-danger"></span>
-							</div>
-						</div>
+				<div class="form-group">
+					<label class="control-label">Parent</label>
+					<input class="sr-only" asp-for="Parent.Type"/>
+					<a class="btn btn-primary" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug">@Model.Parent.Name</a>
 				</div>
 				<div class="form-group">
 					<label asp-for="PublicDescription" class="control-label"></label>

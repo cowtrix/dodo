@@ -19,7 +19,7 @@ namespace Dodo.ViewModels
 		[DisplayName("Revision")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public uint Revision { get; set; }
-		[DisplayName("PublicDescription")]
+		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string PublicDescription { get; set; }
 		public class AdminDataViewModel

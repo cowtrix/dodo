@@ -5,7 +5,7 @@ using System;
 
 namespace Dodo.WorkingGroups
 {
-	public class WorkingGroupSerializer : ResourceReferenceSerializer<WorkingGroup> { }
+	//public class WorkingGroupSerializer : ResourceReferenceSerializer<WorkingGroup> { }
 
 	public class WorkingGroupSchema : OwnedResourceSchemaBase
 	{

@@ -180,6 +180,22 @@ namespace Common.Extensions
 		}
 	}
 
+	public class DescriptionAttribute : VerifyMemberBase
+	{
+		public const int MAX_DESCRIPTION_LENGTH = 1024;
+		public override bool Verify(object value, out string validationError)
+		{
+			var str = value as string;
+			if(str.Length < MAX_DESCRIPTION_LENGTH)
+			{
+				validationError = $"Text was too long - maximum {MAX_DESCRIPTION_LENGTH} characters";
+				return false;
+			}
+			validationError = null;
+			return true;
+		}
+	}
+
 	public static class ValidationExtensions
 	{
 		const int NAME_MIN_LENGTH = 3;

@@ -1,36 +1,10 @@
-using Common;
+﻿using Common;
 using System;
 using Resources;
-using Newtonsoft.Json;
 using MongoDB.Bson.Serialization.Attributes;
-using Common.Extensions;
-using System.ComponentModel.DataAnnotations;
-using Resources.Location;
 
 namespace Dodo.LocationResources
 {
-	public class EventSchema : LocationResourceSchema
-	{
-		[DataType(DataType.DateTime)]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
-		public DateTime StartDate { get; set; }
-		[DataType(DataType.DateTime)]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
-		public DateTime EndDate { get; set; }
-
-		public EventSchema()
-		{
-		}
-
-		public EventSchema(string name, Guid parent, GeoLocation location, string description, DateTime start, DateTime end)
-			: base(name, parent, location, description)
-		{
-			Location = location;
-			StartDate = start;
-			EndDate = end;
-		}
-	}
-
 	[Name("Event")]
 	[SearchPriority(2)]
 	public class Event : LocationResourceBase, ITimeBoundResource

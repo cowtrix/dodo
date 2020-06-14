@@ -13,14 +13,11 @@
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 {BODY}
 				<div class="form-group">
-					<input type="submit" value="Create" class="btn btn-primary" />
+					<div class="card-body">
+						<input type="submit" value="Create" class="btn btn-primary" />
+					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
-
-<div>
-	<a asp-action="Index">Back to List</a>
-</div>
-

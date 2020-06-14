@@ -8,12 +8,12 @@ using Resources.Location;
 
 namespace Dodo.LocalGroups
 {
-	public class LocalGroupSerializer : ResourceReferenceSerializer<LocalGroup> { }
+	//public class LocalGroupSerializer : ResourceReferenceSerializer<LocalGroup> { }
 
 	public class LocalGroupSchema : DescribedResourceSchemaBase
 	{
 		[View]
-		public GeoLocation Location { get; set; }
+		public GeoLocation Location { get; set; } = new GeoLocation();
 
 		public LocalGroupSchema()
 		{
