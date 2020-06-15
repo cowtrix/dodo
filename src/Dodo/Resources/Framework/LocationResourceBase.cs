@@ -88,6 +88,7 @@ namespace Dodo.LocationResources
 		public GeoLocation Location { get; set; } = new GeoLocation();
 		[View(EPermissionLevel.PUBLIC)]
 		[Name("Public Description")]
+		[Description]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public ResourceReference<GroupResource> Parent { get; set; }

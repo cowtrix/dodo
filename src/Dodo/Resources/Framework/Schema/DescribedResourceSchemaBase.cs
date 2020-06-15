@@ -1,4 +1,4 @@
-﻿using Resources;
+using Resources;
 using System.ComponentModel;
 
 namespace Dodo
@@ -6,6 +6,7 @@ namespace Dodo
 	public abstract class DescribedResourceSchemaBase : ResourceSchemaBase
 	{
 		[View]
+		[Common.Extensions.Description]
 		[DisplayName("Public Description")]
 		public string PublicDescription { get; set; }
 

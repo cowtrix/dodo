@@ -13,27 +13,27 @@
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 				<div class="form-group">
 					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control"/>
+					<input  readonly asp-for="Guid" class="form-control"></input>
 					<span asp-validation-for="Guid" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Name" class="control-label"></label>
-					<input  asp-for="Name" class="form-control"/>
+					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control"/>
+					<input  asp-for="Slug" class="form-control"></input>
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
-					<input  readonly asp-for="Revision" class="form-control"/>
+					<input  readonly asp-for="Revision" class="form-control"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="PublicDescription" class="control-label"></label>
-					<input  asp-for="PublicDescription" class="form-control"/>
+					<textarea  asp-for="PublicDescription" class="form-control"></textarea>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
 				<div class="card">
@@ -41,24 +41,24 @@
 						<div class="card-body">
 						@foreach(var admin in Model.AdministratorData.Administrators) {
 							<div class="card">
-								<a class="btn btn-primary" role="button" href="admin.Type/admin.Slug">admin.Name</a>
+								<a class="btn btn-primary" role="button" href="../../@admin.Type/@admin.Slug">@admin.Name</a>
 							</div>
 						}
 						</div>
 				</div>
 				<div class="form-group">
 					<label asp-for="MemberCount" class="control-label"></label>
-					<input  readonly asp-for="MemberCount" class="form-control"/>
+					<input  readonly asp-for="MemberCount" class="form-control"></input>
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="PublicKey" class="control-label"></label>
-					<input  readonly asp-for="PublicKey" class="form-control"/>
+					<input  readonly asp-for="PublicKey" class="form-control"></input>
 					<span asp-validation-for="PublicKey" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="IsPublished" class="control-label"></label>
-					<input  asp-for="IsPublished" class="form-control"/>
+					<input  asp-for="IsPublished" class="form-control"></input>
 					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
 				<div class="form-group">

@@ -20,6 +20,7 @@ namespace DodoAOT
 			{ typeof(LocationData), LocationDataView },
 			{ typeof(Dodo.GroupResource.AdminData), AdminDataView },
 			{ typeof(IResourceReference), RefView },
+			{ typeof(IEnumerable<IResourceReference>), RefView },
 		};
 
 		private static IEnumerable<string> RefView(string prefix, MemberInfo member, int indentLevel)
@@ -37,10 +38,10 @@ namespace DodoAOT
 		{
 			IEnumerable<string> refInLoop(string prefix, int indentLevel)
 			{
-				var nameStr = $"{prefix}{nameof(IResourceReference.Name)}";
-				var urlStr = $"{prefix}{nameof(IResourceReference.Type)}/{prefix}{nameof(IResourceReference.Slug)}";
+				var nameStr = $"@{prefix}{nameof(IResourceReference.Name)}";
+				var urlStr = $"@{prefix}{nameof(IResourceReference.Type)}/@{prefix}{nameof(IResourceReference.Slug)}";
 				yield return Indent(indentLevel) + $"<div class=\"card\">";
-				yield return Indent(indentLevel + 1) + $"<a class=\"btn btn-primary\" role=\"button\" href=\"{urlStr}\">{nameStr}</a>";
+				yield return Indent(indentLevel + 1) + $"<a class=\"btn btn-primary\" role=\"button\" href=\"../../{urlStr}\">{nameStr}</a>";
 				yield return Indent(indentLevel) + $"</div>";
 			}
 			yield return Indent(indentLevel) + $"<div class=\"card\">";
@@ -151,7 +152,7 @@ namespace DodoAOT
 					}
 					yield return Indent(indentLevel) + $"<div class=\"form-group\">";
 					yield return Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"control-label\"></label>";
-					yield return Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"form-control\"/>";
+					yield return Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"form-control\"></{inputType}>";
 					yield return Indent(indentLevel + 1) + $"<span asp-validation-for=\"{prefix}{memberName}\" class=\"text-danger\"></span>";
 					yield return Indent(indentLevel) + $"</div>";
 				}

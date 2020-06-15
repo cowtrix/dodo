@@ -19,6 +19,7 @@ namespace DodoAOT
 			Logger.Info($"Generating AOT");
 			var parsedArgs = new CommandArguments(args);
 			var viewModelPath = Path.GetFullPath(parsedArgs.MustGetValue<string>("viewmodels"));
+			Logger.Info($"Outputting viewmodels to {viewModelPath}");
 			if (!Directory.Exists(viewModelPath))
 			{
 				throw new DirectoryNotFoundException(viewModelPath);
@@ -42,6 +43,7 @@ namespace DodoAOT
 
 			// Create Views
 			var viewPath = Path.GetFullPath(parsedArgs.MustGetValue<string>("views"));
+			Logger.Info($"Outputting view .cshtml to {viewPath}");
 			if (!Directory.Exists(viewPath))
 			{
 				throw new DirectoryNotFoundException(viewPath);

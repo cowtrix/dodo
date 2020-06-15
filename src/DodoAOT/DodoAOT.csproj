@@ -28,9 +28,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="buildAOT.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Delete.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File  .\buildAOT.ps1 -solutionDir $(SolutionDir) -configuration $(ConfigurationName)" />
+  </Target>
 
 </Project>

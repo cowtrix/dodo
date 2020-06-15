@@ -8,6 +8,7 @@ using Common.Security;
 using Dodo.Users.Tokens;
 using Common;
 using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel;
 
 namespace Dodo
 {
@@ -38,6 +39,7 @@ namespace Dodo
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC)]
 		[Name("Public Description")]
+		[Common.Extensions.Description]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public UserMultiSigStore<AdminData> AdministratorData { get; set; }

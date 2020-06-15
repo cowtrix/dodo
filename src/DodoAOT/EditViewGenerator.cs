@@ -6,7 +6,6 @@ using System.IO;
 
 namespace DodoAOT
 {
-
 	public class EditViewGenerator : ViewGeneratorBase
 	{
 		public static string Generate(Type resourceType)
