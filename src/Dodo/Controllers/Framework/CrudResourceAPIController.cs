@@ -78,7 +78,7 @@ namespace Resources
 			return (await PublicService.Get(id)).ActionResult;
 		}
 
-		[HttpGet("{id}/notifications")]
+		[HttpGet("notifications/{id}")]
 		public virtual async Task<IActionResult> GetNotifications(string id, int page = 1)
 		{
 			int chunkSize = ConfigManager.GetValue($"Notifications_ChunkSize", 25);
