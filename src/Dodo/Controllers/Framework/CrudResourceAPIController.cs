@@ -71,7 +71,7 @@ namespace Resources
 		}
 
 		[HttpGet("notifications/{id}")]
-		public virtual async Task<IActionResult> GetNotifications(string id, int page = 1)
+		public virtual async Task<IActionResult> GetNotifications([FromRoute]string id, [FromQuery]int page = 1)
 		{
 			int chunkSize = ConfigManager.GetValue($"Notifications_ChunkSize", 25);
 			if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))

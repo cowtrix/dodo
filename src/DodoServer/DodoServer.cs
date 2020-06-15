@@ -23,10 +23,15 @@ namespace DodoServer
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 			Host.CreateDefaultBuilder(args)
-				.ConfigureWebHostDefaults((System.Action<IWebHostBuilder>)(webBuilder =>
+				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<DodoStartup>();
-					webBuilder.UseUrls($"https://{(global::Dodo.DodoApp.NetConfig.Hostname)}:{(global::Dodo.DodoApp.NetConfig.SSLPort)}", $"http://{(global::Dodo.DodoApp.NetConfig.Hostname)}:{(global::Dodo.DodoApp.NetConfig.HTTPPort)}");
+					webBuilder.UseUrls(
+						$"https://{(Dodo.DodoApp.NetConfig.Hostname)}:{(Dodo.DodoApp.NetConfig.SSLPort)}", 
+						$"http://{(Dodo.DodoApp.NetConfig.Hostname)}:{(Dodo.DodoApp.NetConfig.HTTPPort)}",
+						$"https://{(Dodo.DodoApp.NetConfig.Domain)}:{(Dodo.DodoApp.NetConfig.SSLPort)}",
+						$"http://{(Dodo.DodoApp.NetConfig.Domain)}:{(Dodo.DodoApp.NetConfig.HTTPPort)}"
+						);
 					// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2
 					webBuilder.UseKestrel(options =>
 						options.ConfigureEndpointDefaults(defaults =>
