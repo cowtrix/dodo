@@ -20,7 +20,7 @@ namespace DodoAOT
 			{ typeof(LocationData), LocationDataView },
 			{ typeof(Dodo.GroupResource.AdminData), AdminDataView },
 			{ typeof(IResourceReference), RefView },
-			{ typeof(IEnumerable<IResourceReference>), RefView },
+			//{ typeof(IEnumerable<IResourceReference>), for },
 		};
 
 		private static IEnumerable<string> RefView(string prefix, MemberInfo member, int indentLevel)

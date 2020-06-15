@@ -1,5 +1,7 @@
 param([Parameter(Mandatory)][string] $configuration, [string] $solutionDir)
 
+Write-Host "Configuration was $($configuration)"
+
 if($configuration -ne "Debug")
 {
 	Write-Host "Skipping AOT compilation due to $configuration configuration"

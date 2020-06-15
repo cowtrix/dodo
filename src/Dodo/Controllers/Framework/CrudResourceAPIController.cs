@@ -1,18 +1,10 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Dodo;
-using Dodo.Users;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using Resources.Security;
-using System.Security.Claims;
-using Newtonsoft.Json.Linq;
 using System.Text.Json;
-using Common.Extensions;
 using Dodo.Users.Tokens;
 using Common.Config;
 
