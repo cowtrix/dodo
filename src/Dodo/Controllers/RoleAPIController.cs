@@ -9,7 +9,7 @@ namespace DodoResources.Roles
 {
 
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
-	public class RoleAPIController : CrudResourceAPIController<Role, RoleSchema>
+	public class RoleAPIController : SearchableResourceController<Role, RoleSchema>
 	{
 		public const string RootURL = "role";
 
