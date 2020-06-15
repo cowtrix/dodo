@@ -49,9 +49,20 @@ namespace DodoTest.Framework.Postman
 #if POSTMAN
 			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
 				return;
+
+			entry = new PostmanEntryAddress { Category = entry.Category.Replace(" ", ""), Request = entry.Request.Replace(" ", "") };
+
 			var items = m_collection.Value<JObject>("collection").Value<JArray>("item");
-			var cat = items.First(x => x.Value<string>("name").Replace(" ", "") == entry.Category.Replace(" ", "")).Value<JArray>("item");
-			var item = cat.First(x => x.Value<string>("name").Replace(" ", "") == entry.Request.Replace(" ", ""));
+			var cat = items.First(x => x.Value<string>("name").Replace(" ", "") == entry.Category).Value<JArray>("item");
+			JToken item = null;
+			try
+			{
+				item = cat.First(x => x.Value<string>("name").Replace(" ", "").Equals(entry.Request, StringComparison.OrdinalIgnoreCase));
+			}
+			catch(InvalidOperationException e)
+			{
+				throw new Exception($"Unable to find entry {entry.Request}", e);
+			}
 
 			var requestBody = req.RequestMessage.Content == null ? "" :
 				JsonExtensions.PrettifyJSON(Task.Run(async () => await req.RequestMessage.Content.ReadAsStringAsync().ConfigureAwait(false))?.Result);

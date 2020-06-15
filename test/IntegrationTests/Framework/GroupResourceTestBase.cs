@@ -39,7 +39,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async Task CreatorIsShownAsAndOwner()
+		public async Task CreatorIsShownAsOwner()
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var group = CreateObject<T>(context);
@@ -152,6 +152,9 @@ namespace RESTTests
 			var request = await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}", EHTTPRequestType.GET);
 			var notifications = request.Value<JArray>("notifications").Values<JToken>().Select(r => r.ToObject<Notification>());
 			Assert.IsTrue(notifications.Any());
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get Notifications" }, LastRequest);
 		}
 	}
 }
