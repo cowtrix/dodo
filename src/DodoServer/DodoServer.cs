@@ -38,6 +38,6 @@ namespace DodoServer
 							defaults.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1
 						)
 					);
-				}));
+				});
 	}
 }

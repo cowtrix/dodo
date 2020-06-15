@@ -61,5 +61,14 @@ namespace Groups
 			var all = ResourceManager.Get(r => true).ToList();
 			Assert.IsTrue(updatedGroup.IsAdmin(newAdmin, creatorContext));
 		}
+
+		[TestMethod]
+		public void CanGetNotifications()
+		{
+			GetRandomUser(out var pass, out var context);
+			var rsc = CreateObject<T>(context);
+			var notifications = rsc.GetNotifications(context, EPermissionLevel.OWNER);
+			Assert.IsTrue(notifications.Any());
+		}
 	}
 }

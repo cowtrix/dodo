@@ -1,4 +1,4 @@
-#define POSTMAN
+//#define POSTMAN
 
 using Common;
 using Common.Config;

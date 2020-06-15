@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Dodo.SharedTest;
 using Dodo.Users.Tokens;
 using DodoTest.Framework.Postman;
+using Newtonsoft.Json;
+using Dodo.Users;
 
 namespace RESTTests
 {
@@ -141,6 +143,15 @@ namespace RESTTests
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Leave a {PostmanTypeName}" },
 				leaveReq);
+		}
+
+		[TestMethod]
+		public async Task CanGetNotifications()
+		{
+			var group = CreateObject<T>();
+			var request = await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}", EHTTPRequestType.GET);
+			var notifications = request.Value<JArray>("notifications").Values<JToken>().Select(r => r.ToObject<Notification>());
+			Assert.IsTrue(notifications.Any());
 		}
 	}
 }

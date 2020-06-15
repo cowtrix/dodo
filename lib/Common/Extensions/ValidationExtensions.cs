@@ -182,13 +182,13 @@ namespace Common.Extensions
 
 	public class DescriptionAttribute : VerifyMemberBase
 	{
-		public const int MAX_DESCRIPTION_LENGTH = 1024;
+		public const int MAX_DESCRIPTION_LENGTH = 2048;
 		public override bool Verify(object value, out string validationError)
 		{
 			var str = value as string;
-			if(str.Length < MAX_DESCRIPTION_LENGTH)
+			if(str.Length > MAX_DESCRIPTION_LENGTH)
 			{
-				validationError = $"Text was too long - maximum {MAX_DESCRIPTION_LENGTH} characters";
+				validationError = $"Text was too long at {str.Length} characters - maximum {MAX_DESCRIPTION_LENGTH} characters";
 				return false;
 			}
 			validationError = null;
