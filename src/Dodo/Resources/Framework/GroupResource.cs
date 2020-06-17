@@ -19,7 +19,7 @@ namespace Dodo
 	/// It can have administrators, which are authorised to edit it.
 	/// It can have members and a public description.
 	/// </summary>
-	public abstract class GroupResource : DodoResource, IPublicResource, ITokenOwner, INotificationResource
+	public abstract class GroupResource : DodoResource, IPublicResource, ITokenResource, INotificationResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		public class AdminData
@@ -118,7 +118,7 @@ namespace Dodo
 			}
 			adminList.Add(newAdmin);
 			AdministratorData.SetValue(adminData, newAdmin, newPass);
-			SharedTokens.Add(this, new EncryptedNotificationToken(Name,
+			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
 				$"Administrator @{context.User.AuthData.Username} added new Administrator @{newAdmin.AuthData.Username}",
 				false), EPermissionLevel.ADMIN);
 			return true;
@@ -146,14 +146,14 @@ namespace Dodo
 
 		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			SharedTokens.Add(this, new SimpleNotificationToken(Name,
-				$"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", true));
+			AddToken(new SimpleNotificationToken(null, Name, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", true),
+				EPermissionLevel.ADMIN);
 		}
 
 		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			SharedTokens.Add(this, new SimpleNotificationToken(Name,
-				$"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", true));
+			AddToken(new SimpleNotificationToken(null, Name, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", true), 
+				EPermissionLevel.ADMIN);
 			return true;
 		}
 
@@ -170,6 +170,11 @@ namespace Dodo
 				pass = context.Passphrase;
 			}
 			return SharedTokens.GetNotifications(context, pass, permissionLevel);
+		}
+
+		public void AddToken(IToken token, EPermissionLevel permissionLevel)
+		{
+			SharedTokens.Add(this, token, permissionLevel);
 		}
 	}
 }

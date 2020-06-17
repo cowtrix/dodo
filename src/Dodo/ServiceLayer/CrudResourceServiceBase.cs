@@ -1,7 +1,10 @@
+using Common.Config;
 using Dodo;
+using Dodo.Models;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Resources;
 using System;
@@ -104,5 +107,58 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 	public virtual async Task<IRequestResult> Get(string id)
 	{
 		return VerifyRequest(id, EHTTPRequestType.GET);
+	}
+
+	public virtual async Task<IRequestResult> GetNotifications(string id, int page)
+	{
+		int chunkSize = ConfigManager.GetValue($"Notifications_ChunkSize", 25);
+		if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
+		{
+			return ResourceRequestError.BadRequest();
+		}
+		var request = await Get(id);
+		if (!request.IsSuccess)
+		{
+			return request;
+		}
+		var actionReq = request as ResourceActionRequest;
+		var notificationProvider = actionReq.Result as INotificationResource;
+		var notifications = notificationProvider.GetNotifications(actionReq.AccessContext, actionReq.PermissionLevel);
+		var chunk = new
+		{
+			notifications = notifications.Skip((page - 1) * chunkSize).Take(chunkSize),
+			totalCount = notifications.Count(),
+			chunkSize = chunkSize
+		};
+		return new OkRequestResult(chunk);
+	}
+
+	public virtual async Task<IRequestResult> AddNotification(string id, NotificationModel notification)
+	{
+		if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
+		{
+			return ResourceRequestError.BadRequest();
+		}
+		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
+		if (!request.IsSuccess)
+		{
+			return request;
+		}
+		var req = (ResourceActionRequest)request;
+		T target;
+		using (var resourceLock = new ResourceLock(req.Result))
+		{
+			target = resourceLock.Value as T;
+			var notificationRsc = target as INotificationResource;
+			if (target == null)
+			{
+				return ResourceRequestError.NotFoundRequest();
+			}
+			var notificationToken = new SimpleNotificationToken(Context.User, Context.User.AuthData.Username, notification.Message, true);
+			notificationRsc.AddToken(notificationToken, notification.PermissionLevel);
+			ResourceManager.Update(target, resourceLock);
+		}
+		req.Result = target;
+		return req;
 	}
 }

@@ -14,9 +14,10 @@ namespace Dodo.Users.Tokens
 {
 	//public class ITokenOwnerSerializer : ResourceReferenceSerializer<ITokenOwner> { }
 
-	public interface ITokenOwner : IRESTResource
+	public interface ITokenResource : IRESTResource
 	{
 		string PublicKey { get; }
+		void AddToken(IToken token, EPermissionLevel permissionLevel);
 	}
 
 	/// <summary>
@@ -35,7 +36,7 @@ namespace Dodo.Users.Tokens
 		[BsonIgnore]
 		public int Count => m_tokens.Count;
 
-		public void Add<T>(ITokenOwner parent, T token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER) where T: Token
+		public void Add(ITokenResource parent, IToken token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER)
 		{
 			if(token == null)
 			{

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Linq;
 using Common.Extensions;
+using Resources;
 
 namespace Dodo.Users.Tokens
 {
@@ -12,7 +13,7 @@ namespace Dodo.Users.Tokens
 	{
 		Guid Guid { get; }
 		bool Encrypted { get; }
-		void OnAdd(ITokenOwner parent);
+		void OnAdd(ITokenResource parent);
 	}
 
 	[BsonDiscriminator(RootClass = true)]
@@ -35,7 +36,7 @@ namespace Dodo.Users.Tokens
 		[BsonIgnore]
 		public abstract bool Encrypted { get; }
 
-		public virtual void OnAdd(ITokenOwner parent)
+		public virtual void OnAdd(ITokenResource parent)
 		{
 			Guid = Guid.NewGuid();
 		}

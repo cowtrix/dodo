@@ -10,6 +10,7 @@ using Dodo.Users.Tokens;
 using DodoTest.Framework.Postman;
 using Newtonsoft.Json;
 using Dodo.Users;
+using Dodo.Models;
 
 namespace RESTTests
 {
@@ -155,6 +156,28 @@ namespace RESTTests
 
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get Notifications" }, LastRequest);
+		}
+
+		[TestMethod]
+		public async Task AdminCanPostPublicNotification()
+		{
+			const string Message = "This is a test notification.";
+			GetRandomUser(out var pass, out var con);
+			var group = CreateObject<T>(con);
+
+			// Create the notification
+			await Login(con.User.AuthData.Username, pass);
+			await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}/new", EHTTPRequestType.POST,
+				new NotificationModel { Message = Message, PermissionLevel = EPermissionLevel.PUBLIC });
+			await Logout();
+
+			// Anon user should see it
+			var request = await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}", EHTTPRequestType.GET);
+			var notifications = request.Value<JArray>("notifications").Values<JToken>().Select(r => r.ToObject<Notification>());
+			Assert.IsTrue(notifications.Any());
+			var n = notifications.SingleOrDefault(n => n.Message == Message);
+			Assert.IsNotNull(n);
+			Assert.AreEqual(Message, n.Message);
 		}
 	}
 }

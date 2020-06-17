@@ -14,7 +14,7 @@ namespace Dodo.Users.Tokens
 		)]
 	public abstract class TokenEntry
 	{
-		public ResourceReference<ITokenOwner> Owner;
+		public ResourceReference<ITokenResource> Owner;
 		public Guid Guid;
 		public bool Removed;
 
@@ -25,13 +25,13 @@ namespace Dodo.Users.Tokens
 		[BsonElement]
 		private string m_typeName;
 
-		public TokenEntry(ITokenOwner owner, Token token, EPermissionLevel permissionLevel)
+		public TokenEntry(ITokenResource owner, IToken token, EPermissionLevel permissionLevel)
 		{
 			if(token == null || owner == null)
 			{
 				throw new ArgumentNullException();
 			}
-			Owner = new ResourceReference<ITokenOwner>(owner);
+			Owner = new ResourceReference<ITokenResource>(owner);
 			Guid = token.Guid;
 			PermissionLevel = permissionLevel;
 			m_typeName = token.GetType().FullName;
@@ -42,9 +42,9 @@ namespace Dodo.Users.Tokens
 			}
 		}
 
-		public abstract Token GetToken(Passphrase privateKey);
+		public abstract IToken GetToken(Passphrase privateKey);
 
-		public Token GetToken(AccessContext context)
+		public IToken GetToken(AccessContext context)
 		{
 			if (context.User == null)
 			{

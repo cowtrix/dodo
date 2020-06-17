@@ -22,7 +22,7 @@ namespace Dodo.Users.Tokens
 		[JsonProperty]
 		private Notification m_notification;
 
-		public override void OnAdd(ITokenOwner parent)
+		public override void OnAdd(ITokenResource parent)
 		{
 			Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 #if DEBUG

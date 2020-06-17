@@ -7,14 +7,14 @@ namespace Dodo.Users.Tokens
 	public class EncryptedTokenEntry : TokenEntry
 	{
 		[BsonElement]
-		private AsymmEncryptedStore<Token> m_data;
+		private AsymmEncryptedStore<IToken> m_data;
 
-		public EncryptedTokenEntry(ITokenOwner owner, Token token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER) : base(owner, token, permissionLevel)
+		public EncryptedTokenEntry(ITokenResource owner, IToken token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER) : base(owner, token, permissionLevel)
 		{
-			m_data = new AsymmEncryptedStore<Token>(token, new Passphrase(owner.PublicKey));
+			m_data = new AsymmEncryptedStore<IToken>(token, new Passphrase(owner.PublicKey));
 		}
 
-		public override Token GetToken(Passphrase pk)
+		public override IToken GetToken(Passphrase pk)
 		{
 			if(pk.Equals(default(Passphrase)))
 			{

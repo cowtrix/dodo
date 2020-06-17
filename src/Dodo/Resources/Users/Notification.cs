@@ -1,7 +1,7 @@
 using System;
 using Resources;
 
-namespace Dodo.Users
+namespace Dodo
 {
 	public class Notification
 	{

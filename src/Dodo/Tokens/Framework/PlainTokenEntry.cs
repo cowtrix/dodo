@@ -12,11 +12,11 @@ namespace Dodo.Users.Tokens
 		[JsonProperty]
 		private string m_token { get; set; }
 
-		public PlainTokenEntry(ITokenOwner owner, Token token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER) : base(owner, token, permissionLevel)
+		public PlainTokenEntry(ITokenResource owner, IToken token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER) : base(owner, token, permissionLevel)
 		{
 			m_token = JsonConvert.SerializeObject(token, JsonExtensions.StorageSettings);
 		}
 
-		public override Token GetToken(Passphrase context) => JsonConvert.DeserializeObject(m_token, JsonExtensions.StorageSettings) as Token;
+		public override IToken GetToken(Passphrase context) => JsonConvert.DeserializeObject(m_token, JsonExtensions.StorageSettings) as IToken;
 	}
 }

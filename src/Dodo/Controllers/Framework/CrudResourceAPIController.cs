@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using Dodo.Users.Tokens;
 using Common.Config;
+using Dodo.Models;
 
 namespace Resources
 {
@@ -73,25 +74,13 @@ namespace Resources
 		[HttpGet("notifications/{id}")]
 		public virtual async Task<IActionResult> GetNotifications([FromRoute]string id, [FromQuery]int page = 1)
 		{
-			int chunkSize = ConfigManager.GetValue($"Notifications_ChunkSize", 25);
-			if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
-			{
-				return BadRequest();
-			}
-			var request = await PublicService.Get(id);
-			if (!request.IsSuccess)
-			{
-				return request.ActionResult;
-			}
-			var actionReq = request as ResourceActionRequest;
-			var notificationProvider = actionReq.Result as INotificationResource;
-			var notifications = notificationProvider.GetNotifications(actionReq.AccessContext, actionReq.PermissionLevel);
-			return Ok(
-				new { 
-					notifications = notifications.Skip((page - 1) * chunkSize).Take(chunkSize), 
-					totalCount = notifications.Count(),
-					chunkSize = chunkSize
-				});
+			return (await PublicService.GetNotifications(id, page)).ActionResult;
+		}
+
+		[HttpPost("notifications/{id}/new")]
+		public virtual async Task<IActionResult> PostNotification([FromRoute]string id, [FromBody]NotificationModel notification)
+		{
+			return (await PublicService.AddNotification(id, notification)).ActionResult;
 		}
 	}
 }

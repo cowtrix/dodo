@@ -13,7 +13,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Users
 {
-	public class User : DodoResource, IVerifiable, ITokenOwner, INotificationResource
+	public class User : DodoResource, IVerifiable, ITokenResource, INotificationResource
 	{
 		public const string ADMIN_OF_KEY = "adminOf";
 		public const string ROLES_HELD_KEY = "roles";
@@ -83,6 +83,11 @@ namespace Dodo.Users
 		{
 			return TokenCollection.GetNotifications(accessContext, 
 				new Passphrase(accessContext.User.AuthData.PrivateKey.GetValue(accessContext.Passphrase)), permissionLevel);
+		}
+
+		public void AddToken(IToken token, EPermissionLevel permissionLevel)
+		{
+			TokenCollection.Add(this, token, permissionLevel);
 		}
 	}
 }
