@@ -67,8 +67,8 @@ namespace RESTTests
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Login" },
 				LastRequest);
-			var response = await Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.GET);
-			Assert.IsTrue(response.IsSuccessStatusCode, response.ToString());
+			var response = await RequestJSON($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.GET);
+			Assert.AreEqual(user.Name, response.Value<string>("name"));
 		}
 
 		[TestMethod]

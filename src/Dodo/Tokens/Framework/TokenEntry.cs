@@ -20,8 +20,7 @@ namespace Dodo.Users.Tokens
 
 		[BsonIgnore]
 		public Type Type => Type.GetType(m_typeName);
-		[BsonIgnore]
-		public EPermissionLevel PermissionLevel { get; private set; }
+		public EPermissionLevel PermissionLevel { get; set; }
 		[BsonElement]
 		private string m_typeName;
 
