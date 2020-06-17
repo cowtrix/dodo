@@ -7,21 +7,19 @@ namespace Dodo
 	{
 		[JsonIgnore]
 #if DEBUG
-		public string FullURI => $"https://{Domain}:{SSLPort}";
+		public string FullURI => $"https://{Domains.First()}:{SSLPort}";
 #else
 		public string FullURI => $"https://{Domain}";
 #endif
 
-		public string Hostname;
 		public int SSLPort;
-		public string Domain;
+		public string[] Domains;
 		public bool LetsEncryptAutoSetup;
 		public int HTTPPort;
 
-		public NetworkConfig(string domain, string hostname, int sslPort, int httpPort, bool letsEncrypt = false)
+		public NetworkConfig(int sslPort, int httpPort, bool letsEncrypt, params string[] domains)
 		{
-			Hostname = hostname;
-			Domain = domain;
+			Domains = domains;
 			SSLPort = sslPort;
 			HTTPPort = httpPort;
 			LetsEncryptAutoSetup = letsEncrypt;

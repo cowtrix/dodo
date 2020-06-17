@@ -34,7 +34,7 @@ namespace RESTTests
 			m_cookies = new CookieContainer();	
 			m_server = new TestServer(new WebHostBuilder()
 				.UseStartup<DodoStartup>()
-				.UseUrls($"{Dodo.DodoApp.NetConfig.Domain}:{Dodo.DodoApp.NetConfig.SSLPort}"));
+				.UseUrls(Dodo.DodoApp.NetConfig.Domains.Select(d => $"{d}:{Dodo.DodoApp.NetConfig.SSLPort}").ToArray()));
 
 			m_client = m_server.CreateClient();
 			m_client.BaseAddress = new Uri(m_client.BaseAddress.ToString().Replace("http", "https"));
