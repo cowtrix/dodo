@@ -9,7 +9,7 @@ namespace Dodo
 #if DEBUG
 		public string FullURI => $"https://{Domains.First()}:{SSLPort}";
 #else
-		public string FullURI => $"https://{Domain}";
+		public string FullURI => $"https://{Domains.First()}";
 #endif
 
 		public int SSLPort;
