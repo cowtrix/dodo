@@ -28,7 +28,8 @@ namespace DodoServer
 			var config = Dodo.DodoApp.NetConfig;
 			foreach (var d in config.Domains)
 			{
-				yield return d;
+				yield return $"https://{d}:{config.SSLPort}";
+				yield return $"http://{d}:{config.HTTPPort}";
 			}
 		}
 
