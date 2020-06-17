@@ -3,10 +3,12 @@ using Dodo.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 
 namespace DodoServer
 {
@@ -72,6 +74,7 @@ namespace DodoServer
 			app.UseStaticFiles();
 			app.UseRouting();
 			app.UseHttpsRedirection();
+			app.UseRewriter(GetRewriteOptions());
 
 			// CORS must be called after UseRouting and before UseEndpoints to function correctly
 			// The `Access-Control-Allow-Origin` header will not be added to normal GET responses
@@ -97,6 +100,13 @@ namespace DodoServer
 			{
 				spa.Options.SourcePath = DodoServer.ReactPath;
 			});
+		}
+
+		private RewriteOptions GetRewriteOptions()
+		{
+			var opt = new RewriteOptions();
+			opt.AddRedirectToWwwPermanent();
+			return opt;
 		}
 	}
 }
