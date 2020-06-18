@@ -26,30 +26,30 @@
 						<h5 class="card-title">Location</h5>
 							<address>
 								<strong>Address</strong>
-								@if (!@Model.Location.LocationData.IsEmpty) {
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Address)) {
-										<br>@Model.Location.LocationData.Address
+								@if (@Model.Location.LocationData != null && !@Model.Location.LocationData.IsEmpty) {
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Address)) {
+										<br>@Model.Location.LocationData?.Address
 									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Neighborhood)) {
-										<br>@Model.Location.LocationData.Neighborhood
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Neighborhood)) {
+										<br>@Model.Location.LocationData?.Neighborhood
 									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Locality)) {
-										<br>@Model.Location.LocationData.Locality
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Locality)) {
+										<br>@Model.Location.LocationData?.Locality
 									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Place)) {
-										<br>@Model.Location.LocationData.Place
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Place)) {
+										<br>@Model.Location.LocationData?.Place
 									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData.District)) {
-										<br>@Model.Location.LocationData.District
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.District)) {
+										<br>@Model.Location.LocationData?.District
 									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Postcode)) {
-										<br>@Model.Location.LocationData.Postcode
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Postcode)) {
+										<br>@Model.Location.LocationData?.Postcode
 									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Region)) {
-										<br>@Model.Location.LocationData.Region
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Region)) {
+										<br>@Model.Location.LocationData?.Region
 									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData.Country)) {
-										<br>@Model.Location.LocationData.Country
+									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Country)) {
+										<br>@Model.Location.LocationData?.Country
 									}
 								} else {  @Html.Raw("<br>"); @Html.Label("None"); }
 							</address>

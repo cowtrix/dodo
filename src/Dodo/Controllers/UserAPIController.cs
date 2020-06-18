@@ -58,5 +58,15 @@ namespace Dodo.Users
 		{
 			return (await UserService.Register(schema, token)).ActionResult;
 		}
+
+		[HttpGet("notifications")]
+		public virtual async Task<IActionResult> GetNotifications([FromQuery]int page = 1)
+		{
+			if(Context.User == null)
+			{
+				return Forbid();
+			}
+			return (await PublicService.GetNotifications(Context.User.Guid.ToString(), page)).ActionResult;
+		}
 	}
 }

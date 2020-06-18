@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Dodo.SharedTest;
 using Dodo.Users.Tokens;
 using DodoTest.Framework.Postman;
+using System.Linq;
 
 namespace RESTTests
 {
@@ -69,6 +70,22 @@ namespace RESTTests
 				LastRequest);
 			var response = await RequestJSON($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(user.Name, response.Value<string>("name"));
+			Postman.Update(
+				new PostmanEntryAddress { Category = UserCat, Request = "Login" },
+				LastRequest);
+		}
+
+		[TestMethod]
+		public async Task CanGetNotifications()
+		{
+			var user = GetRandomUser(out var password, out _);
+			await Login(user.AuthData.Username, password);
+			var request = await RequestJSON<JObject>($"{UserService.RootURL}/notifications", EHTTPRequestType.GET);
+			var notifications = request.Value<JArray>("notifications").Values<JToken>().Select(r => r.ToObject<Notification>());
+			Assert.IsTrue(notifications.Any());
+
+			Postman.Update(
+				new PostmanEntryAddress { Category = UserCat, Request = $"Get Notifications" }, LastRequest);
 		}
 
 		[TestMethod]

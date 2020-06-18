@@ -47,6 +47,19 @@ namespace Resources.Location
 			}
 			var json = JsonConvert.DeserializeObject<JObject>(body);
 			var features = json.Value<JArray>("features");
+
+			var tileQuery = await m_httpClient.GetAsync(
+				"v4/examples.4ze9z6tv/tilequery/" +
+				$"{location.Longitude},{location.Latitude}.json" +
+				$"?access_token={ApiKey}");
+			body = await tileQuery.Content.ReadAsStringAsync();
+			if (!tileQuery.IsSuccessStatusCode)
+			{
+				Logger.Error($"{nameof(MapBoxGeocodingService)}: {tileQuery.StatusCode}\n{body}");
+				return null;
+			}
+			json = JsonConvert.DeserializeObject<JObject>(body);
+			var timezone = json.Value<JArray>("features").First["properties"].Value<string>("TZID");
 			return new LocationData()
 			{
 				Country = GetFromFeatures(features, "country"),
@@ -57,6 +70,7 @@ namespace Resources.Location
 				Locality = GetFromFeatures(features, "locality"),
 				Neighborhood = GetFromFeatures(features, "neighborhood"),
 				Address = GetFromFeatures(features, "address"),
+				TimezoneID = timezone
 			};
 		}
 

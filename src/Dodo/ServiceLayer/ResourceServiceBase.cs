@@ -12,8 +12,8 @@ public class ResourceServiceBase<T, TSchema>
 	protected HttpContext HttpContext { get; private set; }
 	public AuthorizationService<T, TSchema> AuthService { get; private set; }
 
-	protected virtual IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
-	protected virtual IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
+	public virtual IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
+	public virtual IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
 	public ResourceServiceBase(AccessContext context, HttpContext httpContext, AuthorizationService<T, TSchema> authService)
 	{
 		Context = context;

@@ -22,6 +22,8 @@ namespace Resources.Location
 		public string Neighborhood { get; set; }
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public string Address { get; set; }
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public string TimezoneID { get; set; }
 
 		[BsonIgnore]
 		[JsonIgnore]

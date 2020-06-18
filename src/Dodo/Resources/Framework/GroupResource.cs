@@ -146,13 +146,13 @@ namespace Dodo
 
 		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, Name, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", true),
+			AddToken(new SimpleNotificationToken(null, Name, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", false),
 				EPermissionLevel.PUBLIC);
 		}
 
 		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, Name, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", true), 
+			AddToken(new SimpleNotificationToken(null, Name, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", false), 
 				EPermissionLevel.PUBLIC);
 			return true;
 		}

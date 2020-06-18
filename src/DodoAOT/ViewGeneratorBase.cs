@@ -8,6 +8,9 @@ using Common;
 using Resources.Location;
 using Resources.Security;
 using Dodo.Users;
+using System.IO;
+using System.Text;
+using Dodo.Users.Tokens;
 
 namespace DodoAOT
 {
@@ -22,6 +25,43 @@ namespace DodoAOT
 			{ typeof(IResourceReference), RefView },
 			//{ typeof(IEnumerable<IResourceReference>), for },
 		};
+
+		protected static string GetNotificationEditor(Type resourceType)
+		{
+			if (!typeof(INotificationResource).IsAssignableFrom(resourceType))
+			{
+				return "";
+			}
+			var template = File.ReadAllText("Notifications.template");
+			var sb = new StringBuilder();
+			foreach (var l in BuildNotificationView(resourceType)) sb.AppendLine(l);
+			template = template.Replace("{BODY}", sb.ToString());
+			return template;
+		}
+
+		private static IEnumerable<string> BuildNotificationView(Type resourceType)
+		{
+			var indent = 3;
+			yield return Indent(indent) + "<div class=\"card\" style=\"width:100%;\">";
+			yield return Indent(indent + 1) + "<div class=\"card-body\">";
+			yield return Indent(indent + 2) + $"@notification.Message";
+			yield return Indent(indent + 1) + "</div>";
+			yield return Indent(indent) + "</div>";
+		}
+
+		protected static IEnumerable<string> BuildScripts()
+		{
+			string scriptPath = Path.GetFullPath("Scripts");
+			if(!Directory.Exists(scriptPath))
+			{
+				throw new DirectoryNotFoundException(scriptPath);
+			}
+			var scripts = Directory.GetFiles(scriptPath);
+			foreach(var f in scripts)
+			{
+				yield return File.ReadAllText(f);
+			}
+		}
 
 		private static IEnumerable<string> RefView(string prefix, MemberInfo member, int indentLevel)
 		{
@@ -60,15 +100,15 @@ namespace DodoAOT
 			var name = member.Name;
 			IEnumerable<string> labelIfNotNull(string fieldName, int indent)
 			{
-				yield return Indent(indent) + $"@if (!string.IsNullOrEmpty(Model.{prefix}{name}.{fieldName})) {{";
-				yield return Indent(indent + 1) + $"<br>@Model.{prefix}{name}.{fieldName}";
+				yield return Indent(indent) + $"@if (!string.IsNullOrEmpty(Model.{prefix}{name}?.{fieldName})) {{";
+				yield return Indent(indent + 1) + $"<br>@Model.{prefix}{name}?.{fieldName}";
 				yield return Indent(indent) + "}";
 			}
 			yield return Indent(indentLevel) + $"<address>";
 			yield return Indent(indentLevel + 1) + $"<strong>Address</strong>";
 
 			//early return
-			yield return Indent(indentLevel + 1) + $"@if (!@Model.{prefix}{name}.IsEmpty) {{";
+			yield return Indent(indentLevel + 1) + $"@if (@Model.{prefix}{name} != null && !@Model.{prefix}{name}.IsEmpty) {{";
 
 			foreach (var l in labelIfNotNull(nameof(LocationData.Address), indentLevel + 2)) yield return l;
 			foreach (var l in labelIfNotNull(nameof(LocationData.Neighborhood), indentLevel + 2)) yield return l;

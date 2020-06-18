@@ -61,6 +61,7 @@ namespace Dodo.Controllers.Edit
 				}
 				owned.Parent = rsc.Guid;
 				ViewData["Parent"] = rsc.Guid;
+				ViewData["Context"] = Context;
 			}
 			return View(schema);
 		}
@@ -105,12 +106,25 @@ namespace Dodo.Controllers.Edit
 				return Forbid();
 			}
 			var result = await CrudService.Get(id);
+			if (!result.IsSuccess)
+			{
+				return result.ActionResult;
+			}
+			var actionResult = result as ResourceActionRequest;
+			var rsc = actionResult.Result as T;
+			result = CrudService.AuthService.IsAuthorised(Context, rsc, EHTTPRequestType.PATCH);
 			if(!result.IsSuccess)
 			{
 				return result.ActionResult;
 			}
-			var getResult = result as ResourceActionRequest;
-			var model = ViewModel(getResult.Result as T);
+			actionResult = result as ResourceActionRequest;
+			ViewData["Permission"] = actionResult.PermissionLevel;
+			ViewData["Context"] = Context;
+			if (rsc is INotificationResource notificationResource)
+			{
+				ViewData["Notifications"] = notificationResource.GetNotifications(Context, actionResult.PermissionLevel);
+			}
+			var model = ViewModel(rsc);
 			return View(model);
 		}
 
@@ -161,6 +175,7 @@ namespace Dodo.Controllers.Edit
 			}
 			var getResult = result as ResourceActionRequest;
 			var model = ViewModel(getResult.Result as T);
+			ViewData["Context"] = Context;
 			return View(model);
 		}
 
