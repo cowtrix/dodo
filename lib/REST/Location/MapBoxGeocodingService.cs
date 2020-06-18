@@ -59,7 +59,7 @@ namespace Resources.Location
 				return null;
 			}
 			json = JsonConvert.DeserializeObject<JObject>(body);
-			var timezone = json.Value<JArray>("features").First["properties"].Value<string>("TZID");
+			var timezone = json.Value<JArray>("features").First?["properties"].Value<string>("TZID");
 			return new LocationData()
 			{
 				Country = GetFromFeatures(features, "country"),
