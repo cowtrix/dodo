@@ -61,7 +61,6 @@ namespace Dodo.Controllers.Edit
 				}
 				owned.Parent = rsc.Guid;
 				ViewData["Parent"] = rsc.Guid;
-				ViewData["Context"] = Context;
 			}
 			return View(schema);
 		}
@@ -119,7 +118,6 @@ namespace Dodo.Controllers.Edit
 			}
 			actionResult = result as ResourceActionRequest;
 			ViewData["Permission"] = actionResult.PermissionLevel;
-			ViewData["Context"] = Context;
 			if (rsc is INotificationResource notificationResource)
 			{
 				ViewData["Notifications"] = notificationResource.GetNotifications(Context, actionResult.PermissionLevel);
@@ -175,7 +173,6 @@ namespace Dodo.Controllers.Edit
 			}
 			var getResult = result as ResourceActionRequest;
 			var model = ViewModel(getResult.Result as T);
-			ViewData["Context"] = Context;
 			return View(model);
 		}
 

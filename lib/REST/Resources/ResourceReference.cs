@@ -2,6 +2,7 @@ using Common;
 using Common.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using Resources.Location;
 using System;
 using System.Collections.Generic;
 
@@ -19,6 +20,7 @@ namespace Resources
 
 	public class ResourceReference<T> : IResourceReference where T : class, IRESTResource
 	{
+		public string Name { get; private set; }
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		[BsonElement]
@@ -31,10 +33,7 @@ namespace Resources
 		[JsonProperty]
 		[BsonElement]
 		public string Type { get; private set; }
-		[View(EPermissionLevel.PUBLIC)]
-		[JsonProperty]
-		[BsonElement]
-		public string Name { get; private set; }
+		public GeoLocation? Location { get; set; }
 
 		public T GetValue()
 		{
@@ -51,14 +50,19 @@ namespace Resources
 			Slug = resource != null ? resource.Slug : default;
 			Type = resource?.GetType().Name.ToCamelCase();
 			Name = resource?.Name;
+			if(resource is ILocationalResource loc)
+			{
+				Location = loc.Location;
+			}
 		}
 
-		public ResourceReference(Guid guid, string slug, string type, string name)
+		public ResourceReference(Guid guid, string slug, string type, string name, GeoLocation location)
 		{
 			Guid = guid;
 			Slug = slug;
 			Type = type;
 			Name = name;
+			Location = location;
 		}
 
 		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)

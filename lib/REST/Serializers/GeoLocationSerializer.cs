@@ -22,9 +22,9 @@ namespace Resources.Serializers
 		{
 			context.Writer.WriteStartDocument();
 			context.Writer.WriteName("Latitude");
-			context.Writer.WriteDouble(value.Latitude);
+			context.Writer.WriteDouble(value != null ? value.Latitude : 0);
 			context.Writer.WriteName("Longitude");
-			context.Writer.WriteDouble(value.Longitude);
+			context.Writer.WriteDouble(value != null ? value.Longitude : 0);
 			context.Writer.WriteEndDocument();
 		}
 

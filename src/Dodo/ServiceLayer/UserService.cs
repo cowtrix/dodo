@@ -126,7 +126,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 					$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{RESET_PASSWORD}?token={resetToken.Key}");
 			}
 		}
-		return new OkRequestResult();
+		return new OkRequestResult("If an account with that email exists, you will receive a one-time link to reset your password.");
 	}
 
 	public async Task<IRequestResult> ResetPassword(string token, string password)
@@ -150,7 +150,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			UserManager.Update(user, rscLock);
 		}
 		await Logout();
-		return new OkRequestResult();
+		return new OkRequestResult("Your password has been changed.");
 	}
 
 	public async Task<IRequestResult> ChangePassword(ChangePasswordModel model)

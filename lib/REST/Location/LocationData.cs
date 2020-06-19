@@ -1,6 +1,8 @@
+using Common;
 using Common.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using System;
 
 namespace Resources.Location
 {
@@ -39,6 +41,28 @@ namespace Resources.Location
 					Postcode == null &&
 					Region == null &&
 					Country == null;
+			}
+		}
+
+		[BsonIgnore]
+		[JsonIgnore]
+		public TimeZoneInfo Timezone
+		{
+			get
+			{
+				try
+				{
+					if(string.IsNullOrEmpty(TimezoneID))
+					{
+						return TimeZoneInfo.Utc;
+					}
+					return TimeZoneInfo.FindSystemTimeZoneById(TimezoneID);
+				}
+				catch(Exception e)
+				{
+					Logger.Exception(e);
+					return TimeZoneInfo.Utc;
+				}
 			}
 		}
 

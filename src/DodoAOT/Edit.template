@@ -5,6 +5,7 @@
 	ViewData["Title"] = "Edit {NAME}";
 	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
+	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 }
 
 {SCRIPTS}

@@ -7,7 +7,7 @@
 				<div class="card" style="width:100%;">
 					<div class="card-body">
 						<p>	@notification.Message </p>
-						<p> @notification.Timestamp.ToUniversalTime().ToString("u").Replace(' ','T') </p>
+						<p> TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone) </p>
 						@if(notification.CanDelete)
 						{
 							<a href="#" class="btn btn-primary">Delete</a>

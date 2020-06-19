@@ -72,31 +72,6 @@ namespace Resources.Location
 			return true;
 		}
 
-		public override bool Equals(object obj)
-		{
-			return obj is GeoLocation location &&
-				   Latitude == location.Latitude &&
-				   Longitude == location.Longitude;
-		}
-
-		public override int GetHashCode()
-		{
-			var hashCode = -1416534245;
-			hashCode = hashCode * -1521134295 + Latitude.GetHashCode();
-			hashCode = hashCode * -1521134295 + Longitude.GetHashCode();
-			return hashCode;
-		}
-
-		public static bool operator ==(GeoLocation left, GeoLocation right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(GeoLocation left, GeoLocation right)
-		{
-			return !(left == right);
-		}
-
 		public GeoLocation Offset(double latitude, double longitude)
 		{
 			return new GeoLocation(Latitude + latitude, Longitude + longitude);
@@ -111,6 +86,28 @@ namespace Resources.Location
 		{
 			error = null;
 			return true;
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is GeoLocation location &&
+				   Latitude == location.Latitude &&
+				   Longitude == location.Longitude;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(Latitude, Longitude);
+		}
+
+		public static bool operator ==(GeoLocation left, GeoLocation right)
+		{
+			return EqualityComparer<GeoLocation>.Default.Equals(left, right);
+		}
+
+		public static bool operator !=(GeoLocation left, GeoLocation right)
+		{
+			return !(left == right);
 		}
 	}
 }

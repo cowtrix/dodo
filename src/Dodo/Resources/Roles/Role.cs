@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Http;
 using Resources;
 using Resources.Serializers;
 using System.Collections.Generic;
+using Resources.Location;
 
 namespace Dodo.Roles
 {
 	[SearchPriority(4)]
-	public class Role : DodoResource, IOwnedResource, IPublicResource
+	public class Role : DodoResource, IOwnedResource, IPublicResource, ILocationalResource
 	{
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public ResourceReference<GroupResource> Parent { get; set; }
@@ -22,6 +23,8 @@ namespace Dodo.Roles
 		public string AdminDescription { get; set; }
 		[View(EPermissionLevel.ADMIN)]
 		public bool IsPublished { get; set; }
+
+		public GeoLocation Location => Parent.Location;
 
 		[View(EPermissionLevel.USER)]
 		public UserCollection RoleHolders;

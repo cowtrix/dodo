@@ -74,10 +74,7 @@ namespace Dodo.LocationResources
 		typeof(Site)
 		)]
 	public abstract class LocationResourceBase : DodoResource,
-		ILocationalResource,
-		IOwnedResource,
-		IVideoResource,
-		IPublicResource
+		ILocationalResource, IOwnedResource, IVideoResource, IPublicResource
 	{
 		[View(EPermissionLevel.USER)]
 		[Name("Arrest Risk")]

@@ -5,6 +5,7 @@ using Common.Extensions;
 using Common;
 using System;
 using System.Collections.Generic;
+using Resources.Location;
 
 namespace Dodo
 {
@@ -51,6 +52,7 @@ namespace Dodo
 		}
 
 		public string Creator { get; private set; }
+
 		public bool IsCreator(AccessContext context)
 		{
 			if(context.User == null)

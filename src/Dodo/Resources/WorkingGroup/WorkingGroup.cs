@@ -12,6 +12,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
+using Resources.Location;
 
 namespace Dodo.WorkingGroups
 {
@@ -22,7 +23,7 @@ namespace Dodo.WorkingGroups
 	/// </summary>
 	[Name("Working Group")]
 	[SearchPriority(3)]
-	public class WorkingGroup : GroupResource, IOwnedResource
+	public class WorkingGroup : GroupResource, IOwnedResource, ILocationalResource
 	{
 		public WorkingGroup() : base() { }
 
@@ -64,6 +65,8 @@ namespace Dodo.WorkingGroups
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public ResourceReference<GroupResource> Parent { get; private set; }
+
+		public GeoLocation Location => Parent.Location;
 
 		public override bool CanContain(Type type)
 		{

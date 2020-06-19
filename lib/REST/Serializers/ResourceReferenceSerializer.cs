@@ -2,6 +2,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using Resources.Location;
 using System;
 
 namespace Resources.Serializers
@@ -21,8 +22,17 @@ namespace Resources.Serializers
 			string type = context.Reader.ReadString();
 			context.Reader.ReadName();
 			string name = context.Reader.ReadString();
+			context.Reader.ReadName();
+			var latitude = context.Reader.ReadDouble();
+			context.Reader.ReadName();
+			var longitude = context.Reader.ReadDouble();
 			context.Reader.ReadEndDocument();
-			return new ResourceReference<T>(guid, slug, type, name);
+			GeoLocation loc = null;
+			if(latitude != 0 && latitude != 0)
+			{
+				loc = new GeoLocation(latitude, longitude);
+			}
+			return new ResourceReference<T>(guid, slug, type, name, loc);
 		}
 
 		public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, ResourceReference<T> value)
@@ -36,6 +46,10 @@ namespace Resources.Serializers
 			context.Writer.WriteString(value.Type ?? string.Empty);
 			context.Writer.WriteName(nameof(value.Name));
 			context.Writer.WriteString(value.Name ?? string.Empty);
+			context.Writer.WriteName(nameof(value.Location.Latitude));
+			context.Writer.WriteDouble(value.Location != null ? value.Location.Latitude : 0);
+			context.Writer.WriteName(nameof(value.Location.Longitude));
+			context.Writer.WriteDouble(value.Location != null ? value.Location.Longitude : 0);
 			context.Writer.WriteEndDocument();
 		}
 

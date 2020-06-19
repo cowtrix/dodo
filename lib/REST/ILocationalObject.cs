@@ -2,7 +2,7 @@ using Common;
 using Resources;
 using Resources.Location;
 
-namespace Dodo
+namespace Resources
 {
 	public interface ILocationalResource : IRESTResource
 	{
