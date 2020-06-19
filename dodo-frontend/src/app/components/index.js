@@ -1,6 +1,7 @@
 import * as footer from "./footer/title"
 import * as events from "./resources"
 import * as tiles from "./tiles"
+import * as forms from './forms'
 
 export { SubHeader } from "./sub-header"
 export { Icon } from "./icon"
@@ -22,4 +23,4 @@ export { List, ExpandableList } from './list'
 export { CenterMap } from './center-map'
 export { Video } from './video'
 
-export { footer, events, tiles }
+export { footer, events, tiles, forms }
