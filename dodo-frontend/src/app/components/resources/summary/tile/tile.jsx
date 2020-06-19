@@ -7,8 +7,6 @@ import styles from './tile.module.scss'
 
 export const Tile = ({ type, resourceTypes = [] }) => {
 
-	console.log(type, resourceTypes)
-
 	const eventColor = resourceTypes.find(resType => type === resType.value).displayColor
 
 	const tileStyles = {

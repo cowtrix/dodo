@@ -1,56 +1,52 @@
-import React, { useState } from "react"
-import styles from "./login.module.scss"
+import React, { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { postLogin } from "app/domain/services/login"
-import { useHistory } from "react-router-dom"
+import { useHistory } from 'react-router-dom'
 
-export const Login = () => {
+
+import { Input, Container, Submit, Error } from 'app/components/forms'
+
+const LOGIN = 'Login'
+
+export const Login = ({ login, isLoggedIn, error }) => {
+
+	const history = useHistory()
+
+	if (isLoggedIn) {
+		history.push('/')
+	}
+
 	const { t } = useTranslation("ui")
 
 	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
 
-	const history = useHistory()
-
 	return (
-		<div className={styles.loginFormWrapper}>
-			<div className={styles.loginForm}>
-				<label htmlFor="username">Username</label>
-				<input
-					type="text"
-					id="username"
-					name="username"
-					value={username}
-					onChange={e => setUsername(e.target.value)}
-				></input>
-				<label htmlFor="password">Password</label>
-				<input
-					type="password"
-					id="password"
-					name="password"
-					value={password}
-					onChange={e => setPassword(e.target.value)}
-				></input>
-				<input
-					type="submit"
-					value={t("header_sign_in_text")}
-					onClick={() => {
-						postLogin(username, password)
-							.then(response => {
-								if (!response.ok) {
-									throw new Error(
-										"Sign in response was not ok"
-									)
-								}
-								console.log("Sign in success:", response)
-								history.push("/")
-							})
-							.catch(error => {
-								console.error("Sign in failure:", error)
-							})
-					}}
-				/>
-			</div>
-		</div>
+			<Container
+				title={LOGIN}
+				content={
+					<Fragment>
+						<Input
+							name="Username"
+							id="username"
+							type="text"
+							value={username}
+							setValue={setUsername}
+						/>
+						<Input
+							name="Password"
+							id="password"
+							type="password"
+							value={password}
+							setValue={setPassword}
+						/>
+						<Error error={error}/>
+						<Submit
+							value={t("header_sign_in_text")}
+							submit={login(username, password)}
+						/>
+					</Fragment>
+				}
+			/>
 	)
 }

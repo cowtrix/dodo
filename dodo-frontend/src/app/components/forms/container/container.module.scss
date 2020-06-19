@@ -1,0 +1,27 @@
+@import "~app/styles/styles";
+
+.containerWrapper {
+	display: flex;
+	justify-content: center;
+}
+
+.container {
+	display: flex;
+	max-width: $application-max-width;
+	flex-grow: 1;
+	flex-direction: column;
+	padding: spacing(6) spacing(3) spacing(3) spacing(3);
+
+	@media (min-width: $responsive-breakpoint) {
+		width: 500px;
+		flex-grow: initial;
+		margin-top: spacing(10);
+		box-shadow: $standard-box-shadow;
+		border-radius: 2px;
+		padding: spacing(12) spacing(6) spacing(6) spacing(6);
+	}
+}
+
+.title {
+		margin-bottom: spacing(6);
+}

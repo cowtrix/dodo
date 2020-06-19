@@ -5,7 +5,7 @@ import styles from "./title.module.scss"
 export const Title = ({ title, parent }) =>
 	<div className={styles.titleContainer}>
 		<h2 className={styles.title}>{title}</h2>
-		<h4 className={styles.location}>{parent}</h4>
+		{parent ? <h4 className={styles.location}>{parent.name}</h4> : null}
 	</div>
 
 Title.propTypes = {

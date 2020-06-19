@@ -1,15 +1,9 @@
 @import "~app/styles/styles";
 
-.loginFormWrapper {
+.loginForm {
 	display: flex;
-	justify-content: center;
 
-	.loginForm {
-		display: flex;
-		align-items: center;
-		justify-content: space-around;
-		max-width: $application-max-width;
-		flex-grow: 1;
-		flex-direction: column;
-	}
+	max-width: $application-max-width;
+	flex-grow: 1;
+	flex-direction: column;
 }
