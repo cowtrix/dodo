@@ -22,7 +22,7 @@ if($p)
 }
 
 # publish
-dotnet publish --force src\DodoServer\DodoServer.csproj -o ..\build -c Debug
+dotnet publish --force src\DodoServer\DodoServer.csproj -o ..\build -c Release
 
 # run
 cd ..\build\
