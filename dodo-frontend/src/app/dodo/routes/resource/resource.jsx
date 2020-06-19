@@ -8,7 +8,7 @@ export const Resource = ({ match, getResource, resource, isLoading, centerMap, s
 	const { eventId, eventType } = match.params
 
 	useEffect(() => {
-		getResource(eventType, eventId)
+		getResource(eventType, eventId, setCenterMap)
 	}, [match])
 
 

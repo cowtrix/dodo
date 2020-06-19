@@ -4,8 +4,8 @@ import { API_URL } from "../urls"
 import { actionTypes as searchActionTypes } from '../search'
 
 
-export const resourceGet = (dispatch, eventType, event) =>
-	apiAction(dispatch, RESOURCE_GET, API_URL + eventType + "/" + event)
+export const resourceGet = (dispatch, eventType, event, cb) =>
+	apiAction(dispatch, RESOURCE_GET, API_URL + eventType + "/" + event, cb)
 
 const setSearchEvents =  dispatch => async payload => {
 	dispatch({
