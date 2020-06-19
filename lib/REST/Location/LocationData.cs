@@ -25,7 +25,7 @@ namespace Resources.Location
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public string Address { get; set; }
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public string TimezoneID { get; set; }
+		public TimeZoneInfo Timezone { get; set; }
 
 		[BsonIgnore]
 		[JsonIgnore]
@@ -41,28 +41,6 @@ namespace Resources.Location
 					Postcode == null &&
 					Region == null &&
 					Country == null;
-			}
-		}
-
-		[BsonIgnore]
-		[JsonIgnore]
-		public TimeZoneInfo Timezone
-		{
-			get
-			{
-				try
-				{
-					if(string.IsNullOrEmpty(TimezoneID))
-					{
-						return TimeZoneInfo.Utc;
-					}
-					return TimeZoneInfo.FindSystemTimeZoneById(TimezoneID);
-				}
-				catch(Exception e)
-				{
-					Logger.Exception(e);
-					return TimeZoneInfo.Utc;
-				}
 			}
 		}
 

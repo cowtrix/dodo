@@ -1,12 +1,16 @@
 using Common;
 using Common.Config;
+using GeoTimeZone;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using TimeZoneConverter;
 
 namespace Resources.Location
 {
@@ -29,14 +33,14 @@ namespace Resources.Location
 			{
 				return arr.FirstOrDefault(j => j.Value<JArray>("place_type").Values<string>().Contains(key))?.Value<string>("text");
 			}
-			if(!Enabled)
+			if (!Enabled)
 			{
 				Logger.Warning($"No MapBox API Key is set.");
 				return null;
 			}
 			Logger.Debug($"Executing MapBox API query for {location}");
 			var response = await m_httpClient.GetAsync(
-				"/geocoding/v5/mapbox.places/" +	// TODO: change to permanent?
+				"/geocoding/v5/mapbox.places/" +    // TODO: change to permanent?
 				$"{location.Longitude},{location.Latitude}.json" +
 				$"?access_token={ApiKey}");
 			var body = await response.Content.ReadAsStringAsync();
@@ -47,19 +51,7 @@ namespace Resources.Location
 			}
 			var json = JsonConvert.DeserializeObject<JObject>(body);
 			var features = json.Value<JArray>("features");
-
-			var tileQuery = await m_httpClient.GetAsync(
-				"v4/examples.4ze9z6tv/tilequery/" +
-				$"{location.Longitude},{location.Latitude}.json" +
-				$"?access_token={ApiKey}");
-			body = await tileQuery.Content.ReadAsStringAsync();
-			if (!tileQuery.IsSuccessStatusCode)
-			{
-				Logger.Error($"{nameof(MapBoxGeocodingService)}: {tileQuery.StatusCode}\n{body}");
-				return null;
-			}
-			json = JsonConvert.DeserializeObject<JObject>(body);
-			var timezone = json.Value<JArray>("features").First?["properties"].Value<string>("TZID");
+			var timezone = TimeZoneLookup.GetTimeZone(location.Latitude, location.Longitude);
 			return new LocationData()
 			{
 				Country = GetFromFeatures(features, "country"),
@@ -70,13 +62,13 @@ namespace Resources.Location
 				Locality = GetFromFeatures(features, "locality"),
 				Neighborhood = GetFromFeatures(features, "neighborhood"),
 				Address = GetFromFeatures(features, "address"),
-				TimezoneID = timezone
+				Timezone = TZConvert.GetTimeZoneInfo(timezone.Result),
 			};
 		}
 
 		public async Task<IEnumerable<GeoLocation>> GetLocations(string searchString)
 		{
-			if(!Enabled)
+			if (!Enabled)
 			{
 				Logger.Warning($"No MapBox API Key is set.");
 				return null;
@@ -126,12 +118,12 @@ namespace Resources.Location
 			}
 			var json = JsonConvert.DeserializeObject<JObject>(body);
 			List<GeoLocation> results = new List<GeoLocation>();
-			foreach(var result in json.Value<JArray>("features").Values<JObject>())
+			foreach (var result in json.Value<JArray>("features").Values<JObject>())
 			{
 				var center = result.Value<JArray>("center");
 				var loc = new GeoLocation(center[1].Value<double>(), center[0].Value<double>());
 				var data = new LocationData();
-				foreach(var context in result.Value<JArray>("context"))
+				foreach (var context in result.Value<JArray>("context"))
 				{
 					var contextType = context["id"].Value<string>();
 					contextType = contextType.Substring(0, contextType.IndexOf('.'));
