@@ -13,5 +13,5 @@ export const postLogin = async (username, password) =>
 			Accept: "application/json"
 		},
 		credentials: "include"
-	})
+	}).then(resp => resp.json())
 // TODO: login doesn't return JSON (just a HTTP status code) so need to refactor if to use api service
