@@ -27,7 +27,7 @@ export const Summary = (
 		>
 			<div className={styles.summaryLeft}>
 				<Tile type={metadata.type} resourceTypes={resourceTypes}/>
-				<Title title={name} parent={parent.name} />
+				<Title title={name} parent={parent} />
 				<Description description={publicDescription}/>
 			</div>
 			<div className={styles.summaryRight}>

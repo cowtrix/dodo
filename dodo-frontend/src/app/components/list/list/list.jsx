@@ -9,10 +9,10 @@ import styles from "./list.module.scss"
 const SEE_MORE = "See All..."
 const SEE_LESS = "See Less..."
 
-export const List = ({ resources = [], resourceTypes, listExpanded, setListExpanded }) =>
+export const List = ({ resources = [], resourceTypes, listExpanded, setListExpanded, isExpandableList }) =>
 	<ul className={styles.eventList}>
 		{resources.map(event => <Summary {...event} key={event.guid} resourceTypes={resourceTypes}/>)}
-		{setListExpanded ?
+		{isExpandableList ?
 			<li>
 				<Button
 					onClick={() => setListExpanded(!listExpanded)}
@@ -28,5 +28,8 @@ export const List = ({ resources = [], resourceTypes, listExpanded, setListExpan
 
 List.propTypes = {
 	resources: PropTypes.array,
-	resourceTypes: PropTypes.array
+	resourceTypes: PropTypes.array,
+	listExpanded: PropTypes.bool,
+	isExpandableList: PropTypes.bool,
+	setListExpanded: PropTypes.func,
 }

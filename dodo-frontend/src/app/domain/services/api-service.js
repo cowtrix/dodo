@@ -12,6 +12,6 @@ export const api = async(url, method = "get", body, abortSignal) => {
 			Accept: "application/json"
 		},
 		signal: abortSignal ? abortController.signal : null
-	})
+	}).then(resp => resp.json())
 }
 

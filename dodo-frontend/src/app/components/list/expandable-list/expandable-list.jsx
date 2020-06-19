@@ -16,6 +16,7 @@ export const ExpandableList = ({ resources = [], title, resourceTypes }) => {
 						resourceTypes={resourceTypes}
 						setListExpanded={setListExpanded}
 						listExpanded={listExpanded}
+						isExpandableList={setListExpanded && resources.length > 2}
 					/>
 				</div>
 			</Fragment>

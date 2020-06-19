@@ -10,7 +10,7 @@ const parentLink = (parent) =>
 	'/' + parent.type + '/' + parent.guid
 
 export const ParentLink = ({ parent }) =>
-	parent.name !== "" ?
+	parent ?
 		<Link className={styles.parentLink} variant="link" to={parentLink(parent)}>
 			<h3 className={styles.intro}>
 				{PART_OF}
