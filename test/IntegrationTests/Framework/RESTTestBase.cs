@@ -20,7 +20,9 @@ namespace RESTTests
 		protected virtual IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
 		protected abstract string PostmanCategory { get; }
 
+		#region Get
 		[TestMethod]
+		[TestCategory("Get")]
 		public async virtual Task CanGetWithGuidAnonymously()
 		{
 			GetRandomUser(out _, out var context);
@@ -35,6 +37,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Get")]
 		public async virtual Task CanGetWithSlugAnonymously()
 		{
 			GetRandomUser(out _, out var context);
@@ -45,6 +48,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Get")]
 		public async virtual Task CanGetWithGuidAsOwner()
 		{
 			var user = GetRandomUser(out var password, out var context);
@@ -60,6 +64,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Get")]
 		public async virtual Task CanGetWithSlugAsOwner()
 		{
 			var user = GetRandomUser(out var password, out var context);
@@ -71,6 +76,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Get")]
 		public async virtual Task CanGetWithGuidAsUser()
 		{
 			var user = GetRandomUser(out var password, out var context);
@@ -86,6 +92,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Get")]
 		public async virtual Task CanGetWithSlugAsUser()
 		{
 			var user = GetRandomUser(out var password, out var context);
@@ -96,6 +103,8 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Negative")]
+		[TestCategory("Get")]
 		public async virtual Task BadGetWithGuidReturns404()
 		{
 			await AssertX.ThrowsAsync<Exception>(Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{Guid.NewGuid()}", EHTTPRequestType.GET),
@@ -103,12 +112,16 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Negative")]
+		[TestCategory("Get")]
 		public async virtual Task BadGetWithSlugReturns404()
 		{
 			await AssertX.ThrowsAsync<Exception>(Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/thisisabadslug", EHTTPRequestType.GET),
 				e => e.Message.Contains("Not Found"));
 		}
+		#endregion
 
+		#region Creation
 		protected virtual void VerifyCreatedObject(T rsc, JObject obj, TSchema schema)
 		{
 			Assert.AreEqual(rsc.Guid, Guid.Parse(obj.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())));
@@ -117,6 +130,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Creation")]
 		public virtual async Task CanCreate()
 		{
 			var user = GetRandomUser(out var password, out var context);
@@ -127,9 +141,12 @@ namespace RESTTests
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Create a new {PostmanTypeName}" },
 				LastRequest);
 		}
+		#endregion
 
+		#region Deletion
 		[TestMethod]
-		public virtual async Task CanDelete()
+		[TestCategory("Deletion")]
+		public virtual async Task AdminCanDelete()
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>(context);
@@ -141,6 +158,30 @@ namespace RESTTests
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Delete a {PostmanTypeName}" },
 				LastRequest);
 		}
+
+		[TestMethod]
+		[TestCategory("Deletion")]
+		[TestCategory("Negative")]
+		public virtual async Task AnonCannotDelete()
+		{
+			GetRandomUser(out var password, out var context); // we need the context to make a schema, but note we don't login here
+			var resource = CreateObject<T>();
+			await AssertX.ThrowsAsync<Exception>(Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.DELETE,
+				SchemaGenerator.GetRandomSchema<T>(context)));
+		}
+
+		[TestMethod]
+		[TestCategory("Deletion")]
+		[TestCategory("Negative")]
+		public virtual async Task UserCannotDelete()
+		{
+			var user = GetRandomUser(out var password, out var context);
+			var resource = CreateObject<T>();
+			await Login(user.AuthData.Username, password);
+			await AssertX.ThrowsAsync<Exception>(Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.DELETE,
+				SchemaGenerator.GetRandomSchema<T>(context)));
+		}
+		#endregion
 
 		protected abstract JObject GetPatchObject();
 

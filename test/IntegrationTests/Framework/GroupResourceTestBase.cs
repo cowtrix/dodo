@@ -14,11 +14,13 @@ using Dodo.Models;
 
 namespace RESTTests
 {
-	public abstract class GroupResourceTestBase<T, TSchema> : RESTTestBase<T, TSchema> 
-		where T:GroupResource
-		where TSchema:DescribedResourceSchemaBase
+	public abstract class GroupResourceTestBase<T, TSchema> : RESTTestBase<T, TSchema>
+		where T : GroupResource
+		where TSchema : DescribedResourceSchemaBase
 	{
+		#region Creation
 		[TestMethod]
+		[TestCategory("Creation")]
 		public override async Task CanCreate()
 		{
 			var user = GetRandomUser(out var password, out var context);
@@ -40,6 +42,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Creation")]
 		public async Task CreatorIsShownAsOwner()
 		{
 			var user = GetRandomUser(out var password, out var context);
@@ -49,8 +52,11 @@ namespace RESTTests
 			Assert.AreEqual(PermissionLevel.OWNER,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
 		}
+		#endregion
 
+		#region Administration
 		[TestMethod]
+		[TestCategory("Administration")]
 		public async Task CanAddAdminFromGuid()
 		{
 			// Create a new user
@@ -61,7 +67,7 @@ namespace RESTTests
 			await Login(user1.AuthData.Username, user1Password);
 
 			var user2 = GetRandomUser(out var user2Password, out var user2Context);
-			var apiReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin", 
+			var apiReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin",
 				EHTTPRequestType.POST, user2.Guid);
 
 			var obj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
@@ -80,6 +86,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Administration")]
 		public async Task CanAddAdminFromEmail()
 		{
 			Assert.Inconclusive();
@@ -114,8 +121,11 @@ namespace RESTTests
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Add an Administrator by Email" },
 				apiReq);*/
 		}
+		#endregion
 
+		#region Joining & Leaving
 		[TestMethod]
+		[TestCategory("Joining & Leaving")]
 		public async Task CanJoin()
 		{
 			var group = CreateObject<T>();
@@ -131,6 +141,7 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		[TestCategory("Joining & Leaving")]
 		public async Task CanLeave()
 		{
 			var group = CreateObject<T>();
@@ -145,9 +156,12 @@ namespace RESTTests
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Leave a {PostmanTypeName}" },
 				leaveReq);
 		}
+		#endregion
 
+		#region Notifications
 		[TestMethod]
-		public async Task CanGetNotifications()
+		[TestCategory("Notifications")]
+		public async Task Notifications_CanGetNotifications()
 		{
 			var group = CreateObject<T>();
 			var request = await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}", EHTTPRequestType.GET);
@@ -159,7 +173,8 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async Task AdminCanPostPublicNotification()
+		[TestCategory("Notifications")]
+		public async Task Notifications_AdminCanPostPublicNotification()
 		{
 			const string Message = "This is a test notification.";
 			GetRandomUser(out var pass, out var con);
@@ -181,7 +196,8 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async Task AdminCanViewAdminNotification()
+		[TestCategory("Notifications")]
+		public async Task Notifications_AdminCanViewAdminNotification()
 		{
 			const string Message = "This is a test notification.";
 			GetRandomUser(out var pass, out var con);
@@ -200,7 +216,28 @@ namespace RESTTests
 		}
 
 		[TestMethod]
-		public async Task AnonCannotViewAdminNotification()
+		[TestCategory("Notifications")]
+		public async Task Notifications_AdminCanDeleteDifferentAdminNotification()
+		{
+			const string Message = "This is a test notification.";
+			GetRandomUser(out var pass, out var con);
+			var group = CreateObject<T>(con);
+
+			// Create the notification
+			await Login(con.User.AuthData.Username, pass);
+			await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}/new", EHTTPRequestType.POST,
+				new NotificationModel { Message = Message, PermissionLevel = EPermissionLevel.ADMIN });
+			var request = await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}", EHTTPRequestType.GET);
+			var notifications = request.Value<JArray>("notifications").Values<JToken>().Select(r => r.ToObject<Notification>());
+			Assert.IsTrue(notifications.Any());
+			var n = notifications.SingleOrDefault(n => n.Message == Message);
+			Assert.IsNotNull(n);
+			Assert.AreEqual(Message, n.Message);
+		}
+
+		[TestMethod]
+		[TestCategory("Notifications")]
+		public async Task Notifications_AnonCannotViewAdminNotification()
 		{
 			const string Message = "This is a test notification.";
 			GetRandomUser(out var pass, out var con);
@@ -217,5 +254,6 @@ namespace RESTTests
 			var n = notifications.SingleOrDefault(n => n.Message == Message);
 			Assert.IsNull(n);
 		}
+		#endregion
 	}
 }

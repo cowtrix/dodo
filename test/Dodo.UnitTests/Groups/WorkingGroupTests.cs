@@ -11,6 +11,8 @@ namespace Groups
 	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup> 
 	{
 		[TestMethod]
+		[TestCategory("Child Objects")]
+		[TestCategory("Administration")]
 		public void CanAddAndRemoveSubWorkingGroup()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
@@ -27,6 +29,8 @@ namespace Groups
 		}
 
 		[TestMethod]
+		[TestCategory("Child Objects")]
+		[TestCategory("Administration")]
 		public void CanAddAndRemoveRoles()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);

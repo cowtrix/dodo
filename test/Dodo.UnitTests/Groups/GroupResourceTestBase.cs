@@ -48,7 +48,7 @@ namespace Groups
 		}
 
 		[TestMethod]
-
+		[TestCategory("Administration")]
 		public void CanAddAdmin()
 		{
 			var creator = GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);

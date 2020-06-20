@@ -1,10 +1,11 @@
-﻿using Common.Security;
+using Common.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources.Security;
 
 namespace Security
 {
 	[TestClass]
+	[TestCategory("Security")]
 	public class MultiKey : TestDataBase
 	{
 		[TestMethod]

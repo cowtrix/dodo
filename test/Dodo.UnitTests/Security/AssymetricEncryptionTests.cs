@@ -12,6 +12,7 @@ using SharedTest;
 namespace Security
 {
 	[TestClass]
+	[TestCategory("Security")]
 	public class AsymmetricEncryptionTests : TestBase
 	{
 		[TestMethod]

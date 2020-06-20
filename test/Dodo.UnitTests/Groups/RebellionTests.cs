@@ -12,6 +12,8 @@ namespace Groups
 	public class RebellionTests : GroupResourceTestBase<Rebellion> 
 	{
 		[TestMethod]
+		[TestCategory("Child Objects")]
+		[TestCategory("Administration")]
 		public void CanAddAndRemoveSubWorkingGroup()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
@@ -24,6 +26,8 @@ namespace Groups
 		}
 
 		[TestMethod]
+		[TestCategory("Child Objects")]
+		[TestCategory("Administration")]
 		public void CanAddAndRemoveSite()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
@@ -36,6 +40,8 @@ namespace Groups
 		}
 
 		[TestMethod]
+		[TestCategory("Administration")]
+		[TestCategory("Child Objects")]
 		public void CanAddAndRemoveEvent()
 		{
 			GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
