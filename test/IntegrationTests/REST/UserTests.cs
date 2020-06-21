@@ -37,7 +37,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var lg = CreateObject<LocalGroup>(context, SchemaGenerator.GetRandomLocalGroup(context));
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			const string newName = "My New Name";
 			var patchObj = new
 			{
@@ -64,7 +64,7 @@ namespace RESTTests
 		public async Task CanLogin()
 		{
 			var user = GetRandomUser(out var password, out _);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Login" },
 				LastRequest);
@@ -79,7 +79,7 @@ namespace RESTTests
 		public async Task CanGetNotifications()
 		{
 			var user = GetRandomUser(out var password, out _);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var request = await RequestJSON<JObject>($"{UserService.RootURL}/notifications", EHTTPRequestType.GET);
 			var notifications = request.Value<JArray>("notifications").Values<JToken>().Select(r => r.ToObject<Notification>());
 			Assert.IsTrue(notifications.Any());
@@ -92,7 +92,7 @@ namespace RESTTests
 		public async Task CanLogout()
 		{
 			var user = GetRandomUser(out var password, out _);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			await Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.GET);
 			await Logout();
 			await AssertX.ThrowsAsync<Exception>(Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.GET),
@@ -106,7 +106,7 @@ namespace RESTTests
 		public async Task CanDeleteProfile()
 		{
 			var user = GetRandomUser(out var password, out _);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			await Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.DELETE);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Delete a User" },
@@ -117,7 +117,7 @@ namespace RESTTests
 		public async Task CannotLoginWithBadAuth()
 		{
 			var user = GetRandomUser(out var password, out _);
-			await AssertX.ThrowsAsync<Exception>(Login(user.AuthData.Username, "not the password"),
+			await AssertX.ThrowsAsync<Exception>(Login(user.Slug, "not the password"),
 				e => e.Message.Contains("Bad Request"));
 		}
 
@@ -132,7 +132,7 @@ namespace RESTTests
 		public async virtual Task CanGetOwnProfile()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			await RequestJSON($"{UserService.RootURL}/{user.Guid.ToString()}", EHTTPRequestType.GET);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Get a User" },
@@ -156,7 +156,7 @@ namespace RESTTests
 			request = await Request($"{UserService.RootURL}/{UserService.RESET_PASSWORD}", EHTTPRequestType.POST,
 				newPassword, new[] { ( UserService.PARAM_TOKEN, token.Key ) });
 
-			await Login(user.AuthData.Username, newPassword);
+			await Login(user.Slug, newPassword);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Redeem a Password Reset Token" },
 				request);
@@ -167,9 +167,9 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var req = await Request($"{UserService.RootURL}/{UserService.CHANGE_PASSWORD}", EHTTPRequestType.POST, new { currentpassword = password, newpassword = newPassword });
-			await Login(user.AuthData.Username, newPassword);
+			await Login(user.Slug, newPassword);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Change your password" },
 				req);
@@ -182,7 +182,7 @@ namespace RESTTests
 			var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context);
 			Assert.IsNotNull(token);
 			Assert.IsNotNull(token.Token);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var request = await Request($"{UserService.RootURL}/{UserService.VERIFY_EMAIL}", EHTTPRequestType.GET,
 				null, new[] { ("token", token.Token) });
 			Postman.Update(

@@ -29,7 +29,7 @@ namespace RESTTests
 				user.TokenCollection.Add(user, new ResourceCreationToken(typeof(T)));
 				UserManager.Update(user, rscLock);
 			}
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var response = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST, schema);
 			user = UserManager.GetSingle(u => u.Guid == user.Guid);
@@ -47,7 +47,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var group = CreateObject<T>(context);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var obj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.OWNER,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
@@ -64,7 +64,7 @@ namespace RESTTests
 			// Let them create a new group
 			var group = CreateObject<T>(user1Context);
 			Assert.IsTrue(group.IsAdmin(user1, user1Context));
-			await Login(user1.AuthData.Username, user1Password);
+			await Login(user1.Slug, user1Password);
 
 			var user2 = GetRandomUser(out var user2Password, out var user2Context);
 			var apiReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin",
@@ -75,7 +75,7 @@ namespace RESTTests
 				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() == user2.Guid.ToString()));
 			await Logout();
 
-			await Login(user2.AuthData.Username, user2Password);
+			await Login(user2.Slug, user2Password);
 			obj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.ADMIN,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
@@ -95,7 +95,7 @@ namespace RESTTests
 			// Let them create a new group
 			var group = CreateObject<T>(user1Context);
 			Assert.IsTrue(group.IsAdmin(user1, user1Context));
-			await Login(user1.AuthData.Username, user1Password);
+			await Login(user1.Slug, user1Password);
 
 			var user2Email = "myUser2@email.com";
 			var apiReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin",
@@ -112,7 +112,7 @@ namespace RESTTests
 			await Request(inviteURL, EHTTPRequestType.POST, new UserSchema("Test User 2", "testuser2", user2Password, user2Email));
 			var user2 = UserManager.GetSingle(u => u.PersonalData.Email == user2Email);
 
-			await Login(user2.AuthData.Username, user2Password);
+			await Login(user2.Slug, user2Password);
 			obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.ADMIN,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
@@ -130,7 +130,7 @@ namespace RESTTests
 		{
 			var group = CreateObject<T>();
 			var user = GetRandomUser(out var password, out var context);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var joinReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/join", EHTTPRequestType.POST);
 			var verify = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(verify[Resource.METADATA]["isMember"].Value<string>(), "true");
@@ -146,7 +146,7 @@ namespace RESTTests
 		{
 			var group = CreateObject<T>();
 			var user = GetRandomUser(out var password, out var context);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/join", EHTTPRequestType.POST);
 			var leaveReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/leave", EHTTPRequestType.POST);
 			var verify = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
@@ -181,7 +181,7 @@ namespace RESTTests
 			var group = CreateObject<T>(con);
 
 			// Create the notification
-			await Login(con.User.AuthData.Username, pass);
+			await Login(con.User.Slug, pass);
 			await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}/new", EHTTPRequestType.POST,
 				new NotificationModel { Message = Message, PermissionLevel = EPermissionLevel.PUBLIC });
 			await Logout();
@@ -204,7 +204,7 @@ namespace RESTTests
 			var group = CreateObject<T>(con);
 
 			// Create the notification
-			await Login(con.User.AuthData.Username, pass);
+			await Login(con.User.Slug, pass);
 			await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}/new", EHTTPRequestType.POST,
 				new NotificationModel { Message = Message, PermissionLevel = EPermissionLevel.ADMIN });
 			var request = await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}", EHTTPRequestType.GET);
@@ -224,7 +224,7 @@ namespace RESTTests
 			var group = CreateObject<T>(con);
 
 			// Create the notification
-			await Login(con.User.AuthData.Username, pass);
+			await Login(con.User.Slug, pass);
 			await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}/new", EHTTPRequestType.POST,
 				new NotificationModel { Message = Message, PermissionLevel = EPermissionLevel.ADMIN });
 			var request = await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}", EHTTPRequestType.GET);
@@ -244,7 +244,7 @@ namespace RESTTests
 			var group = CreateObject<T>(con);
 
 			// Create the notification
-			await Login(con.User.AuthData.Username, pass);
+			await Login(con.User.Slug, pass);
 			await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}/new", EHTTPRequestType.POST,
 				new NotificationModel { Message = Message, PermissionLevel = EPermissionLevel.ADMIN });
 			await Logout();

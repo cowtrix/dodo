@@ -17,20 +17,11 @@ namespace Dodo.Users
 		///     (password changed, login removed)
 		/// </summary>
 		public string SecurityStamp { get; set; }
-
 		public static int MaxFailedLoginAttempts => ConfigManager.GetValue($"{nameof(AuthorizationData)}_MaxLogonAttempts", 5);
 		public static TimeSpan LockoutTime => ConfigManager.GetValue($"{nameof(AuthorizationData)}_LockoutTime", TimeSpan.FromHours(1));
 		public virtual DateTime? LockoutEndDateUtc { get; set; }
 		public virtual bool LockoutEnabled { get; set; }
 		public virtual int AccessFailedCount { get; set; }
-
-		/// <summary>
-		/// The user's username
-		/// </summary>
-		[View(EPermissionLevel.USER)]
-		[Slug]
-		public string Username { get; set; }
-
 		public string PublicKey { get; set; }
 
 		/// <summary>
@@ -50,10 +41,8 @@ namespace Dodo.Users
 			SecurityStamp = "";
 		}
 
-		public AuthorizationData(string userName, string password)
+		public AuthorizationData(string password)
 		{
-			Username = userName;
-
 			var passphrase = KeyGenerator.GetUniqueKey(128);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			PrivateKey = new SymmEncryptedStore<string>(pv, new Passphrase(passphrase));

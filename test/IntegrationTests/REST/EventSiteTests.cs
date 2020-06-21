@@ -20,7 +20,7 @@ namespace RESTTests
 		public async Task CanPatchStartDate()
 		{
 			GetRandomUser(out var pass, out var context);
-			await Login(context.User.AuthData.Username, pass);
+			await Login(context.User.Slug, pass);
 			var site = CreateObject<Event>(context);
 			var date = SchemaGenerator.RandomDate;
 			await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { startDate = date });
@@ -32,7 +32,7 @@ namespace RESTTests
 		public async Task CanPatchEndDate()
 		{
 			GetRandomUser(out var pass, out var context);
-			await Login(context.User.AuthData.Username, pass);
+			await Login(context.User.Slug, pass);
 			var site = CreateObject<Event>(context);
 			var date = SchemaGenerator.RandomDate;
 			await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { endDate = date });

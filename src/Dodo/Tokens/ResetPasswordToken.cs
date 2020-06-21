@@ -31,7 +31,7 @@ namespace Dodo.Users.Tokens
 			m_notification = new Notification("Your Account", "You've requested your password to be reset. " +
 				"Check your email and click the link there. If this wasn't you, change your password immediately.");
 #if DEBUG
-			Console.WriteLine($"Reset password action added for user {targetUser.AuthData.Username}: {Key}");
+			Console.WriteLine($"Reset password action added for user {targetUser.Slug}: {Key}");
 #endif
 		}
 

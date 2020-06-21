@@ -57,7 +57,7 @@ namespace RESTTests
 			var rebellion = CreateObject<Rebellion>(context);
 			var wg = CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test WG", "test", rebellion.Guid));
 
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var patch = GetPatchObject();
 			await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{rebellion.Guid}", EHTTPRequestType.PATCH, patch);
 			var updatedObj = ResourceManager.GetSingle(r => r.Guid == rebellion.Guid);

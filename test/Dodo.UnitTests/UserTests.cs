@@ -47,7 +47,7 @@ namespace UnitTests
 		{
 			var user1 = GetRandomUser(out _, out _);
 			AssertX.Throws<Exception>(() =>
-				GenerateUser(new UserSchema("second", user1.AuthData.Username, "[@ssw0rd", "test@web.com"), out _),
+				GenerateUser(new UserSchema("second", user1.Slug, "[@ssw0rd", "test@web.com"), out _),
 				e => e.Message.Contains("A user with that username already exists"));
 		}
 

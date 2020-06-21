@@ -8,6 +8,7 @@ using Dodo.Users.Tokens;
 using Dodo.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Resources;
 using Resources.Security;
 using System;
@@ -40,10 +41,10 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			// User is already logged in
 			Logger.Debug($"{logstr} User was already logged in under guid {Context.User.Guid}");
-			return new OkRequestResult();
+			return ResourceRequestError.BadRequest($"User is already signed in as {Context.User.Slug}");
 		}
 
-		var user = ResourceManager.GetSingle(x => x.AuthData.Username == login.Username);
+		var user = ResourceManager.GetSingle(x => x.Slug == login.Username);
 		if (user == null)
 		{
 			Logger.Debug($"{logstr} User was not found with that username.");
@@ -103,7 +104,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			Logger.Error($"Failed to log user {user} out - could not remove session token");
 		}
 		UserManager.Update(user, rscLock);
-		Logger.Debug($"Logged out user {user.AuthData.Username}");
+		Logger.Debug($"Logged out user {user.Slug}");
 		return new OkRequestResult();
 	}
 
@@ -146,7 +147,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			user = rscLock.Value as User;
 			user.TokenCollection.RemoveAll<ResetPasswordToken>(Context);
-			user.AuthData = new AuthorizationData(user.AuthData.Username, password);
+			user.AuthData = new AuthorizationData(password);
 			UserManager.Update(user, rscLock);
 		}
 		await Logout();
@@ -190,7 +191,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		if (verifyToken.Token != token)
 		{
-			return ResourceRequestError.ForbidRequest("Token mismatch");
+			return ResourceRequestError.BadRequest("Token mismatch");
 		}
 		using var rscLock = new ResourceLock(Context.User);
 		var user = rscLock.Value as User;
@@ -211,7 +212,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return request;
 		}
 		var req = (ResourceCreationRequest)request;
-		var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username || x.PersonalData.Email == schema.Email);
+		var user = ResourceManager.GetSingle(x => x.Slug == schema.Username || x.PersonalData.Email == schema.Email);
 		if (user != null)
 		{
 			return ResourceRequestError.Conflict();
@@ -220,6 +221,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		user = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));
 		var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));
 		SendEmailVerification(new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)));
+		await Login(new LoginModel { Username = schema.Username, Password = schema.Password });
 		return new ResourceCreationRequest(
 			new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)),
 			schema)
@@ -236,7 +238,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return error;
 		}
 		var req = (ResourceActionRequest)request;
-		var user = ResourceManager.GetSingle(x => x.AuthData.Username == schema.Username || x.PersonalData.Email == schema.Email);
+		var user = ResourceManager.GetSingle(x => x.Slug == schema.Username || x.PersonalData.Email == schema.Email);
 		if (user == null)
 		{
 			return ResourceRequestError.BadRequest();
@@ -247,13 +249,13 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return ResourceRequestError.Conflict();
 		}
-		if (UserManager.GetSingle(u => u.AuthData.Username == schema.Username) != null)
+		if (UserManager.GetSingle(u => u.Slug == schema.Username) != null)
 		{
 			return ResourceRequestError.Conflict();
 		}
 		using var rscLock = new ResourceLock(user.Guid);
 		user.AuthData.ChangePassword(new Passphrase(tempToken.Password), new Passphrase(schema.Password));
-		user.AuthData.Username = schema.Username;
+		user.Slug = schema.Username;
 		user.Name = schema.Name;
 		if (!user.Verify(out var verificationError))
 		{

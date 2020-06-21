@@ -54,7 +54,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var resource = CreateObject<T>(context, schema);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var resourceObj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
 
@@ -70,7 +70,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var schema = SchemaGenerator.GetRandomSchema<T>(context) as TSchema;
 			var resource = CreateObject<T>(context, schema);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var resourceObj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
 		}
@@ -81,7 +81,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>();
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var resourceObj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.USER,
 				resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>());
@@ -97,7 +97,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>();
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var resourceObj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
 			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.USER);
 		}
@@ -134,7 +134,7 @@ namespace RESTTests
 		public virtual async Task CanCreate()
 		{
 			var user = GetRandomUser(out var password, out var context);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var response = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.POST,
 				SchemaGenerator.GetRandomSchema<T>(context));
 			Postman.Update(
@@ -150,7 +150,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>(context);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.DELETE,
 				SchemaGenerator.GetRandomSchema<T>(context));
 			Assert.IsNull(ResourceManager.GetSingle(r => r.Guid == resource.Guid));
@@ -177,7 +177,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>();
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			await AssertX.ThrowsAsync<Exception>(Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.DELETE,
 				SchemaGenerator.GetRandomSchema<T>(context)));
 		}
@@ -190,7 +190,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>(context);
-			await Login(user.AuthData.Username, password);
+			await Login(user.Slug, password);
 			var patch = GetPatchObject();
 			await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.PATCH,	patch);
 			var updatedObj = ResourceManager.GetSingle(r => r.Guid == resource.Guid);

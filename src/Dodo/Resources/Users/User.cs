@@ -41,14 +41,15 @@ namespace Dodo.Users
 		/// <param name="schema"></param>
 		public User(AccessContext context, UserSchema schema) : base(default, schema)
 		{
-			AuthData = new AuthorizationData(schema.Username, schema.Password);
+			AuthData = new AuthorizationData(schema.Password);
 			PersonalData.Email = schema.Email;
+			Slug = schema.Username;
 		}
 
 		public override bool VerifyExplicit(out string error)
 		{
 			var um = ResourceUtility.GetManager<User>();
-			if (um.GetSingle(u => u.AuthData.Username == AuthData.Username && u.Guid != Guid) != null)
+			if (um.GetSingle(u => u.Slug == Slug && u.Guid != Guid) != null)
 			{
 				error = "A user with that username already exists";
 				return false;

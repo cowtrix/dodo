@@ -119,7 +119,7 @@ namespace Dodo
 			adminList.Add(newAdmin);
 			AdministratorData.SetValue(adminData, newAdmin, newPass);
 			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
-				$"Administrator @{context.User.AuthData.Username} added new Administrator @{newAdmin.AuthData.Username}",
+				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
 				false), EPermissionLevel.ADMIN);
 			return true;
 		}
