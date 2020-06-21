@@ -331,7 +331,7 @@ namespace Common.Extensions
 			}
 
 			const int minCharCount = 8;
-			const int maxCharCount = 20;
+			const int maxCharCount = 64;
 
 			//var hasNumber = new Regex(@"[0-9]+");
 			//var hasUpperChar = new Regex(@"[A-Z]+");
