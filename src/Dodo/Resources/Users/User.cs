@@ -10,6 +10,7 @@ using Resources;
 using System.Security.Principal;
 using Dodo.Users.Tokens;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace Dodo.Users
 {
@@ -89,6 +90,11 @@ namespace Dodo.Users
 		public void AddToken(IToken token, EPermissionLevel permissionLevel)
 		{
 			TokenCollection.Add(this, token, permissionLevel);
+		}
+
+		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
+		{
+			return TokenCollection.Remove(context, permissionLevel, notification);
 		}
 	}
 }

@@ -99,7 +99,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return ResourceRequestError.BadRequest();
 		}
-		if (!user.TokenCollection.Remove(Context, session))
+		if (!user.TokenCollection.Remove(Context, EPermissionLevel.OWNER, session))
 		{
 			Logger.Error($"Failed to log user {user} out - could not remove session token");
 		}
@@ -146,7 +146,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		using (var rscLock = new ResourceLock(user))
 		{
 			user = rscLock.Value as User;
-			user.TokenCollection.RemoveAll<ResetPasswordToken>(Context);
+			user.TokenCollection.RemoveAll<ResetPasswordToken>(Context, EPermissionLevel.OWNER);
 			user.AuthData = new AuthorizationData(password);
 			UserManager.Update(user, rscLock);
 		}

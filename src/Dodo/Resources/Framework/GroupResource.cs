@@ -176,5 +176,10 @@ namespace Dodo
 		{
 			SharedTokens.Add(this, token, permissionLevel);
 		}
+
+		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
+		{
+			return SharedTokens.Remove(context, permissionLevel, notification);
+		}
 	}
 }

@@ -11,11 +11,11 @@ namespace Dodo
 		public Guid Guid { get; set; }
 		public bool CanDelete { get; set; }
 
-		public Notification(string source, string message, bool canDelete = false)
+		public Notification(Guid tokenGuid, string source, string message, bool canDelete = false)
 		{
+			Guid = tokenGuid;
 			Source = source;
 			Message = message;
-			Guid = Guid.NewGuid();
 			Timestamp = DateTime.UtcNow;
 			CanDelete = canDelete;
 		}

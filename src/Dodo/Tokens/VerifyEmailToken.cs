@@ -28,7 +28,7 @@ namespace Dodo.Users.Tokens
 #if DEBUG
 			Logger.Info($"DEBUG: generated email verification key {Token} for user {parent}");
 #endif
-			m_notification = new Notification("Your Account", "You should check your email and verify your email address with us.");
+			m_notification = new Notification(Guid, "Your Account", "You should check your email and verify your email address with us.");
 			base.OnAdd(parent);
 		}
 

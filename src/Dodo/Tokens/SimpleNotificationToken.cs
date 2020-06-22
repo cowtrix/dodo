@@ -5,22 +5,28 @@ using Dodo.Users;
 
 namespace Dodo
 {
-	public class SimpleNotificationToken : Token, INotificationToken
+	public class SimpleNotificationToken : Token, INotificationToken, IRemovableToken
 	{
 		public override bool Encrypted => false;
 
 		public ResourceReference<User> Creator { get; set; }
 
+		public bool ShouldRemove { get; set; }
+
 		[JsonProperty]
 		Notification m_notification;
 		public Notification GetNotification(AccessContext context) => m_notification;
 
+		public void OnRemove(AccessContext parent)
+		{
+		}
+
 		public SimpleNotificationToken() { }
 
-		public SimpleNotificationToken(User creator, string source, string message, bool canDelete)
+		public SimpleNotificationToken(User creator, string source, string message, bool canDelete) : base()
 		{
 			Creator = new ResourceReference<User>(creator);
-			m_notification = new Notification(source, message, canDelete);
+			m_notification = new Notification(Guid, source, message, canDelete);
 		}
 	}
 }

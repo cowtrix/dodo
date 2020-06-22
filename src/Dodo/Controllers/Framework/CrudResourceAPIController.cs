@@ -82,5 +82,11 @@ namespace Resources
 		{
 			return (await PublicService.AddNotification(id, notification)).ActionResult;
 		}
+
+		[HttpPost("notifications/{id}/delete")]
+		public virtual async Task<IActionResult> DeleteNotification([FromRoute]string id, [FromQuery]Guid notification)
+		{
+			return (await PublicService.DeleteNotification(id, notification)).ActionResult;
+		}
 	}
 }

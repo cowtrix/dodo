@@ -31,15 +31,13 @@ namespace Dodo.Users.Tokens
 	{
 		[JsonProperty]
 		[BsonElement]
-		public Guid Guid { get; private set; }
+		public Guid Guid { get; private set; } = Guid.NewGuid();
+
 		[JsonIgnore]
 		[BsonIgnore]
 		public abstract bool Encrypted { get; }
 
-		public virtual void OnAdd(ITokenResource parent)
-		{
-			Guid = Guid.NewGuid();
-		}
+		public virtual void OnAdd(ITokenResource parent) { }
 
 		public bool CanVerify() => true;
 

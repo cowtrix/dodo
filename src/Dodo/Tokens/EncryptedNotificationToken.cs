@@ -21,7 +21,7 @@ namespace Dodo
 		public EncryptedNotificationToken(User creator, string source, string message, bool canDelete)
 		{
 			Creator = new ResourceReference<User>(creator);
-			m_notification = new Notification(source, message, canDelete);
+			m_notification = new Notification(Guid, source, message, canDelete);
 		}
 	}
 }

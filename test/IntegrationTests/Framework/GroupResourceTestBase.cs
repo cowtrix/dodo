@@ -11,6 +11,7 @@ using DodoTest.Framework.Postman;
 using Newtonsoft.Json;
 using Dodo.Users;
 using Dodo.Models;
+using System;
 
 namespace RESTTests
 {
@@ -217,22 +218,28 @@ namespace RESTTests
 
 		[TestMethod]
 		[TestCategory("Notifications")]
-		public async Task Notifications_AdminCanDeleteDifferentAdminNotification()
+		public async Task Notifications_AdminCanDeleteNotification()
 		{
 			const string Message = "This is a test notification.";
 			GetRandomUser(out var pass, out var con);
 			var group = CreateObject<T>(con);
+			Guid notGuid;
+			// Create a notification
+			using (var rscLock = new ResourceLock(group))
+			{
+				var token = new SimpleNotificationToken(con.User, "Test", Message, true);
+				notGuid = token.Guid;
+				group.AddToken(token, EPermissionLevel.PUBLIC);
+				ResourceManager.Update(group, rscLock);
+			}
 
-			// Create the notification
+			// Delete the notification
 			await Login(con.User.Slug, pass);
-			await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}/new", EHTTPRequestType.POST,
-				new NotificationModel { Message = Message, PermissionLevel = EPermissionLevel.ADMIN });
-			var request = await RequestJSON<JObject>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}", EHTTPRequestType.GET);
-			var notifications = request.Value<JArray>("notifications").Values<JToken>().Select(r => r.ToObject<Notification>());
-			Assert.IsTrue(notifications.Any());
-			var n = notifications.SingleOrDefault(n => n.Message == Message);
-			Assert.IsNotNull(n);
-			Assert.AreEqual(Message, n.Message);
+			await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/notifications/{group.Slug}/delete?notification={notGuid}", EHTTPRequestType.POST);
+
+			group = ResourceManager.GetSingle(r => r.Guid == group.Guid) as T;
+			var n = group.GetNotifications(con, EPermissionLevel.PUBLIC).SingleOrDefault(n => n.Message == Message);
+			Assert.IsNull(n);
 		}
 
 		[TestMethod]

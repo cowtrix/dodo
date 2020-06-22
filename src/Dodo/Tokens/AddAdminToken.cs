@@ -24,7 +24,7 @@ namespace Dodo.Users.Tokens
 		{
 			Resource = new ResourceReference<GroupResource>(resource);
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
-			m_notification = new Notification(resource.Name, $"You have been added as an Administrator to {Resource.Name}");
+			m_notification = new Notification(Guid, resource.Name, $"You have been added as an Administrator to {Resource.Name}");
 		}
 
 		protected override bool OnExecuted(AccessContext context)

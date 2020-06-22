@@ -161,4 +161,29 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		req.Result = target;
 		return req;
 	}
+
+	public virtual async Task<IRequestResult> DeleteNotification(string id, Guid notification)
+	{
+		if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
+		{
+			return ResourceRequestError.BadRequest();
+		}
+		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
+		if (!request.IsSuccess)
+		{
+			return request;
+		}
+		var req = (ResourceActionRequest)request;
+		INotificationResource target;
+		using (var resourceLock = new ResourceLock(req.Result))
+		{
+			target = (INotificationResource)resourceLock.Value;
+			if(!target.DeleteNotification(req.AccessContext, req.PermissionLevel, notification))
+			{
+				return ResourceRequestError.NotFoundRequest();
+			}
+			ResourceManager.Update(target, resourceLock);
+		}
+		return new OkRequestResult($"Notification {notification} was deleted.");
+	}
 }

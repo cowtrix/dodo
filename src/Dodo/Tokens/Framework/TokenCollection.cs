@@ -42,6 +42,10 @@ namespace Dodo.Users.Tokens
 			{
 				throw new ArgumentNullException();
 			}
+			if(token.Guid == default)
+			{
+				throw new ArgumentException("Token Guid cannot be null - make sure base constructor is being called");
+			}
 			if(!token.Verify(out var error))
 			{
 				throw new Exception(error);
@@ -61,24 +65,24 @@ namespace Dodo.Users.Tokens
 			m_tokens.Add(newEntry);
 		}
 
-		public bool RemoveAll<T>(AccessContext context) where T: IRemovableToken
+		public bool RemoveAll<T>(AccessContext context, EPermissionLevel permissionLevel) where T: IRemovableToken
 		{
-			return Remove(context, t => t is T);
+			return Remove(context, permissionLevel, t => t is T);
 		}
 
-		public bool Remove(AccessContext context, IRemovableToken token)
+		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, IRemovableToken token)
 		{
-			return Remove(context, t => t.Guid == token.Guid);
+			return Remove(context, permissionLevel, t => t.Guid == token.Guid);
 		}
 
-		public bool Remove(AccessContext context, Guid tokenGuid)
+		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, Guid tokenGuid)
 		{
-			return Remove(context, t => t.Guid == tokenGuid);
+			return Remove(context, permissionLevel, t => t.Guid == tokenGuid);
 		}
 
-		public bool Remove(AccessContext context, Func<IRemovableToken, bool> removeWhere)
+		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, Func<IRemovableToken, bool> removeWhere)
 		{
-			var toRemove = GetAllTokens<IRemovableToken>(context, EPermissionLevel.OWNER).Where(t => removeWhere(t));
+			var toRemove = GetAllTokens<IRemovableToken>(context, permissionLevel).Where(t => removeWhere(t));
 			if(!toRemove.Any())
 			{
 				return false;
