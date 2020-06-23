@@ -1,1 +1,1 @@
-export { Login } from './login'
+export { LoginConnected as Login } from './container'

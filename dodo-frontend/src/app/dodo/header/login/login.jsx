@@ -1,14 +1,18 @@
 import React from "react"
-import styles from "./login.module.scss"
-import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
+import { LoginRegister } from './login-register'
+import { UserButton } from './user-button'
 
-export const Login = () => {
-	const { t } = useTranslation("ui")
+import styles from './login.module.scss'
 
+export const Login = ({ isLoggedIn }) => {
 	return (
-		<Link to="/login" className={styles.login}>
-			{t("header_sign_in_text")}
-		</Link>
+		<div className={styles.login}>
+			{!isLoggedIn ?
+				<UserButton/> :
+				<LoginRegister/>
+			}
+		</div>
+
 	)
 }
+

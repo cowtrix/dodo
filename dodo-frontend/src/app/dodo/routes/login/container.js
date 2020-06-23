@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	login: (username, password) => () => login(dispatch, username, password)
+	login: (username, password, rememberMe) => () => login(dispatch, username, password, rememberMe)
 })
 
 export const LoginConnected = connect(mapStateToProps, mapDispatchToProps)(Login)

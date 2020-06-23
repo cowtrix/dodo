@@ -8,3 +8,6 @@ export const LOCAL_GROUPS = apiUrl + "localgroups/"
 export const SITES = apiUrl + "sites/"
 export const SEARCH = apiUrl + "search"
 export const LOGIN = authUrl + "login/" // note: not api root
+
+export const RESET_PASSWORD = authUrl + "resetpassword"
+export const REGISTER_USER = authUrl + "register"

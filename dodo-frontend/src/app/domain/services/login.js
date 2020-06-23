@@ -1,11 +1,12 @@
 import { LOGIN } from "app/domain/urls"
 
-export const postLogin = async (username, password) =>
+export const postLogin = async (username, password, rememberMe) =>
 	fetch(LOGIN, {
 		method: "post",
 		body: JSON.stringify({
 			username: username,
 			password: password,
+			rememberMe: rememberMe,
 			redirect: ""
 		}),
 		headers: {

@@ -1,0 +1,24 @@
+@import "~app/styles/styles";
+
+.tickBox {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: spacing(6);
+	align-items: center;
+
+	label {
+		flex-basis: 0;
+		flex-grow: 0.3;
+	}
+
+	input {
+		margin: 0;
+		zoom: 1.8;
+	}
+}
+
+.box {
+	justify-content: flex-start;
+	flex-basis: 0;
+	flex-grow: 0.7;
+}
