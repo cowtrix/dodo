@@ -61,6 +61,26 @@ namespace RESTTests
 		}
 
 		[TestMethod]
+		public async Task CanAccessOwnAccountPage()
+		{
+			var user = GetRandomUser(out var password, out _);
+			await Login(user.Slug, password);
+			var response = await RequestJSON($"{UserService.RootURL}", EHTTPRequestType.GET);
+			Assert.AreEqual(user.Name, response.Value<string>("name"));
+			Postman.Update(
+				new PostmanEntryAddress { Category = UserCat, Request = "Get The Logged In User" },
+				LastRequest);
+		}
+
+		[TestMethod]
+		public async Task AccessAuthEndpointWithoutLoginReturnsForbid()
+		{
+			await AssertX.ThrowsAsync<Exception>(RequestJSON($"{UserService.RootURL}", EHTTPRequestType.GET),
+				e => e.Message.Contains("StatusCode: 302, ReasonPhrase: 'Found'"));
+			
+		}
+
+		[TestMethod]
 		public async Task CanLogin()
 		{
 			var user = GetRandomUser(out var password, out _);

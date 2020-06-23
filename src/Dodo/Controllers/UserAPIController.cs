@@ -22,6 +22,16 @@ namespace Dodo.Users
 			return (await UserService.Login(login)).ActionResult;
 		}
 
+		[HttpGet]
+		public async Task<IActionResult> GetCurrentUser()
+		{
+			if(Context.User == null)
+			{
+				return Forbid();
+			}
+			return Ok(Context.User.GenerateJsonView(EPermissionLevel.OWNER, Context.User, Context.Passphrase));
+		}
+
 		[HttpGet(LOGOUT)]
 		public async Task<IActionResult> Logout()
 		{

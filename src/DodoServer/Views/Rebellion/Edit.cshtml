@@ -42,11 +42,14 @@
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
 				<div class="card">
-					<h5 class="card-title">AdministratorData</h5>
 						<div class="card-body">
+					<h5 class="card-title">Administrator Data</h5>
 						@foreach(var admin in Model.AdministratorData.Administrators) {
-							<div class="card">
-							</div>
+				<div class="card">
+				<div class="card">
+					<p>@admin.User.Name [@admin.User.Slug]</p>
+				</div>
+				</div>
 						}
 						</div>
 				</div>
@@ -136,7 +139,7 @@
 				<div class="card" style="width:100%;">
 					<div class="card-body">
 						<p>	@notification.Message </p>
-						<p> TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone) </p>
+						<p> @TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc) </p>
 						@if(notification.CanDelete)
 						{
 							<a href="#" class="btn btn-primary">Delete</a>

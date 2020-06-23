@@ -53,12 +53,12 @@ namespace DodoAOT
 		protected static IEnumerable<string> BuildScripts()
 		{
 			string scriptPath = Path.GetFullPath("Scripts");
-			if(!Directory.Exists(scriptPath))
+			if (!Directory.Exists(scriptPath))
 			{
 				throw new DirectoryNotFoundException(scriptPath);
 			}
 			var scripts = Directory.GetFiles(scriptPath);
-			foreach(var f in scripts)
+			foreach (var f in scripts)
 			{
 				yield return File.ReadAllText(f);
 			}
@@ -68,6 +68,10 @@ namespace DodoAOT
 		{
 			var nameStr = $"@Model.{prefix}{member?.Name}.{nameof(IResourceReference.Name)}";
 			var urlStr = $"@Model.{prefix}{member?.Name}.{nameof(IResourceReference.Type)}/@Model.{prefix}{member?.Name}.{nameof(IResourceReference.Slug)}";
+			if (member.GetMemberType() == typeof(User))
+			{
+				throw new Exception("Can't link to user profiles");
+			}
 			yield return Indent(indentLevel) + $"<div class=\"form-group\">";
 			yield return Indent(indentLevel + 1) + $"<label class=\"control-label\">{member.GetName()}</label>";
 			yield return Indent(indentLevel + 1) + $"<input class=\"sr-only\" asp-for=\"{prefix}{member?.Name}.{nameof(IResourceReference.Type)}\"/>";
@@ -77,20 +81,20 @@ namespace DodoAOT
 
 		private static IEnumerable<string> AdminDataView(string prefix, MemberInfo member, int indentLevel)
 		{
-			IEnumerable<string> refInLoop(string prefix, int indentLevel)
-			{
-				var nameStr = $"@{prefix}{nameof(IResourceReference.Name)}";
-				var urlStr = $"@{prefix}{nameof(IResourceReference.Type)}/@{prefix}{nameof(IResourceReference.Slug)}";
-				yield return Indent(indentLevel) + $"<div class=\"card\">";
-				//yield return Indent(indentLevel + 1) + $"<a class=\"btn btn-primary\" role=\"button\" href=\"../../{urlStr}\">{nameStr}</a>";
-				yield return Indent(indentLevel) + $"</div>";
-			}
 			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			yield return Indent(indentLevel + 1) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
 			yield return Indent(indentLevel + 2) + $"<div class=\"card-body\">";
+			yield return Indent(indentLevel + 1) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
 			yield return Indent(indentLevel + 2) + $"@foreach(var admin in Model.{prefix}{member.Name}.Administrators) {{";
 			// iterate admin array
-			foreach (var l in refInLoop("admin.", indentLevel + 3)) yield return l;
+
+			yield return Indent(indentLevel) + $"<div class=\"card\">";
+			yield return Indent(indentLevel) + $"<div class=\"card\">";
+			var name = $"@{prefix}admin.{nameof(AdministratorEntry.User)}.{nameof(IResourceReference.Name)}";
+			var slug = $"@{prefix}admin.{nameof(AdministratorEntry.User)}.{nameof(IResourceReference.Slug)}";
+			yield return Indent(indentLevel + 1) + $"<p>{name} [{slug}]</p>";
+			yield return Indent(indentLevel) + $"</div>";
+			yield return Indent(indentLevel) + $"</div>";
+
 			yield return Indent(indentLevel + 2) + "}";
 			yield return Indent(indentLevel + 2) + $"</div>";
 			yield return Indent(indentLevel) + $"</div>";

@@ -33,6 +33,7 @@ namespace Dodo
 		[Common.Extensions.Description]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		[Name("Administrator Data")]
 		public UserMultiSigStore<AdministrationData> AdministratorData { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public int MemberCount { get { return Members.Count; } }
@@ -83,7 +84,7 @@ namespace Dodo
 		public bool AddAdmin(AccessContext context, User newAdmin)
 		{
 			var temporaryPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
-			if (!AddOrUpdateAdmin(context, newAdmin, temporaryPass))
+			if (!AddOrUpdateAdmin(context, newAdmin, temporaryPass, false))
 			{
 				return false;
 			}
@@ -95,13 +96,13 @@ namespace Dodo
 			return true;
 		}
 
-		public bool AddOrUpdateAdmin(AccessContext context, User newAdmin, Passphrase newPass)
+		public bool AddOrUpdateAdmin(AccessContext context, User newAdmin, Passphrase newPass, bool tokenTriggered)
 		{
 			if (newAdmin == null)
 			{
 				throw new ArgumentNullException(nameof(newAdmin));
 			}
-			if(!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanAddAdmin)
+			if(!IsAdmin(context.User, context, out var administratorPermission) || (!tokenTriggered && !administratorPermission.CanAddAdmin))
 			{
 				// Context isn't admin, or doesn't have correct permissions
 				SecurityWatcher.RegisterEvent($"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");

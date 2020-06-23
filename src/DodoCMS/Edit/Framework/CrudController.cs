@@ -138,11 +138,11 @@ namespace Dodo.Controllers.Edit
 			}
 			try
 			{
-				if (!ModelState.IsValid) 
-				{ 
-					return View(modified); 
+				if (!ModelState.IsValid)
+				{
+					ModelState.AddModelError("Save Error", "Error updating the resource");
+					return await Edit(id); 
 				}
-
 				var result = await CrudService.Update(id, modified);
 				if (!result.IsSuccess)
 				{
@@ -153,7 +153,7 @@ namespace Dodo.Controllers.Edit
 			catch (Exception e)
 			{
 				ModelState.AddModelError("", e.Message);
-				return View(modified);
+				return await Edit(id);
 			}
 		}
 

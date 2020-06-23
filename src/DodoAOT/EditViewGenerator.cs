@@ -33,7 +33,6 @@ namespace DodoAOT
 			var viewBody = sb.ToString();
 			template = template.Replace("{BODY}", viewBody);
 			template = template.Replace("{NOTIFICATIONS}", GetNotificationEditor(resourceType));
-
 			return template;
 		}
 

@@ -77,7 +77,7 @@ namespace GenerateSampleData
 				SchemaGenerator.SampleDescription, rebelRiders.Guid), seed: false);
 
 			var admin2 = TestBase.GetRandomUser(out _, out var admin2context);
-			actionSupport.AddOrUpdateAdmin(context, admin2, admin2context.Passphrase);
+			actionSupport.AddOrUpdateAdmin(context, admin2, admin2context.Passphrase, false);
 
 			var deescalation = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Non-Violence & De-escalation",
 				SchemaGenerator.SampleDescription, actionSupport.Guid), seed: false);
