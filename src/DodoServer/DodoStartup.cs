@@ -57,7 +57,7 @@ namespace DodoServer
 				config.AccessDeniedPath = config.LoginPath;
 				config.ExpireTimeSpan = TimeSpan.FromDays(1);
 				config.SlidingExpiration = true;
-				//config.Cookie.SameSite = SameSiteMode.Strict;
+				config.Cookie.SameSite = SameSiteMode.None;
 				config.Cookie.HttpOnly = true;
 			});
 			Logger.Error("REENABLE SAMESITE COOKIES BEFORE DEPLOYMENT");
