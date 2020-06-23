@@ -63,7 +63,8 @@ namespace Groups
 			}			
 			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
 			var all = ResourceManager.Get(r => true).ToList();
-			Assert.IsTrue(updatedGroup.IsAdmin(newAdmin, creatorContext));
+			Assert.IsTrue(updatedGroup.IsAdmin(newAdmin, creatorContext, out var p));
+			Assert.IsFalse(p.CanAddAdmin);
 		}
 
 		[TestMethod]

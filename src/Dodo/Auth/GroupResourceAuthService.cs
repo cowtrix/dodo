@@ -26,7 +26,7 @@ namespace DodoResources
 			{
 				return EPermissionLevel.OWNER;
 			}
-			if (target.IsAdmin(context.User, context))
+			if (target.IsAdmin(context.User, context, out _))
 			{
 				return EPermissionLevel.ADMIN;
 			}
@@ -44,7 +44,7 @@ namespace DodoResources
 				return ResourceRequestError.ForbidRequest();
 			}
 
-			// User has a resource creation token, so we consume it and return ok
+			// User has a resource creation token with this type, so we consume it and return ok
 			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context, EPermissionLevel.OWNER)
 				.FirstOrDefault(t => !t.IsRedeemed && t.ResourceType == typeof(T).Name);
 			if (token != null || context.User.TokenCollection.GetSingleToken<SysadminToken>(context) != null)
@@ -52,7 +52,7 @@ namespace DodoResources
 				return new ResourceCreationRequest(context, schema, token);
 			}
 
-			// Test if user has admin on parent
+			// Does the user have permission to create a child of the parent?
 			if(schema is OwnedResourceSchemaBase owned)
 			{
 				var parent = ResourceUtility.GetResourceByGuid(owned.Parent) as GroupResource;
@@ -60,7 +60,8 @@ namespace DodoResources
 				{
 					return ResourceRequestError.BadRequest();
 				}
-				if (!parent.IsAdmin(context.User, context))
+				if (!parent.IsAdmin(context.User, context, out var permissionSet)
+					|| !permissionSet.CanCreateChildObjects)
 				{
 					return ResourceRequestError.UnauthorizedRequest();
 				}
@@ -78,7 +79,7 @@ namespace DodoResources
 			switch (action)
 			{
 				case GroupResourceService<T, TSchema>.ADD_ADMIN:
-					if (target.IsAdmin(context.User, context))
+					if (target.IsAdmin(context.User, context, out var permissionSet) || !permissionSet.CanAddAdmin)
 					{
 						return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
 					}

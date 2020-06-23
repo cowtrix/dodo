@@ -95,25 +95,30 @@ namespace Dodo
 				SecurityWatcher.RegisterEvent($"{Resource}: Admin {context.User}, tried to change their own permissions, which is never allowed.");
 				return false;
 			}
-			var changingAdminEntry = Administrators.SingleOrDefault(ad => ad.User.Guid == context.User.Guid);
-			if (changingAdminEntry == null)
+			var adminMakingChange = Administrators.SingleOrDefault(ad => ad.User.Guid == context.User.Guid);
+			if (adminMakingChange == null)
 			{
 				SecurityWatcher.RegisterEvent($"{Resource}: Admin {context.User}, who isn't on the administrator list managed to decrypt it and tried to add {newAdmin} as a Administrator");
-				return false;
-			}
-			if (!changingAdminEntry.Permissions.CanAddAdmin)
-			{
-				SecurityWatcher.RegisterEvent($"{Resource} : Admin {context.User} tried to add {newAdmin} as an admin, and they don't have permission to do so.");
 				return false;
 			}
 			var alteredAdminEntry = Administrators.SingleOrDefault(ad => ad.User.Guid == newAdmin.Guid);
 			if (alteredAdminEntry == null)
 			{
+				if (!adminMakingChange.Permissions.CanAddAdmin)
+				{
+					SecurityWatcher.RegisterEvent($"{Resource} : Admin {context.User} tried to add {newAdmin} as an admin, and they don't have permission to do so.");
+					return false;
+				}
 				alteredAdminEntry = new AdministratorEntry(newAdmin);
 				Administrators.Add(alteredAdminEntry);
 			}
 			if (permissions != null)
 			{
+				if (!adminMakingChange.Permissions.CanChangePermissions)
+				{
+					SecurityWatcher.RegisterEvent($"{Resource} : Admin {context.User} tried to change permissions for {newAdmin}, and they don't have permission to do so.");
+					return false;
+				}
 				alteredAdminEntry.Permissions = permissions;
 			}
 			return true;

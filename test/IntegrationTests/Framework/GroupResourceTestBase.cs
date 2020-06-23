@@ -64,7 +64,8 @@ namespace RESTTests
 			var user1 = GetRandomUser(out var user1Password, out var user1Context);
 			// Let them create a new group
 			var group = CreateObject<T>(user1Context);
-			Assert.IsTrue(group.IsAdmin(user1, user1Context));
+			Assert.IsTrue(group.IsAdmin(user1, user1Context, out var p));
+			Assert.IsTrue(p.CanAddAdmin);
 			await Login(user1.Slug, user1Password);
 
 			var user2 = GetRandomUser(out var user2Password, out var user2Context);
@@ -97,7 +98,8 @@ namespace RESTTests
 			var user1 = GetRandomUser(out var user1Password, out var user1Context);
 			// Let them create a new group
 			var group = CreateObject<T>(user1Context);
-			Assert.IsTrue(group.IsAdmin(user1, user1Context));
+			Assert.IsTrue(group.IsAdmin(user1, user1Context, out var p));
+			Assert.IsTrue(p.CanAddAdmin);
 			await Login(user1.Slug, user1Password);
 
 			var user2Email = "myUser2@email.com";

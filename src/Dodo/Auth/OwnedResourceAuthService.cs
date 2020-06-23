@@ -19,9 +19,9 @@ namespace DodoResources.Sites
 			{
 				return ResourceRequestError.BadRequest();
 			}
-			if (!parent.IsAdmin(context.User, context))
+			if (!parent.IsAdmin(context.User, context, out var p) || !p.CanCreateChildObjects)
 			{
-				return ResourceRequestError.ForbidRequest();
+				return ResourceRequestError.UnauthorizedRequest();
 			}
 			return new ResourceCreationRequest(context, target);
 		}

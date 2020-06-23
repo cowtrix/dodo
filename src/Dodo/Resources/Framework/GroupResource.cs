@@ -10,6 +10,7 @@ using Common;
 using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel;
 using System.Linq;
+using System.Security;
 
 namespace Dodo
 {
@@ -60,8 +61,9 @@ namespace Dodo
 			PublicDescription = schema.PublicDescription;
 		}
 
-		public bool IsAdmin(User target, AccessContext requesterContext)
+		public bool IsAdmin(User target, AccessContext requesterContext, out AdministratorPermissionSet permissions)
 		{
+			permissions = null;
 			var userRef = requesterContext.User.CreateRef();
 			if (!AdministratorData.IsAuthorised(userRef, requesterContext.Passphrase))
 			{
@@ -69,7 +71,13 @@ namespace Dodo
 			}
 			// GetValue should never fail here
 			var data = AdministratorData.GetValue(userRef, requesterContext.Passphrase);
-			return data.Administrators.Any(ad => ad.User.Guid == target.Guid);
+			var entry = data.Administrators.SingleOrDefault(ad => ad.User.Guid == target.Guid);
+			if(entry == null)
+			{
+				return false;
+			}
+			permissions = entry.Permissions;
+			return true;
 		}
 
 		public bool AddAdmin(AccessContext context, User newAdmin)
@@ -91,9 +99,15 @@ namespace Dodo
 		{
 			if (newAdmin == null)
 			{
+				throw new ArgumentNullException(nameof(newAdmin));
+			}
+			if(!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanAddAdmin)
+			{
+				// Context isn't admin, or doesn't have correct permissions
+				SecurityWatcher.RegisterEvent($"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");
 				return false;
 			}
-			if (newAdmin.Guid != context.User.Guid && IsAdmin(newAdmin, context))
+			if (newAdmin.Guid != context.User.Guid && IsAdmin(newAdmin, context, out _))
 			{
 				// Other user can't change existing admin password
 				return true;
@@ -110,7 +124,8 @@ namespace Dodo
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
 				false), EPermissionLevel.ADMIN);
 #if DEBUG
-			if (!IsAdmin(newAdmin, context))
+			// Do a bit of extra testing just to make sure
+			if (!IsAdmin(newAdmin, context, out _))
 			{
 				throw new Exception($"Failed to add {newAdmin} as a new administrator");
 			}
