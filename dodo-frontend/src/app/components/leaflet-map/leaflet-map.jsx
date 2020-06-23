@@ -38,6 +38,7 @@ export const LeafletMap = (
 		}
 	}, [centerMap])
 
+
 	const setNewSearchParams = (e) => {
 		const newSearchCenter = e.target.getCenter()
 		const newSearchDistance = e.target.getZoom()
@@ -71,7 +72,7 @@ export const LeafletMap = (
 			<TitleLayers/>
 			<Markers markers={sites}/>
 			{!sites.length && center.length ?
-				<Marker position={center} icon={MarkerIcon} /> :
+				<Marker position={center} icon={MarkerIcon}/> :
 				null}
 		</Map>
 	)

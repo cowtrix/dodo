@@ -6,6 +6,8 @@ import { Search, route as search } from "./search"
 import { Event } from "./resource"
 import { Login } from "./login"
 import { NotFound } from "./error"
+import { ResetPassword } from './reset-password'
+import { Register } from './register'
 
 export const Routes = () => (
 	<Fragment>
@@ -13,6 +15,8 @@ export const Routes = () => (
 			<Route path={"/:eventType/:eventId"} component={Event} exact />
 			<Route path={search} component={Search} exact />
 			<Route path={"/login"} component={Login} exact />
+			<Route path={"/reset-password"} component={ResetPassword} exact />
+			<Route path={"/register"} component={Register} exact />
 			<Route path="*" component={NotFound} />
 		</Switch>
 	</Fragment>

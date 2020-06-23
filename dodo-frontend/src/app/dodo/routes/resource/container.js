@@ -16,8 +16,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
-	getResource: (resourceType, resourceID) =>
-		resources.actions.resourceGet(dispatch, resourceType, resourceID)
+	getResource: (resourceType, resourceID, setCenterMap) =>
+		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap)
 })
 
 export const ResourceConnected = connect(

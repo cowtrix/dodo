@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react"
+import React, { Fragment, useState } from "react"
 import PropTypes from "prop-types"
 import { Container } from "app/components/resources"
 import { SiteMap, Loader, CenterMap, List, Video } from "app/components"
@@ -20,6 +20,11 @@ export const Search = (
 		resourceTypes,
 		setSearchParams,
 	}) => {
+
+	useState(() => {
+		getSearchResults({}, setCenterMap)
+	}, [])
+
 	return (
 		<Fragment>
 			<SiteMap
@@ -33,7 +38,7 @@ export const Search = (
 			<Container
 				content={
 					<Fragment>
-						<Loader display={isFetchingSearch} />
+						<Loader display={isFetchingSearch}/>
 						<div className={styles.searchHeader}>
 							<Filter/>
 							<SearchByLocation

@@ -1,10 +1,10 @@
 import React, { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { postLogin } from "app/domain/services/login"
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 
 
-import { Input, Container, Submit, Error } from 'app/components/forms'
+import { Input, Container, Submit, Error, TickBox } from 'app/components/forms'
 
 const LOGIN = 'Login'
 
@@ -20,6 +20,7 @@ export const Login = ({ login, isLoggedIn, error }) => {
 
 	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
+	const [rememberMe, setRememberMe] = useState(true)
 
 	return (
 			<Container
@@ -40,10 +41,22 @@ export const Login = ({ login, isLoggedIn, error }) => {
 							value={password}
 							setValue={setPassword}
 						/>
+						<TickBox
+							name="Remember Me"
+							id="rememberMe"
+							value={rememberMe}
+							setValue={setRememberMe}
+						/>
+						<p>
+							Not a member? <Link to="/register">Click here to register</Link>
+						</p>
+						<p>
+							Forgot your password? <Link to="/reset-password">Click here</Link>
+						</p>
 						<Error error={error}/>
 						<Submit
 							value={t("header_sign_in_text")}
-							submit={login(username, password)}
+							submit={login(username, password, rememberMe)}
 						/>
 					</Fragment>
 				}

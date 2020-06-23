@@ -1,0 +1,12 @@
+@import "~app/styles/styles";
+
+.userButton {
+	width: 48px;
+	height: 48px;
+	margin-right: spacing(6);
+
+
+	@media (min-width: $responsive-breakpoint) {
+		margin-right: 0;
+	}
+}

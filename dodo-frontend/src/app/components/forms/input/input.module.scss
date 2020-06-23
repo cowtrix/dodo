@@ -17,6 +17,7 @@
 		@media (min-width: $responsive-breakpoint) {
 			flex-basis: 0;
 			flex-grow: .3;
+			margin-bottom: 0;
 		}
 	}
 
@@ -30,4 +31,9 @@
 			flex-grow: .7;
 		}
 	}
+}
+
+.error {
+	color: red;
+	border-color: red;
 }
