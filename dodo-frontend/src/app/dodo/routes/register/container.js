@@ -1,9 +1,12 @@
 import { connect } from 'react-redux'
 import { Register } from './register'
-import { registerUser } from 'app/domain/user/actions'
+import { actions, selectors } from 'app/domain/user'
+
+const { username } = selectors
+const { registerUser } = actions
 
 const mapStateToProps = state => ({
-
+	isLoggedIn: username(state),
 })
 
 const mapDispatchToProps = dispatch => ({

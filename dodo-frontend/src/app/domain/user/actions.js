@@ -37,4 +37,6 @@ export const resetPassword = (dispatch, email, cb) =>
 	apiAction(dispatch, RESET_PASSWORD, RESET_PASSWORD_URL + '?email=' + email, cb)
 
 export const registerUser = (dispatch, userDetails) =>
-	apiAction(dispatch, REGISTER_USER, REGISTER_USER_URL, null, false, 'post', userDetails)
+	apiAction(dispatch, REGISTER_USER, REGISTER_USER_URL, (success) => dispatch({
+	type: LOGIN + SUCCESS, payload: success
+}), false, 'post', userDetails)

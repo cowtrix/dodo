@@ -1,21 +1,35 @@
 import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Container, Submit, Input } from 'app/components/forms/'
-import { Error } from '../../../components/forms/error'
+import { Container, Submit, Input, Error } from 'app/components/forms/'
+
+import styles from './register.module.scss'
+import { useHistory } from 'react-router-dom'
+
 
 const REGISTER = "Register for XR"
 
-export const Register = ({ register }) => {
+export const Register = ({ register, isLoggedIn }) => {
+	const history = useHistory()
+
+	if (isLoggedIn) {
+		history.push('/')
+	}
+
 	const [username, setUsername] = useState("")
 	const [name, setName] = useState("")
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [passwordConfirmation, setPasswordConfirmation] = useState("")
 
-	const userNameLength = username.length < 3 && username.length > 0
-	const nameLength = name.length < 3 && name.length > 0
-	const passwordLength = password.length < 8 && password.length > 0
+	const userNameLength = username.length < 3 && username.length
+	const nameLength = name.length < 3 && name.length
+	const passwordLength = password.length < 8 && password.length
+	const passwordValid = /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(password) || !password.length
 	const passwordMatch = passwordConfirmation.length && password !== passwordConfirmation
+	const emailValidation = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email) || !email.length
+	const hasError =
+		userNameLength || nameLength || passwordLength || passwordMatch || !passwordValid || !emailValidation ||
+		!username.length || !name.length || !email.length || !password.length || !passwordConfirmation.length
 
 	return (
 		<Container
@@ -44,6 +58,7 @@ export const Register = ({ register }) => {
 						type="email"
 						value={email}
 						setValue={setEmail}
+						error={!emailValidation}
 					/>
 					<Input
 						name="Password"
@@ -51,7 +66,7 @@ export const Register = ({ register }) => {
 						type="password"
 						value={password}
 						setValue={setPassword}
-						error={passwordLength}
+						error={passwordLength || !passwordValid}
 					/>
 					<Input
 						name="Confirm Password"
@@ -64,13 +79,15 @@ export const Register = ({ register }) => {
 					<p>
 						By continuing, you agree to the Rebel Agreement and Privacy Policy.
 					</p>
-					{userNameLength && <Error error="Username should be longer"/>}
-					{nameLength && <Error error="Name should be longer"/>}
-					{passwordLength && <Error error="Password should be longer"/>}
+					{userNameLength ? <Error error="Username should be longer"/> : null}
+					{nameLength ? <Error error="Name should be longer"/> : null}
+					{passwordLength ? <Error error="Password should be longer"/> : null}
+					{!passwordValid ? <Error error="Password should contain symbol"/> : null}
 					{passwordMatch ? <Error error="Passwords should match"/> : null}
-
+					{!emailValidation ? <Error error="Email is invalid"/> : null}
 					<Submit
-							submit={register({
+						className={hasError ? styles.disabled : null}
+						submit={register({
 							username,
 							password,
 							email,
@@ -87,4 +104,5 @@ export const Register = ({ register }) => {
 
 Register.propTypes = {
 	register: PropTypes.func,
+	isLoggedIn: PropTypes.string,
 }
