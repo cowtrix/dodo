@@ -1,3 +1,4 @@
+using Common;
 using Dodo;
 using Dodo.Users;
 using Microsoft.AspNetCore.Builder;
@@ -56,9 +57,10 @@ namespace DodoServer
 				config.AccessDeniedPath = config.LoginPath;
 				config.ExpireTimeSpan = TimeSpan.FromDays(1);
 				config.SlidingExpiration = true;
-				config.Cookie.SameSite = SameSiteMode.Strict;
+				//config.Cookie.SameSite = SameSiteMode.Strict;
 				config.Cookie.HttpOnly = true;
 			});
+			Logger.Error("REENABLE SAMESITE COOKIES BEFORE DEPLOYMENT");
 			services.AddAuthorization(config =>
 			{
 			});
