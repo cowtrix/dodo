@@ -36,6 +36,7 @@ export const Register = ({ register, isLoggedIn }) => {
 			title={REGISTER}
 			content={
 				<Fragment>
+					{userNameLength ? <Error error="Username should be longer"/> : null}
 					<Input
 						name="Username"
 						id="username"
@@ -44,6 +45,7 @@ export const Register = ({ register, isLoggedIn }) => {
 						setValue={setUsername}
 						error={userNameLength}
 					/>
+					{nameLength ? <Error error="Name should be longer"/> : null}
 					<Input
 						name="Name"
 						id="name"
@@ -52,6 +54,7 @@ export const Register = ({ register, isLoggedIn }) => {
 						setValue={setName}
 						error={nameLength}
 					/>
+					{!emailValidation ? <Error error="Email is invalid"/> : null}
 					<Input
 						name="Email"
 						id="email"
@@ -60,6 +63,8 @@ export const Register = ({ register, isLoggedIn }) => {
 						setValue={setEmail}
 						error={!emailValidation}
 					/>
+					{passwordLength ? <Error error="Password should be longer"/> : null}
+					{!passwordValid ? <Error error="Password should contain symbol"/> : null}
 					<Input
 						name="Password"
 						id="password"
@@ -68,6 +73,7 @@ export const Register = ({ register, isLoggedIn }) => {
 						setValue={setPassword}
 						error={passwordLength || !passwordValid}
 					/>
+					{passwordMatch ? <Error error="Passwords should match"/> : null}
 					<Input
 						name="Confirm Password"
 						id="confirmPassword"
@@ -79,12 +85,6 @@ export const Register = ({ register, isLoggedIn }) => {
 					<p>
 						By continuing, you agree to the Rebel Agreement and Privacy Policy.
 					</p>
-					{userNameLength ? <Error error="Username should be longer"/> : null}
-					{nameLength ? <Error error="Name should be longer"/> : null}
-					{passwordLength ? <Error error="Password should be longer"/> : null}
-					{!passwordValid ? <Error error="Password should contain symbol"/> : null}
-					{passwordMatch ? <Error error="Passwords should match"/> : null}
-					{!emailValidation ? <Error error="Email is invalid"/> : null}
 					<Submit
 						className={hasError ? styles.disabled : null}
 						submit={register({
