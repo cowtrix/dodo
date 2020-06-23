@@ -9,7 +9,7 @@ namespace Dodo
 	{
 		public bool IsAuthorised(AccessContext context)
 		{
-			return base.IsAuthorised(context.User, context.Passphrase);
+			return base.IsAuthorised(context.User.CreateRef(), context.Passphrase);
 		}
 	}
 }

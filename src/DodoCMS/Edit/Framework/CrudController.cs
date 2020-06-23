@@ -27,7 +27,7 @@ namespace Dodo.Controllers.Edit
 	{
 		protected virtual CrudResourceServiceBase<T, TSchema> CrudService => new CrudResourceServiceBase<T, TSchema>(Context, HttpContext, AuthService);
 		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
-		protected TViewModel ViewModel(T rsc) => rsc.CopyByValue<TViewModel>(new ResourceReference<User>(Context.User), Context.Passphrase);
+		protected TViewModel ViewModel(T rsc) => rsc.CopyByValue<TViewModel>(Context.User.CreateRef(), Context.Passphrase);
 
 		[Route("create")]
 		public IActionResult Create([FromQuery] string parent = null)

@@ -18,7 +18,7 @@ namespace Resources
 		public static Dictionary<string, object> GenerateJsonView(this object obj, EPermissionLevel visibility,
 			User requester, Passphrase passphrase)
 		{
-			return JsonViewUtility.GenerateJsonView(obj, visibility, new ResourceReference<User>(requester), passphrase);
+			return JsonViewUtility.GenerateJsonView(obj, visibility, requester.CreateRef(), passphrase);
 		}
 
 		/// <summary>

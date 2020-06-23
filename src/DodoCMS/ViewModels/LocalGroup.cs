@@ -22,15 +22,15 @@ namespace Dodo.ViewModels
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string PublicDescription { get; set; }
-		public class AdminDataViewModel
+		public class AdministrationDataViewModel
 		{
 			[DisplayName("Administrators")]
-			[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-			public System.Collections.Generic.List<Resources.ResourceReference<Dodo.Users.User>> Administrators { get; set; }
+			[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+			public System.Collections.Generic.List<Dodo.AdministratorEntry> Administrators { get; set; }
 		}
 		[DisplayName("AdministratorData")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		public AdminDataViewModel AdministratorData { get; set; }
+		public AdministrationDataViewModel AdministratorData { get; set; }
 		[DisplayName("MemberCount")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public int MemberCount { get; set; }

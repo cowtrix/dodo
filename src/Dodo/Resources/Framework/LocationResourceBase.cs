@@ -105,7 +105,7 @@ namespace Dodo.LocationResources
 				return;
 			}
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
-			Parent = new ResourceReference<GroupResource>(group);
+			Parent = group.CreateRef(); ;
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();

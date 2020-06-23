@@ -8,7 +8,7 @@ using Resources.Location;
 
 namespace Dodo.LocalGroups
 {
-	//public class LocalGroupSerializer : ResourceReferenceSerializer<LocalGroup> { }
+	public class LocalGroupSerializer : ResourceReferenceSerializer<LocalGroup> { }
 
 	public class LocalGroupSchema : DescribedResourceSchemaBase
 	{

@@ -34,7 +34,7 @@ namespace Dodo.Roles
 		public Role(AccessContext context, RoleSchema schema) : base(context, schema)
 		{
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
-			Parent = new ResourceReference<GroupResource>(group);
+			Parent = group.CreateRef();
 			PublicDescription = schema.PublicDescription;
 			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), context);
 		}

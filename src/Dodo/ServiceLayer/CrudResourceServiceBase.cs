@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Resources;
+using Resources.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,11 +49,12 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 					}
 					if (token.IsRedeemed)
 					{
-						throw new SecurityException($"Unexpected token consumption could indicate a user " +
+						SecurityWatcher.RegisterEvent($"Unexpected token consumption could indicate a user " +
 							"is attempting to exploit creation of multiple resources.");
+						return ResourceRequestError.BadRequest();
 					}
 					token.Redeem(Context);
-					token.Target = new ResourceReference<IRESTResource>(createdObject);
+					token.Target = createdObject.CreateRef<IRESTResource>(); ;
 					UserManager.Update(user, rscLock);
 				}
 			}

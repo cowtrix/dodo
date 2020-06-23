@@ -1,37 +1,60 @@
-﻿using Common;
+using Common;
 using System;
+using System.Collections;
+using System.Diagnostics;
 
-namespace Resources
+namespace Resources.Security
 {
-	/// <summary>
-	/// This exception should be thrown when any kind of security breach is detected
-	/// It will try very hard to notify the people it needs to
-	/// </summary>
-	public partial class SecurityException : Exception
+	public class SecurityEvent
 	{
-		public delegate void OnBroadcastDelegate(SecurityException exception);
-		public OnBroadcastDelegate OnBroadcast;
+		public StackTrace StackTrace { get; set; }
+		public Exception Exception { get; set; }
+		public string Message { get; set; }
+		public DateTime TimeStampUTC { get; set; }
+	}
 
-		public SecurityException()
+	public static class SecurityWatcher	
+	{
+		public delegate void OnBroadcastDelegate(SecurityEvent exception);
+		public static OnBroadcastDelegate OnBroadcast { get; set; }
+		private static PersistentStore<Guid, SecurityEvent> m_events = new PersistentStore<Guid, SecurityEvent>("events", "sec");
+
+		public static Guid RegisterEvent(Exception exception, string message = null)
 		{
-			BroadCast();
+			var ev = new SecurityEvent
+			{
+				Exception = exception,
+				StackTrace = new StackTrace(),
+				Message = message,
+				TimeStampUTC = DateTime.UtcNow,
+			};
+			Logger.Exception(exception);
+			var guid = Guid.NewGuid();
+			m_events[guid] = ev;
+			BroadCast(ev);
+			return guid;
 		}
 
-		public SecurityException(string message) : base(message)
+		public static Guid RegisterEvent(string message)
 		{
-			BroadCast();
+			var ev = new SecurityEvent
+			{
+				StackTrace = new System.Diagnostics.StackTrace(),
+				Message = message,
+				TimeStampUTC = DateTime.UtcNow,
+			};
+			Logger.Error($"SECURITY EVENT LOGGED: {message}");
+			var guid = Guid.NewGuid();
+			m_events[guid] = ev;
+			BroadCast(ev);
+			return guid;
 		}
 
-		public SecurityException(string message, Exception innerException) : base(message, innerException)
-		{
-			BroadCast();
-		}
-
-		void BroadCast()
+		private static void BroadCast(SecurityEvent ev)
 		{
 			try
 			{
-				OnBroadcast?.Invoke(this);
+				OnBroadcast?.Invoke(ev);
 			}
 			catch(Exception e)
 			{

@@ -12,7 +12,7 @@ using Resources.Serializers;
 
 namespace Dodo.Users.Tokens
 {
-	//public class ITokenOwnerSerializer : ResourceReferenceSerializer<ITokenOwner> { }
+	public class ITokenOwnerSerializer : ResourceReferenceSerializer<ITokenResource> { }
 
 	public interface ITokenResource : IRESTResource
 	{

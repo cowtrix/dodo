@@ -18,8 +18,11 @@ namespace Resources
 		bool HasValue();
 	}
 
-	public class ResourceReference<T> : IResourceReference where T : class, IRESTResource
+	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
 	{
+		[View(EPermissionLevel.PUBLIC)]
+		[JsonProperty]
+		[BsonElement]
 		public string Name { get; private set; }
 		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
@@ -42,18 +45,13 @@ namespace Resources
 
 		public bool HasValue() => Guid != default;
 
-		public ResourceReference() { }
-
 		public ResourceReference(T resource)
 		{
 			Guid = resource != null ? resource.Guid : default;
 			Slug = resource != null ? resource.Slug : default;
 			Type = resource?.GetType().Name.ToCamelCase();
 			Name = resource?.Name;
-			if(resource is ILocationalResource loc)
-			{
-				Location = loc.Location;
-			}
+			Location = resource is ILocationalResource loc ? loc.Location : null;
 		}
 
 		public ResourceReference(Guid guid, string slug, string type, string name, GeoLocation location)
@@ -68,9 +66,6 @@ namespace Resources
 		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)
 		{
 		}
-
-		public static implicit operator T(ResourceReference<T> d) => d.GetValue();
-		public static implicit operator ResourceReference<T>(T b) => new ResourceReference<T>(b);
 
 		public override bool Equals(object obj)
 		{

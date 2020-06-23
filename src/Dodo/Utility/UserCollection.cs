@@ -1,4 +1,4 @@
-﻿using Dodo.Users;
+using Dodo.Users;
 using Resources;
 using Resources.Security;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace Dodo
 		{
 		}
 
-		public UserCollection(AccessContext context) : base(new List<ResourceReference<User>>() { context.User }, context)
+		public UserCollection(AccessContext context) : base(new List<ResourceReference<User>>() { context.User.CreateRef() }, context)
 		{
 		}
 	}

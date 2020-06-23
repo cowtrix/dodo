@@ -30,7 +30,7 @@ namespace Dodo.Users.Tokens
 			{
 				throw new ArgumentNullException();
 			}
-			Owner = new ResourceReference<ITokenResource>(owner);
+			Owner = owner.CreateRef();
 			Guid = token.Guid;
 			PermissionLevel = permissionLevel;
 			m_typeName = token.GetType().FullName;

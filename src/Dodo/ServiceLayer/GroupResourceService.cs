@@ -41,9 +41,11 @@ namespace DodoResources
 				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier) ??
 					UserService.CreateTemporaryUser(newAdminIdentifier);
 			}
-			var resource = req.Result as T;
+			using var rscLock = new ResourceLock(req.Result);
+			var resource = rscLock.Value as T;
 			if(resource.AddAdmin(req.AccessContext, targetUser))
 			{
+				ResourceManager.Update(resource, rscLock);
 				return new OkRequestResult();
 			}
 			return ResourceRequestError.BadRequest();
@@ -59,7 +61,7 @@ namespace DodoResources
 			var req = (ResourceActionRequest)reqResult;
 			using var resourceLock = new ResourceLock(req.Result);
 			var target = resourceLock.Value as T;
-			target.Members.Add(req.AccessContext.User, req.AccessContext.Passphrase);
+			target.Members.Add(req.AccessContext.User.CreateRef(), req.AccessContext.Passphrase);
 			ResourceManager.Update(target, resourceLock);
 			return new OkRequestResult();
 		}
@@ -75,7 +77,7 @@ namespace DodoResources
 			var req = (ResourceActionRequest)reqResult;
 			using var resourceLock = new ResourceLock(req.Result);
 			var target = resourceLock.Value as T;
-			target.Members.Remove(req.AccessContext.User, req.AccessContext.Passphrase);
+			target.Members.Remove(req.AccessContext.User.CreateRef(), req.AccessContext.Passphrase);
 			ResourceManager.Update(target, resourceLock);
 			return new OkRequestResult();
 		}

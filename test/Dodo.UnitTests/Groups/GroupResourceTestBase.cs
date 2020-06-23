@@ -28,23 +28,23 @@ namespace Groups
 			using (var rscLock = new ResourceLock(newGroup))
 			{
 				newGroup = rscLock.Value as T;
-				newGroup.Members.Add(user, joinerContext.Passphrase);
-				Assert.IsTrue(newGroup.Members.IsAuthorised(user, joinerContext.Passphrase));
+				newGroup.Members.Add(user.CreateRef(), joinerContext.Passphrase);
+				Assert.IsTrue(newGroup.Members.IsAuthorised(user.CreateRef(), joinerContext.Passphrase));
 				ResourceManager.Update(newGroup, rscLock);
 			}
 			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsTrue(updatedGroup.Members.IsAuthorised(user, joinerContext.Passphrase));
+			Assert.IsTrue(updatedGroup.Members.IsAuthorised(user.CreateRef(), joinerContext.Passphrase));
 
 			// Leave
 			using (var rscLock = new ResourceLock(newGroup))
 			{
 				newGroup = rscLock.Value as T;
-				newGroup.Members.Remove(user, joinerContext.Passphrase);
-				Assert.IsFalse(newGroup.Members.IsAuthorised(user, joinerContext.Passphrase));
+				newGroup.Members.Remove(user.CreateRef(), joinerContext.Passphrase);
+				Assert.IsFalse(newGroup.Members.IsAuthorised(user.CreateRef(), joinerContext.Passphrase));
 				ResourceManager.Update(newGroup, rscLock);
 			}
 			updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsFalse(updatedGroup.Members.IsAuthorised(user, joinerContext.Passphrase));
+			Assert.IsFalse(updatedGroup.Members.IsAuthorised(user.CreateRef(), joinerContext.Passphrase));
 		}
 
 		[TestMethod]
@@ -56,7 +56,11 @@ namespace Groups
 
 			// Add
 			var newAdmin = GenerateUser(SchemaGenerator.GetRandomUser(default), out var newAdminContext);
-			newGroup.AddAdmin(creatorContext, newAdmin);
+			using(var rscLock = new ResourceLock(newGroup))
+			{
+				Assert.IsTrue(newGroup.AddAdmin(creatorContext, newAdmin));
+				ResourceManager.Update(newGroup, rscLock);
+			}			
 			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
 			var all = ResourceManager.Get(r => true).ToList();
 			Assert.IsTrue(updatedGroup.IsAdmin(newAdmin, creatorContext));

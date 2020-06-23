@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dodo.Rebellions
 {
-	//public class RebellionSerializer : ResourceReferenceSerializer<Rebellion> { }
+	public class RebellionSerializer : ResourceReferenceSerializer<Rebellion> { }
 
 	public class RebellionSchema : DescribedResourceSchemaBase
 	{

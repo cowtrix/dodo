@@ -11,6 +11,7 @@ using Dodo.Users;
 using System.IO;
 using System.Text;
 using Dodo.Users.Tokens;
+using Dodo;
 
 namespace DodoAOT
 {
@@ -21,7 +22,7 @@ namespace DodoAOT
 		{
 			//{ typeof(GeoLocation), GetLocationEditor },
 			{ typeof(LocationData), LocationDataView },
-			{ typeof(Dodo.GroupResource.AdminData), AdminDataView },
+			{ typeof(AdministrationData), AdminDataView },
 			{ typeof(IResourceReference), RefView },
 			//{ typeof(IEnumerable<IResourceReference>), for },
 		};
@@ -81,7 +82,7 @@ namespace DodoAOT
 				var nameStr = $"@{prefix}{nameof(IResourceReference.Name)}";
 				var urlStr = $"@{prefix}{nameof(IResourceReference.Type)}/@{prefix}{nameof(IResourceReference.Slug)}";
 				yield return Indent(indentLevel) + $"<div class=\"card\">";
-				yield return Indent(indentLevel + 1) + $"<a class=\"btn btn-primary\" role=\"button\" href=\"../../{urlStr}\">{nameStr}</a>";
+				//yield return Indent(indentLevel + 1) + $"<a class=\"btn btn-primary\" role=\"button\" href=\"../../{urlStr}\">{nameStr}</a>";
 				yield return Indent(indentLevel) + $"</div>";
 			}
 			yield return Indent(indentLevel) + $"<div class=\"card\">";

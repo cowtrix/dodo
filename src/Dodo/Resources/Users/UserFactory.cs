@@ -7,7 +7,7 @@ using System;
 
 namespace Dodo.Users
 {
-	//public class UserSerializer : ResourceReferenceSerializer<User> { }
+	public class UserSerializer : ResourceReferenceSerializer<User> { }
 
 	public class UserSchema : ResourceSchemaBase
 	{

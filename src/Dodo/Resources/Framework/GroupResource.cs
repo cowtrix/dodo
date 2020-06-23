@@ -9,6 +9,7 @@ using Dodo.Users.Tokens;
 using Common;
 using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Dodo
 {
@@ -19,21 +20,10 @@ namespace Dodo
 	/// It can have administrators, which are authorised to edit it.
 	/// It can have members and a public description.
 	/// </summary>
-	public abstract class GroupResource : DodoResource, IPublicResource, ITokenResource, INotificationResource
+	public abstract class GroupResource : 
+		DodoResource, IPublicResource, ITokenResource, INotificationResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
-		public class AdminData
-		{
-			[View(EPermissionLevel.ADMIN)]
-			public List<ResourceReference<User>> Administrators = new List<ResourceReference<User>>();
-			public string GroupPrivateKey { get; private set; }
-			public AdminData(User firstAdmin, string privateKey)
-			{
-				Administrators.Add(firstAdmin);
-				GroupPrivateKey = privateKey;
-			}
-		}
-
 		/// <summary>
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
@@ -42,7 +32,7 @@ namespace Dodo
 		[Common.Extensions.Description]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		public UserMultiSigStore<AdminData> AdministratorData { get; set; }
+		public UserMultiSigStore<AdministrationData> AdministratorData { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public int MemberCount { get { return Members.Count; } }
 		[View(EPermissionLevel.MEMBER)]
@@ -65,30 +55,29 @@ namespace Dodo
 			}
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			PublicKey = pk;
-			AdministratorData = new UserMultiSigStore<AdminData>(new AdminData(context.User, pv), context);
+			AdministratorData = new UserMultiSigStore<AdministrationData>(
+				new AdministrationData(this, context.User, pv), context);
 			PublicDescription = schema.PublicDescription;
 		}
 
 		public bool IsAdmin(User target, AccessContext requesterContext)
 		{
-			var userRef = new ResourceReference<User>(requesterContext.User);
-			if(!AdministratorData.IsAuthorised(userRef, requesterContext.Passphrase))
+			var userRef = requesterContext.User.CreateRef();
+			if (!AdministratorData.IsAuthorised(userRef, requesterContext.Passphrase))
 			{
 				return false;
 			}
-			return AdministratorData.GetValue(userRef, requesterContext.Passphrase).Administrators.Contains(target);
+			// GetValue should never fail here
+			var data = AdministratorData.GetValue(userRef, requesterContext.Passphrase);
+			return data.Administrators.Any(ad => ad.User.Guid == target.Guid);
 		}
 
 		public bool AddAdmin(AccessContext context, User newAdmin)
 		{
 			var temporaryPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
-			using (var groupLock = new ResourceLock(this))
+			if (!AddOrUpdateAdmin(context, newAdmin, temporaryPass))
 			{
-				if (!AddOrUpdateAdmin(context, newAdmin, temporaryPass))
-				{
-					return false;
-				}
-				ResourceManager.Update(this, groupLock);
+				return false;
 			}
 			using (var userLock = new ResourceLock(newAdmin))
 			{
@@ -109,18 +98,23 @@ namespace Dodo
 				// Other user can't change existing admin password
 				return true;
 			}
-			AdministratorData.AddPermission(context.User, context.Passphrase, newAdmin, newPass);
-			var adminData = AdministratorData.GetValue(newAdmin, newPass);
-			var adminList = adminData.Administrators;
-			if (adminList.Contains(newAdmin))
+			var newAdminRef = newAdmin.CreateRef();
+			AdministratorData.AddPermission(context.User.CreateRef(), context.Passphrase, newAdminRef, newPass);
+			var adminData = AdministratorData.GetValue(newAdminRef, newPass);
+			if(!adminData.AddOrUpdateAdministrator(context, newAdmin))
 			{
-				return true;
+				return false;
 			}
-			adminList.Add(newAdmin);
-			AdministratorData.SetValue(adminData, newAdmin, newPass);
+			AdministratorData.SetValue(adminData, newAdminRef, newPass);
 			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
 				false), EPermissionLevel.ADMIN);
+#if DEBUG
+			if (!IsAdmin(newAdmin, context))
+			{
+				throw new Exception($"Failed to add {newAdmin} as a new administrator");
+			}
+#endif
 			return true;
 		}
 
@@ -139,7 +133,7 @@ namespace Dodo
 			object requester, Passphrase passphrase)
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
-			var isMember = Members.IsAuthorised(user, passphrase);
+			var isMember = Members.IsAuthorised(user.CreateRef(), passphrase);
 			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
@@ -163,7 +157,7 @@ namespace Dodo
 			if (permissionLevel >= EPermissionLevel.ADMIN)
 			{
 				// Unlock encrypted administrator tokens
-				pass = new Passphrase(AdministratorData.GetValue(context.User, context.Passphrase).GroupPrivateKey);
+				pass = new Passphrase(AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase).GroupPrivateKey);
 			}
 			else
 			{

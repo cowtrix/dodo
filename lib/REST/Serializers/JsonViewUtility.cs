@@ -43,7 +43,8 @@ namespace Resources
 				if(!decryptable.TryGetValue(requester, passphrase, out obj))
 				{
 					// User wasn't authorised
-					throw new SecurityException("Bad authorization");
+					SecurityWatcher.RegisterEvent("Bad authorization");
+					return null;
 				}
 				sourceType = obj.GetType();
 			}
@@ -266,6 +267,20 @@ namespace Resources
 				throw new ArgumentException($"Patch permission level cannot be {nameof(EPermissionLevel.SYSTEM)}." +
 					" Members with this permission level can only be altered from direct code calls.");
 			}
+
+			// If the object is decryptable, we handle this transparently and redirect the data within
+			if (targetObject is IDecryptable decryptable)
+			{
+				if (!decryptable.TryGetValue(requester, passphrase, out var encryptedObject))
+				{
+					// User wasn't authorised
+					SecurityWatcher.RegisterEvent("Bad authorization");
+				}
+				encryptedObject.PatchObject(values, permissionLevel, requester, passphrase);
+				decryptable.SetValue(encryptedObject, permissionLevel, requester, passphrase);
+				return targetObject;
+			}
+
 			// Check for case insensitive duplicates
 			foreach (var key in values.Keys)
 			{
@@ -290,21 +305,7 @@ namespace Resources
 				throw new Exception("Cannot patch immutable struct - you must pass the full object. " +
 					"Add the [ViewClass] attribute to your struct.");
 			}
-
-			// If the object is decryptable, we handle this transparently and redirect the data within
-			if (targetObject is IDecryptable)
-			{
-				var decryptable = targetObject as IDecryptable;
-				if (!decryptable.TryGetValue(requester, passphrase, out var encryptedObject))
-				{
-					// User wasn't authorised
-					throw new SecurityException("Bad authorization");
-				}
-				encryptedObject.PatchObject(values, permissionLevel, requester, passphrase);
-				decryptable.SetValue(encryptedObject, permissionLevel, requester, passphrase);
-				return targetObject;
-			}
-
+			
 			// Get fields and properties
 			var members = new List<MemberInfo>(targetObject.GetType().GetProperties());
 			members.AddRange(targetObject.GetType().GetFields());
@@ -317,17 +318,17 @@ namespace Resources
 			if (validFields.Count() != values.Count)
 			{
 				// Request submitted incorrect fields
-				throw new SecurityException("Invalid field names");
+				throw new Exception("Invalid field names");
 			}
 			if (validFields.Where(member => member.GetCustomAttribute<ViewAttribute>()?.EditPermission <= permissionLevel)
 				.Count() != values.Count)
 			{
 				// The request is trying to modify fields it is not allowed to
-				throw new SecurityException("Insufficient privileges");
+				throw new Exception("Insufficient privileges");
 			}
 			if (!validFields.Where(m => m.GetMemberType() is IDecryptable).Cast<IDecryptable>().All(decryptable => decryptable.IsAuthorised(requester, passphrase)))
 			{
-				throw new SecurityException("Authorisation failed");
+				throw new Exception("Authorisation failed");
 			}
 
 			// Go through the dictionary and set the values
@@ -341,7 +342,7 @@ namespace Resources
 				var viewAttr = targetMember.GetCustomAttribute<ViewAttribute>();
 				if (viewAttr == null || viewAttr.EditPermission > permissionLevel)
 				{
-					throw new SecurityException($"Cannot patch field {targetMember.Name}: Insufficient privileges");
+					throw new Exception($"Cannot patch field {targetMember.Name}: Insufficient privileges");
 				}
 				object objToPatch = targetObject;
 				var value = targetMember.GetValue(targetObject);
@@ -380,7 +381,7 @@ namespace Resources
 				}
 				if (typeof(IDecryptable).IsAssignableFrom(targetMember.GetMemberType()))
 				{
-					var decryptable = fieldValue as IDecryptable;
+					decryptable = fieldValue as IDecryptable;
 					decryptable.SetValue(valueToSet, permissionLevel, requester, passphrase);
 					valueToSet = decryptable;
 				}

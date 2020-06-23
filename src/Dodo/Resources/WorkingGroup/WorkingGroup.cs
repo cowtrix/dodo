@@ -30,7 +30,11 @@ namespace Dodo.WorkingGroups
 		public WorkingGroup(AccessContext context, WorkingGroupSchema schema) : base(context, schema)
 		{
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
-			Parent = new ResourceReference<GroupResource>(group);
+			if(group == null)
+			{
+				throw new Exception($"Invalid parent group ID in Working Group construction: {schema.Parent}");
+			}
+			Parent = group.CreateRef();
 		}
 
 		[BsonElement]

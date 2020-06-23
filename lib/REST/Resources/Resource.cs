@@ -11,6 +11,8 @@ using System.Linq;
 
 namespace Resources
 {
+	public class IRESTResourceReferenceSerializer : ResourceReferenceSerializer<IRESTResource> { }
+
 	public interface IRESTResource : IVerifiable, IViewMetadataProvider
 	{
 		Guid Guid { get; }

@@ -72,8 +72,10 @@ namespace RESTTests
 				EHTTPRequestType.POST, user2.Guid);
 
 			var obj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
-			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(GroupResource.AdminData.Administrators).ToCamelCase()).Values<JToken>()
-				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() == user2.Guid.ToString()));
+			var adminData = obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase());
+			Assert.IsNotNull(adminData.Value<JArray>(nameof(AdministrationData.Administrators).ToCamelCase())
+				.Values<JToken>().Single(s => s.Value<JToken>(nameof(AdministratorEntry.User).ToCamelCase()).
+					Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() == user2.Guid.ToString()));
 			await Logout();
 
 			await Login(user2.Slug, user2Password);
@@ -103,7 +105,7 @@ namespace RESTTests
 				EHTTPRequestType.POST, user2Email);
 
 			var obj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
-			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(GroupResource.AdminData.Administrators).ToCamelCase()).Values<JToken>()
+			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(AdministrationData.Administrators).ToCamelCase()).Values<JToken>()
 				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() != user1.Guid.ToString()));
 			await Logout();
 
