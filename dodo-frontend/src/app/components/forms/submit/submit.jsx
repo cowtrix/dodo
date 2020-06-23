@@ -11,5 +11,6 @@ export const Submit = ({ submit, value }) =>
 	</Button>
 
 Submit.propTypes = {
+	value: PropTypes.string,
 	onSubmit: PropTypes.func,
 }
