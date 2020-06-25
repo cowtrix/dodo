@@ -18,7 +18,7 @@ namespace Dodo.Rebellions
 {
 	[Name("Rebellion")]
 	[SearchPriority(0)]
-	public class Rebellion : GroupResource, ILocationalResource, ITimeBoundResource
+	public class Rebellion : GroupResource, ILocationalResource, ITimeBoundResource, IVideoResource
 	{
 		public const string ROOT = "rebellions";
 
@@ -88,6 +88,10 @@ namespace Dodo.Rebellions
 
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; } = new GeoLocation();
+
+		[View(EPermissionLevel.PUBLIC)]
+		[Name("Banner Video Embed URL")]
+		public string VideoEmbedURL { get; set; }
 
 		public Rebellion() : base() { }
 

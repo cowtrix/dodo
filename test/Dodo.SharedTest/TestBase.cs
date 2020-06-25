@@ -106,6 +106,8 @@ namespace SharedTest
 			{
 				if (obj is Rebellion rebellion)
 				{
+					rebellion.VideoEmbedURL = "https://www.youtube.com/embed/d4QDM_Isi24";
+
 					// Add some working groups, sites
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));

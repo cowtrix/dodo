@@ -32,10 +32,10 @@ namespace Dodo.ViewModels
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public AdministrationDataViewModel AdministratorData { get; set; }
 		[DisplayName("MemberCount")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get; set; }
 		[DisplayName("PublicKey")]
-		[View(EPermissionLevel.MEMBER, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
 		public string PublicKey { get; set; }
 		[DisplayName("IsPublished")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]

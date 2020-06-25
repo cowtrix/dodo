@@ -10,13 +10,26 @@
 
 
 
-<h4 class="title">Edit Rebellion</h4>
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			<form asp-action="Edit">
-				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<div class="form-group">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Adminstration</a>
+	</li>
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Rebellion/@Model.Slug">View</a></li>
+</ul>
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="row">
+			<div class="card" style="width:100%;">
+				<div class="card-body">
+					<form asp-action="Edit">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+										<div class="form-group">
 					<label asp-for="Guid" class="control-label"></label>
 					<input  readonly asp-for="Guid" class="form-control"></input>
 					<span asp-validation-for="Guid" class="text-danger"></span>
@@ -78,59 +91,173 @@
 					<input  asp-for="EndDate" class="form-control"></input>
 					<span asp-validation-for="EndDate" class="text-danger"></span>
 				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Location</h5>
-							<address>
-								<strong>Address</strong>
-								@if (@Model.Location.LocationData != null && !@Model.Location.LocationData.IsEmpty) {
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Address)) {
-										<br>@Model.Location.LocationData?.Address
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Neighborhood)) {
-										<br>@Model.Location.LocationData?.Neighborhood
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Locality)) {
-										<br>@Model.Location.LocationData?.Locality
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Place)) {
-										<br>@Model.Location.LocationData?.Place
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.District)) {
-										<br>@Model.Location.LocationData?.District
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Postcode)) {
-										<br>@Model.Location.LocationData?.Postcode
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Region)) {
-										<br>@Model.Location.LocationData?.Region
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Country)) {
-										<br>@Model.Location.LocationData?.Country
-									}
-								} else {  @Html.Raw("<br>"); @Html.Label("None"); }
-							</address>
-							<div class="form-group">
-								<label asp-for="Location.Latitude" class="control-label"></label>
-								<input  asp-for="Location.Latitude" class="form-control"></input>
-								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Location.Longitude" class="control-label"></label>
-								<input  asp-for="Location.Longitude" class="form-control"></input>
-								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
-							</div>
-						</div>
-				</div>
+<script>
+	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
+	var coordinates = document.getElementById('coordinates');
+	window.onload = function () {
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/streets-v11',
+			center: [@Model.Location.Longitude, @Model.Location.Latitude],
+			zoom: 6
+		});
+		var geocoder = new MapboxGeocoder({
+			accessToken: mapboxgl.accessToken,
+			mapboxgl: mapboxgl
+		});
+		geocoder.on('result', function (result) {
+			
+			var coords = result["result"]["center"];
+			console.warn(JSON.stringify(
+				coords,
+				null,
+				2
+			));
+			document.getElementById("Model.Location_lat").value = coords[1];
+			document.getElementById("Model.Location_lng").value = coords[0];
+			// Update the Point feature in `geojson` coordinates
+			// and call setData to the source layer `point` on it.
+		geojson.features[0].geometry.coordinates = [coords[0], coords[1]];
+			map.getSource('point').setData(geojson);
+		});
+		map.addControl(
+			geocoder
+		);
+		var canvas = map.getCanvasContainer();
 
-				<div class="form-group">
-					<input type="submit" value="Save" class="btn btn-primary" />
-				</div>
-			</form>
+		var geojson = {
+			'type': 'FeatureCollection',
+			'features': [
+				{
+					'type': 'Feature',
+					'geometry': {
+						'type': 'Point',
+						'coordinates': [@Model.Location.Longitude, @Model.Location.Latitude],
+					}
+				}
+			]
+		};
+
+		function onMove(e) {
+			var coords = e.lngLat;
+
+			// Set a UI indicator for dragging.
+			canvas.style.cursor = 'grabbing';
+
+			// Update the Point feature in `geojson` coordinates
+			// and call setData to the source layer `point` on it.
+			geojson.features[0].geometry.coordinates = [coords.lng, coords.lat];
+			map.getSource('point').setData(geojson);
+		}
+
+		function onUp(e) {
+			var coords = e.lngLat;
+
+			document.getElementById("Model.Location_lat").value = coords.lat;
+			document.getElementById("Model.Location_lng").value = coords.lng;
+
+			canvas.style.cursor = '';
+
+			// Unbind mouse/touch events
+			map.off('mousemove', onMove);
+			map.off('touchmove', onMove);
+		}
+
+		map.on('load', function () {
+			// Add a single point to the map
+			map.addSource('point', {
+				'type': 'geojson',
+				'data': geojson
+			});
+
+			map.addLayer({
+				'id': 'point',
+				'type': 'circle',
+				'source': 'point',
+				'paint': {
+					'circle-radius': 10,
+					'circle-color': '#3887be'
+				}
+			});
+
+			// When the cursor enters a feature in the point layer, prepare for dragging.
+			map.on('mouseenter', 'point', function () {
+				map.setPaintProperty('point', 'circle-color', '#3bb2d0');
+				canvas.style.cursor = 'move';
+			});
+
+			map.on('mouseleave', 'point', function () {
+				map.setPaintProperty('point', 'circle-color', '#3887be');
+				canvas.style.cursor = '';
+			});
+
+			map.on('mousedown', 'point', function (e) {
+				// Prevent the default map drag behavior.
+				e.preventDefault();
+
+				canvas.style.cursor = 'grab';
+
+				map.on('mousemove', onMove);
+				map.once('mouseup', onUp);
+			});
+
+			map.on('touchstart', 'point', function (e) {
+				if (e.points.length !== 1) return;
+
+				// Prevent the default map drag behavior.
+				e.preventDefault();
+
+				map.on('touchmove', onMove);
+				map.once('touchend', onUp);
+			});
+		});
+	}
+</script>
+
+@{ /**/
+	   var data = Model.Location.LocationData; }
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title">Location</h5>
+		<div id="map" style="height: 20em; width: 100%;"></div>
+		<div class="form-group">
+			<label asp-for="Location.Latitude" class="control-label"></label>
+			<input id="Model.Location_lat" asp-for="Location.Latitude" class="form-control"></input>
+			<span asp-validation-for="Location.Latitude" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Location.Longitude" class="control-label"></label>
+			<input id="Model.Location_lng" asp-for="Location.Longitude" class="form-control"></input>
+			<span asp-validation-for="Location.Longitude" class="text-danger"></span>
 		</div>
 	</div>
 </div>
 
+				<div class="form-group">
+					<label asp-for="VideoEmbedURL" class="control-label"></label>
+					<input  asp-for="VideoEmbedURL" class="form-control"></input>
+					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
+				</div>
+
+						<div class="form-group">
+							<input type="submit" value="Save" class="btn btn-primary" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="card" style="width:100%;">
+				<div class="card-body">
+					<form asp-action="Delete">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger">Delete</a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
 <div class="row">
 	<div class="card" style="width:100%;">		
 		<div class="card-body">
@@ -150,19 +277,7 @@
 		</div>
 	</div>
 </div>
-
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			<form asp-action="Delete">
-				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<a href="@Model.Slug/delete" class="btn btn-danger">Delete</a>
-			</form>
-		</div>
-	</div>
 </div>
-
-<div>
-	<a href="../../Rebellion/@Model.Slug">View Rebellion</a>
+	<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">...</div>
 </div>
 

@@ -140,6 +140,7 @@ namespace Dodo.Controllers.Edit
 			{
 				if (!ModelState.IsValid)
 				{
+					var errors = ModelState.Values.Where(v => v.Errors.Any()).ToList();
 					ModelState.AddModelError("Save Error", "Error updating the resource");
 					return await Edit(id); 
 				}

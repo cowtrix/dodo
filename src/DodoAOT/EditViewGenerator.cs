@@ -13,7 +13,7 @@ namespace DodoAOT
 	{
 		public static string Generate(Type resourceType)
 		{
-			var template = File.ReadAllText("Edit.template");
+			var template = File.ReadAllText("Edit.template.cshtml");
 			var sb = new StringBuilder();
 			foreach(var s in BuildScripts())
 			{

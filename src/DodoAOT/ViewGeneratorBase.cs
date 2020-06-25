@@ -20,8 +20,7 @@ namespace DodoAOT
 		private delegate IEnumerable<string> CustomTypeCallback(string prefix, MemberInfo member, int indentLevel);
 		private static Dictionary<Type, CustomTypeCallback> m_customTypeCallback = new Dictionary<Type, CustomTypeCallback>()
 		{
-			//{ typeof(GeoLocation), GetLocationEditor },
-			{ typeof(LocationData), LocationDataView },
+			{ typeof(GeoLocation), GetLocationEditor },
 			{ typeof(AdministrationData), AdminDataView },
 			{ typeof(IResourceReference), RefView },
 			//{ typeof(IEnumerable<IResourceReference>), for },
@@ -100,32 +99,13 @@ namespace DodoAOT
 			yield return Indent(indentLevel) + $"</div>";
 		}
 
-		private static IEnumerable<string> LocationDataView(string prefix, MemberInfo member, int indentLevel)
+		private static IEnumerable<string> GetLocationEditor(string prefix, MemberInfo member, int indentLevel)
 		{
 			var name = member.Name;
-			IEnumerable<string> labelIfNotNull(string fieldName, int indent)
-			{
-				yield return Indent(indent) + $"@if (!string.IsNullOrEmpty(Model.{prefix}{name}?.{fieldName})) {{";
-				yield return Indent(indent + 1) + $"<br>@Model.{prefix}{name}?.{fieldName}";
-				yield return Indent(indent) + "}";
-			}
-			yield return Indent(indentLevel) + $"<address>";
-			yield return Indent(indentLevel + 1) + $"<strong>Address</strong>";
-
-			//early return
-			yield return Indent(indentLevel + 1) + $"@if (@Model.{prefix}{name} != null && !@Model.{prefix}{name}.IsEmpty) {{";
-
-			foreach (var l in labelIfNotNull(nameof(LocationData.Address), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Neighborhood), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Locality), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Place), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.District), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Postcode), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Region), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Country), indentLevel + 2)) yield return l;
-
-			yield return Indent(indentLevel + 1) + "} else {  @Html.Raw(\"<br>\"); @Html.Label(\"None\"); }";
-			yield return Indent(indentLevel) + $"</address>";
+			var template = File.ReadAllText("LocationPicker.template.cshtml");
+			template = template.Replace("{LOCATION}", $"Model.{prefix}{name}");
+			template = template.Replace("{ LOCATION }", $"Model.{prefix}{name}");
+			yield return template;
 		}
 
 		protected static string Indent(int indent)

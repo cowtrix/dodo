@@ -1,7 +1,17 @@
 {
 	"version": "1.0",
 	"defaultProvider": "cdnjs",
+	
 	"libraries": [
+		{
+			"library": "jquery@3.3.1",
+			"files": [
+				"jquery.min.js",
+				"jquery.js",
+				"jquery.min.map"
+			],
+			"destination": "wwwroot/lib/jquery/"
+		},
 		{
 			"library": "twitter-bootstrap@4.4.1",
 			"destination": "wwwroot/lib/twitter-bootstrap/"

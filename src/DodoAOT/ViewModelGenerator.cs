@@ -7,6 +7,7 @@ using System.Reflection;
 using Common.Extensions;
 using Common;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace DodoAOT
 {
@@ -57,6 +58,10 @@ namespace DodoAOT
 				}
 				yield return new string('\t', indentLevel) + $"[DisplayName(\"{member.GetName()}\")]";
 				yield return new string('\t', indentLevel) + $"[View({nameof(EPermissionLevel)}.{attr.ViewPermission}, {nameof(EPermissionLevel)}.{attr.EditPermission})]";
+				if(member.GetCustomAttribute<EmailAttribute>() != null)
+				{
+					yield return new string('\t', indentLevel) + $"[{typeof(EmailAddressAttribute).Namespace}.{typeof(EmailAddressAttribute).Name}]";
+				}
 				yield return new string('\t', indentLevel) + $"public {typeName} {memberName} {{ get; set; }}";
 			}
 		}

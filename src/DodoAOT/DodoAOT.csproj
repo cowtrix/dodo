@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <None Remove="Create.template" />
-    <None Remove="Edit.template" />
+    <None Remove="Edit.template.cshtml" />
     <None Remove="Notifications.template" />
   </ItemGroup>
 
@@ -17,7 +17,7 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Edit.template">
+    <Content Include="Edit.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -37,7 +37,10 @@
     <None Update="buildAOT.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Delete.template">
+    <None Update="Delete.template.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="LocationPicker.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

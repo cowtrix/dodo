@@ -6,19 +6,18 @@
 }
 
 <script>
-	function validateForm() {
-		var x = document.getElementById("nameConfirm").value;
-		if (x != "@Model.Name") {
-			alert("Name was incorrect");
-			return false;
-		}
+	function validateForm(form) {
+		var value = document.getElementById("nameConfirm").value;
+		console.warn("Value was " + value)
+		console.warn("Model name was " + "@Model.Name")
+		return value == "@Model.Name";
 	}
 </script>
 
 <h1>Delete Working Group</h1>
 
 <div>
-	<form runat="server" asp-action="Delete">
+	<form id="deleteForm" onsubmit="return validateForm(this);" asp-action="Delete">
 		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 		<div class="form-group">
 			<label asp-for="Guid" class="control-label"></label>
@@ -34,6 +33,6 @@
 			<label class="control-label">Confirm</label>
 			<input class="form-control" id="nameConfirm" />
 		</div>
-		<input type="submit" OnClientClick="return validateForm()" value="Delete" class="btn btn-danger" /> |
+		<input type="submit" value="Delete" class="btn btn-danger" />
 	</form>
 </div>

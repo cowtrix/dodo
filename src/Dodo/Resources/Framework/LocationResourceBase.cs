@@ -91,7 +91,7 @@ namespace Dodo.LocationResources
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		[Name("Video Embed URL")]
-		public string VideoEmbedURL { get; set; } = "https://www.youtube.com/embed/d4QDM_Isi24";
+		public string VideoEmbedURL { get; set; }
 		[View(EPermissionLevel.ADMIN)]
 		[Name("Published")]
 		public bool IsPublished { get; set; }

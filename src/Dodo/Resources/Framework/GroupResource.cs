@@ -35,10 +35,10 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		[Name("Administrator Data")]
 		public UserMultiSigStore<AdministrationData> AdministratorData { get; set; }
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get { return Members.Count; } }
-		[View(EPermissionLevel.MEMBER)]
 		[BsonElement]
+		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
 		public string PublicKey { get; private set; }
 		[View(EPermissionLevel.ADMIN)]
 		public bool IsPublished { get; set; }

@@ -15,7 +15,7 @@ namespace DodoAOT
 	{
 		public static string Generate(Type resourceType)
 		{
-			var template = File.ReadAllText("Delete.template");
+			var template = File.ReadAllText("Delete.template.cshtml");
 			template = template.Replace("{TYPE}", resourceType.Name);
 			template = template.Replace("{NAME}", resourceType.GetName());
 			return template;

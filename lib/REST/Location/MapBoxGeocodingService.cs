@@ -62,7 +62,7 @@ namespace Resources.Location
 				Locality = GetFromFeatures(features, "locality"),
 				Neighborhood = GetFromFeatures(features, "neighborhood"),
 				Address = GetFromFeatures(features, "address"),
-				Timezone = TZConvert.GetTimeZoneInfo(timezone.Result),
+				TimezoneID = timezone.Result,
 			};
 		}
 
