@@ -121,7 +121,7 @@ namespace RESTTests
 		protected async Task Logout()
 		{
 			var response = await m_client.GetAsync($"{UserService.RootURL}/{UserService.LOGOUT}");
-			if (!response.IsSuccessStatusCode)
+			if (response.StatusCode != HttpStatusCode.Redirect)
 			{
 				throw new Exception(response.ToString());
 			}
