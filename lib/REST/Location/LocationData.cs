@@ -3,6 +3,7 @@ using Common.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using System;
+using TimeZoneConverter;
 
 namespace Resources.Location
 {
@@ -25,7 +26,7 @@ namespace Resources.Location
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public string Address { get; set; }
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public TimeZoneInfo Timezone { get; set; }
+		public string TimezoneID { get; set; }
 
 		[BsonIgnore]
 		[JsonIgnore]
@@ -43,6 +44,10 @@ namespace Resources.Location
 					Country == null;
 			}
 		}
+
+		[JsonIgnore]
+		[BsonIgnore]
+		public TimeZoneInfo Timezone => TimezoneID != null ? TZConvert.GetTimeZoneInfo(TimezoneID) : TimeZoneInfo.Utc;
 
 		public override string ToString() =>
 			Address.AppendIfNotNull(", ") +
