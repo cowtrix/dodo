@@ -14,6 +14,12 @@ using System.Security;
 
 namespace Dodo
 {
+	public interface IAdministratedResource : IRESTResource
+	{
+		AdministrationData GetAdministrationData(AccessContext requester);
+		void SetAdministrationData(AccessContext requester, AdministrationData data);
+	}
+
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
 	/// <summary>
@@ -22,7 +28,7 @@ namespace Dodo
 	/// It can have members and a public description.
 	/// </summary>
 	public abstract class GroupResource : 
-		DodoResource, IPublicResource, ITokenResource, INotificationResource
+		DodoResource, IPublicResource, ITokenResource, INotificationResource, IAdministratedResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 		/// <summary>
@@ -33,7 +39,6 @@ namespace Dodo
 		[Common.Extensions.Description]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Administrator Data")]
 		public UserMultiSigStore<AdministrationData> AdministratorData { get; set; }
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get { return Members.Count; } }
@@ -105,7 +110,7 @@ namespace Dodo
 			if(!IsAdmin(context.User, context, out var administratorPermission) || (!tokenTriggered && !administratorPermission.CanAddAdmin))
 			{
 				// Context isn't admin, or doesn't have correct permissions
-				SecurityWatcher.RegisterEvent($"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");
+				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");
 				return false;
 			}
 			if (newAdmin.Guid != context.User.Guid && IsAdmin(newAdmin, context, out _))
@@ -190,6 +195,16 @@ namespace Dodo
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
 			return SharedTokens.Remove(context, permissionLevel, notification);
+		}
+
+		public AdministrationData GetAdministrationData(AccessContext requester)
+		{
+			return AdministratorData.GetValue(requester.User.CreateRef(), requester.Passphrase);
+		}
+
+		public void SetAdministrationData(AccessContext requester, AdministrationData data)
+		{
+			AdministratorData.SetValue(data, requester.User.CreateRef(), requester.Passphrase);
 		}
 	}
 }

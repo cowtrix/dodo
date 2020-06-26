@@ -44,7 +44,7 @@ namespace Resources
 				if(!decryptable.TryGetValue(requester, passphrase, out obj))
 				{
 					// User wasn't authorised
-					SecurityWatcher.RegisterEvent("Bad authorization");
+					SecurityWatcher.RegisterEvent(requester as IRESTResource, "Bad authorization");
 					return null;
 				}
 				sourceType = obj.GetType();
@@ -275,7 +275,7 @@ namespace Resources
 				if (!decryptable.TryGetValue(requester, passphrase, out var encryptedObject))
 				{
 					// User wasn't authorised
-					SecurityWatcher.RegisterEvent("Bad authorization");
+					SecurityWatcher.RegisterEvent(requester as IRESTResource, "Bad authorization");
 				}
 				encryptedObject.PatchObject(values, permissionLevel, requester, passphrase);
 				decryptable.SetValue(encryptedObject, permissionLevel, requester, passphrase);

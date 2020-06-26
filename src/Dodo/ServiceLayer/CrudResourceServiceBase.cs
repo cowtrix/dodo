@@ -49,7 +49,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 					}
 					if (token.IsRedeemed)
 					{
-						SecurityWatcher.RegisterEvent($"Unexpected token consumption could indicate a user " +
+						SecurityWatcher.RegisterEvent(Context.User, $"Unexpected token consumption could indicate a user " +
 							"is attempting to exploit creation of multiple resources.");
 						return ResourceRequestError.BadRequest();
 					}

@@ -92,13 +92,13 @@ namespace Dodo
 		{
 			if (context.User == newAdmin)
 			{
-				SecurityWatcher.RegisterEvent($"{Resource}: Admin {context.User}, tried to change their own permissions, which is never allowed.");
+				SecurityWatcher.RegisterEvent(context.User, $"{Resource}: Admin {context.User}, tried to change their own permissions, which is never allowed.");
 				return false;
 			}
 			var adminMakingChange = Administrators.SingleOrDefault(ad => ad.User.Guid == context.User.Guid);
 			if (adminMakingChange == null)
 			{
-				SecurityWatcher.RegisterEvent($"{Resource}: Admin {context.User}, who isn't on the administrator list managed to decrypt it and tried to add {newAdmin} as a Administrator");
+				SecurityWatcher.RegisterEvent(context.User, $"{Resource}: Admin {context.User}, who isn't on the administrator list managed to decrypt it and tried to add {newAdmin} as a Administrator");
 				return false;
 			}
 			var alteredAdminEntry = Administrators.SingleOrDefault(ad => ad.User.Guid == newAdmin.Guid);
@@ -106,7 +106,7 @@ namespace Dodo
 			{
 				if (!adminMakingChange.Permissions.CanAddAdmin)
 				{
-					SecurityWatcher.RegisterEvent($"{Resource} : Admin {context.User} tried to add {newAdmin} as an admin, and they don't have permission to do so.");
+					SecurityWatcher.RegisterEvent(context.User, $"{Resource} : Admin {context.User} tried to add {newAdmin} as an admin, and they don't have permission to do so.");
 					return false;
 				}
 				alteredAdminEntry = new AdministratorEntry(newAdmin);
@@ -116,7 +116,7 @@ namespace Dodo
 			{
 				if (!adminMakingChange.Permissions.CanChangePermissions)
 				{
-					SecurityWatcher.RegisterEvent($"{Resource} : Admin {context.User} tried to change permissions for {newAdmin}, and they don't have permission to do so.");
+					SecurityWatcher.RegisterEvent(context.User, $"{Resource} : Admin {context.User} tried to change permissions for {newAdmin}, and they don't have permission to do so.");
 					return false;
 				}
 				alteredAdminEntry.Permissions = permissions;
