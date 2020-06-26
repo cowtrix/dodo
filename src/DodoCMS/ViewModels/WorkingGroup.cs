@@ -7,6 +7,7 @@ namespace Dodo.ViewModels
 {
 	public class WorkingGroupViewModel : IViewModel
 	{
+		public System.Type __Type => typeof(WorkingGroup);
 		[DisplayName("Guid")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Guid Guid { get; set; }

@@ -7,6 +7,7 @@ namespace Dodo.ViewModels
 {
 	public class EventViewModel : IViewModel
 	{
+		public System.Type __Type => typeof(Event);
 		[DisplayName("Guid")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Guid Guid { get; set; }

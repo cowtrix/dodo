@@ -14,13 +14,13 @@
 	<li class="nav-item">
 		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
 	</li>
-	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.GetType()))
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
 			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
 		</li>
 	}
-	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.GetType()))
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
 			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Adminstration</a>
@@ -241,18 +241,24 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="card" style="width:100%;">
-				<div class="card-body">
-					<form asp-action="Delete">
-						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-						<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger" style="width:80%;height:32em;">Delete</a>
-					</form>
+		<div id="accordion">
+			<div class="card">
+				<div class="card-header" id="headingOne">
+					<h5 class="mb-0">
+						<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+							DANGER ZONE
+						</button>
+					</h5>
+				</div>
+				<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+					<div class="card-body">
+						<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.GetType()))
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{
 		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
 			
@@ -278,7 +284,7 @@
 
 		</div>
 	}
-	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.GetType()))
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
 	{
 		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
 			<div class="row">
@@ -292,13 +298,48 @@
 				var canedit = thisAdmin.Permissions.CanChangePermissions;
 				var canadd = thisAdmin.Permissions.CanAddAdmin;
 				var canremove = thisAdmin.Permissions.CanRemoveAdmin;
+
 				foreach (var admin in adminData.Administrators)
 				{
+					string getID(string name) { return $"{name}"; };
 					<div class="card" style="width:100%;">
 						<div class="card-body">
-							<strong>@admin.User</strong>
-							<label class="control-label">Can Add Administrators</label>
-							<input  class="form-control" />
+							<form action="/changeAdmin">
+								<label class="control-label" for="@getID("Slug")">Slug</label>
+								<input readonly type="text" class="form-control" id="@getID("Slug")" value="@@@admin.User.Slug">
+								<div class="card" style="width:100%;">
+									<div class="card-body">
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input" id="@getID("CanAddAdmin")" checked="@admin.Permissions.CanAddAdmin.ToString().ToLower()">
+											<label class="form-check-label" for="@getID("CanAddAdmin")">Can Add Admin</label>
+										</div>
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input" id="@getID("CanRemoveAdmin")" checked="@admin.Permissions.CanRemoveAdmin.ToString().ToLower()">
+											<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admin</label>
+										</div>
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input" id="@getID("CanChangePermissions")" checked="@admin.Permissions.CanChangePermissions.ToString().ToLower()">
+											<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Permissions</label>
+										</div>
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input" id="@getID("CanEditInfo")" checked="@admin.Permissions.CanEditInfo.ToString().ToLower()">
+											<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Info</label>
+										</div>
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input" id="@getID("CanCreateChildObjects")" checked="@admin.Permissions.CanCreateChildObjects.ToString().ToLower()">
+											<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
+										</div>
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input" id="@getID("CanDeleteChildObjects")" checked="@admin.Permissions.CanDeleteChildObjects.ToString().ToLower()">
+											<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<input type="submit" value="Save" class="btn btn-primary" />
+								</div>
+
+							</form>
 						</div>
 					</div>
 				}

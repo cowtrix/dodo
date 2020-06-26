@@ -21,7 +21,8 @@ namespace DodoAOT
 				$"using {key.Namespace};\r\n" +
 				"using Resources;\r\n" +
 				"namespace Dodo.ViewModels\r\n{\r\n" +
-				$"\tpublic class {key.Name}ViewModel : IViewModel\r\n\t{{\r\n";
+				$"\tpublic class {key.Name}ViewModel : IViewModel\r\n\t{{\r\n" +
+				$"\t\tpublic System.Type __Type => typeof({key.Name});\r\n";
 		}
 
 		private static IEnumerable<string> BuildClass(Type targetType, int indentLevel)

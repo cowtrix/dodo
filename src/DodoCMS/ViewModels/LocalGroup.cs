@@ -7,6 +7,7 @@ namespace Dodo.ViewModels
 {
 	public class LocalGroupViewModel : IViewModel
 	{
+		public System.Type __Type => typeof(LocalGroup);
 		[DisplayName("Guid")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Guid Guid { get; set; }
