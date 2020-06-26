@@ -20,11 +20,28 @@ namespace DodoAOT
 		private delegate IEnumerable<string> CustomTypeCallback(string prefix, MemberInfo member, int indentLevel);
 		private static Dictionary<Type, CustomTypeCallback> m_customTypeCallback = new Dictionary<Type, CustomTypeCallback>()
 		{
+			{ typeof(AdministrationData), Null },
 			{ typeof(GeoLocation), GetLocationEditor },
-			{ typeof(AdministrationData), AdminDataView },
 			{ typeof(IResourceReference), RefView },
-			//{ typeof(IEnumerable<IResourceReference>), for },
 		};
+
+		private static IEnumerable<string> Null(string prefix, MemberInfo member, int indentLevel)
+		{
+			yield return "";
+		}
+
+		protected static string GetAdminEditor(Type resourceType)
+		{
+			if (!typeof(IAdministratedResource).IsAssignableFrom(resourceType))
+			{
+				return "";
+			}
+			var field = resourceType.GetProperty("AdministratorData");
+			var template = File.ReadAllText("Admin.template.cshtml");
+			template = template.Replace("{NAME}", field.GetName());
+			template = template.Replace("{MEMBER}", field.GetName());
+			return template;
+		}
 
 		protected static string GetNotificationEditor(Type resourceType)
 		{
@@ -113,7 +130,7 @@ namespace DodoAOT
 			return new string('\t', indent);
 		}
 
-		protected static IEnumerable<string> BuildClass(Type targetType, int indentLevel, string prefix, bool forcereadonly = false)
+		protected static IEnumerable<string> BuildDataFields(Type targetType, int indentLevel, string prefix, bool forcereadonly = false)
 		{
 			foreach (var member in targetType.GetPropertiesAndFields(p => p.CanRead, f => true)
 				.OrderBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
@@ -152,7 +169,7 @@ namespace DodoAOT
 					yield return Indent(indentLevel) + $"<div class=\"card\">";
 					yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
 					yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
-					foreach (var line in BuildClass(memberType, indentLevel + 3, $"{prefix}{memberName}.", isReadonly))
+					foreach (var line in BuildDataFields(memberType, indentLevel + 3, $"{prefix}{memberName}.", isReadonly))
 					{
 						yield return line;
 					}

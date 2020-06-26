@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="card" style="width:100%;">
+		<div class="card-body">
+			<strong>{NAME}</strong>
+			@{
+				var adminData = Model.{MEMBER};
+				Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
+
+				var canedit = thisAdmin.Permissions.CanChangePermissions;
+				var canadd = thisAdmin.Permissions.CanAddAdmin;
+				var canremove = thisAdmin.Permissions.CanRemoveAdmin;
+				foreach (var admin in adminData.Administrators)
+				{
+					<div class="card" style="width:100%;">
+						<div class="card-body">
+							<strong>@admin.User</strong>
+							<label class="control-label">Can Add Administrators</label>
+							<input  class="form-control" />
+						</div>
+					</div>
+				}
+			}
+		</div>
+	</div>
+</div>

@@ -14,12 +14,18 @@
 	<li class="nav-item">
 		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
 	</li>
-	<li class="nav-item">
-		<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Adminstration</a>
-	</li>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.GetType()))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
+		</li>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.GetType()))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Adminstration</a>
+		</li>
+	}
 	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Role/@Model.Slug">View</a></li>
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -92,13 +98,23 @@
 				<div class="card-body">
 					<form asp-action="Delete">
 						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-						<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Role/@Model.Slug/delete" class="btn btn-danger">Delete</a>
+						<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Role/@Model.Slug/delete" class="btn btn-danger" style="width:80%;height:32em;">Delete</a>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab"></div>
-	<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">...</div>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.GetType()))
+	{
+		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+			
+		</div>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.GetType()))
+	{
+		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+			
+		</div>
+	}
 </div>
 

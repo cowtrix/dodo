@@ -20,7 +20,7 @@ namespace DodoAOT
 			template = template.Replace("{SCHEMA_TYPE}", schemaType.FullName);
 			template = template.Replace("{NAME}", resourceType.GetName());
 			var view = new StringBuilder();
-			foreach (var line in BuildClass(schemaType, 4, ""))
+			foreach (var line in BuildDataFields(schemaType, 4, ""))
 			{
 				view.AppendLine(line);
 			}

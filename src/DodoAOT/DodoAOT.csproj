@@ -6,12 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Admin.template.cshtml" />
     <None Remove="Create.template" />
     <None Remove="Edit.template.cshtml" />
     <None Remove="Notifications.template" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Admin.template.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="Notifications.template">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

@@ -28,7 +28,7 @@ namespace Dodo.ViewModels
 			[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 			public System.Collections.Generic.List<Dodo.AdministratorEntry> Administrators { get; set; }
 		}
-		[DisplayName("Administrator Data")]
+		[DisplayName("AdministratorData")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public AdministrationDataViewModel AdministratorData { get; set; }
 		[DisplayName("MemberCount")]
