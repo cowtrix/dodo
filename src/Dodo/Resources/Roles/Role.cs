@@ -14,7 +14,7 @@ namespace Dodo.Roles
 	{
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer:"parentRef")]
 		public ResourceReference<GroupResource> Parent { get; set; }
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Description]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.MEMBER)]

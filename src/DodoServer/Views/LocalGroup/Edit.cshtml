@@ -64,9 +64,14 @@
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="form-group">
-					<label asp-for="PublicDescription" class="control-label"></label>
-					<textarea  data-provide="markdown" rows="10" data-resize="vertical" data-iconlibrary="fa" asp-for="PublicDescription" class="form-control"></textarea>
-					<span asp-validation-for="PublicDescription" class="text-danger"></span>
+				<label asp-for="PublicDescription" class="form-label"></label>
+				<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
+					<script>var editor = new EpicEditor({ 
+						basePath: '/lib/epiceditor', autogrow: true,
+						button: { preview: true, fullscreen: false, bar: "show" },
+						theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
+					}).load();
+				</script>
 				</div>
 
 				<div class="form-group">

@@ -90,7 +90,7 @@ namespace Dodo.LocationResources
 		public SiteFacilities Facilities { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; } = new GeoLocation();
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Name("Public Description")]
 		[Description]
 		public string PublicDescription { get; set; }

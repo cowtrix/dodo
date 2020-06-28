@@ -26,8 +26,23 @@ namespace DodoAOT
 		};
 		private static Dictionary<string, CustomDrawerCallback> m_customExcplicitCallback = new Dictionary<string, CustomDrawerCallback>()
 		{
-			{ "parentRef", ParentRefDisplay }
+			{ "parentRef", ParentRefDisplay },
+			{ "markdown", MarkdownEditor }
 		};
+
+		private static IEnumerable<string> MarkdownEditor(string prefix, MemberInfo member, int indentLevel)
+		{
+			yield return Indent(indentLevel) + $"<div class=\"form-group\">";
+			yield return Indent(indentLevel) + $"<label asp-for=\"{prefix}{member.Name}\" class=\"form-label\"></label>";
+			yield return Indent(indentLevel) + $"<div id=\"epiceditor\"><textarea asp-for=\"{prefix}{member.Name}\"></textarea></div>";
+			yield return Indent(indentLevel + 1) + "<script>var editor = new EpicEditor({ ";
+			yield return Indent(indentLevel + 2) + "basePath: '/lib/epiceditor', autogrow: true,";
+			yield return Indent(indentLevel + 2) + "button: { preview: true, fullscreen: false, bar: \"show\" },";
+			yield return Indent(indentLevel + 2) + "theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },";
+			yield return Indent(indentLevel + 1) + "}).load();";
+			yield return Indent(indentLevel) + "</script>";
+			yield return Indent(indentLevel) + $"</div>";
+		}
 
 		private static IEnumerable<string> ParentRefDisplay(string prefix, MemberInfo member, int indentLevel)
 		{
@@ -183,19 +198,15 @@ namespace DodoAOT
 					string inputClass = "form-control";
 					var labelClass = "control-label";
 					var divClass = "form-group";
+					var divId = memberName;
 					bool swapOrder = false;
-					
-					if (member.GetCustomAttribute<DescriptionAttribute>() != null)
-					{
-						inputType = "textarea";
-						inputExtras += " data-provide=\"markdown\" rows=\"10\" data-resize=\"vertical\" data-iconlibrary=\"fa\"";
-					}
-					else if (member.GetMemberType().IsEnum)
+
+					if (member.GetMemberType().IsEnum)
 					{
 						inputType = $"select";
 						inputExtras += $"asp-items=\"@Html.GetEnumSelectList<{member.GetMemberType().Namespace}.{member.GetMemberType().Name}>()\"";
 					}
-					else if(member.GetMemberType() == typeof(bool))
+					else if (member.GetMemberType() == typeof(bool))
 					{
 						labelClass = "form-check-label";
 						inputExtras += "type=\"checkbox\"";
@@ -224,9 +235,9 @@ namespace DodoAOT
 					{
 						yield return labelLine;
 						yield return inputLine;
-					}					
+					}
 					yield return Indent(indentLevel + 1) + $"<span asp-validation-for=\"{prefix}{memberName}\" class=\"text-danger\"></span>";
-					if(!string.IsNullOrEmpty(viewAttr.InputHint))
+					if (!string.IsNullOrEmpty(viewAttr.InputHint))
 					{
 						yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
 						yield return Indent(indentLevel + 2) + viewAttr.InputHint;

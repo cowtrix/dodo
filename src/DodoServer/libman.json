@@ -17,8 +17,8 @@
 			"destination": "wwwroot/lib/twitter-bootstrap/"
 		},
 		{
-			"library": "bootstrap-markdown@2.10.0",
-			"destination": "wwwroot/lib/bootstrap-markdown/"
+			"library": "epiceditor@0.2.2",
+			"destination": "wwwroot/lib/epiceditor/"
 		},
 		{
 			"library": "mapbox-gl@1.11.0",

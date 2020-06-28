@@ -34,7 +34,7 @@ namespace Dodo
 		/// <summary>
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Name("Public Description")]
 		[Common.Extensions.Description]
 		public string PublicDescription { get; set; }
