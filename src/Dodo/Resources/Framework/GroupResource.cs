@@ -45,7 +45,7 @@ namespace Dodo
 		[BsonElement]
 		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
 		public string PublicKey { get; private set; }
-		[View(EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
 		public TokenCollection SharedTokens = new TokenCollection();

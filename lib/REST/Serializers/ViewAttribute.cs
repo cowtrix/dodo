@@ -8,8 +8,16 @@ namespace Resources
 	public class ViewAttribute : Attribute {
 		public EPermissionLevel ViewPermission { get; private set; }
 		public EPermissionLevel EditPermission { get; private set; }
+		public int Priority { get; private set; }
+		public string CustomDrawer { get; private set; }
+		public string InputHint { get; set; }
 
-		public ViewAttribute(EPermissionLevel viewPermission, EPermissionLevel editPermission = EPermissionLevel.ADMIN)
+		public ViewAttribute(
+			EPermissionLevel viewPermission, 
+			EPermissionLevel editPermission = EPermissionLevel.ADMIN, 
+			int priority = 255, 
+			string customDrawer = null,
+			string inputHint = null)
 		{
 			if(viewPermission == EPermissionLevel.OWNER)
 			{
@@ -17,6 +25,9 @@ namespace Resources
 			}
 			ViewPermission = viewPermission;
 			EditPermission = editPermission;
+			Priority = priority;
+			CustomDrawer = customDrawer;
+			InputHint = inputHint;
 		}
 
 		public ViewAttribute() : this(EPermissionLevel.PUBLIC, EPermissionLevel.PUBLIC)

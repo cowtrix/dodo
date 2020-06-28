@@ -12,7 +12,7 @@ namespace Dodo.Roles
 	[SearchPriority(4)]
 	public class Role : DodoResource, IOwnedResource, IPublicResource, ILocationalResource
 	{
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer:"parentRef")]
 		public ResourceReference<GroupResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		[Description]
@@ -21,7 +21,7 @@ namespace Dodo.Roles
 		public string MemberDescription { get; set; }
 		[View(EPermissionLevel.ADMIN)]
 		public string AdminDescription { get; set; }
-		[View(EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
 		public GeoLocation Location => Parent.Location;

@@ -26,7 +26,7 @@
 			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Adminstration</a>
 		</li>
 	}
-	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Event/@Model.Slug">View</a></li>
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Event/@Model.Slug" target="_blank">View</a></li>
 </ul>
 <div class="tab-content" id="myTabContent">
 	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
@@ -35,10 +35,17 @@
 				<div class="card-body">
 					<form asp-action="Edit">
 						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-										<div class="form-group">
-					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control"></input>
-					<span asp-validation-for="Guid" class="text-danger"></span>
+										@{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.Parent.GetRefType()]; }
+				<div class="navbar navbar-expand-lg navbar-dark" style="width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;">
+				<a class="navbar-brand" href="https://localhost:5001/@Model.Parent.GetRefType().Name/@Model.Parent.Slug">Part of the @Model.Parent.Name</a>
+				</div>
+				<div class="form-check">
+					<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+					<label asp-for="IsPublished" class="form-check-label"></label>
+					<span asp-validation-for="IsPublished" class="text-danger"></span>
+					<small id="helpBlock" class="form-text text-muted">
+						This indicates whether or not this is publicly viewable by all users.
+					</small>
 				</div>
 				<div class="form-group">
 					<label asp-for="Name" class="control-label"></label>
@@ -51,99 +58,19 @@
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
 				<div class="form-group">
+					<label asp-for="Guid" class="control-label"></label>
+					<input  readonly asp-for="Guid" class="form-control .form-control-plaintext"></input>
+					<span asp-validation-for="Guid" class="text-danger"></span>
+				</div>
+				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
-					<input  readonly asp-for="Revision" class="form-control"></input>
+					<input  readonly asp-for="Revision" class="form-control .form-control-plaintext"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="ArrestRisk" class="control-label"></label>
-					<input  asp-for="ArrestRisk" class="form-control"></input>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EArrestRisk>()" asp-for="ArrestRisk" class="form-control"></select>
 					<span asp-validation-for="ArrestRisk" class="text-danger"></span>
-				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Facilities</h5>
-							<div class="form-group">
-								<label asp-for="Facilities.Toilets" class="control-label"></label>
-								<input  asp-for="Facilities.Toilets" class="form-control"></input>
-								<span asp-validation-for="Facilities.Toilets" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.Bathrooms" class="control-label"></label>
-								<input  asp-for="Facilities.Bathrooms" class="form-control"></input>
-								<span asp-validation-for="Facilities.Bathrooms" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.Food" class="control-label"></label>
-								<input  asp-for="Facilities.Food" class="form-control"></input>
-								<span asp-validation-for="Facilities.Food" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.Kitchen" class="control-label"></label>
-								<input  asp-for="Facilities.Kitchen" class="form-control"></input>
-								<span asp-validation-for="Facilities.Kitchen" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.DisabilityFriendly" class="control-label"></label>
-								<input  asp-for="Facilities.DisabilityFriendly" class="form-control"></input>
-								<span asp-validation-for="Facilities.DisabilityFriendly" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.OutdoorCamping" class="control-label"></label>
-								<input  asp-for="Facilities.OutdoorCamping" class="form-control"></input>
-								<span asp-validation-for="Facilities.OutdoorCamping" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.IndoorCamping" class="control-label"></label>
-								<input  asp-for="Facilities.IndoorCamping" class="form-control"></input>
-								<span asp-validation-for="Facilities.IndoorCamping" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.Accomodation" class="control-label"></label>
-								<input  asp-for="Facilities.Accomodation" class="form-control"></input>
-								<span asp-validation-for="Facilities.Accomodation" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.Inductions" class="control-label"></label>
-								<input  asp-for="Facilities.Inductions" class="form-control"></input>
-								<span asp-validation-for="Facilities.Inductions" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.TalksAndTraining" class="control-label"></label>
-								<input  asp-for="Facilities.TalksAndTraining" class="form-control"></input>
-								<span asp-validation-for="Facilities.TalksAndTraining" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.Welfare" class="control-label"></label>
-								<input  asp-for="Facilities.Welfare" class="form-control"></input>
-								<span asp-validation-for="Facilities.Welfare" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.AffinityGroupFormation" class="control-label"></label>
-								<input  asp-for="Facilities.AffinityGroupFormation" class="form-control"></input>
-								<span asp-validation-for="Facilities.AffinityGroupFormation" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.VolunteersNeeded" class="control-label"></label>
-								<input  asp-for="Facilities.VolunteersNeeded" class="form-control"></input>
-								<span asp-validation-for="Facilities.VolunteersNeeded" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.FamilyFriendly" class="control-label"></label>
-								<input  asp-for="Facilities.FamilyFriendly" class="form-control"></input>
-								<span asp-validation-for="Facilities.FamilyFriendly" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.Internet" class="control-label"></label>
-								<input  asp-for="Facilities.Internet" class="form-control"></input>
-								<span asp-validation-for="Facilities.Internet" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Facilities.Electricity" class="control-label"></label>
-								<input  asp-for="Facilities.Electricity" class="form-control"></input>
-								<span asp-validation-for="Facilities.Electricity" class="text-danger"></span>
-							</div>
-						</div>
 				</div>
 <script>
 	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
@@ -289,23 +216,13 @@
 
 				<div class="form-group">
 					<label asp-for="PublicDescription" class="control-label"></label>
-					<textarea  asp-for="PublicDescription" class="form-control"></textarea>
+					<textarea  data-provide="markdown" rows="10" data-resize="vertical" data-iconlibrary="fa" asp-for="PublicDescription" class="form-control"></textarea>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label class="control-label">Parent</label>
-					<input class="sr-only" asp-for="Parent.Type"/>
-					<a class="btn btn-primary" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug">@Model.Parent.Name</a>
 				</div>
 				<div class="form-group">
 					<label asp-for="VideoEmbedURL" class="control-label"></label>
 					<input  asp-for="VideoEmbedURL" class="form-control"></input>
 					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="IsPublished" class="control-label"></label>
-					<input  asp-for="IsPublished" class="form-control"></input>
-					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="StartDate" class="control-label"></label>
@@ -316,6 +233,91 @@
 					<label asp-for="EndDate" class="control-label"></label>
 					<input  asp-for="EndDate" class="form-control"></input>
 					<span asp-validation-for="EndDate" class="text-danger"></span>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Facilities</h5>
+							<div class="form-group">
+								<label asp-for="Facilities.Toilets" class="control-label"></label>
+								<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Toilets" class="form-control"></select>
+								<span asp-validation-for="Facilities.Toilets" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Bathrooms" class="control-label"></label>
+								<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Bathrooms" class="form-control"></select>
+								<span asp-validation-for="Facilities.Bathrooms" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Food" class="control-label"></label>
+								<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Food" class="form-control"></select>
+								<span asp-validation-for="Facilities.Food" class="text-danger"></span>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" asp-for="Facilities.Kitchen" class="form-check-input"></input>
+								<label asp-for="Facilities.Kitchen" class="form-check-label"></label>
+								<span asp-validation-for="Facilities.Kitchen" class="text-danger"></span>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" asp-for="Facilities.DisabilityFriendly" class="form-check-input"></input>
+								<label asp-for="Facilities.DisabilityFriendly" class="form-check-label"></label>
+								<span asp-validation-for="Facilities.DisabilityFriendly" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Facilities.OutdoorCamping" class="control-label"></label>
+								<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.OutdoorCamping" class="form-control"></select>
+								<span asp-validation-for="Facilities.OutdoorCamping" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Facilities.IndoorCamping" class="control-label"></label>
+								<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.IndoorCamping" class="form-control"></select>
+								<span asp-validation-for="Facilities.IndoorCamping" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Accomodation" class="control-label"></label>
+								<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Accomodation" class="form-control"></select>
+								<span asp-validation-for="Facilities.Accomodation" class="text-danger"></span>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" asp-for="Facilities.Inductions" class="form-check-input"></input>
+								<label asp-for="Facilities.Inductions" class="form-check-label"></label>
+								<span asp-validation-for="Facilities.Inductions" class="text-danger"></span>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" asp-for="Facilities.TalksAndTraining" class="form-check-input"></input>
+								<label asp-for="Facilities.TalksAndTraining" class="form-check-label"></label>
+								<span asp-validation-for="Facilities.TalksAndTraining" class="text-danger"></span>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" asp-for="Facilities.Welfare" class="form-check-input"></input>
+								<label asp-for="Facilities.Welfare" class="form-check-label"></label>
+								<span asp-validation-for="Facilities.Welfare" class="text-danger"></span>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" asp-for="Facilities.AffinityGroupFormation" class="form-check-input"></input>
+								<label asp-for="Facilities.AffinityGroupFormation" class="form-check-label"></label>
+								<span asp-validation-for="Facilities.AffinityGroupFormation" class="text-danger"></span>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" asp-for="Facilities.VolunteersNeeded" class="form-check-input"></input>
+								<label asp-for="Facilities.VolunteersNeeded" class="form-check-label"></label>
+								<span asp-validation-for="Facilities.VolunteersNeeded" class="text-danger"></span>
+							</div>
+							<div class="form-check">
+								<input type="checkbox" asp-for="Facilities.FamilyFriendly" class="form-check-input"></input>
+								<label asp-for="Facilities.FamilyFriendly" class="form-check-label"></label>
+								<span asp-validation-for="Facilities.FamilyFriendly" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Internet" class="control-label"></label>
+								<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Internet" class="form-control"></select>
+								<span asp-validation-for="Facilities.Internet" class="text-danger"></span>
+							</div>
+							<div class="form-group">
+								<label asp-for="Facilities.Electricity" class="control-label"></label>
+								<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Electricity" class="form-control"></select>
+								<span asp-validation-for="Facilities.Electricity" class="text-danger"></span>
+							</div>
+						</div>
 				</div>
 
 						<div class="form-group">

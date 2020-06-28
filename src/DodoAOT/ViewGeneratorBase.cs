@@ -17,13 +17,28 @@ namespace DodoAOT
 {
 	public class ViewGeneratorBase
 	{
-		private delegate IEnumerable<string> CustomTypeCallback(string prefix, MemberInfo member, int indentLevel);
-		private static Dictionary<Type, CustomTypeCallback> m_customTypeCallback = new Dictionary<Type, CustomTypeCallback>()
+		private delegate IEnumerable<string> CustomDrawerCallback(string prefix, MemberInfo member, int indentLevel);
+		private static Dictionary<Type, CustomDrawerCallback> m_customTypeCallback = new Dictionary<Type, CustomDrawerCallback>()
 		{
 			{ typeof(AdministrationData), Null },
 			{ typeof(GeoLocation), GetLocationEditor },
 			{ typeof(IResourceReference), RefView },
 		};
+		private static Dictionary<string, CustomDrawerCallback> m_customExcplicitCallback = new Dictionary<string, CustomDrawerCallback>()
+		{
+			{ "parentRef", ParentRefDisplay }
+		};
+
+		private static IEnumerable<string> ParentRefDisplay(string prefix, MemberInfo member, int indentLevel)
+		{
+			var memberType = member.GetMemberType();
+			var memberName = member.Name;
+			var refType = memberType.GetGenericArguments().First();
+			yield return Indent(indentLevel) + $"@{{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.{prefix}{memberName}.GetRefType()]; }}";
+			yield return Indent(indentLevel) + $"<div class=\"navbar navbar-expand-lg navbar-dark\" style=\"width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;\">";
+			yield return Indent(indentLevel) + $"<a class=\"navbar-brand\" href=\"{Dodo.DodoApp.NetConfig.FullURI}/@Model.{prefix}{memberName}.GetRefType().Name/@Model.{prefix}{memberName}.Slug\">Part of the @Model.{prefix}{memberName}.Name</a>";
+			yield return Indent(indentLevel) + $"</div>";
+		}
 
 		private static IEnumerable<string> Null(string prefix, MemberInfo member, int indentLevel)
 		{
@@ -95,27 +110,6 @@ namespace DodoAOT
 			yield return Indent(indentLevel) + $"</div>";
 		}
 
-		private static IEnumerable<string> AdminDataView(string prefix, MemberInfo member, int indentLevel)
-		{
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			yield return Indent(indentLevel + 2) + $"<div class=\"card-body\">";
-			yield return Indent(indentLevel + 1) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
-			yield return Indent(indentLevel + 2) + $"@foreach(var admin in Model.{prefix}{member.Name}.Administrators) {{";
-			// iterate admin array
-
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			var name = $"@{prefix}admin.{nameof(AdministratorEntry.User)}.{nameof(IResourceReference.Name)}";
-			var slug = $"@{prefix}admin.{nameof(AdministratorEntry.User)}.{nameof(IResourceReference.Slug)}";
-			yield return Indent(indentLevel + 1) + $"<p>{name} [{slug}]</p>";
-			yield return Indent(indentLevel) + $"</div>";
-			yield return Indent(indentLevel) + $"</div>";
-
-			yield return Indent(indentLevel + 2) + "}";
-			yield return Indent(indentLevel + 2) + $"</div>";
-			yield return Indent(indentLevel) + $"</div>";
-		}
-
 		private static IEnumerable<string> GetLocationEditor(string prefix, MemberInfo member, int indentLevel)
 		{
 			var name = member.Name;
@@ -133,7 +127,12 @@ namespace DodoAOT
 		protected static IEnumerable<string> BuildDataFields(Type targetType, int indentLevel, string prefix, bool forcereadonly = false)
 		{
 			foreach (var member in targetType.GetPropertiesAndFields(p => p.CanRead, f => true)
-				.OrderBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
+				.OrderBy(m =>
+				{
+					var view = m.GetCustomAttribute<ViewAttribute>();
+					return view != null ? view.Priority : 255;
+				})
+				.ThenBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
 			{
 				var viewAttr = member.GetCustomAttribute<ViewAttribute>();
 				if (viewAttr == null)
@@ -152,7 +151,8 @@ namespace DodoAOT
 				var typeName = memberType.GetRealTypeName(true);
 				var memberName = member.Name;
 
-				var callback = m_customTypeCallback.FirstOrDefault(kvp => kvp.Key.IsAssignableFrom(memberType)).Value;
+				var callback = m_customExcplicitCallback.FirstOrDefault(kvp => kvp.Key == viewAttr.CustomDrawer).Value ??
+					m_customTypeCallback.FirstOrDefault(kvp => kvp.Key.IsAssignableFrom(memberType)).Value;
 				if (callback != null)
 				{
 					foreach (var line in callback(prefix, member, indentLevel))
@@ -179,23 +179,59 @@ namespace DodoAOT
 				else
 				{
 					string inputType = "input";
+					string inputExtras = "";
+					string inputClass = "form-control";
+					var labelClass = "control-label";
+					var divClass = "form-group";
+					bool swapOrder = false;
+					
 					if (member.GetCustomAttribute<DescriptionAttribute>() != null)
 					{
 						inputType = "textarea";
+						inputExtras += " data-provide=\"markdown\" rows=\"10\" data-resize=\"vertical\" data-iconlibrary=\"fa\"";
 					}
-					string inputExtras = "";
-					if (member.GetCustomAttribute<PasswordAttribute>() != null)
+					else if (member.GetMemberType().IsEnum)
+					{
+						inputType = $"select";
+						inputExtras += $"asp-items=\"@Html.GetEnumSelectList<{member.GetMemberType().Namespace}.{member.GetMemberType().Name}>()\"";
+					}
+					else if(member.GetMemberType() == typeof(bool))
+					{
+						labelClass = "form-check-label";
+						inputExtras += "type=\"checkbox\"";
+						inputClass = "form-check-input";
+						divClass = "form-check";
+						swapOrder = true;
+					}
+					else if (member.GetCustomAttribute<PasswordAttribute>() != null)
 					{
 						inputExtras += "type=\"password\"";
 					}
 					if (isReadonly)
 					{
 						inputExtras += " readonly";
+						inputClass += " .form-control-plaintext";
 					}
-					yield return Indent(indentLevel) + $"<div class=\"form-group\">";
-					yield return Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"control-label\"></label>";
-					yield return Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"form-control\"></{inputType}>";
+					yield return Indent(indentLevel) + $"<div class=\"{divClass}\">";
+					var labelLine = Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"{labelClass}\"></label>";
+					var inputLine = Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"{inputClass}\"></{inputType}>";
+					if (swapOrder)
+					{
+						yield return inputLine;
+						yield return labelLine;
+					}
+					else
+					{
+						yield return labelLine;
+						yield return inputLine;
+					}					
 					yield return Indent(indentLevel + 1) + $"<span asp-validation-for=\"{prefix}{memberName}\" class=\"text-danger\"></span>";
+					if(!string.IsNullOrEmpty(viewAttr.InputHint))
+					{
+						yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
+						yield return Indent(indentLevel + 2) + viewAttr.InputHint;
+						yield return Indent(indentLevel + 1) + $"</small>";
+					}
 					yield return Indent(indentLevel) + $"</div>";
 				}
 			}

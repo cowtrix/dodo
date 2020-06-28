@@ -37,13 +37,13 @@ namespace Dodo.ViewModels
 			[DisplayName("Kitchen")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public System.Boolean Kitchen { get; set; }
-			[DisplayName("DisabilityFriendly")]
+			[DisplayName("Disability Friendly")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public System.Boolean DisabilityFriendly { get; set; }
-			[DisplayName("OutdoorCamping")]
+			[DisplayName("Outdoor Camping")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public Dodo.LocationResources.EAccessType OutdoorCamping { get; set; }
-			[DisplayName("IndoorCamping")]
+			[DisplayName("Indoor Camping")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public Dodo.LocationResources.EAccessType IndoorCamping { get; set; }
 			[DisplayName("Accomodation")]
@@ -52,19 +52,19 @@ namespace Dodo.ViewModels
 			[DisplayName("Inductions")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public System.Boolean Inductions { get; set; }
-			[DisplayName("TalksAndTraining")]
+			[DisplayName("Talks And Training")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public System.Boolean TalksAndTraining { get; set; }
 			[DisplayName("Welfare")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public System.Boolean Welfare { get; set; }
-			[DisplayName("AffinityGroupFormation")]
+			[DisplayName("Affinity Group Formation")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public System.Boolean AffinityGroupFormation { get; set; }
-			[DisplayName("VolunteersNeeded")]
+			[DisplayName("Volunteers Needed")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public System.Boolean VolunteersNeeded { get; set; }
-			[DisplayName("FamilyFriendly")]
+			[DisplayName("Family Friendly")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public System.Boolean FamilyFriendly { get; set; }
 			[DisplayName("Internet")]
@@ -84,7 +84,7 @@ namespace Dodo.ViewModels
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string PublicDescription { get; set; }
 		[DisplayName("Parent")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public Resources.ResourceReference<Dodo.GroupResource> Parent { get; set; }
 		[DisplayName("Video Embed URL")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]

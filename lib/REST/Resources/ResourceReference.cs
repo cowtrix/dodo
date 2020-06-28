@@ -36,12 +36,19 @@ namespace Resources
 		[JsonProperty]
 		[BsonElement]
 		public string Type { get; private set; }
-		public GeoLocation? Location { get; set; }
+		[JsonProperty]
+		[BsonElement]
+		public GeoLocation Location { get; set; }
+		[JsonProperty]
+		[BsonElement]
+		public string FullyQualifiedName { get; set; }
 
 		public T GetValue()
 		{
 			return ResourceUtility.GetResourceByGuid<T>(Guid);
 		}
+
+		public Type GetRefType() => System.Type.GetType(FullyQualifiedName);
 
 		public bool HasValue() => Guid != default;
 
@@ -52,15 +59,21 @@ namespace Resources
 			Type = resource?.GetType().Name.ToCamelCase();
 			Name = resource?.Name;
 			Location = resource is ILocationalResource loc ? loc.Location : null;
+			FullyQualifiedName = resource?.GetType().AssemblyQualifiedName;
 		}
 
-		public ResourceReference(Guid guid, string slug, string type, string name, GeoLocation location)
+		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location)
 		{
+			if(type == null && guid != default)
+			{
+				throw new Exception("Failed to deserialize type");
+			}
 			Guid = guid;
 			Slug = slug;
-			Type = type;
+			Type = type?.Name.ToCamelCase();
 			Name = name;
 			Location = location;
+			FullyQualifiedName = type?.AssemblyQualifiedName;
 		}
 
 		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)

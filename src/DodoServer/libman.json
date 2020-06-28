@@ -1,7 +1,7 @@
 {
 	"version": "1.0",
 	"defaultProvider": "cdnjs",
-	
+
 	"libraries": [
 		{
 			"library": "jquery@3.3.1",
@@ -13,8 +13,20 @@
 			"destination": "wwwroot/lib/jquery/"
 		},
 		{
-			"library": "twitter-bootstrap@4.4.1",
+			"library": "twitter-bootstrap@4.5.0",
 			"destination": "wwwroot/lib/twitter-bootstrap/"
+		},
+		{
+			"library": "bootstrap-markdown@2.10.0",
+			"destination": "wwwroot/lib/bootstrap-markdown/"
+		},
+		{
+			"library": "mapbox-gl@1.11.0",
+			"destination": "wwwroot/lib/mapbox-gl/"
+		},
+		{
+			"library": "font-awesome@5.13.1",
+			"destination": "wwwroot/lib/font-awesome/"
 		}
 	]
 }

@@ -26,7 +26,7 @@
 			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Adminstration</a>
 		</li>
 	}
-	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Role/@Model.Slug">View</a></li>
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Role/@Model.Slug" target="_blank">View</a></li>
 </ul>
 <div class="tab-content" id="myTabContent">
 	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
@@ -35,10 +35,17 @@
 				<div class="card-body">
 					<form asp-action="Edit">
 						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-										<div class="form-group">
-					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control"></input>
-					<span asp-validation-for="Guid" class="text-danger"></span>
+										@{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.Parent.GetRefType()]; }
+				<div class="navbar navbar-expand-lg navbar-dark" style="width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;">
+				<a class="navbar-brand" href="https://localhost:5001/@Model.Parent.GetRefType().Name/@Model.Parent.Slug">Part of the @Model.Parent.Name</a>
+				</div>
+				<div class="form-check">
+					<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+					<label asp-for="IsPublished" class="form-check-label"></label>
+					<span asp-validation-for="IsPublished" class="text-danger"></span>
+					<small id="helpBlock" class="form-text text-muted">
+						This indicates whether or not this is publicly viewable by all users.
+					</small>
 				</div>
 				<div class="form-group">
 					<label asp-for="Name" class="control-label"></label>
@@ -51,18 +58,18 @@
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
 				<div class="form-group">
+					<label asp-for="Guid" class="control-label"></label>
+					<input  readonly asp-for="Guid" class="form-control .form-control-plaintext"></input>
+					<span asp-validation-for="Guid" class="text-danger"></span>
+				</div>
+				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
-					<input  readonly asp-for="Revision" class="form-control"></input>
+					<input  readonly asp-for="Revision" class="form-control .form-control-plaintext"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="form-group">
-					<label class="control-label">Parent</label>
-					<input class="sr-only" asp-for="Parent.Type"/>
-					<a class="btn btn-primary" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug">@Model.Parent.Name</a>
-				</div>
-				<div class="form-group">
 					<label asp-for="PublicDescription" class="control-label"></label>
-					<textarea  asp-for="PublicDescription" class="form-control"></textarea>
+					<textarea  data-provide="markdown" rows="10" data-resize="vertical" data-iconlibrary="fa" asp-for="PublicDescription" class="form-control"></textarea>
 					<span asp-validation-for="PublicDescription" class="text-danger"></span>
 				</div>
 				<div class="form-group">
@@ -74,11 +81,6 @@
 					<label asp-for="AdminDescription" class="control-label"></label>
 					<input  asp-for="AdminDescription" class="form-control"></input>
 					<span asp-validation-for="AdminDescription" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="IsPublished" class="control-label"></label>
-					<input  asp-for="IsPublished" class="form-control"></input>
-					<span asp-validation-for="IsPublished" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="RoleHolders" class="control-label"></label>
