@@ -1,4 +1,5 @@
 using System;
+using Common.Extensions;
 using Resources;
 
 namespace Dodo
@@ -15,7 +16,7 @@ namespace Dodo
 
 	public class Notification
 	{
-		public ENotificationType Type { get; set; }
+		public string Type { get; set; }
 		public DateTime Timestamp { get; set; }
 		public string Source { get; set; }
 		public string Message { get; set; }
@@ -31,7 +32,7 @@ namespace Dodo
 			Timestamp = DateTime.UtcNow;
 			CanDelete = canDelete;
 			Link = link;
-			Type = type;
+			Type = type.ToString().ToCamelCase();
 		}
 	}
 }
