@@ -18,10 +18,10 @@ namespace Dodo
 
 		public EncryptedNotificationToken() { }
 
-		public EncryptedNotificationToken(User creator, string source, string message, bool canDelete)
+		public EncryptedNotificationToken(User creator, string source, string message, string link, ENotificationType type, bool canDelete)
 		{
 			Creator = creator.CreateRef();
-			m_notification = new Notification(Guid, source, message, canDelete);
+			m_notification = new Notification(Guid, source, message, link, type, canDelete);
 		}
 	}
 }

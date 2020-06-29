@@ -64,7 +64,7 @@ namespace Resources
 
 		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location)
 		{
-			if(type == null && guid != default)
+			if(type == null && !string.IsNullOrEmpty(name))
 			{
 				throw new Exception("Failed to deserialize type");
 			}

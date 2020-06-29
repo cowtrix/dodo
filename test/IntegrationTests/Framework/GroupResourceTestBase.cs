@@ -231,7 +231,7 @@ namespace RESTTests
 			// Create a notification
 			using (var rscLock = new ResourceLock(group))
 			{
-				var token = new SimpleNotificationToken(con.User, "Test", Message, true);
+				var token = new SimpleNotificationToken(con.User, "Test", Message, null, ENotificationType.Announcement, true);
 				notGuid = token.Guid;
 				group.AddToken(token, EPermissionLevel.PUBLIC);
 				ResourceManager.Update(group, rscLock);

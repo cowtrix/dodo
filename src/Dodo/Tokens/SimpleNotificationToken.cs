@@ -23,10 +23,10 @@ namespace Dodo
 
 		public SimpleNotificationToken() { }
 
-		public SimpleNotificationToken(User creator, string source, string message, bool canDelete) : base()
+		public SimpleNotificationToken(User creator, string source, string message, string link, ENotificationType type, bool canDelete) : base()
 		{
 			Creator = creator.CreateRef();
-			m_notification = new Notification(Guid, source, message, canDelete);
+			m_notification = new Notification(Guid, source, message, link, type, canDelete);
 		}
 	}
 }

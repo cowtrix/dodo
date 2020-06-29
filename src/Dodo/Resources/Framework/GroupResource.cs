@@ -127,8 +127,8 @@ namespace Dodo
 			}
 			AdministratorData.SetValue(adminData, newAdminRef, newPass);
 			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
-				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
-				false), EPermissionLevel.ADMIN);
+				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}", 
+				null, ENotificationType.Alert, false), EPermissionLevel.ADMIN);
 #if DEBUG
 			// Do a bit of extra testing just to make sure
 			if (!IsAdmin(newAdmin, context, out _))
@@ -161,13 +161,13 @@ namespace Dodo
 
 		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, Name, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", false),
+			AddToken(new SimpleNotificationToken(null, Name, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", null, ENotificationType.Alert, false),
 				EPermissionLevel.PUBLIC);
 		}
 
 		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, Name, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", false), 
+			AddToken(new SimpleNotificationToken(null, Name, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", null, ENotificationType.Alert, false), 
 				EPermissionLevel.PUBLIC);
 			return true;
 		}
