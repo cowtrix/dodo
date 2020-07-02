@@ -104,19 +104,13 @@ namespace Dodo.Controllers.Edit
 				// redirect to login
 				return Forbid();
 			}
-			var result = await CrudService.Get(id);
+			var result = AuthService.IsAuthorised(Context, id, EHTTPRequestType.PATCH);
 			if (!result.IsSuccess)
 			{
 				return result.ActionResult;
 			}
 			var actionResult = result as ResourceActionRequest;
 			var rsc = actionResult.Result as T;
-			result = CrudService.AuthService.IsAuthorised(Context, rsc, EHTTPRequestType.PATCH);
-			if(!result.IsSuccess)
-			{
-				return result.ActionResult;
-			}
-			actionResult = result as ResourceActionRequest;
 			ViewData["Permission"] = actionResult.PermissionLevel;
 			if (rsc is INotificationResource notificationResource)
 			{
@@ -178,7 +172,7 @@ namespace Dodo.Controllers.Edit
 		}
 
 		[HttpPost]
-		[Route("delete/{id}")]
+		[Route("{id}/delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Delete(TViewModel view)
 		{
@@ -191,6 +185,43 @@ namespace Dodo.Controllers.Edit
 			{
 				var request = (await CrudService.Delete(view.Guid.ToString()));
 				return Redirect(Dodo.DodoApp.NetConfig.FullURI);
+			}
+			catch (Exception e)
+			{
+				ModelState.AddModelError("Unable to delete resource", e.Message);
+				return RedirectToAction(nameof(Edit));
+			}
+		}
+
+		[HttpPost]
+		[Route("{guid}/updateadmin")]
+		public async Task<IActionResult> UpdateAdmin([FromRoute]string guid, [FromQuery]string id, [FromForm] AdministratorPermissionSet permissionSet)
+		{
+			if (Context.User == null)
+			{
+				// redirect to login
+				return Forbid();
+			}
+			if(!typeof(IAdministratedResource).IsAssignableFrom(typeof(T)))
+			{
+				return BadRequest();
+			}
+			try
+			{
+				var user = ResourceUtility.GetManager<User>().GetSingle(u => u.Slug == id);
+				if(user == null)
+				{
+					return BadRequest();
+				}
+				var request = AuthService.IsAuthorised(Context, guid, EHTTPRequestType.PATCH);
+				if(!request.IsSuccess)
+				{
+					return Unauthorized();
+				}
+				var actionReq = request as ResourceActionRequest;
+				var rsc = actionReq.Result as IAdministratedResource;
+				rsc.UpdateAdmin(Context, user, permissionSet);
+				return RedirectToAction(nameof(Edit));
 			}
 			catch (Exception e)
 			{

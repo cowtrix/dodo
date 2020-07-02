@@ -1,0 +1,96 @@
+<div id="accordion">
+	@{
+		var adminData = Model.{MEMBER};
+		Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
+
+
+		var canadd = thisAdmin.Permissions.CanAddAdmin;
+		var canremove = thisAdmin.Permissions.CanRemoveAdmin;
+		var counter = 0;
+		foreach (var admin in adminData.Administrators)
+		{
+			string getID(string name) { return $"{name}"; };
+			var isMe = admin.User.Guid == context.User.Guid;
+			var canedit = !isMe && thisAdmin.Permissions.CanChangePermissions;
+
+			<div class="card">
+				<div class="card-header" id="heading@(counter)">
+					<div class="row">
+						<div class="col">
+							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
+								<h5 class="mb-0">@@@admin.User.Slug @(isMe ? "(Me)" : "")</h5>
+							</button>
+						</div>
+						<div class="col-sm-auto">
+							@{ if (!isMe && canremove)
+								{
+									<button class="btn btn-outline-danger">
+										<p class="fas fa-trash"></p>
+									</button>
+								}
+							}
+						</div>
+					</div>
+				</div>
+				<!-- Permissions foldout -->
+				<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
+					<div class="card-body">
+						<form method="post" action="updateadmin?id=@admin.User.Slug">
+							<div class="card-body">
+								@{ if (thisAdmin.Permissions.CanChangePermissions && isMe)
+									{
+										<div class="alert alert-info" role="alert">
+											You can't edit your own permissions.
+										</div>
+									}
+								}
+								<div class="row">
+									<div class="col">
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanAddAdmin")" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanAddAdmin")" style="">Can Add New Admins</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanRemoveAdmin")" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admins</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanChangePermissions")" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Admin Permissions</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanEditInfo")" @(admin.Permissions.CanEditInfo ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Details</label>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanCreateChildObjects")" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanDeleteChildObjects")" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanCreateAnnouncements")" @(admin.Permissions.CanCreateAnnouncements ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanCreateAnnouncements")">Can Create Announcements</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							@{ if (canedit)
+								{
+									<div class="card-body">
+										<input type="submit" value="Save" class="btn btn-primary btn-block" />
+									</div>
+								}
+							}
+						</form>
+					</div>
+				</div>
+			</div>
+			counter++;
+		}
+	}
+</div>

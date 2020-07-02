@@ -43,7 +43,7 @@ namespace DodoResources
 			}
 			using var rscLock = new ResourceLock(req.Result);
 			var resource = rscLock.Value as T;
-			if(resource.AddAdmin(req.AccessContext, targetUser))
+			if(resource.AddNewAdmin(req.AccessContext, targetUser))
 			{
 				ResourceManager.Update(resource, rscLock);
 				return new OkRequestResult();

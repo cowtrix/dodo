@@ -76,9 +76,6 @@ namespace GenerateSampleData
 			var rebelRiderRole = TestBase.CreateNewObject<Role>(context, new RoleSchema("Rebel Rider Team",
 				SchemaGenerator.SampleDescription, rebelRiders.Guid), seed: false);
 
-			var admin2 = TestBase.GetRandomUser(out _, out var admin2context);
-			actionSupport.AddOrUpdateAdmin(context, admin2, admin2context.Passphrase, false);
-
 			var deescalation = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Non-Violence & De-escalation",
 				SchemaGenerator.SampleDescription, actionSupport.Guid), seed: false);
 

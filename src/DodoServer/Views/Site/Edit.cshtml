@@ -54,17 +54,17 @@
 				</div>
 				<div class="form-group">
 					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control"></input>
+					<input  readonly asp-for="Slug" class="form-control"></input>
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control .form-control-plaintext"></input>
+					<input  readonly asp-for="Guid" class="form-control"></input>
 					<span asp-validation-for="Guid" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
-					<input  readonly asp-for="Revision" class="form-control .form-control-plaintext"></input>
+					<input  readonly asp-for="Revision" class="form-control"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
 				<div class="form-group">
@@ -214,16 +214,19 @@
 	</div>
 </div>
 
-				<div class="form-group">
-				<label asp-for="PublicDescription" class="form-label"></label>
-				<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
-					<script>var editor = new EpicEditor({ 
-						basePath: '/lib/epiceditor', autogrow: true,
-						button: { preview: true, fullscreen: false, bar: "show" },
-						theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
-					}).load();
-				</script>
-				</div>
+<div class="form-group">
+	<label asp-for="PublicDescription" class="form-label"></label>
+	<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
+	<script>
+		var editor = new EpicEditor({
+			basePath: '/lib/epiceditor', clientSideStorage: false,
+			autogrow: { minHeight: "200", maxHeight: "400", scroll: true },
+			button: { preview: true, fullscreen: false, bar: "show" },
+			theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
+		}).load();
+	</script>
+</div>
+
 				<div class="form-group">
 					<label asp-for="VideoEmbedURL" class="control-label"></label>
 					<input  asp-for="VideoEmbedURL" class="form-control"></input>
@@ -316,26 +319,18 @@
 				</div>
 
 						<div class="form-group">
-							<input type="submit" value="Save" class="btn btn-primary" />
+							<input type="submit" value="Save" class="btn btn-primary btn-block" />
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
-		<div id="accordion">
-			<div class="card">
-				<div class="card-header" id="headingOne">
-					<h5 class="mb-0">
-						<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-							DANGER ZONE
-						</button>
-					</h5>
-				</div>
-				<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-					<div class="card-body">
-						<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Site/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
-					</div>
-				</div>
+		<div class="card">
+			<div class="alert alert-warning" role="alert">
+				<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
+			</div>
+			<div class="card-body">
+				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Site/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
 			</div>
 		</div>
 	</div>

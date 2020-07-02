@@ -50,40 +50,39 @@
 				</div>
 				<div class="form-group">
 					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control"></input>
+					<input  readonly asp-for="Slug" class="form-control"></input>
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control .form-control-plaintext"></input>
+					<input  readonly asp-for="Guid" class="form-control"></input>
 					<span asp-validation-for="Guid" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
-					<input  readonly asp-for="Revision" class="form-control .form-control-plaintext"></input>
+					<input  readonly asp-for="Revision" class="form-control"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
-				<div class="form-group">
-				<label asp-for="PublicDescription" class="form-label"></label>
-				<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
-					<script>var editor = new EpicEditor({ 
-						basePath: '/lib/epiceditor', autogrow: true,
-						button: { preview: true, fullscreen: false, bar: "show" },
-						theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
-					}).load();
-				</script>
-				</div>
+<div class="form-group">
+	<label asp-for="PublicDescription" class="form-label"></label>
+	<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
+	<script>
+		var editor = new EpicEditor({
+			basePath: '/lib/epiceditor', clientSideStorage: false,
+			autogrow: { minHeight: "200", maxHeight: "400", scroll: true },
+			button: { preview: true, fullscreen: false, bar: "show" },
+			theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
+		}).load();
+	</script>
+</div>
+
 
 				<div class="form-group">
 					<label asp-for="MemberCount" class="control-label"></label>
-					<input  readonly asp-for="MemberCount" class="form-control .form-control-plaintext"></input>
+					<input  readonly asp-for="MemberCount" class="form-control"></input>
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
-				<div class="form-group">
-					<label asp-for="PublicKey" class="control-label"></label>
-					<input  readonly asp-for="PublicKey" class="form-control .form-control-plaintext"></input>
-					<span asp-validation-for="PublicKey" class="text-danger"></span>
-				</div>
+
 				<div class="form-group">
 					<label asp-for="StartDate" class="control-label"></label>
 					<input  asp-for="StartDate" class="form-control"></input>
@@ -243,26 +242,18 @@
 				</div>
 
 						<div class="form-group">
-							<input type="submit" value="Save" class="btn btn-primary" />
+							<input type="submit" value="Save" class="btn btn-primary btn-block" />
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
-		<div id="accordion">
-			<div class="card">
-				<div class="card-header" id="headingOne">
-					<h5 class="mb-0">
-						<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-							DANGER ZONE
-						</button>
-					</h5>
-				</div>
-				<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-					<div class="card-body">
-						<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
-					</div>
-				</div>
+		<div class="card">
+			<div class="alert alert-warning" role="alert">
+				<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
+			</div>
+			<div class="card-body">
+				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
 			</div>
 		</div>
 	</div>
@@ -295,67 +286,101 @@
 	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
 	{
 		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-			<div class="row">
-	<div class="card" style="width:100%;">
-		<div class="card-body">
-			<strong>AdministratorData</strong>
-			@{
-				var adminData = Model.AdministratorData;
-				Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
+			<div id="accordion">
+	@{
+		var adminData = Model.AdministratorData;
+		Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
 
-				var canedit = thisAdmin.Permissions.CanChangePermissions;
-				var canadd = thisAdmin.Permissions.CanAddAdmin;
-				var canremove = thisAdmin.Permissions.CanRemoveAdmin;
 
-				foreach (var admin in adminData.Administrators)
-				{
-					string getID(string name) { return $"{name}"; };
-					<div class="card" style="width:100%;">
-						<div class="card-body">
-							<form action="/changeAdmin">
-								<label class="control-label" for="@getID("Slug")">Slug</label>
-								<input readonly type="text" class="form-control" id="@getID("Slug")" value="@@@admin.User.Slug">
-								@if (canedit)
+		var canadd = thisAdmin.Permissions.CanAddAdmin;
+		var canremove = thisAdmin.Permissions.CanRemoveAdmin;
+		var counter = 0;
+		foreach (var admin in adminData.Administrators)
+		{
+			string getID(string name) { return $"{name}"; };
+			var isMe = admin.User.Guid == context.User.Guid;
+			var canedit = !isMe && thisAdmin.Permissions.CanChangePermissions;
+
+			<div class="card">
+				<div class="card-header" id="heading@(counter)">
+					<div class="row">
+						<div class="col">
+							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
+								<h5 class="mb-0">@@@admin.User.Slug @(isMe ? "(Me)" : "")</h5>
+							</button>
+						</div>
+						<div class="col-sm-auto">
+							@{ if (!isMe && canremove)
 								{
-									<div class="card" style="width:100%;">
-										<div class="card-body">
-											<div class="form-check">
-												<input type="checkbox" class="form-check-input" id="@getID("CanAddAdmin")" checked="@admin.Permissions.CanAddAdmin.ToString().ToLower()">
-												<label class="form-check-label" for="@getID("CanAddAdmin")">Can Add Admin</label>
-											</div>
-											<div class="form-check">
-												<input type="checkbox" class="form-check-input" id="@getID("CanRemoveAdmin")" checked="@admin.Permissions.CanRemoveAdmin.ToString().ToLower()">
-												<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admin</label>
-											</div>
-											<div class="form-check">
-												<input type="checkbox" class="form-check-input" id="@getID("CanChangePermissions")" checked="@admin.Permissions.CanChangePermissions.ToString().ToLower()">
-												<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Permissions</label>
-											</div>
-											<div class="form-check">
-												<input type="checkbox" class="form-check-input" id="@getID("CanEditInfo")" checked="@admin.Permissions.CanEditInfo.ToString().ToLower()">
-												<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Info</label>
-											</div>
-											<div class="form-check">
-												<input type="checkbox" class="form-check-input" id="@getID("CanCreateChildObjects")" checked="@admin.Permissions.CanCreateChildObjects.ToString().ToLower()">
-												<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
-											</div>
-											<div class="form-check">
-												<input type="checkbox" class="form-check-input" id="@getID("CanDeleteChildObjects")" checked="@admin.Permissions.CanDeleteChildObjects.ToString().ToLower()">
-												<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<input type="submit" value="Save" class="btn btn-primary" />
-									</div>
+									<button class="btn btn-outline-danger">
+										<p class="fas fa-trash"></p>
+									</button>
 								}
-							</form>
+							}
 						</div>
 					</div>
-				}
-			}
-		</div>
-	</div>
+				</div>
+				<!-- Permissions foldout -->
+				<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
+					<div class="card-body">
+						<form method="post" action="updateadmin?id=@admin.User.Slug">
+							<div class="card-body">
+								@{ if (thisAdmin.Permissions.CanChangePermissions && isMe)
+									{
+										<div class="alert alert-info" role="alert">
+											You can't edit your own permissions.
+										</div>
+									}
+								}
+								<div class="row">
+									<div class="col">
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanAddAdmin")" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanAddAdmin")" style="">Can Add New Admins</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanRemoveAdmin")" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admins</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanChangePermissions")" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Admin Permissions</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanEditInfo")" @(admin.Permissions.CanEditInfo ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Details</label>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanCreateChildObjects")" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanDeleteChildObjects")" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
+										</div>
+										<div class="form-check">
+											<input @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="@getID("CanCreateAnnouncements")" @(admin.Permissions.CanCreateAnnouncements ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanCreateAnnouncements")">Can Create Announcements</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							@{ if (canedit)
+								{
+									<div class="card-body">
+										<input type="submit" value="Save" class="btn btn-primary btn-block" />
+									</div>
+								}
+							}
+						</form>
+					</div>
+				</div>
+			</div>
+			counter++;
+		}
+	}
 </div>
 
 		</div>

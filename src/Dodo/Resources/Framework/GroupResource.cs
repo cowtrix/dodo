@@ -16,8 +16,8 @@ namespace Dodo
 {
 	public interface IAdministratedResource : IRESTResource
 	{
-		AdministrationData GetAdministrationData(AccessContext requester);
-		void SetAdministrationData(AccessContext requester, AdministrationData data);
+		public bool AddNewAdmin(AccessContext context, User newAdmin);
+		public bool UpdateAdmin(AccessContext context, User newAdmin, AdministratorPermissionSet permissions);
 	}
 
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
@@ -43,8 +43,9 @@ namespace Dodo
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get { return Members.Count; } }
 		[BsonElement]
-		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM, customDrawer:"null")]
 		public string PublicKey { get; private set; }
+		[Name("Published")]
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
@@ -86,31 +87,52 @@ namespace Dodo
 			return true;
 		}
 
-		public bool AddAdmin(AccessContext context, User newAdmin)
+		public bool AddNewAdmin(AccessContext context, User newAdmin)
 		{
-			var temporaryPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
-			if (!AddOrUpdateAdmin(context, newAdmin, temporaryPass, false))
+			var newPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
+			if (newAdmin == null)
+			{
+				throw new ArgumentNullException(nameof(newAdmin));
+			}
+			if (!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanAddAdmin)
+			{
+				// Context isn't admin, or doesn't have correct permissions
+				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");
+				return false;
+			}
+			if (newAdmin.Guid == context.User.Guid || IsAdmin(newAdmin, context, out _))
+			{
+				// User is already admin
+				return true;
+			}
+			var newAdminRef = newAdmin.CreateRef();
+			AdministratorData.AddPermission(context.User.CreateRef(), context.Passphrase, newAdminRef, newPass);
+			var adminData = AdministratorData.GetValue(newAdminRef, newPass);
+			if (!adminData.AddOrUpdateAdministrator(context, newAdmin))
 			{
 				return false;
 			}
+			AdministratorData.SetValue(adminData, newAdminRef, newPass);
+			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
+				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
+				null, ENotificationType.Alert, false), EPermissionLevel.ADMIN);
 			using (var userLock = new ResourceLock(newAdmin))
 			{
-				newAdmin.TokenCollection.Add(newAdmin, new UserAddedAsAdminToken(this, temporaryPass, newAdmin.AuthData.PublicKey), EPermissionLevel.OWNER);
+				newAdmin.TokenCollection.Add(newAdmin, new UserAddedAsAdminToken(this, newPass, newAdmin.AuthData.PublicKey), EPermissionLevel.OWNER);
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;
 		}
 
-		public bool AddOrUpdateAdmin(AccessContext context, User newAdmin, Passphrase newPass, bool tokenTriggered)
+		public bool CompleteAdminInvite(AccessContext context, User newAdmin, Passphrase newPass)
 		{
 			if (newAdmin == null)
 			{
 				throw new ArgumentNullException(nameof(newAdmin));
 			}
-			if(!IsAdmin(context.User, context, out var administratorPermission) || (!tokenTriggered && !administratorPermission.CanAddAdmin))
+			if(!IsAdmin(context.User, context, out var administratorPermission))
 			{
-				// Context isn't admin, or doesn't have correct permissions
-				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");
+				// User has no pending invite
 				return false;
 			}
 			if (newAdmin.Guid != context.User.Guid && IsAdmin(newAdmin, context, out _))
@@ -126,9 +148,6 @@ namespace Dodo
 				return false;
 			}
 			AdministratorData.SetValue(adminData, newAdminRef, newPass);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
-				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}", 
-				null, ENotificationType.Alert, false), EPermissionLevel.ADMIN);
 #if DEBUG
 			// Do a bit of extra testing just to make sure
 			if (!IsAdmin(newAdmin, context, out _))
@@ -136,6 +155,31 @@ namespace Dodo
 				throw new Exception($"Failed to add {newAdmin} as a new administrator");
 			}
 #endif
+			return true;
+		}
+
+		public bool UpdateAdmin(AccessContext context, User target, AdministratorPermissionSet permissions)
+		{
+			if(context.User == null)
+			{
+				return false;
+			}
+			if(!IsAdmin(context.User, context, out var requesterPermissions) || !requesterPermissions.CanChangePermissions)
+			{
+				return false;
+			}
+			if(!IsAdmin(target, context, out _))
+			{
+				return false;
+			}
+			var adminData = AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase);
+			var entry = adminData.Administrators.Single(ad => ad.User.Guid == target.Guid);
+			if(entry == null)
+			{
+				return false;
+			}
+			entry.Permissions = permissions;
+			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
 			return true;
 		}
 
@@ -195,16 +239,6 @@ namespace Dodo
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
 			return SharedTokens.Remove(context, permissionLevel, notification);
-		}
-
-		public AdministrationData GetAdministrationData(AccessContext requester)
-		{
-			return AdministratorData.GetValue(requester.User.CreateRef(), requester.Passphrase);
-		}
-
-		public void SetAdministrationData(AccessContext requester, AdministrationData data)
-		{
-			AdministratorData.SetValue(data, requester.User.CreateRef(), requester.Passphrase);
 		}
 	}
 }

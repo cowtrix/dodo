@@ -37,26 +37,18 @@
 						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 						{DETAILS}
 						<div class="form-group">
-							<input type="submit" value="Save" class="btn btn-primary" />
+							<input type="submit" value="Save" class="btn btn-primary btn-block" />
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
-		<div id="accordion">
-			<div class="card">
-				<div class="card-header" id="headingOne">
-					<h5 class="mb-0">
-						<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-							DANGER ZONE
-						</button>
-					</h5>
-				</div>
-				<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-					<div class="card-body">
-						<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
-					</div>
-				</div>
+		<div class="card">
+			<div class="alert alert-warning" role="alert">
+				<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
+			</div>
+			<div class="card-body">
+				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
 			</div>
 		</div>
 	</div>

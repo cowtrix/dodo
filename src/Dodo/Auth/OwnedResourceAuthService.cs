@@ -5,7 +5,7 @@ using Resources;
 namespace DodoResources.Sites
 {
 	public class OwnedResourceAuthService<T, TSchema> : AuthorizationService<T, TSchema>
-		where T : IOwnedResource
+		where T : class, IOwnedResource
 		where TSchema : OwnedResourceSchemaBase
 	{
 		public OwnedResourceAuthService() : base()

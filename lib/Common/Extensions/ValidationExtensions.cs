@@ -300,11 +300,6 @@ namespace Common.Extensions
 				error = "Username can only contain alphanumeric characters and _";
 				return false;
 			}
-			if(slug != slug.StripForURL())
-			{
-				error = $"Username was invalid, Expected: {slug.StripForURL()} Received: {slug}";
-				return false;
-			}
 			error = null;
 			return true;
 		}

@@ -36,15 +36,15 @@ namespace Resources.Location
 		public GeoCoordinatePortable.GeoCoordinate ToCoordinate() => new GeoCoordinate(Latitude, Longitude);
 		[JsonProperty]
 		[Range(-90, 90)]
-		[View]
+		[View(EPermissionLevel.PUBLIC, inputHint: "Must be between -90 and 90")]
 		public double Latitude { get { return m_lat; } set { m_lat = WrapClamp(value, -90, 90); } }
-		private double m_lat;
+		private double m_lat = 45;
 
 		[JsonProperty]
 		[Range(-180, 180)]
-		[View]
+		[View(EPermissionLevel.PUBLIC, inputHint:"Must be between -180 and 180")]
 		public double Longitude { get { return m_long; } set { m_long = WrapClamp(value, -180, 180); } }
-		private double m_long;
+		private double m_long = 0;
 
 		public GeoLocation(double latitude, double longitude)
 		{

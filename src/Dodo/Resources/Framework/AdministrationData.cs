@@ -44,6 +44,9 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		[Name("Delete Existing Child Objects")]
 		public bool CanDeleteChildObjects { get; set; }
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		[Name("Create Announcements")]
+		public bool CanCreateAnnouncements { get; set; }
 	}
 
 	public class AdministrationData
@@ -78,6 +81,7 @@ namespace Dodo
 				Permissions = new AdministratorPermissionSet
 				{
 					// The first admin gets it all
+					CanChangePermissions = true,
 					CanAddAdmin = true,
 					CanRemoveAdmin = true,
 					CanEditInfo = true,

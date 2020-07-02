@@ -58,7 +58,7 @@ namespace Groups
 			var newAdmin = GenerateUser(SchemaGenerator.GetRandomUser(default), out var newAdminContext);
 			using(var rscLock = new ResourceLock(newGroup))
 			{
-				Assert.IsTrue(newGroup.AddAdmin(creatorContext, newAdmin));
+				Assert.IsTrue(newGroup.AddNewAdmin(creatorContext, newAdmin));
 				ResourceManager.Update(newGroup, rscLock);
 			}			
 			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);

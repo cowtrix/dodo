@@ -15,7 +15,7 @@ namespace Dodo.ViewModels
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string Name { get; set; }
 		[DisplayName("Slug")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]

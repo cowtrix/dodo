@@ -102,6 +102,17 @@ namespace SharedTest
 			{
 				obj = (T)pubRsc.Publish();
 			}
+			if (publish && obj is IAdministratedResource admin)
+			{
+				using (var rscLock = new ResourceLock(admin))
+				{
+					admin = rscLock.Value as IAdministratedResource;
+					admin.AddNewAdmin(context, GetRandomUser(out _, out _));
+					admin.AddNewAdmin(context, GetRandomUser(out _, out _));
+					admin.AddNewAdmin(context, GetRandomUser(out _, out _));
+					ResourceUtility.GetManager(admin.GetType()).Update(admin, rscLock);
+				}				
+			}
 			if (seed)
 			{
 				if (obj is Rebellion rebellion)

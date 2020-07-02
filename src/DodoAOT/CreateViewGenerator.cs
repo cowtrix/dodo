@@ -16,7 +16,7 @@ namespace DodoAOT
 		public static string Generate(Type resourceType)
 		{
 			var schemaType = ResourceUtility.GetFactory(resourceType).SchemaType;
-			var template = File.ReadAllText("Create.template");
+			var template = Template("Create");
 			template = template.Replace("{SCHEMA_TYPE}", schemaType.FullName);
 			template = template.Replace("{NAME}", resourceType.GetName());
 			var view = new StringBuilder();

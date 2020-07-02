@@ -9,26 +9,26 @@
     <None Remove="Admin.template.cshtml" />
     <None Remove="Create.template" />
     <None Remove="Edit.template.cshtml" />
-    <None Remove="Notifications.template" />
+    <None Remove="Notifications.template.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Admin.template.cshtml">
+    <Content Include="Templates\Admin.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Notifications.template">
+    <Content Include="Templates\Notifications.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Edit.template.cshtml">
+    <Content Include="Templates\Edit.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Create.template">
+    <Content Include="Templates\Create.template.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -43,10 +43,13 @@
     <None Update="buildAOT.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Delete.template.cshtml">
+    <None Update="Templates\Delete.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="LocationPicker.template.cshtml">
+    <None Update="Templates\LocationPicker.template.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\MarkdownEditor.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

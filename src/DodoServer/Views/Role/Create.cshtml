@@ -15,17 +15,31 @@
 					<label asp-for="Name" class="control-label"></label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
+					<small id="helpBlock" class="form-text text-muted">
+						Must be between 3-64 characters
+						<p id="slugPreview"></p>
+						<script>
+							$('form :input').change(function(){
+								var inputVal = $('#Name').val().toLowerCase();
+								inputVal = inputVal.split(new RegExp("[^a-z0-9_]")).join('');
+								$('#slugPreview').text('URL will be /' + inputVal + '/')
+							});
+						</script>
+					</small>
 				</div>
-				<div class="form-group">
-				<label asp-for="PublicDescription" class="form-label"></label>
-				<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
-					<script>var editor = new EpicEditor({ 
-						basePath: '/lib/epiceditor', autogrow: true,
-						button: { preview: true, fullscreen: false, bar: "show" },
-						theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
-					}).load();
-				</script>
-				</div>
+<div class="form-group">
+	<label asp-for="PublicDescription" class="form-label"></label>
+	<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
+	<script>
+		var editor = new EpicEditor({
+			basePath: '/lib/epiceditor', clientSideStorage: false,
+			autogrow: { minHeight: "200", maxHeight: "400", scroll: true },
+			button: { preview: true, fullscreen: false, bar: "show" },
+			theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
+		}).load();
+	</script>
+</div>
+
 				<div class="form-group">
 					<label class="control-label">Parent Resource</label>
 					<input class="sr-only" asp-for="ParentReference.Type"/>
@@ -34,7 +48,7 @@
 
 				<div class="form-group">
 					<div class="card-body">
-						<input type="submit" value="Create" class="btn btn-primary" />
+						<input type="submit" value="Create" class="btn btn-primary btn-block" />
 					</div>
 				</div>
 			</form>

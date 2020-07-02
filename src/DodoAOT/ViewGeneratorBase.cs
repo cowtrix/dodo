@@ -17,6 +17,12 @@ namespace DodoAOT
 {
 	public class ViewGeneratorBase
 	{
+		protected static string Template(string templateName)
+		{
+			var fullPath = Path.GetFullPath($"./Templates/{templateName}.template.cshtml");
+			return File.ReadAllText(fullPath);
+		}
+
 		private delegate IEnumerable<string> CustomDrawerCallback(string prefix, MemberInfo member, int indentLevel);
 		private static Dictionary<Type, CustomDrawerCallback> m_customTypeCallback = new Dictionary<Type, CustomDrawerCallback>()
 		{
@@ -27,21 +33,15 @@ namespace DodoAOT
 		private static Dictionary<string, CustomDrawerCallback> m_customExcplicitCallback = new Dictionary<string, CustomDrawerCallback>()
 		{
 			{ "parentRef", ParentRefDisplay },
-			{ "markdown", MarkdownEditor }
+			{ "markdown", MarkdownEditor },
+			{ "null", Null }
 		};
 
 		private static IEnumerable<string> MarkdownEditor(string prefix, MemberInfo member, int indentLevel)
 		{
-			yield return Indent(indentLevel) + $"<div class=\"form-group\">";
-			yield return Indent(indentLevel) + $"<label asp-for=\"{prefix}{member.Name}\" class=\"form-label\"></label>";
-			yield return Indent(indentLevel) + $"<div id=\"epiceditor\"><textarea asp-for=\"{prefix}{member.Name}\"></textarea></div>";
-			yield return Indent(indentLevel + 1) + "<script>var editor = new EpicEditor({ ";
-			yield return Indent(indentLevel + 2) + "basePath: '/lib/epiceditor', autogrow: true,";
-			yield return Indent(indentLevel + 2) + "button: { preview: true, fullscreen: false, bar: \"show\" },";
-			yield return Indent(indentLevel + 2) + "theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },";
-			yield return Indent(indentLevel + 1) + "}).load();";
-			yield return Indent(indentLevel) + "</script>";
-			yield return Indent(indentLevel) + $"</div>";
+			var txt = Template("MarkdownEditor");
+			txt = txt.Replace("{NAME}", $"{prefix}{member.Name}");
+			yield return txt;
 		}
 
 		private static IEnumerable<string> ParentRefDisplay(string prefix, MemberInfo member, int indentLevel)
@@ -67,7 +67,7 @@ namespace DodoAOT
 				return "";
 			}
 			var field = resourceType.GetProperty("AdministratorData");
-			var template = File.ReadAllText("Admin.template.cshtml");
+			var template = Template("Admin");
 			template = template.Replace("{NAME}", field.GetName());
 			template = template.Replace("{MEMBER}", field.GetName());
 			return template;
@@ -79,7 +79,7 @@ namespace DodoAOT
 			{
 				return "";
 			}
-			var template = File.ReadAllText("Notifications.template");
+			var template = Template("Notifications");
 			var sb = new StringBuilder();
 			foreach (var l in BuildNotificationView(resourceType)) sb.AppendLine(l);
 			template = template.Replace("{BODY}", sb.ToString());
@@ -128,7 +128,7 @@ namespace DodoAOT
 		private static IEnumerable<string> GetLocationEditor(string prefix, MemberInfo member, int indentLevel)
 		{
 			var name = member.Name;
-			var template = File.ReadAllText("LocationPicker.template.cshtml");
+			var template = Template("LocationPicker");
 			template = template.Replace("{LOCATION}", $"Model.{prefix}{name}");
 			template = template.Replace("{ LOCATION }", $"Model.{prefix}{name}");
 			yield return template;
@@ -221,7 +221,7 @@ namespace DodoAOT
 					if (isReadonly)
 					{
 						inputExtras += " readonly";
-						inputClass += " .form-control-plaintext";
+						//inputClass = "form-control-plaintext";
 					}
 					yield return Indent(indentLevel) + $"<div class=\"{divClass}\">";
 					var labelLine = Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"{labelClass}\"></label>";
@@ -241,6 +241,17 @@ namespace DodoAOT
 					{
 						yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
 						yield return Indent(indentLevel + 2) + viewAttr.InputHint;
+						if(viewAttr.CustomDrawer == "slugPreview")
+						{
+							yield return Indent(indentLevel + 2) + "<p id=\"slugPreview\"></p>";
+							yield return Indent(indentLevel + 2) + "<script>";
+							yield return Indent(indentLevel + 3) + "$('form :input').change(function(){";
+							yield return Indent(indentLevel + 4) + $"var inputVal = $('#{memberName}').val().toLowerCase();";
+							yield return Indent(indentLevel + 4) + "inputVal = inputVal.split(new RegExp(\"[^a-z0-9_]\")).join('');";
+							yield return Indent(indentLevel + 4) + "$('#slugPreview').text('URL will be /' + inputVal + '/')";
+							yield return Indent(indentLevel + 3) + "});";
+							yield return Indent(indentLevel + 2) + "</script>";
+						}
 						yield return Indent(indentLevel + 1) + $"</small>";
 					}
 					yield return Indent(indentLevel) + $"</div>";

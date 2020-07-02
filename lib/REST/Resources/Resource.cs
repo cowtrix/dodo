@@ -29,7 +29,7 @@ namespace Resources
 
 	public abstract class ResourceSchemaBase : IVerifiable
 	{
-		[View]
+		[View(EPermissionLevel.PUBLIC, customDrawer:"slugPreview", inputHint:"Must be between 3-64 characters")]
 		[UserFriendlyName]
 		public string Name { get; set; }
 
@@ -75,7 +75,7 @@ namespace Resources
 		[UserFriendlyName]
 		public string Name { get; set; }
 
-		[View(EPermissionLevel.PUBLIC, priority:1)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority:1)]
 		[JsonProperty]
 		[Slug]
 		public string Slug { get; set; }
