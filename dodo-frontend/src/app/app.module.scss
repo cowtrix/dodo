@@ -28,6 +28,9 @@ body {
 
 .app {
   background: white;
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: spacing(13);
 }
 
 ul {

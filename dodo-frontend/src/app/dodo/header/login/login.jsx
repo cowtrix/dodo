@@ -7,12 +7,11 @@ import styles from './login.module.scss'
 export const Login = ({ isLoggedIn }) => {
 	return (
 		<div className={styles.login}>
-			{!isLoggedIn ?
+			{isLoggedIn ?
 				<UserButton/> :
 				<LoginRegister/>
 			}
 		</div>
-
 	)
 }
 

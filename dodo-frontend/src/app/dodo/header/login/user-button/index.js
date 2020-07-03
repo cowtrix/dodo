@@ -1,1 +1,1 @@
-export { UserButton } from './user-button'
+export { UserButtonConnected as UserButton } from './container'
