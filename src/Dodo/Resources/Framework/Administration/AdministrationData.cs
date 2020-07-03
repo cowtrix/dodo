@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
-using Common;
 using Dodo.Users;
-using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
@@ -12,47 +10,6 @@ using Resources.Security;
 
 namespace Dodo
 {
-	public class AdministratorEntry
-	{
-		public AdministratorEntry() { }
-		public AdministratorEntry(User user)
-		{
-			User = user.CreateRef();
-		}
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		public ResourceReference<User> User { get; set; }
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		public AdministratorPermissionSet Permissions { get; set; } = new AdministratorPermissionSet();
-	}
-
-	[BindProperties]	
-	public class AdministratorPermissionSet
-	{
-		public AdministratorPermissionSet() { }
-
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Change Administrator Permissions")]
-		public bool CanChangePermissions { get; set; }
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Add New Administrators")]
-		public bool CanAddAdmin { get; set; }
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Remove Existing Administrators")]
-		public bool CanRemoveAdmin { get; set; }
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Edit Information")]
-		public bool CanEditInfo { get; set; }
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Create New Child Objects")]
-		public bool CanCreateChildObjects { get; set; }
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Delete Existing Child Objects")]
-		public bool CanDeleteChildObjects { get; set; }
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Create Announcements")]
-		public bool CanCreateAnnouncements { get; set; }
-	}
-
 	public class AdministrationData
 	{
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
@@ -91,6 +48,7 @@ namespace Dodo
 					CanEditInfo = true,
 					CanCreateChildObjects = true,
 					CanDeleteChildObjects = true,
+					CanCreateAnnouncements = true,
 				}
 			});
 			GroupPrivateKey = privateKey;

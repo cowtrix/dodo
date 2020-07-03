@@ -20,14 +20,24 @@ namespace Dodo.Controllers.Edit
 		public async Task<IActionResult> UpdateAdmin([FromRoute]string guid, [FromQuery]string id, 
 			[FromForm] AdministratorPermissionSet permissionSet)
 		{
-			return GroupService.UpdateAdmin(guid, id, permissionSet).ActionResult;
+			var result = GroupService.UpdateAdmin(guid, id, permissionSet);
+			if (!result.IsSuccess)
+			{
+				return result.ActionResult;
+			}
+			var req = result as ResourceActionRequest;
+			return Redirect($"~/edit/{typeof(T).Name}/{guid}");
 		}
 
 		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.ADD_ADMIN)]
-		public IActionResult AddAdministrator(string id, [FromBody]string newAdminIdentifier)
+		public IActionResult AddAdministrator(string id, [FromForm]string newAdminIdentifier)
 		{
 			var result = GroupService.AddAdministrator(id, newAdminIdentifier);
-			return result.ActionResult;
+			if(!result.IsSuccess)
+			{
+				return result.ActionResult;
+			}
+			return Redirect($"~/edit/{typeof(T).Name}/{id}");
 		}
 	}
 }

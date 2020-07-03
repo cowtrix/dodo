@@ -30,7 +30,8 @@ namespace Dodo.Users.Tokens
 		public List<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel, ITokenResource parent) => 
 			GetAllTokens<INotificationToken>(accessContext, permissionLevel, parent)
 					.Select(x => x.GetNotification(accessContext))
-					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
+					.Where(x => !string.IsNullOrEmpty(x.Message))
+					.OrderByDescending(x => x.Timestamp).ToList();
 
 		[BsonElement]
 		private List<TokenEntry> m_tokens = new List<TokenEntry>();

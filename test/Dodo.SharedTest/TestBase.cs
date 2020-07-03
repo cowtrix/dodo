@@ -42,6 +42,7 @@ namespace SharedTest
 			m_runner = MongoDbRunner.Start();
 			ConfigManager.SetValue(ResourceUtility.CONFIGKEY_MONGODBSERVERURL, m_runner.ConnectionString);
 			ResourceUtility.ClearAllManagers();
+			Dodo.Security.SessionTokenStore.Initialise();
 			Logger.OnLog += OnLog;
 		}
 

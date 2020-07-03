@@ -29,6 +29,10 @@ namespace DodoResources
 			{
 				return reqResult;
 			}
+			if (string.IsNullOrEmpty(newAdminIdentifier))
+			{
+				return ResourceRequestError.BadRequest("No user specified");
+			}
 			var req = (ResourceActionRequest)reqResult;
 			var userManager = UserManager;
 			User targetUser = null;
@@ -40,6 +44,14 @@ namespace DodoResources
 			{
 				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier) ??
 					UserService.CreateTemporaryUser(newAdminIdentifier);
+			}
+			else
+			{
+				targetUser = userManager.GetSingle(x => x.Slug == newAdminIdentifier);
+			}
+			if (targetUser == null)
+			{
+				return ResourceRequestError.NotFoundRequest();
 			}
 			using var rscLock = new ResourceLock(req.Result);
 			var resource = rscLock.Value as T;
@@ -80,7 +92,7 @@ namespace DodoResources
 				return ResourceRequestError.BadRequest();
 			}
 			ResourceManager.Update(rsc, rscLock);
-			return new ActionRequestResult(new RedirectResult($"~/edit/{typeof(T).Name}/{rsc.Slug}"));
+			return new OkRequestResult();
 		}
 
 		public IRequestResult JoinGroup(string id)

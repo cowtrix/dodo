@@ -14,14 +14,6 @@ using System.Security;
 
 namespace Dodo
 {
-	public interface IAdministratedResource : IRESTResource
-	{
-		bool IsAdmin(User target, AccessContext requesterContext, out AdministratorPermissionSet permissions);
-		bool AddNewAdmin(AccessContext context, User newAdmin);
-		bool UpdateAdmin(AccessContext context, User newAdmin, AdministratorPermissionSet permissions);
-		bool CompleteAdminInvite(AccessContext context, User newAdmin, Passphrase newPass);
-	}
-
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
 	/// <summary>
@@ -33,6 +25,7 @@ namespace Dodo
 		DodoResource, IPublicResource, ITokenResource, INotificationResource, IAdministratedResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
+
 		/// <summary>
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
@@ -40,13 +33,17 @@ namespace Dodo
 		[Name("Public Description")]
 		[Common.Extensions.Description]
 		public string PublicDescription { get; set; }
+
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public UserMultiSigStore<AdministrationData> AdministratorData { get; set; }
+
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get { return Members.Count; } }
+
 		[BsonElement]
 		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM, customDrawer:"null")]
 		public string PublicKey { get; private set; }
+
 		[Name("Published")]
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
@@ -70,6 +67,13 @@ namespace Dodo
 			PublicDescription = schema.PublicDescription;
 		}
 
+		/// <summary>
+		/// Is the target user an administrator? Only another administrator can find out.
+		/// </summary>
+		/// <param name="target">The user to test</param>
+		/// <param name="requesterContext">An existing administrator's context</param>
+		/// <param name="permissions">If the target is an admin, their permissions</param>
+		/// <returns>True on success, false on failure</returns>
 		public bool IsAdmin(User target, AccessContext requesterContext, out AdministratorPermissionSet permissions)
 		{
 			permissions = null;
@@ -89,6 +93,12 @@ namespace Dodo
 			return true;
 		}
 
+		/// <summary>
+		/// Add a new administrator to the resource.
+		/// </summary>
+		/// <param name="context">The existing administrator context who is adding the new administrator</param>
+		/// <param name="newAdmin">The new administrator</param>
+		/// <returns>True on success, false on failure</returns>
 		public bool AddNewAdmin(AccessContext context, User newAdmin)
 		{
 			var newPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
@@ -126,35 +136,30 @@ namespace Dodo
 			return true;
 		}
 
-		public bool CompleteAdminInvite(AccessContext context, User newAdmin, Passphrase newPass)
+		public bool CompleteAdminInvite(AccessContext context, Passphrase tempPass)
 		{
-			if (newAdmin == null)
+			if (context.User == null)
 			{
-				throw new ArgumentNullException(nameof(newAdmin));
+				throw new ArgumentNullException(nameof(context.User));
 			}
-			if(!IsAdmin(context.User, context, out var administratorPermission))
+			if(IsAdmin(context.User, context, out _))
 			{
 				// User has no pending invite
 				return false;
 			}
-			if (newAdmin.Guid != context.User.Guid && IsAdmin(newAdmin, context, out _))
-			{
-				// Other user can't change existing admin password
-				return true;
-			}
-			var newAdminRef = newAdmin.CreateRef();
-			AdministratorData.AddPermission(context.User.CreateRef(), context.Passphrase, newAdminRef, newPass);
-			var adminData = AdministratorData.GetValue(newAdminRef, newPass);
-			if(!adminData.AddOrUpdateAdministrator(context, newAdmin))
+			var adminRef = context.User.CreateRef();
+			AdministratorData.AddPermission(adminRef, tempPass, adminRef, context.Passphrase);
+			var adminData = AdministratorData.GetValue(adminRef, context.Passphrase);
+			if(!adminData.AddOrUpdateAdministrator(context, context.User))
 			{
 				return false;
 			}
-			AdministratorData.SetValue(adminData, newAdminRef, newPass);
+			AdministratorData.SetValue(adminData, adminRef, context.Passphrase);
 #if DEBUG
 			// Do a bit of extra testing just to make sure
-			if (!IsAdmin(newAdmin, context, out _))
+			if (!IsAdmin(context.User, context, out _))
 			{
-				throw new Exception($"Failed to add {newAdmin} as a new administrator");
+				throw new Exception($"Failed to complete {context.User} Administrator invite");
 			}
 #endif
 			return true;
@@ -207,7 +212,9 @@ namespace Dodo
 
 		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, Name, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", null, ENotificationType.Alert, false),
+			AddToken(new SimpleNotificationToken(null, Name, 
+				$"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", 
+				$"{Dodo.DodoApp.NetConfig.FullURI}", ENotificationType.Alert, false),
 				EPermissionLevel.PUBLIC);
 		}
 
@@ -220,7 +227,6 @@ namespace Dodo
 
 		public IEnumerable<Notification> GetNotifications(AccessContext context, EPermissionLevel permissionLevel)
 		{
-			Passphrase pass;
 			return SharedTokens.GetNotifications(context, permissionLevel, this);
 		}
 
@@ -242,10 +248,12 @@ namespace Dodo
 			}
 			if(!IsAdmin(context.User, context, out _))
 			{
-				throw new Exception($"User {context.User} tried to get Private Key but wasn't admin");
+				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to get Private Key but wasn't admin");
+				throw new Exception("Bad auth");
 			}
 			if (!AdministratorData.TryGetValue(context.User.CreateRef(), context.Passphrase, out var adminDataObj))
 			{
+				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to get Private Key, passed admin check but couldn't decrypt");
 				throw new Exception("Bad auth");
 			}
 			return new Passphrase((adminDataObj as AdministrationData).GroupPrivateKey);

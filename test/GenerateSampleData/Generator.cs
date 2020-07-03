@@ -17,6 +17,12 @@ using Dodo.Users.Tokens;
 
 namespace GenerateSampleData
 {
+	/// <summary>
+	/// This class will go and generate a bunch of sample information. It will take a good few minutes to generate.
+	/// The easiest way to get more/less data is just to add/remove cities below.
+	/// Be aware that running this utility will REQUIRE providing a valid MapBox public API key `MapBoxGeocodingService_ApiKey` in your configuration
+	/// in order to look up the city lat/longs
+	/// </summary>
 	public static class Generator
 	{
 		const string UNIVERSAL_PASS = "@12345667";
@@ -131,9 +137,7 @@ namespace GenerateSampleData
 
 		private static User GenerateUser(UserSchema schema, out AccessContext context)
 		{
-			var user = TestBase.CreateNewObject<User>(default(AccessContext), schema);
-			context = new AccessContext(user, new Passphrase(user.AuthData.PassPhrase.GetValue(new Passphrase(schema.Password))));
-			return user;
+			return TestBase.GenerateUser(schema, out context);
 		}
 	}
 }

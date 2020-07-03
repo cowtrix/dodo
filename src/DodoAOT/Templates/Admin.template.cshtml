@@ -1,9 +1,27 @@
+@{
+	var adminData = Model.{MEMBER};
+	Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
+}
+@{ if (thisAdmin.Permissions.CanAddAdmin)
+	{
+		<div class="card">
+			<h5 class="card-header">Add New Administrator</h5>
+			<div class="card-body">
+				<form id="newadmin" method="post" action="@Model.Slug/addadmin">
+					<div class="form-group">
+						<label class="control-label">New Administrator</label>
+						<input id="newAdminIdentifier" name="newAdminIdentifier" class="form-control"></input>
+						<small id="helpBlock" class="form-text text-muted">
+							This can be the username, user ID, or an email. If the holder of the email doesn't already have an account, they will be sent an invite link.
+						</small>
+					</div>
+					<input type="submit" value="Add" class="btn btn-primary btn-block" />
+				</form>
+			</div>
+		</div>
+	} }
 <div id="accordion">
 	@{
-		var adminData = Model.{MEMBER};
-		Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
-
-
 		var canadd = thisAdmin.Permissions.CanAddAdmin;
 		var canremove = thisAdmin.Permissions.CanRemoveAdmin;
 		var counter = 0;
@@ -11,17 +29,28 @@
 		{
 			string getID(string name) { return $"{name}"; };
 			var isMe = admin.User.Guid == context.User.Guid;
+			var userVal = admin.User.GetValue();
+			var isTemp = !userVal.PersonalData.EmailConfirmed;
 			var canedit = !isMe && thisAdmin.Permissions.CanChangePermissions;
 
 			<div class="card">
 				<div class="card-header" id="heading@(counter)">
 					<div class="row">
-						<div class="col">
+						<div class="col-auto">
 							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
-								<h5 class="mb-0">@@@admin.User.Slug @(isMe ? "(Me)" : "")</h5>
+								@{ if (isTemp)
+									{
+										<h5 class="mb-0">@userVal.PersonalData.Email (Pending Invite)</h5>
+									}
+									else
+									{
+										<h5 class="mb-0">@@@admin.User.Slug @(isMe ? "(Me)" : "")</h5>
+									}
+								}
+
 							</button>
 						</div>
-						<div class="col-sm-auto">
+						<div class="col" style="text-align:right;">
 							@{ if (!isMe && canremove)
 								{
 									<button class="btn btn-outline-danger">
