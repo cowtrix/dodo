@@ -30,7 +30,7 @@ namespace Resources
 			ViewData["Context"] = Context;
 			if (Context.User != null)
 			{
-				foreach (var token in Context.User.TokenCollection.GetAllTokens<IAutoExecuteToken>(Context, EPermissionLevel.OWNER))
+				foreach (var token in Context.User.TokenCollection.GetAllTokens<IAutoExecuteToken>(Context, EPermissionLevel.OWNER, Context.User))
 				{
 					token.Execute(Context);
 				}

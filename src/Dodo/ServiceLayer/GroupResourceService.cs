@@ -51,6 +51,38 @@ namespace DodoResources
 			return ResourceRequestError.BadRequest();
 		}
 
+		public IRequestResult UpdateAdmin(string resourceID, string adminID, AdministratorPermissionSet permissionSet)
+		{
+			if (Context.User == null)
+			{
+				// redirect to login
+				return ResourceRequestError.ForbidRequest();
+			}
+			if (!typeof(IAdministratedResource).IsAssignableFrom(typeof(T)))
+			{
+				return ResourceRequestError.BadRequest();
+			}
+			var user = ResourceUtility.GetManager<User>().GetSingle(u => u.Slug == adminID);
+			if (user == null)
+			{
+				return ResourceRequestError.BadRequest();
+			}
+			var request = AuthService.IsAuthorised(Context, resourceID, EHTTPRequestType.PATCH);
+			if (!request.IsSuccess)
+			{
+				return ResourceRequestError.UnauthorizedRequest();
+			}
+			var actionReq = request as ResourceActionRequest;
+			using var rscLock = new ResourceLock(actionReq.Result);
+			var rsc = rscLock.Value as IAdministratedResource;
+			if(!rsc.UpdateAdmin(Context, user, permissionSet))
+			{
+				return ResourceRequestError.BadRequest();
+			}
+			ResourceManager.Update(rsc, rscLock);
+			return new ActionRequestResult(new RedirectResult($"~/edit/{typeof(T).Name}/{rsc.Slug}"));
+		}
+
 		public IRequestResult JoinGroup(string id)
 		{
 			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, JOIN_GROUP);

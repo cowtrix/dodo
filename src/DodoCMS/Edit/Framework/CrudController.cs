@@ -21,9 +21,9 @@ namespace Dodo.Controllers.Edit
 
 	[Route("edit/[controller]")]
 	public abstract class CrudController<T, TSchema, TViewModel> : CustomController
-		where T : DodoResource, IPublicResource
-		where TSchema : ResourceSchemaBase, new()
-		where TViewModel : class, IViewModel, new()
+	where T : DodoResource, IPublicResource
+	where TSchema : ResourceSchemaBase, new()
+	where TViewModel : class, IViewModel, new()
 	{
 		protected virtual CrudResourceServiceBase<T, TSchema> CrudService => new CrudResourceServiceBase<T, TSchema>(Context, HttpContext, AuthService);
 		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
@@ -32,22 +32,22 @@ namespace Dodo.Controllers.Edit
 		[Route("create")]
 		public IActionResult Create([FromQuery] string parent = null)
 		{
-			if(Context.User == null)
+			if (Context.User == null)
 			{
 				// redirect to login
 				return Forbid();
 			}
-			var tokens = Context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(Context, EPermissionLevel.OWNER)
+			var tokens = Context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(Context, EPermissionLevel.OWNER, Context.User)
 				.Where(t => t.ResourceType == typeof(T).Name && !t.IsRedeemed);
-			if(!tokens.Any() && Context.User.TokenCollection.GetSingleToken<SysadminToken>(Context) == null)
+			if (!tokens.Any() && Context.User.TokenCollection.GetSingleToken<SysadminToken>(Context, EPermissionLevel.OWNER, Context.User) == null)
 			{
 				return Unauthorized("You must request permission to create this resource.");
 			}
 			var schema = new TSchema();
-			if(schema is OwnedResourceSchemaBase owned)
+			if (schema is OwnedResourceSchemaBase owned)
 			{
-				IRESTResource rsc; 
-				if(Guid.TryParse(parent, out var guid))
+				IRESTResource rsc;
+				if (Guid.TryParse(parent, out var guid))
 				{
 					rsc = ResourceUtility.GetResourceByGuid(guid);
 				}
@@ -55,7 +55,7 @@ namespace Dodo.Controllers.Edit
 				{
 					rsc = ResourceUtility.GetResourceBySlug(parent);
 				}
-				if(rsc == null)
+				if (rsc == null)
 				{
 					return BadRequest($"No parent resource found with ID {parent}");
 				}
@@ -77,12 +77,12 @@ namespace Dodo.Controllers.Edit
 			}
 			try
 			{
-				if (!ModelState.IsValid) 
-				{ 
-					return View(schema); 
+				if (!ModelState.IsValid)
+				{
+					return View(schema);
 				}
 				var request = await CrudService.Create(schema);
-				if(!request.IsSuccess)
+				if (!request.IsSuccess)
 				{
 					return request.ActionResult;
 				}
@@ -136,7 +136,7 @@ namespace Dodo.Controllers.Edit
 				{
 					var errors = ModelState.Values.Where(v => v.Errors.Any()).ToList();
 					ModelState.AddModelError("Save Error", "Error updating the resource");
-					return await Edit(id); 
+					return await Edit(id);
 				}
 				var result = await CrudService.Update(id, modified);
 				if (!result.IsSuccess)
@@ -185,43 +185,6 @@ namespace Dodo.Controllers.Edit
 			{
 				var request = (await CrudService.Delete(view.Guid.ToString()));
 				return Redirect(Dodo.DodoApp.NetConfig.FullURI);
-			}
-			catch (Exception e)
-			{
-				ModelState.AddModelError("Unable to delete resource", e.Message);
-				return RedirectToAction(nameof(Edit));
-			}
-		}
-
-		[HttpPost]
-		[Route("{guid}/updateadmin")]
-		public async Task<IActionResult> UpdateAdmin([FromRoute]string guid, [FromQuery]string id, [FromForm] AdministratorPermissionSet permissionSet)
-		{
-			if (Context.User == null)
-			{
-				// redirect to login
-				return Forbid();
-			}
-			if(!typeof(IAdministratedResource).IsAssignableFrom(typeof(T)))
-			{
-				return BadRequest();
-			}
-			try
-			{
-				var user = ResourceUtility.GetManager<User>().GetSingle(u => u.Slug == id);
-				if(user == null)
-				{
-					return BadRequest();
-				}
-				var request = AuthService.IsAuthorised(Context, guid, EHTTPRequestType.PATCH);
-				if(!request.IsSuccess)
-				{
-					return Unauthorized();
-				}
-				var actionReq = request as ResourceActionRequest;
-				var rsc = actionReq.Result as IAdministratedResource;
-				rsc.UpdateAdmin(Context, user, permissionSet);
-				return RedirectToAction(nameof(Edit));
 			}
 			catch (Exception e)
 			{

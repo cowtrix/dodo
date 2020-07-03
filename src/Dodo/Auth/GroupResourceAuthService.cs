@@ -45,9 +45,9 @@ namespace DodoResources
 			}
 
 			// User has a resource creation token with this type, so we consume it and return ok
-			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context, EPermissionLevel.OWNER)
+			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context, EPermissionLevel.OWNER, context.User)
 				.FirstOrDefault(t => !t.IsRedeemed && t.ResourceType == typeof(T).Name);
-			if (token != null || context.User.TokenCollection.GetSingleToken<SysadminToken>(context) != null)
+			if (token != null || context.User.TokenCollection.GetSingleToken<SysadminToken>(context, EPermissionLevel.OWNER, context.User) != null)
 			{
 				return new ResourceCreationRequest(context, schema, token);
 			}

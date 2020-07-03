@@ -16,8 +16,10 @@ namespace Dodo
 {
 	public interface IAdministratedResource : IRESTResource
 	{
-		public bool AddNewAdmin(AccessContext context, User newAdmin);
-		public bool UpdateAdmin(AccessContext context, User newAdmin, AdministratorPermissionSet permissions);
+		bool IsAdmin(User target, AccessContext requesterContext, out AdministratorPermissionSet permissions);
+		bool AddNewAdmin(AccessContext context, User newAdmin);
+		bool UpdateAdmin(AccessContext context, User newAdmin, AdministratorPermissionSet permissions);
+		bool CompleteAdminInvite(AccessContext context, User newAdmin, Passphrase newPass);
 	}
 
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
@@ -49,9 +51,9 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
-		public TokenCollection SharedTokens = new TokenCollection();
+		public TokenCollection SharedTokens { get; set; } = new TokenCollection();
 
-		public SecureUserStore Members = new SecureUserStore();
+		public SecureUserStore Members { get; set; } = new SecureUserStore();
 
 		public GroupResource() : base() { }
 
@@ -219,16 +221,7 @@ namespace Dodo
 		public IEnumerable<Notification> GetNotifications(AccessContext context, EPermissionLevel permissionLevel)
 		{
 			Passphrase pass;
-			if (permissionLevel >= EPermissionLevel.ADMIN)
-			{
-				// Unlock encrypted administrator tokens
-				pass = new Passphrase(AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase).GroupPrivateKey);
-			}
-			else
-			{
-				pass = context.Passphrase;
-			}
-			return SharedTokens.GetNotifications(context, pass, permissionLevel);
+			return SharedTokens.GetNotifications(context, permissionLevel, this);
 		}
 
 		public void AddToken(IToken token, EPermissionLevel permissionLevel)
@@ -238,7 +231,27 @@ namespace Dodo
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
-			return SharedTokens.Remove(context, permissionLevel, notification);
+			Passphrase pass;
+			if (permissionLevel >= EPermissionLevel.ADMIN)
+			{
+				// Unlock encrypted administrator tokens
+				context = new AccessContext(context.User,
+					new Passphrase(AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase).GroupPrivateKey));
+			}
+			return SharedTokens.Remove(context, permissionLevel, notification, this);
+		}
+
+		public Passphrase GetPrivateKey(AccessContext context)
+		{
+			if (context.User == null)
+			{
+				return default;
+			}
+			if (!AdministratorData.TryGetValue(context.User.CreateRef(), context.Passphrase, out var adminDataObj))
+			{
+				throw new Exception("Bad auth");
+			}
+			return new Passphrase((adminDataObj as AdministrationData).GroupPrivateKey);
 		}
 	}
 }

@@ -167,7 +167,7 @@ namespace RESTTests
 				null, new[] { ( "email", user.PersonalData.Email) } );
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			user = UserManager.GetSingle(u => u.Guid == user.Guid);
-			var token = user.TokenCollection.GetSingleToken<ResetPasswordToken>(context);
+			var token = user.TokenCollection.GetSingleToken<ResetPasswordToken>(context, EPermissionLevel.OWNER, user);
 
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Request a Password Reset Token" },
@@ -199,7 +199,7 @@ namespace RESTTests
 		public async Task CanVerifyEmail()
 		{
 			var user = GetRandomUser(out var password, out var context, false);
-			var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context);
+			var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, user);
 			Assert.IsNotNull(token);
 			Assert.IsNotNull(token.Token);
 			await Login(user.Slug, password);

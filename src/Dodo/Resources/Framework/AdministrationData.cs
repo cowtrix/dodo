@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security;
 using Common;
 using Dodo.Users;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
@@ -24,8 +25,11 @@ namespace Dodo
 		public AdministratorPermissionSet Permissions { get; set; } = new AdministratorPermissionSet();
 	}
 
+	[BindProperties]	
 	public class AdministratorPermissionSet
 	{
+		public AdministratorPermissionSet() { }
+
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		[Name("Change Administrator Permissions")]
 		public bool CanChangePermissions { get; set; }

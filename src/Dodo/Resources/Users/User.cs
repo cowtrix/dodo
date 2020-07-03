@@ -25,8 +25,8 @@ namespace Dodo.Users
 		public PersonalInfo PersonalData = new PersonalInfo();
 		[View(EPermissionLevel.USER)]
 		[VerifyObject]
-		public AuthorizationData AuthData;
-		public TokenCollection TokenCollection = new TokenCollection();
+		public AuthorizationData AuthData { get; set; }
+		public TokenCollection TokenCollection { get; set; } = new TokenCollection();
 		[BsonIgnore]
 		public string PublicKey => AuthData.PublicKey;
 		#endregion
@@ -83,8 +83,7 @@ namespace Dodo.Users
 
 		public IEnumerable<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel)
 		{
-			return TokenCollection.GetNotifications(accessContext, 
-				new Passphrase(accessContext.User.AuthData.PrivateKey.GetValue(accessContext.Passphrase)), permissionLevel);
+			return TokenCollection.GetNotifications(accessContext, permissionLevel, this);
 		}
 
 		public void AddToken(IToken token, EPermissionLevel permissionLevel)
@@ -94,7 +93,16 @@ namespace Dodo.Users
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
-			return TokenCollection.Remove(context, permissionLevel, notification);
+			return TokenCollection.Remove(context, permissionLevel, notification, this);
+		}
+
+		public Passphrase GetPrivateKey(AccessContext accessContext)
+		{
+			if(accessContext.User == null)
+			{
+				return default;
+			}
+			return new Passphrase(accessContext.User.AuthData.PrivateKey.GetValue(accessContext.Passphrase));
 		}
 	}
 }

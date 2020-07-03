@@ -172,7 +172,7 @@ namespace SharedTest
 			// Verify email if flag has been set
 			if (verifyEmail)
 			{
-				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context);
+				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, user);
 				Assert.IsNotNull(verifyToken);
 				user.PersonalData.EmailConfirmed = true;
 			}
