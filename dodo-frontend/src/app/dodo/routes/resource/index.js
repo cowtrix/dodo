@@ -1,1 +1,3 @@
-export { ResourceConnected as Event } from "./container"
+export { ResourceConnected as Resource } from "./container"
+export { RESOURCE_ROUTE } from './route'
+
