@@ -1,7 +1,7 @@
 import { postLogin } from '../services'
-import { LOGIN, RESET_PASSWORD, REGISTER_USER } from './action-types'
+import { LOGIN, RESET_PASSWORD, REGISTER_USER, GET_LOGGED_IN_USER, UPDATE_DETAILS } from './action-types'
 import { apiAction } from '../factories'
-import { RESET_PASSWORD as RESET_PASSWORD_URL, REGISTER_USER as REGISTER_USER_URL } from '../urls'
+import { RESET_PASSWORD as RESET_PASSWORD_URL, REGISTER_USER as REGISTER_USER_URL, AUTH_URL } from '../urls'
 
 
 import { REQUEST, SUCCESS, FAILURE } from '../constants'
@@ -40,3 +40,11 @@ export const registerUser = (dispatch, userDetails) =>
 	apiAction(dispatch, REGISTER_USER, REGISTER_USER_URL, (success) => dispatch({
 	type: LOGIN + SUCCESS, payload: success
 }), false, 'post', userDetails)
+
+export const getLoggedInUser = (dispatch) =>
+	apiAction(dispatch, GET_LOGGED_IN_USER, AUTH_URL)
+
+export const updateDetails = (dispatch, user, details) =>
+	apiAction(dispatch, UPDATE_DETAILS, AUTH_URL + user.username, (success) => dispatch({
+		type: LOGIN + SUCCESS, payload: success
+	}), false, 'patch', details)

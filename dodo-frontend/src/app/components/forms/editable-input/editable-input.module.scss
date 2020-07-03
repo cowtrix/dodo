@@ -1,0 +1,47 @@
+@import "~app/styles/styles";
+
+.inputWrapper {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: spacing(6);
+
+	@media (min-width: $responsive-breakpoint) {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	label {
+		margin-bottom: spacing(3);
+
+		@media (min-width: $responsive-breakpoint) {
+			flex-basis: 0;
+			flex-grow: .3;
+			margin-bottom: 0;
+		}
+	}
+
+	input {
+		flex-grow: .8;
+		border-radius: 4px;
+		font-size: 1rem;
+		line-height: 32px;
+	}
+}
+
+.input {
+	height: 32px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	@media (min-width: $responsive-breakpoint) {
+		flex-basis: 0;
+		flex-grow: .7;
+	}
+}
+
+.error {
+	color: red;
+	border-color: red;
+}
