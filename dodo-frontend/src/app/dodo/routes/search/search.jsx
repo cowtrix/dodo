@@ -63,5 +63,7 @@ Search.propTypes = {
 	searchResults: PropTypes.array,
 	searchSetCurrentLocation: PropTypes.func,
 	setSearchParams: PropTypes.func,
-	centerMap: PropTypes.func,
+	centerMap: PropTypes.oneOfType([
+		PropTypes.array, PropTypes.bool,
+	]),
 }

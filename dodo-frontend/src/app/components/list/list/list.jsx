@@ -16,7 +16,8 @@ export const List = ({ resources = [], resourceTypes, listExpanded, setListExpan
 			<li>
 				<Button
 					onClick={() => setListExpanded(!listExpanded)}
-					variant="link" className={styles.button}
+					variant="link"
+					className={styles.button}
 				>
 					{listExpanded ? SEE_LESS : SEE_MORE}
 				</Button>

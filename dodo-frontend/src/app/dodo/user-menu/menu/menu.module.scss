@@ -1,0 +1,28 @@
+@import "~app/styles/styles";
+
+$menu-max-width: 480px;
+
+.menu {
+	width: 100%;
+	max-width: $menu-max-width;
+	background: white;
+	position: absolute;
+	right: -100%;
+	transition: 0.3s;
+	z-index: 9999999999;
+	top: 130px;
+	padding: spacing(3);
+
+	@media(min-width: $responsive-breakpoint) {
+		top: 100px;
+	}
+}
+
+.open {
+	right: 0;
+}
+
+.user {
+	width: 100%;
+	text-align: right;
+}

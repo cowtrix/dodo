@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom"
 import { Header } from "./header"
 import { Routes } from "./routes"
 import { ErrorBoundary } from "./routes/error/"
+import { UserMenu } from './user-menu'
 
 export const Dodo = ({ startup }) => {
 	startup()
@@ -12,6 +13,7 @@ export const Dodo = ({ startup }) => {
 		<ErrorBoundary>
 			<Router>
 				<Header />
+				<UserMenu />
 				<Routes />
 			</Router>
 		</ErrorBoundary>

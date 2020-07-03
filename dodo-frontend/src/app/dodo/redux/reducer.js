@@ -1,7 +1,8 @@
-import { CENTER_MAP } from './action-types'
+import { CENTER_MAP, MENU_OPEN } from './action-types'
 
 const initialState = {
 	centerMap: false,
+	menuOpen: false,
 }
 
 export const reducer = (state = initialState, action) => {
@@ -10,6 +11,12 @@ export const reducer = (state = initialState, action) => {
 			return ({
 				...state,
 				centerMap: action.payload
+			})
+		}
+		case (MENU_OPEN) : {
+			return ({
+				...state,
+				menuOpen: action.payload
 			})
 		}
 		default: return state

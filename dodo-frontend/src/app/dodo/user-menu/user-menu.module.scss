@@ -1,0 +1,11 @@
+@import "~app/styles/styles";
+
+.userMenu {
+	z-index: 9999999999;
+	top: 130px;
+	position: fixed;
+
+	@media(min-width: $responsive-breakpoint) {
+		top: 100px;
+	}
+}
