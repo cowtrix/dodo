@@ -58,4 +58,8 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="dotnet run --no-build /viewmodels:&quot;$(SolutionDir)src\DodoCMS\ViewModels&quot; /views:&quot;$(SolutionDir)src\DodoServer\Views&quot;" />
+  </Target>
+
 </Project>

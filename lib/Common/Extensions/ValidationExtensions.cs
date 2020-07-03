@@ -49,21 +49,6 @@ namespace Common.Extensions
 		}
 	}
 
-	public class PhoneNumberAttribute : VerifyMemberBase
-	{
-		public override bool Verify(object value, out string validationError)
-		{
-			var ph = value as string;
-			if (!ValidationExtensions.ValidateNumber(ref ph))
-			{
-				validationError = "Invalid phone number";
-				return false;
-			}
-			validationError = null;
-			return true;
-		}
-	}
-
 	public class MemberVerificationException : Exception
 	{
 		public MemberVerificationException(string message) : base(message)
