@@ -85,7 +85,7 @@ namespace DodoServer
 			// AllowCredentials can't be used with AllowAnyOrigin (origins must be specified)
 			app.UseCors(config =>
 			{
-				config.AllowAnyOrigin()
+				config.WithOrigins("http://localhost:3000").AllowCredentials() // development only
 				.AllowAnyMethod()
 				.AllowAnyHeader();
 			});
