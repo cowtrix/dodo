@@ -58,8 +58,4 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File  .\buildAOT.ps1 -solutionDir $(SolutionDir) -configuration $(ConfigurationName)" />
-  </Target>
-
 </Project>

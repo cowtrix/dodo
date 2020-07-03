@@ -123,7 +123,7 @@ namespace Dodo.Users.Tokens
 
 		public IEnumerable<IToken> GetAllTokens(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent)
 		{
-			var pk = parent.GetPrivateKey(context);
+			var pk = parent != null ? parent.GetPrivateKey(context) : default;
 			foreach (var token in m_tokens.Where(t => t.PermissionLevel <= permissionLevel))
 			{
 				var t = token.GetToken(pk);

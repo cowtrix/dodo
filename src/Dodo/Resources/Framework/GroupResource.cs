@@ -231,13 +231,6 @@ namespace Dodo
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
-			Passphrase pass;
-			if (permissionLevel >= EPermissionLevel.ADMIN)
-			{
-				// Unlock encrypted administrator tokens
-				context = new AccessContext(context.User,
-					new Passphrase(AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase).GroupPrivateKey));
-			}
 			return SharedTokens.Remove(context, permissionLevel, notification, this);
 		}
 
@@ -246,6 +239,10 @@ namespace Dodo
 			if (context.User == null)
 			{
 				return default;
+			}
+			if(!IsAdmin(context.User, context, out _))
+			{
+				throw new Exception($"User {context.User} tried to get Private Key but wasn't admin");
 			}
 			if (!AdministratorData.TryGetValue(context.User.CreateRef(), context.Passphrase, out var adminDataObj))
 			{
