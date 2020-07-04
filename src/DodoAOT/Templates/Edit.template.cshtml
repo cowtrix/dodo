@@ -6,6 +6,7 @@
 	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
+	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
 }
 
 {SCRIPTS}

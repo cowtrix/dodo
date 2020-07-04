@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dodo;
+using Dodo.Models;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using Microsoft.AspNetCore.Authorization;
@@ -191,6 +192,28 @@ namespace Dodo.Controllers.Edit
 				ModelState.AddModelError("Unable to delete resource", e.Message);
 				return RedirectToAction(nameof(Edit));
 			}
+		}
+
+		[HttpPost("notifications/{id}/new")]
+		public virtual async Task<IActionResult> PostNotification([FromRoute]string id, [FromBody]NotificationModel notification)
+		{
+			var result = await CrudService.AddNotification(id, notification);
+			if (!result.IsSuccess)
+			{
+				return result.ActionResult;
+			}
+			return RedirectToAction(nameof(Edit), new { id = id });
+		}
+
+		[HttpGet("notifications/{id}/delete")]
+		public virtual async Task<IActionResult> DeleteNotification([FromRoute]string id, [FromQuery]Guid notification)
+		{
+			var result = await CrudService.DeleteNotification(id, notification);
+			if(!result.IsSuccess)
+			{
+				return result.ActionResult;
+			}
+			return RedirectToAction(nameof(Edit), new { id = id });
 		}
 	}
 }

@@ -23,8 +23,9 @@ namespace Dodo
 		public string Link { get; set; }
 		public Guid Guid { get; set; }
 		public bool CanDelete { get; set; }
+		public EPermissionLevel PermissionLevel { get; set; }
 
-		public Notification(Guid tokenGuid, string source, string message, string link, ENotificationType type, bool canDelete = false)
+		public Notification(Guid tokenGuid, string source, string message, string link, ENotificationType type, EPermissionLevel permissionLevel, bool canDelete = false)
 		{
 			Guid = tokenGuid;
 			Source = source;
@@ -33,6 +34,7 @@ namespace Dodo
 			CanDelete = canDelete;
 			Link = link;
 			Type = type.ToString().ToCamelCase();
+			PermissionLevel = permissionLevel;
 		}
 	}
 }

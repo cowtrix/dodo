@@ -12,7 +12,7 @@ namespace Dodo.Users.Tokens
 		[JsonProperty]
 		private string m_token { get; set; }
 
-		public PlainTokenEntry(ITokenResource owner, IToken token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER) : base(owner, token, permissionLevel)
+		public PlainTokenEntry(ITokenResource owner, IToken token) : base(owner, token)
 		{
 			m_token = JsonConvert.SerializeObject(token, JsonExtensions.StorageSettings);
 		}

@@ -1,6 +1,8 @@
-﻿using Common;
+using Common;
 using Microsoft.AspNetCore.Mvc;
 using Resources;
+using System;
+using System.Collections.Generic;
 
 namespace Dodo
 {
@@ -28,7 +30,34 @@ namespace Dodo
 		[Name("Delete Existing Child Objects")]
 		public bool CanDeleteChildObjects { get; set; }
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Create Announcements")]
-		public bool CanCreateAnnouncements { get; set; }
+		[Name("Manage Announcements")]
+		public bool CanManageAnnouncements { get; set; }
+
+		public override bool Equals(object obj)
+		{
+			return obj is AdministratorPermissionSet set &&
+				   CanChangePermissions == set.CanChangePermissions &&
+				   CanAddAdmin == set.CanAddAdmin &&
+				   CanRemoveAdmin == set.CanRemoveAdmin &&
+				   CanEditInfo == set.CanEditInfo &&
+				   CanCreateChildObjects == set.CanCreateChildObjects &&
+				   CanDeleteChildObjects == set.CanDeleteChildObjects &&
+				   CanManageAnnouncements == set.CanManageAnnouncements;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(CanChangePermissions, CanAddAdmin, CanRemoveAdmin, CanEditInfo, CanCreateChildObjects, CanDeleteChildObjects, CanManageAnnouncements);
+		}
+
+		public static bool operator ==(AdministratorPermissionSet left, AdministratorPermissionSet right)
+		{
+			return EqualityComparer<AdministratorPermissionSet>.Default.Equals(left, right);
+		}
+
+		public static bool operator !=(AdministratorPermissionSet left, AdministratorPermissionSet right)
+		{
+			return !(left == right);
+		}
 	}
 }

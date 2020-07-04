@@ -288,7 +288,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 	public static User CreateTemporaryUser(string email)
 	{
 		var temporaryPassword = new Passphrase(ValidationExtensions.GenerateStrongPassword());
-		var schema = new UserSchema("TEMPORARY", Guid.NewGuid().ToString().Replace("-", ""),
+		var schema = new UserSchema("TEMPORARY", $"tempuser_{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16)}",
 			temporaryPassword.Value, email);
 		var factory = ResourceUtility.GetFactory<User>();
 		var newUser = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));

@@ -13,6 +13,10 @@ namespace Dodo
 
 		public bool ShouldRemove { get; set; }
 
+		public EPermissionLevel PermissionLevel { get; set; }
+
+		public override EPermissionLevel GetVisibility() => PermissionLevel;
+
 		[JsonProperty]
 		Notification m_notification;
 		public Notification GetNotification(AccessContext context) => m_notification;
@@ -23,10 +27,11 @@ namespace Dodo
 
 		public SimpleNotificationToken() { }
 
-		public SimpleNotificationToken(User creator, string source, string message, string link, ENotificationType type, bool canDelete) : base()
+		public SimpleNotificationToken(User creator, string source, string message, string link, ENotificationType type, EPermissionLevel permissionLevel, bool canDelete) : base()
 		{
 			Creator = creator.CreateRef();
-			m_notification = new Notification(Guid, source, message, link, type, canDelete);
+			PermissionLevel = permissionLevel;
+			m_notification = new Notification(Guid, source, message, link, type, permissionLevel, canDelete);
 		}
 	}
 }

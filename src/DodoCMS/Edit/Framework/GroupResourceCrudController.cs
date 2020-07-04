@@ -39,5 +39,16 @@ namespace Dodo.Controllers.Edit
 			}
 			return Redirect($"~/edit/{typeof(T).Name}/{id}");
 		}
+
+		[HttpGet("{id}/" + GroupResourceService<T, TSchema>.REMOVE_ADMIN)]
+		public IActionResult RemoveAdministrator(string id, [FromQuery]string adminID)
+		{
+			var result = GroupService.RemoveAdministrator(id, adminID);
+			if (!result.IsSuccess)
+			{
+				return result.ActionResult;
+			}
+			return Redirect($"~/edit/{typeof(T).Name}/{id}");
+		}
 	}
 }

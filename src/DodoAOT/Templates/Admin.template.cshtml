@@ -9,7 +9,6 @@
 			<div class="card-body">
 				<form id="newadmin" method="post" action="@Model.Slug/addadmin">
 					<div class="form-group">
-						<label class="control-label">New Administrator</label>
 						<input id="newAdminIdentifier" name="newAdminIdentifier" class="form-control"></input>
 						<small id="helpBlock" class="form-text text-muted">
 							This can be the username, user ID, or an email. If the holder of the email doesn't already have an account, they will be sent an invite link.
@@ -53,9 +52,9 @@
 						<div class="col" style="text-align:right;">
 							@{ if (!isMe && canremove)
 								{
-									<button class="btn btn-outline-danger">
+									<a class="btn btn-outline-danger" href="@Model.Slug/removeadmin?adminID=@admin.User.Guid">
 										<p class="fas fa-trash"></p>
-									</button>
+									</a>
 								}
 							}
 						</div>
@@ -64,7 +63,7 @@
 				<!-- Permissions foldout -->
 				<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
 					<div class="card-body">
-						<form id="admin@(admin.User.Slug)" method="post" action="@Model.Slug/updateadmin?id=@admin.User.Slug" enctype="application/x-www-form-urlencoded">
+						<form id="admin@(admin.User.Slug)" method="post" action="@Model.Slug/updateadmin?id=@admin.User.Guid" enctype="application/x-www-form-urlencoded">
 							<div class="card-body">
 								@{ if (thisAdmin.Permissions.CanChangePermissions && isMe)
 									{
@@ -102,8 +101,8 @@
 											<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
 										</div>
 										<div class="form-check">
-											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateAnnouncements" name="CanCreateAnnouncements" @(admin.Permissions.CanCreateAnnouncements ? "checked" : "")>
-											<label class="form-check-label" for="@getID("CanCreateAnnouncements")">Can Create Announcements</label>
+											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
 										</div>
 									</div>
 								</div>

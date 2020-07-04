@@ -3,6 +3,7 @@ using Common.Security;
 using Dodo.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
+using Resources;
 using Resources.Security;
 using System;
 using System.Net;
@@ -46,5 +47,7 @@ namespace Dodo.Users.Tokens
 		{
 			SessionTokenStore.RemoveUser(UserKey);
 		}
+
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.PUBLIC;
 	}
 }

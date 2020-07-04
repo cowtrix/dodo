@@ -86,9 +86,9 @@ namespace Dodo.Users
 			return TokenCollection.GetNotifications(accessContext, permissionLevel, this);
 		}
 
-		public void AddToken(IToken token, EPermissionLevel permissionLevel)
+		public void AddToken(IToken token)
 		{
-			TokenCollection.Add(this, token, permissionLevel);
+			TokenCollection.Add(this, token);
 		}
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)

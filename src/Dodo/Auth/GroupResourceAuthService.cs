@@ -5,6 +5,7 @@ using Dodo.Users;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Dodo.Users.Tokens;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace DodoResources
 {
@@ -72,25 +73,29 @@ namespace DodoResources
 
 		protected override IRequestResult CanPost(AccessContext context, T target, string action = null)
 		{
+			if (context.User == null)
+			{
+				return ResourceRequestError.ForbidRequest();
+			}
 			if (action.Contains('?'))
 			{
 				action = action.Substring(action.IndexOf('?'));
 			}
-			switch (action)
+			if(action == GroupResourceService<T, TSchema>.JOIN_GROUP || action == GroupResourceService<T, TSchema>.LEAVE_GROUP)
 			{
-				case GroupResourceService<T, TSchema>.ADD_ADMIN:
-					if (target.IsAdmin(context.User, context, out var permissionSet) || !permissionSet.CanAddAdmin)
-					{
-						return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
-					}
-					break;
-				case GroupResourceService<T, TSchema>.JOIN_GROUP:
-				case GroupResourceService<T, TSchema>.LEAVE_GROUP:
-					if (context.User != null)
-					{
-						return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
-					}
-					return ResourceRequestError.ForbidRequest();
+				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.MEMBER);
+			}
+			// Everything below requires admin
+			if(!target.IsAdmin(context.User, context, out var permissionSet))
+			{
+				return ResourceRequestError.UnauthorizedRequest();
+			}
+			if ((action == GroupResourceService<T, TSchema>.ADD_ADMIN && permissionSet.CanAddAdmin) ||
+				(action == GroupResourceService<T, TSchema>.UPDATE_ADMIN && permissionSet.CanChangePermissions) ||
+				(action == GroupResourceService<T, TSchema>.REMOVE_ADMIN && permissionSet.CanRemoveAdmin) ||
+				(action == "notifications" && permissionSet.CanManageAnnouncements))
+			{
+				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);
 			}
 			return ResourceRequestError.UnauthorizedRequest();
 		}

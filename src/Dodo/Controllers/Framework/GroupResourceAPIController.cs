@@ -27,11 +27,19 @@ namespace DodoResources
 		protected override AuthorizationService<T, TSchema> AuthService => new GroupResourceAuthService<T, TSchema>();
 
 		[HttpPost]
-		[Route("{guid}/updateadmin")]
+		[Route("{guid}/" + GroupResourceService<T, TSchema>.UPDATE_ADMIN)]
 		public async Task<IActionResult> UpdateAdmin([FromRoute]string guid, [FromQuery]string id,
 			[FromBody] AdministratorPermissionSet permissionSet)
 		{
 			var result = GroupService.UpdateAdmin(guid, id, permissionSet);
+			return result.ActionResult;
+		}
+
+		[HttpGet]
+		[Route("{guid}/" + GroupResourceService<T, TSchema>.REMOVE_ADMIN)]
+		public async Task<IActionResult> RemoveAdmin([FromRoute]string guid, [FromQuery]string id)
+		{
+			var result = GroupService.RemoveAdministrator(guid, id);
 			return result.ActionResult;
 		}
 

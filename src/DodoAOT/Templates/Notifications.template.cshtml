@@ -1,20 +1,52 @@
 
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			@{foreach (var notification in (ViewData["notifications"] as IEnumerable<Dodo.Notification>))
-			{
-				<div class="card" style="width:100%;">
-					<div class="card-body">
-						<p>	@notification.Message </p>
-						<p> @TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc) </p>
-						@if(notification.CanDelete)
-						{
-							<a href="#" class="btn btn-primary">Delete</a>
-						}
+<ul class="list-group">
+	@{foreach (var notification in notifications)
+		{
+			<li class="list-group-item">
+				<div class="row">
+					<div class="col">
+						<small>
+							@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc)
+						</small>
 					</div>
+					<div class="col-auto">
+						<strong>
+							@notification.Type.ToUpperInvariant()
+						</strong>
+					</div>
+					@{ if (!string.IsNullOrEmpty(notification.Source))
+						{
+							<div class="col-auto">
+								<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="Source: @notification.Source">
+									<span class="fas fa-comment"></span>
+								</button>
+							</div>
+						} }
+					@{ if (!string.IsNullOrEmpty(notification.Link))
+						{
+							<div class="col-auto">
+								<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="URL: @notification.Link">
+									<span class="fas fa-link"></span>
+								</button>
+							</div>
+						} }
+					<div class="col-auto">
+						<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="The visibility of this announcement is @Common.NameAttributeExtensions.GetName(notification.PermissionLevel)">
+							<span class="fas fa-eye"></span>
+						</button>
+					</div>
+					@if (notification.CanDelete)
+					{
+						<div class="col-auto">
+							<a class="btn btn-outline-danger" href="notifications/@Model.Slug/delete?notification=@notification.Guid">
+								<p class="fas fa-trash"></p>
+							</a>
+						</div>
+					}
 				</div>
-			}}
-		</div>
-	</div>
-</div>
+				<div style="padding:10px;">
+					<p style="margin:0;">	@notification.Message </p>
+				</div>
+			</li>
+		}}
+</ul>

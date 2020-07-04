@@ -17,7 +17,7 @@ namespace Dodo.Users.Tokens
 	public interface ITokenResource : IRESTResource
 	{
 		string PublicKey { get; }
-		void AddToken(IToken token, EPermissionLevel permissionLevel);
+		void AddToken(IToken token);
 		Passphrase GetPrivateKey(AccessContext context);
 	}
 
@@ -37,7 +37,7 @@ namespace Dodo.Users.Tokens
 		private List<TokenEntry> m_tokens = new List<TokenEntry>();
 		[BsonIgnore]
 		public int Count => m_tokens.Count;
-		public void Add(ITokenResource parent, IToken token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER)
+		public void Add(ITokenResource parent, IToken token)
 		{
 			if(token == null)
 			{
@@ -62,7 +62,7 @@ namespace Dodo.Users.Tokens
 			{
 				throw new Exception($"Token type {token.GetType()} is not falling through to the base .OnAdd()");
 			}
-			var newEntry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token, permissionLevel) : (TokenEntry)new PlainTokenEntry(parent, token, permissionLevel);
+			var newEntry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token) : (TokenEntry)new PlainTokenEntry(parent, token);
 			m_tokens.Add(newEntry);
 		}
 

@@ -14,6 +14,7 @@ namespace Dodo.Users.Tokens
 		Guid Guid { get; }
 		bool Encrypted { get; }
 		void OnAdd(ITokenResource parent);
+		EPermissionLevel GetVisibility();
 	}
 
 	[BsonDiscriminator(RootClass = true)]
@@ -46,5 +47,7 @@ namespace Dodo.Users.Tokens
 			error = null;
 			return true;
 		}
+
+		public abstract EPermissionLevel GetVisibility();
 	}
 }

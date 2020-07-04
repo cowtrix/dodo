@@ -27,5 +27,7 @@ namespace Dodo.Users.Tokens
 			Password = password.Value;
 			TokenChallenge = tokenChallenge;
 		}
+
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.PUBLIC;
 	}
 }
