@@ -14,25 +14,27 @@
 	}
 </script>
 
-<h1>Delete {NAME}</h1>
+<div class="container-md">
+	<h1>Delete {NAME}</h1>
 
-<div>
-	<form id="deleteForm" onsubmit="return validateForm(this);" asp-action="Delete">
-		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-		<div class="form-group">
-			<label asp-for="Guid" class="control-label"></label>
-			<input readonly asp-for="Guid" class="form-control" />
-			<span asp-validation-for="Guid" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-			<label asp-for="Name" class="control-label"></label>
-			<input readonly asp-for="Name" class="form-control" />
-			<span asp-validation-for="Name" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-			<label class="control-label">Confirm</label>
-			<input class="form-control" id="nameConfirm" />
-		</div>
-		<input type="submit" value="Delete" class="btn btn-danger" />
-	</form>
+	<div>
+		<form id="deleteForm" onsubmit="return validateForm(this);" asp-action="Delete">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Guid" class="control-label"></label>
+				<input readonly asp-for="Guid" class="form-control" />
+				<span asp-validation-for="Guid" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+				<input readonly asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label class="control-label">Confirm</label>
+				<input class="form-control" id="nameConfirm" />
+			</div>
+			<input type="submit" value="Delete" class="btn btn-danger" />
+		</form>
+	</div>
 </div>

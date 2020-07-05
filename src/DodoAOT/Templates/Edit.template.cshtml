@@ -31,25 +31,25 @@
 </ul>
 <div class="tab-content" id="myTabContent">
 	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-		<div class="row">
-			<div class="card" style="width:100%;">
-				<div class="card-body">
-					<form asp-action="Edit">
-						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-						{DETAILS}
-						<div class="form-group">
-							<input type="submit" value="Save" class="btn btn-primary btn-block" />
-						</div>
-					</form>
-				</div>
+		<div class="card" style="width:100%;">
+			<div class="card-body">
+				<form asp-action="Edit">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					{DETAILS}
+					<div class="form-group">
+						<input type="submit" value="Save" class="btn btn-primary btn-block" />
+					</div>
+				</form>
 			</div>
 		</div>
 		<div class="card">
-			<div class="alert alert-warning" role="alert">
-				<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
-			</div>
 			<div class="card-body">
-				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+				<div class="alert alert-warning" role="alert">
+					<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
+				</div>
+				<div class="card-body">
+					<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -66,4 +66,3 @@
 		</div>
 	}
 </div>
-

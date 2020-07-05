@@ -8,6 +8,11 @@ namespace Common.Extensions
 
 	public static class StringExtensions
 	{
+		public static string TextToHtml(string str)
+		{
+			return str.Replace(Environment.NewLine, "<br/>")
+				.Replace("\n", "<br/>");
+		}
 		public static string AppendIfNotNull(this string str, string toAppend)
 		{
 			if(str == null)

@@ -70,13 +70,9 @@ namespace Dodo.Users
 			var accessContext = new AccessContext(requesterUser, passphrase);
 			if (permissionLevel >= EPermissionLevel.ADMIN)
 			{
-				view.Add(ADMIN_OF_KEY, new
-				{
-					Rebellions = ResourceUtility.GetManager<Rebellion>().Get(r => r.IsAdmin(this, accessContext, out _)).Select(r => r.Guid),
-					WorkingGroups = ResourceUtility.GetManager<WorkingGroup>().Get(r => r.IsAdmin(this, accessContext, out _)).Select(r => r.Guid),
-					LocalGroups = ResourceUtility.GetManager<LocalGroup>().Get(r => r.IsAdmin(this, accessContext, out _)).Select(r => r.Guid),
-				});
-				view.Add(ROLES_HELD_KEY, ResourceUtility.GetManager<Role>().Get(r => r.RoleHolders.IsAuthorised(this.CreateRef(), passphrase)).Select(r => r.Guid));
+				view.Add(ADMIN_OF_KEY, TokenCollection.GetAllTokens<UserAddedAsAdminToken>(accessContext, permissionLevel, this)
+					.Select(t => t.Resource).ToList());
+				//view.Add(ROLES_HELD_KEY, ResourceUtility.GetManager<Role>().Get(r => r.RoleHolders.IsAuthorised(this.CreateRef(), passphrase)).Select(r => r.Guid));
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}

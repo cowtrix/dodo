@@ -37,12 +37,11 @@ $(function () {
 </ul>
 <div class="tab-content" id="myTabContent">
 	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-		<div class="row">
-			<div class="card" style="width:100%;">
-				<div class="card-body">
-					<form asp-action="Edit">
-						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-										@{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.Parent.GetRefType()]; }
+		<div class="card" style="width:100%;">
+			<div class="card-body">
+				<form asp-action="Edit">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+									@{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.Parent.GetRefType()]; }
 				<div class="navbar navbar-expand-lg navbar-dark" style="width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;">
 				<a class="navbar-brand" href="https://localhost:5001/@Model.Parent.GetRefType().Name/@Model.Parent.Slug">Part of the @Model.Parent.Name</a>
 				</div>
@@ -74,19 +73,10 @@ $(function () {
 					<input  readonly asp-for="Revision" class="form-control"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
-<div class="form-group">
-	<label asp-for="PublicDescription" class="form-label"></label>
-	<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
-	<script>
-		var editor = new EpicEditor({
-			basePath: '/lib/epiceditor', clientSideStorage: false,
-			autogrow: { minHeight: "200", maxHeight: "400", scroll: true },
-			button: { preview: true, fullscreen: false, bar: "show" },
-			theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
-		}).load();
-	</script>
-</div>
-
+				<div class="form-group">
+				<label asp-for="PublicDescription" class="control-label"></label>
+				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
+				</div>
 
 				<div class="form-group">
 					<label asp-for="MemberCount" class="control-label"></label>
@@ -95,73 +85,81 @@ $(function () {
 				</div>
 
 
-						<div class="form-group">
-							<input type="submit" value="Save" class="btn btn-primary btn-block" />
-						</div>
-					</form>
-				</div>
+					<div class="form-group">
+						<input type="submit" value="Save" class="btn btn-primary btn-block" />
+					</div>
+				</form>
 			</div>
 		</div>
 		<div class="card">
-			<div class="alert alert-warning" role="alert">
-				<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
-			</div>
 			<div class="card-body">
-				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/WorkingGroup/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+				<div class="alert alert-warning" role="alert">
+					<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
+				</div>
+				<div class="card-body">
+					<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/WorkingGroup/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+				</div>
 			</div>
 		</div>
 	</div>
 	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{
 		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-			
+			<div class="card">
+	<h5 class="card-header">Post an Announcement</h5>
+	<div class="card-body" style="text-align:right;">
+		<form id="newannouncement" method="post" action="notifications/@Model.Slug/new">
+			<div class="form-group">
+				<textarea id="Message" name="Message" class="form-control" style="height:10em;"></textarea>
+			</div>
+			<input type="submit" value="Post" class="btn btn-primary" style="width:100px;" />
+		</form>
+	</div>
+</div>
+
 <ul class="list-group">
 	@{foreach (var notification in notifications)
 		{
 			<li class="list-group-item">
-				<div class="row">
-					<div class="col">
-						<small>
-							@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc)
-						</small>
-					</div>
-					<div class="col-auto">
-						<strong>
-							@notification.Type.ToUpperInvariant()
-						</strong>
-					</div>
-					@{ if (!string.IsNullOrEmpty(notification.Source))
-						{
-							<div class="col-auto">
-								<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="Source: @notification.Source">
-									<span class="fas fa-comment"></span>
-								</button>
-							</div>
-						} }
-					@{ if (!string.IsNullOrEmpty(notification.Link))
-						{
-							<div class="col-auto">
-								<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="URL: @notification.Link">
-									<span class="fas fa-link"></span>
-								</button>
-							</div>
-						} }
-					<div class="col-auto">
-						<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="The visibility of this announcement is @Common.NameAttributeExtensions.GetName(notification.PermissionLevel)">
-							<span class="fas fa-eye"></span>
-						</button>
-					</div>
-					@if (notification.CanDelete)
-					{
-						<div class="col-auto">
-							<a class="btn btn-outline-danger" href="notifications/@Model.Slug/delete?notification=@notification.Guid">
-								<p class="fas fa-trash"></p>
-							</a>
+				<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+					<div class="row">
+						<div class="col">
+							<small>
+								@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
+							</small>
 						</div>
-					}
+						<div class="col-auto">
+
+							<strong>
+								@notification.Type.ToUpperInvariant()
+							</strong>
+							@{ if (!string.IsNullOrEmpty(notification.Source))
+								{
+									<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="Source: @notification.Source">
+										<span class="fas fa-comment"></span>
+									</button>
+								} }
+							@{ if (!string.IsNullOrEmpty(notification.Link))
+								{
+									<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="URL: @notification.Link">
+										<span class="fas fa-link"></span>
+									</button>
+								} }
+							<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="The visibility of this announcement is @Common.NameAttributeExtensions.GetName(notification.PermissionLevel)">
+								<span class="fas fa-eye"></span>
+							</button>
+							@if (notification.CanDelete)
+							{
+								<a class="btn btn-outline-danger" href="notifications/@Model.Slug/delete?notification=@notification.Guid">
+									<p class="fas fa-trash"></p>
+								</a>
+							}
+
+						</div>
+					</div>
 				</div>
 				<div style="padding:10px;">
-					<p style="margin:0;">	@notification.Message </p>
+					<p style="margin:0;"> @Html.Raw(Common.Extensions.StringExtensions.TextToHtml(notification.Message)) </p>
 				</div>
 			</li>
 		}}
@@ -300,4 +298,3 @@ $(function () {
 		</div>
 	}
 </div>
-

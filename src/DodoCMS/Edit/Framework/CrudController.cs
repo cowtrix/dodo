@@ -195,7 +195,7 @@ namespace Dodo.Controllers.Edit
 		}
 
 		[HttpPost("notifications/{id}/new")]
-		public virtual async Task<IActionResult> PostNotification([FromRoute]string id, [FromBody]NotificationModel notification)
+		public virtual async Task<IActionResult> PostNotification([FromRoute]string id, [FromForm]NotificationModel notification)
 		{
 			var result = await CrudService.AddNotification(id, notification);
 			if (!result.IsSuccess)

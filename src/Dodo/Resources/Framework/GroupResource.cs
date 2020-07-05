@@ -106,7 +106,7 @@ namespace Dodo
 			var adminData = AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase);
 			adminData.Administrators = adminData.Administrators.Where(ad => ad.User.Guid != targetUser.Guid).ToList();
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
+			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
@@ -143,7 +143,7 @@ namespace Dodo
 				return false;
 			}
 			AdministratorData.SetValue(adminData, newAdminRef, newPass);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
+			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			using (var userLock = new ResourceLock(newAdmin))
@@ -187,7 +187,8 @@ namespace Dodo
 		{
 			string GetPermissionDiff(AdministratorPermissionSet old, AdministratorPermissionSet newp)
 			{
-				var sb = new StringBuilder("\n");
+				// This just generates a nice message of what permissions have changed
+				var sb = new StringBuilder();
 				foreach(var prop in typeof(AdministratorPermissionSet).GetProperties())
 				{
 					var oldVal = prop.GetValue(old);
@@ -225,8 +226,8 @@ namespace Dodo
 			}
 			entry.Permissions = newPermissions;
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
-				$"Administrator @{context.User.Slug} altered @{target.Slug}'s administrator permissions: {GetPermissionDiff(existingPermissions, newPermissions)}",
+			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null,
+				$"Administrator @{context.User.Slug} altered @{target.Slug}'s administrator permissions:\n{GetPermissionDiff(existingPermissions, newPermissions)}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}

@@ -6,6 +6,8 @@ using Resources;
 using Resources.Serializers;
 using System.Collections.Generic;
 using Resources.Location;
+using Common;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo.Roles
 {
@@ -14,20 +16,22 @@ namespace Dodo.Roles
 	{
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer:"parentRef")]
 		public ResourceReference<GroupResource> Parent { get; set; }
+
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Description]
+		[Name("Public Description")]
 		public string PublicDescription { get; set; }
-		[View(EPermissionLevel.MEMBER)]
-		public string MemberDescription { get; set; }
-		[View(EPermissionLevel.ADMIN)]
-		public string AdminDescription { get; set; }
+
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint:"All applicants will answer this prompt when applying.")]
+		[Description]
+		[Name("Applicant Question")]
+		public string QuestionString { get; set; }
+
+		[Name("Published")]
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
 		public GeoLocation Location => Parent.Location;
-
-		[View(EPermissionLevel.USER)]
-		public UserCollection RoleHolders;
 
 		public Role() : base() { }
 
@@ -36,7 +40,6 @@ namespace Dodo.Roles
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
 			Parent = group.CreateRef();
 			PublicDescription = schema.PublicDescription;
-			RoleHolders = new UserCollection(new List<ResourceReference<User>>(), context);
 		}
 	}
 }

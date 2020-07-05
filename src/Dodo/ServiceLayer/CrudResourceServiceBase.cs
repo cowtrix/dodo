@@ -156,7 +156,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 			{
 				return ResourceRequestError.NotFoundRequest();
 			}
-			var notificationToken = new SimpleNotificationToken(Context.User, Context.User.Slug, notification.Message, null, ENotificationType.Announcement, notification.PermissionLevel, true);
+			var notificationToken = new SimpleNotificationToken(Context.User, null, notification.Message, null, ENotificationType.Announcement, notification.PermissionLevel, true);
 			notificationRsc.AddToken(notificationToken);
 			ResourceManager.Update(target, resourceLock);
 		}

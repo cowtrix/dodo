@@ -67,11 +67,19 @@ namespace Dodo
 
 		protected virtual IRequestResult CanGet(AccessContext context, T target, string action = null)
 		{
+			if (target == null)
+			{
+				return ResourceRequestError.NotFoundRequest();
+			}
 			return new ResourceActionRequest(context, target, EHTTPRequestType.GET, GetPermission(context, target), action);
 		}
 
 		protected virtual IRequestResult CanDelete(AccessContext context, T target)
 		{
+			if (target == null)
+			{
+				return ResourceRequestError.NotFoundRequest();
+			}
 			var permission = GetPermission(context, target);
 			if (permission >= EPermissionLevel.OWNER)
 			{
@@ -86,6 +94,10 @@ namespace Dodo
 
 		protected virtual IRequestResult CanEdit(AccessContext context, T target)
 		{
+			if(target == null)
+			{
+				return ResourceRequestError.NotFoundRequest();
+			}
 			var permission = GetPermission(context, target);
 			if (permission >= EPermissionLevel.ADMIN)
 			{
@@ -112,6 +124,14 @@ namespace Dodo
 			if (target != null && target.IsCreator(context))
 			{
 				return EPermissionLevel.OWNER;
+			}
+			if (target is IAdministratedResource admin && admin.IsAdmin(context.User, context, out _))
+			{
+				return EPermissionLevel.ADMIN;
+			}
+			if (target is IOwnedResource owned && owned.Parent.GetValue().IsAdmin(context.User, context, out _))
+			{
+				return EPermissionLevel.ADMIN;
 			}
 			if (context.User != null)
 			{

@@ -10,7 +10,7 @@ namespace Dodo.Users.Tokens
 	{
 		[JsonProperty(TypeNameHandling = TypeNameHandling.None)]
 		[NotNulResource]
-		public ResourceReference<GroupResource> Resource { get; private set; }
+		public ResourceReference<IAdministratedResource> Resource { get; private set; }
 		[JsonProperty]
 		public byte[] Token { get; private set; }
 		[JsonIgnore]
@@ -20,7 +20,7 @@ namespace Dodo.Users.Tokens
 
 		public UserAddedAsAdminToken() { }
 
-		public UserAddedAsAdminToken(GroupResource resource, Passphrase temporaryPassword, string publicKey) : base()
+		public UserAddedAsAdminToken(IAdministratedResource resource, Passphrase temporaryPassword, string publicKey) : base()
 		{
 			Resource = resource.CreateRef();
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);

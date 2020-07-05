@@ -18,7 +18,7 @@ namespace Dodo.Users.Tokens
 		public string TokenChallenge { get; private set; }
 		[JsonIgnore]
 		[BsonIgnore]
-		public override bool Encrypted => true;
+		public override bool Encrypted => false;
 
 		public TemporaryUserToken() { }
 

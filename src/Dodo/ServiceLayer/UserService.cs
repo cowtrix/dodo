@@ -237,8 +237,8 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return error;
 		}
-		var req = (ResourceActionRequest)request;
-		var user = ResourceManager.GetSingle(x => x.Slug == schema.Username || x.PersonalData.Email == schema.Email);
+		var req = (ResourceCreationRequest)request;
+		var user = ResourceManager.GetSingle(x => x.PersonalData.Email == schema.Email);
 		if (user == null)
 		{
 			return ResourceRequestError.BadRequest();
@@ -247,6 +247,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>(Context, EPermissionLevel.OWNER, Context.User);
 		if (tempToken == null || !PasswordHasher.VerifyHashedPassword(tempToken.TokenChallenge, token))
 		{
+			Logger.Warning($"Registering user tried to redeem invalid token {token}");
 			return ResourceRequestError.Conflict();
 		}
 		if (UserManager.GetSingle(u => u.Slug == schema.Username) != null)
@@ -254,7 +255,10 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return ResourceRequestError.Conflict();
 		}
 		using var rscLock = new ResourceLock(user.Guid);
-		user.AuthData.ChangePassword(new Passphrase(tempToken.Password), new Passphrase(schema.Password));
+		if(!user.AuthData.ChangePassword(new Passphrase(tempToken.Password), new Passphrase(schema.Password)))
+		{
+			return ResourceRequestError.BadRequest();
+		}
 		user.Slug = schema.Username;
 		user.Name = schema.Name;
 		if (!user.Verify(out var verificationError))
@@ -292,8 +296,15 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			temporaryPassword.Value, email);
 		var factory = ResourceUtility.GetFactory<User>();
 		var newUser = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));
-		var token = KeyGenerator.GetUniqueKey(32);
+		var token = StringExtensions.RandomString(32).ToLowerInvariant();
 		var tokenChallenge = PasswordHasher.HashPassword(token);
+#if DEBUG
+		if(!PasswordHasher.VerifyHashedPassword(tokenChallenge, token))
+		{
+			throw new Exception("Failed to generate challenge");
+		}
+		Logger.Debug($"Temp user token generated: {token}");
+#endif
 		using (var rscLock = new ResourceLock(newUser))
 		{
 			newUser.TokenCollection.Add(newUser, new TemporaryUserToken(temporaryPassword, tokenChallenge));

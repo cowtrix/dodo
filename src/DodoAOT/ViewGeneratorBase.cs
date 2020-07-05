@@ -39,9 +39,14 @@ namespace DodoAOT
 
 		private static IEnumerable<string> MarkdownEditor(string prefix, MemberInfo member, int indentLevel)
 		{
-			var txt = Template("MarkdownEditor");
+			// Nah not good enough, plaintext for now...
+			/*var txt = Template("MarkdownEditor");
 			txt = txt.Replace("{NAME}", $"{prefix}{member.Name}");
-			yield return txt;
+			yield return txt;*/
+			yield return Indent(indentLevel) + "<div class=\"form-group\">";
+			yield return Indent(indentLevel) + $"<label asp-for=\"{prefix}{member.Name}\" class=\"control-label\"></label>";
+			yield return Indent(indentLevel) + $"<textarea style=\"height:20em;\" asp-for=\"{prefix}{member.Name}\" class=\"form-control\"></textarea>";
+			yield return Indent(indentLevel) + "</div>";
 		}
 
 		private static IEnumerable<string> ParentRefDisplay(string prefix, MemberInfo member, int indentLevel)

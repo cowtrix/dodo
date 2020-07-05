@@ -23,20 +23,14 @@ namespace Dodo.ViewModels
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public Resources.ResourceReference<Dodo.GroupResource> Parent { get; set; }
-		[DisplayName("PublicDescription")]
+		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string PublicDescription { get; set; }
-		[DisplayName("MemberDescription")]
-		[View(EPermissionLevel.MEMBER, EPermissionLevel.ADMIN)]
-		public string MemberDescription { get; set; }
-		[DisplayName("AdminDescription")]
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		public string AdminDescription { get; set; }
-		[DisplayName("IsPublished")]
+		[DisplayName("Applicant Question")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		public string QuestionString { get; set; }
+		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }
-		[DisplayName("RoleHolders")]
-		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
-		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.Users.User>> RoleHolders { get; set; }
 	}
 }

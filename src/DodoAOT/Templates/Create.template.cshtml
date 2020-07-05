@@ -5,19 +5,21 @@
 	ViewData["Title"] = "Create A New {NAME}";
 }
 
-<h4 class="title">Create a New {NAME}</h4>
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			<form asp-action="Create">
-				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-{BODY}
-				<div class="form-group">
-					<div class="card-body">
-						<input type="submit" value="Create" class="btn btn-primary btn-block" />
+<div class="container-md">
+	<h4 class="title">Create a New {NAME}</h4>
+	<div class="row">
+		<div class="card" style="width:100%;">
+			<div class="card-body">
+				<form asp-action="Create">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					{BODY}
+					<div class="form-group">
+						<div class="card-body">
+							<input type="submit" value="Create" class="btn btn-primary btn-block" />
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>

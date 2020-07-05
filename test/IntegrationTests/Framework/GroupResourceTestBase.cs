@@ -13,6 +13,7 @@ using Dodo.Users;
 using Dodo.Models;
 using System;
 using Microsoft.AspNetCore.Routing.Patterns;
+using Dodo.Utility;
 
 namespace RESTTests
 {
@@ -117,9 +118,31 @@ namespace RESTTests
 
 		[TestMethod]
 		[TestCategory("Administration")]
+		public async Task Admin_CanRemoveAdmin()
+		{
+			// Create a new user
+			var user1 = GetRandomUser(out var user1Password, out var user1Context);
+			var user2 = GetRandomUser(out var user2Password, out var user2Context);
+			// Let them create a new group
+			var group = CreateObject<T>(user1Context);
+			// Add the second admin
+			using (var rscLock = new ResourceLock(group))
+			{
+				group.AddNewAdmin(user1Context, user2);
+				ResourceManager.Update(group, rscLock);
+			}
+			await Login(user1.Slug, user1Password);
+			// Remove the admin
+			await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Slug}/removeadmin?id={user2.Slug}", EHTTPRequestType.GET);
+			group = ResourceManager.GetSingle(rsc => rsc.Guid == group.Guid);
+			var adminData = group.AdministratorData.GetValue(user1.CreateRef(), user1Context.Passphrase);
+			Assert.IsNull(adminData.Administrators.SingleOrDefault(ad => ad.User.Guid == user2.Guid));
+		}
+
+		[TestMethod]
+		[TestCategory("Administration")]
 		public async Task Admin_CanAddAdminFromEmail()
 		{
-			Assert.Inconclusive();
 			// Create a new user
 			var user1 = GetRandomUser(out var user1Password, out var user1Context);
 			// Let them create a new group
@@ -132,25 +155,23 @@ namespace RESTTests
 			var apiReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/addadmin",
 				EHTTPRequestType.POST, user2Email);
 
-			var obj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
-			Assert.IsNotNull(obj.Value<JObject>(nameof(GroupResource.AdministratorData).ToCamelCase()).Value<JArray>(nameof(AdministrationData.Administrators).ToCamelCase()).Values<JToken>()
-				.Single(s => s.Value<string>(nameof(IResourceReference.Guid).ToCamelCase()).ToString() != user1.Guid.ToString()));
 			await Logout();
 
-			/*var inviteURL = EmailHelper.Callback;
-			var trim = inviteURL.Substring(inviteURL.IndexOf("?token=") + 7);
+			var inviteURL = EmailHelper.EmailHistory.Last().Contents.First().Value;
+			var startUrlIndex = inviteURL.IndexOf(Dodo.DodoApp.NetConfig.FullURI);
+			inviteURL = inviteURL.Substring(startUrlIndex);
 			var user2Password = ValidationExtensions.GenerateStrongPassword();
 			await Request(inviteURL, EHTTPRequestType.POST, new UserSchema("Test User 2", "testuser2", user2Password, user2Email));
 			var user2 = UserManager.GetSingle(u => u.PersonalData.Email == user2Email);
 
 			await Login(user2.Slug, user2Password);
-			obj = await RequestJSON($"{DodoServer.DodoServer.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			var obj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(PermissionLevel.ADMIN,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
 
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Add an Administrator by Email" },
-				apiReq);*/
+				apiReq);
 		}
 		#endregion
 
