@@ -33,6 +33,7 @@ export const Login = ({ login, isLoggedIn, error }) => {
 							type="text"
 							value={username}
 							setValue={setUsername}
+							maxLength={63}
 						/>
 						<Input
 							name="Password"
@@ -40,6 +41,7 @@ export const Login = ({ login, isLoggedIn, error }) => {
 							type="password"
 							value={password}
 							setValue={setPassword}
+							maxLength={63}
 						/>
 						<TickBox
 							name="Remember Me"
