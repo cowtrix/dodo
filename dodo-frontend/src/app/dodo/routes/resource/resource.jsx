@@ -5,10 +5,10 @@ import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
 import { ResourceContent } from './resource-content'
 
 export const Resource = ({ match, getResource, resource, isLoading, centerMap, setCenterMap, resourceTypes = [] }) => {
-	const { resourceId, resourceType } = match.params
+	const { eventId, eventType } = match.params
 
 	useEffect(() => {
-		getResource(resourceType, resourceId, setCenterMap)
+		getResource(eventType, eventId, setCenterMap)
 	}, [match])
 
 
