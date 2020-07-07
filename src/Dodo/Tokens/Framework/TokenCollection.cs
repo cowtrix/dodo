@@ -17,7 +17,8 @@ namespace Dodo.Users.Tokens
 	public interface ITokenResource : IRESTResource
 	{
 		string PublicKey { get; }
-		void AddToken(IToken token, EPermissionLevel permissionLevel);
+		void AddToken(IToken token);
+		Passphrase GetPrivateKey(AccessContext context);
 	}
 
 	/// <summary>
@@ -26,17 +27,17 @@ namespace Dodo.Users.Tokens
 	/// </summary>
 	public class TokenCollection
 	{
-		public List<Notification> GetNotifications(AccessContext accessContext, Passphrase privateKey, EPermissionLevel permissionLevel) => 
-			GetAllTokens<INotificationToken>(privateKey, permissionLevel)
+		public List<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel, ITokenResource parent) => 
+			GetAllTokens<INotificationToken>(accessContext, permissionLevel, parent)
 					.Select(x => x.GetNotification(accessContext))
-					.Where(x => !string.IsNullOrEmpty(x.Message)).ToList();
+					.Where(x => !string.IsNullOrEmpty(x.Message))
+					.OrderByDescending(x => x.Timestamp).ToList();
 
 		[BsonElement]
 		private List<TokenEntry> m_tokens = new List<TokenEntry>();
 		[BsonIgnore]
 		public int Count => m_tokens.Count;
-
-		public void Add(ITokenResource parent, IToken token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER)
+		public void Add(ITokenResource parent, IToken token)
 		{
 			if(token == null)
 			{
@@ -61,28 +62,28 @@ namespace Dodo.Users.Tokens
 			{
 				throw new Exception($"Token type {token.GetType()} is not falling through to the base .OnAdd()");
 			}
-			var newEntry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token, permissionLevel) : (TokenEntry)new PlainTokenEntry(parent, token, permissionLevel);
+			var newEntry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token) : (TokenEntry)new PlainTokenEntry(parent, token);
 			m_tokens.Add(newEntry);
 		}
 
-		public bool RemoveAll<T>(AccessContext context, EPermissionLevel permissionLevel) where T: IRemovableToken
+		public bool RemoveAll<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) where T: IRemovableToken
 		{
-			return Remove(context, permissionLevel, t => t is T);
+			return Remove(context, permissionLevel, t => t is T, parent);
 		}
 
-		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, IRemovableToken token)
+		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, IRemovableToken token, ITokenResource parent)
 		{
-			return Remove(context, permissionLevel, t => t.Guid == token.Guid);
+			return Remove(context, permissionLevel, t => t.Guid == token.Guid, parent);
 		}
 
-		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, Guid tokenGuid)
+		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, Guid tokenGuid, ITokenResource parent)
 		{
-			return Remove(context, permissionLevel, t => t.Guid == tokenGuid);
+			return Remove(context, permissionLevel, t => t.Guid == tokenGuid, parent);
 		}
 
-		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, Func<IRemovableToken, bool> removeWhere)
+		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, Func<IRemovableToken, bool> removeWhere, ITokenResource parent)
 		{
-			var toRemove = GetAllTokens<IRemovableToken>(context, permissionLevel).Where(t => removeWhere(t));
+			var toRemove = GetAllTokens<IRemovableToken>(context, permissionLevel, parent).Where(t => removeWhere(t));
 			if(!toRemove.Any())
 			{
 				return false;
@@ -105,38 +106,28 @@ namespace Dodo.Users.Tokens
 			return m_tokens.Any(mt => mt.Type.IsAssignableFrom(t));
 		}
 
-		public T GetSingleToken<T>(AccessContext context) where T: class, IToken
+		public T GetSingleToken<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) where T: class, IToken
 		{
-			return GetSingleToken(context, typeof(T)) as T;
+			return GetSingleToken(context, typeof(T), permissionLevel, parent) as T;
 		}
 
-		public IToken GetSingleToken(AccessContext context, Type tokenType)
+		public IToken GetSingleToken(AccessContext context, Type tokenType, EPermissionLevel permissionLevel, ITokenResource parent)
 		{
-			return GetAllTokens(new Passphrase(context.User?.AuthData.PrivateKey.GetValue(context.Passphrase)), EPermissionLevel.SYSTEM)
+			return GetAllTokens(context, permissionLevel, parent)
 				.SingleOrDefault(pa => tokenType.IsAssignableFrom(pa.GetType()));
 		}
 
-		public IEnumerable<T> GetAllTokens<T>(AccessContext context, EPermissionLevel permissionLevel) where T : class, IToken
+		public IEnumerable<T> GetAllTokens<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) where T : class, IToken
 		{
-			return GetAllTokens<T>(new Passphrase(context.User?.AuthData.PrivateKey.GetValue(context.Passphrase)), permissionLevel);
+			return GetAllTokens(context, permissionLevel, parent).OfType<T>();
 		}
 
-		public IEnumerable<IToken> GetAllTokens(AccessContext context, EPermissionLevel permissionLevel)
+		public IEnumerable<IToken> GetAllTokens(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent)
 		{
-			return GetAllTokens(new Passphrase(context.User?.AuthData.PrivateKey.GetValue(context.Passphrase)), permissionLevel);
-		}
-
-
-		public IEnumerable<T> GetAllTokens<T>(Passphrase privateKey, EPermissionLevel permissionLevel) where T : class, IToken
-		{
-			return GetAllTokens(privateKey, permissionLevel).OfType<T>();
-		}
-
-		public IEnumerable<IToken> GetAllTokens(Passphrase privateKey, EPermissionLevel permissionLevel)
-		{
+			var pk = parent != null ? parent.GetPrivateKey(context) : default;
 			foreach (var token in m_tokens.Where(t => t.PermissionLevel <= permissionLevel))
 			{
-				var t = token.GetToken(privateKey);
+				var t = token.GetToken(pk);
 				if (t != null)
 				{
 					yield return t;

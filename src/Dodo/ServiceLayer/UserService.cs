@@ -93,19 +93,19 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
 		using var rscLock = new ResourceLock(Context.User);
 		var user = rscLock.Value as User;
-		var session = user.TokenCollection.GetAllTokens<SessionToken>(Context, EPermissionLevel.OWNER)
+		var session = user.TokenCollection.GetAllTokens<SessionToken>(Context, EPermissionLevel.OWNER, user)
 				.SingleOrDefault(t => t.UserKey == Context.UserToken);
 		if (session == null)
 		{
 			return ResourceRequestError.BadRequest();
 		}
-		if (!user.TokenCollection.Remove(Context, EPermissionLevel.OWNER, session))
+		if (!user.TokenCollection.Remove(Context, EPermissionLevel.OWNER, session, user))
 		{
 			Logger.Error($"Failed to log user {user} out - could not remove session token");
 		}
 		UserManager.Update(user, rscLock);
 		Logger.Debug($"Logged out user {user.Slug}");
-		return new OkRequestResult();
+		return new ActionRequestResult(new RedirectResult(Dodo.DodoApp.NetConfig.FullURI));
 	}
 
 	public async Task<IRequestResult> RequestPasswordReset(string email)
@@ -138,7 +138,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return ResourceRequestError.BadRequest();
 		}
 		var user = UserManager.GetSingle(u =>
-			u.TokenCollection.GetSingleToken<ResetPasswordToken>(Context)?.Key == token);
+			u.TokenCollection.GetSingleToken<ResetPasswordToken>(Context, EPermissionLevel.OWNER, null)?.Key == token);
 		if (user == null)
 		{
 			return ResourceRequestError.BadRequest();
@@ -146,7 +146,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		using (var rscLock = new ResourceLock(user))
 		{
 			user = rscLock.Value as User;
-			user.TokenCollection.RemoveAll<ResetPasswordToken>(Context, EPermissionLevel.OWNER);
+			user.TokenCollection.RemoveAll<ResetPasswordToken>(Context, EPermissionLevel.OWNER, user);
 			user.AuthData = new AuthorizationData(password);
 			UserManager.Update(user, rscLock);
 		}
@@ -184,7 +184,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return new OkRequestResult();
 		}
-		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context);
+		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context, EPermissionLevel.OWNER, Context.User);
 		if (verifyToken == null)
 		{
 			throw new Exception($"Verify token was null for user {Context.User.Guid}");
@@ -244,7 +244,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return ResourceRequestError.BadRequest();
 		}
 		// Check if this is a temporary user (e.g. a new admin activating an email invite to administrate a resource)
-		var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>(Context);
+		var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>(Context, EPermissionLevel.OWNER, Context.User);
 		if (tempToken == null || !PasswordHasher.VerifyHashedPassword(tempToken.TokenChallenge, token))
 		{
 			return ResourceRequestError.Conflict();
@@ -270,7 +270,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 
 	private static void SendEmailVerification(AccessContext context)
 	{
-		var token = context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(context);
+		var token = context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, context.User);
 		if (token == null)
 		{
 			Logger.Error($"Couldn't send email verification to {context.User} - user was already verified.");
@@ -288,7 +288,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 	public static User CreateTemporaryUser(string email)
 	{
 		var temporaryPassword = new Passphrase(ValidationExtensions.GenerateStrongPassword());
-		var schema = new UserSchema("TEMPORARY", Guid.NewGuid().ToString().Replace("-", ""),
+		var schema = new UserSchema("TEMPORARY", $"tempuser_{Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16)}",
 			temporaryPassword.Value, email);
 		var factory = ResourceUtility.GetFactory<User>();
 		var newUser = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));

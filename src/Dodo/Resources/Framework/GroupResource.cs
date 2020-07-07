@@ -11,6 +11,8 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel;
 using System.Linq;
 using System.Security;
+using Microsoft.AspNetCore.Mvc.Formatters.Internal;
+using System.Text;
 
 namespace Dodo
 {
@@ -22,30 +24,35 @@ namespace Dodo
 	/// It can have members and a public description.
 	/// </summary>
 	public abstract class GroupResource : 
-		DodoResource, IPublicResource, ITokenResource, INotificationResource
+		DodoResource, IPublicResource, ITokenResource, INotificationResource, IAdministratedResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
+
 		/// <summary>
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Name("Public Description")]
 		[Common.Extensions.Description]
 		public string PublicDescription { get; set; }
+
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Administrator Data")]
 		public UserMultiSigStore<AdministrationData> AdministratorData { get; set; }
-		[View(EPermissionLevel.PUBLIC)]
+
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get { return Members.Count; } }
-		[View(EPermissionLevel.MEMBER)]
+
 		[BsonElement]
+		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM, customDrawer:"null")]
 		public string PublicKey { get; private set; }
-		[View(EPermissionLevel.ADMIN)]
+
+		[Name("Published")]
+		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
-		public TokenCollection SharedTokens = new TokenCollection();
+		public TokenCollection SharedTokens { get; set; } = new TokenCollection();
 
-		public SecureUserStore Members = new SecureUserStore();
+		public SecureUserStore Members { get; set; } = new SecureUserStore();
 
 		public GroupResource() : base() { }
 
@@ -62,6 +69,13 @@ namespace Dodo
 			PublicDescription = schema.PublicDescription;
 		}
 
+		/// <summary>
+		/// Is the target user an administrator? Only another administrator can find out.
+		/// </summary>
+		/// <param name="target">The user to test</param>
+		/// <param name="requesterContext">An existing administrator's context</param>
+		/// <param name="permissions">If the target is an admin, their permissions</param>
+		/// <returns>True on success, false on failure</returns>
 		public bool IsAdmin(User target, AccessContext requesterContext, out AdministratorPermissionSet permissions)
 		{
 			permissions = null;
@@ -81,56 +95,139 @@ namespace Dodo
 			return true;
 		}
 
-		public bool AddAdmin(AccessContext context, User newAdmin)
+		public bool RemoveAdmin(AccessContext context, User targetUser)
 		{
-			var temporaryPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
-			if (!AddOrUpdateAdmin(context, newAdmin, temporaryPass, false))
+			if (!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanRemoveAdmin)
 			{
+				// Context isn't admin, or doesn't have correct permissions
+				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to remove {targetUser} as a new administrator for {this}, but they weren't an administrator.");
 				return false;
 			}
-			using (var userLock = new ResourceLock(newAdmin))
-			{
-				newAdmin.TokenCollection.Add(newAdmin, new UserAddedAsAdminToken(this, temporaryPass, newAdmin.AuthData.PublicKey), EPermissionLevel.OWNER);
-				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
-			}
+			var adminData = AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase);
+			adminData.Administrators = adminData.Administrators.Where(ad => ad.User.Guid != targetUser.Guid).ToList();
+			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
+			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
+				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
 
-		public bool AddOrUpdateAdmin(AccessContext context, User newAdmin, Passphrase newPass, bool tokenTriggered)
+		/// <summary>
+		/// Add a new administrator to the resource.
+		/// </summary>
+		/// <param name="context">The existing administrator context who is adding the new administrator</param>
+		/// <param name="newAdmin">The new administrator</param>
+		/// <returns>True on success, false on failure</returns>
+		public bool AddNewAdmin(AccessContext context, User newAdmin)
 		{
+			var newPass = new Passphrase(KeyGenerator.GetUniqueKey(32));
 			if (newAdmin == null)
 			{
 				throw new ArgumentNullException(nameof(newAdmin));
 			}
-			if(!IsAdmin(context.User, context, out var administratorPermission) || (!tokenTriggered && !administratorPermission.CanAddAdmin))
+			if (!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanAddAdmin)
 			{
 				// Context isn't admin, or doesn't have correct permissions
-				SecurityWatcher.RegisterEvent($"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");
+				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");
 				return false;
 			}
-			if (newAdmin.Guid != context.User.Guid && IsAdmin(newAdmin, context, out _))
+			if (newAdmin.Guid == context.User.Guid || IsAdmin(newAdmin, context, out _))
 			{
-				// Other user can't change existing admin password
+				// User is already admin
 				return true;
 			}
 			var newAdminRef = newAdmin.CreateRef();
 			AdministratorData.AddPermission(context.User.CreateRef(), context.Passphrase, newAdminRef, newPass);
 			var adminData = AdministratorData.GetValue(newAdminRef, newPass);
-			if(!adminData.AddOrUpdateAdministrator(context, newAdmin))
+			if (!adminData.AddOrUpdateAdministrator(context, newAdmin))
 			{
 				return false;
 			}
 			AdministratorData.SetValue(adminData, newAdminRef, newPass);
 			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
-				false), EPermissionLevel.ADMIN);
+				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
+			using (var userLock = new ResourceLock(newAdmin))
+			{
+				newAdmin.TokenCollection.Add(newAdmin, new UserAddedAsAdminToken(this, newPass, newAdmin.AuthData.PublicKey));
+				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
+			}
+			return true;
+		}
+
+		public bool CompleteAdminInvite(AccessContext context, Passphrase tempPass)
+		{
+			if (context.User == null)
+			{
+				throw new ArgumentNullException(nameof(context.User));
+			}
+			if(IsAdmin(context.User, context, out _))
+			{
+				// User has no pending invite
+				return false;
+			}
+			var adminRef = context.User.CreateRef();
+			AdministratorData.AddPermission(adminRef, tempPass, adminRef, context.Passphrase);
+			var adminData = AdministratorData.GetValue(adminRef, context.Passphrase);
+			if(!adminData.AddOrUpdateAdministrator(context, context.User))
+			{
+				return false;
+			}
+			AdministratorData.SetValue(adminData, adminRef, context.Passphrase);
 #if DEBUG
 			// Do a bit of extra testing just to make sure
-			if (!IsAdmin(newAdmin, context, out _))
+			if (!IsAdmin(context.User, context, out _))
 			{
-				throw new Exception($"Failed to add {newAdmin} as a new administrator");
+				throw new Exception($"Failed to complete {context.User} Administrator invite");
 			}
 #endif
+			return true;
+		}
+
+		public bool UpdateAdmin(AccessContext context, User target, AdministratorPermissionSet newPermissions)
+		{
+			string GetPermissionDiff(AdministratorPermissionSet old, AdministratorPermissionSet newp)
+			{
+				var sb = new StringBuilder("\n");
+				foreach(var prop in typeof(AdministratorPermissionSet).GetProperties())
+				{
+					var oldVal = prop.GetValue(old);
+					var newVal = prop.GetValue(newp);
+					if((oldVal == null && newVal == null) || oldVal.Equals(newVal))
+					{
+						continue;
+					}
+					var name = prop.GetName();
+					sb.AppendLine($"{name} = {newVal}");
+				}
+				return sb.ToString();
+			}
+			if(context.User == null)
+			{
+				return false;
+			}
+			if(!IsAdmin(context.User, context, out var requesterPermissions) || !requesterPermissions.CanChangePermissions)
+			{
+				return false;
+			}
+			if(!IsAdmin(target, context, out var existingPermissions))
+			{
+				return false;
+			}
+			if(existingPermissions == newPermissions)
+			{
+				return true;
+			}
+			var adminData = AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase);
+			var entry = adminData.Administrators.Single(ad => ad.User.Guid == target.Guid);
+			if(entry == null)
+			{
+				return false;
+			}
+			entry.Permissions = newPermissions;
+			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
+			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, Name,
+				$"Administrator @{context.User.Slug} altered @{target.Slug}'s administrator permissions: {GetPermissionDiff(existingPermissions, newPermissions)}",
+				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
 
@@ -156,40 +253,49 @@ namespace Dodo
 
 		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, Name, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", false),
-				EPermissionLevel.PUBLIC);
+			AddToken(new SimpleNotificationToken(null, null, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", 
+				$"{Dodo.DodoApp.NetConfig.FullURI}/{rsc.GetType().Name.ToLowerInvariant()}/{rsc.Slug}", ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 		}
 
 		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, Name, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", false), 
-				EPermissionLevel.PUBLIC);
+			AddToken(new SimpleNotificationToken(null, null, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", 
+				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
 
 		public IEnumerable<Notification> GetNotifications(AccessContext context, EPermissionLevel permissionLevel)
 		{
-			Passphrase pass;
-			if (permissionLevel >= EPermissionLevel.ADMIN)
-			{
-				// Unlock encrypted administrator tokens
-				pass = new Passphrase(AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase).GroupPrivateKey);
-			}
-			else
-			{
-				pass = context.Passphrase;
-			}
-			return SharedTokens.GetNotifications(context, pass, permissionLevel);
+			return SharedTokens.GetNotifications(context, permissionLevel, this);
 		}
 
-		public void AddToken(IToken token, EPermissionLevel permissionLevel)
+		public void AddToken(IToken token)
 		{
-			SharedTokens.Add(this, token, permissionLevel);
+			SharedTokens.Add(this, token);
 		}
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
-			return SharedTokens.Remove(context, permissionLevel, notification);
+			return SharedTokens.Remove(context, permissionLevel, notification, this);
+		}
+
+		public Passphrase GetPrivateKey(AccessContext context)
+		{
+			if (context.User == null)
+			{
+				return default;
+			}
+			if(!IsAdmin(context.User, context, out _))
+			{
+				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to get Private Key but wasn't admin");
+				throw new Exception("Bad auth");
+			}
+			if (!AdministratorData.TryGetValue(context.User.CreateRef(), context.Passphrase, out var adminDataObj))
+			{
+				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to get Private Key, passed admin check but couldn't decrypt");
+				throw new Exception("Bad auth");
+			}
+			return new Passphrase((adminDataObj as AdministrationData).GroupPrivateKey);
 		}
 	}
 }

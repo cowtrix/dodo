@@ -27,4 +27,19 @@ namespace Resources
 			Content = content;
 		}
 	}
+
+	public class ActionRequestResult : IRequestResult
+	{
+		public bool IsSuccess { get; private set; }
+
+		public IActionResult ActionResult { get; private set; }
+
+		public ActionRequestResult() { }
+
+		public ActionRequestResult(IActionResult result, bool isSuccess = true)
+		{
+			ActionResult = result;
+			IsSuccess = true;
+		}
+	}
 }

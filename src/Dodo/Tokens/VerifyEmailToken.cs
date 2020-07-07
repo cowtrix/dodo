@@ -5,6 +5,7 @@ using System;
 using Common.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Common;
+using Resources;
 
 namespace Dodo.Users.Tokens
 {
@@ -28,10 +29,12 @@ namespace Dodo.Users.Tokens
 #if DEBUG
 			Logger.Info($"DEBUG: generated email verification key {Token} for user {parent}");
 #endif
-			m_notification = new Notification(Guid, "Your Account", "You should check your email and verify your email address with us.");
+			m_notification = new Notification(Guid, "Your Account", "You should check your email and verify your email address with us.", null, ENotificationType.Alert, EPermissionLevel.OWNER);
 			base.OnAdd(parent);
 		}
 
 		public Notification GetNotification(AccessContext context) => m_notification;
+
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
 	}
 }

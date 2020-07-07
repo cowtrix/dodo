@@ -1,0 +1,69 @@
+@model Dodo.ViewModels.{TYPE}ViewModel;
+
+@{
+	// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n
+	ViewData["Title"] = "Edit {NAME}";
+	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
+	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
+	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
+	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
+}
+
+{SCRIPTS}
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+	</li>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
+		</li>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
+		</li>
+	}
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/{TYPE}/@Model.Slug" target="_blank">View</a></li>
+</ul>
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="row">
+			<div class="card" style="width:100%;">
+				<div class="card-body">
+					<form asp-action="Edit">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						{DETAILS}
+						<div class="form-group">
+							<input type="submit" value="Save" class="btn btn-primary btn-block" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="alert alert-warning" role="alert">
+				<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
+			</div>
+			<div class="card-body">
+				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+			</div>
+		</div>
+	</div>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+			{NOTIFICATIONS}
+		</div>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+			{ADMIN}
+		</div>
+	}
+</div>
+

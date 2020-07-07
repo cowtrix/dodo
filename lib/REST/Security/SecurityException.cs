@@ -11,6 +11,7 @@ namespace Resources.Security
 		public Exception Exception { get; set; }
 		public string Message { get; set; }
 		public DateTime TimeStampUTC { get; set; }
+		public ResourceReference<IRESTResource> Actor { get; set; } 
 	}
 
 	public static class SecurityWatcher	
@@ -19,7 +20,7 @@ namespace Resources.Security
 		public static OnBroadcastDelegate OnBroadcast { get; set; }
 		private static PersistentStore<Guid, SecurityEvent> m_events = new PersistentStore<Guid, SecurityEvent>("events", "sec");
 
-		public static Guid RegisterEvent(Exception exception, string message = null)
+		public static Guid RegisterEvent(IRESTResource actor, Exception exception, string message = null)
 		{
 			var ev = new SecurityEvent
 			{
@@ -27,33 +28,24 @@ namespace Resources.Security
 				StackTrace = new StackTrace(),
 				Message = message,
 				TimeStampUTC = DateTime.UtcNow,
-			};
-			Logger.Exception(exception);
+				Actor = actor.CreateRef(),
+			};			
 			var guid = Guid.NewGuid();
 			m_events[guid] = ev;
 			BroadCast(ev);
 			return guid;
 		}
 
-		public static Guid RegisterEvent(string message)
+		public static Guid RegisterEvent(IRESTResource actor, string message)
 		{
-			var ev = new SecurityEvent
-			{
-				StackTrace = new System.Diagnostics.StackTrace(),
-				Message = message,
-				TimeStampUTC = DateTime.UtcNow,
-			};
-			Logger.Error($"SECURITY EVENT LOGGED: {message}");
-			var guid = Guid.NewGuid();
-			m_events[guid] = ev;
-			BroadCast(ev);
-			return guid;
+			return RegisterEvent(actor, null, message);
 		}
 
 		private static void BroadCast(SecurityEvent ev)
 		{
 			try
 			{
+				Logger.Error($"SECURITY EVENT LOGGED: {ev}");
 				OnBroadcast?.Invoke(ev);
 			}
 			catch(Exception e)

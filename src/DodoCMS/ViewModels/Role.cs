@@ -7,6 +7,7 @@ namespace Dodo.ViewModels
 {
 	public class RoleViewModel : IViewModel
 	{
+		public System.Type __Type => typeof(Role);
 		[DisplayName("Guid")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Guid Guid { get; set; }
@@ -14,7 +15,7 @@ namespace Dodo.ViewModels
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string Name { get; set; }
 		[DisplayName("Slug")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]

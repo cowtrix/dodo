@@ -49,21 +49,6 @@ namespace Common.Extensions
 		}
 	}
 
-	public class PhoneNumberAttribute : VerifyMemberBase
-	{
-		public override bool Verify(object value, out string validationError)
-		{
-			var ph = value as string;
-			if (!ValidationExtensions.ValidateNumber(ref ph))
-			{
-				validationError = "Invalid phone number";
-				return false;
-			}
-			validationError = null;
-			return true;
-		}
-	}
-
 	public class MemberVerificationException : Exception
 	{
 		public MemberVerificationException(string message) : base(message)
@@ -221,51 +206,6 @@ namespace Common.Extensions
 			return isValid;
 		}
 
-		public static bool ValidateNumber(ref string number)
-		{
-			number = number.Replace(" ", "").Replace("-", "");
-			if (string.IsNullOrEmpty(number))
-			{
-				return true;
-			}
-			if(!number.StartsWith("+44"))
-			{
-				if(number.StartsWith("07"))
-				{
-					number = "+44" + number.Substring(1);
-				}
-				else if (number.StartsWith("7"))
-				{
-					number = "+44" + number;
-				}
-				else if (number.StartsWith("44"))
-				{
-					number = "+" + number;
-				}
-			}
-			if (number.StartsWith("00"))
-			{
-				// Replace 00 at beginning with +
-				number = "+" + number.Remove(0, 2);
-			}
-			if(!number.StartsWith("+"))
-			{
-				number = "+" + number;
-			}
-			try
-			{
-				// TODO
-				//PhoneNumbers.PhoneNumberUtil.GetInstance().Parse(number, null);
-			}
-			catch
-			{
-				return false;
-			}
-			return true;
-			//return Regex.IsMatch(number,
-			//	@"^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$");
-		}
-
 		static IList<string> m_reservedWords = new List<string>()
 		{
 			//"COORDINATOR", "ADMIN",
@@ -298,11 +238,6 @@ namespace Common.Extensions
 			if(!Regex.IsMatch(slug, rgx))
 			{
 				error = "Username can only contain alphanumeric characters and _";
-				return false;
-			}
-			if(slug != slug.StripForURL())
-			{
-				error = $"Username was invalid, Expected: {slug.StripForURL()} Received: {slug}";
 				return false;
 			}
 			error = null;

@@ -6,20 +6,53 @@
 	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
+	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
 }
 
+<script>
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip()
+})
+
+</script>
 
 
-<h4 class="title">Edit Role</h4>
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			<form asp-action="Edit">
-				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<div class="form-group">
-					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control"></input>
-					<span asp-validation-for="Guid" class="text-danger"></span>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+	</li>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
+		</li>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
+		</li>
+	}
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Role/@Model.Slug" target="_blank">View</a></li>
+</ul>
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="row">
+			<div class="card" style="width:100%;">
+				<div class="card-body">
+					<form asp-action="Edit">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+										@{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.Parent.GetRefType()]; }
+				<div class="navbar navbar-expand-lg navbar-dark" style="width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;">
+				<a class="navbar-brand" href="https://localhost:5001/@Model.Parent.GetRefType().Name/@Model.Parent.Slug">Part of the @Model.Parent.Name</a>
+				</div>
+				<div class="form-check">
+					<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+					<label asp-for="IsPublished" class="form-check-label"></label>
+					<span asp-validation-for="IsPublished" class="text-danger"></span>
+					<small id="helpBlock" class="form-text text-muted">
+						This indicates whether or not this is publicly viewable by all users.
+					</small>
 				</div>
 				<div class="form-group">
 					<label asp-for="Name" class="control-label"></label>
@@ -28,24 +61,32 @@
 				</div>
 				<div class="form-group">
 					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control"></input>
+					<input  readonly asp-for="Slug" class="form-control"></input>
 					<span asp-validation-for="Slug" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="Guid" class="control-label"></label>
+					<input  readonly asp-for="Guid" class="form-control"></input>
+					<span asp-validation-for="Guid" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
 					<input  readonly asp-for="Revision" class="form-control"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
-				<div class="form-group">
-					<label class="control-label">Parent</label>
-					<input class="sr-only" asp-for="Parent.Type"/>
-					<a class="btn btn-primary" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug">@Model.Parent.Name</a>
-				</div>
-				<div class="form-group">
-					<label asp-for="PublicDescription" class="control-label"></label>
-					<textarea  asp-for="PublicDescription" class="form-control"></textarea>
-					<span asp-validation-for="PublicDescription" class="text-danger"></span>
-				</div>
+<div class="form-group">
+	<label asp-for="PublicDescription" class="form-label"></label>
+	<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
+	<script>
+		var editor = new EpicEditor({
+			basePath: '/lib/epiceditor', clientSideStorage: false,
+			autogrow: { minHeight: "200", maxHeight: "400", scroll: true },
+			button: { preview: true, fullscreen: false, bar: "show" },
+			theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
+		}).load();
+	</script>
+</div>
+
 				<div class="form-group">
 					<label asp-for="MemberDescription" class="control-label"></label>
 					<input  asp-for="MemberDescription" class="form-control"></input>
@@ -57,36 +98,38 @@
 					<span asp-validation-for="AdminDescription" class="text-danger"></span>
 				</div>
 				<div class="form-group">
-					<label asp-for="IsPublished" class="control-label"></label>
-					<input  asp-for="IsPublished" class="form-control"></input>
-					<span asp-validation-for="IsPublished" class="text-danger"></span>
-				</div>
-				<div class="form-group">
 					<label asp-for="RoleHolders" class="control-label"></label>
 					<input  asp-for="RoleHolders" class="form-control"></input>
 					<span asp-validation-for="RoleHolders" class="text-danger"></span>
 				</div>
 
-				<div class="form-group">
-					<input type="submit" value="Save" class="btn btn-primary" />
+						<div class="form-group">
+							<input type="submit" value="Save" class="btn btn-primary btn-block" />
+						</div>
+					</form>
 				</div>
-			</form>
+			</div>
+		</div>
+		<div class="card">
+			<div class="alert alert-warning" role="alert">
+				<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
+			</div>
+			<div class="card-body">
+				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Role/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+			</div>
 		</div>
 	</div>
-</div>
-
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			<form asp-action="Delete">
-				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<a href="@Model.Slug/delete" class="btn btn-danger">Delete</a>
-			</form>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+			
 		</div>
-	</div>
-</div>
-
-<div>
-	<a href="../../Role/@Model.Slug">View Role</a>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+			
+		</div>
+	}
 </div>
 

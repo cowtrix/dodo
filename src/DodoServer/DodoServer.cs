@@ -11,7 +11,7 @@ namespace DodoServer
 {
 	public static class DodoServer
 	{
-		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", "test@web.com");
+		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", "");
 		public static string ReactPath => ConfigManager.GetValue("ReactPath", Path.GetFullPath(@"..\..\dodo-frontend\build"));
 
 		public static void Main(string[] args)

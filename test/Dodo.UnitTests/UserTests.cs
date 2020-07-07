@@ -30,7 +30,7 @@ namespace UnitTests
 			}
 			var userInDB = UserManager.GetSingle(u => u.Guid == user.Guid);
 			Assert.AreEqual(user.TokenCollection.Count, userInDB.TokenCollection.Count);
-			foreach(var token in user.TokenCollection.GetAllTokens(context, EPermissionLevel.SYSTEM))
+			foreach(var token in user.TokenCollection.GetAllTokens(context, EPermissionLevel.SYSTEM, user))
 			{
 				var tokenInDB = userInDB.TokenCollection.GetToken(context, token.Guid);
 				Assert.IsNotNull(tokenInDB);

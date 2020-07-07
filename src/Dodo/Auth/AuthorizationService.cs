@@ -1,13 +1,29 @@
 using Resources;
+using System;
 
 namespace Dodo
 {
 	public class AuthorizationService<T, TSchema>
-		where T : IDodoResource
+		where T : class, IDodoResource
 		where TSchema : ResourceSchemaBase
 	{
+		protected virtual IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
 		public AuthorizationService()
 		{
+		}
+
+		public virtual IRequestResult IsAuthorised(AccessContext context, string targetID, EHTTPRequestType requestType, string action = null)
+		{
+			T rsc = null;
+			if(Guid.TryParse(targetID, out var guid))
+			{
+				rsc = ResourceManager.GetSingle(r => r.Guid == guid);
+			}
+			else
+			{
+				rsc = ResourceManager.GetSingle(r => r.Slug == targetID);
+			}
+			return IsAuthorised(context, rsc, requestType, action);
 		}
 
 		public virtual IRequestResult IsAuthorised(AccessContext context, T target, EHTTPRequestType requestType, string action = null)

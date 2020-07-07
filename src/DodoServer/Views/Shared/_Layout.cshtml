@@ -1,13 +1,44 @@
 <!DOCTYPE html>
 
+@{
+	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
+}
+
 <html>
 <head>
 	<meta name="viewport" content="width=device-width" />
-	<title>Dodo - @ViewBag.Title</title>
+	<title>@Dodo.DodoApp.PRODUCT_NAME - @ViewBag.Title</title>
+
 	<link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.min.css" />
+	<script src="~/lib/jquery/jquery.min.js"></script>
+	<script src="~/lib/twitter-bootstrap/js/bootstrap.min.js"></script>
+	<script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src='~/lib/mapbox-gl/mapbox-gl.js'></script>
+	<link href='~/lib/mapbox-gl/mapbox-gl.css' rel='stylesheet' />
+	<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+	<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css" type="text/css" />
+
+	<link href='~/lib/font-awesome/css/all.css' rel='stylesheet' type="text/css" />
+	<script src="~/lib/font-awesome/js/all.js"></script>
+	<script src="~/lib/epiceditor/js/epiceditor.js"></script>
+	<link rel="stylesheet" href="~/CustomCRUDCss.css" />
 </head>
 <body>
-	<div class="container">
+	<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #22a73d">
+		<a class="navbar-brand" href="@Dodo.DodoApp.NetConfig.FullURI">@Dodo.DodoApp.PRODUCT_NAME</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<span class="navbar-text" style="padding-right:1em">
+					Logged in as @@@context.User.Slug
+				</span>
+				<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/auth/logout">Logout</a>
+			</div>
+		</div>
+	</nav>
+	<div class="container-md">
 		@RenderBody()
 	</div>
 </body>

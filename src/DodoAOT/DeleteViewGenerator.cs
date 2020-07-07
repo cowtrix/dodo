@@ -11,11 +11,11 @@ using System.IO;
 
 namespace DodoAOT
 {
-	public static class DeleteViewGenerator
+	public class DeleteViewGenerator : ViewGeneratorBase
 	{
 		public static string Generate(Type resourceType)
 		{
-			var template = File.ReadAllText("Delete.template");
+			var template = Template("Delete");
 			template = template.Replace("{TYPE}", resourceType.Name);
 			template = template.Replace("{NAME}", resourceType.GetName());
 			return template;

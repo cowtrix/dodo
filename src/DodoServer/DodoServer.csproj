@@ -7,7 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\DodoAOT\DodoAOT.csproj" />
 		<ProjectReference Include="..\DodoCMS\DodoCMS.csproj" />
 		<ProjectReference Include="..\Dodo\Dodo.csproj" />
 	</ItemGroup>
@@ -17,6 +16,7 @@
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.3" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.76" />
 	</ItemGroup>
 
 	<ItemGroup>

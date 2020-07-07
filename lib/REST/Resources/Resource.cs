@@ -29,7 +29,7 @@ namespace Resources
 
 	public abstract class ResourceSchemaBase : IVerifiable
 	{
-		[View]
+		[View(EPermissionLevel.PUBLIC, customDrawer:"slugPreview", inputHint:"Must be between 3-64 characters")]
 		[UserFriendlyName]
 		public string Name { get; set; }
 
@@ -67,15 +67,15 @@ namespace Resources
 		public const string METADATA_PERMISSION = "permission";
 
 		[JsonProperty]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: 2)]
 		public Guid Guid { get; private set; }
 
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, priority: 0)]
 		[JsonProperty]
 		[UserFriendlyName]
 		public string Name { get; set; }
 
-		[View(EPermissionLevel.PUBLIC)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority:1)]
 		[JsonProperty]
 		[Slug]
 		public string Slug { get; set; }
@@ -83,7 +83,7 @@ namespace Resources
 		/// <summary>
 		/// This should only ever be incremented on ResourceManager.Update()
 		/// </summary>
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: 3)]
 		[JsonProperty]
 		public uint Revision { get; set; }
 

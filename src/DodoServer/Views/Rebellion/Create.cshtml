@@ -15,56 +15,172 @@
 					<label asp-for="Name" class="control-label"></label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
+					<small id="helpBlock" class="form-text text-muted">
+						Must be between 3-64 characters
+						<p id="slugPreview"></p>
+						<script>
+							$('form :input').change(function(){
+								var inputVal = $('#Name').val().toLowerCase();
+								inputVal = inputVal.split(new RegExp("[^a-z0-9_]")).join('');
+								$('#slugPreview').text('URL will be /' + inputVal + '/')
+							});
+						</script>
+					</small>
 				</div>
-				<div class="form-group">
-					<label asp-for="PublicDescription" class="control-label"></label>
-					<textarea  asp-for="PublicDescription" class="form-control"></textarea>
-					<span asp-validation-for="PublicDescription" class="text-danger"></span>
-				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Location</h5>
-							<address>
-								<strong>Address</strong>
-								@if (@Model.Location.LocationData != null && !@Model.Location.LocationData.IsEmpty) {
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Address)) {
-										<br>@Model.Location.LocationData?.Address
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Neighborhood)) {
-										<br>@Model.Location.LocationData?.Neighborhood
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Locality)) {
-										<br>@Model.Location.LocationData?.Locality
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Place)) {
-										<br>@Model.Location.LocationData?.Place
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.District)) {
-										<br>@Model.Location.LocationData?.District
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Postcode)) {
-										<br>@Model.Location.LocationData?.Postcode
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Region)) {
-										<br>@Model.Location.LocationData?.Region
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Country)) {
-										<br>@Model.Location.LocationData?.Country
-									}
-								} else {  @Html.Raw("<br>"); @Html.Label("None"); }
-							</address>
-							<div class="form-group">
-								<label asp-for="Location.Latitude" class="control-label"></label>
-								<input  asp-for="Location.Latitude" class="form-control"></input>
-								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Location.Longitude" class="control-label"></label>
-								<input  asp-for="Location.Longitude" class="form-control"></input>
-								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
-							</div>
-						</div>
-				</div>
+<div class="form-group">
+	<label asp-for="PublicDescription" class="form-label"></label>
+	<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
+	<script>
+		var editor = new EpicEditor({
+			basePath: '/lib/epiceditor', clientSideStorage: false,
+			autogrow: { minHeight: "200", maxHeight: "400", scroll: true },
+			button: { preview: true, fullscreen: false, bar: "show" },
+			theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
+		}).load();
+	</script>
+</div>
+
+<script>
+	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
+	var coordinates = document.getElementById('coordinates');
+	window.onload = function () {
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/streets-v11',
+			center: [@Model.Location.Longitude, @Model.Location.Latitude],
+			zoom: 6
+		});
+		var geocoder = new MapboxGeocoder({
+			accessToken: mapboxgl.accessToken,
+			mapboxgl: mapboxgl
+		});
+		geocoder.on('result', function (result) {
+			
+			var coords = result["result"]["center"];
+			console.warn(JSON.stringify(
+				coords,
+				null,
+				2
+			));
+			document.getElementById("Model.Location_lat").value = coords[1];
+			document.getElementById("Model.Location_lng").value = coords[0];
+			// Update the Point feature in `geojson` coordinates
+			// and call setData to the source layer `point` on it.
+		geojson.features[0].geometry.coordinates = [coords[0], coords[1]];
+			map.getSource('point').setData(geojson);
+		});
+		map.addControl(
+			geocoder
+		);
+		var canvas = map.getCanvasContainer();
+
+		var geojson = {
+			'type': 'FeatureCollection',
+			'features': [
+				{
+					'type': 'Feature',
+					'geometry': {
+						'type': 'Point',
+						'coordinates': [@Model.Location.Longitude, @Model.Location.Latitude],
+					}
+				}
+			]
+		};
+
+		function onMove(e) {
+			var coords = e.lngLat;
+
+			// Set a UI indicator for dragging.
+			canvas.style.cursor = 'grabbing';
+
+			// Update the Point feature in `geojson` coordinates
+			// and call setData to the source layer `point` on it.
+			geojson.features[0].geometry.coordinates = [coords.lng, coords.lat];
+			map.getSource('point').setData(geojson);
+		}
+
+		function onUp(e) {
+			var coords = e.lngLat;
+
+			document.getElementById("Model.Location_lat").value = coords.lat;
+			document.getElementById("Model.Location_lng").value = coords.lng;
+
+			canvas.style.cursor = '';
+
+			// Unbind mouse/touch events
+			map.off('mousemove', onMove);
+			map.off('touchmove', onMove);
+		}
+
+		map.on('load', function () {
+			// Add a single point to the map
+			map.addSource('point', {
+				'type': 'geojson',
+				'data': geojson
+			});
+
+			map.addLayer({
+				'id': 'point',
+				'type': 'circle',
+				'source': 'point',
+				'paint': {
+					'circle-radius': 10,
+					'circle-color': '#3887be'
+				}
+			});
+
+			// When the cursor enters a feature in the point layer, prepare for dragging.
+			map.on('mouseenter', 'point', function () {
+				map.setPaintProperty('point', 'circle-color', '#3bb2d0');
+				canvas.style.cursor = 'move';
+			});
+
+			map.on('mouseleave', 'point', function () {
+				map.setPaintProperty('point', 'circle-color', '#3887be');
+				canvas.style.cursor = '';
+			});
+
+			map.on('mousedown', 'point', function (e) {
+				// Prevent the default map drag behavior.
+				e.preventDefault();
+
+				canvas.style.cursor = 'grab';
+
+				map.on('mousemove', onMove);
+				map.once('mouseup', onUp);
+			});
+
+			map.on('touchstart', 'point', function (e) {
+				if (e.points.length !== 1) return;
+
+				// Prevent the default map drag behavior.
+				e.preventDefault();
+
+				map.on('touchmove', onMove);
+				map.once('touchend', onUp);
+			});
+		});
+	}
+</script>
+
+@{ var data = Model.Location.LocationData; }
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title">Location</h5>
+		<div id="map" style="height: 20em; width: 100%;"></div>
+		<div class="form-group">
+			<label asp-for="Location.Latitude" class="control-label"></label>
+			<input id="Model.Location_lat" asp-for="Location.Latitude" class="form-control"></input>
+			<span asp-validation-for="Location.Latitude" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Location.Longitude" class="control-label"></label>
+			<input id="Model.Location_lng" asp-for="Location.Longitude" class="form-control"></input>
+			<span asp-validation-for="Location.Longitude" class="text-danger"></span>
+		</div>
+	</div>
+</div>
+
 				<div class="form-group">
 					<label asp-for="StartDate" class="control-label"></label>
 					<input  asp-for="StartDate" class="form-control"></input>
@@ -78,7 +194,7 @@
 
 				<div class="form-group">
 					<div class="card-body">
-						<input type="submit" value="Create" class="btn btn-primary" />
+						<input type="submit" value="Create" class="btn btn-primary btn-block" />
 					</div>
 				</div>
 			</form>

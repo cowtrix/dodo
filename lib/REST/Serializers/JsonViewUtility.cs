@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Resources.Location;
+using System.Collections.Concurrent;
 
 namespace Resources
 {
@@ -22,7 +23,7 @@ namespace Resources
 	/// </summary>
 	public static class JsonViewUtility
 	{
-		private static Dictionary<(Guid, uint), Dictionary<string, object>> m_cache = new Dictionary<(Guid, uint), Dictionary<string, object>>();
+		private static ConcurrentDictionary<(Guid, uint), Dictionary<string, object>> m_cache = new ConcurrentDictionary<(Guid, uint), Dictionary<string, object>>();
 
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
@@ -43,7 +44,7 @@ namespace Resources
 				if(!decryptable.TryGetValue(requester, passphrase, out obj))
 				{
 					// User wasn't authorised
-					SecurityWatcher.RegisterEvent("Bad authorization");
+					SecurityWatcher.RegisterEvent(requester as IRESTResource, "Bad authorization");
 					return null;
 				}
 				sourceType = obj.GetType();
@@ -274,7 +275,7 @@ namespace Resources
 				if (!decryptable.TryGetValue(requester, passphrase, out var encryptedObject))
 				{
 					// User wasn't authorised
-					SecurityWatcher.RegisterEvent("Bad authorization");
+					SecurityWatcher.RegisterEvent(requester as IRESTResource, "Bad authorization");
 				}
 				encryptedObject.PatchObject(values, permissionLevel, requester, passphrase);
 				decryptable.SetValue(encryptedObject, permissionLevel, requester, passphrase);

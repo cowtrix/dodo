@@ -12,16 +12,21 @@ namespace Dodo
 
 		public ResourceReference<User> Creator { get; set; }
 
+		public EPermissionLevel PermissionLevel { get; set; }
+
 		[JsonProperty]
 		Notification m_notification;
 		public Notification GetNotification(AccessContext context) => m_notification;
 
+		public override EPermissionLevel GetVisibility() => PermissionLevel;
+
 		public EncryptedNotificationToken() { }
 
-		public EncryptedNotificationToken(User creator, string source, string message, bool canDelete)
+		public EncryptedNotificationToken(User creator, string source, string message, string link, ENotificationType type, EPermissionLevel permissionLevel, bool canDelete)
 		{
 			Creator = creator.CreateRef();
-			m_notification = new Notification(Guid, source, message, canDelete);
+			PermissionLevel = permissionLevel;
+			m_notification = new Notification(Guid, source, message, link, type, permissionLevel, canDelete);
 		}
 	}
 }

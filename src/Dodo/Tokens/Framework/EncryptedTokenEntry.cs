@@ -9,7 +9,7 @@ namespace Dodo.Users.Tokens
 		[BsonElement]
 		private AsymmEncryptedStore<IToken> m_data;
 
-		public EncryptedTokenEntry(ITokenResource owner, IToken token, EPermissionLevel permissionLevel = EPermissionLevel.OWNER) : base(owner, token, permissionLevel)
+		public EncryptedTokenEntry(ITokenResource owner, IToken token) : base(owner, token)
 		{
 			m_data = new AsymmEncryptedStore<IToken>(token, new Passphrase(owner.PublicKey));
 		}

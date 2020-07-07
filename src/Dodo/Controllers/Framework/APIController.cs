@@ -22,7 +22,7 @@ namespace Dodo
 	[AllowAnonymous]
 	public class APIController : Controller
 	{
-		static Dictionary<Type, string> m_displayColors = new Dictionary<Type, string>()
+		public static Dictionary<Type, string> TypeDisplayColors = new Dictionary<Type, string>()
 		{
 			{ typeof(Rebellion),		"22A73D" },
 			{ typeof(LocalGroup),		"71D0F1" },
@@ -42,7 +42,7 @@ namespace Dodo
 					{
 						label = t.GetName(),
 						value = t.Name.ToCamelCase(),
-						displayColor = m_displayColors[t],
+						displayColor = TypeDisplayColors[t],
 						schema = JsonViewUtility.GetJsonSchema(t)
 					}).ToList(),
 				indexVideoEmbed = ConfigManager.GetValue("IndexVideoEmbedURL", "https://www.youtube.com/embed/d4QDM_Isi24"),

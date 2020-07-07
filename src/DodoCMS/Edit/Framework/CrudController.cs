@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dodo;
+using Dodo.Models;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +22,9 @@ namespace Dodo.Controllers.Edit
 
 	[Route("edit/[controller]")]
 	public abstract class CrudController<T, TSchema, TViewModel> : CustomController
-		where T : DodoResource, IPublicResource
-		where TSchema : ResourceSchemaBase, new()
-		where TViewModel : class, IViewModel, new()
+	where T : DodoResource, IPublicResource
+	where TSchema : ResourceSchemaBase, new()
+	where TViewModel : class, IViewModel, new()
 	{
 		protected virtual CrudResourceServiceBase<T, TSchema> CrudService => new CrudResourceServiceBase<T, TSchema>(Context, HttpContext, AuthService);
 		protected abstract AuthorizationService<T, TSchema> AuthService { get; }
@@ -32,22 +33,22 @@ namespace Dodo.Controllers.Edit
 		[Route("create")]
 		public IActionResult Create([FromQuery] string parent = null)
 		{
-			if(Context.User == null)
+			if (Context.User == null)
 			{
 				// redirect to login
 				return Forbid();
 			}
-			var tokens = Context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(Context, EPermissionLevel.OWNER)
+			var tokens = Context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(Context, EPermissionLevel.OWNER, Context.User)
 				.Where(t => t.ResourceType == typeof(T).Name && !t.IsRedeemed);
-			if(!tokens.Any() && Context.User.TokenCollection.GetSingleToken<SysadminToken>(Context) == null)
+			if (!tokens.Any() && Context.User.TokenCollection.GetSingleToken<SysadminToken>(Context, EPermissionLevel.OWNER, Context.User) == null)
 			{
 				return Unauthorized("You must request permission to create this resource.");
 			}
 			var schema = new TSchema();
-			if(schema is OwnedResourceSchemaBase owned)
+			if (schema is OwnedResourceSchemaBase owned)
 			{
-				IRESTResource rsc; 
-				if(Guid.TryParse(parent, out var guid))
+				IRESTResource rsc;
+				if (Guid.TryParse(parent, out var guid))
 				{
 					rsc = ResourceUtility.GetResourceByGuid(guid);
 				}
@@ -55,7 +56,7 @@ namespace Dodo.Controllers.Edit
 				{
 					rsc = ResourceUtility.GetResourceBySlug(parent);
 				}
-				if(rsc == null)
+				if (rsc == null)
 				{
 					return BadRequest($"No parent resource found with ID {parent}");
 				}
@@ -77,12 +78,12 @@ namespace Dodo.Controllers.Edit
 			}
 			try
 			{
-				if (!ModelState.IsValid) 
-				{ 
-					return View(schema); 
+				if (!ModelState.IsValid)
+				{
+					return View(schema);
 				}
 				var request = await CrudService.Create(schema);
-				if(!request.IsSuccess)
+				if (!request.IsSuccess)
 				{
 					return request.ActionResult;
 				}
@@ -104,19 +105,13 @@ namespace Dodo.Controllers.Edit
 				// redirect to login
 				return Forbid();
 			}
-			var result = await CrudService.Get(id);
+			var result = AuthService.IsAuthorised(Context, id, EHTTPRequestType.PATCH);
 			if (!result.IsSuccess)
 			{
 				return result.ActionResult;
 			}
 			var actionResult = result as ResourceActionRequest;
 			var rsc = actionResult.Result as T;
-			result = CrudService.AuthService.IsAuthorised(Context, rsc, EHTTPRequestType.PATCH);
-			if(!result.IsSuccess)
-			{
-				return result.ActionResult;
-			}
-			actionResult = result as ResourceActionRequest;
 			ViewData["Permission"] = actionResult.PermissionLevel;
 			if (rsc is INotificationResource notificationResource)
 			{
@@ -140,8 +135,9 @@ namespace Dodo.Controllers.Edit
 			{
 				if (!ModelState.IsValid)
 				{
+					var errors = ModelState.Values.Where(v => v.Errors.Any()).ToList();
 					ModelState.AddModelError("Save Error", "Error updating the resource");
-					return await Edit(id); 
+					return await Edit(id);
 				}
 				var result = await CrudService.Update(id, modified);
 				if (!result.IsSuccess)
@@ -177,7 +173,7 @@ namespace Dodo.Controllers.Edit
 		}
 
 		[HttpPost]
-		[Route("delete/{id}")]
+		[Route("{id}/delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Delete(TViewModel view)
 		{
@@ -196,6 +192,28 @@ namespace Dodo.Controllers.Edit
 				ModelState.AddModelError("Unable to delete resource", e.Message);
 				return RedirectToAction(nameof(Edit));
 			}
+		}
+
+		[HttpPost("notifications/{id}/new")]
+		public virtual async Task<IActionResult> PostNotification([FromRoute]string id, [FromBody]NotificationModel notification)
+		{
+			var result = await CrudService.AddNotification(id, notification);
+			if (!result.IsSuccess)
+			{
+				return result.ActionResult;
+			}
+			return RedirectToAction(nameof(Edit), new { id = id });
+		}
+
+		[HttpGet("notifications/{id}/delete")]
+		public virtual async Task<IActionResult> DeleteNotification([FromRoute]string id, [FromQuery]Guid notification)
+		{
+			var result = await CrudService.DeleteNotification(id, notification);
+			if(!result.IsSuccess)
+			{
+				return result.ActionResult;
+			}
+			return RedirectToAction(nameof(Edit), new { id = id });
 		}
 	}
 }

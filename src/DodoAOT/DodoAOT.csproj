@@ -1,28 +1,35 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Admin.template.cshtml" />
     <None Remove="Create.template" />
-    <None Remove="Edit.template" />
-    <None Remove="Notifications.template" />
+    <None Remove="Edit.template.cshtml" />
+    <None Remove="Notifications.template.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Notifications.template">
+    <Content Include="Templates\Admin.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Edit.template">
+    <Content Include="Templates\Notifications.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Create.template">
+    <Content Include="Templates\Edit.template.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Templates\Create.template.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -34,20 +41,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="buildAOT.ps1">
+    <None Update="Templates\Delete.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Delete.template">
+    <None Update="Templates\LocationPicker.template.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\MarkdownEditor.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Scripts\" />
-  </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File  .\buildAOT.ps1 -solutionDir $(SolutionDir) -configuration $(ConfigurationName)" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="dotnet run --no-build /viewmodels:&quot;$(SolutionDir)src\DodoCMS\ViewModels&quot; /views:&quot;$(SolutionDir)src\DodoServer\Views&quot;" />
   </Target>
 
 </Project>

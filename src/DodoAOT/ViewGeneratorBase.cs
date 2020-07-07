@@ -17,15 +17,61 @@ namespace DodoAOT
 {
 	public class ViewGeneratorBase
 	{
-		private delegate IEnumerable<string> CustomTypeCallback(string prefix, MemberInfo member, int indentLevel);
-		private static Dictionary<Type, CustomTypeCallback> m_customTypeCallback = new Dictionary<Type, CustomTypeCallback>()
+		protected static string Template(string templateName)
 		{
-			//{ typeof(GeoLocation), GetLocationEditor },
-			{ typeof(LocationData), LocationDataView },
-			{ typeof(AdministrationData), AdminDataView },
+			var fullPath = Path.GetFullPath($"./Templates/{templateName}.template.cshtml");
+			return File.ReadAllText(fullPath);
+		}
+
+		private delegate IEnumerable<string> CustomDrawerCallback(string prefix, MemberInfo member, int indentLevel);
+		private static Dictionary<Type, CustomDrawerCallback> m_customTypeCallback = new Dictionary<Type, CustomDrawerCallback>()
+		{
+			{ typeof(AdministrationData), Null },
+			{ typeof(GeoLocation), GetLocationEditor },
 			{ typeof(IResourceReference), RefView },
-			//{ typeof(IEnumerable<IResourceReference>), for },
 		};
+		private static Dictionary<string, CustomDrawerCallback> m_customExcplicitCallback = new Dictionary<string, CustomDrawerCallback>()
+		{
+			{ "parentRef", ParentRefDisplay },
+			{ "markdown", MarkdownEditor },
+			{ "null", Null }
+		};
+
+		private static IEnumerable<string> MarkdownEditor(string prefix, MemberInfo member, int indentLevel)
+		{
+			var txt = Template("MarkdownEditor");
+			txt = txt.Replace("{NAME}", $"{prefix}{member.Name}");
+			yield return txt;
+		}
+
+		private static IEnumerable<string> ParentRefDisplay(string prefix, MemberInfo member, int indentLevel)
+		{
+			var memberType = member.GetMemberType();
+			var memberName = member.Name;
+			var refType = memberType.GetGenericArguments().First();
+			yield return Indent(indentLevel) + $"@{{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.{prefix}{memberName}.GetRefType()]; }}";
+			yield return Indent(indentLevel) + $"<div class=\"navbar navbar-expand-lg navbar-dark\" style=\"width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;\">";
+			yield return Indent(indentLevel) + $"<a class=\"navbar-brand\" href=\"{Dodo.DodoApp.NetConfig.FullURI}/@Model.{prefix}{memberName}.GetRefType().Name/@Model.{prefix}{memberName}.Slug\">Part of the @Model.{prefix}{memberName}.Name</a>";
+			yield return Indent(indentLevel) + $"</div>";
+		}
+
+		private static IEnumerable<string> Null(string prefix, MemberInfo member, int indentLevel)
+		{
+			yield return "";
+		}
+
+		protected static string GetAdminEditor(Type resourceType)
+		{
+			if (!typeof(IAdministratedResource).IsAssignableFrom(resourceType))
+			{
+				return "";
+			}
+			var field = resourceType.GetProperty("AdministratorData");
+			var template = Template("Admin");
+			template = template.Replace("{NAME}", field.GetName());
+			template = template.Replace("{MEMBER}", field.GetName());
+			return template;
+		}
 
 		protected static string GetNotificationEditor(Type resourceType)
 		{
@@ -33,7 +79,7 @@ namespace DodoAOT
 			{
 				return "";
 			}
-			var template = File.ReadAllText("Notifications.template");
+			var template = Template("Notifications");
 			var sb = new StringBuilder();
 			foreach (var l in BuildNotificationView(resourceType)) sb.AppendLine(l);
 			template = template.Replace("{BODY}", sb.ToString());
@@ -79,53 +125,13 @@ namespace DodoAOT
 			yield return Indent(indentLevel) + $"</div>";
 		}
 
-		private static IEnumerable<string> AdminDataView(string prefix, MemberInfo member, int indentLevel)
-		{
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			yield return Indent(indentLevel + 2) + $"<div class=\"card-body\">";
-			yield return Indent(indentLevel + 1) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
-			yield return Indent(indentLevel + 2) + $"@foreach(var admin in Model.{prefix}{member.Name}.Administrators) {{";
-			// iterate admin array
-
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			var name = $"@{prefix}admin.{nameof(AdministratorEntry.User)}.{nameof(IResourceReference.Name)}";
-			var slug = $"@{prefix}admin.{nameof(AdministratorEntry.User)}.{nameof(IResourceReference.Slug)}";
-			yield return Indent(indentLevel + 1) + $"<p>{name} [{slug}]</p>";
-			yield return Indent(indentLevel) + $"</div>";
-			yield return Indent(indentLevel) + $"</div>";
-
-			yield return Indent(indentLevel + 2) + "}";
-			yield return Indent(indentLevel + 2) + $"</div>";
-			yield return Indent(indentLevel) + $"</div>";
-		}
-
-		private static IEnumerable<string> LocationDataView(string prefix, MemberInfo member, int indentLevel)
+		private static IEnumerable<string> GetLocationEditor(string prefix, MemberInfo member, int indentLevel)
 		{
 			var name = member.Name;
-			IEnumerable<string> labelIfNotNull(string fieldName, int indent)
-			{
-				yield return Indent(indent) + $"@if (!string.IsNullOrEmpty(Model.{prefix}{name}?.{fieldName})) {{";
-				yield return Indent(indent + 1) + $"<br>@Model.{prefix}{name}?.{fieldName}";
-				yield return Indent(indent) + "}";
-			}
-			yield return Indent(indentLevel) + $"<address>";
-			yield return Indent(indentLevel + 1) + $"<strong>Address</strong>";
-
-			//early return
-			yield return Indent(indentLevel + 1) + $"@if (@Model.{prefix}{name} != null && !@Model.{prefix}{name}.IsEmpty) {{";
-
-			foreach (var l in labelIfNotNull(nameof(LocationData.Address), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Neighborhood), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Locality), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Place), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.District), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Postcode), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Region), indentLevel + 2)) yield return l;
-			foreach (var l in labelIfNotNull(nameof(LocationData.Country), indentLevel + 2)) yield return l;
-
-			yield return Indent(indentLevel + 1) + "} else {  @Html.Raw(\"<br>\"); @Html.Label(\"None\"); }";
-			yield return Indent(indentLevel) + $"</address>";
+			var template = Template("LocationPicker");
+			template = template.Replace("{LOCATION}", $"Model.{prefix}{name}");
+			template = template.Replace("{ LOCATION }", $"Model.{prefix}{name}");
+			yield return template;
 		}
 
 		protected static string Indent(int indent)
@@ -133,10 +139,15 @@ namespace DodoAOT
 			return new string('\t', indent);
 		}
 
-		protected static IEnumerable<string> BuildClass(Type targetType, int indentLevel, string prefix, bool forcereadonly = false)
+		protected static IEnumerable<string> BuildDataFields(Type targetType, int indentLevel, string prefix, bool forcereadonly = false)
 		{
 			foreach (var member in targetType.GetPropertiesAndFields(p => p.CanRead, f => true)
-				.OrderBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
+				.OrderBy(m =>
+				{
+					var view = m.GetCustomAttribute<ViewAttribute>();
+					return view != null ? view.Priority : 255;
+				})
+				.ThenBy(m => m.DeclaringType?.InheritanceHierarchy().Count()))
 			{
 				var viewAttr = member.GetCustomAttribute<ViewAttribute>();
 				if (viewAttr == null)
@@ -155,7 +166,8 @@ namespace DodoAOT
 				var typeName = memberType.GetRealTypeName(true);
 				var memberName = member.Name;
 
-				var callback = m_customTypeCallback.FirstOrDefault(kvp => kvp.Key.IsAssignableFrom(memberType)).Value;
+				var callback = m_customExcplicitCallback.FirstOrDefault(kvp => kvp.Key == viewAttr.CustomDrawer).Value ??
+					m_customTypeCallback.FirstOrDefault(kvp => kvp.Key.IsAssignableFrom(memberType)).Value;
 				if (callback != null)
 				{
 					foreach (var line in callback(prefix, member, indentLevel))
@@ -172,7 +184,7 @@ namespace DodoAOT
 					yield return Indent(indentLevel) + $"<div class=\"card\">";
 					yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
 					yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
-					foreach (var line in BuildClass(memberType, indentLevel + 3, $"{prefix}{memberName}.", isReadonly))
+					foreach (var line in BuildDataFields(memberType, indentLevel + 3, $"{prefix}{memberName}.", isReadonly))
 					{
 						yield return line;
 					}
@@ -182,23 +194,66 @@ namespace DodoAOT
 				else
 				{
 					string inputType = "input";
-					if (member.GetCustomAttribute<DescriptionAttribute>() != null)
-					{
-						inputType = "textarea";
-					}
 					string inputExtras = "";
-					if (member.GetCustomAttribute<PasswordAttribute>() != null)
+					string inputClass = "form-control";
+					var labelClass = "control-label";
+					var divClass = "form-group";
+					var divId = memberName;
+					bool swapOrder = false;
+
+					if (member.GetMemberType().IsEnum)
+					{
+						inputType = $"select";
+						inputExtras += $"asp-items=\"@Html.GetEnumSelectList<{member.GetMemberType().Namespace}.{member.GetMemberType().Name}>()\"";
+					}
+					else if (member.GetMemberType() == typeof(bool))
+					{
+						labelClass = "form-check-label";
+						inputExtras += "type=\"checkbox\"";
+						inputClass = "form-check-input";
+						divClass = "form-check";
+						swapOrder = true;
+					}
+					else if (member.GetCustomAttribute<PasswordAttribute>() != null)
 					{
 						inputExtras += "type=\"password\"";
 					}
 					if (isReadonly)
 					{
 						inputExtras += " readonly";
+						//inputClass = "form-control-plaintext";
 					}
-					yield return Indent(indentLevel) + $"<div class=\"form-group\">";
-					yield return Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"control-label\"></label>";
-					yield return Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"form-control\"></{inputType}>";
+					yield return Indent(indentLevel) + $"<div class=\"{divClass}\">";
+					var labelLine = Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"{labelClass}\"></label>";
+					var inputLine = Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"{inputClass}\"></{inputType}>";
+					if (swapOrder)
+					{
+						yield return inputLine;
+						yield return labelLine;
+					}
+					else
+					{
+						yield return labelLine;
+						yield return inputLine;
+					}
 					yield return Indent(indentLevel + 1) + $"<span asp-validation-for=\"{prefix}{memberName}\" class=\"text-danger\"></span>";
+					if (!string.IsNullOrEmpty(viewAttr.InputHint))
+					{
+						yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
+						yield return Indent(indentLevel + 2) + viewAttr.InputHint;
+						if(viewAttr.CustomDrawer == "slugPreview")
+						{
+							yield return Indent(indentLevel + 2) + "<p id=\"slugPreview\"></p>";
+							yield return Indent(indentLevel + 2) + "<script>";
+							yield return Indent(indentLevel + 3) + "$('form :input').change(function(){";
+							yield return Indent(indentLevel + 4) + $"var inputVal = $('#{memberName}').val().toLowerCase();";
+							yield return Indent(indentLevel + 4) + "inputVal = inputVal.split(new RegExp(\"[^a-z0-9_]\")).join('');";
+							yield return Indent(indentLevel + 4) + "$('#slugPreview').text('URL will be /' + inputVal + '/')";
+							yield return Indent(indentLevel + 3) + "});";
+							yield return Indent(indentLevel + 2) + "</script>";
+						}
+						yield return Indent(indentLevel + 1) + $"</small>";
+					}
 					yield return Indent(indentLevel) + $"</div>";
 				}
 			}

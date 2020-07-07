@@ -1,2 +1,2 @@
-export { route } from './route'
+export { SEARCH_ROUTE } from './route'
 export { SearchConnected as Search } from './container'

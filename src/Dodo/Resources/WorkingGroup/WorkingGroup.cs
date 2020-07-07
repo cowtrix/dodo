@@ -67,7 +67,7 @@ namespace Dodo.WorkingGroups
 			}
 		}
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority:-2, customDrawer: "parentRef")]
 		public ResourceReference<GroupResource> Parent { get; private set; }
 
 		public GeoLocation Location => Parent.Location;

@@ -1,0 +1,140 @@
+<script>
+	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
+	var coordinates = document.getElementById('coordinates');
+	window.onload = function () {
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/streets-v11',
+			center: [@{LOCATION}.Longitude, @{LOCATION}.Latitude],
+			zoom: 6
+		});
+		var geocoder = new MapboxGeocoder({
+			accessToken: mapboxgl.accessToken,
+			mapboxgl: mapboxgl
+		});
+		geocoder.on('result', function (result) {
+			
+			var coords = result["result"]["center"];
+			console.warn(JSON.stringify(
+				coords,
+				null,
+				2
+			));
+			document.getElementById("{LOCATION}_lat").value = coords[1];
+			document.getElementById("{LOCATION}_lng").value = coords[0];
+			// Update the Point feature in `geojson` coordinates
+			// and call setData to the source layer `point` on it.
+		geojson.features[0].geometry.coordinates = [coords[0], coords[1]];
+			map.getSource('point').setData(geojson);
+		});
+		map.addControl(
+			geocoder
+		);
+		var canvas = map.getCanvasContainer();
+
+		var geojson = {
+			'type': 'FeatureCollection',
+			'features': [
+				{
+					'type': 'Feature',
+					'geometry': {
+						'type': 'Point',
+						'coordinates': [@{LOCATION}.Longitude, @{LOCATION}.Latitude],
+					}
+				}
+			]
+		};
+
+		function onMove(e) {
+			var coords = e.lngLat;
+
+			// Set a UI indicator for dragging.
+			canvas.style.cursor = 'grabbing';
+
+			// Update the Point feature in `geojson` coordinates
+			// and call setData to the source layer `point` on it.
+			geojson.features[0].geometry.coordinates = [coords.lng, coords.lat];
+			map.getSource('point').setData(geojson);
+		}
+
+		function onUp(e) {
+			var coords = e.lngLat;
+
+			document.getElementById("{LOCATION}_lat").value = coords.lat;
+			document.getElementById("{LOCATION}_lng").value = coords.lng;
+
+			canvas.style.cursor = '';
+
+			// Unbind mouse/touch events
+			map.off('mousemove', onMove);
+			map.off('touchmove', onMove);
+		}
+
+		map.on('load', function () {
+			// Add a single point to the map
+			map.addSource('point', {
+				'type': 'geojson',
+				'data': geojson
+			});
+
+			map.addLayer({
+				'id': 'point',
+				'type': 'circle',
+				'source': 'point',
+				'paint': {
+					'circle-radius': 10,
+					'circle-color': '#3887be'
+				}
+			});
+
+			// When the cursor enters a feature in the point layer, prepare for dragging.
+			map.on('mouseenter', 'point', function () {
+				map.setPaintProperty('point', 'circle-color', '#3bb2d0');
+				canvas.style.cursor = 'move';
+			});
+
+			map.on('mouseleave', 'point', function () {
+				map.setPaintProperty('point', 'circle-color', '#3887be');
+				canvas.style.cursor = '';
+			});
+
+			map.on('mousedown', 'point', function (e) {
+				// Prevent the default map drag behavior.
+				e.preventDefault();
+
+				canvas.style.cursor = 'grab';
+
+				map.on('mousemove', onMove);
+				map.once('mouseup', onUp);
+			});
+
+			map.on('touchstart', 'point', function (e) {
+				if (e.points.length !== 1) return;
+
+				// Prevent the default map drag behavior.
+				e.preventDefault();
+
+				map.on('touchmove', onMove);
+				map.once('touchend', onUp);
+			});
+		});
+	}
+</script>
+
+@{ var data = { LOCATION }.LocationData; }
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title">Location</h5>
+		<div id="map" style="height: 20em; width: 100%;"></div>
+		<div class="form-group">
+			<label asp-for="Location.Latitude" class="control-label"></label>
+			<input id="{LOCATION}_lat" asp-for="Location.Latitude" class="form-control"></input>
+			<span asp-validation-for="Location.Latitude" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Location.Longitude" class="control-label"></label>
+			<input id="{LOCATION}_lng" asp-for="Location.Longitude" class="form-control"></input>
+			<span asp-validation-for="Location.Longitude" class="text-danger"></span>
+		</div>
+	</div>
+</div>

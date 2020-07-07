@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Dodo.Users;
 using Dodo.Models;
 using System;
+using Microsoft.AspNetCore.Routing.Patterns;
 
 namespace RESTTests
 {
@@ -58,7 +59,7 @@ namespace RESTTests
 		#region Administration
 		[TestMethod]
 		[TestCategory("Administration")]
-		public async Task CanAddAdminFromGuid()
+		public async Task Admin_CanAddAdminFromGuid()
 		{
 			// Create a new user
 			var user1 = GetRandomUser(out var user1Password, out var user1Context);
@@ -91,7 +92,32 @@ namespace RESTTests
 
 		[TestMethod]
 		[TestCategory("Administration")]
-		public async Task CanAddAdminFromEmail()
+		public async Task Admin_CanUpdateAdmin()
+		{
+			// Create a new user
+			var user1 = GetRandomUser(out var user1Password, out var user1Context);
+			var user2 = GetRandomUser(out var user2Password, out var user2Context);
+			// Let them create a new group
+			var group = CreateObject<T>(user1Context);
+			// Add the second admin
+			using(var rscLock = new ResourceLock(group))
+			{
+				group.AddNewAdmin(user1Context, user2);
+				ResourceManager.Update(group, rscLock);
+			}
+			group = ResourceManager.GetSingle(rsc => rsc.Guid == group.Guid);
+			var adminData = group.AdministratorData.GetValue(user1.CreateRef(), user1Context.Passphrase);
+			Assert.IsFalse(adminData.Administrators.Single(ad => ad.User.Guid == user2.Guid).Permissions.CanEditInfo);
+			await Login(user1.Slug, user1Password);
+			await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Slug}/updateadmin?id={user2.Slug}", EHTTPRequestType.POST, new AdministratorPermissionSet { CanEditInfo = true });
+			group = ResourceManager.GetSingle(rsc => rsc.Guid == group.Guid);
+			adminData = group.AdministratorData.GetValue(user1.CreateRef(), user1Context.Passphrase);
+			Assert.IsTrue(adminData.Administrators.Single(ad => ad.User.Guid == user2.Guid).Permissions.CanEditInfo);
+		}
+
+		[TestMethod]
+		[TestCategory("Administration")]
+		public async Task Admin_CanAddAdminFromEmail()
 		{
 			Assert.Inconclusive();
 			// Create a new user
@@ -231,9 +257,9 @@ namespace RESTTests
 			// Create a notification
 			using (var rscLock = new ResourceLock(group))
 			{
-				var token = new SimpleNotificationToken(con.User, "Test", Message, true);
+				var token = new SimpleNotificationToken(con.User, "Test", Message, null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true);
 				notGuid = token.Guid;
-				group.AddToken(token, EPermissionLevel.PUBLIC);
+				group.AddToken(token);
 				ResourceManager.Update(group, rscLock);
 			}
 

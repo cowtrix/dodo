@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DodoAOT\DodoAOT.csproj" />
     <ProjectReference Include="..\Dodo\Dodo.csproj" />
   </ItemGroup>
 

@@ -13,7 +13,7 @@ namespace DodoAOT
 	{
 		public static string Generate(Type resourceType)
 		{
-			var template = File.ReadAllText("Edit.template");
+			var template = Template("Edit");
 			var sb = new StringBuilder();
 			foreach(var s in BuildScripts())
 			{
@@ -26,13 +26,14 @@ namespace DodoAOT
 			template = template.Replace("{TYPE}", resourceType.Name);
 			template = template.Replace("{NAME}", resourceType.GetName());
 			
-			foreach (var line in BuildClass(resourceType, 4, ""))
+			foreach (var line in BuildDataFields(resourceType, 4, ""))
 			{
 				sb.AppendLine(line);
 			}
 			var viewBody = sb.ToString();
-			template = template.Replace("{BODY}", viewBody);
+			template = template.Replace("{DETAILS}", viewBody);
 			template = template.Replace("{NOTIFICATIONS}", GetNotificationEditor(resourceType));
+			template = template.Replace("{ADMIN}", string.Join('\n', GetAdminEditor(resourceType)));
 			return template;
 		}
 

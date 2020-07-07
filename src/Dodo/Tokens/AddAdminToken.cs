@@ -24,7 +24,7 @@ namespace Dodo.Users.Tokens
 		{
 			Resource = resource.CreateRef();
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
-			m_notification = new Notification(Guid, resource.Name, $"You have been added as an Administrator to {Resource.Name}");
+			m_notification = new Notification(Guid, resource.Name, $"You have been added as an Administrator to {Resource.Name}", null, ENotificationType.Alert, GetVisibility());
 		}
 
 		protected override bool OnExecuted(AccessContext context)
@@ -35,7 +35,7 @@ namespace Dodo.Users.Tokens
 			{
 				var resource = rscLocker.Value as GroupResource;
 				// Change the admin access from temp us
-				resource.AddOrUpdateAdmin(new AccessContext(context.User, tempPass), context.User, context.Passphrase, true);
+				resource.CompleteAdminInvite(context, tempPass);
 				ResourceUtility.GetManagerForResource(resource).Update(resource, rscLocker);
 			}
 			return true;
@@ -45,5 +45,7 @@ namespace Dodo.Users.Tokens
 		{
 			return m_notification;
 		}
+
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
 	}
 }

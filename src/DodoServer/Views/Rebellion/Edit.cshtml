@@ -6,20 +6,49 @@
 	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
+	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
 }
 
+<script>
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip()
+})
+
+</script>
 
 
-<h4 class="title">Edit Rebellion</h4>
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			<form asp-action="Edit">
-				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<div class="form-group">
-					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control"></input>
-					<span asp-validation-for="Guid" class="text-danger"></span>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+	</li>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
+		</li>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
+		</li>
+	}
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Rebellion/@Model.Slug" target="_blank">View</a></li>
+</ul>
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="row">
+			<div class="card" style="width:100%;">
+				<div class="card-body">
+					<form asp-action="Edit">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+										<div class="form-check">
+					<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+					<label asp-for="IsPublished" class="form-check-label"></label>
+					<span asp-validation-for="IsPublished" class="text-danger"></span>
+					<small id="helpBlock" class="form-text text-muted">
+						This indicates whether or not this is publicly viewable by all users.
+					</small>
 				</div>
 				<div class="form-group">
 					<label asp-for="Name" class="control-label"></label>
@@ -28,46 +57,39 @@
 				</div>
 				<div class="form-group">
 					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control"></input>
+					<input  readonly asp-for="Slug" class="form-control"></input>
 					<span asp-validation-for="Slug" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="Guid" class="control-label"></label>
+					<input  readonly asp-for="Guid" class="form-control"></input>
+					<span asp-validation-for="Guid" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Revision" class="control-label"></label>
 					<input  readonly asp-for="Revision" class="form-control"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
-				<div class="form-group">
-					<label asp-for="PublicDescription" class="control-label"></label>
-					<textarea  asp-for="PublicDescription" class="form-control"></textarea>
-					<span asp-validation-for="PublicDescription" class="text-danger"></span>
-				</div>
-				<div class="card">
-						<div class="card-body">
-					<h5 class="card-title">Administrator Data</h5>
-						@foreach(var admin in Model.AdministratorData.Administrators) {
-				<div class="card">
-				<div class="card">
-					<p>@admin.User.Name [@admin.User.Slug]</p>
-				</div>
-				</div>
-						}
-						</div>
-				</div>
+<div class="form-group">
+	<label asp-for="PublicDescription" class="form-label"></label>
+	<div id="epiceditor"><textarea asp-for="PublicDescription"></textarea></div>
+	<script>
+		var editor = new EpicEditor({
+			basePath: '/lib/epiceditor', clientSideStorage: false,
+			autogrow: { minHeight: "200", maxHeight: "400", scroll: true },
+			button: { preview: true, fullscreen: false, bar: "show" },
+			theme: { base: '/themes/base/epiceditor.css', preview: '/themes/preview/github.css', editor: '/themes/editor/epic-light.css' },
+		}).load();
+	</script>
+</div>
+
+
 				<div class="form-group">
 					<label asp-for="MemberCount" class="control-label"></label>
 					<input  readonly asp-for="MemberCount" class="form-control"></input>
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
-				<div class="form-group">
-					<label asp-for="PublicKey" class="control-label"></label>
-					<input  readonly asp-for="PublicKey" class="form-control"></input>
-					<span asp-validation-for="PublicKey" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="IsPublished" class="control-label"></label>
-					<input  asp-for="IsPublished" class="form-control"></input>
-					<span asp-validation-for="IsPublished" class="text-danger"></span>
-				</div>
+
 				<div class="form-group">
 					<label asp-for="StartDate" class="control-label"></label>
 					<input  asp-for="StartDate" class="form-control"></input>
@@ -78,91 +100,356 @@
 					<input  asp-for="EndDate" class="form-control"></input>
 					<span asp-validation-for="EndDate" class="text-danger"></span>
 				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Location</h5>
-							<address>
-								<strong>Address</strong>
-								@if (@Model.Location.LocationData != null && !@Model.Location.LocationData.IsEmpty) {
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Address)) {
-										<br>@Model.Location.LocationData?.Address
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Neighborhood)) {
-										<br>@Model.Location.LocationData?.Neighborhood
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Locality)) {
-										<br>@Model.Location.LocationData?.Locality
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Place)) {
-										<br>@Model.Location.LocationData?.Place
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.District)) {
-										<br>@Model.Location.LocationData?.District
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Postcode)) {
-										<br>@Model.Location.LocationData?.Postcode
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Region)) {
-										<br>@Model.Location.LocationData?.Region
-									}
-									@if (!string.IsNullOrEmpty(Model.Location.LocationData?.Country)) {
-										<br>@Model.Location.LocationData?.Country
-									}
-								} else {  @Html.Raw("<br>"); @Html.Label("None"); }
-							</address>
-							<div class="form-group">
-								<label asp-for="Location.Latitude" class="control-label"></label>
-								<input  asp-for="Location.Latitude" class="form-control"></input>
-								<span asp-validation-for="Location.Latitude" class="text-danger"></span>
-							</div>
-							<div class="form-group">
-								<label asp-for="Location.Longitude" class="control-label"></label>
-								<input  asp-for="Location.Longitude" class="form-control"></input>
-								<span asp-validation-for="Location.Longitude" class="text-danger"></span>
-							</div>
-						</div>
-				</div>
+<script>
+	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
+	var coordinates = document.getElementById('coordinates');
+	window.onload = function () {
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/streets-v11',
+			center: [@Model.Location.Longitude, @Model.Location.Latitude],
+			zoom: 6
+		});
+		var geocoder = new MapboxGeocoder({
+			accessToken: mapboxgl.accessToken,
+			mapboxgl: mapboxgl
+		});
+		geocoder.on('result', function (result) {
+			
+			var coords = result["result"]["center"];
+			console.warn(JSON.stringify(
+				coords,
+				null,
+				2
+			));
+			document.getElementById("Model.Location_lat").value = coords[1];
+			document.getElementById("Model.Location_lng").value = coords[0];
+			// Update the Point feature in `geojson` coordinates
+			// and call setData to the source layer `point` on it.
+		geojson.features[0].geometry.coordinates = [coords[0], coords[1]];
+			map.getSource('point').setData(geojson);
+		});
+		map.addControl(
+			geocoder
+		);
+		var canvas = map.getCanvasContainer();
+
+		var geojson = {
+			'type': 'FeatureCollection',
+			'features': [
+				{
+					'type': 'Feature',
+					'geometry': {
+						'type': 'Point',
+						'coordinates': [@Model.Location.Longitude, @Model.Location.Latitude],
+					}
+				}
+			]
+		};
+
+		function onMove(e) {
+			var coords = e.lngLat;
+
+			// Set a UI indicator for dragging.
+			canvas.style.cursor = 'grabbing';
+
+			// Update the Point feature in `geojson` coordinates
+			// and call setData to the source layer `point` on it.
+			geojson.features[0].geometry.coordinates = [coords.lng, coords.lat];
+			map.getSource('point').setData(geojson);
+		}
+
+		function onUp(e) {
+			var coords = e.lngLat;
+
+			document.getElementById("Model.Location_lat").value = coords.lat;
+			document.getElementById("Model.Location_lng").value = coords.lng;
+
+			canvas.style.cursor = '';
+
+			// Unbind mouse/touch events
+			map.off('mousemove', onMove);
+			map.off('touchmove', onMove);
+		}
+
+		map.on('load', function () {
+			// Add a single point to the map
+			map.addSource('point', {
+				'type': 'geojson',
+				'data': geojson
+			});
+
+			map.addLayer({
+				'id': 'point',
+				'type': 'circle',
+				'source': 'point',
+				'paint': {
+					'circle-radius': 10,
+					'circle-color': '#3887be'
+				}
+			});
+
+			// When the cursor enters a feature in the point layer, prepare for dragging.
+			map.on('mouseenter', 'point', function () {
+				map.setPaintProperty('point', 'circle-color', '#3bb2d0');
+				canvas.style.cursor = 'move';
+			});
+
+			map.on('mouseleave', 'point', function () {
+				map.setPaintProperty('point', 'circle-color', '#3887be');
+				canvas.style.cursor = '';
+			});
+
+			map.on('mousedown', 'point', function (e) {
+				// Prevent the default map drag behavior.
+				e.preventDefault();
+
+				canvas.style.cursor = 'grab';
+
+				map.on('mousemove', onMove);
+				map.once('mouseup', onUp);
+			});
+
+			map.on('touchstart', 'point', function (e) {
+				if (e.points.length !== 1) return;
+
+				// Prevent the default map drag behavior.
+				e.preventDefault();
+
+				map.on('touchmove', onMove);
+				map.once('touchend', onUp);
+			});
+		});
+	}
+</script>
+
+@{ var data = Model.Location.LocationData; }
+<div class="card">
+	<div class="card-body">
+		<h5 class="card-title">Location</h5>
+		<div id="map" style="height: 20em; width: 100%;"></div>
+		<div class="form-group">
+			<label asp-for="Location.Latitude" class="control-label"></label>
+			<input id="Model.Location_lat" asp-for="Location.Latitude" class="form-control"></input>
+			<span asp-validation-for="Location.Latitude" class="text-danger"></span>
+		</div>
+		<div class="form-group">
+			<label asp-for="Location.Longitude" class="control-label"></label>
+			<input id="Model.Location_lng" asp-for="Location.Longitude" class="form-control"></input>
+			<span asp-validation-for="Location.Longitude" class="text-danger"></span>
+		</div>
+	</div>
+</div>
 
 				<div class="form-group">
-					<input type="submit" value="Save" class="btn btn-primary" />
+					<label asp-for="VideoEmbedURL" class="control-label"></label>
+					<input  asp-for="VideoEmbedURL" class="form-control"></input>
+					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
 				</div>
-			</form>
+
+						<div class="form-group">
+							<input type="submit" value="Save" class="btn btn-primary btn-block" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="alert alert-warning" role="alert">
+				<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
+			</div>
+			<div class="card-body">
+				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+			</div>
 		</div>
 	</div>
-</div>
-
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			@{foreach (var notification in (ViewData["notifications"] as IEnumerable<Dodo.Notification>))
-			{
-				<div class="card" style="width:100%;">
-					<div class="card-body">
-						<p>	@notification.Message </p>
-						<p> @TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc) </p>
-						@if(notification.CanDelete)
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+			
+<ul class="list-group">
+	@{foreach (var notification in notifications)
+		{
+			<li class="list-group-item">
+				<div class="row">
+					<div class="col">
+						<small>
+							@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc)
+						</small>
+					</div>
+					<div class="col-auto">
+						<strong>
+							@notification.Type.ToUpperInvariant()
+						</strong>
+					</div>
+					@{ if (!string.IsNullOrEmpty(notification.Source))
 						{
-							<a href="#" class="btn btn-primary">Delete</a>
-						}
+							<div class="col-auto">
+								<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="Source: @notification.Source">
+									<span class="fas fa-comment"></span>
+								</button>
+							</div>
+						} }
+					@{ if (!string.IsNullOrEmpty(notification.Link))
+						{
+							<div class="col-auto">
+								<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="URL: @notification.Link">
+									<span class="fas fa-link"></span>
+								</button>
+							</div>
+						} }
+					<div class="col-auto">
+						<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="The visibility of this announcement is @Common.NameAttributeExtensions.GetName(notification.PermissionLevel)">
+							<span class="fas fa-eye"></span>
+						</button>
+					</div>
+					@if (notification.CanDelete)
+					{
+						<div class="col-auto">
+							<a class="btn btn-outline-danger" href="notifications/@Model.Slug/delete?notification=@notification.Guid">
+								<p class="fas fa-trash"></p>
+							</a>
+						</div>
+					}
+				</div>
+				<div style="padding:10px;">
+					<p style="margin:0;">	@notification.Message </p>
+				</div>
+			</li>
+		}}
+</ul>
+
+		</div>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+			@{
+	var adminData = Model.AdministratorData;
+	Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
+}
+@{ if (thisAdmin.Permissions.CanAddAdmin)
+	{
+		<div class="card">
+			<h5 class="card-header">Add New Administrator</h5>
+			<div class="card-body">
+				<form id="newadmin" method="post" action="@Model.Slug/addadmin">
+					<div class="form-group">
+						<input id="newAdminIdentifier" name="newAdminIdentifier" class="form-control"></input>
+						<small id="helpBlock" class="form-text text-muted">
+							This can be the username, user ID, or an email. If the holder of the email doesn't already have an account, they will be sent an invite link.
+						</small>
+					</div>
+					<input type="submit" value="Add" class="btn btn-primary btn-block" />
+				</form>
+			</div>
+		</div>
+	} }
+<div id="accordion">
+	@{
+		var canadd = thisAdmin.Permissions.CanAddAdmin;
+		var canremove = thisAdmin.Permissions.CanRemoveAdmin;
+		var counter = 0;
+		foreach (var admin in adminData.Administrators)
+		{
+			string getID(string name) { return $"{name}"; };
+			var isMe = admin.User.Guid == context.User.Guid;
+			var userVal = admin.User.GetValue();
+			var isTemp = !userVal.PersonalData.EmailConfirmed;
+			var canedit = !isMe && thisAdmin.Permissions.CanChangePermissions;
+
+			<div class="card">
+				<div class="card-header" id="heading@(counter)">
+					<div class="row">
+						<div class="col-auto">
+							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
+								@{ if (isTemp)
+									{
+										<h5 class="mb-0">@userVal.PersonalData.Email (Pending Invite)</h5>
+									}
+									else
+									{
+										<h5 class="mb-0">@@@admin.User.Slug @(isMe ? "(Me)" : "")</h5>
+									}
+								}
+
+							</button>
+						</div>
+						<div class="col" style="text-align:right;">
+							@{ if (!isMe && canremove)
+								{
+									<a class="btn btn-outline-danger" href="@Model.Slug/removeadmin?adminID=@admin.User.Guid">
+										<p class="fas fa-trash"></p>
+									</a>
+								}
+							}
+						</div>
 					</div>
 				</div>
-			}}
-		</div>
-	</div>
+				<!-- Permissions foldout -->
+				<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
+					<div class="card-body">
+						<form id="admin@(admin.User.Slug)" method="post" action="@Model.Slug/updateadmin?id=@admin.User.Guid" enctype="application/x-www-form-urlencoded">
+							<div class="card-body">
+								@{ if (thisAdmin.Permissions.CanChangePermissions && isMe)
+									{
+										<div class="alert alert-info" role="alert">
+											You can't edit your own permissions.
+										</div>
+									}
+								}
+								<div class="row">
+									<div class="col">
+										<div class="form-check">
+											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanAddAdmin" name="CanAddAdmin" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanAddAdmin")" style="">Can Add New Admins</label>
+										</div>
+										<div class="form-check">
+											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanRemoveAdmin" name="CanRemoveAdmin" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admins</label>
+										</div>
+										<div class="form-check">
+											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanChangePermissions" name="CanChangePermissions" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Admin Permissions</label>
+										</div>
+										<div class="form-check">
+											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditInfo" name="CanEditInfo" @(admin.Permissions.CanEditInfo ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Details</label>
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-check">
+											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateChildObjects" name="CanCreateChildObjects" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
+										</div>
+										<div class="form-check">
+											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDeleteChildObjects" name="CanDeleteChildObjects" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
+										</div>
+										<div class="form-check">
+											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
+											<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							@{ if (canedit)
+								{
+									<div class="card-body">
+										<input type="submit" value="Save" class="btn btn-primary btn-block" />
+									</div>
+								}
+							}
+						</form>
+					</div>
+				</div>
+			</div>
+			counter++;
+		}
+	}
 </div>
 
-<div class="row">
-	<div class="card" style="width:100%;">		
-		<div class="card-body">
-			<form asp-action="Delete">
-				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-				<a href="@Model.Slug/delete" class="btn btn-danger">Delete</a>
-			</form>
 		</div>
-	</div>
-</div>
-
-<div>
-	<a href="../../Rebellion/@Model.Slug">View Rebellion</a>
+	}
 </div>
 

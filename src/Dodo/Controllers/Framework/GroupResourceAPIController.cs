@@ -14,16 +14,34 @@ using System;
 using Microsoft.AspNetCore.Authorization;
 using Dodo;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace DodoResources
 {
-	public abstract class GroupResourceAPIController<T, TSchema> : SearchableResourceController<T, TSchema> 
+	public abstract class GroupResourceAPIController<T, TSchema> : SearchableResourceController<T, TSchema>
 		where T : GroupResource
 		where TSchema : DescribedResourceSchemaBase
 	{
-		protected GroupResourceService<T, TSchema> GroupService => 
+		protected GroupResourceService<T, TSchema> GroupService =>
 			new GroupResourceService<T, TSchema>(Context, HttpContext, AuthService);
 		protected override AuthorizationService<T, TSchema> AuthService => new GroupResourceAuthService<T, TSchema>();
+
+		[HttpPost]
+		[Route("{guid}/" + GroupResourceService<T, TSchema>.UPDATE_ADMIN)]
+		public async Task<IActionResult> UpdateAdmin([FromRoute]string guid, [FromQuery]string id,
+			[FromBody] AdministratorPermissionSet permissionSet)
+		{
+			var result = GroupService.UpdateAdmin(guid, id, permissionSet);
+			return result.ActionResult;
+		}
+
+		[HttpGet]
+		[Route("{guid}/" + GroupResourceService<T, TSchema>.REMOVE_ADMIN)]
+		public async Task<IActionResult> RemoveAdmin([FromRoute]string guid, [FromQuery]string id)
+		{
+			var result = GroupService.RemoveAdministrator(guid, id);
+			return result.ActionResult;
+		}
 
 		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.ADD_ADMIN)]
 		public IActionResult AddAdministrator(string id, [FromBody]string newAdminIdentifier)

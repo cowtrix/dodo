@@ -19,7 +19,8 @@ namespace Resources.Serializers
 			context.Reader.ReadName();
 			string slug = context.Reader.ReadString();
 			context.Reader.ReadName();
-			string type = context.Reader.ReadString();
+			var typeName = context.Reader.ReadString();
+			Type type = Type.GetType(typeName);
 			context.Reader.ReadName();
 			string name = context.Reader.ReadString();
 			context.Reader.ReadName();
@@ -42,8 +43,8 @@ namespace Resources.Serializers
 			context.Writer.WriteBinaryData(value.Guid);
 			context.Writer.WriteName(nameof(value.Slug));
 			context.Writer.WriteString(value.Slug ?? string.Empty);
-			context.Writer.WriteName(nameof(value.Type));
-			context.Writer.WriteString(value.Type ?? string.Empty);
+			context.Writer.WriteName(nameof(value.FullyQualifiedName));
+			context.Writer.WriteString(value.FullyQualifiedName ?? string.Empty);
 			context.Writer.WriteName(nameof(value.Name));
 			context.Writer.WriteString(value.Name ?? string.Empty);
 			context.Writer.WriteName(nameof(value.Location.Latitude));

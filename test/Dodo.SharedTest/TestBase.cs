@@ -42,6 +42,7 @@ namespace SharedTest
 			m_runner = MongoDbRunner.Start();
 			ConfigManager.SetValue(ResourceUtility.CONFIGKEY_MONGODBSERVERURL, m_runner.ConnectionString);
 			ResourceUtility.ClearAllManagers();
+			Dodo.Security.SessionTokenStore.Initialise();
 			Logger.OnLog += OnLog;
 		}
 
@@ -102,10 +103,23 @@ namespace SharedTest
 			{
 				obj = (T)pubRsc.Publish();
 			}
+			if (publish && obj is IAdministratedResource admin)
+			{
+				using (var rscLock = new ResourceLock(admin))
+				{
+					admin = rscLock.Value as IAdministratedResource;
+					admin.AddNewAdmin(context, GetRandomUser(out _, out _));
+					admin.AddNewAdmin(context, GetRandomUser(out _, out _));
+					admin.AddNewAdmin(context, GetRandomUser(out _, out _));
+					ResourceUtility.GetManager(admin.GetType()).Update(admin, rscLock);
+				}				
+			}
 			if (seed)
 			{
 				if (obj is Rebellion rebellion)
 				{
+					rebellion.VideoEmbedURL = "https://www.youtube.com/embed/d4QDM_Isi24";
+
 					// Add some working groups, sites
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
@@ -159,7 +173,7 @@ namespace SharedTest
 			// Verify email if flag has been set
 			if (verifyEmail)
 			{
-				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context);
+				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, user);
 				Assert.IsNotNull(verifyToken);
 				user.PersonalData.EmailConfirmed = true;
 			}

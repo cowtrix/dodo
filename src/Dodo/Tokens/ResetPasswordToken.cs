@@ -29,7 +29,8 @@ namespace Dodo.Users.Tokens
 		{
 			Key = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
 			m_notification = new Notification(Guid, "Your Account", "You've requested your password to be reset. " +
-				"Check your email and click the link there. If this wasn't you, change your password immediately.");
+				"Check your email and click the link there. If this wasn't you, change your password immediately.",
+				null, ENotificationType.Alert, EPermissionLevel.OWNER);
 #if DEBUG
 			Console.WriteLine($"Reset password action added for user {targetUser.Slug}: {Key}");
 #endif
@@ -39,6 +40,8 @@ namespace Dodo.Users.Tokens
 		{
 			return m_notification;
 		}
+
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
 	}
 
 }

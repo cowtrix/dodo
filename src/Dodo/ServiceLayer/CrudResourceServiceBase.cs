@@ -49,7 +49,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 					}
 					if (token.IsRedeemed)
 					{
-						SecurityWatcher.RegisterEvent($"Unexpected token consumption could indicate a user " +
+						SecurityWatcher.RegisterEvent(Context.User, $"Unexpected token consumption could indicate a user " +
 							"is attempting to exploit creation of multiple resources.");
 						return ResourceRequestError.BadRequest();
 					}
@@ -141,7 +141,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		{
 			return ResourceRequestError.BadRequest();
 		}
-		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
+		var request = VerifyRequest(id, EHTTPRequestType.POST, "notifications");
 		if (!request.IsSuccess)
 		{
 			return request;
@@ -156,8 +156,8 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 			{
 				return ResourceRequestError.NotFoundRequest();
 			}
-			var notificationToken = new SimpleNotificationToken(Context.User, Context.User.Slug, notification.Message, true);
-			notificationRsc.AddToken(notificationToken, notification.PermissionLevel);
+			var notificationToken = new SimpleNotificationToken(Context.User, Context.User.Slug, notification.Message, null, ENotificationType.Announcement, notification.PermissionLevel, true);
+			notificationRsc.AddToken(notificationToken);
 			ResourceManager.Update(target, resourceLock);
 		}
 		req.Result = target;
@@ -170,7 +170,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		{
 			return ResourceRequestError.BadRequest();
 		}
-		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
+		var request = VerifyRequest(id, EHTTPRequestType.POST, "notifications");
 		if (!request.IsSuccess)
 		{
 			return request;

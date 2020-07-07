@@ -24,7 +24,7 @@ namespace Dodo.Users.Tokens
 		[BsonElement]
 		private string m_typeName;
 
-		public TokenEntry(ITokenResource owner, IToken token, EPermissionLevel permissionLevel)
+		public TokenEntry(ITokenResource owner, IToken token)
 		{
 			if(token == null || owner == null)
 			{
@@ -32,7 +32,7 @@ namespace Dodo.Users.Tokens
 			}
 			Owner = owner.CreateRef();
 			Guid = token.Guid;
-			PermissionLevel = permissionLevel;
+			PermissionLevel = token.GetVisibility();
 			m_typeName = token.GetType().FullName;
 			if (!BsonClassMap.IsClassMapRegistered(token.GetType()))
 			{
