@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom'
 
 const REGISTER = "Register for XR"
 
-const passwordRegex = (password) => /[-!$%^&*()_+|~=`{}\[\]:";'<>?,.\/]/.test(password)
+const passwordRegex = (password) => /[!@#$%^&*()_+=\[{\]};:<>|./?,-£]/.test(password)
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
 const notEmptyAndLengthBelow = (minLength, str) => str && str.length < minLength
 
