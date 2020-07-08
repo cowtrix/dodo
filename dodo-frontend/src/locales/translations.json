@@ -18,5 +18,25 @@
 			"footer_menu_link_text_donate": "Donate",
 			"footer_menu_link_text_join": "Join"
 		}
+	},
+	"es": {
+		"ui": {
+			"header_logo_alt": "ES Extinction Rebellion logo",
+			"header_select_placeholder": "ES Search...",
+			"header_select_no_results": "ES No results",
+			"header_select_no_results__for": "ES No results for {{inputValue}}",
+			"header_sign_in_text": "ES Login / Register",
+			"location_search_copy": "ES SEARCH IN MY LOCATION",
+			"rebellions_header_copy": "ES {{count}} EVENTS HAPPENING ACROSS THE WORLD",
+			"copyright_info_title": "ES Copyright info",
+			"copyright_info_copy": "ES Extinction Rebellion (XR) is a do-it-together movement. All our design and artwork can be used non-commercially for the purpose of planet saving. This does not mean creating merchandise for fundraising or sending XR a percentage of your sales. We do not endorse or create any merchandise and we will pursue and prosecute anyone who does. The Extinction Symbol was designed in 2011 by street artist ESP, who loans XR usage on the same basis: www.extinctionsymbol.info.",
+			"social_title": "ES Social",
+			"social_contact_copy": "ES Contact the app team",
+			"footer_menu_links_title": "ES Around XR",
+			"footer_menu_link_text_xr_home": "ES Extinction Rebellion Home",
+			"footer_menu_link_text_climate_emergency": "ES The Climate Emergency",
+			"footer_menu_link_text_donate": "ES Donate",
+			"footer_menu_link_text_join": "ES Join"
+		}
 	}
 }
