@@ -170,6 +170,11 @@ namespace Common.Extensions
 		public const int MAX_DESCRIPTION_LENGTH = 2048;
 		public override bool Verify(object value, out string validationError)
 		{
+			if(value == null)
+			{
+				validationError = null;
+				return true;
+			}	
 			var str = value as string;
 			if(str.Length > MAX_DESCRIPTION_LENGTH)
 			{
