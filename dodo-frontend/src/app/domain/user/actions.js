@@ -47,4 +47,4 @@ export const getLoggedInUser = (dispatch) =>
 export const updateDetails = (dispatch, user, details) =>
 	apiAction(dispatch, UPDATE_DETAILS, AUTH_URL + user.username, (success) => dispatch({
 		type: LOGIN + SUCCESS, payload: success
-	}), false, 'patch', details)
+	}), false, 'PATCH', details)
