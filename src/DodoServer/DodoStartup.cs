@@ -87,7 +87,8 @@ namespace DodoServer
 			{
 				config.WithOrigins("http://localhost:3000", "https://localhost:3000").AllowCredentials() // development only
 				.AllowAnyMethod()
-				.AllowAnyHeader();
+				.AllowAnyHeader()
+				.SetIsOriginAllowedToAllowWildcardSubdomains();
 			});
 
 			app.UseSpaStaticFiles();
