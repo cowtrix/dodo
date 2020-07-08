@@ -10,6 +10,7 @@ using Dodo.Users;
 using Dodo.Users.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Resources;
 
 namespace Dodo.Controllers.Edit
@@ -214,6 +215,12 @@ namespace Dodo.Controllers.Edit
 				return result.ActionResult;
 			}
 			return RedirectToAction(nameof(Edit), new { id = id });
+		}
+
+		public override void OnActionExecuting(ActionExecutingContext actionContext)
+		{
+			base.OnActionExecuting(actionContext);
+			ViewData["auth"] = AuthService;
 		}
 	}
 }

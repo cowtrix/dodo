@@ -243,16 +243,6 @@ $(function () {
 				</form>
 			</div>
 		</div>
-		<div class="card">
-			<div class="card-body">
-				<div class="alert alert-warning" role="alert">
-					<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
-				</div>
-				<div class="card-body">
-					<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
-				</div>
-			</div>
-		</div>
 	</div>
 	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{
@@ -264,58 +254,69 @@ $(function () {
 			<div class="form-group">
 				<textarea id="Message" name="Message" class="form-control" style="height:10em;"></textarea>
 			</div>
+			<small id="helpBlock" class="form-text text-muted" style="text-align:left;">
+				Announcements are messages that will be displayed on the public page and be visible for all users. You can use them to give short updates or messages.
+			</small>
 			<input type="submit" value="Post" class="btn btn-primary" style="width:100px;" />
 		</form>
 	</div>
 </div>
 
-<ul class="list-group">
-	@{foreach (var notification in notifications)
-		{
-			<li class="list-group-item">
-				<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
-					<div class="row">
-						<div class="col">
-							<small>
-								@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
-							</small>
-						</div>
-						<div class="col-auto">
-
-							<strong>
-								@notification.Type.ToUpperInvariant()
-							</strong>
-							@{ if (!string.IsNullOrEmpty(notification.Source))
-								{
-									<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="Source: @notification.Source">
-										<span class="fas fa-comment"></span>
+<div class="card">
+	<h5 class="card-header">Current Notifications</h5>
+	<div class="card-body">
+		<ul class="list-group">
+			@{foreach (var notification in notifications)
+				{
+					<li class="list-group-item">
+						<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+							<div class="row">
+								<div class="col" style="margin-left:10px;">
+									<div class="row">
+										<small>
+											@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
+										</small>
+									</div>
+									<div class="row">
+										<strong>
+											@notification.Type.ToUpperInvariant()
+										</strong>
+									</div>
+								</div>
+								<div class="col-auto">
+									@{ if (!string.IsNullOrEmpty(notification.Source))
+										{
+											<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="Source: @notification.Source">
+												<span class="fas fa-comment"></span>
+											</button>
+										} }
+									@{ if (!string.IsNullOrEmpty(notification.Link))
+										{
+											<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="URL: @notification.Link">
+												<span class="fas fa-link"></span>
+											</button>
+										} }
+									<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="The visibility of this announcement is @Common.NameAttributeExtensions.GetName(notification.PermissionLevel)">
+										<span class="fas fa-eye"></span>
 									</button>
-								} }
-							@{ if (!string.IsNullOrEmpty(notification.Link))
-								{
-									<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="URL: @notification.Link">
-										<span class="fas fa-link"></span>
-									</button>
-								} }
-							<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="The visibility of this announcement is @Common.NameAttributeExtensions.GetName(notification.PermissionLevel)">
-								<span class="fas fa-eye"></span>
-							</button>
-							@if (notification.CanDelete)
-							{
-								<a class="btn btn-outline-danger" href="notifications/@Model.Slug/delete?notification=@notification.Guid">
-									<p class="fas fa-trash"></p>
-								</a>
-							}
+									@if (notification.CanDelete)
+									{
+										<a class="btn btn-outline-danger" href="notifications/@Model.Slug/delete?notification=@notification.Guid">
+											<p class="fas fa-trash"></p>
+										</a>
+									}
 
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
-				<div style="padding:10px;">
-					<p style="margin:0;"> @Html.Raw(Common.Extensions.StringExtensions.TextToHtml(notification.Message)) </p>
-				</div>
-			</li>
-		}}
-</ul>
+						<div style="padding:10px;">
+							<p style="margin:0;"> @Html.Raw(Common.Extensions.StringExtensions.TextToHtml(notification.Message)) </p>
+						</div>
+					</li>
+				}}
+		</ul>
+	</div>
+</div>
 
 		</div>
 	}
@@ -325,11 +326,13 @@ $(function () {
 			@{
 	var adminData = Model.AdministratorData;
 	Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
+	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<Dodo.Rebellions.Rebellion, Dodo.Rebellions.RebellionSchema>);
+	var canDelete = authManager.IsAuthorised(context, Model.Slug, Resources.EHTTPRequestType.DELETE).IsSuccess;
 }
 @{ if (thisAdmin.Permissions.CanAddAdmin)
 	{
 		<div class="card">
-			<h5 class="card-header">Add New Administrator</h5>
+			<h5 class="card-header">Current Administrators</h5>
 			<div class="card-body">
 				<form id="newadmin" method="post" action="@Model.Slug/addadmin">
 					<div class="form-group">
@@ -343,109 +346,129 @@ $(function () {
 			</div>
 		</div>
 	} }
-<div id="accordion">
-	@{
-		var canadd = thisAdmin.Permissions.CanAddAdmin;
-		var canremove = thisAdmin.Permissions.CanRemoveAdmin;
-		var counter = 0;
-		foreach (var admin in adminData.Administrators)
-		{
-			string getID(string name) { return $"{name}"; };
-			var isMe = admin.User.Guid == context.User.Guid;
-			var userVal = admin.User.GetValue();
-			var isTemp = !userVal.PersonalData.EmailConfirmed;
-			var canedit = !isMe && thisAdmin.Permissions.CanChangePermissions;
+<div class="card">
+	<h5 class="card-header">Add New Administrator</h5>
+	<div class="card-body">
+		<div id="accordion">
+			@{
+				var canadd = thisAdmin.Permissions.CanAddAdmin;
+				var canremove = thisAdmin.Permissions.CanRemoveAdmin;
+				var counter = 0;
+				foreach (var admin in adminData.Administrators)
+				{
+					string getID(string name) { return $"{name}"; };
+					var isMe = admin.User.Guid == context.User.Guid;
+					var userVal = admin.User.GetValue();
+					var isTemp = !userVal.PersonalData.EmailConfirmed;
+					var canedit = !isMe && thisAdmin.Permissions.CanChangePermissions;
 
-			<div class="card">
-				<div class="card-header" id="heading@(counter)">
-					<div class="row">
-						<div class="col-auto">
-							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
-								@{ if (isTemp)
-									{
-										<h5 class="mb-0">@userVal.PersonalData.Email (Pending Invite)</h5>
-									}
-									else
-									{
-										<h5 class="mb-0">@@@admin.User.Slug @(isMe ? "(Me)" : "")</h5>
-									}
-								}
+					<div class="card">
+						<div class="card-header" id="heading@(counter)">
+							<div class="row">
+								<div class="col-auto">
+									<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
+										@{ if (isTemp)
+											{
+												<h5 class="mb-0">@userVal.PersonalData.Email (Pending Invite)</h5>
+											}
+											else
+											{
+												<h5 class="mb-0">@@@admin.User.Slug @(isMe ? "(Me)" : "")</h5>
+											}
+										}
 
-							</button>
-						</div>
-						<div class="col" style="text-align:right;">
-							@{ if (!isMe && canremove)
-								{
-									<a class="btn btn-outline-danger" href="@Model.Slug/removeadmin?adminID=@admin.User.Guid">
-										<p class="fas fa-trash"></p>
-									</a>
-								}
-							}
-						</div>
-					</div>
-				</div>
-				<!-- Permissions foldout -->
-				<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
-					<div class="card-body">
-						<form id="admin@(admin.User.Slug)" method="post" action="@Model.Slug/updateadmin?id=@admin.User.Guid" enctype="application/x-www-form-urlencoded">
-							<div class="card-body">
-								@{ if (thisAdmin.Permissions.CanChangePermissions && isMe)
-									{
-										<div class="alert alert-info" role="alert">
-											You can't edit your own permissions.
-										</div>
+									</button>
+								</div>
+								<div class="col" style="text-align:right;">
+									@{ if (!isMe && canremove)
+										{
+											<a class="btn btn-outline-danger" href="@Model.Slug/removeadmin?adminID=@admin.User.Guid">
+												<p class="fas fa-trash"></p>
+											</a>
+										}
 									}
-								}
-								<div class="row">
-									<div class="col">
-										<div class="form-check">
-											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanAddAdmin" name="CanAddAdmin" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
-											<label class="form-check-label" for="@getID("CanAddAdmin")" style="">Can Add New Admins</label>
-										</div>
-										<div class="form-check">
-											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanRemoveAdmin" name="CanRemoveAdmin" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
-											<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admins</label>
-										</div>
-										<div class="form-check">
-											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanChangePermissions" name="CanChangePermissions" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
-											<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Admin Permissions</label>
-										</div>
-										<div class="form-check">
-											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditInfo" name="CanEditInfo" @(admin.Permissions.CanEditInfo ? "checked" : "")>
-											<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Details</label>
-										</div>
-									</div>
-									<div class="col">
-										<div class="form-check">
-											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateChildObjects" name="CanCreateChildObjects" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
-											<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
-										</div>
-										<div class="form-check">
-											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDeleteChildObjects" name="CanDeleteChildObjects" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
-											<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
-										</div>
-										<div class="form-check">
-											<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
-											<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
-										</div>
-									</div>
 								</div>
 							</div>
-							@{ if (canedit)
-								{
+						</div>
+						<!-- Permissions foldout -->
+						<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
+							<div class="card-body">
+								<form id="admin@(admin.User.Slug)" method="post" action="@Model.Slug/updateadmin?id=@admin.User.Guid" enctype="application/x-www-form-urlencoded">
 									<div class="card-body">
-										<input type="submit" value="Save" class="btn btn-primary btn-block" />
+										@{ if (thisAdmin.Permissions.CanChangePermissions && isMe)
+											{
+												<div class="alert alert-info" role="alert">
+													You can't edit your own permissions.
+												</div>
+											}
+										}
+										<div class="row">
+											<div class="col">
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanAddAdmin" name="CanAddAdmin" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanAddAdmin")" style="">Can Add New Admins</label>
+												</div>
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanRemoveAdmin" name="CanRemoveAdmin" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admins</label>
+												</div>
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanChangePermissions" name="CanChangePermissions" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Admin Permissions</label>
+												</div>
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditInfo" name="CanEditInfo" @(admin.Permissions.CanEditInfo ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Details</label>
+												</div>
+											</div>
+											<div class="col">
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateChildObjects" name="CanCreateChildObjects" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
+												</div>
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDeleteChildObjects" name="CanDeleteChildObjects" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
+												</div>
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
+												</div>
+											</div>
+										</div>
 									</div>
-								}
-							}
-						</form>
+									@{ if (canedit)
+										{
+											<div class="card-body">
+												<input type="submit" value="Save" class="btn btn-primary btn-block" />
+											</div>
+										}
+									}
+								</form>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			counter++;
-		}
-	}
+					counter++;
+				}
+			}
+		</div>
+	</div>
 </div>
+@{ if (canDelete)
+	{
+	<div class="card">
+		<h5 class="card-header">Delete This Object</h5>
+		<div class="card-body">
+			<div class="alert alert-warning" role="alert">
+				<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
+			</div>
+			<div class="card-body">
+				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+			</div>
+		</div>
+	</div>
+	}
+}
 
 		</div>
 	}

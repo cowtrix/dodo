@@ -110,6 +110,10 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 
 	public async Task<IRequestResult> RequestPasswordReset(string email)
 	{
+		if(string.IsNullOrEmpty(email))
+		{
+			return ResourceRequestError.BadRequest("Email can't be empty");
+		}
 		if (Context.User != null && Context.User.PersonalData.Email != email)
 		{
 			return ResourceRequestError.BadRequest("Mismatching emails");

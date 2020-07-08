@@ -330,16 +330,6 @@ $(function () {
 				</form>
 			</div>
 		</div>
-		<div class="card">
-			<div class="card-body">
-				<div class="alert alert-warning" role="alert">
-					<b>Do not</b> use these settings unless you know what you are doing. Contact your Systems Administrator if you are unsure.
-				</div>
-				<div class="card-body">
-					<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Event/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
-				</div>
-			</div>
-		</div>
 	</div>
 	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{

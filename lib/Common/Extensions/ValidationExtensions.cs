@@ -271,7 +271,7 @@ namespace Common.Extensions
 			//var hasNumber = new Regex(@"[0-9]+");
 			//var hasUpperChar = new Regex(@"[A-Z]+");
 			//var hasLowerChar = new Regex(@"[a-z]+");
-			var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
+			var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,\-£]");
 
 			/*if (!hasLowerChar.IsMatch(input))
 			{

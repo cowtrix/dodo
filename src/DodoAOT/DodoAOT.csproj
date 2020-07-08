@@ -36,9 +36,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
-    <None Update="Templates\EditViewNavbar.template.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Templates\LocationPicker.template.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
