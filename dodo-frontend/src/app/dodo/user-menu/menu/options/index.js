@@ -1,1 +1,1 @@
-export { Options } from './options'
+export { OptionsConnected as Options } from './container'

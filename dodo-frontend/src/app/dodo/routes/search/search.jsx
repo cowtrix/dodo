@@ -47,7 +47,7 @@ export const Search = (
 								setCenterMap={setCenterMap}
 							/>
 						</div>
-						<List resources={searchResults} resourceTypes={resourceTypes}/>
+						<List resources={searchResults} resourceTypes={resourceTypes} isMasterList/>
 					</Fragment>
 				}
 			/>
