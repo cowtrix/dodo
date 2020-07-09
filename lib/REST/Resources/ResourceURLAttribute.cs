@@ -3,7 +3,7 @@ using System;
 
 namespace Common.Extensions
 {
-	public class ResourceURLAttribute : VerifyMemberBase
+	public class ResourceURLAttribute : CustomValidator
 	{
 		public override bool Verify(object value, out string validationError)
 		{

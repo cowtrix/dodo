@@ -7,6 +7,11 @@ using System.Text.RegularExpressions;
 
 namespace Common.Extensions
 {
+	public interface IVerifiableMember
+	{
+		bool Verify(object objectToVerify, out string error);
+	}
+
 	/// <summary>
 	/// Indicates that a type is able to verify and validate its state
 	/// </summary>
@@ -14,39 +19,6 @@ namespace Common.Extensions
 	{
 		bool CanVerify();
 		bool VerifyExplicit(out string error);
-	}
-
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-	public abstract class VerifyMemberBase : Attribute
-	{
-		public abstract bool Verify(object value, out string validationError);
-	}
-
-	public class EmailAttribute : VerifyMemberBase
-	{
-		public override bool Verify(object value, out string validationError)
-		{
-			validationError = "Invalid email";
-			return ValidationExtensions.EmailIsValid(value as string);
-		}
-	}
-
-	public class VerifyObjectAttribute : VerifyMemberBase
-	{
-		public override bool Verify(object value, out string validationError)
-		{
-			if(value == null)
-			{
-				validationError = null;
-				return true;
-			}
-			var verifiable = value as IVerifiable;
-			if(verifiable != null && !verifiable.VerifyExplicit(out validationError))
-			{
-				return false;
-			}
-			return verifiable.Verify(out validationError);
-		}
 	}
 
 	public class MemberVerificationException : Exception
@@ -78,111 +50,21 @@ namespace Common.Extensions
 			foreach(var m in members)
 			{
 				var memberName = m.Name;
-				var attr = m.GetCustomAttribute<VerifyMemberBase>();
-				if(attr == null)
+				var attributes = m.GetCustomAttributes(true).OfType<IVerifiableMember>();
+				foreach (var attr in attributes)
 				{
-					continue;
-				}
-				object value = null;
-				if(m is FieldInfo)
-				{
-					value = (m as FieldInfo).GetValue(objectToVerify);
-				}
-				else if(m is PropertyInfo)
-				{
-					value = (m as PropertyInfo).GetValue(objectToVerify);
-				}
-				else
-				{
-					continue;
-				}
-				if(!attr.Verify(value, out error))
-				{
-					return false;
+					if (attr == null)
+					{
+						continue;
+					}
+					var value = m.GetValue(objectToVerify);
+					if (!attr.Verify(value, out error))
+					{
+						return false;
+					}
 				}
 			}
 			return objectToVerify.VerifyExplicit(out error);
-		}
-	}
-
-	public class SlugAttribute : VerifyMemberBase
-	{
-		public override bool Verify(object value, out string validationError)
-		{
-			var str = value as string;
-			if (!ValidationExtensions.SlugIsValid(str, out validationError))
-			{
-				return false;
-			}
-			return true;
-		}
-	}
-
-	public class PasswordAttribute : VerifyMemberBase
-	{
-		public override bool Verify(object value, out string validationError)
-		{
-			var str = value as string;
-			if (!ValidationExtensions.IsStrongPassword(str, out validationError))
-			{
-				return false;
-			}
-			return true;
-		}
-	}
-
-	public class RangeAttribute : VerifyMemberBase
-	{
-		public readonly double Min;
-		public readonly double Max;
-		public RangeAttribute(double min, double max)
-		{
-			Min = min;
-			Max = max;
-		}
-
-		public override bool Verify(object value, out string validationError)
-		{
-			if(value is double doubleVal)
-			{
-				validationError = $"Value {doubleVal} was not within {Min}-{Max}";
-				return doubleVal >= Min && doubleVal <= Max;
-			}
-			throw new Exception($"Type not supported: {value?.GetType()}");
-		}
-	}
-
-	public class UserFriendlyNameAttribute : VerifyMemberBase
-	{
-		public override bool Verify(object value, out string validationError)
-		{
-			var str = value as string;
-			if (!ValidationExtensions.NameIsValid(str, out validationError))
-			{
-				return false;
-			}
-			return true;
-		}
-	}
-
-	public class DescriptionAttribute : VerifyMemberBase
-	{
-		public const int MAX_DESCRIPTION_LENGTH = 2048;
-		public override bool Verify(object value, out string validationError)
-		{
-			if(value == null)
-			{
-				validationError = null;
-				return true;
-			}	
-			var str = value as string;
-			if(str.Length > MAX_DESCRIPTION_LENGTH)
-			{
-				validationError = $"Text was too long at {str.Length} characters - maximum {MAX_DESCRIPTION_LENGTH} characters";
-				return false;
-			}
-			validationError = null;
-			return true;
 		}
 	}
 
