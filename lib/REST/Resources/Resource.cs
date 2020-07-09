@@ -75,7 +75,7 @@ namespace Resources
 		[UserFriendlyName]
 		public string Name { get; set; }
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority:1)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN, priority:1)]
 		[JsonProperty]
 		[Slug]
 		public string Slug { get; set; }
