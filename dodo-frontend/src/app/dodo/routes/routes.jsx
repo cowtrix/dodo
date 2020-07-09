@@ -8,7 +8,7 @@ import { Login, LOGIN_ROUTE } from "./login"
 import { NotFound } from "./error"
 import { ResetPassword, RESET_PASSWORD_ROUTE } from './reset-password'
 import { Register, REGISTER_ROUTE } from './register'
-import { MyRebellion, MY_REBELLION_ROUTE } from './my-rebellion'
+import { YourProfile, YOUR_PROFILE_ROUTE } from './your-profile'
 
 export const Routes = () => (
 	<Fragment>
@@ -18,7 +18,7 @@ export const Routes = () => (
 			<Route path={LOGIN_ROUTE} component={Login} exact />
 			<Route path={RESET_PASSWORD_ROUTE} component={ResetPassword} exact />
 			<Route path={REGISTER_ROUTE} component={Register} exact />
-			<Route path={MY_REBELLION_ROUTE} component={MyRebellion} />
+			<Route path={YOUR_PROFILE_ROUTE} component={YourProfile} />
 			<Route path="*" component={NotFound} />
 		</Switch>
 	</Fragment>

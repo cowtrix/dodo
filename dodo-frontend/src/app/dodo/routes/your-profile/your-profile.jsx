@@ -1,12 +1,14 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, EditableInput, Submit } from 'app/components/forms'
+import { UpdateEmail } from './update-email'
+
 import { useHistory } from 'react-router-dom'
 
-const MY_REBELLION = "My rebellion"
+const MY_REBELLION = "Your profile"
 const UPDATE_DETAILS = "Update my details"
 
-export const MyRebellion = ({ currentUsername, currentName, currentEmail, fetchingUser, updateDetails }) => {
+export const YourProfile = ({ currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid }) => {
 	// const history = useHistory()
 
 	// if (!currentUsername) {
@@ -43,16 +45,10 @@ export const MyRebellion = ({ currentUsername, currentName, currentEmail, fetchi
 						value={name}
 						setValue={setName}
 					/>
-					<EditableInput
-						name="Email"
-						id="email"
-						type="text"
-						value={email}
-						setValue={setEmail}
-					/>
+					<UpdateEmail email={email} setEmail={setEmail} isConfirmed={isConfirmed} />
 					<Submit
 						value={UPDATE_DETAILS}
-						submit={updateDetails(username, name, email)}
+						submit={updateDetails(username, name, email, guid)}
 					/>
 				</Fragment>
 			}
@@ -61,6 +57,6 @@ export const MyRebellion = ({ currentUsername, currentName, currentEmail, fetchi
 }
 
 
-MyRebellion.propTypes = {
+YourProfile.propTypes = {
 	currentUsername: PropTypes.string
 }

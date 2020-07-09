@@ -44,7 +44,7 @@ export const registerUser = (dispatch, userDetails) =>
 export const getLoggedInUser = (dispatch) =>
 	apiAction(dispatch, GET_LOGGED_IN_USER, AUTH_URL)
 
-export const updateDetails = (dispatch, user, details) =>
-	apiAction(dispatch, UPDATE_DETAILS, AUTH_URL + user.username, (success) => dispatch({
+export const updateDetails = (dispatch, guid, details) =>
+	apiAction(dispatch, UPDATE_DETAILS, AUTH_URL + guid, (success) => dispatch({
 		type: LOGIN + SUCCESS, payload: success
 	}), false, 'PATCH', details)

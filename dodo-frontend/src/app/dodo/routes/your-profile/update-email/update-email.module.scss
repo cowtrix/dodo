@@ -1,0 +1,11 @@
+@import "~app/styles/styles";
+
+.confirmed {
+	background-color: $warning-yellow
+}
+
+.warning {
+	margin-bottom: spacing(3);
+	font-size: 0.8rem;
+	opacity: 0.5;
+}

@@ -1,1 +1,0 @@
-export const MY_REBELLION_ROUTE = '/my-rebellion'
