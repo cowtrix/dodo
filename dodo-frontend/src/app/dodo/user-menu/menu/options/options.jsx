@@ -8,10 +8,10 @@ import { YOUR_PROFILE_ROUTE } from '../../../routes/your-profile'
 export const Options = ({}) =>
 	<ul className={styles.options}>
 		<li>
-			<Link to={YOUR_PROFILE_ROUTE}>My Rebellion</Link>
+			<Link to="">My Rebellion</Link>
 		</li>
 		<li>
-			<Link to="">Edit Profile</Link>
+			<Link to={YOUR_PROFILE_ROUTE}>Edit Profile</Link>
 		</li>
 		<li>
 			<Link to="">Settings</Link>

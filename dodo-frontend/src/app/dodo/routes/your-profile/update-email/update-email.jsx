@@ -5,7 +5,7 @@ import styles from './update-email.module.scss'
 
 export const EMAIL_WARNING = "Your email has not been verified, which will limit what you can do. Resend Verification Email"
 
-export const UpdateEmail = ({ email, setEmail, isConfirmed }) =>
+export const UpdateEmail = ({ email, setEmail, isConfirmed = true }) =>
 	<div className={!isConfirmed ? styles.confirmed : ''}>
 		<EditableInput
 			name="Email"
