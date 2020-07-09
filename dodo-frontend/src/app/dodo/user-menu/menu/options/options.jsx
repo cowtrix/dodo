@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 import { YOUR_PROFILE_ROUTE } from '../../../routes/your-profile'
 
-export const Options = ({}) =>
+export const Options = ({ logout }) =>
 	<ul className={styles.options}>
 		<li>
 			<Link to="">My Rebellion</Link>
@@ -17,10 +17,10 @@ export const Options = ({}) =>
 			<Link to="">Settings</Link>
 		</li>
 		<li>
-			<Link to="">Logout</Link>
+			<Link onClick={() => logout()}>Logout</Link>
 		</li>
 	</ul>
 
 Options.propTypes = {
-
+	logout: PropTypes.func,
 }

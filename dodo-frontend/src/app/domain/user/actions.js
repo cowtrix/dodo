@@ -1,7 +1,7 @@
 import { postLogin } from '../services'
-import { LOGIN, RESET_PASSWORD, REGISTER_USER, GET_LOGGED_IN_USER, UPDATE_DETAILS } from './action-types'
+import { LOGIN, RESET_PASSWORD, REGISTER_USER, GET_LOGGED_IN_USER, UPDATE_DETAILS, LOGOUT } from './action-types'
 import { apiAction } from '../factories'
-import { RESET_PASSWORD as RESET_PASSWORD_URL, REGISTER_USER as REGISTER_USER_URL, AUTH_URL } from '../urls'
+import { RESET_PASSWORD as RESET_PASSWORD_URL, REGISTER_USER as REGISTER_USER_URL, AUTH_URL, LOGOUT_URL } from '../urls'
 
 
 import { REQUEST, SUCCESS, FAILURE } from '../constants'
@@ -48,3 +48,13 @@ export const updateDetails = (dispatch, guid, details) =>
 	apiAction(dispatch, UPDATE_DETAILS, AUTH_URL + guid, (success) => dispatch({
 		type: LOGIN + SUCCESS, payload: success
 	}), false, 'PATCH', details)
+
+export const logUserOut = (dispatch) =>
+	apiAction(dispatch, LOGOUT, LOGOUT_URL, refreshPage)
+
+const refreshPage = (logoutSuccess) => {
+	if(logoutSuccess) {
+		window.location.logout()
+		return false
+	}
+}

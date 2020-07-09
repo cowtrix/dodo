@@ -2,23 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/list/list/list.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/list/list/list.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/list/list/list.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/list/list/list.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/resources/sign-up-button/sign-up-button.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/resources/sign-up-button/sign-up-button.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/resource/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/menu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/menu.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/resources/action-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/resources/action-types.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/resources/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/resources/actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/urls.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/domain/user/action-types.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/user/action-types.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/options.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/options.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/domain/user/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/domain/user/actions.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -86,7 +72,7 @@
           <entry key="json" value="520" />
           <entry key="jsx" value="37304" />
           <entry key="scss" value="10023" />
-          <entry key="txt" value="2956" />
+          <entry key="txt" value="2984" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -96,7 +82,7 @@
           <entry key="JSON" value="520" />
           <entry key="JSX Harmony" value="37304" />
           <entry key="JavaScript" value="20634" />
-          <entry key="PLAIN_TEXT" value="2990" />
+          <entry key="PLAIN_TEXT" value="3018" />
           <entry key="SCSS" value="10023" />
         </counts>
       </usages-collector>
@@ -148,7 +134,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/container.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="135">
@@ -193,7 +179,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/app/domain/urls.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
@@ -384,16 +370,6 @@
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="dodo" type="462c0819:PsiDirectoryNode" />
-              <item name="user-menu" type="462c0819:PsiDirectoryNode" />
-              <item name="menu" type="462c0819:PsiDirectoryNode" />
-              <item name="options" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="domain" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -520,14 +496,7 @@
       <workItem from="1588239105601" duration="11187000" />
       <workItem from="1589290510770" duration="19807000" />
       <workItem from="1592554001599" duration="24818000" />
-      <workItem from="1594289628126" duration="8294000" />
-    </task>
-    <task id="LOCAL-00032" summary="fix map marker problem">
-      <created>1588264382350</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1588264382350</updated>
+      <workItem from="1594289628126" duration="8680000" />
     </task>
     <task id="LOCAL-00033" summary="fix map marker problem">
       <created>1588264734393</created>
@@ -865,7 +834,14 @@
       <option name="project" value="LOCAL" />
       <updated>1594301118267</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="addded beginnings of logout">
+      <created>1594304371376</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1594304371376</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -889,11 +865,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="337897000" />
+    <option name="totallyTimeSpent" value="338283000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19010006" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -924,7 +899,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="renamed events to dialog&#10;implemented new styles" />
     <MESSAGE value="Added center map to search page" />
     <MESSAGE value="added video component" />
     <MESSAGE value="added parent link" />
@@ -949,7 +923,8 @@
     <MESSAGE value="created single source of truth for routes" />
     <MESSAGE value="changed my rebellion to your profile&#10;added email check" />
     <MESSAGE value="automated menu close" />
-    <option name="LAST_COMMIT_MESSAGE" value="automated menu close" />
+    <MESSAGE value="addded beginnings of logout" />
+    <option name="LAST_COMMIT_MESSAGE" value="addded beginnings of logout" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1287,13 +1262,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/urls.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="30" selection-start-line="14" selection-start-column="30" selection-end-line="14" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/requests-reducer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1367,6 +1335,13 @@
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/urls.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="30" selection-start-line="14" selection-start-column="30" selection-end-line="14" selection-end-column="30" />
         </state>
       </provider>
     </entry>
