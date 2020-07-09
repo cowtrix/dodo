@@ -13,15 +13,18 @@ namespace Dodo.ViewModels
 		public System.Guid Guid { get; set; }
 		[DisplayName("Name")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[Resources.UserFriendlyNameAttribute()]
 		public string Name { get; set; }
 		[DisplayName("Slug")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[Resources.SlugAttribute()]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public uint Revision { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[Resources.DescriptionAttribute()]
 		public string PublicDescription { get; set; }
 		public class AdministrationDataViewModel
 		{

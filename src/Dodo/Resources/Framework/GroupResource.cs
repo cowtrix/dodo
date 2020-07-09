@@ -33,7 +33,7 @@ namespace Dodo
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Name("Public Description")]
-		[Common.Extensions.Description]
+		[Resources.Description]
 		public string PublicDescription { get; set; }
 
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]

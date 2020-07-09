@@ -386,10 +386,13 @@ namespace Resources
 					decryptable.SetValue(valueToSet, permissionLevel, requester, passphrase);
 					valueToSet = decryptable;
 				}
-				var verifyAttr = targetMember.GetCustomAttribute<VerifyMemberBase>();
-				if (verifyAttr != null && !verifyAttr.Verify(valueToSet, out error))
+				var verifyAttributes = targetMember.GetCustomAttributes().OfType<IVerifiableMember>();
+				foreach(var verifyAttr in verifyAttributes)
 				{
-					throw new MemberVerificationException(error);
+					if (verifyAttr != null && !verifyAttr.Verify(valueToSet, out error))
+					{
+						throw new MemberVerificationException(error);
+					}
 				}
 				targetMember.SetValue(targetObject, valueToSet);
 			}

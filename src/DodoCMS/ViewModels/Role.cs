@@ -13,9 +13,11 @@ namespace Dodo.ViewModels
 		public System.Guid Guid { get; set; }
 		[DisplayName("Name")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[Resources.UserFriendlyNameAttribute()]
 		public string Name { get; set; }
 		[DisplayName("Slug")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[Resources.SlugAttribute()]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
@@ -25,9 +27,11 @@ namespace Dodo.ViewModels
 		public Resources.ResourceReference<Dodo.GroupResource> Parent { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[Resources.DescriptionAttribute()]
 		public string PublicDescription { get; set; }
 		[DisplayName("Applicant Question")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[Resources.DescriptionAttribute()]
 		public string QuestionString { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]

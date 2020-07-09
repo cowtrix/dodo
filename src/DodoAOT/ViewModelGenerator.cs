@@ -59,9 +59,11 @@ namespace DodoAOT
 				}
 				yield return new string('\t', indentLevel) + $"[DisplayName(\"{member.GetName()}\")]";
 				yield return new string('\t', indentLevel) + $"[View({nameof(EPermissionLevel)}.{attr.ViewPermission}, {nameof(EPermissionLevel)}.{attr.EditPermission})]";
-				if(member.GetCustomAttribute<EmailAttribute>() != null)
+				var attributes = member.GetCustomAttributesData().Where(ca => typeof(ValidationAttribute).IsAssignableFrom(ca.AttributeType));
+				foreach(var vattr in attributes)
 				{
-					yield return new string('\t', indentLevel) + $"[{typeof(EmailAddressAttribute).Namespace}.{typeof(EmailAddressAttribute).Name}]";
+					var constructor = string.Join(", ", vattr.ConstructorArguments.Select(ca => $"{ca.ArgumentType.Namespace}.{ca.ArgumentType.Name} {ca.Value}"));
+					yield return new string('\t', indentLevel) + $"[{vattr.AttributeType.Namespace}.{vattr.AttributeType.Name}({constructor})]";
 				}
 				yield return new string('\t', indentLevel) + $"public {typeName} {memberName} {{ get; set; }}";
 			}

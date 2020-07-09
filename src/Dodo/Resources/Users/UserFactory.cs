@@ -4,6 +4,7 @@ using Dodo.Users.Tokens;
 using Resources;
 using Resources.Serializers;
 using System;
+using System.ComponentModel;
 
 namespace Dodo.Users
 {
@@ -14,6 +15,7 @@ namespace Dodo.Users
 		[Slug]
 		public string Username { get; set; }
 		[Password]
+		[PasswordPropertyText]
 		public string Password { get; set; }
 		[Email]
 		public string Email { get; set; }

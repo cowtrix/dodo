@@ -6,7 +6,7 @@ namespace Dodo
 	public abstract class DescribedResourceSchemaBase : ResourceSchemaBase
 	{
 		[View(EPermissionLevel.USER, customDrawer: "markdown")]
-		[Common.Extensions.Description]
+		[Resources.Description]
 		[DisplayName("Public Description")]
 		public string PublicDescription { get; set; }
 

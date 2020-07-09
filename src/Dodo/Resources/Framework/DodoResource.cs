@@ -23,7 +23,7 @@ namespace Dodo
 		bool IsCreator(AccessContext context);
 	}
 
-	public class NotNulResourceAttribute : VerifyMemberBase
+	public class NotNulResourceAttribute : CustomValidator
 	{
 		public override bool Verify(object value, out string validationError)
 		{
