@@ -17,6 +17,7 @@ namespace Dodo.Users
 	public class User : DodoResource, IVerifiable, ITokenResource, INotificationResource
 	{
 		public const string ADMIN_OF_KEY = "adminOf";
+		public const string MEMBER_OF_KEY = "memberOf";
 		public const string ROLES_HELD_KEY = "roles";
 
 		#region Data
@@ -70,9 +71,23 @@ namespace Dodo.Users
 			var accessContext = new AccessContext(requesterUser, passphrase);
 			if (permissionLevel >= EPermissionLevel.ADMIN)
 			{
-				view.Add(ADMIN_OF_KEY, TokenCollection.GetAllTokens<UserAddedAsAdminToken>(accessContext, permissionLevel, this)
-					.Select(t => t.Resource).ToList());
-				//view.Add(ROLES_HELD_KEY, ResourceUtility.GetManager<Role>().Get(r => r.RoleHolders.IsAuthorised(this.CreateRef(), passphrase)).Select(r => r.Guid));
+				view.Add(ADMIN_OF_KEY, ResourceUtility.GetResource(r =>
+				{
+					if(!(r is IAdministratedResource admin))
+					{
+						return false;
+					}
+					return admin.IsAdmin(this, accessContext, out _);
+				}).Select(r => r.CreateRef()));
+
+				view.Add(MEMBER_OF_KEY, ResourceUtility.GetResource(r =>
+				{
+					if (!(r is IAdministratedResource admin))
+					{
+						return false;
+					}
+					return admin.IsAdmin(this, accessContext, out _);
+				}).Select(r => r.CreateRef()));
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}

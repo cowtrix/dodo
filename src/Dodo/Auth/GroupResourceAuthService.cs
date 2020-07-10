@@ -31,7 +31,7 @@ namespace DodoResources
 			{
 				return EPermissionLevel.ADMIN;
 			}
-			if (target.Members.IsAuthorised(context))
+			if (target.IsMember(context))
 			{
 				return EPermissionLevel.MEMBER;
 			}

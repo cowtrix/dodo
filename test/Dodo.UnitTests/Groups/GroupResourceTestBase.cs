@@ -28,23 +28,23 @@ namespace Groups
 			using (var rscLock = new ResourceLock(newGroup))
 			{
 				newGroup = rscLock.Value as T;
-				newGroup.Members.Add(user.CreateRef(), joinerContext.Passphrase);
-				Assert.IsTrue(newGroup.Members.IsAuthorised(user.CreateRef(), joinerContext.Passphrase));
+				newGroup.Join(joinerContext);
+				Assert.IsTrue(newGroup.IsMember(joinerContext));
 				ResourceManager.Update(newGroup, rscLock);
 			}
 			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsTrue(updatedGroup.Members.IsAuthorised(user.CreateRef(), joinerContext.Passphrase));
+			Assert.IsTrue(updatedGroup.IsMember(joinerContext));
 
 			// Leave
 			using (var rscLock = new ResourceLock(newGroup))
 			{
 				newGroup = rscLock.Value as T;
-				newGroup.Members.Remove(user.CreateRef(), joinerContext.Passphrase);
-				Assert.IsFalse(newGroup.Members.IsAuthorised(user.CreateRef(), joinerContext.Passphrase));
+				newGroup.Leave(joinerContext);
+				Assert.IsFalse(newGroup.IsMember(joinerContext));
 				ResourceManager.Update(newGroup, rscLock);
 			}
 			updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsFalse(updatedGroup.Members.IsAuthorised(user.CreateRef(), joinerContext.Passphrase));
+			Assert.IsFalse(updatedGroup.IsMember(joinerContext));
 		}
 
 		[TestMethod]

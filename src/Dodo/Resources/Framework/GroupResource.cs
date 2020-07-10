@@ -16,6 +16,14 @@ using System.Text;
 
 namespace Dodo
 {
+	public interface IGroupResource
+	{
+		bool IsMember(AccessContext context);
+		int MemberCount { get; }
+		void Join(AccessContext context);
+		void Leave(AccessContext context);
+	}
+
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
 	/// <summary>
@@ -24,7 +32,7 @@ namespace Dodo
 	/// It can have members and a public description.
 	/// </summary>
 	public abstract class GroupResource : 
-		DodoResource, IPublicResource, ITokenResource, INotificationResource, IAdministratedResource
+		DodoResource, IPublicResource, INotificationResource, IAdministratedResource, IGroupResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 
@@ -39,9 +47,6 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public UserMultiSigStore<AdministrationData> AdministratorData { get; set; }
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public int MemberCount { get { return Members.Count; } }
-
 		[BsonElement]
 		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM, customDrawer:"null")]
 		public string PublicKey { get; private set; }
@@ -50,9 +55,11 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
-		public TokenCollection SharedTokens { get; set; } = new TokenCollection();
+		[BsonElement]
+		private TokenCollection SharedTokens { get; set; } = new TokenCollection();
 
-		public SecureUserStore Members { get; set; } = new SecureUserStore();
+		[BsonElement]
+		private SecureUserStore Members { get; set; } = new SecureUserStore();
 
 		public GroupResource() : base() { }
 
@@ -69,6 +76,7 @@ namespace Dodo
 			PublicDescription = schema.PublicDescription;
 		}
 
+		#region Administration
 		/// <summary>
 		/// Is the target user an administrator? Only another administrator can find out.
 		/// </summary>
@@ -231,26 +239,10 @@ namespace Dodo
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
+		#endregion
 
+		#region Child Objects
 		public abstract bool CanContain(Type type);
-
-		/// <summary>
-		/// We append several things to a group's metadata. 
-		/// `isMember` - whether the requesting user is a member of the group.
-		/// `notifications` - a collection of notifications that this user is allowed to view
-		/// </summary>
-		/// <param name="view"></param>
-		/// <param name="permissionLevel"></param>
-		/// <param name="requester"></param>
-		/// <param name="passphrase"></param>
-		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
-			object requester, Passphrase passphrase)
-		{
-			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
-			var isMember = Members.IsAuthorised(user.CreateRef(), passphrase);
-			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
-			base.AppendMetadata(view, permissionLevel, requester, passphrase);
-		}
 
 		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
 		{
@@ -264,7 +256,9 @@ namespace Dodo
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
+		#endregion
 
+		#region Notifications & Tokens
 		public IEnumerable<Notification> GetNotifications(AccessContext context, EPermissionLevel permissionLevel)
 		{
 			return SharedTokens.GetNotifications(context, permissionLevel, this);
@@ -297,6 +291,40 @@ namespace Dodo
 				throw new Exception("Bad auth");
 			}
 			return new Passphrase((adminDataObj as AdministrationData).GroupPrivateKey);
+		}
+		#endregion
+
+		#region Group
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public int MemberCount { get { return Members.Count; } }
+
+		public bool IsMember(AccessContext context)
+		{
+			if (!context.Challenge())
+			{
+				return false;
+			}
+			return Members.IsAuthorised(context);
+		}
+
+		public void Leave(AccessContext accessContext)
+		{
+			Members.Remove(accessContext.User.CreateRef(), accessContext.Passphrase);
+		}
+
+		public void Join(AccessContext accessContext)
+		{
+			Members.Add(accessContext.User.CreateRef(), accessContext.Passphrase);
+		}
+		#endregion
+
+		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
+			object requester, Passphrase passphrase)
+		{
+			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
+			var context = new AccessContext(user, passphrase);
+			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(context) ? "true" : "false");
+			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 	}
 }

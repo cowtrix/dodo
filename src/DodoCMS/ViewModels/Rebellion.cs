@@ -16,7 +16,7 @@ namespace Dodo.ViewModels
 		[Resources.UserFriendlyNameAttribute()]
 		public string Name { get; set; }
 		[DisplayName("Slug")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		[Resources.SlugAttribute()]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]
@@ -35,15 +35,15 @@ namespace Dodo.ViewModels
 		[DisplayName("AdministratorData")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public AdministrationDataViewModel AdministratorData { get; set; }
-		[DisplayName("MemberCount")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public int MemberCount { get; set; }
 		[DisplayName("PublicKey")]
 		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
 		public string PublicKey { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }
+		[DisplayName("MemberCount")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public int MemberCount { get; set; }
 		[DisplayName("StartDate")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public System.DateTime StartDate { get; set; }

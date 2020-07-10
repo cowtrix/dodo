@@ -56,7 +56,7 @@ $(function () {
 				</div>
 				<div class="form-group">
 					<label asp-for="Slug" class="control-label"></label>
-					<input  readonly asp-for="Slug" class="form-control"></input>
+					<input  asp-for="Slug" class="form-control"></input>
 					<span asp-validation-for="Slug" class="text-danger"></span>
 				</div>
 				<div class="form-group">
@@ -74,12 +74,12 @@ $(function () {
 				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
 				</div>
 
+
 				<div class="form-group">
 					<label asp-for="MemberCount" class="control-label"></label>
 					<input  readonly asp-for="MemberCount" class="form-control"></input>
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
-
 <script>
 	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
 	var coordinates = document.getElementById('coordinates');
