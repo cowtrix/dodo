@@ -37,7 +37,7 @@ namespace Dodo.Users.Tokens
 		private List<TokenEntry> m_tokens = new List<TokenEntry>();
 		[BsonIgnore]
 		public int Count => m_tokens.Count;
-		public void Add(ITokenResource parent, IToken token)
+		public void AddOrUpdate(ITokenResource parent, IToken token)
 		{
 			if(token == null)
 			{
@@ -62,8 +62,22 @@ namespace Dodo.Users.Tokens
 			{
 				throw new Exception($"Token type {token.GetType()} is not falling through to the base .OnAdd()");
 			}
-			var newEntry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token) : (TokenEntry)new PlainTokenEntry(parent, token);
-			m_tokens.Add(newEntry);
+			var entry = m_tokens.SingleOrDefault(e => e.Guid == token.Guid);
+			if(entry == null)
+			{
+				entry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token) : (TokenEntry)new PlainTokenEntry(parent, token);
+				m_tokens.Add(entry);
+			}
+			else
+			{
+				entry.SetData(parent, token);
+			}
+		}
+
+		public void Update(ITokenResource parent, IToken token)
+		{
+			
+
 		}
 
 		public bool RemoveAll<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) where T: IRemovableToken

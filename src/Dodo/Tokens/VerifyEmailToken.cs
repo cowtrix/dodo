@@ -12,6 +12,7 @@ namespace Dodo.Users.Tokens
 	[SingletonToken]
 	public class VerifyEmailToken : RedeemableToken, INotificationToken
 	{
+		public const int MAX_REQUEST_COUNT = 4;
 		const int TOKEN_SIZE = 64;
 
 		[JsonProperty]
@@ -22,6 +23,8 @@ namespace Dodo.Users.Tokens
 		public override bool Encrypted => true;
 		[JsonProperty]
 		private Notification m_notification;
+		[JsonProperty]
+		public int ConfirmationEmailRequestCount { get; set; }
 
 		public override void OnAdd(ITokenResource parent)
 		{

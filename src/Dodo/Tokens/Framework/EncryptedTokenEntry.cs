@@ -11,7 +11,6 @@ namespace Dodo.Users.Tokens
 
 		public EncryptedTokenEntry(ITokenResource owner, IToken token) : base(owner, token)
 		{
-			m_data = new AsymmEncryptedStore<IToken>(token, new Passphrase(owner.PublicKey));
 		}
 
 		public override IToken GetToken(Passphrase pk)
@@ -21,6 +20,11 @@ namespace Dodo.Users.Tokens
 				return default;
 			}
 			return m_data.GetValue(pk);
+		}
+
+		public override void SetData(ITokenResource owner, IToken token)
+		{
+			m_data = new AsymmEncryptedStore<IToken>(token, new Passphrase(owner.PublicKey));
 		}
 	}
 }

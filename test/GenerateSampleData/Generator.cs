@@ -44,7 +44,7 @@ namespace GenerateSampleData
 			var sysAdmin = GenerateUser(new UserSchema("Rebellion Tom", "test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
 			using (var rscLock = new ResourceLock(sysAdmin))
 			{
-				sysAdmin.TokenCollection.Add(sysAdmin, new SysadminToken());
+				sysAdmin.TokenCollection.AddOrUpdate(sysAdmin, new SysadminToken());
 				ResourceUtility.GetManager<User>().Update(sysAdmin, rscLock);
 			}
 			foreach(var city in m_cities)

@@ -21,11 +21,11 @@ namespace UnitTests
 			var user = GetRandomUser(out var password, out var context, verifyEmail:false);
 			using (var rscLock = new ResourceLock(user))
 			{
-				user.TokenCollection.Add(user, new ResourceCreationToken(typeof(Rebellion)));
-				user.TokenCollection.Add(user, new UserAddedAsAdminToken(CreateObject<LocalGroup>(), new Passphrase("1234"), user.AuthData.PublicKey));
-				user.TokenCollection.Add(user, new ResetPasswordToken(user));
-				user.TokenCollection.Add(user, new TemporaryUserToken(new Passphrase("1234"), "1234"));
-				user.TokenCollection.Add(user, new SessionToken(user, "1234", new Passphrase("1234"), new System.Net.IPAddress(0)));
+				user.TokenCollection.AddOrUpdate(user, new ResourceCreationToken(typeof(Rebellion)));
+				user.TokenCollection.AddOrUpdate(user, new UserAddedAsAdminToken(CreateObject<LocalGroup>(), new Passphrase("1234"), user.AuthData.PublicKey));
+				user.TokenCollection.AddOrUpdate(user, new ResetPasswordToken(user));
+				user.TokenCollection.AddOrUpdate(user, new TemporaryUserToken(new Passphrase("1234"), "1234"));
+				user.TokenCollection.AddOrUpdate(user, new SessionToken(user, "1234", new Passphrase("1234"), new System.Net.IPAddress(0)));
 				UserManager.Update(user, rscLock);
 			}
 			var userInDB = UserManager.GetSingle(u => u.Guid == user.Guid);

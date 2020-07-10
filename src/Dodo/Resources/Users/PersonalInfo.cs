@@ -5,11 +5,8 @@ using System;
 
 namespace Dodo.Users
 {
-	public class PersonalDataAttribute : Attribute { }
-
 	public class PersonalInfo
 	{
-		[PersonalData]
 		[Email]
 		[View(EPermissionLevel.OWNER)]
 		public string Email;

@@ -99,7 +99,7 @@ namespace Dodo.Users
 
 		public void AddToken(IToken token)
 		{
-			TokenCollection.Add(this, token);
+			TokenCollection.AddOrUpdate(this, token);
 		}
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)

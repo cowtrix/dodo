@@ -114,7 +114,7 @@ namespace Dodo
 			var adminData = AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase);
 			adminData.Administrators = adminData.Administrators.Where(ad => ad.User.Guid != targetUser.Guid).ToList();
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
+			SharedTokens.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
@@ -151,12 +151,12 @@ namespace Dodo
 				return false;
 			}
 			AdministratorData.SetValue(adminData, newAdminRef, newPass);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null,
+			SharedTokens.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			using (var userLock = new ResourceLock(newAdmin))
 			{
-				newAdmin.TokenCollection.Add(newAdmin, new UserAddedAsAdminToken(this, newPass, newAdmin.AuthData.PublicKey));
+				newAdmin.TokenCollection.AddOrUpdate(newAdmin, new UserAddedAsAdminToken(this, newPass, newAdmin.AuthData.PublicKey));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;
@@ -234,7 +234,7 @@ namespace Dodo
 			}
 			entry.Permissions = newPermissions;
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null,
+			SharedTokens.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} altered @{target.Slug}'s administrator permissions:\n{GetPermissionDiff(existingPermissions, newPermissions)}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
@@ -266,7 +266,7 @@ namespace Dodo
 
 		public void AddToken(IToken token)
 		{
-			SharedTokens.Add(this, token);
+			SharedTokens.AddOrUpdate(this, token);
 		}
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)

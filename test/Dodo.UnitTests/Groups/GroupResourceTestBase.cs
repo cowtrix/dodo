@@ -17,7 +17,6 @@ namespace Groups
 		protected IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
 
 		[TestMethod]
-
 		public void CanJoinAndLeave()
 		{
 			var creator = GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);

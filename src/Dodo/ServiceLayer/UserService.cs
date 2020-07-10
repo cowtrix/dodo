@@ -13,7 +13,6 @@ using Resources;
 using Resources.Security;
 using System;
 using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -64,7 +63,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		using (var rscLock = new ResourceLock(user))
 		{
 			user = rscLock.Value as User;
-			user.TokenCollection.Add(user, token);
+			user.TokenCollection.AddOrUpdate(user, token);
 			UserManager.Update(user, rscLock);
 		}
 
@@ -125,7 +124,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			{
 				targetUser = rscLock.Value as User;
 				var resetToken = new ResetPasswordToken(targetUser);
-				targetUser.TokenCollection.Add(targetUser, resetToken);
+				targetUser.TokenCollection.AddOrUpdate(targetUser, resetToken);
 				UserManager.Update(targetUser, rscLock);
 				EmailHelper.SendPasswordResetEmail(targetUser.PersonalData.Email, targetUser.Name,
 					$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{RESET_PASSWORD}?token={resetToken.Key}");
@@ -186,12 +185,18 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		if (Context.User.PersonalData.EmailConfirmed)
 		{
-			return new OkRequestResult();
+			return new OkRequestResult("You've already verified your email address");
 		}
 		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context, EPermissionLevel.OWNER, Context.User);
 		if (verifyToken == null)
 		{
 			throw new Exception($"Verify token was null for user {Context.User.Guid}");
+		}
+		if(string.IsNullOrEmpty(token))
+		{
+			// user is requesting new email
+			SendEmailVerification(Context);
+			return new OkRequestResult($"A new email verification link has been sent to {Context.User.PersonalData.Email}");
 		}
 		if (verifyToken.Token != token)
 		{
@@ -201,7 +206,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var user = rscLock.Value as User;
 		user.PersonalData.EmailConfirmed = true;
 		UserManager.Update(user, rscLock);
-		return new OkRequestResult();
+		return new OkRequestResult($"Successfully verified email {Context.User.PersonalData.Email}");
 	}
 
 	public async Task<IRequestResult> Register(UserSchema schema, string token = null)
@@ -276,21 +281,29 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		return req;
 	}
 
-	private static void SendEmailVerification(AccessContext context)
+	private IRequestResult SendEmailVerification(AccessContext context)
 	{
+		if(context.User.PersonalData.EmailConfirmed)
+		{
+			return new OkRequestResult("User has already confirmed email");
+		}
 		var token = context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, context.User);
 		if (token == null)
 		{
-			Logger.Error($"Couldn't send email verification to {context.User} - user was already verified.");
-			return;
+			return ResourceRequestError.BadRequest();
 		}
-		if (token.IsRedeemed)
+		if(token.ConfirmationEmailRequestCount >= VerifyEmailToken.MAX_REQUEST_COUNT)
 		{
-			Logger.Error($"Couldn't send email verification to {context.User} - user was already verified.");
-			return;
+			return ResourceRequestError.BadRequest("User has requested maximum number of email verifications");
 		}
 		EmailHelper.SendEmailVerificationEmail(context.User.PersonalData.Email, context.User.Name,
 			$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}");
+		using var rscLock = new ResourceLock(context.User);
+		var user = rscLock.Value as User;
+		token.ConfirmationEmailRequestCount++;
+		user.TokenCollection.AddOrUpdate(user, token);
+		ResourceManager.Update(user, rscLock);
+		return new OkRequestResult($"Sent email confirmation to {context.User.PersonalData.Email}");
 	}
 
 	public static User CreateTemporaryUser(string email)
@@ -311,7 +324,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 #endif
 		using (var rscLock = new ResourceLock(newUser))
 		{
-			newUser.TokenCollection.Add(newUser, new TemporaryUserToken(temporaryPassword, tokenChallenge));
+			newUser.TokenCollection.AddOrUpdate(newUser, new TemporaryUserToken(temporaryPassword, tokenChallenge));
 			ResourceUtility.GetManager<User>().Update(newUser, rscLock);
 		}
 		EmailHelper.SendEmail(email, "New Rebel",

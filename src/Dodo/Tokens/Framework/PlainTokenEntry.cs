@@ -14,9 +14,13 @@ namespace Dodo.Users.Tokens
 
 		public PlainTokenEntry(ITokenResource owner, IToken token) : base(owner, token)
 		{
-			m_token = JsonConvert.SerializeObject(token, JsonExtensions.StorageSettings);
 		}
 
 		public override IToken GetToken(Passphrase context) => JsonConvert.DeserializeObject(m_token, JsonExtensions.StorageSettings) as IToken;
+
+		public override void SetData(ITokenResource owner, IToken token)
+		{
+			m_token = JsonConvert.SerializeObject(token, JsonExtensions.StorageSettings);
+		}
 	}
 }
