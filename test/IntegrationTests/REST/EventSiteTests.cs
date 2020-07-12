@@ -1,6 +1,6 @@
 using Dodo.SharedTest;
 using Dodo.LocationResources;
-using DodoResources.Sites;
+using Dodo.Sites;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Resources;

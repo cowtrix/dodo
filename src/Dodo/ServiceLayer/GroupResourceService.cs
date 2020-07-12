@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Dodo;
 
-namespace DodoResources
+namespace Dodo
 {
 	public class GroupResourceService<T, TSchema> : ResourceServiceBase<T, TSchema>
 		where T : GroupResource

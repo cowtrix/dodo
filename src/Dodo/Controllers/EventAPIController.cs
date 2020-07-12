@@ -3,7 +3,7 @@ using Dodo.LocationResources;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace DodoResources.Sites
+namespace Dodo.Sites
 {
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class EventAPIController : SearchableResourceController<Event, EventSchema>

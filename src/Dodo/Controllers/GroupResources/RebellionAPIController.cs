@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Dodo.Rebellions;
 
-namespace DodoResources.Rebellions
+namespace Dodo.Rebellions
 {
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class RebellionAPIController : GroupResourceAPIController<Rebellion, RebellionSchema>

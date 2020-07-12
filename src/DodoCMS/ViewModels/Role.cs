@@ -29,10 +29,10 @@ namespace Dodo.ViewModels
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		[Resources.DescriptionAttribute()]
 		public string PublicDescription { get; set; }
-		[DisplayName("Applicant Question")]
+		[DisplayName("Applicant Instructions")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		[Resources.DescriptionAttribute()]
-		public string QuestionString { get; set; }
+		public string ApplicantInstructions { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }

@@ -1,6 +1,6 @@
 ﻿using Dodo.LocationResources;
 using Dodo.ViewModels;
-using DodoResources.Sites;
+using Dodo.Sites;
 
 namespace Dodo.Controllers.Edit
 {

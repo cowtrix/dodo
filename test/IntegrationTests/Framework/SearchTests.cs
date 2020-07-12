@@ -2,7 +2,7 @@ using Dodo;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.LocationResources;
-using DodoResources;
+using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Resources;

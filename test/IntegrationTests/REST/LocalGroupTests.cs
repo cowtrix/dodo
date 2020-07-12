@@ -1,6 +1,6 @@
 using Dodo.LocalGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DodoResources.LocalGroups;
+using Dodo.LocalGroups;
 using System.Threading.Tasks;
 using Resources;
 using Dodo.SharedTest;

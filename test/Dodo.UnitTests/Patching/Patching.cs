@@ -16,7 +16,6 @@ namespace Patching
 		protected static Random Random = new Random();
 		protected abstract IEnumerable<T> SampleValues { get; }
 
-		[ViewClass]
 		public struct ComplexStruct
 		{
 			public T Field;
@@ -121,12 +120,6 @@ namespace Patching
 			}
 		}
 
-		[ViewClass]
-		struct SingleFieldStructWithViewClass
-		{
-			public T Value;
-		}
-
 		struct SingleFieldStructWithViewAttr
 		{
 			[View(EPermissionLevel.PUBLIC)]
@@ -154,24 +147,6 @@ namespace Patching
 				var cl2 = new SingleFieldClassWithViewAttr { Value = value1 };
 				cl2.PatchObject(patch);
 				Assert.AreEqual(value2, cl2.Value);
-			}
-		}
-
-		[TestMethod]
-		public void PatchStruct()
-		{
-			var dataPairs = SampleValues.ChunkRandom(2);
-			foreach(var pair in dataPairs)
-			{
-				var value1 = pair.First();
-				var value2 = pair.Last();
-				var patch = new Dictionary<string, object>()
-				{
-					{ "Value", value2}
-				};
-				var str = new SingleFieldStructWithViewClass { Value = value1 };
-				str = str.PatchObject(patch);
-				Assert.AreEqual(value2, str.Value);
 			}
 		}
 

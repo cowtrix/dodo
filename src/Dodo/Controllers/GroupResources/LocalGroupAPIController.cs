@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Dodo.LocalGroups;
 
-namespace DodoResources.LocalGroups
+namespace Dodo.LocalGroups
 {
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class LocalGroupAPIController : GroupResourceAPIController<LocalGroup, LocalGroupSchema>

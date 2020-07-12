@@ -16,7 +16,7 @@ using Dodo;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace DodoResources
+namespace Dodo
 {
 	public abstract class GroupResourceAPIController<T, TSchema> : SearchableResourceController<T, TSchema>
 		where T : GroupResource

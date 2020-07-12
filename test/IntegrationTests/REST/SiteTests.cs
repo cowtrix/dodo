@@ -1,6 +1,6 @@
 using Dodo;
 using Dodo.LocationResources;
-using DodoResources.Sites;
+using Dodo.Sites;
 using System.Collections.Generic;
 using System.Linq;
 using Common.Extensions;

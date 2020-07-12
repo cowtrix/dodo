@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DodoResources.Sites
+namespace Dodo.Sites
 {
 
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]

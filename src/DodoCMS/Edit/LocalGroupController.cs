@@ -1,6 +1,6 @@
 using Dodo.LocalGroups;
 using Dodo.ViewModels;
-using DodoResources;
+using Dodo;
 
 namespace Dodo.Controllers.Edit
 {

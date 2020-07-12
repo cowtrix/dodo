@@ -1,6 +1,6 @@
 using Dodo.Rebellions;
 using Dodo.SharedTest;
-using DodoResources.Rebellions;
+using Dodo.Rebellions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 using System;

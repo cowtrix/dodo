@@ -13,17 +13,15 @@ using System.Collections.Concurrent;
 
 namespace Resources
 {
-	[AttributeUsage(AttributeTargets.Struct)]
-	public class ViewClassAttribute : Attribute
-	{
-	}
-
+	/// <summary>
+	/// Classes with this attribute won't have their revisions cached
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
-	public class DontCacheAttribute : Attribute
-	{ }
+	public class DontCacheAttribute : Attribute	{ }
 
 	/// <summary>
-	/// This class will performs Resource specific JSON parsing tasks.
+	/// This class will performs Resource specific JSON parsing tasks, transforming the data object
+	/// into it's view object based on the user requesting it.
 	/// </summary>
 	public static class JsonViewUtility
 	{
@@ -451,11 +449,6 @@ namespace Resources
 
 		public static bool ShouldSerializeDirectly(Type targetType)
 		{
-			var viewAttr = targetType.GetCustomAttribute<ViewClassAttribute>();
-			if (viewAttr != null)
-			{
-				return true;
-			}
 			return (targetType.IsValueType && targetType.IsPrimitive)
 					|| m_explicitValueTypes.Any(t => t.IsAssignableFrom(targetType));
 		}

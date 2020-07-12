@@ -1,5 +1,5 @@
 using Dodo.Users;
-using DodoResources;
+using Dodo;
 using Microsoft.AspNetCore.Mvc;
 using Resources;
 using System;

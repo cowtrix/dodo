@@ -1,6 +1,6 @@
 using Dodo.Rebellions;
 using Dodo.ViewModels;
-using DodoResources;
+using Dodo;
 using Resources;
 
 namespace Dodo.Controllers.Edit

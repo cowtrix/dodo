@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Dodo.Users.Tokens;
 using MongoDB.Bson.Serialization.Serializers;
 
-namespace DodoResources
+namespace Dodo
 {
 	public class GroupResourceAuthService<T, TSchema> : AuthorizationService<T, TSchema>
 		where T : GroupResource

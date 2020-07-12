@@ -1,5 +1,5 @@
 using Dodo.Roles;
-using DodoResources.Roles;
+using Dodo.Roles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 

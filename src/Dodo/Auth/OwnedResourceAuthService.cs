@@ -2,7 +2,7 @@ using Dodo;
 using Dodo.LocationResources;
 using Resources;
 
-namespace DodoResources.Sites
+namespace Dodo
 {
 	public class OwnedResourceAuthService<T, TSchema> : AuthorizationService<T, TSchema>
 		where T : class, IOwnedResource

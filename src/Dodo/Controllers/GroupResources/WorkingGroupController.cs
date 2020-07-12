@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Dodo.WorkingGroups;
 
-namespace DodoResources.WorkingGroups
+namespace Dodo.WorkingGroups
 {
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class WorkingGroupController : GroupResourceAPIController<WorkingGroup, WorkingGroupSchema>

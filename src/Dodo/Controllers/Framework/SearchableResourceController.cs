@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Dodo.DodoResources;
 using System;
 
-namespace DodoResources
+namespace Dodo
 {
 	public abstract class SearchableResourceController<T, TSchema> : CrudResourceAPIController<T, TSchema>
 		where T : DodoResource, IPublicResource

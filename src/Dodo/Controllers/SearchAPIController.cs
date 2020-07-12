@@ -8,7 +8,7 @@ using System;
 using Dodo.DodoResources;
 using Common.Config;
 
-namespace DodoResources
+namespace Dodo
 {
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
 	public class SearchAPIController : CustomController

@@ -1,5 +1,5 @@
 using Dodo.WorkingGroups;
-using DodoResources.WorkingGroups;
+using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 

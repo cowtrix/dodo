@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Resources.Location;
 using Common;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace Dodo.Roles
 {
@@ -24,8 +25,8 @@ namespace Dodo.Roles
 
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint:"All applicants will answer this prompt when applying.")]
 		[Description]
-		[Name("Applicant Question")]
-		public string QuestionString { get; set; }
+		[Name("Applicant Instructions")]
+		public string ApplicantInstructions { get; set; }
 
 		[Name("Published")]
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
@@ -40,6 +41,9 @@ namespace Dodo.Roles
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
 			Parent = group.CreateRef();
 			PublicDescription = schema.PublicDescription;
+		}
+		public bool Apply(AccessContext context, ApplicationModel application)
+		{
 		}
 	}
 }

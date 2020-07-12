@@ -4,7 +4,7 @@ using Dodo.Rebellions;
 using Dodo.DodoResources;
 using Dodo.SharedTest;
 using Dodo.LocationResources;
-using DodoResources;
+using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 using SharedTest;
