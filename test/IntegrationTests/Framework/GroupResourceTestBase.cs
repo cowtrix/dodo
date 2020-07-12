@@ -29,7 +29,7 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			using (var rscLock = new ResourceLock(user))
 			{
-				user.TokenCollection.Add(user, new ResourceCreationToken(typeof(T)));
+				user.TokenCollection.AddOrUpdate(user, new ResourceCreationToken(typeof(T)));
 				UserManager.Update(user, rscLock);
 			}
 			await Login(user.Slug, password);
@@ -280,7 +280,7 @@ namespace RESTTests
 			{
 				var token = new SimpleNotificationToken(con.User, "Test", Message, null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true);
 				notGuid = token.Guid;
-				group.AddToken(token);
+				group.TokenCollection.AddOrUpdate(group, token);
 				ResourceManager.Update(group, rscLock);
 			}
 

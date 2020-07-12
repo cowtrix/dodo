@@ -54,7 +54,7 @@ namespace Dodo.Users
 		{
 			var user = base.CreateObjectInternal(request);
 			using var rscLock = new ResourceLock(user);
-			user.TokenCollection.Add(user, new VerifyEmailToken());
+			user.TokenCollection.AddOrUpdate(user, new VerifyEmailToken());
 			ResourceUtility.GetManager<User>().Update(user, rscLock);
 			return user;
 		}

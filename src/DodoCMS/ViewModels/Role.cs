@@ -16,7 +16,7 @@ namespace Dodo.ViewModels
 		[Resources.UserFriendlyNameAttribute()]
 		public string Name { get; set; }
 		[DisplayName("Slug")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		[Resources.SlugAttribute()]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]

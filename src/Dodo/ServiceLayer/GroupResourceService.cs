@@ -150,12 +150,11 @@ namespace DodoResources
 			var req = (ResourceActionRequest)reqResult;
 			using var resourceLock = new ResourceLock(req.Result);
 			var target = resourceLock.Value as T;
-			target.Members.Add(req.AccessContext.User.CreateRef(), req.AccessContext.Passphrase);
+			target.Join(req.AccessContext);
 			ResourceManager.Update(target, resourceLock);
 			return new OkRequestResult();
 		}
 
-		[HttpPost("{id}/" + LEAVE_GROUP)]
 		public IRequestResult LeaveGroup(string id)
 		{
 			var reqResult = VerifyRequest(id, EHTTPRequestType.POST, LEAVE_GROUP);
@@ -166,7 +165,7 @@ namespace DodoResources
 			var req = (ResourceActionRequest)reqResult;
 			using var resourceLock = new ResourceLock(req.Result);
 			var target = resourceLock.Value as T;
-			target.Members.Remove(req.AccessContext.User.CreateRef(), req.AccessContext.Passphrase);
+			target.Leave(req.AccessContext);
 			ResourceManager.Update(target, resourceLock);
 			return new OkRequestResult();
 		}

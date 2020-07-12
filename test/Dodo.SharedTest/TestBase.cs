@@ -119,13 +119,13 @@ namespace SharedTest
 				using (var rscLock = new ResourceLock(not))
 				{
 					not = rscLock.Value as INotificationResource;
-					not.AddToken(new SimpleNotificationToken(context.User, null,
+					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
 						"This is a test short Public announcement.", null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true));
-					not.AddToken(new SimpleNotificationToken(context.User, null,
+					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
 						"This is a test short Admin only announcement.", null, ENotificationType.Announcement, EPermissionLevel.ADMIN, true));
-					not.AddToken(new SimpleNotificationToken(context.User, null,
+					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
 						"This is a test short Members only announcement.", null, ENotificationType.Announcement, EPermissionLevel.MEMBER, true));
-					not.AddToken(new SimpleNotificationToken(context.User, null,
+					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
 						"This is a longer Public announcement: " + SchemaGenerator.SampleDescription, null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true));
 					ResourceUtility.GetManager(not.GetType()).Update(not, rscLock);
 				}

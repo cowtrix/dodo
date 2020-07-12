@@ -18,6 +18,10 @@ namespace Resources
 	{
 	}
 
+	[AttributeUsage(AttributeTargets.Class)]
+	public class DontCacheAttribute : Attribute
+	{ }
+
 	/// <summary>
 	/// This class will performs Resource specific JSON parsing tasks.
 	/// </summary>
@@ -142,7 +146,7 @@ namespace Resources
 					return null;
 				}
 
-				if (obj is IRESTResource resource)
+				if (obj is IRESTResource resource && obj.GetType().GetCustomAttribute<DontCacheAttribute>() != null)
 				{
 					// Try to hit the resource cache
 					if (m_cache.TryGetValue((resource.Guid, resource.Revision), out var cacheVal))

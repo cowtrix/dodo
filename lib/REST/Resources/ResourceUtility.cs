@@ -80,6 +80,27 @@ namespace Resources
 			GetManagerForResource(resource).Add(resource);
 		}
 
+		public static IEnumerable<T> GetResource<T>(Func<IRESTResource, bool> func, Guid? handle = null) where T : class, IRESTResource
+		{
+			if (func == default)
+			{
+				yield break;
+			}
+			foreach (var rm in ResourceManagers.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
+			{
+				var result = rm.Value.Get(x => func(x), handle).OfType<T>();
+				foreach (var r in result)
+				{
+					yield return r;
+				}
+			}
+		}
+
+		public static IEnumerable<IRESTResource> GetResource(Func<IRESTResource, bool> func, Guid? handle = null)
+		{
+			return GetResource<IRESTResource>(func, handle);
+		}
+
 		public static T GetResourceByGuid<T>(this Guid guid, Guid? handle = null) where T : class, IRESTResource
 		{
 			if(guid == default)

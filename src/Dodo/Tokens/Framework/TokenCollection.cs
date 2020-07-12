@@ -14,10 +14,15 @@ namespace Dodo.Users.Tokens
 {
 	public class ITokenOwnerSerializer : ResourceReferenceSerializer<ITokenResource> { }
 
+
+
+	/// <summary>
+	/// This is any resource which can contain tokens. This requires a public/private key pair
+	/// </summary>
 	public interface ITokenResource : IRESTResource
 	{
 		string PublicKey { get; }
-		void AddToken(IToken token);
+		TokenCollection TokenCollection { get; }
 		Passphrase GetPrivateKey(AccessContext context);
 	}
 
@@ -30,14 +35,14 @@ namespace Dodo.Users.Tokens
 		public List<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel, ITokenResource parent) => 
 			GetAllTokens<INotificationToken>(accessContext, permissionLevel, parent)
 					.Select(x => x.GetNotification(accessContext))
-					.Where(x => !string.IsNullOrEmpty(x.Message))
+					.Where(x => !string.IsNullOrEmpty(x?.Message))
 					.OrderByDescending(x => x.Timestamp).ToList();
 
 		[BsonElement]
 		private List<TokenEntry> m_tokens = new List<TokenEntry>();
 		[BsonIgnore]
 		public int Count => m_tokens.Count;
-		public void Add(ITokenResource parent, IToken token)
+		public void AddOrUpdate(ITokenResource parent, IToken token)
 		{
 			if(token == null)
 			{
@@ -51,19 +56,27 @@ namespace Dodo.Users.Tokens
 			{
 				throw new Exception(error);
 			}
-			var type = token.GetType();
-			var isSingleton = type.GetCustomAttribute<SingletonTokenAttribute>();
-			if (isSingleton != null && HasToken(token.GetType()))
-			{
-				throw new SingletonTokenDuplicateException($"Cannot have multiple {type.Name} Tokens");
-			}
-			token.OnAdd(parent);
+			var type = token.GetType();			
 			if(token.Guid == default)
 			{
 				throw new Exception($"Token type {token.GetType()} is not falling through to the base .OnAdd()");
 			}
-			var newEntry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token) : (TokenEntry)new PlainTokenEntry(parent, token);
-			m_tokens.Add(newEntry);
+			var entry = m_tokens.SingleOrDefault(e => e.Guid == token.Guid);
+			var isSingleton = type.GetCustomAttribute<SingletonTokenAttribute>();
+			if (isSingleton != null && HasToken(token.GetType(), entry?.Guid))
+			{
+				throw new SingletonTokenDuplicateException($"Cannot have multiple {type.Name} Tokens");
+			}
+			token.OnAdd(parent);
+			if (entry == null)
+			{
+				entry = token.Encrypted ? (TokenEntry)new EncryptedTokenEntry(parent, token) : (TokenEntry)new PlainTokenEntry(parent, token);
+				m_tokens.Add(entry);
+			}
+			else
+			{
+				entry.SetData(parent, token);
+			}
 		}
 
 		public bool RemoveAll<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) where T: IRemovableToken
@@ -101,8 +114,12 @@ namespace Dodo.Users.Tokens
 			return HasToken(typeof(T));
 		}
 
-		public bool HasToken(Type t)
+		public bool HasToken(Type t, Guid? exception = null)
 		{
+			if(exception != null)
+			{
+				return m_tokens.Any(mt => mt.Guid != exception && mt.Type.IsAssignableFrom(t));
+			}
 			return m_tokens.Any(mt => mt.Type.IsAssignableFrom(t));
 		}
 

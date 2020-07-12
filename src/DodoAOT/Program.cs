@@ -11,7 +11,15 @@ using Common;
 
 namespace DodoAOT
 {
-
+	/// <summary>
+	/// Is this a dumb way to do things? Maybe. But hey, it works.
+	/// I basically just wanted to make something that programatically generated the viewmodels
+	/// and view razor pages, because I'm lazy and really it's all just derived from the base 
+	/// data model. 
+	/// It's basically just a super simple templating thing that swaps out some magic strings
+	/// in the template files (see `Templates` folder) for their reflected values.
+	/// We can probably rip this out once the CMS stuff stabilises a bit.
+	/// </summary>
 	class Program
 	{
 		static void Main(string[] args)
@@ -64,18 +72,27 @@ namespace DodoAOT
 				{
 					Directory.CreateDirectory(folderPath);
 				}
-				using (var fs = new StreamWriter(Path.Combine(folderPath, $"Create.cshtml")))
-				{
-					fs.Write(CreateViewGenerator.Generate(rmType));
-				}
-				using (var fs = new StreamWriter(Path.Combine(folderPath, $"Edit.cshtml")))
-				{
-					fs.Write(EditViewGenerator.Generate(rmType));
-				}
-				using (var fs = new StreamWriter(Path.Combine(folderPath, $"Delete.cshtml")))
-				{
-					fs.Write(DeleteViewGenerator.Generate(rmType));
-				}
+				OutputReadonlyFile(CreateViewGenerator.Generate(rmType), Path.Combine(folderPath, $"Create.cshtml"));
+				OutputReadonlyFile(EditViewGenerator.Generate(rmType), Path.Combine(folderPath, $"Edit.cshtml"));
+				OutputReadonlyFile(DeleteViewGenerator.Generate(rmType), Path.Combine(folderPath, $"Delete.cshtml"));
+			}
+		}
+
+		static void OutputReadonlyFile(string fileContents, string path)
+		{
+			FileInfo fileInfo = new FileInfo(path);
+			if (fileInfo.IsReadOnly)
+			{
+				fileInfo.IsReadOnly = false;
+			}
+			using (var fs = new StreamWriter(path))
+			{
+				fs.Write(fileContents);
+			}
+			fileInfo = new FileInfo(path);
+			if (!fileInfo.IsReadOnly)
+			{
+				fileInfo.IsReadOnly = true;
 			}
 		}
 	}

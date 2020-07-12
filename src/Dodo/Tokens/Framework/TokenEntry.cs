@@ -26,7 +26,7 @@ namespace Dodo.Users.Tokens
 
 		public TokenEntry(ITokenResource owner, IToken token)
 		{
-			if(token == null || owner == null)
+			if (token == null || owner == null)
 			{
 				throw new ArgumentNullException();
 			}
@@ -39,6 +39,7 @@ namespace Dodo.Users.Tokens
 				Logger.Debug($"Registered BsonClassMap for {token.GetType()}");
 				BsonClassMap.RegisterClassMap(new BsonClassMap(token.GetType()));
 			}
+			SetData(owner, token);
 		}
 
 		public abstract IToken GetToken(Passphrase privateKey);
@@ -51,5 +52,7 @@ namespace Dodo.Users.Tokens
 			}
 			return GetToken(new Passphrase(context.User.AuthData.PrivateKey.GetValue(context.Passphrase)));
 		}
+
+		public abstract void SetData(ITokenResource owner, IToken token);
 	}
 }

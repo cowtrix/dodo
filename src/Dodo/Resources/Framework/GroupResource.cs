@@ -16,6 +16,14 @@ using System.Text;
 
 namespace Dodo
 {
+	public interface IGroupResource
+	{
+		bool IsMember(AccessContext context);
+		int MemberCount { get; }
+		void Join(AccessContext context);
+		void Leave(AccessContext context);
+	}
+
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
 	/// <summary>
@@ -24,7 +32,7 @@ namespace Dodo
 	/// It can have members and a public description.
 	/// </summary>
 	public abstract class GroupResource : 
-		DodoResource, IPublicResource, ITokenResource, INotificationResource, IAdministratedResource
+		DodoResource, IPublicResource, INotificationResource, IAdministratedResource, IGroupResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 
@@ -39,9 +47,6 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public UserMultiSigStore<AdministrationData> AdministratorData { get; set; }
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public int MemberCount { get { return Members.Count; } }
-
 		[BsonElement]
 		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM, customDrawer:"null")]
 		public string PublicKey { get; private set; }
@@ -50,9 +55,11 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
-		public TokenCollection SharedTokens { get; set; } = new TokenCollection();
+		[BsonElement]
+		public TokenCollection TokenCollection { get; private set; } = new TokenCollection();
 
-		public SecureUserStore Members { get; set; } = new SecureUserStore();
+		[BsonElement]
+		private SecureUserStore m_members { get; set; } = new SecureUserStore();
 
 		public GroupResource() : base() { }
 
@@ -69,6 +76,7 @@ namespace Dodo
 			PublicDescription = schema.PublicDescription;
 		}
 
+		#region Administration
 		/// <summary>
 		/// Is the target user an administrator? Only another administrator can find out.
 		/// </summary>
@@ -106,7 +114,7 @@ namespace Dodo
 			var adminData = AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase);
 			adminData.Administrators = adminData.Administrators.Where(ad => ad.User.Guid != targetUser.Guid).ToList();
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
+			TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
@@ -143,12 +151,12 @@ namespace Dodo
 				return false;
 			}
 			AdministratorData.SetValue(adminData, newAdminRef, newPass);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null,
+			TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			using (var userLock = new ResourceLock(newAdmin))
 			{
-				newAdmin.TokenCollection.Add(newAdmin, new UserAddedAsAdminToken(this, newPass, newAdmin.AuthData.PublicKey));
+				newAdmin.TokenCollection.AddOrUpdate(newAdmin, new UserAddedAsAdminToken(this, newPass, newAdmin.AuthData.PublicKey));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;
@@ -226,58 +234,39 @@ namespace Dodo
 			}
 			entry.Permissions = newPermissions;
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			SharedTokens.Add(this, new EncryptedNotificationToken(context.User, null,
+			TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} altered @{target.Slug}'s administrator permissions:\n{GetPermissionDiff(existingPermissions, newPermissions)}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
+		#endregion
 
+		#region Child Objects
 		public abstract bool CanContain(Type type);
-
-		/// <summary>
-		/// We append several things to a group's metadata. 
-		/// `isMember` - whether the requesting user is a member of the group.
-		/// `notifications` - a collection of notifications that this user is allowed to view
-		/// </summary>
-		/// <param name="view"></param>
-		/// <param name="permissionLevel"></param>
-		/// <param name="requester"></param>
-		/// <param name="passphrase"></param>
-		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
-			object requester, Passphrase passphrase)
-		{
-			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
-			var isMember = Members.IsAuthorised(user.CreateRef(), passphrase);
-			view.Add(IS_MEMBER_AUX_TOKEN, isMember ? "true" : "false");
-			base.AppendMetadata(view, permissionLevel, requester, passphrase);
-		}
 
 		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, null, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", 
+			TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", 
 				$"{Dodo.DodoApp.NetConfig.FullURI}/{rsc.GetType().Name.ToLowerInvariant()}/{rsc.Slug}", ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 		}
 
 		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, null, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", 
+			TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", 
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
+		#endregion
 
+		#region Notifications & Tokens
 		public IEnumerable<Notification> GetNotifications(AccessContext context, EPermissionLevel permissionLevel)
 		{
-			return SharedTokens.GetNotifications(context, permissionLevel, this);
-		}
-
-		public void AddToken(IToken token)
-		{
-			SharedTokens.Add(this, token);
+			return TokenCollection.GetNotifications(context, permissionLevel, this);
 		}
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
-			return SharedTokens.Remove(context, permissionLevel, notification, this);
+			return TokenCollection.Remove(context, permissionLevel, notification, this);
 		}
 
 		public Passphrase GetPrivateKey(AccessContext context)
@@ -297,6 +286,40 @@ namespace Dodo
 				throw new Exception("Bad auth");
 			}
 			return new Passphrase((adminDataObj as AdministrationData).GroupPrivateKey);
+		}
+		#endregion
+
+		#region Group
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public int MemberCount { get { return m_members.Count; } }
+
+		public bool IsMember(AccessContext context)
+		{
+			if (!context.Challenge())
+			{
+				return false;
+			}
+			return m_members.IsAuthorised(context);
+		}
+
+		public void Leave(AccessContext accessContext)
+		{
+			m_members.Remove(accessContext.User.CreateRef(), accessContext.Passphrase);
+		}
+
+		public void Join(AccessContext accessContext)
+		{
+			m_members.Add(accessContext.User.CreateRef(), accessContext.Passphrase);
+		}
+		#endregion
+
+		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
+			object requester, Passphrase passphrase)
+		{
+			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
+			var context = new AccessContext(user, passphrase);
+			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(context) ? "true" : "false");
+			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 	}
 }
