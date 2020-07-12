@@ -146,7 +146,7 @@ namespace Resources
 					return null;
 				}
 
-				if (obj is IRESTResource resource && obj.GetType().GetCustomAttribute<DontCacheAttribute>() != null)
+				if (obj is IRESTResource resource && obj.GetType().GetCustomAttribute<DontCacheAttribute>() == null)
 				{
 					// Try to hit the resource cache
 					if (m_cache.TryGetValue((resource.Guid, resource.Revision), out var cacheVal))
