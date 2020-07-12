@@ -280,7 +280,7 @@ namespace RESTTests
 			{
 				var token = new SimpleNotificationToken(con.User, "Test", Message, null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true);
 				notGuid = token.Guid;
-				group.AddToken(token);
+				group.TokenCollection.AddOrUpdate(group, token);
 				ResourceManager.Update(group, rscLock);
 			}
 

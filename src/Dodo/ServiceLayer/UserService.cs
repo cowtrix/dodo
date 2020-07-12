@@ -16,6 +16,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+/// <summary>
+/// Handles all user related services
+/// </summary>
 public class UserService : ResourceServiceBase<User, UserSchema>
 {
 	public const string RootURL = "auth";
@@ -111,11 +114,11 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 	{
 		if(string.IsNullOrEmpty(email))
 		{
-			return ResourceRequestError.BadRequest("Email can't be empty");
+			return ResourceRequestError.BadRequest("Email can't be empty.");
 		}
 		if (Context.User != null && Context.User.PersonalData.Email != email)
 		{
-			return ResourceRequestError.BadRequest("Mismatching emails");
+			return ResourceRequestError.BadRequest("User mismatch.");
 		}
 		var targetUser = UserManager.GetSingle(u => u.PersonalData.Email == email);
 		if (targetUser != null)
@@ -148,9 +151,13 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		using (var rscLock = new ResourceLock(user))
 		{
-			user = rscLock.Value as User;
-			user.TokenCollection.RemoveAll<ResetPasswordToken>(Context, EPermissionLevel.OWNER, user);
+			user = rscLock.Value as User;			
+			// This will wipe the private key and passphrase, so the user needs to start fresh
 			user.AuthData = new AuthorizationData(password);
+			// Get rid of the password reset token immediately, as opposed to just waiting for it to get cleaned up
+			user.TokenCollection.RemoveAll<ResetPasswordToken>(Context, EPermissionLevel.OWNER, user);
+			// User won't be able to decrypt any decrypted tokens
+			user.TokenCollection.Remove(Context, EPermissionLevel.OWNER, t => t.Encrypted, user);
 			UserManager.Update(user, rscLock);
 		}
 		await Logout();
@@ -187,16 +194,16 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return new OkRequestResult("You've already verified your email address");
 		}
-		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context, EPermissionLevel.OWNER, Context.User);
-		if (verifyToken == null)
-		{
-			throw new Exception($"Verify token was null for user {Context.User.Guid}");
-		}
 		if(string.IsNullOrEmpty(token))
 		{
 			// user is requesting new email
 			SendEmailVerification(Context);
 			return new OkRequestResult($"A new email verification link has been sent to {Context.User.PersonalData.Email}");
+		}
+		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context, EPermissionLevel.OWNER, Context.User);
+		if (verifyToken == null)
+		{
+			return ResourceRequestError.BadRequest();
 		}
 		if (verifyToken.Token != token)
 		{
@@ -213,7 +220,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 	{
 		if (!string.IsNullOrEmpty(token))
 		{
-			return await CreateWithToken(token, schema);
+			return await RegisterWithToken(token, schema);
 		}
 		var request = VerifyRequest(schema);
 		if (!request.IsSuccess)
@@ -239,7 +246,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			};
 	}
 
-	public async Task<IRequestResult> CreateWithToken(string token, UserSchema schema)
+	public async Task<IRequestResult> RegisterWithToken(string token, UserSchema schema)
 	{
 		var request = VerifyRequest(schema);
 		if (request is ResourceRequestError error)
@@ -263,19 +270,21 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return ResourceRequestError.Conflict();
 		}
-		using var rscLock = new ResourceLock(user.Guid);
-		if(!user.AuthData.ChangePassword(new Passphrase(tempToken.Password), new Passphrase(schema.Password)))
+		using (var rscLock = new ResourceLock(user.Guid))
 		{
-			return ResourceRequestError.BadRequest();
+			if (!user.AuthData.ChangePassword(new Passphrase(tempToken.Password), new Passphrase(schema.Password)))
+			{
+				return ResourceRequestError.BadRequest();
+			}
+			user.Slug = schema.Username;
+			user.Name = schema.Name;
+			if (!user.Verify(out var verificationError))
+			{
+				return ResourceRequestError.BadRequest(verificationError);
+			}
+			tempToken.Redeem(default);
+			UserManager.Update(user, rscLock);
 		}
-		user.Slug = schema.Username;
-		user.Name = schema.Name;
-		if (!user.Verify(out var verificationError))
-		{
-			return ResourceRequestError.BadRequest(verificationError);
-		}
-		tempToken.Redeem(default);
-		UserManager.Update(user, rscLock);
 		SendEmailVerification(new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)));
 		req.Result = user;
 		return req;

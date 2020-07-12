@@ -56,10 +56,10 @@ namespace Dodo
 		public bool IsPublished { get; set; }
 
 		[BsonElement]
-		private TokenCollection SharedTokens { get; set; } = new TokenCollection();
+		public TokenCollection TokenCollection { get; private set; } = new TokenCollection();
 
 		[BsonElement]
-		private SecureUserStore Members { get; set; } = new SecureUserStore();
+		private SecureUserStore m_members { get; set; } = new SecureUserStore();
 
 		public GroupResource() : base() { }
 
@@ -114,7 +114,7 @@ namespace Dodo
 			var adminData = AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase);
 			adminData.Administrators = adminData.Administrators.Where(ad => ad.User.Guid != targetUser.Guid).ToList();
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			SharedTokens.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
+			TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
@@ -151,7 +151,7 @@ namespace Dodo
 				return false;
 			}
 			AdministratorData.SetValue(adminData, newAdminRef, newPass);
-			SharedTokens.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
+			TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			using (var userLock = new ResourceLock(newAdmin))
@@ -234,7 +234,7 @@ namespace Dodo
 			}
 			entry.Permissions = newPermissions;
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			SharedTokens.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
+			TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} altered @{target.Slug}'s administrator permissions:\n{GetPermissionDiff(existingPermissions, newPermissions)}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
@@ -246,13 +246,13 @@ namespace Dodo
 
 		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, null, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", 
+			TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"", 
 				$"{Dodo.DodoApp.NetConfig.FullURI}/{rsc.GetType().Name.ToLowerInvariant()}/{rsc.Slug}", ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 		}
 
 		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource
 		{
-			AddToken(new SimpleNotificationToken(null, null, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", 
+			TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.", 
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			return true;
 		}
@@ -261,17 +261,12 @@ namespace Dodo
 		#region Notifications & Tokens
 		public IEnumerable<Notification> GetNotifications(AccessContext context, EPermissionLevel permissionLevel)
 		{
-			return SharedTokens.GetNotifications(context, permissionLevel, this);
-		}
-
-		public void AddToken(IToken token)
-		{
-			SharedTokens.AddOrUpdate(this, token);
+			return TokenCollection.GetNotifications(context, permissionLevel, this);
 		}
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
-			return SharedTokens.Remove(context, permissionLevel, notification, this);
+			return TokenCollection.Remove(context, permissionLevel, notification, this);
 		}
 
 		public Passphrase GetPrivateKey(AccessContext context)
@@ -296,7 +291,7 @@ namespace Dodo
 
 		#region Group
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public int MemberCount { get { return Members.Count; } }
+		public int MemberCount { get { return m_members.Count; } }
 
 		public bool IsMember(AccessContext context)
 		{
@@ -304,17 +299,17 @@ namespace Dodo
 			{
 				return false;
 			}
-			return Members.IsAuthorised(context);
+			return m_members.IsAuthorised(context);
 		}
 
 		public void Leave(AccessContext accessContext)
 		{
-			Members.Remove(accessContext.User.CreateRef(), accessContext.Passphrase);
+			m_members.Remove(accessContext.User.CreateRef(), accessContext.Passphrase);
 		}
 
 		public void Join(AccessContext accessContext)
 		{
-			Members.Add(accessContext.User.CreateRef(), accessContext.Passphrase);
+			m_members.Add(accessContext.User.CreateRef(), accessContext.Passphrase);
 		}
 		#endregion
 

@@ -4,6 +4,12 @@ using Microsoft.AspNetCore.Http;
 using Resources;
 using System;
 
+/// <summary>
+/// Handler for basic CRUD operations, and notifications if they are supported
+/// TODO: make notifications have their own thing somehow
+/// </summary>
+/// <typeparam name="T">Type of the resource</typeparam>
+/// <typeparam name="TSchema">Schema type of the resource</typeparam>
 public class ResourceServiceBase<T, TSchema> 
 	where T : DodoResource
 	where TSchema : ResourceSchemaBase
@@ -14,6 +20,13 @@ public class ResourceServiceBase<T, TSchema>
 
 	public virtual IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
 	public virtual IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
+
+	/// <summary>
+	/// TODO: hook up to dependency injection one day
+	/// </summary>
+	/// <param name="context">The security and access context object for authorization</param>
+	/// <param name="httpContext">The HTTP Context of the request</param>
+	/// <param name="authService">The authorization service for this service</param>
 	public ResourceServiceBase(AccessContext context, HttpContext httpContext, AuthorizationService<T, TSchema> authService)
 	{
 		Context = context;

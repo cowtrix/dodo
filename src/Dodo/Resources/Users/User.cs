@@ -27,7 +27,8 @@ namespace Dodo.Users
 		[View(EPermissionLevel.USER)]
 		[VerifyObject]
 		public AuthorizationData AuthData { get; set; }
-		public TokenCollection TokenCollection { get; set; } = new TokenCollection();
+		[BsonElement]
+		public TokenCollection TokenCollection { get; private set; } = new TokenCollection();
 		[BsonIgnore]
 		public string PublicKey => AuthData.PublicKey;
 		#endregion
@@ -95,11 +96,6 @@ namespace Dodo.Users
 		public IEnumerable<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel)
 		{
 			return TokenCollection.GetNotifications(accessContext, permissionLevel, this);
-		}
-
-		public void AddToken(IToken token)
-		{
-			TokenCollection.AddOrUpdate(this, token);
 		}
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
