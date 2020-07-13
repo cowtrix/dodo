@@ -5,5 +5,9 @@
 }
 
 .descriptionContainer {
-	display: flex;
+	padding: spacing(2) spacing(3);
+
+	@media (min-width: $responsive-breakpoint) {
+		display: flex;
+	}
 }

@@ -10,6 +10,7 @@ const { setCenterMap } = actions
 const mapStateToProps = state => ({
 	centerMap: centerMap(state),
 	resource: resources.selectors.currentResource(state),
+	notifications: resources.selectors.currentNotifications(state),
 	isLoading: resources.selectors.resourceLoading(state),
 	resourceTypes: resources.selectors.resourceTypes(state)
 })
@@ -17,7 +18,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
 	getResource: (resourceType, resourceID, setCenterMap) =>
-		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap)
+		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap),
+	getNotifications: (resourceType, resourceID) => resources.actions.notificationsGet(dispatch, resourceType, resourceID)
 })
 
 export const ResourceConnected = connect(

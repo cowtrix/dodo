@@ -4,11 +4,12 @@ import { Container } from "app/components/resources"
 import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
 import { ResourceContent } from './resource-content'
 
-export const Resource = ({ match, getResource, resource, isLoading, centerMap, setCenterMap, resourceTypes = [] }) => {
-	const { eventId, eventType } = match.params
+export const Resource = ({ match, getResource, getNotifications, resource,notifications, isLoading, centerMap, setCenterMap, resourceTypes = [] }) => {
+	const { resourceId, resourceType } = match.params
 
 	useEffect(() => {
-		getResource(eventType, eventId, setCenterMap)
+		getResource(resourceType, resourceId, setCenterMap);
+		getNotifications(resourceType, resourceId);
 	}, [match])
 
 
@@ -37,6 +38,7 @@ export const Resource = ({ match, getResource, resource, isLoading, centerMap, s
 						{resource.metadata && !isLoading && (
 							<ResourceContent
 								resource={resource}
+								notifications={notifications}
 								setCenterMap={setCenterMap}
 								resourceTypes={resourceTypes}
 								resourceColor={resourceColor}
