@@ -157,7 +157,7 @@ namespace RESTTests
 
 			await Logout();
 
-			var inviteURL = EmailHelper.EmailHistory.Last().Contents.First().Value;
+			var inviteURL = EmailUtility.EmailHistory.Last().Contents.First().Value;
 			var startUrlIndex = inviteURL.IndexOf(Dodo.DodoApp.NetConfig.FullURI);
 			inviteURL = inviteURL.Substring(startUrlIndex);
 			var user2Password = ValidationExtensions.GenerateStrongPassword();

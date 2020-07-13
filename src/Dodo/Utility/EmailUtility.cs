@@ -1,5 +1,7 @@
 using Common;
 using Common.Config;
+using Microsoft.AspNetCore.Mvc;
+using Resources;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
@@ -11,7 +13,17 @@ using System.Threading.Tasks;
 
 namespace Dodo.Utility
 {
-	public static class EmailHelper
+	[Route(Dodo.DodoApp.API_ROOT + "email")]
+	public class EmailProxyController : CustomController
+	{
+		public async Task<IActionResult> ReceiveEmail([FromBody]string body)
+		{
+			Logger.Info(body);
+			return Ok();
+		}
+	}
+
+	public static class EmailUtility
 	{
 #if DEBUG
 		public static List<SendGridMessage> EmailHistory = new List<SendGridMessage>();
@@ -22,8 +34,8 @@ namespace Dodo.Utility
 		static ConfigVariable<string> m_privacyPolicy = new ConfigVariable<string>("PrivacyPolicyURL", "http://www.todo.com/privacypolicy");
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
 
-		static ConfigVariable<string> m_verifyEmailTemplateGUID = new ConfigVariable<string>($"{nameof(EmailHelper)}_SendGridTemplate_VerifyEmail", "d-abb66e4f174c470abeb5e6a1ecdaac85");
-		static ConfigVariable<string> m_resetPasswordTemplateGUID = new ConfigVariable<string>($"{nameof(EmailHelper)}_SendGridTemplate_ResetPassword", "d-43861bc9e0dd44b29b131da9b10a07d1");
+		static ConfigVariable<string> m_verifyEmailTemplateGUID = new ConfigVariable<string>($"{nameof(EmailUtility)}_SendGridTemplate_VerifyEmail", "d-abb66e4f174c470abeb5e6a1ecdaac85");
+		static ConfigVariable<string> m_resetPasswordTemplateGUID = new ConfigVariable<string>($"{nameof(EmailUtility)}_SendGridTemplate_ResetPassword", "d-43861bc9e0dd44b29b131da9b10a07d1");
 
 		static SendGridClient m_client;
 
@@ -33,10 +45,10 @@ namespace Dodo.Utility
 			{ "privacy_policy", m_privacyPolicy.Value }
 		};
 
-		static EmailHelper()
+		static EmailUtility()
 		{
 			Logger.Debug($"Using SendGrid API Key {m_sendGridAPIKey.Value}");
-			m_client = new SendGridClient(m_sendGridAPIKey.Value);
+			m_client = new SendGridClient(m_sendGridAPIKey.Value);			
 		}
 
 		public static void SendEmail(string targetEmail, string targetName, string subject, string content)

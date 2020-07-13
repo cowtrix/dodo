@@ -129,7 +129,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 				var resetToken = new ResetPasswordToken(targetUser);
 				targetUser.TokenCollection.AddOrUpdate(targetUser, resetToken);
 				UserManager.Update(targetUser, rscLock);
-				EmailHelper.SendPasswordResetEmail(targetUser.PersonalData.Email, targetUser.Name,
+				EmailUtility.SendPasswordResetEmail(targetUser.PersonalData.Email, targetUser.Name,
 					$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{RESET_PASSWORD}?token={resetToken.Key}");
 			}
 		}
@@ -305,7 +305,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return ResourceRequestError.BadRequest("User has requested maximum number of email verifications");
 		}
-		EmailHelper.SendEmailVerificationEmail(context.User.PersonalData.Email, context.User.Name,
+		EmailUtility.SendEmailVerificationEmail(context.User.PersonalData.Email, context.User.Name,
 			$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}");
 		using var rscLock = new ResourceLock(context.User);
 		var user = rscLock.Value as User;
@@ -336,7 +336,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			newUser.TokenCollection.AddOrUpdate(newUser, new TemporaryUserToken(temporaryPassword, tokenChallenge));
 			ResourceUtility.GetManager<User>().Update(newUser, rscLock);
 		}
-		EmailHelper.SendEmail(email, "New Rebel",
+		EmailUtility.SendEmail(email, "New Rebel",
 			$"You've been invited to create an account on {Dodo.DodoApp.PRODUCT_NAME}",
 			$"To create your account, please following the following link:\n\n{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{REGISTER}?token={token}");
 		return newUser;
