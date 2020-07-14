@@ -11,13 +11,20 @@ const COME_TO_EVENT = "Come to an resources"
 const VOLUNTEER_NOW = "Volunteer now with a working group"
 
 export const ResourceContent =
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, joinResource}) =>
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, joinResource, memberOf, isLoggedIn }) =>
 	<div className={styles.resource}>
 		<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} />
 		<ParentLink parent={resource.parent}/>
 		<Video videoEmbedURL={resource.videoEmbedURL} />
 		<Description description={resource.publicDescription} />
-		<SignUpButton resourceColor={resourceColor} onClick={() => joinResource(resourceType, resource.guid)} />
+		<SignUpButton
+			resourceColor={resourceColor}
+			joinResource={joinResource}
+			resourceType={resourceType}
+			resourceID={resource.guid}
+			memberOf={memberOf}
+			isLoggedIn={isLoggedIn}
+		/>
 		<ExpandableList resources={resource.resources} title={COME_TO_EVENT} resourceTypes={resourceTypes} />
 		<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes} />
 		<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />

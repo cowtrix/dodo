@@ -14,7 +14,10 @@ export const Resource =
 			centerMap,
 			setCenterMap,
 			resourceTypes = [],
-			joinResource
+			joinResource,
+			leaveResource,
+			memberOf,
+			isLoggedIn
 		}
 	) => {
 		const { resourceId, resourceType } = match.params
@@ -54,6 +57,9 @@ export const Resource =
 									resourceColor={resourceColor}
 									resourceType={resourceType}
 									joinResource={joinResource}
+									leaveResource={leaveResource}
+									memberOf={memberOf}
+									isLoggedIn={isLoggedIn}
 								/>
 							)}
 						</Fragment>
