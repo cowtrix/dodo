@@ -1,4 +1,4 @@
-import { RESOURCE_GET, RESOURCES_GET, RESOURCE_JOIN } from "./action-types"
+import { RESOURCE_GET, RESOURCES_GET, RESOURCE_JOIN, RESOURCE_LEAVE } from "./action-types"
 import { apiAction } from "../factories/api-action"
 import { API_URL } from "../urls"
 import { actionTypes as searchActionTypes } from '../search'
@@ -17,5 +17,6 @@ const setSearchEvents =  dispatch => async payload => {
 export const eventTypesGet = (dispatch) =>
 	apiAction(dispatch, RESOURCES_GET, API_URL, setSearchEvents(dispatch))
 
-export const joinResource = (dispatch, resourceType, resourceId, cb) =>
-	apiAction(dispatch, RESOURCE_JOIN, API_URL + resourceType + "/" + resourceId + '/join', cb, false, 'post')
+export const joinResource = (dispatch, resourceType, resourceId, subscribe, cb) =>
+	apiAction(dispatch, RESOURCE_JOIN, API_URL + resourceType + "/" + resourceId + '/' + subscribe, cb, false, 'post')
+
