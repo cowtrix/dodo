@@ -10,8 +10,13 @@
 	max-width: $application-max-width;
 	flex-grow: 1;
 	flex-direction: column;
-	padding: spacing(6) spacing(3) spacing(3) spacing(3);
 	position: relative;
+	padding: spacing(6) 0 spacing(3);
+
+	> * {
+		padding-left: spacing(3);
+		padding-right: spacing(3);
+	}
 
 	@media (min-width: $responsive-breakpoint) {
 		width: 500px;

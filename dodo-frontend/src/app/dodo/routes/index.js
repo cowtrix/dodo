@@ -1,1 +1,1 @@
-export { Routes } from './routes'
+export { RoutesConnected as Routes } from './container'

@@ -9,8 +9,8 @@ import styles from "./list.module.scss"
 const SEE_MORE = "See All..."
 const SEE_LESS = "See Less..."
 
-export const List = ({ resources = [], resourceTypes, listExpanded, setListExpanded, isExpandableList }) =>
-	<ul className={styles.eventList}>
+export const List = ({ resources = [], resourceTypes, listExpanded, setListExpanded, isExpandableList, isMasterList = false }) =>
+	<ul className={`${styles.eventList} ${isMasterList ? styles.masterList : ''}`}>
 		{resources.map(event => <Summary {...event} key={event.guid} resourceTypes={resourceTypes}/>)}
 		{isExpandableList ?
 			<li>
