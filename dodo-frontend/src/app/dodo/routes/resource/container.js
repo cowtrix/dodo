@@ -19,7 +19,9 @@ const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
 	getResource: (resourceType, resourceID, setCenterMap) =>
 		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap),
-	getNotifications: (resourceType, resourceID) => resources.actions.notificationsGet(dispatch, resourceType, resourceID)
+	getNotifications: (resourceType, resourceID) => resources.actions.notificationsGet(dispatch, resourceType, resourceID),
+	joinResource: (resourceType, resourceID) =>
+		resources.actions.joinResource(dispatch, resourceType, resourceID)
 })
 
 export const ResourceConnected = connect(

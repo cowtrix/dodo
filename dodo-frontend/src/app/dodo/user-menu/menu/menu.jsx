@@ -5,12 +5,12 @@ import { Options } from './options'
 
 const SIGN_IN_TEXT = 'Signed in as '
 
-export const Menu = ({ menuOpen, username }) =>
+export const Menu = ({ menuOpen, username, logout }) =>
 	<div className={`${styles.menu} ${menuOpen ? styles.open : ''}`}>
 		<div className={styles.user}>
 			{SIGN_IN_TEXT}{username}
 		</div>
-		<Options/>
+		<Options logout={logout}/>
 	</div>
 
 Menu.propTypes = {

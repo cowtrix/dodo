@@ -1,14 +1,14 @@
 import React, { Fragment, useState } from "react"
-import { useTranslation } from "react-i18next"
-import { postLogin } from "app/domain/services/login"
-import { useHistory, Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
+import { useTranslation } from "react-i18next"
+import { useHistory, Link } from 'react-router-dom'
 
 import { Input, Container, Submit, Error, TickBox } from 'app/components/forms'
 
 const LOGIN = 'Login'
 
-export const Login = ({ login, isLoggedIn, error }) => {
+export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 
 	const history = useHistory()
 
@@ -60,6 +60,14 @@ export const Login = ({ login, isLoggedIn, error }) => {
 						/>
 					</Fragment>
 				}
+				loading={isLoggingIn}
 			/>
 	)
+}
+
+Login.propTypes = {
+	login: PropTypes.func,
+	isLoggedIn: PropTypes.bool,
+	isLoggingIn: PropTypes.bool,
+	error: PropTypes.string,
 }
