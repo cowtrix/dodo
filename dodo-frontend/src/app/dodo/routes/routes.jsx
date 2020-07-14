@@ -27,7 +27,7 @@ export const Routes = ({ closeMenu }) => {
 				<Route path={LOGIN_ROUTE} component={Login} exact />
 				<Route path={RESET_PASSWORD_ROUTE} component={ResetPassword} exact />
 				<Route path={REGISTER_ROUTE} component={Register} exact />
-				<Route path={YOUR_PROFILE_ROUTE} component={YourProfile} />
+				<Route path={YOUR_PROFILE_ROUTE} component={YourProfile} exact />
 				<Route path="*" component={NotFound} />
 			</Switch>
 		</Fragment>

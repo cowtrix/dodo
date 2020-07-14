@@ -23,5 +23,8 @@ export const emailConfirmed = state =>
 export const error = state =>
 	path(["requests", LOGIN, "error"], state)
 
+export const isLoggingIn = state =>
+	path(["requests", LOGIN, "isFetching"], state)
+
 export const fetchingUser = state =>
 	path(["requests", GET_LOGGED_IN_USER, "isFetching"], state) && !path(["requests", GET_LOGGED_IN_USER, "hasErrored"], state)

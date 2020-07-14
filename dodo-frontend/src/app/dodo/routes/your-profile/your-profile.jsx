@@ -8,12 +8,14 @@ import { useHistory } from 'react-router-dom'
 const MY_REBELLION = "Your profile"
 const UPDATE_DETAILS = "Update my details"
 
-export const YourProfile = ({ currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid }) => {
-	// const history = useHistory()
+export const YourProfile = (
+	{ currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid, resendVerificationEmail }
+	) => {
+	const history = useHistory()
 
-	// if (!currentUsername) {
-	// 	history.push('/register')
-	// }
+	if (!currentUsername) {
+		history.push('/register')
+	}
 
 	const [username, setUserName] = useState(currentUsername)
 	const [name, setName] = useState(currentName)
@@ -45,7 +47,12 @@ export const YourProfile = ({ currentUsername, currentName, currentEmail, fetchi
 						value={name}
 						setValue={setName}
 					/>
-					<UpdateEmail email={email} setEmail={setEmail} isConfirmed={isConfirmed} />
+					<UpdateEmail
+						email={email}
+						setEmail={setEmail}
+						isConfirmed={isConfirmed}
+						resendVerificationEmail={resendVerificationEmail}
+					/>
 					<Submit
 						value={UPDATE_DETAILS}
 						submit={updateDetails(username, name, email, guid)}

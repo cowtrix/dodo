@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { YourProfile } from './your-profile'
 import { username, name, email, fetchingUser, guid, emailConfirmed } from 'app/domain/user/selectors'
-import { updateDetails } from 'app/domain/user/actions'
+import { updateDetails, resendVerificationEmail } from 'app/domain/user/actions'
 
 const mapStateToProps = state => ({
 	currentUsername: username(state),
@@ -14,7 +14,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	updateDetails: (slug, name, email, guid) => () =>
-		updateDetails(dispatch, guid, {slug, name, personalData: { email }})
+		updateDetails(dispatch, guid, {slug, name, personalData: { email }}),
+	resendVerificationEmail: () => resendVerificationEmail(dispatch)
 })
 
 export const YourProfileConnected = connect(mapStateToProps, mapDispatchToProps)(YourProfile)
