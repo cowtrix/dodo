@@ -113,7 +113,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> GetNotifications(string id, int page)
 	{
-		int chunkSize = ConfigManager.GetValue($"Notifications_ChunkSize", 25);
+		int chunk = ConfigManager.GetValue($"Notifications_ChunkSize", 10);
 		if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
 		{
 			return ResourceRequestError.BadRequest();
@@ -126,13 +126,13 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		var actionReq = request as ResourceActionRequest;
 		var notificationProvider = actionReq.Result as INotificationResource;
 		var notifications = notificationProvider.GetNotifications(actionReq.AccessContext, actionReq.PermissionLevel);
-		var chunk = new
+		var notificationChunk = new
 		{
-			notifications = notifications.Skip((page - 1) * chunkSize).Take(chunkSize),
+			notifications = notifications.Skip((page - 1) * chunk).Take(chunk),
 			totalCount = notifications.Count(),
-			chunkSize = chunkSize
+			chunkSize = chunk,
 		};
-		return new OkRequestResult(chunk);
+		return new OkRequestResult(notificationChunk);
 	}
 
 	public virtual async Task<IRequestResult> AddNotification(string id, NotificationModel notification)
