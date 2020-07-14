@@ -37,8 +37,8 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 
 	public async Task<IRequestResult> Login(LoginModel login)
 	{
-		var logstr = $"Login request for {login.Username}" +
-			(string.IsNullOrEmpty(login.Redirect) ? "" : $" (redirect: {login.Redirect}).");
+		var logstr = $"Login request for '{login.Username}'" +
+			(string.IsNullOrEmpty(login.Redirect) ? "" : $" (redirect: {login.Redirect})" + ": ");
 		if (Context.User != null)
 		{
 			// User is already logged in
@@ -82,7 +82,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		};
 		// issue authentication cookie with subject ID and username
 		await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
-		Logger.Debug($"{logstr} Request was successful, created new session token {token.Guid} (expires {token.ExpiryDate})");
+		Logger.Debug($"{logstr} Request was successful, created new session token {token.Guid} (expires {token.ExpiryDate}) for {HttpContext.Connection.RemoteIpAddress}");
 		return new OkRequestResult(user.GenerateJsonView(EPermissionLevel.OWNER, user, new Passphrase(user.AuthData.PassPhrase.GetValue(login.Password))));
 	}
 
