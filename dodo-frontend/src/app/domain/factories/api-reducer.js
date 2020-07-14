@@ -25,6 +25,7 @@ export const apiReducerFactory = actionType => (
 		case actionType + FAILURE: {
 			return {
 				...state,
+				isFetching: false,
 				hasErrored: true,
 				error: action.payload
 			}
