@@ -34,41 +34,37 @@ namespace Dodo.WorkingGroups
 			{
 				throw new Exception($"Invalid parent group ID in Working Group construction: {schema.Parent}");
 			}
-			Parent = group.CreateRef();
+			Parent = group.CreateRef<IRESTResource>();
 		}
 
 		[BsonElement]
-		private List<Guid> m_roles = new List<Guid>();
+		private List<ResourceReference<Role>> m_roles = new List<ResourceReference<Role>>();
 		[BsonElement]
-		private List<Guid> m_workingGroups = new List<Guid>();
+		private List<ResourceReference<WorkingGroup>> m_workingGroups = new List<ResourceReference<WorkingGroup>>();
 
 		/// <summary>
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public IEnumerable<WorkingGroup> WorkingGroups
+		public IEnumerable<ResourceReference<WorkingGroup>> WorkingGroups
 		{
 			get
 			{
-				var rm = ResourceUtility.GetManager<WorkingGroup>();
-				return m_workingGroups.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
-					.Where(rsc => rsc != null);
+				return m_workingGroups;
 			}
 		}
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public IEnumerable<Role> Roles
+		public IEnumerable<ResourceReference<Role>> Roles
 		{
 			get
 			{
-				var rm = ResourceUtility.GetManager<Role>();
-				return m_roles.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
-					.Where(rsc => rsc != null);
+				return m_roles;
 			}
 		}
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority:-2, customDrawer: "parentRef")]
-		public ResourceReference<GroupResource> Parent { get; private set; }
+		public ResourceReference<IRESTResource> Parent { get; private set; }
 
 		public GeoLocation Location => Parent.Location;
 
@@ -85,19 +81,19 @@ namespace Dodo.WorkingGroups
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				if (m_workingGroups.Contains(wg.Guid))
+				if (m_workingGroups.Any(w => w.Guid == wg.Guid))
 				{
 					throw new Exception($"Adding duplicated child object {wg.Guid} to {Guid}");
 				}
-				m_workingGroups.Add(wg.Guid);
+				m_workingGroups.Add(wg.CreateRef());
 			}
 			else if (rsc is Role s && s.Parent.Guid == Guid)
 			{
-				if (m_roles.Contains(s.Guid))
+				if (m_roles.Any(w => w.Guid == s.Guid))
 				{
 					throw new Exception($"Adding duplicated child object {s.Guid} to {Guid}");
 				}
-				m_roles.Add(s.Guid);
+				m_roles.Add(s.CreateRef());
 			}
 			else
 			{
@@ -110,11 +106,11 @@ namespace Dodo.WorkingGroups
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				return m_workingGroups.Remove(wg.Guid) && base.RemoveChild(rsc);
+				return m_workingGroups.Remove(wg.CreateRef()) && base.RemoveChild(rsc);
 			}
 			else if (rsc is Role s && s.Parent.Guid == Guid)
 			{
-				return m_roles.Remove(s.Guid) && base.RemoveChild(rsc);
+				return m_roles.Remove(s.CreateRef()) && base.RemoveChild(rsc);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}

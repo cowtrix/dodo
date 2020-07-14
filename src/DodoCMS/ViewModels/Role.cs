@@ -24,7 +24,7 @@ namespace Dodo.ViewModels
 		public uint Revision { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public Resources.ResourceReference<Dodo.GroupResource> Parent { get; set; }
+		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		[Resources.DescriptionAttribute()]

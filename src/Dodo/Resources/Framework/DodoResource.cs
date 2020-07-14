@@ -9,15 +9,6 @@ using Resources.Location;
 
 namespace Dodo
 {
-	/// <summary>
-	/// An owned resource has a "parent" resource that it sits under
-	/// E.g. Working Groups, Roles, Sites
-	/// </summary>
-	public interface IOwnedResource : IDodoResource
-	{
-		ResourceReference<GroupResource> Parent { get; }
-	}
-
 	public interface IDodoResource : IRESTResource
 	{
 		bool IsCreator(AccessContext context);

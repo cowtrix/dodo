@@ -88,7 +88,7 @@ namespace Dodo.ViewModels
 		public string PublicDescription { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public Resources.ResourceReference<Dodo.GroupResource> Parent { get; set; }
+		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }
 		[DisplayName("Video Embed URL")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string VideoEmbedURL { get; set; }

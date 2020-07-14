@@ -14,6 +14,7 @@ using System;
 
 namespace Dodo.Users
 {
+	[DontCache]
 	public class User : DodoResource, IVerifiable, ITokenResource, INotificationResource
 	{
 		public const string ADMIN_OF_KEY = "adminOf";
@@ -23,7 +24,7 @@ namespace Dodo.Users
 		#region Data
 		[View(EPermissionLevel.USER)]
 		[VerifyObject]
-		public PersonalInfo PersonalData = new PersonalInfo();
+		public PersonalInfo PersonalData { get; set; } = new PersonalInfo();
 		[View(EPermissionLevel.USER)]
 		[VerifyObject]
 		public AuthorizationData AuthData { get; set; }
@@ -74,7 +75,7 @@ namespace Dodo.Users
 			{
 				view.Add(ADMIN_OF_KEY, ResourceUtility.GetResource(r =>
 				{
-					if(!(r is IAdministratedResource admin))
+					if (!(r is IAdministratedResource admin))
 					{
 						return false;
 					}
@@ -105,7 +106,7 @@ namespace Dodo.Users
 
 		public Passphrase GetPrivateKey(AccessContext accessContext)
 		{
-			if(accessContext.User == null)
+			if (accessContext.User == null)
 			{
 				return default;
 			}

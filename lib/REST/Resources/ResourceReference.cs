@@ -8,6 +8,14 @@ using System.Collections.Generic;
 
 namespace Resources
 {
+	/// <summary>
+	/// An owned resource has a "parent" resource that it sits under
+	/// E.g. Working Groups, Roles, Sites
+	/// </summary>
+	public interface IOwnedResource : IRESTResource
+	{
+		ResourceReference<IRESTResource> Parent { get; }
+	}
 
 	public interface IResourceReference : IVerifiable
 	{
@@ -15,6 +23,7 @@ namespace Resources
 		string Slug { get; }
 		string Type { get; }
 		string Name { get; }
+		Guid Parent { get; }
 		bool HasValue();
 	}
 
@@ -42,10 +51,18 @@ namespace Resources
 		[JsonProperty]
 		[BsonElement]
 		public string FullyQualifiedName { get; set; }
+		[JsonProperty]
+		[BsonElement]
+		public Guid Parent { get; set; }
 
 		public T GetValue()
 		{
 			return ResourceUtility.GetResourceByGuid<T>(Guid);
+		}
+
+		public T2 GetValue<T2>() where T2: class, T
+		{
+			return GetValue() as T2;
 		}
 
 		public Type GetRefType() => System.Type.GetType(FullyQualifiedName);
@@ -60,9 +77,17 @@ namespace Resources
 			Name = resource?.Name;
 			Location = resource is ILocationalResource loc ? loc.Location : null;
 			FullyQualifiedName = resource?.GetType().AssemblyQualifiedName;
+			if(resource is IOwnedResource owned)
+			{
+				Parent = owned.Parent.Guid;
+			}
+			else
+			{
+				Parent = default;
+			}
 		}
 
-		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location)
+		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location, Guid parent)
 		{
 			if(type == null && !string.IsNullOrEmpty(name))
 			{
@@ -74,6 +99,7 @@ namespace Resources
 			Name = name;
 			Location = location;
 			FullyQualifiedName = type?.AssemblyQualifiedName;
+			Parent = parent;
 		}
 
 		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)

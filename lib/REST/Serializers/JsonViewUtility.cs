@@ -17,7 +17,7 @@ namespace Resources
 	/// Classes with this attribute won't have their revisions cached
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class)]
-	public class DontCacheAttribute : Attribute	{ }
+	public class DontCacheAttribute : Attribute { }
 
 	/// <summary>
 	/// This class will performs Resource specific JSON parsing tasks, transforming the data object
@@ -37,13 +37,36 @@ namespace Resources
 			typeof(IResourceReference)
 		};
 
-		public static T CopyByValue<T>(this object obj, object requester, Passphrase passphrase) where T:class
+		delegate Dictionary<string, object> CustomSerializer(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase);
+		private static readonly Dictionary<Type, CustomSerializer> m_customSerializers = new Dictionary<Type, CustomSerializer>()
+		{
+			{typeof(IResourceReference), ResourceRefSerializer }
+		};
+
+		private static Dictionary<string, object> ResourceRefSerializer(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase)
+		{
+			var reference = obj as IResourceReference;
+			if(!reference.HasValue())
+			{
+				return null;
+			}
+			return new Dictionary<string, object>()
+			{
+				{ nameof(IResourceReference.Guid).ToCamelCase(), reference.Guid },
+				{ nameof(IResourceReference.Slug).ToCamelCase(),  reference.Slug },
+				{ nameof(IResourceReference.Name).ToCamelCase(),  reference.Name },
+				{ nameof(IResourceReference.Type).ToCamelCase(),  reference.Type },
+				{ nameof(IResourceReference.Parent).ToCamelCase(),  reference.Parent },
+			};
+		}
+
+		public static T CopyByValue<T>(this object obj, object requester, Passphrase passphrase) where T : class
 		{
 			var newT = Activator.CreateInstance<T>() as T;
 			var sourceType = obj.GetType();
-			if(obj is IDecryptable decryptable)
+			if (obj is IDecryptable decryptable)
 			{
-				if(!decryptable.TryGetValue(requester, passphrase, out obj))
+				if (!decryptable.TryGetValue(requester, passphrase, out obj))
 				{
 					// User wasn't authorised
 					SecurityWatcher.RegisterEvent(requester as IRESTResource, "Bad authorization");
@@ -55,7 +78,7 @@ namespace Resources
 			{
 				var name = prop.Name;
 				var sourcePropCandidates = sourceType.GetPropertiesAndFields(p => p.Name == name, f => f.Name == name);
-				if(!sourcePropCandidates.Any())
+				if (!sourcePropCandidates.Any())
 				{
 					throw new Exception($"Failed to find property {name} in {sourceType}");
 				}
@@ -65,14 +88,14 @@ namespace Resources
 				}
 				var sourceProp = sourcePropCandidates.Single();
 				object value = sourceProp.GetValue(obj);
-				if(value == null)
+				if (value == null)
 				{
 					continue;
 				}
 				if (value.GetType() != prop.GetMemberType())
 				{
 					value = typeof(JsonViewUtility).GetMethod(nameof(CopyByValue)).MakeGenericMethod(prop.GetMemberType())
-						.Invoke(null, new [] { value, requester, passphrase });
+						.Invoke(null, new[] { value, requester, passphrase });
 				}
 				prop.SetValue(newT, value);
 			}
@@ -155,14 +178,16 @@ namespace Resources
 
 				// Handle composite/primitive object case
 				var targetType = obj.GetType();
+				var serializer = m_customSerializers.SingleOrDefault(kvp => kvp.Key.IsAssignableFrom(targetType)).Value;
+				if (serializer != null)
+				{
+					return serializer(obj, visibility, requester, passphrase);
+				}
 				if (ShouldSerializeDirectly(targetType))
 				{
 					throw new Exception($"Cannot generate JSON view for type {targetType}");
 				}
-
 				var vals = new Dictionary<string, object>();
-
-
 				// Get fields and properties, filter to what we can view with our permission level
 				var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
 				allMembers.AddRange(targetType.GetFields());
@@ -226,15 +251,15 @@ namespace Resources
 
 		public static Dictionary<string, object> ViewToPatch(object obj, EPermissionLevel permissionLevel)
 		{
-			if(obj is Dictionary<string, object> dict)
+			if (obj is Dictionary<string, object> dict)
 			{
 				return dict;
 			}
 			var patch = new Dictionary<string, object>();
-			foreach(var member in obj.GetType().GetPropertiesAndFields(p => true, f => true))
+			foreach (var member in obj.GetType().GetPropertiesAndFields(p => true, f => true))
 			{
 				var viewAttr = member.GetCustomAttribute<ViewAttribute>();
-				if(viewAttr == null || permissionLevel < viewAttr.EditPermission)
+				if (viewAttr == null || permissionLevel < viewAttr.EditPermission)
 				{
 					continue;
 				}
@@ -308,7 +333,7 @@ namespace Resources
 				throw new Exception("Cannot patch immutable struct - you must pass the full object. " +
 					"Add the [ViewClass] attribute to your struct.");
 			}
-			
+
 			// Get fields and properties
 			var members = new List<MemberInfo>(targetObject.GetType().GetProperties());
 			members.AddRange(targetObject.GetType().GetFields());
@@ -389,7 +414,7 @@ namespace Resources
 					valueToSet = decryptable;
 				}
 				var verifyAttributes = targetMember.GetCustomAttributes().OfType<IVerifiableMember>();
-				foreach(var verifyAttr in verifyAttributes)
+				foreach (var verifyAttr in verifyAttributes)
 				{
 					if (verifyAttr != null && !verifyAttr.Verify(valueToSet, out error))
 					{
@@ -410,6 +435,11 @@ namespace Resources
 			if (memberType == null || targetPropValue == null)
 			{
 				return null;
+			}
+			var serializer = m_customSerializers.SingleOrDefault(kvp => kvp.Key.IsAssignableFrom(memberType)).Value;
+			if (serializer != null)
+			{
+				return serializer(targetPropValue, visibility, requester, passphrase);
 			}
 			if (ShouldSerializeDirectly(memberType))
 			{

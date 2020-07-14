@@ -46,6 +46,6 @@ namespace Dodo.ViewModels
 		public int MemberCount { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public Resources.ResourceReference<Dodo.GroupResource> Parent { get; set; }
+		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }
 	}
 }

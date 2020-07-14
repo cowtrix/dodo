@@ -16,7 +16,7 @@ namespace Dodo.Roles
 	public class Role : DodoResource, IOwnedResource, IPublicResource, ILocationalResource
 	{
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer:"parentRef")]
-		public ResourceReference<GroupResource> Parent { get; set; }
+		public ResourceReference<IRESTResource> Parent { get; set; }
 
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Description]
@@ -39,11 +39,13 @@ namespace Dodo.Roles
 		public Role(AccessContext context, RoleSchema schema) : base(context, schema)
 		{
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
-			Parent = group.CreateRef();
+			Parent = group.CreateRef<IRESTResource>();
 			PublicDescription = schema.PublicDescription;
 		}
+
 		public bool Apply(AccessContext context, ApplicationModel application)
 		{
+			return true;
 		}
 	}
 }

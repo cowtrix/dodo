@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Dodo.Utility
 {
-	[Route(Dodo.DodoApp.API_ROOT + "email")]
+	[Route("email")]
 	public class EmailProxyController : CustomController
 	{
 		public async Task<IActionResult> ReceiveEmail([FromBody]string body)

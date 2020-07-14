@@ -194,13 +194,18 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return new OkRequestResult("You've already verified your email address");
 		}
-		if(string.IsNullOrEmpty(token))
-		{
-			// user is requesting new email
-			SendEmailVerification(Context);
-			return new OkRequestResult($"A new email verification link has been sent to {Context.User.PersonalData.Email}");
-		}
 		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context, EPermissionLevel.OWNER, Context.User);
+		if (string.IsNullOrEmpty(token))
+		{
+			if(verifyToken.ConfirmationEmailRequestCount < VerifyEmailToken.MAX_REQUEST_COUNT)
+			{
+				// user is requesting new email
+				SendEmailVerification(Context);
+				return new OkRequestResult($"A new email verification link has been sent to {Context.User.PersonalData.Email}");
+			}
+			
+		}
+		
 		if (verifyToken == null)
 		{
 			return ResourceRequestError.BadRequest();

@@ -129,7 +129,7 @@ namespace Dodo
 			{
 				return EPermissionLevel.ADMIN;
 			}
-			if (target is IOwnedResource owned && owned.Parent.GetValue().IsAdmin(context.User, context, out _))
+			if (target is IOwnedResource owned && owned.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out _))
 			{
 				return EPermissionLevel.ADMIN;
 			}

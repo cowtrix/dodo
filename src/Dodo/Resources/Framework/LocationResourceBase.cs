@@ -95,7 +95,7 @@ namespace Dodo.LocationResources
 		[Description]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer: "parentRef")]
-		public ResourceReference<GroupResource> Parent { get; set; }
+		public ResourceReference<IRESTResource> Parent { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		[Name("Video Embed URL")]
 		public string VideoEmbedURL { get; set; }
@@ -112,7 +112,7 @@ namespace Dodo.LocationResources
 				return;
 			}
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
-			Parent = group.CreateRef(); ;
+			Parent = group.CreateRef<IRESTResource>();
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();

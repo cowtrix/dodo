@@ -26,14 +26,16 @@ namespace Resources.Serializers
 			context.Reader.ReadName();
 			var latitude = context.Reader.ReadDouble();
 			context.Reader.ReadName();
-			var longitude = context.Reader.ReadDouble();
-			context.Reader.ReadEndDocument();
+			var longitude = context.Reader.ReadDouble();			
 			GeoLocation loc = null;
 			if(latitude != 0 && latitude != 0)
 			{
 				loc = new GeoLocation(latitude, longitude);
 			}
-			return new ResourceReference<T>(guid, slug, type, name, loc);
+			context.Reader.ReadName();
+			var parent = context.Reader.ReadBinaryData().AsGuid;
+			context.Reader.ReadEndDocument();
+			return new ResourceReference<T>(guid, slug, type, name, loc, parent);
 		}
 
 		public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, ResourceReference<T> value)
@@ -51,6 +53,8 @@ namespace Resources.Serializers
 			context.Writer.WriteDouble(value.Location != null ? value.Location.Latitude : 0);
 			context.Writer.WriteName(nameof(value.Location.Longitude));
 			context.Writer.WriteDouble(value.Location != null ? value.Location.Longitude : 0);
+			context.Writer.WriteName(nameof(value.Guid));
+			context.Writer.WriteBinaryData(value.Parent);
 			context.Writer.WriteEndDocument();
 		}
 
