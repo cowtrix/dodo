@@ -126,6 +126,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			using (var rscLock = new ResourceLock(targetUser))
 			{
 				targetUser = rscLock.Value as User;
+				targetUser.TokenCollection.RemoveAll<ResetPasswordToken>(Context, EPermissionLevel.OWNER, targetUser);
 				var resetToken = new ResetPasswordToken(targetUser);
 				targetUser.TokenCollection.AddOrUpdate(targetUser, resetToken);
 				UserManager.Update(targetUser, rscLock);
