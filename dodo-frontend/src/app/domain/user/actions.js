@@ -1,8 +1,22 @@
 import { postLogin } from '../services'
-import { LOGIN, RESET_PASSWORD, REGISTER_USER, GET_LOGGED_IN_USER, UPDATE_DETAILS } from './action-types'
+import {
+	LOGIN,
+	RESET_PASSWORD,
+	REGISTER_USER,
+	GET_LOGGED_IN_USER,
+	UPDATE_DETAILS,
+	LOGOUT,
+	RESEND_VALIDATION_EMAIL
+} from './action-types'
 import { apiAction } from '../factories'
-import { RESET_PASSWORD as RESET_PASSWORD_URL, REGISTER_USER as REGISTER_USER_URL, AUTH_URL } from '../urls'
 
+import {
+	RESET_PASSWORD as RESET_PASSWORD_URL,
+	REGISTER_USER as REGISTER_USER_URL,
+	AUTH_URL,
+	LOGOUT_URL,
+	RESEND_VALIDATION_EMAIL_URL
+} from '../urls'
 
 import { REQUEST, SUCCESS, FAILURE } from '../constants'
 
@@ -44,7 +58,18 @@ export const registerUser = (dispatch, userDetails) =>
 export const getLoggedInUser = (dispatch) =>
 	apiAction(dispatch, GET_LOGGED_IN_USER, AUTH_URL)
 
-export const updateDetails = (dispatch, user, details) =>
-	apiAction(dispatch, UPDATE_DETAILS, AUTH_URL + user.username, (success) => dispatch({
+export const updateDetails = (dispatch, guid, details) =>
+	apiAction(dispatch, UPDATE_DETAILS, AUTH_URL + guid, (success) => dispatch({
 		type: LOGIN + SUCCESS, payload: success
 	}), false, 'PATCH', details)
+
+export const logUserOut = (dispatch) =>
+	apiAction(dispatch, LOGOUT, LOGOUT_URL, refreshPage)
+
+export const resendVerificationEmail = (dispatch) =>
+	apiAction(dispatch, RESEND_VALIDATION_EMAIL, RESEND_VALIDATION_EMAIL_URL)
+
+const refreshPage = () => {
+	window.location.reload()
+	return false
+}

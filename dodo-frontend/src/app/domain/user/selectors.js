@@ -13,8 +13,20 @@ export const username = state =>
 export const email = state =>
 	path(["domain", "user", "personalData", "email"], state)
 
+export const guid = state =>
+	path(["domain", "user", "guid"], state)
+
+export const memberOf = state =>
+	path(["domain", "user", "metadata", "memberOf"], state)
+
+export const emailConfirmed = state =>
+	path(["domain", "user", "personalData", "emailConfirmed"], state)
+
 export const error = state =>
 	path(["requests", LOGIN, "error"], state)
 
+export const isLoggingIn = state =>
+	path(["requests", LOGIN, "isFetching"], state)
+
 export const fetchingUser = state =>
-	path(["requests", GET_LOGGED_IN_USER, "isFetching"], state)
+	path(["requests", GET_LOGGED_IN_USER, "isFetching"], state) && !path(["requests", GET_LOGGED_IN_USER, "hasErrored"], state)
