@@ -16,9 +16,11 @@ export const email = state =>
 export const guid = state =>
 	path(["domain", "user", "guid"], state)
 
+export const memberOf = state =>
+	path(["domain", "user", "metadata", "memberOf"], state)
+
 export const emailConfirmed = state =>
 	path(["domain", "user", "personalData", "emailConfirmed"], state)
-
 
 export const error = state =>
 	path(["requests", LOGIN, "error"], state)

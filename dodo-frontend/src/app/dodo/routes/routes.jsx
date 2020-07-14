@@ -9,6 +9,9 @@ import { NotFound } from "./error"
 import { ResetPassword, RESET_PASSWORD_ROUTE } from './reset-password'
 import { Register, REGISTER_ROUTE } from './register'
 import { YourProfile, YOUR_PROFILE_ROUTE } from './your-profile'
+import { MY_REBELLION_ROUTE, MyRebellion } from './my-rebellion'
+
+
 import { useHistory } from 'react-router-dom'
 
 
@@ -28,6 +31,7 @@ export const Routes = ({ closeMenu }) => {
 				<Route path={RESET_PASSWORD_ROUTE} component={ResetPassword} exact />
 				<Route path={REGISTER_ROUTE} component={Register} exact />
 				<Route path={YOUR_PROFILE_ROUTE} component={YourProfile} exact />
+				<Route path={MY_REBELLION_ROUTE} component={MyRebellion} exact />
 				<Route path="*" component={NotFound} />
 			</Switch>
 		</Fragment>
