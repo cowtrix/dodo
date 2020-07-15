@@ -86,7 +86,8 @@ namespace Resources
 			{
 				yield break;
 			}
-			foreach (var rm in ResourceManagers.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
+			foreach (var rm in ResourceManagers.Where(rm => rm.Value is ISearchableResourceManager)
+				.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
 			{
 				var result = rm.Value.Get(x => func(x), handle).OfType<T>();
 				foreach (var r in result)

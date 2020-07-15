@@ -80,16 +80,16 @@ namespace Dodo.Users
 						return false;
 					}
 					return admin.IsAdmin(this, accessContext, out _);
-				}).Select(r => r.CreateRef()));
+				}).Select(r => r.CreateRef()).ToList());
 
 				view.Add(MEMBER_OF_KEY, ResourceUtility.GetResource(r =>
 				{
-					if (!(r is IAdministratedResource admin))
+					if (!(r is IGroupResource group))
 					{
 						return false;
 					}
-					return admin.IsAdmin(this, accessContext, out _);
-				}).Select(r => r.CreateRef()));
+					return group.IsMember(accessContext);
+				}).Select(r => r.CreateRef()).ToList());
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
