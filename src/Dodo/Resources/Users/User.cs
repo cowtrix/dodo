@@ -80,7 +80,7 @@ namespace Dodo.Users
 						return false;
 					}
 					return admin.IsAdmin(this, accessContext, out _);
-				}).Select(r => r.CreateRef()).ToList());
+				}).Select(r => r.CreateRef().GenerateJsonView(permissionLevel, requester, passphrase)).ToList());
 
 				view.Add(MEMBER_OF_KEY, ResourceUtility.GetResource(r =>
 				{
@@ -89,7 +89,7 @@ namespace Dodo.Users
 						return false;
 					}
 					return group.IsMember(accessContext);
-				}).Select(r => r.CreateRef()).ToList());
+				}).Select(r => r.CreateRef().GenerateJsonView(permissionLevel, requester, passphrase)).ToList());
 			}
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
