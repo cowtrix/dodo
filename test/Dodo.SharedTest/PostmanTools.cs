@@ -20,6 +20,10 @@ namespace DodoTest.Framework.Postman
 		public string Request { get; set; }
 	}
 
+	/// <summary>
+	/// This is just a little utility that updates some postman API documentation, because I was sick
+	/// of having to update the examples every time something changed.
+	/// </summary>
 	public class PostmanCollection
 	{
 #if POSTMAN

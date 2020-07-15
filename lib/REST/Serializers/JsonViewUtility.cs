@@ -25,7 +25,8 @@ namespace Resources
 	/// </summary>
 	public static class JsonViewUtility
 	{
-		private static ConcurrentDictionary<(Guid, uint), Dictionary<string, object>> m_cache = new ConcurrentDictionary<(Guid, uint), Dictionary<string, object>>();
+		private static ConcurrentDictionary<(Guid, uint, EPermissionLevel), Dictionary<string, object>> m_cache = 
+			new ConcurrentDictionary<(Guid, uint, EPermissionLevel), Dictionary<string, object>>();
 
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
 		{
@@ -176,58 +177,62 @@ namespace Resources
 				{
 					return null;
 				}
-
-				if (obj is IRESTResource resource && obj.GetType().GetCustomAttribute<DontCacheAttribute>() == null)
+				Dictionary<string, object> vals = null;
+				IRESTResource resource = obj as IRESTResource;
+				var shouldCache = resource != null && visibility < EPermissionLevel.MEMBER &&
+					obj.GetType().GetCustomAttribute<DontCacheAttribute>() == null;
+				if (!shouldCache || !m_cache.TryGetValue((resource.Guid, resource.Revision, visibility), out vals))
 				{
-					// Try to hit the resource cache
-					if (m_cache.TryGetValue((resource.Guid, resource.Revision), out var cacheVal))
+					// Handle composite/primitive object case
+					var targetType = obj.GetType();
+					if (ShouldSerializeDirectly(targetType))
 					{
-						return cacheVal;
+						throw new Exception($"Cannot generate JSON view for type {targetType}");
+					}
+					vals = new Dictionary<string, object>();
+					// Get fields and properties, filter to what we can view with our permission level
+					var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
+					allMembers.AddRange(targetType.GetFields());
+					var filteredMembers = allMembers.Where(m =>
+					{
+						var attr = m.GetCustomAttribute<ViewAttribute>();
+						if (attr == null || attr.ViewPermission > visibility)
+						{
+							return false;
+						}
+						return true;
+					});
+
+					foreach (var member in filteredMembers)
+					{
+						var memberName = member.Name.ToCamelCase();
+						var targetPropValue = member.GetValue(obj);
+						var memberType = member.GetMemberType();
+						var finalObj = GetObject(targetPropValue, member, requester, visibility, passphrase);
+						if (finalObj != null)
+						{
+							vals.Add(memberName, finalObj);
+						}
+					}
+					if (shouldCache && obj is IRESTResource finalRsc)
+					{
+						// Write it to the cache if we should
+						m_cache[(finalRsc.Guid, finalRsc.Revision, visibility)] = vals.DeepCopy();
 					}
 				}
-
-				// Handle composite/primitive object case
-				var targetType = obj.GetType();
-				if (ShouldSerializeDirectly(targetType))
+				else
 				{
-					throw new Exception($"Cannot generate JSON view for type {targetType}");
-				}
-				var vals = new Dictionary<string, object>();
-				// Get fields and properties, filter to what we can view with our permission level
-				var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
-				allMembers.AddRange(targetType.GetFields());
-				var filteredMembers = allMembers.Where(m =>
-				{
-					var attr = m.GetCustomAttribute<ViewAttribute>();
-					if (attr == null || attr.ViewPermission > visibility)
-					{
-						return false;
-					}
-					return true;
-				});
-
-				foreach (var member in filteredMembers)
-				{
-					var memberName = member.Name.ToCamelCase();
-					var targetPropValue = member.GetValue(obj);
-					var memberType = member.GetMemberType();
-					var finalObj = GetObject(targetPropValue, member, requester, visibility, passphrase);
-					if (finalObj != null)
-					{
-						vals.Add(memberName, finalObj);
-					}
+					vals = vals.DeepCopy();
 				}
 				if (obj is IViewMetadataProvider view)
 				{
 					var metadata = new Dictionary<string, object>();
 					view.AppendMetadata(metadata, visibility, requester, passphrase);
+					if(vals.ContainsKey(Resource.METADATA))
+					{
+						throw new Exception();
+					}
 					vals.Add(Resource.METADATA, metadata);
-				}
-
-				if (obj is IRESTResource finalRsc)
-				{
-					m_cache[(finalRsc.Guid, finalRsc.Revision)] = vals;
-					return vals;
 				}
 				return vals;
 			}

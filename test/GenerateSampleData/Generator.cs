@@ -74,7 +74,6 @@ namespace GenerateSampleData
 			var sanctuary = TestBase.CreateNewObject<Site>(context, new SiteSchema("Second Occupation", currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
 			var evt = TestBase.CreateNewObject<Event>(context, new EventSchema("Activism Workshop", currentRebellion.Guid, new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription, currentRebellion.StartDate + TimeSpan.FromDays(1), currentRebellion.StartDate + TimeSpan.FromDays(1) + TimeSpan.FromHours(4)));
 
-
 			var actionSupport = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Action Support",
 				SchemaGenerator.SampleDescription, currentRebellion.Guid), seed: false);
 			var rebelRiders = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Rebel Riders",

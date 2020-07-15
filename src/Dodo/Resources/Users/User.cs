@@ -25,7 +25,6 @@ namespace Dodo.Users
 		[View(EPermissionLevel.USER)]
 		[VerifyObject]
 		public PersonalInfo PersonalData { get; set; } = new PersonalInfo();
-		[View(EPermissionLevel.USER)]
 		[VerifyObject]
 		public AuthorizationData AuthData { get; set; }
 		[BsonElement]

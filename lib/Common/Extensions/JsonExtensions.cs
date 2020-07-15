@@ -76,5 +76,10 @@ namespace Common.Extensions
 			}
 			return JValue.Parse(json).ToString(Formatting.Indented);
 		}
+
+		public static T DeepCopy<T>(this T target)
+		{
+			return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(target, StorageSettings), StorageSettings);
+		}
 	}
 }
