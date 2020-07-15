@@ -34,19 +34,29 @@ namespace Resources
 			typeof(Enum),
 			typeof(DateTime),
 			typeof(GeoLocation),
-			typeof(IResourceReference)
+			//typeof(IResourceReference)
 		};
 
-		delegate Dictionary<string, object> CustomSerializer(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase);
-		private static readonly Dictionary<Type, CustomSerializer> m_customSerializers = new Dictionary<Type, CustomSerializer>()
+		delegate object CustomSerializer(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase);
+		private static readonly Dictionary<Func<MemberInfo, bool>, CustomSerializer> m_customSerializers = new Dictionary<Func<MemberInfo, bool>, CustomSerializer>
 		{
-			{typeof(IResourceReference), ResourceRefSerializer }
+			{ m => m.GetMemberType() == typeof(IResourceReference), ResourceRefSerializer },
+			{ m => m.GetCustomAttribute<ViewDrawerAttribute>()?.DrawerName == "html", HtmlSerializer }
 		};
+
+		private static object HtmlSerializer(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase)
+		{
+			if (!(obj is string str))
+			{
+				throw new Exception("Invalid type: must be string");
+			}
+			return StringExtensions.TextToHtml(str);
+		}
 
 		private static Dictionary<string, object> ResourceRefSerializer(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase)
 		{
 			var reference = obj as IResourceReference;
-			if(!reference.HasValue())
+			if (!reference.HasValue())
 			{
 				return null;
 			}
@@ -178,11 +188,6 @@ namespace Resources
 
 				// Handle composite/primitive object case
 				var targetType = obj.GetType();
-				var serializer = m_customSerializers.SingleOrDefault(kvp => kvp.Key.IsAssignableFrom(targetType)).Value;
-				if (serializer != null)
-				{
-					return serializer(obj, visibility, requester, passphrase);
-				}
 				if (ShouldSerializeDirectly(targetType))
 				{
 					throw new Exception($"Cannot generate JSON view for type {targetType}");
@@ -206,7 +211,7 @@ namespace Resources
 					var memberName = member.Name.ToCamelCase();
 					var targetPropValue = member.GetValue(obj);
 					var memberType = member.GetMemberType();
-					var finalObj = GetObject(targetPropValue, memberType, requester, visibility, passphrase);
+					var finalObj = GetObject(targetPropValue, member, requester, visibility, passphrase);
 					if (finalObj != null)
 					{
 						vals.Add(memberName, finalObj);
@@ -402,7 +407,8 @@ namespace Resources
 					}
 				}
 				var memberType = targetMember.GetMemberType();
-				if (ShouldSerializeDirectly(memberType) && memberType != valueToSet?.GetType())
+				if ((ShouldSerializeDirectly(memberType) || typeof(IResourceReference).IsAssignableFrom(memberType)) 
+					&& memberType != valueToSet?.GetType())
 				{
 					var serialized = JsonConvert.SerializeObject(valueToSet, memberType, JsonExtensions.NetworkSettings);
 					valueToSet = JsonConvert.DeserializeObject(serialized, memberType, JsonExtensions.NetworkSettings);
@@ -430,13 +436,14 @@ namespace Resources
 			return targetObject;
 		}
 
-		private static object GetObject(object targetPropValue, Type memberType, object requester, EPermissionLevel visibility, Passphrase passphrase)
+		private static object GetObject(object targetPropValue, MemberInfo member, object requester, EPermissionLevel visibility, Passphrase passphrase)
 		{
+			var memberType = member?.GetMemberType();
 			if (memberType == null || targetPropValue == null)
 			{
 				return null;
 			}
-			var serializer = m_customSerializers.SingleOrDefault(kvp => kvp.Key.IsAssignableFrom(memberType)).Value;
+			var serializer = m_customSerializers.SingleOrDefault(kvp => kvp.Key(member)).Value;
 			if (serializer != null)
 			{
 				return serializer(targetPropValue, visibility, requester, passphrase);

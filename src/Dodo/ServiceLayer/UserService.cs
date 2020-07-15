@@ -328,7 +328,8 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			temporaryPassword.Value, email);
 		var factory = ResourceUtility.GetFactory<User>();
 		var newUser = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));
-		var token = StringExtensions.RandomString(32).ToLowerInvariant();
+		// TODO make this a bit more crytpsecure
+		var token = KeyGenerator.GetUniqueKey(32).ToLowerInvariant();
 		var tokenChallenge = PasswordHasher.HashPassword(token);
 #if DEBUG
 		if(!PasswordHasher.VerifyHashedPassword(tokenChallenge, token))

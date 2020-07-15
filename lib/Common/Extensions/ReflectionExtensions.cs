@@ -78,26 +78,38 @@ namespace Common.Extensions
 
 		public static Type GetMemberType(this MemberInfo member)
 		{
-			if (member is PropertyInfo)
-				return (member as PropertyInfo).PropertyType;
-			else if (member is FieldInfo)
-				return (member as FieldInfo).FieldType;
+			if(member == null)
+			{
+				return null;
+			}
+			if (member is System.Type type)
+				return type;
+			if (member is PropertyInfo prop)
+				return prop.PropertyType;
+			else if (member is FieldInfo field)
+				return field.FieldType;
 			throw new Exception("Unsupported MemberInfo type" + member.GetType());
 		}
 
 		public static void SetValue(this MemberInfo member, object target, object val)
 		{
-			if (member is PropertyInfo)
-				(member as PropertyInfo).SetValue(target, val);
-			else if (member is FieldInfo)
+			if (member is PropertyInfo prop)
+			{
+				if(val != null && !prop.PropertyType.IsAssignableFrom(val.GetType()))
+				{
+					throw new Exception("Type set mismatch");
+				}
+				prop.SetValue(target, val);
+			}
+			else if (member is FieldInfo field)
 			{
 				if (target.GetType().IsValueType)
 				{
-					(member as FieldInfo).SetValueDirect(__makeref(target), val);
+					field.SetValueDirect(__makeref(target), val);
 				}
 				else
 				{
-					(member as FieldInfo).SetValue(target, Convert.ChangeType(val, member.GetMemberType()));
+					field.SetValue(target, Convert.ChangeType(val, member.GetMemberType()));
 				}
 			}
 		}

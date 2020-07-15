@@ -42,6 +42,7 @@ namespace Dodo
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Name("Public Description")]
 		[Resources.Description]
+		[ViewDrawer("html")]
 		public string PublicDescription { get; set; }
 
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]

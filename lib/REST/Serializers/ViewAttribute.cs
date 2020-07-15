@@ -2,6 +2,15 @@ using System;
 
 namespace Resources
 {
+	public class ViewDrawerAttribute : Attribute
+	{
+		public string DrawerName { get; private set; }
+		public ViewDrawerAttribute(string drawerName)
+		{
+			DrawerName = drawerName;
+		}
+	}
+
 	/// <summary>
 	/// Fields and properties with this attribute will be serialized in REST api queries.
 	/// </summary>

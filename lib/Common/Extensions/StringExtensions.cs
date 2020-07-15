@@ -10,7 +10,26 @@ namespace Common.Extensions
 	{
 		public static string TextToHtml(string str)
 		{
-			return str.Replace(Environment.NewLine, "<br/>")
+			// Firstly escape any explicit html to prevent injection
+			str = System.Web.HttpUtility.HtmlEncode(str);
+			// Now format markdown urls
+			const string fullLinkOnlyRegex = @"\[([^\[]+)\]\((.*?)\)";
+			Match match = Regex.Match(str, fullLinkOnlyRegex);
+			while (match.Success)
+			{
+				// Handle match here...
+				try
+				{
+					var txt = match.Groups[1].Value;
+					var link = match.Groups[2].Value;
+					str = str.Substring(0, match.Index) + $"<a href=\"{link}\">{txt}</a>" + str.Substring(match.Index + match.Length);
+				}
+				catch { }
+				match = Regex.Match(str, fullLinkOnlyRegex);
+			}
+			// Finally replace linebreaks with <br/>
+			return str
+				.Replace(Environment.NewLine, "<br/>")
 				.Replace("\n", "<br/>");
 		}
 		public static string AppendIfNotNull(this string str, string toAppend)

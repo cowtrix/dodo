@@ -29,7 +29,7 @@ namespace Dodo
 		{
 			Guid = tokenGuid;
 			Source = source;
-			Message = message;
+			Message = StringExtensions.TextToHtml(message);
 			Timestamp = DateTime.UtcNow;
 			CanDelete = canDelete;
 			Link = link;

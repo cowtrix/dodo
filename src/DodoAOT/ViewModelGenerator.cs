@@ -46,7 +46,9 @@ namespace DodoAOT
 				}
 				var typeName = memberType.GetRealTypeName(true);
 				var memberName = member.Name;
-				if (!JsonViewUtility.ShouldSerializeDirectly(memberType) && !memberType.Namespace.StartsWith(nameof(System)))
+				if (!JsonViewUtility.ShouldSerializeDirectly(memberType) && 
+					!typeof(IResourceReference).IsAssignableFrom(memberType) &&
+					!memberType.Namespace.StartsWith(nameof(System)))
 				{
 					typeName = $"{memberType.GetRealTypeName(false)}ViewModel";
 					yield return new string('\t', indentLevel) + $"public class {typeName}";
