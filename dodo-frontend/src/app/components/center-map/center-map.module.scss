@@ -2,9 +2,11 @@
 
 .button {
 	display: flex;
-	justify-content: flex-end;
-	margin: spacing(3) spacing(4) 0;
-	position: absolute;
+	// justify-content: flex-end;
+    margin: spacing(3) spacing(4) 0;
+    align-self: flex-end;
+    position: absolute;
+    padding: spacing(1) spacing(2);
 	top: 0;
 	right: 0;
 
