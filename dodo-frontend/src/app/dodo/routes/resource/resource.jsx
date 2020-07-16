@@ -14,10 +14,11 @@ export const Resource =
 			centerMap,
 			setCenterMap,
 			resourceTypes = [],
-			joinResource,
+			subscribeResource,
 			leaveResource,
 			memberOf,
-			isLoggedIn
+			isLoggedIn,
+			fetchingUser
 		}
 	) => {
 		const { resourceId, resourceType } = match.params
@@ -48,7 +49,7 @@ export const Resource =
 				<Container
 					content={
 						<Fragment>
-							<Loader display={isLoading}/>
+							<Loader display={isLoading || fetchingUser}/>
 							{resource.metadata && !isLoading && (
 								<ResourceContent
 									resource={resource}
@@ -56,7 +57,7 @@ export const Resource =
 									resourceTypes={resourceTypes}
 									resourceColor={resourceColor}
 									resourceType={resourceType}
-									joinResource={joinResource}
+									subscribeResource={subscribeResource}
 									leaveResource={leaveResource}
 									memberOf={memberOf}
 									isLoggedIn={isLoggedIn}
@@ -74,4 +75,5 @@ Resource.propTypes = {
 	getResource: PropTypes.func,
 	event: PropTypes.object,
 	resourceTypes: PropTypes.array,
+	fetchingUser: PropTypes.bool
 }

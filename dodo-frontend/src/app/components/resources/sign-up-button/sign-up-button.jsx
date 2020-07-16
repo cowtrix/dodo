@@ -12,13 +12,16 @@ const UNSUBSCRIBE = 'Unsubscribe'
 
 const isSubscribedToResource = (memberOf, resourceID) => memberOf.find(resource => resourceID === resource.guid)
 
-export const SignUpButton = ({ updates = false, resourceColor, joinResource, resourceID, memberOf = [], resourceType, isLoggedIn = false }) => {
+export const SignUpButton = ({ updates = false, resourceColor, subscribeResource, resourceID, memberOf = [], resourceType, isLoggedIn = false }) => {
 	const { push } = useHistory()
 	const isSubscribed = isSubscribedToResource(memberOf, resourceID)
+	const subscribe = () => subscribeResource(resourceType, resourceID, 'join')
+	const unSubscribe = () => subscribeResource(resourceType, resourceID, 'leave')
+
 	return (
 		<div className={styles.wrapper}>
 			<Button
-				onClick={!isLoggedIn ? () => push(REGISTER_ROUTE) : !isSubscribed ? () => joinResource(resourceType, resourceID, 'join') : () => joinResource(resourceType, resourceID, 'leave')}
+				onClick={!isLoggedIn ? () => push(REGISTER_ROUTE) : !isSubscribed ? subscribe : unSubscribe}
 				variant="cta"
 				style={{backgroundColor: resourceColor}}
 			>

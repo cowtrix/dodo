@@ -6,11 +6,13 @@ import { Header } from "./header"
 import { Routes } from "./routes"
 import { ErrorBoundary } from "./routes/error/"
 import { UserMenu } from './user-menu'
+import { AppLoadingScreen } from './app-loading-screen'
 
 export const Dodo = ({ startup }) => {
 	startup()
 	return (
 		<ErrorBoundary>
+			<AppLoadingScreen/>
 			<Router>
 				<Header />
 				<UserMenu />

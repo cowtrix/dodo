@@ -21,6 +21,7 @@ export const Summary = (
 		parent,
 	}) =>
 	<li className={styles.eventSummmary}>
+		{console.log(name, metadata)}
 		<Link
 			to={`${"/" + metadata.type + "/" + guid}`}
 			className={styles.link}
