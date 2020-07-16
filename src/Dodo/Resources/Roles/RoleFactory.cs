@@ -10,10 +10,14 @@ namespace Dodo.Roles
 
 	public class RoleSchema : OwnedResourceSchemaBase
 	{
+		[View(EPermissionLevel.USER, customDrawer:"markdown", inputHint:Role.ApplicantQuestionHint)]
+		[MaxStringLength]
+		public string ApplicantQuestion { get; set; }
 		public RoleSchema() { }
 
-		public RoleSchema(string name, string publicDescription, Guid parent) : base(name, publicDescription, parent)
+		public RoleSchema(string name, string publicDescription, string applicantQuestion, Guid parent) : base(name, publicDescription, parent)
 		{
+			ApplicantQuestion = applicantQuestion;
 		}
 	}
 

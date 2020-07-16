@@ -17,6 +17,12 @@ namespace Resources
 		ResourceReference<IRESTResource> Parent { get; }
 	}
 
+	public interface IDescribedResource : IRESTResource
+	{
+		public const int SHORT_DESC_LENGTH = 256;
+		string PublicDescription { get; }
+	}
+
 	public interface IResourceReference : IVerifiable
 	{
 		Guid Guid { get; }
@@ -24,24 +30,21 @@ namespace Resources
 		string Type { get; }
 		string Name { get; }
 		Guid Parent { get; }
+		string PublicDescription { get; }
 		bool HasValue();
 	}
 
 	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
 	{
-		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		[BsonElement]
 		public string Name { get; private set; }
-		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		[BsonElement]
 		public Guid Guid { get; private set; }
-		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		[BsonElement]
 		public string Slug { get; private set; }
-		[View(EPermissionLevel.PUBLIC)]
 		[JsonProperty]
 		[BsonElement]
 		public string Type { get; private set; }
@@ -54,6 +57,9 @@ namespace Resources
 		[JsonProperty]
 		[BsonElement]
 		public Guid Parent { get; set; }
+		[JsonProperty]
+		[BsonElement]
+		public string PublicDescription { get; set; }
 
 		public T GetValue()
 		{
@@ -85,9 +91,17 @@ namespace Resources
 			{
 				Parent = default;
 			}
+			if(resource is IDescribedResource desc)
+			{
+				PublicDescription = desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH));
+			}
+			else
+			{
+				PublicDescription = default;
+			}
 		}
 
-		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location, Guid parent)
+		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location, Guid parent, string desc)
 		{
 			if(type == null && !string.IsNullOrEmpty(name))
 			{
@@ -100,6 +114,7 @@ namespace Resources
 			Location = location;
 			FullyQualifiedName = type?.AssemblyQualifiedName;
 			Parent = parent;
+			PublicDescription = desc;
 		}
 
 		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)

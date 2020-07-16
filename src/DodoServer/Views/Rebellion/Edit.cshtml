@@ -81,6 +81,21 @@ $(function () {
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
 				<div class="form-group">
+					<label asp-for="WorkingGroups" class="control-label"></label>
+					<input  readonly asp-for="WorkingGroups" class="form-control"></input>
+					<span asp-validation-for="WorkingGroups" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="Sites" class="control-label"></label>
+					<input  readonly asp-for="Sites" class="form-control"></input>
+					<span asp-validation-for="Sites" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="Events" class="control-label"></label>
+					<input  readonly asp-for="Events" class="form-control"></input>
+					<span asp-validation-for="Events" class="text-danger"></span>
+				</div>
+				<div class="form-group">
 					<label asp-for="StartDate" class="control-label"></label>
 					<input  asp-for="StartDate" class="form-control"></input>
 					<span asp-validation-for="StartDate" class="text-danger"></span>

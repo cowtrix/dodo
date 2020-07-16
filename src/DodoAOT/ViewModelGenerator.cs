@@ -64,7 +64,7 @@ namespace DodoAOT
 				var attributes = member.GetCustomAttributesData().Where(ca => typeof(ValidationAttribute).IsAssignableFrom(ca.AttributeType));
 				foreach(var vattr in attributes)
 				{
-					var constructor = string.Join(", ", vattr.ConstructorArguments.Select(ca => $"{ca.ArgumentType.Namespace}.{ca.ArgumentType.Name} {ca.Value}"));
+					var constructor = string.Join(", ", vattr.ConstructorArguments.Select(ca => $"{ca.Value}"));
 					yield return new string('\t', indentLevel) + $"[{vattr.AttributeType.Namespace}.{vattr.AttributeType.Name}({constructor})]";
 				}
 				yield return new string('\t', indentLevel) + $"public {typeName} {memberName} {{ get; set; }}";

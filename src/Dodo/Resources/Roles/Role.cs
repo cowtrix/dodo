@@ -15,18 +15,20 @@ namespace Dodo.Roles
 	[SearchPriority(4)]
 	public class Role : DodoResource, IOwnedResource, IPublicResource, ILocationalResource
 	{
+		public const string ApplicantQuestionHint = "Here you can describe required skills, training and availabilities. All applicants will answer this prompt when applying for this role.";
+
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer:"parentRef")]
 		public ResourceReference<IRESTResource> Parent { get; set; }
 
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
-		[Description]
+		[MaxStringLength]
 		[Name("Public Description")]
 		public string PublicDescription { get; set; }
 
-		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint:"All applicants will answer this prompt when applying.")]
-		[Description]
-		[Name("Applicant Instructions")]
-		public string ApplicantInstructions { get; set; }
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint: ApplicantQuestionHint)]
+		[MaxStringLength]
+		[Name("Applicant Question")]
+		public string ApplicantQuestion { get; set; }
 
 		[Name("Published")]
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
@@ -41,6 +43,7 @@ namespace Dodo.Roles
 			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
 			Parent = group.CreateRef<IRESTResource>();
 			PublicDescription = schema.PublicDescription;
+			ApplicantQuestion = schema.ApplicantQuestion;
 		}
 
 		public bool Apply(AccessContext context, ApplicationModel application)

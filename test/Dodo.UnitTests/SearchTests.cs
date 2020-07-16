@@ -145,8 +145,9 @@ namespace SearchTests
 		{
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context);
-			var positives = new List<IOwnedResource>()
+			var positives = new List<IRESTResource>()
 			{
+				rebellion1,
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working asfafsd 1", "", rebellion1.Guid), false),
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("asfafsd Working Group 2", "", rebellion1.Guid), false),
 				CreateObject<Event>(context, new EventSchema("Test asfafsd Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
@@ -154,7 +155,6 @@ namespace SearchTests
 			};
 			var negatives = new List<IRESTResource>()
 			{
-				rebellion1,
 				CreateObject<Rebellion>(),
 				CreateObject<Site>(),
 				CreateObject<Event>(),
@@ -166,12 +166,12 @@ namespace SearchTests
 			foreach (var pos in positives)
 			{
 				Assert.IsTrue(guids.Contains(pos.Guid),
-					$"Results did not contain expected resource: {pos.GetType()}");
+					$"Results did not contain expected resource: {pos} {pos.GetType()}");
 			}
 			foreach (var neg in negatives)
 			{
 				Assert.IsFalse(guids.Contains(neg.Guid),
-					$"Results contained unexpected resource: {neg.GetType()}");
+					$"Results contained unexpected resource: {neg} {neg.GetType()}");
 			}
 		}
 	}

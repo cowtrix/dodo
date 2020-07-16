@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using System;
 using Resources;
 using MongoDB.Bson.Serialization.Attributes;
@@ -32,11 +32,13 @@ namespace Dodo.LocationResources
 				} 
 			} 
 		}
+		[BsonElement]
 		private DateTime __startDate;
 
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		public DateTime EndDate { get { return __endDate; } set { __endDate = value.ToUniversalTime(); } }
+		[BsonElement]
 		private DateTime __endDate;
 
 		public override bool VerifyExplicit(out string error)

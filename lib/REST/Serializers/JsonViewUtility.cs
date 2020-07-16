@@ -11,6 +11,7 @@ using System.Reflection;
 using Resources.Location;
 using System.Collections.Concurrent;
 
+
 namespace Resources
 {
 	/// <summary>
@@ -25,7 +26,7 @@ namespace Resources
 	/// </summary>
 	public static class JsonViewUtility
 	{
-		private static ConcurrentDictionary<(Guid, uint, EPermissionLevel), Dictionary<string, object>> m_cache = 
+		private static ConcurrentDictionary<(Guid, uint, EPermissionLevel), Dictionary<string, object>> m_cache =
 			new ConcurrentDictionary<(Guid, uint, EPermissionLevel), Dictionary<string, object>>();
 
 		private static readonly HashSet<Type> m_explicitValueTypes = new HashSet<Type>()
@@ -41,7 +42,7 @@ namespace Resources
 		delegate object CustomSerializer(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase);
 		private static readonly Dictionary<Func<MemberInfo, bool>, CustomSerializer> m_customSerializers = new Dictionary<Func<MemberInfo, bool>, CustomSerializer>
 		{
-			{ m => m.GetMemberType() == typeof(IResourceReference), ResourceRefSerializer },
+			{ m => typeof(IResourceReference).IsAssignableFrom(m.GetMemberType()), ResourceRefSerializer },
 			{ m => m.GetCustomAttribute<ViewDrawerAttribute>()?.DrawerName == "html", HtmlSerializer }
 		};
 
@@ -61,14 +62,22 @@ namespace Resources
 			{
 				return null;
 			}
-			return new Dictionary<string, object>()
+			var ret = new Dictionary<string, object>()
 			{
 				{ nameof(IResourceReference.Guid).ToCamelCase(), reference.Guid },
 				{ nameof(IResourceReference.Slug).ToCamelCase(),  reference.Slug },
 				{ nameof(IResourceReference.Name).ToCamelCase(),  reference.Name },
-				{ nameof(IResourceReference.Type).ToCamelCase(),  reference.Type },
-				{ nameof(IResourceReference.Parent).ToCamelCase(),  reference.Parent },
+				{ Resource.METADATA, new { type = reference.Type } },
 			};
+			if(!string.IsNullOrEmpty(reference.PublicDescription))
+			{
+				ret[nameof(IResourceReference.PublicDescription).ToCamelCase()] = reference.PublicDescription;
+			}
+			if(reference.Parent != default)
+			{
+				ret[nameof(IResourceReference.Parent).ToCamelCase()] = reference.Parent;
+			}
+			return ret;
 		}
 
 		public static T CopyByValue<T>(this object obj, object requester, Passphrase passphrase) where T : class
@@ -189,6 +198,11 @@ namespace Resources
 					{
 						throw new Exception($"Cannot generate JSON view for type {targetType}");
 					}
+					var serializer = m_customSerializers.SingleOrDefault(kvp => kvp.Key(targetType)).Value;
+					if (serializer != null)
+					{
+						return (Dictionary<string, object>)serializer(obj, visibility, requester, passphrase);
+					}
 					vals = new Dictionary<string, object>();
 					// Get fields and properties, filter to what we can view with our permission level
 					var allMembers = new List<MemberInfo>(targetType.GetProperties().Where(p => p.CanRead));
@@ -217,18 +231,18 @@ namespace Resources
 					if (shouldCache && obj is IRESTResource finalRsc)
 					{
 						// Write it to the cache if we should
-						m_cache[(finalRsc.Guid, finalRsc.Revision, visibility)] = vals.DeepCopy();
+						m_cache[(finalRsc.Guid, finalRsc.Revision, visibility)] = vals.Copy();
 					}
 				}
 				else
 				{
-					vals = vals.DeepCopy();
+					vals = vals.Copy();
 				}
 				if (obj is IViewMetadataProvider view)
 				{
 					var metadata = new Dictionary<string, object>();
 					view.AppendMetadata(metadata, visibility, requester, passphrase);
-					if(vals.ContainsKey(Resource.METADATA))
+					if (vals.ContainsKey(Resource.METADATA))
 					{
 						throw new Exception();
 					}
@@ -412,7 +426,7 @@ namespace Resources
 					}
 				}
 				var memberType = targetMember.GetMemberType();
-				if ((ShouldSerializeDirectly(memberType) || typeof(IResourceReference).IsAssignableFrom(memberType)) 
+				if ((ShouldSerializeDirectly(memberType) || typeof(IResourceReference).IsAssignableFrom(memberType))
 					&& memberType != valueToSet?.GetType())
 				{
 					var serialized = JsonConvert.SerializeObject(valueToSet, memberType, JsonExtensions.NetworkSettings);

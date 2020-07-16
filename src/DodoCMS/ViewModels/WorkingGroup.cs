@@ -24,7 +24,7 @@ namespace Dodo.ViewModels
 		public uint Revision { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		[Resources.DescriptionAttribute()]
+		[Resources.MaxStringLengthAttribute(2048)]
 		public string PublicDescription { get; set; }
 		public class AdministrationDataViewModel
 		{
@@ -44,6 +44,12 @@ namespace Dodo.ViewModels
 		[DisplayName("MemberCount")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get; set; }
+		[DisplayName("Roles")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.Roles.Role>> Roles { get; set; }
+		[DisplayName("WorkingGroups")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>> WorkingGroups { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }

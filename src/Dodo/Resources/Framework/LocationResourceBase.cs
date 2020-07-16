@@ -92,7 +92,7 @@ namespace Dodo.LocationResources
 		public GeoLocation Location { get; set; } = new GeoLocation();
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Name("Public Description")]
-		[Description]
+		[MaxStringLength]
 		public string PublicDescription { get; set; }
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer: "parentRef")]
 		public ResourceReference<IRESTResource> Parent { get; set; }

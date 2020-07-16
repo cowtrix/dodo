@@ -27,12 +27,12 @@ namespace Dodo.ViewModels
 		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		[Resources.DescriptionAttribute()]
+		[Resources.MaxStringLengthAttribute(2048)]
 		public string PublicDescription { get; set; }
-		[DisplayName("Applicant Instructions")]
+		[DisplayName("Applicant Question")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		[Resources.DescriptionAttribute()]
-		public string ApplicantInstructions { get; set; }
+		[Resources.MaxStringLengthAttribute(2048)]
+		public string ApplicantQuestion { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }

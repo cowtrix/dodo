@@ -10,6 +10,10 @@ namespace Common.Extensions
 	{
 		public static string TextToHtml(string str)
 		{
+			if(string.IsNullOrEmpty(str))
+			{
+				return str;
+			}
 			// Firstly escape any explicit html to prevent injection
 			str = System.Web.HttpUtility.HtmlEncode(str);
 			// Now format markdown urls

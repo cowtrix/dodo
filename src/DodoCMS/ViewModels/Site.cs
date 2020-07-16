@@ -84,7 +84,7 @@ namespace Dodo.ViewModels
 		public Resources.Location.GeoLocation Location { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		[Resources.DescriptionAttribute()]
+		[Resources.MaxStringLengthAttribute(2048)]
 		public string PublicDescription { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]

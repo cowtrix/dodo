@@ -70,9 +70,15 @@ namespace Resources
 		}
 	}
 
-	public class DescriptionAttribute : CustomValidator
+	public class MaxStringLengthAttribute : CustomValidator
 	{
-		public const int MAX_DESCRIPTION_LENGTH = 2048;
+		private readonly int m_maxLength;
+
+		public MaxStringLengthAttribute(int maxLength = 2048)
+		{
+			m_maxLength = maxLength;
+		}
+
 		public override bool Verify(object value, out string validationError)
 		{
 			if (value == null)
@@ -81,9 +87,9 @@ namespace Resources
 				return true;
 			}
 			var str = value as string;
-			if (str.Length > MAX_DESCRIPTION_LENGTH)
+			if (str.Length > m_maxLength)
 			{
-				validationError = $"Text was too long at {str.Length} characters - maximum {MAX_DESCRIPTION_LENGTH} characters";
+				validationError = $"Text was too long at {str.Length} characters - maximum {m_maxLength} characters";
 				return false;
 			}
 			validationError = null;

@@ -32,7 +32,8 @@ namespace Dodo
 	/// It can have members and a public description.
 	/// </summary>
 	public abstract class GroupResource : 
-		DodoResource, IPublicResource, INotificationResource, IAdministratedResource, IGroupResource
+		DodoResource, 
+		IPublicResource, INotificationResource, IAdministratedResource, IGroupResource
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 
@@ -41,7 +42,7 @@ namespace Dodo
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[Name("Public Description")]
-		[Resources.Description]
+		[Resources.MaxStringLength]
 		[ViewDrawer("html")]
 		public string PublicDescription { get; set; }
 

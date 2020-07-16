@@ -22,45 +22,12 @@ namespace Dodo.Rebellions
 	{
 		public const string ROOT = "rebellions";
 
-		[BsonElement]
-		private List<Guid> m_workingGroups = new List<Guid>();
-		[BsonElement]
-		private List<Guid> m_sites = new List<Guid>();
-		[BsonElement]
-		private List<Guid> m_events = new List<Guid>();
-
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public IEnumerable<WorkingGroup> WorkingGroups 
-		{ 
-			get 
-			{
-				var rm = ResourceUtility.GetManager<WorkingGroup>();
-				return m_workingGroups.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
-					.Where(rsc => rsc != null);
- 			}
-		}
-
+		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public IEnumerable<Site> Sites
-		{
-			get
-			{
-				var rm = ResourceUtility.GetManager<Site>();
-				return m_sites.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
-					.Where(rsc => rsc != null);
-			}
-		}
-
+		public List<ResourceReference<Site>> Sites { get; set; } = new List<ResourceReference<Site>>();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public IEnumerable<Event> Events
-		{
-			get
-			{
-				var rm = ResourceUtility.GetManager<Event>();
-				return m_events.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
-					.Where(rsc => rsc != null);
-			}
-		}
+		public List<ResourceReference<Event>> Events { get; set; } = new List<ResourceReference<Event>>();
 
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
@@ -115,27 +82,27 @@ namespace Dodo.Rebellions
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				if(m_workingGroups.Contains(wg.Guid))
+				if(WorkingGroups.Any(w => w.Guid == wg.Guid))
 				{
 					throw new Exception($"Adding duplicated child object {wg.Guid} to {Guid}");
 				}
-				m_workingGroups.Add(wg.Guid);
+				WorkingGroups.Add(wg.CreateRef());
 			}
 			else if (rsc is Site s && s.Parent.Guid == Guid)
 			{
-				if (m_sites.Contains(s.Guid))
+				if (Sites.Any(w => w.Guid == s.Guid))
 				{
 					throw new Exception($"Adding duplicated child object {s.Guid} to {Guid}");
 				}
-				m_sites.Add(s.Guid);
+				Sites.Add(s.CreateRef());
 			}
 			else if (rsc is Event e && e.Parent.Guid == Guid)
 			{
-				if (m_events.Contains(e.Guid))
+				if (Events.Any(w => w.Guid == e.Guid))
 				{
 					throw new Exception($"Adding duplicated child object {e.Guid} to {Guid}");
 				}
-				m_events.Add(e.Guid);
+				Events.Add(e.CreateRef());
 			}
 			else
 			{
@@ -148,15 +115,15 @@ namespace Dodo.Rebellions
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				return m_workingGroups.Remove(wg.Guid) && base.RemoveChild(rsc);
+				return WorkingGroups.Remove(wg.CreateRef()) && base.RemoveChild(rsc);
 			}
 			else if (rsc is Site s && s.Parent.Guid == Guid)
 			{
-				return m_sites.Remove(s.Guid) && base.RemoveChild(rsc);
+				return Sites.Remove(s.CreateRef()) && base.RemoveChild(rsc);
 			}
 			else if (rsc is Event e && e.Parent.Guid == Guid)
 			{
-				return m_events.Remove(e.Guid) && base.RemoveChild(rsc);
+				return Events.Remove(e.CreateRef()) && base.RemoveChild(rsc);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}

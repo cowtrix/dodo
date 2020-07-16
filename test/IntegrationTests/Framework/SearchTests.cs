@@ -67,12 +67,12 @@ namespace RESTTests.Search
 			foreach (var pos in positives)
 			{
 				Assert.IsTrue(guids.Contains(pos.Guid),
-					$"Results did not contain expected resource: {pos.GetType()}");
+					$"Results did not contain expected resource: {pos} {pos.GetType()}");
 			}
 			foreach (var neg in negatives)
 			{
 				Assert.IsFalse(guids.Contains(neg.Guid),
-					$"Results contained unexpected resource: {neg.GetType()}");
+					$"Results contained unexpected resource: {neg} {neg.GetType()}");
 			}
 		}
 
@@ -118,18 +118,18 @@ namespace RESTTests.Search
 		[TestMethod]
 		public async Task CanSearchByString()
 		{
+			string magic = "asjdnajdwbakjfbskdfb.......sdfkjsfse";
 			GetRandomUser(out _, out var context);
 			var rebellion1 = CreateObject<Rebellion>(context);
-			var positives = new List<IOwnedResource>()
+			var positives = new List<IRESTResource>()
 			{
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("asdacasdadw Working Group 1", "", rebellion1.Guid)),
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("asdacasdadw Working Group 2", "", rebellion1.Guid)),
-				CreateObject<Event>(context, new EventSchema("Test Event asdacasdadw", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
-				CreateObject<Event>(context, new EventSchema("Test asdacasdadw Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema($"{magic} Working Group 1", "", rebellion1.Guid)),
+				CreateObject<WorkingGroup>(context, new WorkingGroupSchema($"{magic} Working Group 2", "", rebellion1.Guid)),
+				CreateObject<Event>(context, new EventSchema($"Test Event {magic}", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema($"Test {magic} Site", rebellion1.Guid, SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
-				rebellion1,
 				CreateObject<Rebellion>(),
 				CreateObject<Site>(),
 				CreateObject<Event>(),
@@ -139,18 +139,18 @@ namespace RESTTests.Search
 			var request = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
 				{
-					("search", "asdacasdadw"),
+					("search", magic ),
 				});
 			var guids = request.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).Select(s => Guid.Parse(s));
 			foreach (var pos in positives)
 			{
 				Assert.IsTrue(guids.Contains(pos.Guid),
-					$"Results did not contain expected resource: {pos.GetType()}");
+					$"Results did not contain expected resource: {pos} {pos.GetType()}");
 			}
 			foreach (var neg in negatives)
 			{
 				Assert.IsFalse(guids.Contains(neg.Guid),
-					$"Results contained unexpected resource: {neg.GetType()}");
+					$"Results contained unexpected resource: {neg} {neg.GetType()}");
 			}
 		}
 
