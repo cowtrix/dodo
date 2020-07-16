@@ -16,7 +16,7 @@ export const Resource =
 			resourceTypes = [],
 			subscribeResource,
 			leaveResource,
-			memberOf,
+			memberOf = [],
 			isLoggedIn,
 			fetchingUser
 		}
