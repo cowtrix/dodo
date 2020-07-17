@@ -8,6 +8,7 @@ using Dodo.LocationResources;
 using Dodo;
 using Common.Commands;
 using Common;
+using System;
 
 namespace DodoAOT
 {
@@ -25,7 +26,13 @@ namespace DodoAOT
 		static void Main(string[] args)
 		{
 			Logger.Info($"Generating AOT");
+			
 			var parsedArgs = new CommandArguments(args);
+			var wd = parsedArgs.TryGetValue("workingDir", "");
+			if(!string.IsNullOrEmpty(wd))
+			{
+				Environment.CurrentDirectory = wd;
+			}
 			var viewModelPath = Path.GetFullPath(parsedArgs.MustGetValue<string>("viewmodels"));
 			Logger.Info($"Outputting viewmodels to {viewModelPath}");
 			if (!Directory.Exists(viewModelPath))

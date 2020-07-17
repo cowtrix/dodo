@@ -207,7 +207,7 @@ namespace Dodo
 			return true;
 		}
 
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.USER, customDrawer:"null")]
 		public override string PublicKey => m_publicKey;
 		[BsonElement]
 		private string m_publicKey;

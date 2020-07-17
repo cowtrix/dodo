@@ -47,7 +47,7 @@ namespace Dodo.ViewModels
 		[DisplayName("Roles")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.Roles.Role>> Roles { get; set; }
-		[DisplayName("WorkingGroups")]
+		[DisplayName("Working Groups")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>> WorkingGroups { get; set; }
 		[DisplayName("Parent")]

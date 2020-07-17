@@ -83,20 +83,36 @@ $(function () {
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
 
-				<div class="form-group">
-					<label asp-for="PublicKey" class="control-label"></label>
-					<input  readonly asp-for="PublicKey" class="form-control"></input>
-					<span asp-validation-for="PublicKey" class="text-danger"></span>
+
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Roles</h5>
+				@{ for(var i = 0; i < Model.Roles.Count; ++i) {
+							<div class="form-group">
+								<input class="sr-only" asp-for="Roles[i].Type"/>
+								<div class="row">
+								<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Roles[i].GetRefType()]" role="button" href="../../@Model.Roles[i].Type/@Model.Roles[i].Slug">@Model.Roles[i].Name</a></div>
+								<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Roles[i].GetRefType()]" role="button" href="../../edit/@Model.Roles[i].Type/@Model.Roles[i].Slug"><i class="fa fa-edit"></i></a></div>
+								</div>
+							</div>
+				}
+				}
+						</div>
 				</div>
-				<div class="form-group">
-					<label asp-for="Roles" class="control-label"></label>
-					<input  readonly asp-for="Roles" class="form-control"></input>
-					<span asp-validation-for="Roles" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="WorkingGroups" class="control-label"></label>
-					<input  readonly asp-for="WorkingGroups" class="form-control"></input>
-					<span asp-validation-for="WorkingGroups" class="text-danger"></span>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Working Groups</h5>
+				@{ for(var i = 0; i < Model.WorkingGroups.Count; ++i) {
+							<div class="form-group">
+								<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
+								<div class="row">
+								<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.WorkingGroups[i].GetRefType()]" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug">@Model.WorkingGroups[i].Name</a></div>
+								<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.WorkingGroups[i].GetRefType()]" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
+								</div>
+							</div>
+				}
+				}
+						</div>
 				</div>
 
 					<div class="form-group">

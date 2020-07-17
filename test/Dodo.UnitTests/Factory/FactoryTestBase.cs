@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Common.Extensions;
+using Dodo.Users.Tokens;
 
 namespace Factory
 {
@@ -51,6 +52,10 @@ namespace Factory
 		protected virtual void VerifyCreatedObject(T obj, TSchema schema)
 		{
 			Assert.IsTrue(obj.Verify(out var error), error);
+			if(obj is ITokenResource token)
+			{
+				Assert.IsNotNull(token.PublicKey);
+			}
 		}
 	}
 }

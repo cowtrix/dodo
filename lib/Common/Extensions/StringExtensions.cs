@@ -16,6 +16,8 @@ namespace Common.Extensions
 			}
 			// Firstly escape any explicit html to prevent injection
 			str = System.Web.HttpUtility.HtmlEncode(str);
+			// While this is nice, we want quotation marks to work
+			str = str.Replace("&quot;", "\"");
 			// Now format markdown urls
 			const string fullLinkOnlyRegex = @"\[([^\[]+)\]\((.*?)\)";
 			Match match = Regex.Match(str, fullLinkOnlyRegex);
@@ -33,8 +35,8 @@ namespace Common.Extensions
 			}
 			// Finally replace linebreaks with <br/>
 			return str
-				.Replace(Environment.NewLine, "<br/>")
-				.Replace("\n", "<br/>");
+				.Replace(Environment.NewLine, "</br>")
+				.Replace("\n", "</br>");
 		}
 		public static string AppendIfNotNull(this string str, string toAppend)
 		{

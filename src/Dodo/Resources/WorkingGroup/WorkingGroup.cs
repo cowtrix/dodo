@@ -43,6 +43,7 @@ namespace Dodo.WorkingGroups
 		/// Get a list of all Working Groups that have this working group as their parent
 		/// </summary>
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[Name("Working Groups")]
 		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority:-2, customDrawer: "parentRef")]

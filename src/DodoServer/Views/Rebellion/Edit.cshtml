@@ -79,25 +79,51 @@ $(function () {
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
 
-				<div class="form-group">
-					<label asp-for="PublicKey" class="control-label"></label>
-					<input  readonly asp-for="PublicKey" class="form-control"></input>
-					<span asp-validation-for="PublicKey" class="text-danger"></span>
+
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">WorkingGroups</h5>
+				@{ for(var i = 0; i < Model.WorkingGroups.Count; ++i) {
+							<div class="form-group">
+								<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
+								<div class="row">
+								<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.WorkingGroups[i].GetRefType()]" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug">@Model.WorkingGroups[i].Name</a></div>
+								<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.WorkingGroups[i].GetRefType()]" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
+								</div>
+							</div>
+				}
+				}
+						</div>
 				</div>
-				<div class="form-group">
-					<label asp-for="WorkingGroups" class="control-label"></label>
-					<input  readonly asp-for="WorkingGroups" class="form-control"></input>
-					<span asp-validation-for="WorkingGroups" class="text-danger"></span>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Sites</h5>
+				@{ for(var i = 0; i < Model.Sites.Count; ++i) {
+							<div class="form-group">
+								<input class="sr-only" asp-for="Sites[i].Type"/>
+								<div class="row">
+								<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Sites[i].GetRefType()]" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug">@Model.Sites[i].Name</a></div>
+								<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Sites[i].GetRefType()]" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i></a></div>
+								</div>
+							</div>
+				}
+				}
+						</div>
 				</div>
-				<div class="form-group">
-					<label asp-for="Sites" class="control-label"></label>
-					<input  readonly asp-for="Sites" class="form-control"></input>
-					<span asp-validation-for="Sites" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="Events" class="control-label"></label>
-					<input  readonly asp-for="Events" class="form-control"></input>
-					<span asp-validation-for="Events" class="text-danger"></span>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Events</h5>
+				@{ for(var i = 0; i < Model.Events.Count; ++i) {
+							<div class="form-group">
+								<input class="sr-only" asp-for="Events[i].Type"/>
+								<div class="row">
+								<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Events[i].GetRefType()]" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug">@Model.Events[i].Name</a></div>
+								<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Events[i].GetRefType()]" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i></a></div>
+								</div>
+							</div>
+				}
+				}
+						</div>
 				</div>
 				<div class="form-group">
 					<label asp-for="StartDate" class="control-label"></label>
