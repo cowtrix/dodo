@@ -33,6 +33,7 @@ namespace Resources
 		GeoLocation Location { get; }
 		string PublicDescription { get; }
 		bool HasValue();
+		Type GetRefType();
 	}
 
 	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource

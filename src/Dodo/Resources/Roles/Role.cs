@@ -13,7 +13,7 @@ using System;
 namespace Dodo.Roles
 {
 	[SearchPriority(4)]
-	public class Role : DodoResource, IOwnedResource, IPublicResource, ILocationalResource
+	public class Role : DodoResource, IOwnedResource, IPublicResource
 	{
 		public const string ApplicantQuestionHint = "Here you can describe required skills, training and availabilities. All applicants will answer this prompt when applying for this role.";
 
@@ -33,8 +33,6 @@ namespace Dodo.Roles
 		[Name("Published")]
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
-
-		public GeoLocation Location => Parent.Location;
 
 		public Role() : base() { }
 

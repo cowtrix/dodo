@@ -23,7 +23,7 @@ namespace Dodo.WorkingGroups
 	/// </summary>
 	[Name("Working Group")]
 	[SearchPriority(3)]
-	public class WorkingGroup : AdministratedGroupResource, IOwnedResource, ILocationalResource
+	public class WorkingGroup : AdministratedGroupResource, IOwnedResource
 	{
 		public WorkingGroup() : base() { }
 
@@ -48,8 +48,6 @@ namespace Dodo.WorkingGroups
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority:-2, customDrawer: "parentRef")]
 		public ResourceReference<IRESTResource> Parent { get; private set; }
-
-		public GeoLocation Location => Parent.Location;
 
 		public override bool CanContain(Type type)
 		{
