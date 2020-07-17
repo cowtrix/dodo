@@ -1,43 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/role/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/role/role.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/role/route.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/login/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/login/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/login/login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/login/login.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/login.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/login/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/my-rebellion.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/my-rebellion.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/resource/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/resource/resource.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/resource.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/register/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/register/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/register/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/register/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/register/register.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/register/register.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/register/register.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/register/register.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/register/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/register/route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/reset-password/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/reset-password/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/reset-password/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/reset-password/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/reset-password/reset-password.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/reset-password/reset-password.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/reset-password/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/reset-password/route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/your-profile/container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/your-profile/container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/your-profile/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/your-profile/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/your-profile/route.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/your-profile/route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/your-profile/update-email/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/your-profile/update-email/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/your-profile/update-email/update-email.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/your-profile/update-email/update-email.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/your-profile/update-email/update-email.module.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/your-profile/update-email/update-email.module.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/your-profile/your-profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/user-routes/your-profile/your-profile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/options.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/options.jsx" afterDir="false" />
-    </list>
+    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="fixed rebellion error&#10;put user routes into own file" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -103,9 +67,9 @@
           <entry key="html" value="21" />
           <entry key="js" value="22069" />
           <entry key="json" value="520" />
-          <entry key="jsx" value="40255" />
+          <entry key="jsx" value="40324" />
           <entry key="scss" value="10297" />
-          <entry key="txt" value="3388" />
+          <entry key="txt" value="3442" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -113,9 +77,9 @@
           <entry key="Enforced Plain Text" value="66" />
           <entry key="HTML" value="22" />
           <entry key="JSON" value="520" />
-          <entry key="JSX Harmony" value="40255" />
+          <entry key="JSX Harmony" value="40324" />
           <entry key="JavaScript" value="22002" />
-          <entry key="PLAIN_TEXT" value="3434" />
+          <entry key="PLAIN_TEXT" value="3488" />
           <entry key="SCSS" value="10297" />
         </counts>
       </usages-collector>
@@ -175,8 +139,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/resource.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="9" lean-forward="true" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+            <state relative-caret-position="225">
+              <caret line="15" column="14" lean-forward="true" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -545,14 +509,7 @@
       <workItem from="1589290510770" duration="19807000" />
       <workItem from="1592554001599" duration="24818000" />
       <workItem from="1594289628126" duration="10313000" />
-      <workItem from="1594704476557" duration="27838000" />
-    </task>
-    <task id="LOCAL-00039" summary="fixed errors">
-      <created>1589897440559</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1589897440559</updated>
+      <workItem from="1594704476557" duration="28138000" />
     </task>
     <task id="LOCAL-00040" summary="created new event page for all events">
       <created>1589902792050</created>
@@ -890,7 +847,14 @@
       <option name="project" value="LOCAL" />
       <updated>1594899382116</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="fixed rebellion error&#10;put user routes into own file">
+      <created>1595005629162</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1595005629162</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -914,7 +878,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="367754000" />
+    <option name="totallyTimeSpent" value="368054000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
@@ -949,7 +913,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added expandable lists" />
     <MESSAGE value="color coded sites and events" />
     <MESSAGE value="fixed location errors" />
     <MESSAGE value="fixed search errors" />
@@ -974,7 +937,8 @@
     <MESSAGE value="added main loading screen and loading for subscribing&#10;added events lists&#10;updated styles" />
     <MESSAGE value="removed console log&#10;moved click logic out of sign up button" />
     <MESSAGE value="fixed loading error" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed loading error" />
+    <MESSAGE value="fixed rebellion error&#10;put user routes into own file" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed rebellion error&#10;put user routes into own file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1415,8 +1379,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/resource.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="9" lean-forward="true" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+        <state relative-caret-position="225">
+          <caret line="15" column="14" lean-forward="true" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>

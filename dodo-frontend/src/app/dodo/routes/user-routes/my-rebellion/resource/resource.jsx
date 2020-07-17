@@ -5,14 +5,14 @@ import styles from './resource.module.scss'
 import { Icon } from 'app/components/index'
 
 
-export const Resource = ({ name, guid, type, resourceTypes }) => {
-	const resourceType = resourceTypes.find(thisType => thisType.value === type)
+export const Resource = ({ name, guid, metadata, resourceTypes }) => {
+	const resourceType = resourceTypes.find(thisType => thisType.value === metadata.type)
 	const backgroundColor = resourceType && '#' + resourceType.displayColor
 
 	return (
 		<Link
-			to={type + '/' + guid}
-			className={`${styles.resource} ${styles[type]}`}
+			to={metadata.type + '/' + guid}
+			className={`${styles.resource} ${styles[metadata.type]}`}
 			style={{
 				backgroundColor: backgroundColor}}>
 			<h3>{name}</h3>
@@ -25,6 +25,6 @@ export const Resource = ({ name, guid, type, resourceTypes }) => {
 Resource.propTypes = {
 	name: PropTypes.string,
 	guid: PropTypes.string,
-	type: PropTypes.string,
+	metadata: PropTypes.object,
 	resourceTypes: PropTypes.object,
 }
