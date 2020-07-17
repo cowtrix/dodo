@@ -60,27 +60,38 @@ namespace Dodo.DodoResources
 			{
 				return locationalResource.Location.ToCoordinate().GetDistanceTo(m_coordinate) < Distance * 1000;
 			}
-			return false;
+			return true;
 		}
 
 		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
 		{
 			Initialise();
-			if (!rsc.Any() || !(rsc.Any(r => r is ILocationalResource)) || m_coordinate == null)
+			if (!rsc.Any() || m_empty)
 			{
 				return rsc;
 			}
-			if (null == m_coordinate) return rsc;
-
 			if (Distance < TransitionDistance)
 			{
-				return rsc.OrderBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
+				return rsc.OrderBy(GetDist);
 			}
 			else
 			{
 				return rsc.OrderBy(rsc => rsc.GetType().GetCustomAttribute<SearchPriority>()?.Priority)
-					.ThenBy(rsc => (rsc as ILocationalResource)?.Location.ToCoordinate().GetDistanceTo(m_coordinate));
+					.ThenBy(GetDist);
 			}
+		}
+
+		private double? GetDist(IRESTResource rsc)
+		{
+			if(rsc is ILocationalResource loc)
+			{
+				return loc.Location.ToCoordinate().GetDistanceTo(m_coordinate);
+			}
+			if(rsc is IOwnedResource owned)
+			{
+				return owned.Parent.GetValue<ILocationalResource>()?.Location.ToCoordinate().GetDistanceTo(m_coordinate);
+			}
+			return null;
 		}
 	}
 }
