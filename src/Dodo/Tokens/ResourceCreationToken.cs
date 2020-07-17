@@ -25,7 +25,7 @@ namespace Dodo.Users.Tokens
 
 		public ResourceCreationToken(Type type)
 		{
-			if (!typeof(DodoResource).IsAssignableFrom(type))
+			if (!typeof(IDodoResource).IsAssignableFrom(type))
 			{
 				throw new Exception($"Unexpected type: {type}");
 			}

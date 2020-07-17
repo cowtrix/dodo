@@ -77,6 +77,14 @@ namespace Resources
 			{
 				ret[nameof(IResourceReference.Parent).ToCamelCase()] = reference.Parent;
 			}
+			if(reference.Location.Latitude != 0 && reference.Location.Longitude != 0)
+			{
+				ret[nameof(IResourceReference.Location).ToCamelCase()] = new
+				{
+					latitude = reference.Location.Latitude,
+					longitude = reference.Location.Longitude,
+				};
+			}
 			return ret;
 		}
 

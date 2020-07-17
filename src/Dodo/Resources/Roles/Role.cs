@@ -50,10 +50,5 @@ namespace Dodo.Roles
 		{
 			return true;
 		}
-
-		public override Passphrase GetPrivateKey(AccessContext context)
-		{
-			return Parent.GetValue<DodoResource>().GetPrivateKey(context);
-		}
 	}
 }

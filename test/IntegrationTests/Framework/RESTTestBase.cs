@@ -12,7 +12,7 @@ using SharedTest;
 namespace RESTTests
 {
 	public abstract class RESTTestBase<T, TSchema> : IntegrationTestBase 
-		where T:DodoResource
+		where T:class, IDodoResource
 		where TSchema: ResourceSchemaBase
 	{
 		public string PostmanTypeName => typeof(T).Name;

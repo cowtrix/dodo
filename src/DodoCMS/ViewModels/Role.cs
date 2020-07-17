@@ -22,9 +22,6 @@ namespace Dodo.ViewModels
 		[DisplayName("Revision")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public uint Revision { get; set; }
-		[DisplayName("PublicKey")]
-		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
-		public string PublicKey { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }

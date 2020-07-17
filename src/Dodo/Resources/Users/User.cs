@@ -15,7 +15,7 @@ using System;
 namespace Dodo.Users
 {
 	[DontCache]
-	public class User : DodoResource, IVerifiable, ITokenResource, INotificationResource
+	public class User : NotificationResource, IVerifiable, ITokenResource, INotificationResource
 	{
 		public const string ADMIN_OF_KEY = "adminOf";
 		public const string MEMBER_OF_KEY = "memberOf";

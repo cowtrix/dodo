@@ -8,7 +8,7 @@ using System;
 namespace Dodo.DodoResources
 {
 	public abstract class DodoResourceFactory<TResult, TSchema> : ResourceFactory<TResult, TSchema, ResourceCreationRequest>
-		where TResult : DodoResource
+		where TResult : class, IDodoResource
 		where TSchema : ResourceSchemaBase
 	{
 		protected override bool ValidateSchema(ResourceCreationRequest request, out string error)

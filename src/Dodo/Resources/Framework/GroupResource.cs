@@ -18,7 +18,7 @@ namespace Dodo
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
 	public abstract class GroupResource :
-		DodoResource,
+		NotificationResource,
 		IPublicResource,
 		IGroupResource
 	{

@@ -30,6 +30,7 @@ namespace Resources
 		string Type { get; }
 		string Name { get; }
 		Guid Parent { get; }
+		GeoLocation Location { get; }
 		string PublicDescription { get; }
 		bool HasValue();
 	}

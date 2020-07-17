@@ -14,6 +14,7 @@ using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
 using Resources.Location;
 using Dodo.DodoResources;
+using Dodo.Users.Tokens;
 
 namespace Dodo.LocationResources
 {
@@ -65,7 +66,7 @@ namespace Dodo.LocationResources
 
 		public override Passphrase GetPrivateKey(AccessContext context)
 		{
-			return Parent.GetValue<DodoResource>().GetPrivateKey(context);
+			return Parent.GetValue<ITokenResource>().GetPrivateKey(context);
 		}
 	}
 }

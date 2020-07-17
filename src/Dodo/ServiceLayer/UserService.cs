@@ -54,7 +54,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		if (!user.AuthData.ChallengePassword(login.Password, out var passphrase))
 		{
-			Logger.Debug($"{logstr} User provided incorrect username.");
+			Logger.Debug($"{logstr} User provided incorrect password.");
 			return ResourceRequestError.BadRequest();
 		}
 
