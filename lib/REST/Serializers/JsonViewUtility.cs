@@ -77,7 +77,7 @@ namespace Resources
 			{
 				ret[nameof(IResourceReference.Parent).ToCamelCase()] = reference.Parent;
 			}
-			if(reference.Location.Latitude != 0 && reference.Location.Longitude != 0 && typeof(ILocationalResource).IsAssignableFrom(reference.GetRefType()))
+			if(reference.Location?.Latitude != 0 && reference.Location?.Longitude != 0 && typeof(ILocationalResource).IsAssignableFrom(reference.GetRefType()))
 			{
 				ret[nameof(IResourceReference.Location).ToCamelCase()] = new
 				{
