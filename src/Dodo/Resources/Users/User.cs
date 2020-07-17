@@ -27,10 +27,8 @@ namespace Dodo.Users
 		public PersonalInfo PersonalData { get; set; } = new PersonalInfo();
 		[VerifyObject]
 		public AuthorizationData AuthData { get; set; }
-		[BsonElement]
-		public TokenCollection TokenCollection { get; private set; } = new TokenCollection();
 		[BsonIgnore]
-		public string PublicKey => AuthData.PublicKey;
+		public override string PublicKey => AuthData.PublicKey;
 		#endregion
 
 		public User() : base()
@@ -103,7 +101,7 @@ namespace Dodo.Users
 			return TokenCollection.Remove(context, permissionLevel, notification, this);
 		}
 
-		public Passphrase GetPrivateKey(AccessContext accessContext)
+		public override Passphrase GetPrivateKey(AccessContext accessContext)
 		{
 			if (accessContext.User == null)
 			{

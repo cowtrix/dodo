@@ -13,7 +13,7 @@ using Resources.Location;
 namespace RESTTests
 {
 	[TestClass]
-	public class LocalGroupTests : GroupResourceTestBase<LocalGroup, LocalGroupSchema>
+	public class LocalGroupTests : AdministratedGroupResourceTestBase<LocalGroup, LocalGroupSchema>
 	{
 		public override string ResourceRoot => LocalGroupAPIController.RootURL;
 

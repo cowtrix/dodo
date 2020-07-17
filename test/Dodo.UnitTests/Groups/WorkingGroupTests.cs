@@ -8,7 +8,7 @@ using System.Linq;
 namespace Groups
 {
 	[TestClass]
-	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup> 
+	public class WorkingGroupTests : AdministratedGroupResourceTestBase<WorkingGroup> 
 	{
 		[TestMethod]
 		[TestCategory("Child Objects")]

@@ -14,7 +14,7 @@ namespace Dodo
 
 		protected override IRequestResult CanCreate(AccessContext context, TSchema target)
 		{
-			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as GroupResource;
+			var parent = ResourceUtility.GetResourceByGuid(target.Parent) as IAdministratedResource;
 			if (parent == null)
 			{
 				return ResourceRequestError.BadRequest();

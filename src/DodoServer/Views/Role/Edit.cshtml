@@ -73,6 +73,7 @@ $(function () {
 					<input  readonly asp-for="Revision" class="form-control"></input>
 					<span asp-validation-for="Revision" class="text-danger"></span>
 				</div>
+
 				<div class="form-group">
 				<label asp-for="PublicDescription" class="control-label"></label>
 				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
@@ -92,7 +93,77 @@ $(function () {
 	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{
 		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-			
+			<div class="card">
+	<h5 class="card-header">Post an Announcement</h5>
+	<div class="card-body" style="text-align:right;">
+		<form id="newannouncement" method="post" action="notifications/@Model.Slug/new">
+			<div class="form-group">
+				<textarea id="Message" name="Message" class="form-control" style="height:10em;"></textarea>
+			</div>
+			<small id="helpBlock" class="form-text text-muted" style="text-align:left;">
+				Announcements are messages that will be displayed on the public page and be visible for all users. You can use them to give short updates or messages.
+			</small>
+			<input type="submit" value="Post" class="btn btn-primary" style="width:100px;" />
+		</form>
+	</div>
+</div>
+
+<div class="card">
+	<h5 class="card-header">Current Notifications</h5>
+	<div class="card-body">
+		<ul class="list-group">
+			@{foreach (var notification in notifications)
+				{
+					<li class="list-group-item">
+						<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+							<div class="row">
+								<div class="col" style="margin-left:10px;">
+									<div class="row">
+										<small>
+											@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
+										</small>
+									</div>
+									<div class="row">
+										<strong>
+											@notification.Type.ToUpperInvariant()
+										</strong>
+									</div>
+								</div>
+								<div class="col-auto">
+									@{ if (!string.IsNullOrEmpty(notification.Source))
+										{
+											<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="Source: @notification.Source">
+												<span class="fas fa-comment"></span>
+											</button>
+										} }
+									@{ if (!string.IsNullOrEmpty(notification.Link))
+										{
+											<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="URL: @notification.Link">
+												<span class="fas fa-link"></span>
+											</button>
+										} }
+									<button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="The visibility of this announcement is @Common.NameAttributeExtensions.GetName(notification.PermissionLevel)">
+										<span class="fas fa-eye"></span>
+									</button>
+									@if (notification.CanDelete)
+									{
+										<a class="btn btn-outline-danger" href="notifications/@Model.Slug/delete?notification=@notification.Guid">
+											<p class="fas fa-trash"></p>
+										</a>
+									}
+
+								</div>
+							</div>
+						</div>
+						<div style="padding:10px;">
+							<p style="margin:0;"> @Html.Raw(notification.Message) </p>
+						</div>
+					</li>
+				}}
+		</ul>
+	</div>
+</div>
+
 		</div>
 	}
 	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))

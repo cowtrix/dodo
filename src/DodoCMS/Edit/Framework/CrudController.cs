@@ -23,7 +23,7 @@ namespace Dodo.Controllers.Edit
 
 	[Route("edit/[controller]")]
 	public abstract class CrudController<T, TSchema, TViewModel> : CustomController
-	where T : DodoResource, IPublicResource
+	where T : class, IDodoResource, IPublicResource
 	where TSchema : ResourceSchemaBase, new()
 	where TViewModel : class, IViewModel, new()
 	{

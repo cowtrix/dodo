@@ -17,7 +17,7 @@ using Resources.Location;
 namespace RESTTests
 {
 	[TestClass]
-	public class RebellionTests : GroupResourceTestBase<Rebellion, RebellionSchema>
+	public class RebellionTests : AdministratedGroupResourceTestBase<Rebellion, RebellionSchema>
 	{
 		public static DateTime DefaultStart => new DateTime(2019, 10, 7, 0, 0, 0, DateTimeKind.Utc);
 		public static DateTime DefaultEnd => new DateTime(2019, 10, 14, 0, 0, 0, DateTimeKind.Utc);

@@ -6,29 +6,12 @@ using Common;
 using System;
 using System.Collections.Generic;
 using Resources.Location;
+using Dodo.Users.Tokens;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo
 {
-	public interface IDodoResource : IRESTResource
-	{
-		bool IsCreator(AccessContext context);
-	}
-
-	public class NotNulResourceAttribute : CustomValidator
-	{
-		public override bool Verify(object value, out string validationError)
-		{
-			if (value is IResourceReference rscRef && rscRef.HasValue())
-			{
-				validationError = null;
-				return true;
-			}
-			validationError = $"Resource reference as null for {value}";
-			return false;
-		}
-	}
-
-	public abstract class DodoResource : Resource, IDodoResource
+	public abstract class DodoResource : Resource, INotificationResource
 	{
 		private const string METADATA_PUBLISHED = "published";
 		public const string METADATA_NOTIFICATIONS_KEY = "notifications";
@@ -46,7 +29,7 @@ namespace Dodo
 
 		public bool IsCreator(AccessContext context)
 		{
-			if(context.User == null)
+			if (context.User == null)
 			{
 				return false;
 			}
@@ -60,8 +43,8 @@ namespace Dodo
 				// Remove listing from parent resource if needed				
 				using var rscLock = new ResourceLock(owned.Parent.Guid);
 				{
-					var parent = rscLock.Value as GroupResource;
-					if(!parent.RemoveChild(owned))
+					var parent = rscLock.Value as AdministratedGroupResource;
+					if (!parent.RemoveChild(owned))
 					{
 						throw new Exception($"Unexpectedly failed to remove child object {Guid} from parent resource");
 					}
@@ -69,5 +52,35 @@ namespace Dodo
 				}
 			}
 		}
+
+		#region Notifications & Tokens
+		[BsonElement]
+		public TokenCollection TokenCollection { get; private set; } = new TokenCollection();
+
+		public IEnumerable<Notification> GetNotifications(AccessContext context, EPermissionLevel permissionLevel)
+		{
+			return TokenCollection.GetNotifications(context, permissionLevel, this);
+		}
+
+		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
+		{
+			return TokenCollection.Remove(context, permissionLevel, notification, this);
+		}
+
+		public abstract Passphrase GetPrivateKey(AccessContext context);
+		[BsonElement]
+		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM, customDrawer: "null")]
+		public virtual string PublicKey
+		{
+			get
+			{
+				if (this is IOwnedResource owned)
+				{
+					return owned.Parent.GetValue<ITokenResource>().PublicKey;
+				}
+				return null;
+			}
+		}
+		#endregion
 	}
 }

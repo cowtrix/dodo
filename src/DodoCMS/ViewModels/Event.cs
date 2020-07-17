@@ -22,6 +22,19 @@ namespace Dodo.ViewModels
 		[DisplayName("Revision")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public uint Revision { get; set; }
+		[DisplayName("PublicKey")]
+		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
+		public string PublicKey { get; set; }
+		[DisplayName("Public Description")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[Resources.MaxStringLengthAttribute(2048)]
+		public string PublicDescription { get; set; }
+		[DisplayName("Published")]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
+		public System.Boolean IsPublished { get; set; }
+		[DisplayName("MemberCount")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public int MemberCount { get; set; }
 		[DisplayName("Arrest Risk")]
 		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
 		public Dodo.LocationResources.EArrestRisk ArrestRisk { get; set; }
@@ -82,19 +95,12 @@ namespace Dodo.ViewModels
 		[DisplayName("Location")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public Resources.Location.GeoLocation Location { get; set; }
-		[DisplayName("Public Description")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		[Resources.MaxStringLengthAttribute(2048)]
-		public string PublicDescription { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }
 		[DisplayName("Video Embed URL")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string VideoEmbedURL { get; set; }
-		[DisplayName("Published")]
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		public System.Boolean IsPublished { get; set; }
 		[DisplayName("StartDate")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public System.DateTime StartDate { get; set; }

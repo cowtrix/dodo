@@ -18,7 +18,7 @@ namespace Dodo.Rebellions
 {
 	[Name("Rebellion")]
 	[SearchPriority(0)]
-	public class Rebellion : GroupResource, ILocationalResource, ITimeBoundResource, IVideoResource
+	public class Rebellion : AdministratedGroupResource, ILocationalResource, ITimeBoundResource, IVideoResource
 	{
 		public const string ROOT = "rebellions";
 

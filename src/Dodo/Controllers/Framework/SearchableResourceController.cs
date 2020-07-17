@@ -9,7 +9,7 @@ using System;
 namespace Dodo
 {
 	public abstract class SearchableResourceController<T, TSchema> : CrudResourceAPIController<T, TSchema>
-		where T : DodoResource, IPublicResource
+		where T : class, IPublicResource, IDodoResource
 		where TSchema : ResourceSchemaBase
 	{
 		[HttpGet]

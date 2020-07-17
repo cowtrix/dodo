@@ -11,7 +11,7 @@ using System;
 /// <typeparam name="T">Type of the resource</typeparam>
 /// <typeparam name="TSchema">Schema type of the resource</typeparam>
 public class ResourceServiceBase<T, TSchema> 
-	where T : DodoResource
+	where T : class, IDodoResource
 	where TSchema : ResourceSchemaBase
 {
 	protected AccessContext Context { get; private set; }

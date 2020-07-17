@@ -22,7 +22,7 @@ namespace Dodo
 
 		public AdministrationData() { }
 
-		public AdministrationData(IRESTResource resource, User firstAdmin, string privateKey)
+		public AdministrationData(IRESTResource resource, User firstAdmin, Passphrase privateKey)
 		{
 			if (resource == null)
 			{
@@ -32,7 +32,7 @@ namespace Dodo
 			{
 				throw new ArgumentNullException(nameof(firstAdmin));
 			}
-			else if (string.IsNullOrEmpty(privateKey))
+			else if (string.IsNullOrEmpty(privateKey.Value))
 			{
 				throw new ArgumentNullException(nameof(privateKey));
 			}
@@ -51,7 +51,7 @@ namespace Dodo
 					CanManageAnnouncements = true,
 				}
 			});
-			GroupPrivateKey = privateKey;
+			GroupPrivateKey = privateKey.Value;
 		}
 
 		internal bool AddOrUpdateAdministrator(AccessContext context, User newAdmin, AdministratorPermissionSet permissions = null)

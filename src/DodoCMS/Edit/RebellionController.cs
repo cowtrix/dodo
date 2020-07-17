@@ -5,9 +5,9 @@ using Resources;
 
 namespace Dodo.Controllers.Edit
 {
-	public class RebellionController : GroupResourceCrudController<Rebellion, RebellionSchema, RebellionViewModel>
+	public class RebellionController : AdministratedGroupResourceCrudController<Rebellion, RebellionSchema, RebellionViewModel>
 	{
 		protected override AuthorizationService<Rebellion, RebellionSchema> AuthService =>
-			new GroupResourceAuthService<Rebellion, RebellionSchema>();
+			new AdministratedGroupResourceAuthService<Rebellion, RebellionSchema>();
 	}
 }

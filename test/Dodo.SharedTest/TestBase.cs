@@ -134,7 +134,7 @@ namespace SharedTest
 			{
 				if (obj is Rebellion rebellion)
 				{
-					rebellion.VideoEmbedURL = "https://www.youtube.com/embed/d4QDM_Isi24";
+					rebellion.VideoEmbedURL = SchemaGenerator.RandomVideoURL;
 
 					// Add some working groups, sites
 					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
@@ -161,9 +161,8 @@ namespace SharedTest
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 				}
-				obj = ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);
 			}
-			return obj;
+			return ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);
 		}
 
 		long LongRandom(long min, long max)

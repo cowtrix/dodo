@@ -9,7 +9,6 @@ namespace Dodo.Users.Tokens
 	public class UserAddedAsAdminToken : AutoExecutableToken, INotificationToken
 	{
 		[JsonProperty(TypeNameHandling = TypeNameHandling.None)]
-		[NotNulResource]
 		public ResourceReference<IAdministratedResource> Resource { get; private set; }
 		[JsonProperty]
 		public byte[] Token { get; private set; }
@@ -33,7 +32,7 @@ namespace Dodo.Users.Tokens
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
 			using (var rscLocker = new ResourceLock(Resource.GetValue()))
 			{
-				var resource = rscLocker.Value as GroupResource;
+				var resource = rscLocker.Value as IAdministratedResource;
 				// Change the admin access from temp us
 				resource.CompleteAdminInvite(context, tempPass);
 				ResourceUtility.GetManagerForResource(resource).Update(resource, rscLocker);

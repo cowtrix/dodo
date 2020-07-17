@@ -9,11 +9,11 @@ using MongoDB.Bson.Serialization.Serializers;
 
 namespace Dodo
 {
-	public class GroupResourceAuthService<T, TSchema> : AuthorizationService<T, TSchema>
-		where T : GroupResource
+	public class AdministratedGroupResourceAuthService<T, TSchema> : AuthorizationService<T, TSchema>
+		where T : class, IAdministratedResource
 		where TSchema : DescribedResourceSchemaBase
 	{
-		public GroupResourceAuthService() : base()
+		public AdministratedGroupResourceAuthService() : base()
 		{
 		}
 
@@ -31,7 +31,7 @@ namespace Dodo
 			{
 				return EPermissionLevel.ADMIN;
 			}
-			if (target.IsMember(context))
+			if (target is IGroupResource group && group.IsMember(context))
 			{
 				return EPermissionLevel.MEMBER;
 			}
@@ -56,7 +56,7 @@ namespace Dodo
 			// Does the user have permission to create a child of the parent?
 			if(schema is OwnedResourceSchemaBase owned)
 			{
-				var parent = ResourceUtility.GetResourceByGuid(owned.Parent) as GroupResource;
+				var parent = ResourceUtility.GetResourceByGuid(owned.Parent) as T;
 				if (parent == null)
 				{
 					return ResourceRequestError.BadRequest();
@@ -81,7 +81,7 @@ namespace Dodo
 			{
 				action = action.Substring(action.IndexOf('?'));
 			}
-			if(action == GroupResourceService<T, TSchema>.JOIN_GROUP || action == GroupResourceService<T, TSchema>.LEAVE_GROUP)
+			if(action == IGroupResource.JOIN_GROUP || action == IGroupResource.LEAVE_GROUP)
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.MEMBER);
 			}
@@ -90,9 +90,9 @@ namespace Dodo
 			{
 				return ResourceRequestError.UnauthorizedRequest();
 			}
-			if ((action == GroupResourceService<T, TSchema>.ADD_ADMIN && permissionSet.CanAddAdmin) ||
-				(action == GroupResourceService<T, TSchema>.UPDATE_ADMIN && permissionSet.CanChangePermissions) ||
-				(action == GroupResourceService<T, TSchema>.REMOVE_ADMIN && permissionSet.CanRemoveAdmin) ||
+			if ((action == AdministratedGroupResourceService<T, TSchema>.ADD_ADMIN && permissionSet.CanAddAdmin) ||
+				(action == AdministratedGroupResourceService<T, TSchema>.UPDATE_ADMIN && permissionSet.CanChangePermissions) ||
+				(action == AdministratedGroupResourceService<T, TSchema>.REMOVE_ADMIN && permissionSet.CanRemoveAdmin) ||
 				(action == "notifications" && permissionSet.CanManageAnnouncements))
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);

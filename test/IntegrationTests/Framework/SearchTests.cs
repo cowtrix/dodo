@@ -32,6 +32,7 @@ namespace RESTTests.Search
 			var eventSite = CreateObject<Event>(seed: false);
 			using (var rscLock = new ResourceLock(eventSite))
 			{
+				eventSite = rscLock.Value as Event;
 				eventSite.StartDate = startDate + TimeSpan.FromDays(1);
 				eventSite.EndDate = eventSite.StartDate + TimeSpan.FromHours(4);
 				ResourceUtility.GetManager<Event>().Update(eventSite, rscLock);
@@ -40,6 +41,7 @@ namespace RESTTests.Search
 			var marchSite = CreateObject<Event>(seed: false);
 			using (var rscLock = new ResourceLock(marchSite))
 			{
+				marchSite = rscLock.Value as Event;
 				marchSite.StartDate = endDate - TimeSpan.FromDays(1);
 				marchSite.EndDate = marchSite.StartDate + TimeSpan.FromHours(4);
 				ResourceUtility.GetManager<Event>().Update(marchSite, rscLock);

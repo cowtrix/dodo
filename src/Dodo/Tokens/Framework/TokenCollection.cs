@@ -1,4 +1,3 @@
-using Resources.Security;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
@@ -13,18 +12,6 @@ using Resources.Serializers;
 namespace Dodo.Users.Tokens
 {
 	public class ITokenOwnerSerializer : ResourceReferenceSerializer<ITokenResource> { }
-
-
-
-	/// <summary>
-	/// This is any resource which can contain tokens. This requires a public/private key pair
-	/// </summary>
-	public interface ITokenResource : IRESTResource
-	{
-		string PublicKey { get; }
-		TokenCollection TokenCollection { get; }
-		Passphrase GetPrivateKey(AccessContext context);
-	}
 
 	/// <summary>
 	/// This collection enforces some restrictions on tokens, e.g. there can only be

@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace Dodo.Sites
 {
-
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
-	public class SiteAPIController : SearchableResourceController<Site, SiteSchema>
+	public class SiteAPIController : GroupResourceAPIController<Site, SiteSchema>
 	{
 		public const string RootURL = "site";
 
 		protected override AuthorizationService<Site, SiteSchema> AuthService =>
-			new OwnedResourceAuthService<Site, SiteSchema>();
+			new GroupResourceAuthService<Site, SiteSchema>();
 
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] SiteSchema schema)

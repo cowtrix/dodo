@@ -1,63 +1,23 @@
-using System.Collections.Generic;
-using Common;
-using Common.Extensions;
-using Resources.Security;
-using Dodo.Users;
-using Dodo.Utility;
-using Newtonsoft.Json;
-using Resources;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Common.Security;
-using System.Net;
-using System;
-using Microsoft.AspNetCore.Authorization;
-using Dodo;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Dodo
 {
 	public abstract class GroupResourceAPIController<T, TSchema> : SearchableResourceController<T, TSchema>
-		where T : GroupResource
+		where T : class, IGroupResource
 		where TSchema : DescribedResourceSchemaBase
 	{
 		protected GroupResourceService<T, TSchema> GroupService =>
-			new GroupResourceService<T, TSchema>(Context, HttpContext, AuthService);
+			new GroupResourceService<T, TSchema>(Context, HttpContext, new GroupResourceAuthService<T, TSchema>());
 		protected override AuthorizationService<T, TSchema> AuthService => new GroupResourceAuthService<T, TSchema>();
 
-		[HttpPost]
-		[Route("{guid}/" + GroupResourceService<T, TSchema>.UPDATE_ADMIN)]
-		public async Task<IActionResult> UpdateAdmin([FromRoute]string guid, [FromQuery]string id,
-			[FromBody] AdministratorPermissionSet permissionSet)
-		{
-			var result = GroupService.UpdateAdmin(guid, id, permissionSet);
-			return result.ActionResult;
-		}
-
-		[HttpGet]
-		[Route("{guid}/" + GroupResourceService<T, TSchema>.REMOVE_ADMIN)]
-		public async Task<IActionResult> RemoveAdmin([FromRoute]string guid, [FromQuery]string id)
-		{
-			var result = GroupService.RemoveAdministrator(guid, id);
-			return result.ActionResult;
-		}
-
-		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.ADD_ADMIN)]
-		public IActionResult AddAdministrator(string id, [FromBody]string newAdminIdentifier)
-		{
-			var result = GroupService.AddAdministrator(id, newAdminIdentifier);
-			return result.ActionResult;
-		}
-
-		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.JOIN_GROUP)]
+		[HttpPost("{id}/" + IGroupResource.JOIN_GROUP)]
 		public IActionResult JoinGroup(string id)
 		{
 			var result = GroupService.JoinGroup(id);
 			return result.ActionResult;
 		}
 
-		[HttpPost("{id}/" + GroupResourceService<T, TSchema>.LEAVE_GROUP)]
+		[HttpPost("{id}/" + IGroupResource.LEAVE_GROUP)]
 		public IActionResult LeaveGroup(string id)
 		{
 			var result = GroupService.LeaveGroup(id);

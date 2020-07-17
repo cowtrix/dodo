@@ -4,5 +4,5 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Groups
 {
 	[TestClass]
-	public class LocalGroupTests : GroupResourceTestBase<LocalGroup> { }
+	public class LocalGroupTests : AdministratedGroupResourceTestBase<LocalGroup> { }
 }

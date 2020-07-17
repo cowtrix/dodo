@@ -77,12 +77,16 @@ $(function () {
 				<label asp-for="PublicDescription" class="control-label"></label>
 				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
 				</div>
-
-
 				<div class="form-group">
 					<label asp-for="MemberCount" class="control-label"></label>
 					<input  readonly asp-for="MemberCount" class="form-control"></input>
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="PublicKey" class="control-label"></label>
+					<input  readonly asp-for="PublicKey" class="form-control"></input>
+					<span asp-validation-for="PublicKey" class="text-danger"></span>
 				</div>
 				<div class="form-group">
 					<label asp-for="Roles" class="control-label"></label>

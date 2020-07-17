@@ -9,7 +9,7 @@ using System.Linq;
 namespace Groups
 {
 	[TestClass]
-	public class RebellionTests : GroupResourceTestBase<Rebellion> 
+	public class RebellionTests : AdministratedGroupResourceTestBase<Rebellion> 
 	{
 		[TestMethod]
 		[TestCategory("Child Objects")]

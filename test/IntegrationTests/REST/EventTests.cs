@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace RESTTests
 {
 	[TestClass]
-	public class EventSiteTests : SiteTests<Event>
+	public class EventTests : GroupResourceTestBase<Event, EventSchema>
 	{
 		public override string ResourceRoot => EventAPIController.RootURL;
 

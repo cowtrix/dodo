@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 namespace RESTTests
 {
 	[TestClass]
-	public class WorkingGroupTests : GroupResourceTestBase<WorkingGroup, WorkingGroupSchema>
+	public class WorkingGroupTests : AdministratedGroupResourceTestBase<WorkingGroup, WorkingGroupSchema>
 	{
 		public override string ResourceRoot => WorkingGroupController.RootURL;
 

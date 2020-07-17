@@ -23,7 +23,7 @@ namespace Dodo.WorkingGroups
 	/// </summary>
 	[Name("Working Group")]
 	[SearchPriority(3)]
-	public class WorkingGroup : GroupResource, IOwnedResource, ILocationalResource
+	public class WorkingGroup : AdministratedGroupResource, IOwnedResource, ILocationalResource
 	{
 		public WorkingGroup() : base() { }
 

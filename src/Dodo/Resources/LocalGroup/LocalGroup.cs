@@ -17,7 +17,7 @@ namespace Dodo.LocalGroups
 {
 	[Name("Local Group")]
 	[SearchPriority(1)]
-	public class LocalGroup : GroupResource, ILocationalResource
+	public class LocalGroup : AdministratedGroupResource, ILocationalResource
 	{
 		[BsonElement]
 		private List<Guid> m_events = new List<Guid>();

@@ -15,7 +15,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchema>
-	where T : DodoResource
+	where T : class, IDodoResource
 	where TSchema : ResourceSchemaBase
 {
 	public CrudResourceServiceBase(AccessContext context, HttpContext httpContext, AuthorizationService<T, TSchema> auth) 

@@ -14,7 +14,7 @@ using Dodo.Rebellions;
 namespace Dodo.Rebellions
 {
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]
-	public class RebellionAPIController : GroupResourceAPIController<Rebellion, RebellionSchema>
+	public class RebellionAPIController : AdministratedGroupResourceAPIController<Rebellion, RebellionSchema>
 	{
 		public const string RootURL = "rebellion";
 

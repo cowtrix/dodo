@@ -12,7 +12,7 @@ using Dodo.Models;
 namespace Resources
 {
 	public abstract class CrudResourceAPIController<T, TSchema> : CustomController
-		where T : DodoResource
+		where T : class, IDodoResource
 		where TSchema : ResourceSchemaBase
 	{
 		protected CrudResourceServiceBase<T, TSchema> PublicService =>
