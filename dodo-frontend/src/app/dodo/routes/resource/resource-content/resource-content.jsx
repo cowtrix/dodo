@@ -5,7 +5,7 @@ import { Header, Description, SignUpButton, ParentLink } from "app/components/re
 
 import styles from './resource-content.module.scss'
 import { useHistory } from 'react-router-dom'
-import { REGISTER_ROUTE } from '../../register'
+import { REGISTER_ROUTE } from '../../user-routes/register'
 
 
 const JOIN_US_SITES = "Join us at a protest site"
