@@ -4,12 +4,20 @@ import { Switch } from "react-router"
 
 import { Search, SEARCH_ROUTE } from "./search"
 import { RESOURCE_ROUTE, Resource } from "./resource"
-import { Login, LOGIN_ROUTE } from "./login"
+
 import { NotFound } from "./error"
-import { ResetPassword, RESET_PASSWORD_ROUTE } from './reset-password'
-import { Register, REGISTER_ROUTE } from './register'
-import { YourProfile, YOUR_PROFILE_ROUTE } from './your-profile'
-import { MY_REBELLION_ROUTE, MyRebellion } from './my-rebellion'
+import {
+	ResetPassword,
+	RESET_PASSWORD_ROUTE,
+	Register,
+	REGISTER_ROUTE,
+	YourProfile,
+	YOUR_PROFILE_ROUTE,
+	MyRebellion,
+	MY_REBELLION_ROUTE,
+	Login,
+	LOGIN_ROUTE
+} from './user-routes'
 
 
 import { useHistory } from 'react-router-dom'
@@ -25,14 +33,14 @@ export const Routes = ({ closeMenu }) => {
 	return (
 		<Fragment>
 			<Switch>
-				<Route path={RESOURCE_ROUTE} component={Resource} exact />
-				<Route path={SEARCH_ROUTE} component={Search} exact />
-				<Route path={LOGIN_ROUTE} component={Login} exact />
-				<Route path={RESET_PASSWORD_ROUTE} component={ResetPassword} exact />
-				<Route path={REGISTER_ROUTE} component={Register} exact />
-				<Route path={YOUR_PROFILE_ROUTE} component={YourProfile} exact />
-				<Route path={MY_REBELLION_ROUTE} component={MyRebellion} exact />
-				<Route path="*" component={NotFound} />
+				<Route path={RESOURCE_ROUTE} component={Resource} exact/>
+				<Route path={SEARCH_ROUTE} component={Search} exact/>
+				<Route path={LOGIN_ROUTE} component={Login} exact/>
+				<Route path={RESET_PASSWORD_ROUTE} component={ResetPassword} exact/>
+				<Route path={REGISTER_ROUTE} component={Register} exact/>
+				<Route path={YOUR_PROFILE_ROUTE} component={YourProfile} exact/>
+				<Route path={MY_REBELLION_ROUTE} component={MyRebellion} exact/>
+				<Route path="*" component={NotFound}/>
 			</Switch>
 		</Fragment>
 	)
