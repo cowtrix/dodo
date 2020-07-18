@@ -73,7 +73,7 @@ namespace Resources
 			return GetValue() as T2;
 		}
 
-		public Type GetRefType() => System.Type.GetType(FullyQualifiedName);
+		public Type GetRefType() => string.IsNullOrEmpty(FullyQualifiedName) ? null : System.Type.GetType(FullyQualifiedName);
 
 		public bool HasValue() => Guid != default;
 

@@ -5,17 +5,7 @@ information about the status of the Rebellion.
 
 **Read the [Specification Document](https://docs.google.com/document/d/1yjUkmxTiSCRLJ7weWW5JxJRUwE2LFJmo2SnO-Fwxggk/)** for more information on project goals.
 
-# [Basecamp](https://3.basecamp.com/3559494/projects/14285600)
-
 # [REST API Documentation](https://documenter.getpostman.com/view/8888079/SW15xbbc?version=latest)
-
-# Code Documentation
-
-[API: Common](https://code.organise.earth/sean/dodo/wikis/API:-Common)
-
-[API: SimpleHttpServer](https://code.organise.earth/sean/dodo/wikis/API:-SimpleHttpServer)
-
-[API: Dodo](https://code.organise.earth/sean/dodo/wikis/API:-Dodo)
 
 # Getting Started
 
@@ -33,6 +23,22 @@ Dodo is compatible with Linux and Windows. It requires the .NET Core 3.0 runtime
 
 Configuration variables are read from a file called `config.json`, which should be formatted as a JSON dictionary. You can find a sample config file within the project called `config.sample.json` which also serves as a list of all variables that you can set. This file needs to be in the root directory of the application. At various points in this setup, you'll need to open up this file and set a variable to the given value.
 
+At minimum, your configuration file should look like this:
+
+```
+	"LogLevel":2,
+	"Dodo_DevEmail":"<support email>",
+	"NetworkConfig": {
+		"SSLPort": 443,
+		"HTTPPort" : 80,
+		"Domains": [ "<Your domain>" ],
+		"LetsEncryptAutoSetup": true,
+	},
+	"SendGrid_APIKey" : "<SendGrid private API key>",
+	"MapBoxGeocodingService_ApiKey": "<public MapBox geocoding API key>",
+	"ReactPath": "<path to the react frontend>"
+```
+
 ### 1 - Install or set up MongoDB
 
 Dodo requires a MongoDB server to store its data. We strongly recommend that you host the server on hardware that you directly control, and not through a cloud service such as Azure. You can download a free, local MongoDB server [here](https://www.mongodb.com/community).
@@ -43,15 +49,15 @@ If you are locally hosting the MongoDB server, move to the next step. If not, yo
 
 Dodo uses [SendGrid](https://sendgrid.com/) to manage and send emails. To link your server to a SendGrid account, you will need to get an API key from the SendGrid website, and set the `SendGrid_APIKey` configuration value to this key. Without this, users will not receive emails from your server. Additionally, you may wish to customize the `Email_FromEmail` and `Email_FromName` fields, which will change how emails are displayed when received by users.
 
+To enable incoming emails, you need to set up an Inbound Parse to your domain name, and 
+
 ### 3 - Set up your SSL Certificate
 
-// TODO: rewrite after ASP.NET
-
-Dodo expects to load a `.pfx` file containing the SSL certificate it will use to validate HTTPS connections. The relative path to this certificate is defined with the `SSLCertificatePath` configuration variable.
+Dodo uses Let's Encrypt to generate free SSL certificates. If you don't want Dodo to do this, set the `LetsEncryptAutoSetup` variable to false.
 
 ### 3 - Launch the server
 
-You're ready to go! Just run the executable Dodo.executable
+You're ready to go! Just run the executable DodoServer.exe
 
 ## Docker
 

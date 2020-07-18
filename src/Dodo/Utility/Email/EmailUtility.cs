@@ -1,32 +1,18 @@
 using Common;
 using Common.Config;
-using Microsoft.AspNetCore.Mvc;
-using Resources;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+using StrongGrid.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Dodo.Utility
 {
-	[Route("email")]
-	public class EmailProxyController : CustomController
-	{
-		public async Task<IActionResult> ReceiveEmail([FromBody]string body)
-		{
-			Logger.Info(body);
-			return Ok();
-		}
-	}
-
 	public static class EmailUtility
 	{
 #if DEBUG
-		public static List<SendGridMessage> EmailHistory = new List<SendGridMessage>();
+		//public static List<Email> EmailHistory = new List<SendGridMessage>();
 #endif
 
 		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", $"noreply@{DodoApp.PRODUCT_NAME}.com");
@@ -37,7 +23,7 @@ namespace Dodo.Utility
 		static ConfigVariable<string> m_verifyEmailTemplateGUID = new ConfigVariable<string>($"{nameof(EmailUtility)}_SendGridTemplate_VerifyEmail", "d-abb66e4f174c470abeb5e6a1ecdaac85");
 		static ConfigVariable<string> m_resetPasswordTemplateGUID = new ConfigVariable<string>($"{nameof(EmailUtility)}_SendGridTemplate_ResetPassword", "d-43861bc9e0dd44b29b131da9b10a07d1");
 
-		static SendGridClient m_client;
+		static StrongGrid.Client m_client;
 
 		static Dictionary<string, string> GetStandardTemplate() => new Dictionary<string, string>()
 		{
@@ -47,15 +33,42 @@ namespace Dodo.Utility
 
 		static EmailUtility()
 		{
+			if (string.IsNullOrEmpty(m_sendGridAPIKey.Value))
+			{
+				Logger.Warning($"No {m_sendGridAPIKey.ConfigKey} specified, email will not work.");
+				return;
+			}
 			Logger.Debug($"Using SendGrid API Key {m_sendGridAPIKey.Value}");
-			m_client = new SendGridClient(m_sendGridAPIKey.Value);			
+			m_client = new StrongGrid.Client(m_sendGridAPIKey.Value);
 		}
 
 		public static void SendEmail(string targetEmail, string targetName, string subject, string content)
 		{
-			var from = new EmailAddress(m_emailFrom.Value, m_nameFrom.Value);
-			var to = new EmailAddress(targetEmail, targetName);
-			SendEmail(MailHelper.CreateSingleEmail(from, to, subject, content, content));
+			if(m_client == null)
+			{
+				Logger.Warning($"No {m_sendGridAPIKey.ConfigKey} specified, email send was suppressed.");
+				return;
+			}
+			var from = new MailAddress(m_emailFrom.Value, m_nameFrom.Value);
+			var to = new MailAddress(targetEmail, targetName);
+			if (string.IsNullOrEmpty(m_sendGridAPIKey.Value))
+			{
+				Logger.Error($"No SendGrid API key was set - suppressing email send");
+				return;
+			}
+			var t = new Task(async () =>
+			{
+				try
+				{
+					await m_client.Mail.SendToSingleRecipientAsync(to, from, subject, content, content,
+						trackOpens: false, trackClicks: false); // Important!
+				}
+				catch (Exception e)
+				{
+					Logger.Exception(e, $"Failed to send email message");
+				}
+			});
+			t.Start();
 		}
 
 		public static void SendPasswordResetEmail(string targetEmail, string targetName, string callback)
@@ -70,30 +83,39 @@ namespace Dodo.Utility
 
 		private static void SendCallbackEmail(string targetEmail, string targetName, string callback, string template)
 		{
-			var from = new EmailAddress(m_emailFrom.Value, m_nameFrom.Value);
-			var to = new EmailAddress(targetEmail, targetName);
+			var from = new MailAddress(m_emailFrom.Value, m_nameFrom.Value);
+			var to = new MailAddress(targetEmail, targetName);
 			var dynamicTemplateData = GetStandardTemplate();
 			dynamicTemplateData["name"] = targetName;
 			dynamicTemplateData["callback"] = callback;
-			SendEmail(MailHelper.CreateSingleTemplateEmail(from, to, template, dynamicTemplateData));
+			SendTemplateEmail(from, to, template, dynamicTemplateData);
 		}
 
-		private static void SendEmail(SendGridMessage msg)
+		private static void SendTemplateEmail(MailAddress from, MailAddress to, string templateID, object data)
 		{
+			if (m_client == null)
+			{
+				Logger.Warning($"No {m_sendGridAPIKey.ConfigKey} specified, email send was suppressed.");
+				return;
+			}
 #if DEBUG
-			EmailHistory.Add(msg);
+			//EmailHistory.Add(msg);
 #endif
-			if(string.IsNullOrEmpty(m_sendGridAPIKey.Value))
+			if (string.IsNullOrEmpty(m_sendGridAPIKey.Value))
 			{
 				Logger.Error($"No SendGrid API key was set - suppressing email send");
 				return;
 			}
 			var t = new Task(async () =>
 			{
-				var response = await m_client.SendEmailAsync(msg);
-				if(response.StatusCode != HttpStatusCode.Accepted)
+				try
 				{
-					Logger.Error($"Failed to send email message, error code {response.StatusCode}: Body:[{await response.Body.ReadAsStringAsync()}]");
+					await m_client.Mail.SendToSingleRecipientAsync(to, from, templateID, data,
+						trackOpens: false, trackClicks: false); // Very important!
+				}
+				catch (Exception e)
+				{
+					Logger.Exception(e, $"Failed to send email message");
 				}
 			});
 			t.Start();
