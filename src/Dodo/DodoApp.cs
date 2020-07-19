@@ -9,7 +9,7 @@ namespace Dodo
 {
 	public static class DodoApp
 	{
-		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", $"admin@{NetConfig.Domains.First()}");
+		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", $"admin@dodo.ovh");
 		public static System.ValueTuple<string, string>[] EmailRedirects => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_EmailRedirects", 
 			new[]{
 				( DevEmail, "youremailhere@example.com" )
