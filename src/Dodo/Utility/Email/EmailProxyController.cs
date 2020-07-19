@@ -18,7 +18,7 @@ namespace Dodo.Utility
 		public async Task<IActionResult> ReceiveEmail()
 		{
 			var parser = new StrongGrid.WebhookParser();
-			var inboundEmail = parser.ParseInboundEmailWebhook(Request.Body);
+			var inboundEmail = await parser.ParseInboundEmailWebhookAsync(Request.Body);
 			Logger.Debug($"Received email {inboundEmail}");
 			var targets = inboundEmail.To.Where(m => Dodo.DodoApp.NetConfig.Domains.Any(d => m.Email.EndsWith(d)));
 			if(!targets.Any())
