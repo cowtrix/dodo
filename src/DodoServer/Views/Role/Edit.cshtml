@@ -81,6 +81,14 @@ $(function () {
 				<label asp-for="ApplicantQuestion" class="control-label"></label>
 				<textarea style="height:20em;" asp-for="ApplicantQuestion" class="form-control"></textarea>
 				</div>
+				<div class="form-group">
+					<label asp-for="ContactEmail" class="control-label"></label>
+					<input  asp-for="ContactEmail" class="form-control"></input>
+					<span asp-validation-for="ContactEmail" class="text-danger"></span>
+					<small id="helpBlock" class="form-text text-muted">
+						This email will receive all applications for this role.
+					</small>
+				</div>
 
 					<div class="form-group">
 						<input type="submit" value="Save" class="btn btn-primary btn-block" />

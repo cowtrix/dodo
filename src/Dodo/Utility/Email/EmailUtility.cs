@@ -42,14 +42,22 @@ namespace Dodo.Utility
 			m_client = new StrongGrid.Client(m_sendGridAPIKey.Value);
 		}
 
-		public static void SendEmail(string targetEmail, string targetName, string subject, string content)
+		public static void SendEmail(string targetEmail, string targetName,
+			string subject, string textContent, string htmlContent = null)
 		{
-			if(m_client == null)
+			SendEmail(targetEmail, targetName, m_emailFrom.Value, m_nameFrom.Value, subject, textContent, htmlContent);
+		}
+
+		public static void SendEmail(string targetEmail, string targetName,
+			string fromEmail, string fromName, string subject, string textContent, string htmlContent = null)
+		{
+			htmlContent = htmlContent ?? textContent;
+			if (m_client == null)
 			{
 				Logger.Warning($"No {m_sendGridAPIKey.ConfigKey} specified, email send was suppressed.");
 				return;
 			}
-			var from = new MailAddress(m_emailFrom.Value, m_nameFrom.Value);
+			var from = new MailAddress(fromEmail, fromName);
 			var to = new MailAddress(targetEmail, targetName);
 			if (string.IsNullOrEmpty(m_sendGridAPIKey.Value))
 			{
@@ -60,7 +68,7 @@ namespace Dodo.Utility
 			{
 				try
 				{
-					await m_client.Mail.SendToSingleRecipientAsync(to, from, subject, content, content,
+					await m_client.Mail.SendToSingleRecipientAsync(to, from, subject, htmlContent, textContent,
 						trackOpens: false, trackClicks: false); // Important!
 				}
 				catch (Exception e)

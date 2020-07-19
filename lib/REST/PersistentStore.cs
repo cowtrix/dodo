@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Resources
@@ -74,6 +75,12 @@ namespace Resources
 			}
 			value = match.First().Value;
 			return true;
+		}
+
+		public bool ContainsKey(TKey key)
+		{
+			var count = Collection.CountDocuments(x => x.Key.Equals(key));
+			return count > 0;
 		}
 	}
 }

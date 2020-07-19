@@ -28,9 +28,9 @@ namespace Dodo.Roles
 			var role = actionReq.Result as Role;
 			using var rscLock = new ResourceLock(role);
 			role = rscLock.Value as Role;
-			if (!role.Apply(Context, application))
+			if (!role.Apply(Context, application, out var error))
 			{
-				return ResourceRequestError.BadRequest();
+				return ResourceRequestError.BadRequest(error);
 			}
 			ResourceManager.Update(role, rscLock);
 			return new OkRequestResult("Application successful");

@@ -9,6 +9,7 @@ using Resources.Location;
 using Common;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using Dodo.Utility;
 
 namespace Dodo.Roles
 {
@@ -34,6 +35,10 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
+		[Name("Contact Email")]
+		[View(EPermissionLevel.ADMIN, inputHint: "This email will receive all applications for this role.")]
+		public string ContactEmail { get; set; }
+
 		public Role() : base() { }
 
 		public Role(AccessContext context, RoleSchema schema) : base(context, schema)
@@ -42,10 +47,29 @@ namespace Dodo.Roles
 			Parent = group.CreateRef<IRESTResource>();
 			PublicDescription = schema.PublicDescription;
 			ApplicantQuestion = schema.ApplicantQuestion;
+			ContactEmail = schema.ContactEmail;
 		}
 
-		public bool Apply(AccessContext context, ApplicationModel application)
+		public bool Apply(AccessContext context, ApplicationModel application, out string error)
 		{
+			if(context.User == null)
+			{
+				error = "User not logged in";
+				return false;
+			}
+			if(!context.User.PersonalData.EmailConfirmed)
+			{
+				error = "User email not verified";
+				return false;
+			}
+			var applicantEmail = context.User.PersonalData.Email;
+			var proxy = EmailProxy.SetProxy(applicantEmail, ContactEmail);
+			var subject = $"You have a new applicant for {Name}: {context.User.Name}";
+			var content = $"{subject}\n\n{ApplicantQuestion}\n\n{application.Content}";
+			EmailUtility.SendEmail(proxy.RemoteEmail, Name, 
+				$"[{Dodo.DodoApp.PRODUCT_NAME}] {subject}",
+				content, content);
+			error = null;
 			return true;
 		}
 	}

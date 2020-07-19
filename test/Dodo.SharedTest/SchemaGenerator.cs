@@ -45,8 +45,7 @@ namespace Dodo.SharedTest
 		public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
 		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
 		public static string RandomVideoURL => "https://www.youtube.com/embed/d4QDM_Isi24";
-
-		public static string SampleRoleInstructions { get; set; }
+		public static string SampleRoleInstructions => "This is some sample instructions. Here you might ask if a volunteer has First Aid training, or to outline their previous XR experience, or to tell you about shift availabilites. You should have made this clear in the Applicant Question for the Role.";
 
 		private static string RandomName<T>() => m_nameGenerators[typeof(T)].Invoke();
 
@@ -93,7 +92,7 @@ namespace Dodo.SharedTest
 			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomWorkinGroup(context)));
 			return new RoleSchema(RandomName<Role>(),
-				SampleDescription, SampleRoleInstructions,
+				SampleDescription, SampleRoleInstructions, "testAdmin@example.com",
 				wg.Guid);
 		}
 

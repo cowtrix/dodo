@@ -36,5 +36,8 @@ namespace Dodo.ViewModels
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }
+		[DisplayName("Contact Email")]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
+		public string ContactEmail { get; set; }
 	}
 }
