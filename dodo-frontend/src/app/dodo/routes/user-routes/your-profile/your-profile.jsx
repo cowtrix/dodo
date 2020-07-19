@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Container, EditableInput, Submit } from 'app/components/forms'
-import { UpdateEmail } from './update-email'
+import { Container, EditableInput, Submit } from 'app/components/forms/index'
+import { UpdateEmail } from './update-email/index'
 
 import { useHistory } from 'react-router-dom'
 

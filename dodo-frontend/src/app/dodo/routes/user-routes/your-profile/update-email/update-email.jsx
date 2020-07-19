@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button } from 'app/components'
+import { Button } from 'app/components/index'
 
-import { EditableInput } from 'app/components/forms'
+import { EditableInput } from 'app/components/forms/index'
 import styles from './update-email.module.scss'
 
 export const EMAIL_WARNING = "Your email has not been verified, which will limit what you can do."

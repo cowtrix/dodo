@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import styles from './options.module.scss'
 import { Link } from 'react-router-dom'
 
-import { YOUR_PROFILE_ROUTE } from '../../../routes/your-profile'
-import { MY_REBELLION_ROUTE } from '../../../routes/my-rebellion'
+import { YOUR_PROFILE_ROUTE } from '../../../routes/user-routes/your-profile'
+import { MY_REBELLION_ROUTE } from '../../../routes/user-routes/my-rebellion'
 
 export const Options = ({ logout }) =>
 	<ul className={styles.options}>
