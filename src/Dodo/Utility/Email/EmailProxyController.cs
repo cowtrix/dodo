@@ -30,10 +30,10 @@ namespace Dodo.Utility
 				return Ok();
 			}
 			debug.AppendLine($" Targets: {string.Join(", ", targets)}");
-			var redirect = Dodo.DodoApp.EmailRedirects.SingleOrDefault(r => r.Item1 == inboundEmail.From.Email);
-			if (!string.IsNullOrEmpty(redirect.Item1))
+			var redirect = Dodo.DodoApp.EmailRedirects.SingleOrDefault(r => r.Email == inboundEmail.From.Email);
+			if (!string.IsNullOrEmpty(redirect.Email))
 			{
-				EmailUtility.SendEmail(redirect.Item1, "", $"noreply@{Dodo.DodoApp.NetConfig.Domains.First()}", "", 
+				EmailUtility.SendEmail(redirect.Redirect, "", $"noreply@{Dodo.DodoApp.NetConfig.Domains.First()}", "", 
 					inboundEmail.Subject, inboundEmail.Text, inboundEmail.Html);
 			}
 			foreach(var target in targets)

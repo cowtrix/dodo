@@ -28,7 +28,7 @@ namespace Dodo.Users.Tokens
 
 		public override void OnAdd(ITokenResource parent)
 		{
-			Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE);
+			Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE).ToLowerInvariant();
 #if DEBUG
 			Logger.Info($"DEBUG: generated email verification key {Token} for user {parent}");
 #endif
