@@ -51,6 +51,7 @@ namespace Dodo.Utility
 		public static void SendEmail(string targetEmail, string targetName,
 			string fromEmail, string fromName, string subject, string textContent, string htmlContent = null)
 		{
+			Logger.Debug($"Sending an email from {fromEmail} to {targetEmail}: {subject}");
 			htmlContent = htmlContent ?? textContent;
 			if (m_client == null)
 			{
