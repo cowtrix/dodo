@@ -66,7 +66,8 @@ namespace Dodo.Roles
 			var proxy = EmailProxy.SetProxy(applicantEmail, ContactEmail);
 			var subject = $"You have a new applicant for {Name}: {context.User.Name}";
 			var content = $"{subject}\n\n{ApplicantQuestion}\n\n{application.Content}";
-			EmailUtility.SendEmail(proxy.RemoteEmail, Name, 
+			EmailUtility.SendEmail(proxy.RemoteEmail, "", 
+				proxy.ProxyEmail, "",
 				$"[{Dodo.DodoApp.PRODUCT_NAME}] {subject}",
 				content, content);
 			error = null;
