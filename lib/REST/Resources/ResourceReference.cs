@@ -95,7 +95,7 @@ namespace Resources
 			}
 			if(resource is IDescribedResource desc)
 			{
-				PublicDescription = desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH));
+				PublicDescription = StringExtensions.StripMDLinks(desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH)));
 			}
 			else
 			{

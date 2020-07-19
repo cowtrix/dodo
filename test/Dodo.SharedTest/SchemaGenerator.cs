@@ -92,7 +92,7 @@ namespace Dodo.SharedTest
 			wg = wg ?? ResourceUtility.GetFactory<WorkingGroup>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomWorkinGroup(context)));
 			return new RoleSchema(RandomName<Role>(),
-				SampleDescription, SampleRoleInstructions, "testAdmin@example.com",
+				SampleDescription, SampleRoleInstructions, Dodo.DodoApp.DevEmail,
 				wg.Guid);
 		}
 

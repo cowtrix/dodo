@@ -8,6 +8,8 @@ namespace Common.Extensions
 
 	public static class StringExtensions
 	{
+		const string fullLinkOnlyRegex = @"\[([^\[]+)\]\((.*?)\)";
+
 		public static string TextToHtml(string str)
 		{
 			if(string.IsNullOrEmpty(str))
@@ -19,7 +21,6 @@ namespace Common.Extensions
 			// While this is nice, we want quotation marks to work
 			str = str.Replace("&quot;", "\"");
 			// Now format markdown urls
-			const string fullLinkOnlyRegex = @"\[([^\[]+)\]\((.*?)\)";
 			Match match = Regex.Match(str, fullLinkOnlyRegex);
 			while (match.Success)
 			{
@@ -37,6 +38,35 @@ namespace Common.Extensions
 			return str
 				.Replace(Environment.NewLine, "</br>")
 				.Replace("\n", "</br>");
+		}
+		public static string StripMDLinks(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return str;
+			}
+			// Firstly escape any explicit html to prevent injection
+			str = System.Web.HttpUtility.HtmlEncode(str);
+			// While this is nice, we want quotation marks to work
+			str = str.Replace("&quot;", "\"");
+			// Now format markdown urls
+			Match match = Regex.Match(str, fullLinkOnlyRegex);
+			while (match.Success)
+			{
+				// Handle match here...
+				try
+				{
+					var txt = match.Groups[1].Value;
+					var link = match.Groups[2].Value;
+					str = str.Substring(0, match.Index) + str.Substring(match.Index + match.Length);
+				}
+				catch { }
+				match = Regex.Match(str, fullLinkOnlyRegex);
+			}
+			// Finally replace linebreaks with <br/>
+			return str
+				.Replace(Environment.NewLine, "")
+				.Replace("\n", "");
 		}
 		public static string AppendIfNotNull(this string str, string toAppend)
 		{

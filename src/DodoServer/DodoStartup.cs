@@ -33,7 +33,7 @@ namespace DodoServer
 				{
 					config.AcceptTermsOfService = true;
 					config.DomainNames = Dodo.DodoApp.NetConfig.Domains;
-					config.EmailAddress = DodoServer.DevEmail;
+					config.EmailAddress = DodoApp.DevEmail;
 				});
 			}
 
