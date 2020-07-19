@@ -30,10 +30,10 @@ namespace Dodo.Utility
 				return Ok();
 			}
 			debug.AppendLine($" Targets: {string.Join(", ", targets)}");
-
+			Logger.Debug(debug);
 			foreach (var target in targets)
 			{
-				if(Dodo.DodoApp.EmailRedirects != null)
+				/*if(Dodo.DodoApp.EmailRedirects != null)
 				{
 					var redirect = Dodo.DodoApp.EmailRedirects?.SingleOrDefault(r => r?.Email == target);
 					if (!string.IsNullOrEmpty(redirect.Email))
@@ -42,16 +42,18 @@ namespace Dodo.Utility
 							inboundEmail.Subject, inboundEmail.Text, inboundEmail.Html);
 						continue;
 					}
-				}
+				}*/
 				var text = inboundEmail.Text.Replace(target, "anonymous")
+					.Replace(inboundEmail.From.Email, "anonymous");
+				var html = inboundEmail.Html.Replace(target, "anonymous")
 					.Replace(inboundEmail.From.Email, "anonymous");
 				var proxy = EmailProxy.GetProxyFromKey(inboundEmail.From.Email, target);
 				if (proxy == null)
 				{
-					debug.AppendLine("Couldn't resolve!");
+					Logger.Warning($"Couldn't resolve {target}");
 					continue;
 				}
-				EmailUtility.SendEmail(proxy.RemoteEmail, "", proxy.ProxyEmail, "", inboundEmail.Subject, inboundEmail.Text, inboundEmail.Html);
+				EmailUtility.SendEmail(proxy.RemoteEmail, "", proxy.ProxyEmail, "", inboundEmail.Subject, text, html);
 			}
 			return Ok();
 		}

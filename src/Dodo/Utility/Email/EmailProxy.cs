@@ -1,3 +1,4 @@
+using Common;
 using Common.Security;
 using Resources;
 
@@ -31,8 +32,13 @@ namespace Dodo.Utility
 			= new PersistentStore<string, ProxyInformation>(Dodo.DodoApp.PRODUCT_NAME, "mailproxy");
 		public static ProxyInformation GetProxyFromKey(string fromEmail, string proxyEmail)
 		{
-			var key = SHA256Utility.SHA256(fromEmail + proxyEmail);
-			m_proxy.TryGetValue(key, out var proxy);
+			if(!m_proxy.TryGetValue(SHA256Utility.SHA256(fromEmail + proxyEmail), out var proxy))
+			{
+				if(m_proxy.TryGetValue(SHA256Utility.SHA256(proxyEmail + fromEmail), out proxy))
+				{
+					Logger.Warning($"Had to reverse proxy for some reason?");
+				}
+			}
 			return proxy;
 		}
 
