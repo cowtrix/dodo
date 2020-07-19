@@ -50,7 +50,8 @@ namespace Dodo.Utility
 			ProxyInformation proxy;
 			do
 			{
-				proxy = new ProxyInformation(email, KeyGenerator.GetUniqueKey(SaltSize).ToLowerInvariant());
+				var proxyEmail = $"{KeyGenerator.GetUniqueKey(SaltSize).ToLowerInvariant()}@{Dodo.DodoApp.NetConfig.GetHostname()}";
+				proxy = new ProxyInformation(email, proxyEmail);
 			} 
 			while (m_proxy.ContainsKey(proxy.GetKey()));
 			return proxy;

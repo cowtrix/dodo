@@ -11,7 +11,15 @@ namespace Dodo
 #else
 		public string FullURI => $"https://{Domains.First()}";
 #endif
-
+		public string GetHostname()
+		{
+			var d = Domains.FirstOrDefault();
+			if (d.StartsWith("www."))
+			{
+				return d.Substring(4);
+			}
+			return d;
+		}
 		public int SSLPort;
 		public string[] Domains;
 		public bool LetsEncryptAutoSetup;
