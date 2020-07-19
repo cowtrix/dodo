@@ -30,7 +30,7 @@ namespace Dodo.Utility
 				return Ok();
 			}
 			debug.AppendLine($" Targets: {string.Join(", ", targets)}");
-			Logger.Debug(debug);
+			Logger.Debug(debug.ToString());
 			foreach (var target in targets)
 			{
 				/*if(Dodo.DodoApp.EmailRedirects != null)
