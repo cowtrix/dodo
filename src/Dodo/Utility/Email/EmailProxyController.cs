@@ -33,13 +33,18 @@ namespace Dodo.Utility
 
 			foreach (var target in targets)
 			{
-				/*var redirect = Dodo.DodoApp.EmailRedirects?.SingleOrDefault(r => r?.Email == target);
-				if (!string.IsNullOrEmpty(redirect.Email))
+				if(Dodo.DodoApp.EmailRedirects != null)
 				{
-					EmailUtility.SendEmail(redirect.Redirect, "", $"noreply@{Dodo.DodoApp.NetConfig.GetHostname()}", "",
-						inboundEmail.Subject, inboundEmail.Text, inboundEmail.Html);
-					continue;
-				}*/
+					var redirect = Dodo.DodoApp.EmailRedirects?.SingleOrDefault(r => r?.Email == target);
+					if (!string.IsNullOrEmpty(redirect.Email))
+					{
+						EmailUtility.SendEmail(redirect.Redirect, "", $"noreply@{Dodo.DodoApp.NetConfig.GetHostname()}", "",
+							inboundEmail.Subject, inboundEmail.Text, inboundEmail.Html);
+						continue;
+					}
+				}
+				var text = inboundEmail.Text.Replace(target, "anonymous")
+					.Replace(inboundEmail.From.Email, "anonymous");
 				var proxy = EmailProxy.GetProxyFromKey(inboundEmail.From.Email, target);
 				if (proxy == null)
 				{
