@@ -40,8 +40,8 @@ namespace Dodo.Utility
 		{
 			var incomingProxy = GenerateNewProxy(fromEmail);
 			var outgoingProxy = GenerateNewProxy(toEmail);
-			m_proxy[incomingProxy.GetKey()] = incomingProxy;
-			m_proxy[outgoingProxy.GetKey()] = outgoingProxy;
+			m_proxy[incomingProxy.GetKey()] = outgoingProxy;
+			m_proxy[outgoingProxy.GetKey()] = incomingProxy;
 			return outgoingProxy;
 		}
 
