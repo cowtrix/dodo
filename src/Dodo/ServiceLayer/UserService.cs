@@ -213,6 +213,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		if (verifyToken.Token != token)
 		{
+			Logger.Debug($"Expected token {verifyToken.Token} but got {token}");
 			return ResourceRequestError.BadRequest("Token mismatch");
 		}
 		using var rscLock = new ResourceLock(Context.User);
