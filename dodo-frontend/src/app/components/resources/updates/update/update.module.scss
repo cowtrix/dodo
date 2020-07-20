@@ -1,20 +1,5 @@
 @import "~app/styles/styles";
 
-.container {
-	flex: 0 0 360px;
-	border: 1px solid $color-light-grey;
-	padding: spacing(2);
-}
-
-.title {
-	padding: 0 0 spacing(2);
-
-	@media (min-width: $responsive-breakpoint) {
-		padding: 0 0 spacing(2);
-		font-size: 1.5rem;
-	}
-}
-
 .update {
 	display: flex;
 	padding: spacing(2);
@@ -37,12 +22,6 @@
 
 .updateIconImg {
 	width: 100%;
-}
-
-.updateMeta {
-	font-size: 0.8rem;
-	color: $color-text-light;
-	padding-bottom: spacing(1);
 }
 
 .message {

@@ -5,9 +5,7 @@ import styles from './description.module.scss'
 
 
 export const Description = ({ description }) =>
-	<div className={styles.description}>
-		{description}
-	</div>
+	<div className={styles.description} dangerouslySetInnerHTML={{__html: description}}/>
 
 Description.propTypes = {
 	description: PropTypes.string,

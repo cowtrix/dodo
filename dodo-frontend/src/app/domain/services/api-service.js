@@ -13,7 +13,7 @@ export const api = async(url, method = "get", body, abortSignal) => {
 			"Content-Type": "application/json",
 			Accept: "application/json"
 		},
-		credentials: "include",
+		// credentials: "include",
 		signal: abortSignal ? abortController.signal : null,
 	}).then(resp => resp.json())
 }
