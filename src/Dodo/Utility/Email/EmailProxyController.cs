@@ -33,15 +33,13 @@ namespace Dodo.Utility
 			Logger.Debug(debug.ToString());
 			foreach (var target in targets)
 			{
-				/*if(Dodo.DodoApp.EmailRedirects != null)
+				// TODO why is the call to EmailRedirects throwing a null exception?
+				/*var redirect = Dodo.DodoApp.EmailRedirects?.SingleOrDefault(r => r?.Email == target);
+				if (!string.IsNullOrEmpty(redirect.Email))
 				{
-					var redirect = Dodo.DodoApp.EmailRedirects?.SingleOrDefault(r => r?.Email == target);
-					if (!string.IsNullOrEmpty(redirect.Email))
-					{
-						EmailUtility.SendEmail(redirect.Redirect, "", $"noreply@{Dodo.DodoApp.NetConfig.GetHostname()}", "",
-							inboundEmail.Subject, inboundEmail.Text, inboundEmail.Html);
-						continue;
-					}
+					EmailUtility.SendEmail(redirect.Redirect, "", $"noreply@{Dodo.DodoApp.NetConfig.GetHostname()}", "",
+						inboundEmail.Subject, inboundEmail.Text, inboundEmail.Html);
+					continue;
 				}*/
 				var text = inboundEmail.Text.Replace(target, "anonymous")
 					.Replace(inboundEmail.From.Email, "anonymous");

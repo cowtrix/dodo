@@ -16,6 +16,7 @@ namespace Dodo.Roles
 	[SearchPriority(4)]
 	public class Role : DodoResource, IOwnedResource, IPublicResource
 	{
+		const string METADATA_APPLIED = "applied";
 		public const string ApplicantQuestionHint = "Here you can describe required skills, training and availabilities. All applicants will answer this prompt when applying for this role.";
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer:"parentRef")]
@@ -38,6 +39,8 @@ namespace Dodo.Roles
 		[Name("Contact Email")]
 		[View(EPermissionLevel.ADMIN, inputHint: "This email will receive all applications for this role.")]
 		public string ContactEmail { get; set; }
+
+		public SecureUserStore Applications = new SecureUserStore();
 
 		public Role() : base() { }
 
@@ -70,8 +73,22 @@ namespace Dodo.Roles
 				proxy.ProxyEmail, "",
 				$"[{Dodo.DodoApp.PRODUCT_NAME}] {subject}",
 				content, content);
+			Applications.Add(context.User.CreateRef(), context.Passphrase);
 			error = null;
 			return true;
+		}
+
+		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
+		{
+			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
+			var context = new AccessContext(user, passphrase);
+			view.Add(METADATA_APPLIED, HasApplied(context) ? "true" : "false");
+			base.AppendMetadata(view, permissionLevel, requester, passphrase);
+		}
+
+		private bool HasApplied(AccessContext context)
+		{
+			return Applications.IsAuthorised(context);
 		}
 	}
 }

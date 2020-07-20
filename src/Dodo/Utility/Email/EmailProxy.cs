@@ -4,6 +4,10 @@ using Resources;
 
 namespace Dodo.Utility
 {
+	/// <summary>
+	/// This is a simple email anonimization service that routes conversations between
+	/// different user accounts, and masks the addresses.
+	/// </summary>
 	public static class EmailProxy
 	{
 		const int SaltSize = 16;
@@ -34,10 +38,7 @@ namespace Dodo.Utility
 		{
 			if(!m_proxy.TryGetValue(SHA256Utility.SHA256(fromEmail + proxyEmail), out var proxy))
 			{
-				if(m_proxy.TryGetValue(SHA256Utility.SHA256(proxyEmail + fromEmail), out proxy))
-				{
-					Logger.Warning($"Had to reverse proxy for some reason?");
-				}
+				Logger.Warning($"Unable to resolve proxy for {fromEmail} + {proxyEmail}");
 			}
 			return proxy;
 		}
@@ -47,7 +48,9 @@ namespace Dodo.Utility
 			var incomingProxy = GenerateNewProxy(fromEmail);
 			var outgoingProxy = GenerateNewProxy(toEmail);
 			m_proxy[incomingProxy.GetKey()] = outgoingProxy;
+			Logger.Debug($"Set proxy {incomingProxy.GetKey().Substring(0, 8)}... {outgoingProxy.ProxyEmail} -> {outgoingProxy.RemoteEmail}");
 			m_proxy[outgoingProxy.GetKey()] = incomingProxy;
+			Logger.Debug($"Set proxy {outgoingProxy.GetKey().Substring(0, 8)}... {incomingProxy.ProxyEmail} -> {incomingProxy.RemoteEmail}");
 			return outgoingProxy;
 		}
 
