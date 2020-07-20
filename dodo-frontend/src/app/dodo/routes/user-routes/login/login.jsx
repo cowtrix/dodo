@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { useTranslation } from "react-i18next"
 import { useHistory, Link } from 'react-router-dom'
 
-import { Input, Container, Submit, Error, TickBox } from 'app/components/forms'
+import { Input, Container, Submit, Error, TickBox } from 'app/components/forms/index'
 
 const LOGIN = 'Login'
 

@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
-import { Container, Input, Submit } from 'app/components/forms'
-import { api } from 'app/domain/services'
+import { Container, Input, Submit } from 'app/components/forms/index'
+import { api } from 'app/domain/services/index'
 import { RESET_PASSWORD} from 'app/domain/urls'
 
 

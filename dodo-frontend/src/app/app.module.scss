@@ -30,8 +30,7 @@ body {
   background: white;
   position: relative;
   overflow-x: hidden;
-  padding-bottom: spacing(13);
-}
+  min-height: 100vh;}
 
 ul {
   list-style: none;

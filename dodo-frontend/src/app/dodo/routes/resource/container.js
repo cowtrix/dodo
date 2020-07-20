@@ -13,15 +13,16 @@ const mapStateToProps = state => ({
 	isLoading: resources.selectors.resourceLoading(state),
 	resourceTypes: resources.selectors.resourceTypes(state),
 	memberOf: user.selectors.memberOf(state),
-	isLoggedIn: !!user.selectors.username(state)
+	isLoggedIn: !!user.selectors.username(state),
+	fetchingUser: user.selectors.fetchingUser(state)
 })
 
 const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
 	getResource: (resourceType, resourceID, setCenterMap) =>
 		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap),
-	joinResource: (resourceType, resourceID, subscribe) =>
-		resources.actions.joinResource(dispatch, resourceType, resourceID, subscribe),
+	subscribeResource: (resourceType, resourceID, subscribe) =>
+		resources.actions.subscribeResource(dispatch, resourceType, resourceID, subscribe),
 })
 
 export const ResourceConnected = connect(
