@@ -28,9 +28,15 @@ namespace Dodo.Users.Tokens
 
 		public override void OnAdd(ITokenResource parent)
 		{
-			Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE).ToLowerInvariant();
-			Logger.Info($"DEBUG: generated email verification key {Token} for user {parent}");
-			m_notification = new Notification(Guid, "Your Account", "You should check your email and verify your email address with us.", null, ENotificationType.Alert, EPermissionLevel.OWNER);
+			if(string.IsNullOrEmpty(Token))
+			{
+				Token = KeyGenerator.GetUniqueKey(TOKEN_SIZE).ToLowerInvariant();
+				Logger.Info($"DEBUG: generated email verification key {Token} for user {parent}");
+			}
+			if(m_notification == null)
+			{
+				m_notification = new Notification(Guid, "Your Account", "You should check your email and verify your email address with us.", null, ENotificationType.Alert, EPermissionLevel.OWNER);
+			}
 			base.OnAdd(parent);
 		}
 
