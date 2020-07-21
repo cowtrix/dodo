@@ -1,0 +1,50 @@
+@import "~app/styles/styles";
+
+.update {
+	display: flex;
+	padding: spacing(2);
+	border: 1px solid $color-light-grey;
+	border-radius: 4px;
+	margin-bottom: spacing(2);
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.updateIcon {
+	flex: 0 0 60px;
+	padding: spacing(2);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.updateIconImg {
+	width: 100%;
+}
+
+.message {
+	overflow: hidden;
+}
+
+.updateActions {
+	display: flex;
+}
+
+.showMoreUpdate {
+	margin-left: auto;
+	padding: 0;
+	border: none;
+	background: none;
+	font-size: 0.8rem;
+	color: $color-text-light;
+	text-decoration: underline;
+	outline: none;
+	cursor: pointer;
+	&:hover {
+		color: $color-text;
+	}
+}
+
+

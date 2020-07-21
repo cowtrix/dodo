@@ -9,7 +9,9 @@ export const Resource =
 		{
 			match,
 			getResource,
+			getNotifications,
 			resource,
+			notifications,
 			isLoading,
 			centerMap,
 			setCenterMap,
@@ -25,6 +27,7 @@ export const Resource =
 
 		useEffect(() => {
 			getResource(resourceType, resourceId, setCenterMap)
+			getNotifications(resourceType, resourceId);
 		}, [match])
 
 
@@ -53,6 +56,7 @@ export const Resource =
 							{resource.metadata && !isLoading && (
 								<ResourceContent
 									resource={resource}
+									notifications={notifications}
 									setCenterMap={setCenterMap}
 									resourceTypes={resourceTypes}
 									resourceColor={resourceColor}

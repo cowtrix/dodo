@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Video, ExpandableList } from "app/components"
-import { Header, Description, SignUpButton, ParentLink } from "app/components/resources"
+import { Header, Description, SignUpButton, ParentLink, Updates } from "app/components/resources"
 
 import styles from './resource-content.module.scss'
 import { useHistory } from 'react-router-dom'
@@ -15,7 +15,7 @@ const VOLUNTEER_NOW = "Volunteer now with a working group"
 const isSubscribedToResource = (memberOf, resourceID) => memberOf.find(resource => resourceID === resource.guid)
 
 export const ResourceContent =
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn }) => {
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications }) => {
 		const { push } = useHistory()
 
 		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
@@ -27,8 +27,10 @@ export const ResourceContent =
 			<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} />
 			<ParentLink parent={resource.parent}/>
 			<Video videoEmbedURL={resource.videoEmbedURL} />
-			<Description description={resource.publicDescription} />
-			<SignUpButton
+			<div className={styles.descriptionContainer}>
+				<Description description={resource.publicDescription} />
+				<Updates notifications={notifications}/>
+			</div>			<SignUpButton
 				resourceColor={resourceColor}
 				isLoggedIn={isLoggedIn}
 				isSubscribed={isSubscribed}
@@ -45,6 +47,7 @@ export const ResourceContent =
 ResourceContent.propTypes = {
 	subscribeResource: PropTypes.func,
 	resource: PropTypes.object,
+	notifications: PropTypes.object,
 	resourceColor: PropTypes.string,
 	resourceTypes: PropTypes.array,
 	setCenterMap: PropTypes.func
