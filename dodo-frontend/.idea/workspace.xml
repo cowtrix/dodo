@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="fixed rebellion error&#10;put user routes into own file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -34,7 +33,7 @@
           <entry key="env" value="2" />
           <entry key="gitignore" value="2" />
           <entry key="html" value="3" />
-          <entry key="js" value="970" />
+          <entry key="js" value="972" />
           <entry key="json" value="29" />
           <entry key="jsx" value="723" />
           <entry key="scss" value="294" />
@@ -49,7 +48,7 @@
           <entry key="HTML" value="3" />
           <entry key="JSON" value="25" />
           <entry key="JSX Harmony" value="723" />
-          <entry key="JavaScript" value="963" />
+          <entry key="JavaScript" value="965" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="SCSS" value="294" />
           <entry key="SVG" value="9" />
@@ -68,9 +67,9 @@
           <entry key="dummy" value="39" />
           <entry key="gitignore" value="7" />
           <entry key="html" value="21" />
-          <entry key="js" value="22069" />
+          <entry key="js" value="22109" />
           <entry key="json" value="520" />
-          <entry key="jsx" value="40351" />
+          <entry key="jsx" value="40388" />
           <entry key="scss" value="10297" />
           <entry key="txt" value="3442" />
         </counts>
@@ -80,8 +79,8 @@
           <entry key="Enforced Plain Text" value="66" />
           <entry key="HTML" value="22" />
           <entry key="JSON" value="520" />
-          <entry key="JSX Harmony" value="40351" />
-          <entry key="JavaScript" value="22002" />
+          <entry key="JSX Harmony" value="40388" />
+          <entry key="JavaScript" value="22042" />
           <entry key="PLAIN_TEXT" value="3488" />
           <entry key="SCSS" value="10297" />
         </counts>
@@ -99,11 +98,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="16" selection-start-line="15" selection-start-column="16" selection-end-line="15" selection-end-column="16" />
+            <state relative-caret-position="396">
+              <caret line="54" column="52" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
               <folding>
                 <element signature="e#0#50#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/app/domain/factories/api-reducer.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -112,7 +120,7 @@
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="660">
-              <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="44" />
+              <caret line="44" selection-start-line="44" selection-end-line="44" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -120,11 +128,16 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/domain/services/url-modifiers.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/domain/services/api-service.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="4" lean-forward="true" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+            <state relative-caret-position="300">
+              <caret line="20" selection-start-line="20" selection-end-line="20" />
             </state>
           </provider>
         </entry>
@@ -181,7 +194,6 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/my-rebellion.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/resource/resource.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/my-rebellion/resource/resource.module.scss" />
-        <option value="$PROJECT_DIR$/src/app/domain/factories/api-reducer.js" />
         <option value="$PROJECT_DIR$/src/app/domain/user/actions.js" />
         <option value="$PROJECT_DIR$/src/app/domain/resources/action-types.js" />
         <option value="$PROJECT_DIR$/src/app/reducer.js" />
@@ -206,7 +218,6 @@
         <option value="$PROJECT_DIR$/src/app/components/resources/summary/summary.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/resources/container/container.module.scss" />
         <option value="$PROJECT_DIR$/src/app/components/resources/sign-up-button/sign-up-button.jsx" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/user-routes/index.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/routes.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/role/role.jsx" />
@@ -216,6 +227,8 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/resource.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/services/api-service.js" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
+        <option value="$PROJECT_DIR$/src/app/domain/factories/api-reducer.js" />
       </list>
     </option>
   </component>
@@ -236,8 +249,9 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="1680" />
-    <option name="height" value="1050" />
+    <option name="x" value="-1920" />
+    <option name="width" value="1920" />
+    <option name="height" value="1080" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -283,7 +297,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="domain" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="factories" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -308,19 +322,19 @@
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/app" />
-      <recent name="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options" />
-      <recent name="$PROJECT_DIR$/src/app/dodo/routes/login" />
-      <recent name="$PROJECT_DIR$/src/app/dodo/routes/reset-password" />
-      <recent name="$PROJECT_DIR$/src/app/dodo/routes/register" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/app/dodo/routes/user-routes" />
       <recent name="$PROJECT_DIR$/src/app/dodo/routes" />
       <recent name="$PROJECT_DIR$/src/app/components/forms" />
       <recent name="$PROJECT_DIR$/src/app/components/list/list" />
       <recent name="$PROJECT_DIR$/src/app/components" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/app" />
+      <recent name="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options" />
+      <recent name="$PROJECT_DIR$/src/app/dodo/routes/login" />
+      <recent name="$PROJECT_DIR$/src/app/dodo/routes/reset-password" />
+      <recent name="$PROJECT_DIR$/src/app/dodo/routes/register" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -403,13 +417,6 @@
       <workItem from="1592554001599" duration="24818000" />
       <workItem from="1594289628126" duration="10313000" />
       <workItem from="1594704476557" duration="28138000" />
-    </task>
-    <task id="LOCAL-00040" summary="created new event page for all events">
-      <created>1589902792050</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1589902792050</updated>
     </task>
     <task id="LOCAL-00041" summary="fixed bugs&#10;added loading to events">
       <created>1589903722626</created>
@@ -747,7 +754,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595005629162</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="fixed confilcts">
+      <created>1595331829812</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1595331829812</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -771,13 +785,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="368388000" />
+    <option name="totallyTimeSpent" value="369091000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21760097" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19010006" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -806,7 +820,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="color coded sites and events" />
     <MESSAGE value="fixed location errors" />
     <MESSAGE value="fixed search errors" />
     <MESSAGE value="added user domain and login page" />
@@ -831,7 +844,8 @@
     <MESSAGE value="removed console log&#10;moved click logic out of sign up button" />
     <MESSAGE value="fixed loading error" />
     <MESSAGE value="fixed rebellion error&#10;put user routes into own file" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed rebellion error&#10;put user routes into own file" />
+    <MESSAGE value="fixed confilcts" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed confilcts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -856,16 +870,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="463">
-          <caret line="43" column="31" selection-start-line="43" selection-start-column="15" selection-end-line="43" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/container.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -899,13 +903,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/reset-password/reset-password.jsx">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/domain/factories/api-reducer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="39" column="24" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/styles/styles.scss">
       <provider selected="true" editor-type-id="text-editor">
@@ -1205,30 +1202,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="16" selection-start-line="15" selection-start-column="16" selection-end-line="15" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="660">
-          <caret line="44" lean-forward="true" selection-start-line="44" selection-end-line="44" />
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/services/url-modifiers.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/services/api-service.js">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="54" column="52" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/domain/factories/api-reducer.js">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
-          <caret line="15" column="4" lean-forward="true" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
         </state>
       </provider>
     </entry>

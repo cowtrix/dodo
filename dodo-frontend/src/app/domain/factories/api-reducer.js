@@ -13,13 +13,15 @@ export const apiReducerFactory = actionType => (
 		case actionType + REQUEST: {
 			return {
 				...state,
-				isFetching: true
+				isFetching: true,
+				hasErrored: false,
 			}
 		}
 		case actionType + SUCCESS: {
 			return {
 				...state,
-				isFetching: false
+				isFetching: false,
+				hasErrored: false
 			}
 		}
 		case actionType + FAILURE: {
