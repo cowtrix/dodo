@@ -15,21 +15,7 @@ const VOLUNTEER_NOW = "Volunteer now with a working group"
 const isSubscribedToResource = (memberOf, resourceID) => memberOf.find(resource => resourceID === resource.guid)
 
 export const ResourceContent =
-	({ resource, notifications, setCenterMap, resourceTypes, resourceColor, resourceType, joinResource}) =>
-	<div className={styles.resource}>
-		<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} />
-		<ParentLink parent={resource.parent}/>
-		<Video videoEmbedURL={resource.videoEmbedURL} />
-		<div className={styles.descriptionContainer}>
-			<Description description={resource.publicDescription} />
-			<Updates notifications={notifications}/>
-		</div>
-		<SignUpButton resourceColor={resourceColor} onClick={() => joinResource(resourceType, resource.guid)} />
-		<ExpandableList resources={resource.resources} title={COME_TO_EVENT} resourceTypes={resourceTypes} />
-		<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes} />
-		<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />
-	</div>
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn }) => {
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications }) => {
 		const { push } = useHistory()
 
 		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
@@ -41,8 +27,10 @@ export const ResourceContent =
 			<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} />
 			<ParentLink parent={resource.parent}/>
 			<Video videoEmbedURL={resource.videoEmbedURL} />
-			<Description description={resource.publicDescription} />
-			<SignUpButton
+			<div className={styles.descriptionContainer}>
+				<Description description={resource.publicDescription} />
+				<Updates notifications={notifications}/>
+			</div>			<SignUpButton
 				resourceColor={resourceColor}
 				isLoggedIn={isLoggedIn}
 				isSubscribed={isSubscribed}
