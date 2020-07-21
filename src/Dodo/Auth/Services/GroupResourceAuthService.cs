@@ -85,7 +85,7 @@ namespace Dodo
 			{
 				return ResourceRequestError.UnauthorizedRequest();
 			}
-			if (action == "notifications" && permissionSet.CanManageAnnouncements)
+			if (action == INotificationResource.ACTION_NOTIFICATION && permissionSet.CanManageAnnouncements)
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);
 			}

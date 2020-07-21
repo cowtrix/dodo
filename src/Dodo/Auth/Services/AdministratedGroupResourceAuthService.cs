@@ -93,7 +93,7 @@ namespace Dodo
 			if ((action == AdministratedGroupResourceService<T, TSchema>.ADD_ADMIN && permissionSet.CanAddAdmin) ||
 				(action == AdministratedGroupResourceService<T, TSchema>.UPDATE_ADMIN && permissionSet.CanChangePermissions) ||
 				(action == AdministratedGroupResourceService<T, TSchema>.REMOVE_ADMIN && permissionSet.CanRemoveAdmin) ||
-				(action == "notifications" && permissionSet.CanManageAnnouncements))
+				(action == INotificationResource.ACTION_NOTIFICATION && permissionSet.CanManageAnnouncements))
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);
 			}

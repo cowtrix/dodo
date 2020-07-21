@@ -1,4 +1,5 @@
 using Dodo.Roles;
+using Dodo.Users.Tokens;
 using Resources;
 
 namespace Dodo
@@ -23,7 +24,16 @@ namespace Dodo
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.USER, action);
 			}
-			return ResourceRequestError.NotFoundRequest();
+			// Everything below requires admin
+			if (!target.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out var permissionSet))
+			{
+				return ResourceRequestError.UnauthorizedRequest();
+			}
+			if (action == INotificationResource.ACTION_NOTIFICATION && permissionSet.CanManageAnnouncements)
+			{
+				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);
+			}
+			return ResourceRequestError.UnauthorizedRequest();
 		}
 	}
 }

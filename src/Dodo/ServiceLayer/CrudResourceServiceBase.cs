@@ -1,3 +1,4 @@
+using Common;
 using Common.Config;
 using Dodo;
 using Dodo.Models;
@@ -123,7 +124,11 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		{
 			return request;
 		}
-		var actionReq = request as ResourceActionRequest;
+		if(!(request is ResourceActionRequest actionReq))
+		{
+			Logger.Error($"Request was unexpectedly {request.GetType().Name}");
+			return ResourceRequestError.BadRequest();
+		}
 		var notificationProvider = actionReq.Result as INotificationResource;
 		var notifications = notificationProvider.GetNotifications(actionReq.AccessContext, actionReq.PermissionLevel);
 		var notificationChunk = new
@@ -141,7 +146,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		{
 			return ResourceRequestError.BadRequest();
 		}
-		var request = VerifyRequest(id, EHTTPRequestType.POST, "notifications");
+		var request = VerifyRequest(id, EHTTPRequestType.POST, INotificationResource.ACTION_NOTIFICATION);
 		if (!request.IsSuccess)
 		{
 			return request;
@@ -170,7 +175,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		{
 			return ResourceRequestError.BadRequest();
 		}
-		var request = VerifyRequest(id, EHTTPRequestType.POST, "notifications");
+		var request = VerifyRequest(id, EHTTPRequestType.POST, INotificationResource.ACTION_NOTIFICATION);
 		if (!request.IsSuccess)
 		{
 			return request;
