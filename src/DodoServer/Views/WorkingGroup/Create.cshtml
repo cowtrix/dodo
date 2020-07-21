@@ -31,14 +31,9 @@
 				<div class="form-group">
 				<label asp-for="PublicDescription" class="control-label"></label>
 				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
-				</div>
-				<div class="form-group">
-					<label class="control-label">Parent Resource</label>
-					<input class="sr-only" asp-for="ParentReference.Type"/>
-					<div class="row">
-					<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.ParentReference.GetRefType()]" role="button" href="../../@Model.ParentReference.Type/@Model.ParentReference.Slug">@Model.ParentReference.Name</a></div>
-					<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.ParentReference.GetRefType()]" role="button" href="../../edit/@Model.ParentReference.Type/@Model.ParentReference.Slug"><i class="fa fa-edit"></i></a></div>
-					</div>
+					<small id="helpBlock" class="form-text text-muted">
+						To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+					</small>
 				</div>
 
 					<div class="form-group">

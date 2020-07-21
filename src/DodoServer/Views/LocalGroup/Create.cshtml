@@ -31,6 +31,9 @@
 				<div class="form-group">
 				<label asp-for="PublicDescription" class="control-label"></label>
 				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
+					<small id="helpBlock" class="form-text text-muted">
+						To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+					</small>
 				</div>
 <script>
 	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"

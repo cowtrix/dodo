@@ -33,29 +33,41 @@ namespace DodoAOT
 			{ typeof(IList), ListView },
 		};
 
-		private static IEnumerable<string> ListView(string prefix, MemberInfo member, int indentLevel)
-		{
-			var typeMember = member.GetMemberType().GetGenericArguments().First();
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
-			yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
-			yield return Indent(indentLevel) + $"@{{ for(var i = 0; i < Model.{prefix}{member.Name}.Count; ++i) {{";
-			foreach (var line in BuildDataField(typeMember, indentLevel + 3, $"{prefix}{member.Name}[i]."))
-			{
-				yield return line;
-			}
-			yield return Indent(indentLevel) + "}";
-			yield return Indent(indentLevel) + "}";
-			yield return Indent(indentLevel + 2) + $"</div>";
-			yield return Indent(indentLevel) + $"</div>";
-		}
-
 		private static Dictionary<string, CustomDrawerCallback> m_customExcplicitCallback = new Dictionary<string, CustomDrawerCallback>()
 		{
 			{ "parentRef", ParentRefDisplay },
 			{ "markdown", MarkdownEditor },
 			{ "null", Null }
 		};
+
+		private static IEnumerable<string> ListView(string prefix, MemberInfo member, int indentLevel)
+		{
+			var typeMember = member.GetMemberType().GetGenericArguments().First();
+			yield return Indent(indentLevel) + $"<div class=\"card\">";
+			yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
+			yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
+			yield return Indent(indentLevel + 1) + $"<ul class=\"list-group\">";
+			yield return Indent(indentLevel) + $"@{{ for(var i = 0; i < Model.{prefix}{member.Name}.Count; ++i) {{";
+			yield return Indent(indentLevel) + "<li class=\"list-group-item\">";
+			foreach (var line in BuildDataField(typeMember, indentLevel + 3, $"{prefix}{member.Name}[i]."))
+			{
+				yield return line;
+			}
+			yield return Indent(indentLevel) + "</li>";
+			yield return Indent(indentLevel) + "}";
+			yield return Indent(indentLevel) + "}";
+			if (typeof(IResourceReference).IsAssignableFrom(typeMember))
+			{
+				// Create button!
+				var type = typeMember.GetGenericArguments().First();
+				var style = $"style=\"background-color:#@Dodo.APIController.GetDisplayColor(typeof({type.Namespace}.{type.Name}))\"";
+				string parent = "?parent=@Model.Slug";
+				yield return Indent(indentLevel + 2) + $"<a class=\"btn btn-light btn-block\" {style} role=\"button\" href=\"~/edit/{type.Name}/create{parent}\">Create</a>";
+			}
+			yield return Indent(indentLevel + 2) + $"</ul>";
+			yield return Indent(indentLevel + 1) + $"</div>";
+			yield return Indent(indentLevel) + $"</div>";
+		}
 
 		private static IEnumerable<string> MarkdownEditor(string prefix, MemberInfo member, int indentLevel)
 		{
@@ -66,6 +78,9 @@ namespace DodoAOT
 			yield return Indent(indentLevel) + "<div class=\"form-group\">";
 			yield return Indent(indentLevel) + $"<label asp-for=\"{prefix}{member.Name}\" class=\"control-label\"></label>";
 			yield return Indent(indentLevel) + $"<textarea style=\"height:20em;\" asp-for=\"{prefix}{member.Name}\" class=\"form-control\"></textarea>";
+			yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
+			yield return Indent(indentLevel + 2) + "To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href=\"www.example.com\">My link text</a>";
+			yield return Indent(indentLevel + 1) + $"</small>";
 			yield return Indent(indentLevel) + "</div>";
 		}
 
@@ -74,7 +89,7 @@ namespace DodoAOT
 			var memberType = member.GetMemberType();
 			var memberName = member.Name;
 			var refType = memberType.GetGenericArguments().First();
-			yield return Indent(indentLevel) + $"@{{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.{prefix}{memberName}.GetRefType()]; }}";
+			yield return Indent(indentLevel) + $"@{{ var rscColor = @Dodo.APIController.GetDisplayColor(Model.{prefix}{memberName}.GetRefType()); }}";
 			yield return Indent(indentLevel) + $"<div class=\"navbar navbar-expand-lg navbar-dark\" style=\"width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;\">";
 			yield return Indent(indentLevel) + $"<a class=\"navbar-brand\" href=\"{Dodo.DodoApp.NetConfig.FullURI}/@Model.{prefix}{memberName}.GetRefType().Name/@Model.{prefix}{memberName}.Slug\">Part of the @Model.{prefix}{memberName}.Name</a>";
 			yield return Indent(indentLevel) + $"</div>";
@@ -82,7 +97,7 @@ namespace DodoAOT
 
 		private static IEnumerable<string> Null(string prefix, MemberInfo member, int indentLevel)
 		{
-			yield return "";
+			yield return Indent(indentLevel + 1) + $"<input asp-for=\"{prefix}{member.Name}\" class=\"sr-only\"></input>"; ;
 		}
 
 		protected static string GetAdminEditor(Type resourceType)
@@ -149,18 +164,20 @@ namespace DodoAOT
 			var memberName = member != null ? $"{member.Name}." : "";
 			var nameStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Name)}";
 			var urlStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Type)}/@Model.{prefix}{memberName}{nameof(IResourceReference.Slug)}";
-			yield return Indent(indentLevel) + $"<div class=\"form-group\">";
-			if(member != null)
+			//yield return Indent(indentLevel) + $"<div class=\"card\">";
+			//yield return Indent(indentLevel) + $"<div class=\"card-body\">";
+			if (member != null)
 			{
 				yield return Indent(indentLevel + 1) + $"<label class=\"control-label\">{member.GetName()}</label>";
 			}
-			
 			yield return Indent(indentLevel + 1) + $"<input class=\"sr-only\" asp-for=\"{prefix}{memberName}{nameof(IResourceReference.Type)}\"/>";
 			yield return Indent(indentLevel + 1) + "<div class=\"row\">";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col\"><a class=\"btn btn-primary btn-block\" style=\"background-color:#@Dodo.APIController.TypeDisplayColors[Model.{prefix}{memberName}GetRefType()]\" role=\"button\" href=\"../../{urlStr}\">{nameStr}</a></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-primary\" style=\"background-color:#@Dodo.APIController.TypeDisplayColors[Model.{prefix}{memberName}GetRefType()]\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i></a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col\"><strong>{nameStr}</strong></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light\" style=\"background-color:#@Dodo.APIController.GetDisplayColor(Model.{prefix}{memberName}GetRefType())\" role=\"button\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i></a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light\" style=\"background-color:#@Dodo.APIController.GetDisplayColor(Model.{prefix}{memberName}GetRefType())\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i></a></div>";
 			yield return Indent(indentLevel + 1) + "</div>";
-			yield return Indent(indentLevel) + $"</div>";
+			//yield return Indent(indentLevel) + $"</div>";
+			//yield return Indent(indentLevel) + $"</div>";
 		}
 
 		private static IEnumerable<string> GetLocationEditor(string prefix, MemberInfo member, int indentLevel)

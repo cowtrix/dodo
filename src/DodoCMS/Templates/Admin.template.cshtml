@@ -7,7 +7,7 @@
 @{ if (thisAdmin.Permissions.CanAddAdmin)
 	{
 		<div class="card">
-			<h5 class="card-header">Current Administrators</h5>
+			<h5 class="card-header">Add a New Administrator</h5>
 			<div class="card-body">
 				<form id="newadmin" method="post" action="@Model.Slug/addadmin">
 					<div class="form-group">
@@ -22,7 +22,7 @@
 		</div>
 	} }
 <div class="card">
-	<h5 class="card-header">Add New Administrator</h5>
+	<h5 class="card-header">Current Administrators</h5>
 	<div class="card-body">
 		<div id="accordion">
 			@{

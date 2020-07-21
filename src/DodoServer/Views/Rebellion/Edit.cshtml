@@ -54,76 +54,79 @@ $(function () {
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
-				<div class="form-group">
-					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control"></input>
-					<span asp-validation-for="Slug" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control"></input>
-					<span asp-validation-for="Guid" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="Revision" class="control-label"></label>
-					<input  readonly asp-for="Revision" class="form-control"></input>
-					<span asp-validation-for="Revision" class="text-danger"></span>
-				</div>
+					<input asp-for="Slug" class="sr-only"></input>
+					<input asp-for="Guid" class="sr-only"></input>
+					<input asp-for="Revision" class="sr-only"></input>
 				<div class="form-group">
 				<label asp-for="PublicDescription" class="control-label"></label>
 				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
+					<small id="helpBlock" class="form-text text-muted">
+						To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+					</small>
 				</div>
 				<div class="form-group">
 					<label asp-for="MemberCount" class="control-label"></label>
 					<input  readonly asp-for="MemberCount" class="form-control"></input>
 					<span asp-validation-for="MemberCount" class="text-danger"></span>
 				</div>
-
-
+					<input asp-for="AdministratorData" class="sr-only"></input>
+					<input asp-for="PublicKey" class="sr-only"></input>
 				<div class="card">
 					<div class="card-body">
-						<h5 class="card-title">WorkingGroups</h5>
+						<h5 class="card-title">Working Groups</h5>
+					<ul class="list-group">
 				@{ for(var i = 0; i < Model.WorkingGroups.Count; ++i) {
-							<div class="form-group">
+				<li class="list-group-item">
 								<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
 								<div class="row">
-								<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.WorkingGroups[i].GetRefType()]" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug">@Model.WorkingGroups[i].Name</a></div>
-								<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.WorkingGroups[i].GetRefType()]" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col"><strong>@Model.WorkingGroups[i].Name</strong></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.WorkingGroups[i].GetRefType())" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.WorkingGroups[i].GetRefType())" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
 								</div>
-							</div>
+				</li>
 				}
 				}
-						</div>
+						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.WorkingGroups.WorkingGroup))" role="button" href="~/edit/WorkingGroup/create?parent=@Model.Slug">Create</a>
+						</ul>
+					</div>
 				</div>
 				<div class="card">
 					<div class="card-body">
 						<h5 class="card-title">Sites</h5>
+					<ul class="list-group">
 				@{ for(var i = 0; i < Model.Sites.Count; ++i) {
-							<div class="form-group">
+				<li class="list-group-item">
 								<input class="sr-only" asp-for="Sites[i].Type"/>
 								<div class="row">
-								<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Sites[i].GetRefType()]" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug">@Model.Sites[i].Name</a></div>
-								<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Sites[i].GetRefType()]" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col"><strong>@Model.Sites[i].Name</strong></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Sites[i].GetRefType())" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Sites[i].GetRefType())" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i></a></div>
 								</div>
-							</div>
+				</li>
 				}
 				}
-						</div>
+						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.LocationResources.Site))" role="button" href="~/edit/Site/create?parent=@Model.Slug">Create</a>
+						</ul>
+					</div>
 				</div>
 				<div class="card">
 					<div class="card-body">
 						<h5 class="card-title">Events</h5>
+					<ul class="list-group">
 				@{ for(var i = 0; i < Model.Events.Count; ++i) {
-							<div class="form-group">
+				<li class="list-group-item">
 								<input class="sr-only" asp-for="Events[i].Type"/>
 								<div class="row">
-								<div class="col"><a class="btn btn-primary btn-block" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Events[i].GetRefType()]" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug">@Model.Events[i].Name</a></div>
-								<div class="col-auto"><a class="btn btn-primary" style="background-color:#@Dodo.APIController.TypeDisplayColors[Model.Events[i].GetRefType()]" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col"><strong>@Model.Events[i].Name</strong></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Events[i].GetRefType())" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Events[i].GetRefType())" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i></a></div>
 								</div>
-							</div>
+				</li>
 				}
 				}
-						</div>
+						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.LocationResources.Event))" role="button" href="~/edit/Event/create?parent=@Model.Slug">Create</a>
+						</ul>
+					</div>
 				</div>
 				<div class="form-group">
 					<label asp-for="StartDate" class="control-label"></label>
@@ -377,7 +380,7 @@ $(function () {
 @{ if (thisAdmin.Permissions.CanAddAdmin)
 	{
 		<div class="card">
-			<h5 class="card-header">Current Administrators</h5>
+			<h5 class="card-header">Add a New Administrator</h5>
 			<div class="card-body">
 				<form id="newadmin" method="post" action="@Model.Slug/addadmin">
 					<div class="form-group">
@@ -392,7 +395,7 @@ $(function () {
 		</div>
 	} }
 <div class="card">
-	<h5 class="card-header">Add New Administrator</h5>
+	<h5 class="card-header">Current Administrators</h5>
 	<div class="card-body">
 		<div id="accordion">
 			@{

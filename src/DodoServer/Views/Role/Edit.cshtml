@@ -41,7 +41,7 @@ $(function () {
 			<div class="card-body">
 				<form asp-action="Edit">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-									@{ var rscColor = @Dodo.APIController.TypeDisplayColors[Model.Parent.GetRefType()]; }
+									@{ var rscColor = @Dodo.APIController.GetDisplayColor(Model.Parent.GetRefType()); }
 				<div class="navbar navbar-expand-lg navbar-dark" style="width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;">
 				<a class="navbar-brand" href="https://localhost:5001/@Model.Parent.GetRefType().Name/@Model.Parent.Slug">Part of the @Model.Parent.Name</a>
 				</div>
@@ -58,28 +58,22 @@ $(function () {
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
 				</div>
-				<div class="form-group">
-					<label asp-for="Slug" class="control-label"></label>
-					<input  asp-for="Slug" class="form-control"></input>
-					<span asp-validation-for="Slug" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="Guid" class="control-label"></label>
-					<input  readonly asp-for="Guid" class="form-control"></input>
-					<span asp-validation-for="Guid" class="text-danger"></span>
-				</div>
-				<div class="form-group">
-					<label asp-for="Revision" class="control-label"></label>
-					<input  readonly asp-for="Revision" class="form-control"></input>
-					<span asp-validation-for="Revision" class="text-danger"></span>
-				</div>
+					<input asp-for="Slug" class="sr-only"></input>
+					<input asp-for="Guid" class="sr-only"></input>
+					<input asp-for="Revision" class="sr-only"></input>
 				<div class="form-group">
 				<label asp-for="PublicDescription" class="control-label"></label>
 				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
+					<small id="helpBlock" class="form-text text-muted">
+						To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+					</small>
 				</div>
 				<div class="form-group">
 				<label asp-for="ApplicantQuestion" class="control-label"></label>
 				<textarea style="height:20em;" asp-for="ApplicantQuestion" class="form-control"></textarea>
+					<small id="helpBlock" class="form-text text-muted">
+						To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+					</small>
 				</div>
 				<div class="form-group">
 					<label asp-for="ContactEmail" class="control-label"></label>

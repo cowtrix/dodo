@@ -44,7 +44,7 @@ namespace Dodo.ViewModels
 		[DisplayName("PublicKey")]
 		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
 		public string PublicKey { get; set; }
-		[DisplayName("WorkingGroups")]
+		[DisplayName("Working Groups")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>> WorkingGroups { get; set; }
 		[DisplayName("Sites")]
@@ -53,10 +53,10 @@ namespace Dodo.ViewModels
 		[DisplayName("Events")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.LocationResources.Event>> Events { get; set; }
-		[DisplayName("StartDate")]
+		[DisplayName("Start Date")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public System.DateTime StartDate { get; set; }
-		[DisplayName("EndDate")]
+		[DisplayName("End Date")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public System.DateTime EndDate { get; set; }
 		[DisplayName("Location")]
