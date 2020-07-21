@@ -2,6 +2,7 @@ using Common;
 using Common.Extensions;
 using Common.Security;
 using Resources;
+using Resources.Security;
 using System;
 
 namespace Dodo.Utility
@@ -44,24 +45,24 @@ namespace Dodo.Utility
 			}
 		}
 
-		private static PersistentStore<string, ProxyInformation> m_proxy 
-			= new PersistentStore<string, ProxyInformation>(Dodo.DodoApp.PRODUCT_NAME, "mailproxy");
+		private static PersistentStore<string, SymmEncryptedStore<ProxyInformation>> m_proxy 
+			= new PersistentStore<string, SymmEncryptedStore<ProxyInformation>>(Dodo.DodoApp.PRODUCT_NAME, "mailproxy");
 		public static ProxyInformation GetProxyFromKey(string fromEmail, string proxyEmail)
 		{
 			if(!m_proxy.TryGetValue(SHA256Utility.SHA256(fromEmail + proxyEmail), out var proxy))
 			{
 				Logger.Warning($"Unable to resolve proxy for {fromEmail} + {proxyEmail}");
 			}
-			return proxy;
+			return proxy.GetValue(fromEmail);
 		}
 
 		public static ProxyInformation SetProxy(string fromEmail, string toEmail)
 		{
 			var incomingProxy = GenerateNewProxy(fromEmail);
 			var outgoingProxy = GenerateNewProxy(toEmail);
-			m_proxy[incomingProxy.GetKey()] = outgoingProxy;
+			m_proxy[incomingProxy.GetKey()] = new SymmEncryptedStore<ProxyInformation>(outgoingProxy, fromEmail);
 			Logger.Debug($"Set proxy {incomingProxy.GetKey().Substring(0, 8)}... {outgoingProxy.ProxyEmail} -> {outgoingProxy.RemoteEmail}");
-			m_proxy[outgoingProxy.GetKey()] = incomingProxy;
+			m_proxy[outgoingProxy.GetKey()] = new SymmEncryptedStore<ProxyInformation>(incomingProxy, toEmail);
 			Logger.Debug($"Set proxy {outgoingProxy.GetKey().Substring(0, 8)}... {incomingProxy.ProxyEmail} -> {incomingProxy.RemoteEmail}");
 			return outgoingProxy;
 		}

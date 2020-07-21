@@ -25,6 +25,8 @@ namespace Resources.Security
 
 		public SymmEncryptedStore() { }
 
+		public SymmEncryptedStore(T value, string passphrase) : this(value, new Passphrase(passphrase)) { }
+
 		public SymmEncryptedStore(T value, Passphrase passphrase)
 		{
 			if(!value.Equals(default))
