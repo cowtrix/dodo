@@ -32,7 +32,7 @@ namespace Dodo
 
 		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
 		{
-			return TokenCollection.Remove(context, permissionLevel, notification, this);
+			return TokenCollection.Remove<INotificationToken>(context, permissionLevel, notification, this);
 		}
 
 		public abstract Passphrase GetPrivateKey(AccessContext context);

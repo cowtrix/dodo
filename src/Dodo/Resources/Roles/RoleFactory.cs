@@ -1,3 +1,4 @@
+using Common;
 using Dodo.DodoResources;
 using Resources;
 using Resources.Serializers;
@@ -11,9 +12,11 @@ namespace Dodo.Roles
 	{
 		[View(EPermissionLevel.USER, customDrawer:"markdown", inputHint:Role.ApplicantQuestionHint)]
 		[MaxStringLength]
+		[Name("Applicant Question")]
 		public string ApplicantQuestion { get; set; }
 		[View(EPermissionLevel.USER)]
 		[Email]
+		[Name("Contact Email")]
 		public string ContactEmail { get; set; }
 
 		public RoleSchema() { }

@@ -44,6 +44,7 @@ namespace Dodo
 
 		public GroupResource(AccessContext context, DescribedResourceSchemaBase schema) : base(context, schema)
 		{
+			PublicDescription = schema.PublicDescription;
 		}
 
 		#region Group
@@ -62,11 +63,24 @@ namespace Dodo
 		public void Leave(AccessContext accessContext)
 		{
 			m_members.Remove(accessContext.User.CreateRef(), accessContext.Passphrase);
+			using var rscLock = new ResourceLock(accessContext.User);
+			var user = rscLock.Value as User;
+			if(!user.TokenCollection.Remove<UserJoinedGroupToken>(accessContext, EPermissionLevel.OWNER, 
+				t => t.Resource.Guid == Guid, user))
+			{
+				Logger.Error($"Failed to remove UserJoinedGroupToken from user {user} for {this}");
+				return;
+			}
+			ResourceUtility.GetManager<User>().Update(user, rscLock);
 		}
 
 		public void Join(AccessContext accessContext)
 		{
 			m_members.Add(accessContext.User.CreateRef(), accessContext.Passphrase);
+			using var rscLock = new ResourceLock(accessContext.User);
+			var user = rscLock.Value as User;
+			user.TokenCollection.AddOrUpdate(user, new UserJoinedGroupToken(this));
+			ResourceUtility.GetManager<User>().Update(user, rscLock);
 		}
 		#endregion
 

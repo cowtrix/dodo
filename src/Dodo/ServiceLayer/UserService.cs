@@ -101,7 +101,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return ResourceRequestError.BadRequest();
 		}
-		if (!user.TokenCollection.Remove(Context, EPermissionLevel.OWNER, session, user))
+		if (!user.TokenCollection.Remove<SessionToken>(Context, EPermissionLevel.OWNER, session, user))
 		{
 			Logger.Error($"Failed to log user {user} out - could not remove session token");
 		}
@@ -126,7 +126,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			using (var rscLock = new ResourceLock(targetUser))
 			{
 				targetUser = rscLock.Value as User;
-				targetUser.TokenCollection.RemoveAll<ResetPasswordToken>(Context, EPermissionLevel.OWNER, targetUser);
+				targetUser.TokenCollection.RemoveAllOfType<ResetPasswordToken>(Context, EPermissionLevel.OWNER, targetUser);
 				var resetToken = new ResetPasswordToken(targetUser);
 				targetUser.TokenCollection.AddOrUpdate(targetUser, resetToken);
 				UserManager.Update(targetUser, rscLock);
@@ -156,9 +156,9 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			// This will wipe the private key and passphrase, so the user needs to start fresh
 			user.AuthData = new AuthorizationData(password);
 			// Get rid of the password reset token immediately, as opposed to just waiting for it to get cleaned up
-			user.TokenCollection.RemoveAll<ResetPasswordToken>(Context, EPermissionLevel.OWNER, user);
+			user.TokenCollection.RemoveAllOfType<ResetPasswordToken>(Context, EPermissionLevel.OWNER, user);
 			// User won't be able to decrypt any decrypted tokens
-			user.TokenCollection.Remove(Context, EPermissionLevel.OWNER, t => t.Encrypted, user);
+			user.TokenCollection.Remove<IToken>(Context, EPermissionLevel.OWNER, t => t.Encrypted, user);
 			UserManager.Update(user, rscLock);
 		}
 		await Logout();

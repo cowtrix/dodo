@@ -8,7 +8,7 @@ namespace Dodo.Users.Tokens
 		[BsonElement]
 		public bool HasExecuted { get; private set; }
 
-		public bool ShouldRemove => HasExecuted;
+		public virtual bool ShouldRemove => HasExecuted;
 
 		/// <summary>
 		/// Redeem this token.

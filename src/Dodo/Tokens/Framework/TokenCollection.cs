@@ -8,6 +8,7 @@ using System;
 using Common.Extensions;
 using Common.Security;
 using Resources.Serializers;
+using Common;
 
 namespace Dodo.Users.Tokens
 {
@@ -66,33 +67,38 @@ namespace Dodo.Users.Tokens
 			}
 		}
 
-		public bool RemoveAll<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) where T: IRemovableToken
+		public bool RemoveAllOfType<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) 
+			where T: class, IToken
 		{
-			return Remove(context, permissionLevel, t => t is T, parent);
+			return Remove<T>(context, permissionLevel, t => t is T, parent);
 		}
 
-		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, IRemovableToken token, ITokenResource parent)
+		public bool Remove<T>(AccessContext context, EPermissionLevel permissionLevel, IRemovableToken token, ITokenResource parent)
+			where T : class, IToken
 		{
-			return Remove(context, permissionLevel, t => t.Guid == token.Guid, parent);
+			return Remove<T>(context, permissionLevel, t => t.Guid == token.Guid, parent);
 		}
 
-		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, Guid tokenGuid, ITokenResource parent)
+		public bool Remove<T>(AccessContext context, EPermissionLevel permissionLevel, Guid tokenGuid, ITokenResource parent)
+			where T : class, IToken
 		{
-			return Remove(context, permissionLevel, t => t.Guid == tokenGuid, parent);
+			return Remove<T>(context, permissionLevel, t => t.Guid == tokenGuid, parent);
 		}
 
-		public bool Remove(AccessContext context, EPermissionLevel permissionLevel, Func<IRemovableToken, bool> removeWhere, ITokenResource parent)
+		public bool Remove<T>(AccessContext context, EPermissionLevel permissionLevel, Func<T, bool> removeWhere, ITokenResource parent)
+			where T:class, IToken
 		{
-			var toRemove = GetAllTokens<IRemovableToken>(context, permissionLevel, parent).Where(t => removeWhere(t));
-			if(!toRemove.Any())
+			var toRemove = GetAllTokens<T>(context, permissionLevel, parent)
+				.Where(t => removeWhere(t)).ToList();
+			if (!toRemove.Any())
 			{
 				return false;
 			}
-			foreach(var token in toRemove)
+			foreach (var token in toRemove.OfType<IRemovableToken>())
 			{
-				token.OnRemove(context);
+				token.OnRemove(context);				
 			}
-			m_tokens = m_tokens.Where(t1 => !toRemove.Any(t2 => t2.Guid == t1.Guid)).ToList();
+			m_tokens.RemoveAll(t => toRemove.Any(r => t.Guid == r.Guid));
 			return true;
 		}
 
@@ -131,7 +137,15 @@ namespace Dodo.Users.Tokens
 			var pk = parent != null ? parent.GetPrivateKey(context) : default;
 			foreach (var token in m_tokens.Where(t => t.PermissionLevel <= permissionLevel))
 			{
-				var t = token.GetToken(pk);
+				IToken t = null;
+				try
+				{
+					t = token.GetToken(pk);
+				}
+				catch(Exception e)
+				{
+					Logger.Exception(e);
+				}
 				if (t != null)
 				{
 					yield return t;

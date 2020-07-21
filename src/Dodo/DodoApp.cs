@@ -11,7 +11,9 @@ namespace Dodo
 	{
 		public class EmailRedirect
 		{
+			[Email]
 			public string Email { get; set; }
+			[Email]
 			public string Redirect { get; set; }
 		}
 		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", $"admin@dodo.ovh");

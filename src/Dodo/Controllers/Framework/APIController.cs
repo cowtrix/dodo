@@ -22,7 +22,16 @@ namespace Dodo
 	[AllowAnonymous]
 	public class APIController : Controller
 	{
-		public static Dictionary<Type, string> TypeDisplayColors = new Dictionary<Type, string>()
+		public static string GetDisplayColor(Type t)
+		{
+			if (t == null || !TypeDisplayColors.TryGetValue(t, out var c))
+			{
+				return "FFFFF";
+			}
+			return c;
+		}
+
+		private static Dictionary<Type, string> TypeDisplayColors = new Dictionary<Type, string>()
 		{
 			{ typeof(Rebellion),		"22A73D" },
 			{ typeof(LocalGroup),		"71D0F1" },

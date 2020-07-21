@@ -1,6 +1,8 @@
 using Common;
+using Common.Extensions;
 using Common.Security;
 using Resources;
+using System;
 
 namespace Dodo.Utility
 {
@@ -12,7 +14,7 @@ namespace Dodo.Utility
 	{
 		const int SaltSize = 16;
 
-		public class ProxyInformation
+		public class ProxyInformation : IVerifiable
 		{
 			public ProxyInformation(string email, string proxy)
 			{
@@ -23,13 +25,23 @@ namespace Dodo.Utility
 			/// This is the email that messages will be forwarded to if they
 			/// get the key
 			/// </summary>
+			[Email]
 			public string RemoteEmail { get; set; }
 			/// <summary>
 			/// This is the email that the RemoteEmail should respond to, which
 			/// should be a local account
 			/// </summary>
+			[Email]
 			public string ProxyEmail { get; set; }
+
+			public bool CanVerify() => true;
 			public string GetKey() => SHA256Utility.SHA256(RemoteEmail + ProxyEmail);
+
+			public bool VerifyExplicit(out string error)
+			{
+				error = null;
+				return true;
+			}
 		}
 
 		private static PersistentStore<string, ProxyInformation> m_proxy 
@@ -63,6 +75,10 @@ namespace Dodo.Utility
 				proxy = new ProxyInformation(email, proxyEmail);
 			} 
 			while (m_proxy.ContainsKey(proxy.GetKey()));
+			if(!proxy.Verify(out var error))
+			{
+				throw new Exception(error);
+			}
 			return proxy;
 		}
 	}

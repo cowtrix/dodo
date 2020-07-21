@@ -11,12 +11,6 @@ namespace Dodo
 	{
 		public Guid Parent { get; set; }
 
-		[View]
-		[JsonIgnore]
-		[BsonIgnore]
-		[Name("Parent Resource")]
-		public ResourceReference<IRESTResource> ParentReference => new ResourceReference<IRESTResource>();
-
 		public OwnedResourceSchemaBase(string name, string publicDescription, Guid parent)
 			: base(name, publicDescription)
 		{

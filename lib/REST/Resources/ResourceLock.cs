@@ -26,7 +26,7 @@ namespace Resources
 
 		public static bool IsLocked(Guid resource, Guid? handle = null)
 		{
-			if(handle.HasValue)
+			if (handle.HasValue)
 			{
 				return m_locks.TryGetValue(resource, out var handleGuid) && handleGuid != handle;
 			}
@@ -35,7 +35,7 @@ namespace Resources
 
 		public static bool IsLocked(IRESTResource resource, Guid? handle = null)
 		{
-			if(resource == null)
+			if (resource == null)
 			{
 				return false;
 			}
@@ -45,13 +45,17 @@ namespace Resources
 		public Guid Guid { get; private set; }
 		public Guid Handle { get; private set; }
 
+#if DEBUG
+		private System.Diagnostics.StackTrace m_stackTrace;
+#endif
+
 		public ResourceLock(Guid resource) : this(ResourceUtility.GetResourceByGuid(resource))
 		{
 		}
 
 		public ResourceLock(IRESTResource resource)
 		{
-			if(resource == null)
+			if (resource == null)
 			{
 				return;
 			}
@@ -63,36 +67,40 @@ namespace Resources
 			}
 			Guid = resource.Guid;
 			Value = ResourceUtility.GetResourceByGuid(Guid, Handle);
-		}
-
-		#region IDisposable Support
-		private bool disposedValue = false; // To detect redundant calls
-
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!disposedValue)
-			{
-				if (disposing)
-				{
-					// TODO: dispose managed state (managed objects).
-				}
-				m_locks.TryRemove(Guid, out _);	// Remove the lock
-				disposedValue = true;
-			}
-		}
-
-		 ~ResourceLock() {
-		   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-		   Dispose(false);
-		}
-
-		// This code added to correctly implement the disposable pattern.
-		public void Dispose()
-		{
-			// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-			Dispose(true);
-		}
-		#endregion
-
+#if DEBUG
+			m_stackTrace = new System.Diagnostics.StackTrace();
+#endif
 	}
+
+	#region IDisposable Support
+	private bool disposedValue = false; // To detect redundant calls
+
+	protected virtual void Dispose(bool disposing)
+	{
+		if (!disposedValue)
+		{
+			if (disposing)
+			{
+				// TODO: dispose managed state (managed objects).
+			}
+			m_locks.TryRemove(Guid, out _); // Remove the lock
+			disposedValue = true;
+		}
+	}
+
+	~ResourceLock()
+	{
+		// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+		Dispose(false);
+	}
+
+	// This code added to correctly implement the disposable pattern.
+	public void Dispose()
+	{
+		// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+		Dispose(true);
+	}
+	#endregion
+
+}
 }

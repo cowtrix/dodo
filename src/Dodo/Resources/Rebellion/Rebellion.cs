@@ -23,6 +23,7 @@ namespace Dodo.Rebellions
 		public const string ROOT = "rebellions";
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[Name("Working Groups")]
 		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public List<ResourceReference<Site>> Sites { get; set; } = new List<ResourceReference<Site>>();
@@ -31,6 +32,7 @@ namespace Dodo.Rebellions
 
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+		[Name("Start Date")]
 		public DateTime StartDate
 		{
 			get
@@ -50,6 +52,7 @@ namespace Dodo.Rebellions
 
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+		[Name("End Date")]
 		public DateTime EndDate { get { return __endDate; } set { __endDate = value.ToUniversalTime(); } }
 		private DateTime __endDate;
 

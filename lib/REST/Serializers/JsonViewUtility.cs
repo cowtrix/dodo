@@ -395,7 +395,7 @@ namespace Resources
 			foreach (var val in values)
 			{
 				var targetMember = validFields.FirstOrDefault(x => x.Name.Equals(val.Key, StringComparison.OrdinalIgnoreCase));
-				if (targetMember == null)
+				if (targetMember == null || (targetMember is PropertyInfo prop && !prop.CanWrite))
 				{
 					continue;
 				}
@@ -414,7 +414,7 @@ namespace Resources
 					// Auth is incorrect, but that should have been picked up before
 					throw new Exception("Unexpected authorization failure on " + targetMember.Name);
 				}
-				if (!string.IsNullOrEmpty(val.Value.ToString()))
+				if (!string.IsNullOrEmpty(val.Value?.ToString()))
 				{
 					try
 					{

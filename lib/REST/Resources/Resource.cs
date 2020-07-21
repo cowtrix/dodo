@@ -67,7 +67,7 @@ namespace Resources
 		public const string METADATA_PERMISSION = "permission";
 
 		[JsonProperty]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: 2)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, customDrawer: "null")]
 		public Guid Guid { get; private set; }
 
 		[View(EPermissionLevel.PUBLIC, priority: 0)]
@@ -75,7 +75,7 @@ namespace Resources
 		[UserFriendlyName]
 		public string Name { get; set; }
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN, priority:1)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN, priority:1, customDrawer:"null")]
 		[JsonProperty]
 		[Slug]
 		public string Slug { get; set; }
@@ -83,7 +83,7 @@ namespace Resources
 		/// <summary>
 		/// This should only ever be incremented on ResourceManager.Update()
 		/// </summary>
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: 3)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, customDrawer: "null")]
 		[JsonProperty]
 		public uint Revision { get; set; }
 

@@ -18,9 +18,15 @@ namespace Dodo
 		{
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			m_publicKey = pk;
-			PublicDescription = schema.PublicDescription;
 			AdministratorData = new UserMultiSigStore<AdministrationData>(
 				new AdministrationData(this, context.User, new Passphrase(pv)), context);
+			
+			using (var userLock = new ResourceLock(context.User))
+			{
+				var newAdmin = userLock.Value as User;
+				newAdmin.TokenCollection.AddOrUpdate(newAdmin, new UserAddedAsAdminToken(this));
+				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
+			}
 		}
 
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
@@ -123,6 +129,7 @@ namespace Dodo
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 			using (var userLock = new ResourceLock(newAdmin))
 			{
+				newAdmin = userLock.Value as User;
 				newAdmin.TokenCollection.AddOrUpdate(newAdmin, new UserAddedAsAdminToken(this, newPass, newAdmin.AuthData.PublicKey));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}

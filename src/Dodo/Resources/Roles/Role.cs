@@ -25,6 +25,7 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
 		[MaxStringLength]
 		[Name("Public Description")]
+		[ViewDrawer("html")]
 		public string PublicDescription { get; set; }
 
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint: ApplicantQuestionHint)]
