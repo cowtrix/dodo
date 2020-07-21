@@ -3,3 +3,11 @@
 .resource {
 	margin-bottom: spacing(10);
 }
+
+.descriptionContainer {
+	padding: spacing(2) spacing(3);
+
+	@media (min-width: $responsive-breakpoint) {
+		display: flex;
+	}
+}

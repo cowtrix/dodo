@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Container } from "app/components/resources"
-import { SiteMap, Loader, DateLayout, PageTitle } from "app/components"
+import { SiteMap, Loader } from "app/components"
 import { ResourceContent } from './resource-content'
 
 export const Resource =
@@ -9,7 +9,9 @@ export const Resource =
 		{
 			match,
 			getResource,
+			getNotifications,
 			resource,
+			notifications,
 			isLoading,
 			centerMap,
 			setCenterMap,
@@ -25,6 +27,7 @@ export const Resource =
 
 		useEffect(() => {
 			getResource(resourceType, resourceId, setCenterMap)
+			getNotifications(resourceType, resourceId);
 		}, [match])
 
 
@@ -49,10 +52,12 @@ export const Resource =
 				<Container
 					content={
 						<Fragment>
+							{console.log(isLoading, fetchingUser)}
 							<Loader display={isLoading || fetchingUser}/>
 							{resource.metadata && !isLoading && (
 								<ResourceContent
 									resource={resource}
+									notifications={notifications}
 									setCenterMap={setCenterMap}
 									resourceTypes={resourceTypes}
 									resourceColor={resourceColor}
