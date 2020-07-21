@@ -117,7 +117,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		int chunk = ConfigManager.GetValue($"Notifications_ChunkSize", 10);
 		if (typeof(INotificationResource).IsAssignableFrom(typeof(T)))
 		{
-			return ResourceRequestError.BadRequest();
+			return ResourceRequestError.BadRequest("This resource type does not support notifications");
 		}
 		var request = await Get(id);
 		if (!request.IsSuccess)
@@ -142,9 +142,9 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> AddNotification(string id, NotificationModel notification)
 	{
-		if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
+		if (typeof(INotificationResource).IsAssignableFrom(typeof(T)))
 		{
-			return ResourceRequestError.BadRequest();
+			return ResourceRequestError.BadRequest("This resource type does not support notifications");
 		}
 		var request = VerifyRequest(id, EHTTPRequestType.POST, INotificationResource.ACTION_NOTIFICATION);
 		if (!request.IsSuccess)
@@ -171,9 +171,9 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> DeleteNotification(string id, Guid notification)
 	{
-		if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
+		if (typeof(INotificationResource).IsAssignableFrom(typeof(T)))
 		{
-			return ResourceRequestError.BadRequest();
+			return ResourceRequestError.BadRequest("This resource type does not support notifications");
 		}
 		var request = VerifyRequest(id, EHTTPRequestType.POST, INotificationResource.ACTION_NOTIFICATION);
 		if (!request.IsSuccess)
