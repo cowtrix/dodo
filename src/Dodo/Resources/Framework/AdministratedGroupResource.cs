@@ -227,8 +227,7 @@ namespace Dodo
 			}
 			if (!IsAdmin(context.User, context, out _))
 			{
-				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to get Private Key but wasn't admin");
-				throw new Exception("Bad auth");
+				return default;
 			}
 			if (!AdministratorData.TryGetValue(context.User.CreateRef(), context.Passphrase, out var adminDataObj))
 			{
