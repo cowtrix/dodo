@@ -5,7 +5,7 @@ import styles from './resource.module.scss'
 import { Icon } from 'app/components/index'
 
 
-export const Resource = ({ name, guid, metadata, resourceTypes }) => {
+export const Resource = ({ name, guid, metadata, resourceTypes = [] }) => {
 	const resourceType = resourceTypes.find(thisType => thisType.value === metadata.type)
 	const backgroundColor = resourceType && '#' + resourceType.displayColor
 

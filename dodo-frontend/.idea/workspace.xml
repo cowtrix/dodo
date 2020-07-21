@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="fixed rebellion error&#10;put user routes into own file">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -33,9 +31,9 @@
           <entry key="env" value="2" />
           <entry key="gitignore" value="2" />
           <entry key="html" value="3" />
-          <entry key="js" value="972" />
+          <entry key="js" value="981" />
           <entry key="json" value="29" />
-          <entry key="jsx" value="723" />
+          <entry key="jsx" value="728" />
           <entry key="scss" value="294" />
           <entry key="svg" value="9" />
           <entry key="ts" value="1" />
@@ -47,8 +45,8 @@
           <entry key="Enforced Plain Text" value="7" />
           <entry key="HTML" value="3" />
           <entry key="JSON" value="25" />
-          <entry key="JSX Harmony" value="723" />
-          <entry key="JavaScript" value="965" />
+          <entry key="JSX Harmony" value="728" />
+          <entry key="JavaScript" value="974" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="SCSS" value="294" />
           <entry key="SVG" value="9" />
@@ -67,11 +65,11 @@
           <entry key="dummy" value="39" />
           <entry key="gitignore" value="7" />
           <entry key="html" value="21" />
-          <entry key="js" value="22109" />
+          <entry key="js" value="22143" />
           <entry key="json" value="520" />
-          <entry key="jsx" value="40388" />
+          <entry key="jsx" value="40442" />
           <entry key="scss" value="10297" />
-          <entry key="txt" value="3442" />
+          <entry key="txt" value="3493" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -79,15 +77,15 @@
           <entry key="Enforced Plain Text" value="66" />
           <entry key="HTML" value="22" />
           <entry key="JSON" value="520" />
-          <entry key="JSX Harmony" value="40388" />
-          <entry key="JavaScript" value="22042" />
-          <entry key="PLAIN_TEXT" value="3488" />
+          <entry key="JSX Harmony" value="40442" />
+          <entry key="JavaScript" value="22076" />
+          <entry key="PLAIN_TEXT" value="3539" />
           <entry key="SCSS" value="10297" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages">
         <counts>
-          <entry key="git.branch.create.new" value="28" />
+          <entry key="git.branch.create.new" value="29" />
           <entry key="git.branch.merge" value="3" />
         </counts>
       </usages-collector>
@@ -98,8 +96,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="54" column="52" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
+            <state relative-caret-position="621">
+              <caret line="68" column="16" lean-forward="true" selection-start-line="68" selection-start-column="16" selection-end-line="68" selection-end-column="16" />
               <folding>
                 <element signature="e#0#50#0" expanded="true" />
               </folding>
@@ -107,20 +105,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/app/domain/factories/api-reducer.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="660">
-              <caret line="44" selection-start-line="44" selection-end-line="44" />
+            <state relative-caret-position="150">
+              <caret line="10" selection-start-line="10" selection-end-line="10" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -128,16 +117,74 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/domain/services/url-modifiers.js">
-          <provider selected="true" editor-type-id="text-editor" />
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/constants.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app/domain/services/api-service.js">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/services.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" selection-start-line="20" selection-end-line="20" />
+            <state>
+              <caret column="7" selection-start-column="7" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/routes.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/container.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/role.jsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/route.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="21" selection-start-column="21" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/route.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret selection-end-column="58" />
             </state>
           </provider>
         </entry>
@@ -170,7 +217,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature/your-profile-page" />
+        <entry key="$PROJECT_DIR$/.." value="master" />
       </map>
     </option>
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
@@ -178,11 +225,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/app/dodo/user-menu/menu/options/container.js" />
-        <option value="$PROJECT_DIR$/src/app/domain/user/action-types.js" />
-        <option value="$PROJECT_DIR$/src/app/domain/urls.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/your-profile/container.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/your-profile/update-email/update-email.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/your-profile/update-email/update-email.module.scss" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/your-profile/your-profile.jsx" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/login/login.jsx" />
@@ -224,11 +266,16 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/role/container.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/role/index.js" />
         <option value="$PROJECT_DIR$/src/app/dodo/routes/role/route.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/resource.jsx" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/services/api-service.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/factories/api-reducer.js" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/resource.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/index.js" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/my-rebellion.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
+        <option value="$PROJECT_DIR$/src/app/components/resources/parent-link/parent-link.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/services.js" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/constants.js" />
       </list>
     </option>
   </component>
@@ -289,15 +336,42 @@
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="domain" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
               <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="domain" type="462c0819:PsiDirectoryNode" />
-              <item name="factories" type="462c0819:PsiDirectoryNode" />
+              <item name="dodo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="dodo" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="dodo" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="resource" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dodo-frontend" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dodo-frontend" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="dodo" type="462c0819:PsiDirectoryNode" />
+              <item name="routes" type="462c0819:PsiDirectoryNode" />
+              <item name="resource" type="462c0819:PsiDirectoryNode" />
+              <item name="resource-content" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -417,13 +491,6 @@
       <workItem from="1592554001599" duration="24818000" />
       <workItem from="1594289628126" duration="10313000" />
       <workItem from="1594704476557" duration="28138000" />
-    </task>
-    <task id="LOCAL-00041" summary="fixed bugs&#10;added loading to events">
-      <created>1589903722626</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1589903722626</updated>
     </task>
     <task id="LOCAL-00042" summary="updated event page">
       <created>1590147035494</created>
@@ -761,7 +828,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595331829812</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="fixed loader not showing on subscribe / unsubscribe">
+      <created>1595333535166</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1595333535166</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -785,7 +859,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="369091000" />
+    <option name="totallyTimeSpent" value="371766000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
@@ -820,7 +894,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed location errors" />
     <MESSAGE value="fixed search errors" />
     <MESSAGE value="added user domain and login page" />
     <MESSAGE value="fixed bugs to fit new data map" />
@@ -845,7 +918,8 @@
     <MESSAGE value="fixed loading error" />
     <MESSAGE value="fixed rebellion error&#10;put user routes into own file" />
     <MESSAGE value="fixed confilcts" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed confilcts" />
+    <MESSAGE value="fixed loader not showing on subscribe / unsubscribe" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed loader not showing on subscribe / unsubscribe" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -866,41 +940,15 @@
           <url>file://$PROJECT_DIR$/src/app/dodo/header/login/login-register/login-register.jsx</url>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/my-rebellion.jsx</url>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/container.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/route.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="31" selection-start-column="13" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/route.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="24" selection-start-column="13" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/login/login.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="17" lean-forward="true" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/register/register.jsx">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/reset-password/reset-password.jsx">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1147,71 +1195,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/routes.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/route.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="21" selection-start-column="21" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/container.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/role.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/container.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/my-rebellion.jsx">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/resource.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="14" lean-forward="true" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/route.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="44" selection-start-line="44" selection-end-line="44" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/services/url-modifiers.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1222,20 +1205,136 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/container.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="54" column="52" selection-start-line="54" selection-start-column="52" selection-end-line="54" selection-end-column="52" />
+        <state relative-caret-position="240">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
           <folding>
-            <element signature="e#0#50#0" expanded="true" />
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/resource.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="67" selection-start-line="7" selection-start-column="67" selection-end-line="7" selection-end-column="67" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/resource/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/user-routes/my-rebellion/my-rebellion.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" selection-start-line="23" selection-end-line="23" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/factories/api-reducer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
+        <state relative-caret-position="255">
+          <caret line="17" column="7" lean-forward="true" selection-start-line="17" selection-start-column="7" selection-end-line="17" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/resources/parent-link/parent-link.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/container.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/role.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/role/route.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="21" selection-start-column="21" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/route.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/routes.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="621">
+          <caret line="68" column="16" lean-forward="true" selection-start-line="68" selection-start-column="16" selection-end-line="68" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/services.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="7" selection-start-column="7" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/resource-content.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource-content/constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
         </state>
       </provider>
     </entry>

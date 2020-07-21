@@ -7,7 +7,7 @@ import styles from './parent-link.module.scss'
 const PART_OF = "Part of the"
 
 const parentLink = (parent) =>
-	'/' + parent.type + '/' + parent.guid
+	'/' + parent.metadata.type + '/' + parent.guid
 
 export const ParentLink = ({ parent }) =>
 	parent ?
