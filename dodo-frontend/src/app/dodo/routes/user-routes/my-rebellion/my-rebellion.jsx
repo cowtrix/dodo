@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Container } from 'app/components/forms'
-import { Resource } from './resource'
+import { Container } from 'app/components/forms/index'
+import { Resource } from './resource/index'
 
 
 const MY_REBELLION = "My rebellion"

@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Container, Submit, Input, Error } from 'app/components/forms/'
+import { Container, Submit, Input, Error } from 'app/components/forms/index'
 
 import styles from './register.module.scss'
 import { useHistory } from 'react-router-dom'

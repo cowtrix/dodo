@@ -2,6 +2,7 @@ import { RESOURCE_GET, RESOURCE_NOTIFICATIONS_GET, RESOURCES_GET, RESOURCE_JOIN 
 import { apiAction } from "../factories/api-action"
 import { API_URL } from "../urls"
 import { actionTypes as searchActionTypes } from '../search'
+import { getLoggedInUser } from '../user/actions'
 
 
 export const resourceGet = (dispatch, resourceType, resourceId, cb) =>
@@ -21,6 +22,6 @@ export const eventTypesGet = (dispatch) =>
 export const notificationsGet = (dispatch, eventType, event, cb) =>
 	apiAction(dispatch, RESOURCE_NOTIFICATIONS_GET, API_URL + eventType + "/notifications/" + event, cb)
 
-export const joinResource = (dispatch, resourceType, resourceId, cb) =>
-	apiAction(dispatch, RESOURCE_JOIN, API_URL + resourceType + "/" + resourceId + '/join', cb, false, 'post')
+export const subscribeResource = (dispatch, resourceType, resourceId, subscribe) =>
+	apiAction(dispatch, RESOURCE_JOIN, API_URL + resourceType + "/" + resourceId + '/' + subscribe, () => getLoggedInUser(dispatch), false, 'post')
 

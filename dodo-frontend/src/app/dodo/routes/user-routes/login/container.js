@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Login } from './login'
-import { actions, selectors } from 'app/domain/user'
+import { actions, selectors } from 'app/domain/user/index'
 
 const { username, error, isLoggingIn } = selectors
 const { login } = actions

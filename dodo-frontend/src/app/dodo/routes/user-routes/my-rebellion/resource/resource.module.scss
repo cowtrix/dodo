@@ -1,0 +1,14 @@
+@import "~app/styles/styles";
+
+.resource {
+	justify-content: space-between;
+	display: flex;
+	color: black;
+	text-decoration: none;
+	padding: spacing(3);
+	box-shadow: $standard-box-shadow;
+}
+
+.icon {
+ opacity: 0.2;
+}
