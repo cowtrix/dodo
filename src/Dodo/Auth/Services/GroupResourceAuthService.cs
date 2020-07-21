@@ -12,27 +12,6 @@ namespace Dodo
 		{
 		}
 
-		protected override EPermissionLevel GetPermission(AccessContext context, T target)
-		{
-			if (context.User == null)
-			{
-				return EPermissionLevel.PUBLIC;
-			}
-			if (target.IsCreator(context))
-			{
-				return EPermissionLevel.OWNER;
-			}
-			if ((target is IOwnedResource owned) && owned.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out _))
-			{
-				return EPermissionLevel.ADMIN;
-			}
-			if (target.IsMember(context))
-			{
-				return EPermissionLevel.MEMBER;
-			}
-			return EPermissionLevel.USER;
-		}
-
 		protected override IRequestResult CanCreate(AccessContext context, TSchema schema)
 		{
 			if (context.User == null)

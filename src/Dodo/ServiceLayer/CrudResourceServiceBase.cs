@@ -115,7 +115,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 	public virtual async Task<IRequestResult> GetNotifications(string id, int page)
 	{
 		int chunk = ConfigManager.GetValue($"Notifications_ChunkSize", 10);
-		if (typeof(T).IsAssignableFrom(typeof(INotificationResource)))
+		if (typeof(INotificationResource).IsAssignableFrom(typeof(T)))
 		{
 			return ResourceRequestError.BadRequest();
 		}
