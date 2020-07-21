@@ -83,7 +83,7 @@ namespace Resources
 		/// <summary>
 		/// This should only ever be incremented on ResourceManager.Update()
 		/// </summary>
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, customDrawer: "null")]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM, customDrawer: "null")]
 		[JsonProperty]
 		public uint Revision { get; set; }
 
