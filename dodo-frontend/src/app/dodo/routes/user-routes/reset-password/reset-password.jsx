@@ -20,7 +20,7 @@ export const ResetPassword = ({ resetPassword }) => {
 						Enter the email associated with your account to request a one-time password reset code.
 					</p>
 					<p>
-						Please be aware that resetting your password will remove all adminstrative rights associated with your
+						Please be aware that resetting your password will remove all administrative rights associated with your
 						account.
 					</p>
 					<Input
@@ -29,6 +29,7 @@ export const ResetPassword = ({ resetPassword }) => {
 						type="text"
 						value={email}
 						setValue={setEmail}
+						maxLength={253}
 					/>
 					<Submit
 						value={RESET_PASSWORD_COPY}
