@@ -41,15 +41,19 @@ export const Resource =
 			? [location.latitude, location.longitude]
 			: []
 
+		const hideMap = resourceType === 'role' || resourceType === 'workingGroup'
+
 		return (
 			<Fragment>
 				<SiteMap
+					display={!hideMap}
 					centerMap={centerMap}
 					setCenterMap={setCenterMap}
 					center={defaultLocation}
 					sites={resource.sites && [...resource.sites, ...resource.workingGroups]}
 				/>
 				<Container
+					hideMap={hideMap}
 					content={
 						<Fragment>
 							<Loader display={isLoading || fetchingUser}/>
