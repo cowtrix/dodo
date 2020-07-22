@@ -1,18 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
-import { Header, Description, SignUpButton, ParentLink, Updates } from "app/components/resources"
+import { Header, Description, SignUpButton, ParentLink, Updates, Role } from "app/components/resources"
+
+import { isSubscribedToResource } from './services'
+import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT} from './constants'
 
 import styles from './resource-content.module.scss'
-import { useHistory } from 'react-router-dom'
 import { REGISTER_ROUTE } from '../../user-routes/register'
-
-
-const JOIN_US_SITES = "Join us at a protest site"
-const COME_TO_EVENT = "Sign up to an event"
-const VOLUNTEER_NOW = "Volunteer now with a working group"
-
-const isSubscribedToResource = (memberOf, resourceID) => memberOf.find(resource => resourceID === resource.guid)
 
 export const ResourceContent =
 	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications }) => {
@@ -21,6 +17,7 @@ export const ResourceContent =
 		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
 		const subscribe = () => subscribeResource(resourceType, resource.guid, 'join')
 		const unSubscribe = () => subscribeResource(resourceType, resource.guid, 'leave')
+		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', {content: body})
 
 	return (
 		<div className={styles.resource}>
@@ -30,7 +27,10 @@ export const ResourceContent =
 			<div className={styles.descriptionContainer}>
 				<Description description={resource.publicDescription} />
 				<Updates notifications={notifications}/>
-			</div>			<SignUpButton
+			</div>
+			<Role applicantQuestion={resource.applicantQuestion} resourceColor={resourceColor} applyForRole={apply} isLoggedIn={isLoggedIn}/>
+			<SignUpButton
+				disable={isLoggedIn && resource.applicantQuestion}
 				resourceColor={resourceColor}
 				isLoggedIn={isLoggedIn}
 				isSubscribed={isSubscribed}
@@ -39,6 +39,7 @@ export const ResourceContent =
 			<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes} />
 			<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes} />
 			<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />
+			<ExpandableList resources={resource.roles} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />
 		</div>
 	)
 }

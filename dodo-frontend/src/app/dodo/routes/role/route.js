@@ -1,1 +1,0 @@
-export const ROLE_ROUTE = "/:roleType/:roleId"

@@ -4,7 +4,7 @@ import styles from "./updates.module.scss";
 import { useTranslation } from "react-i18next";
 import { Update } from "./update";
 
-export const Updates = ({ notifications: { notifications } }) => {
+export const Updates = ({ notifications: { notifications = [] } }) => {
 	const { t } = useTranslation("ui");
 
 	return (
