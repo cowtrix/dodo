@@ -15,7 +15,7 @@ export const Dialog = ({
 	buttonText,
 	close
 }) => (
-	<MuDialog open={active} className={styles.dialogWrapper} fullWidth>
+	<MuDialog open={active} className={styles.dialogWrapper} fullWidth fullScreen>
 		<div className={styles.dialog}>
 			<Header onClose={close} title={title} />
 			<Content content={content} />

@@ -11,7 +11,7 @@ import styles from './resource-content.module.scss'
 import { REGISTER_ROUTE } from '../../user-routes/register'
 
 export const ResourceContent =
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications }) => {
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications, hideMap }) => {
 		const { push } = useHistory()
 
 		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
@@ -21,7 +21,7 @@ export const ResourceContent =
 
 	return (
 		<div className={styles.resource}>
-			<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} />
+			<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap} />
 			<ParentLink parent={resource.parent}/>
 			<Video videoEmbedURL={resource.videoEmbedURL} />
 			<div className={styles.descriptionContainer}>
@@ -51,5 +51,6 @@ ResourceContent.propTypes = {
 	notifications: PropTypes.object,
 	resourceColor: PropTypes.string,
 	resourceTypes: PropTypes.array,
-	setCenterMap: PropTypes.func
+	setCenterMap: PropTypes.func,
+	hideMap: PropTypes.bool
 }

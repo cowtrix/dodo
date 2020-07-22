@@ -32,9 +32,8 @@ export const Resource =
 
 
 		const resourceColor =
-			resource.metadata &&
 			resourceTypes.length &&
-			'#' + resourceTypes.find(resType => resource.metadata.type === resType.value).displayColor
+			'#' + resourceTypes.find(resource => resourceType === resource.value).displayColor || '000000'
 
 		const { location } = resource
 		const defaultLocation = resource.location
@@ -59,6 +58,7 @@ export const Resource =
 							<Loader display={isLoading || fetchingUser}/>
 							{resource.metadata && !isLoading && (
 								<ResourceContent
+									hideMap={hideMap}
 									resource={resource}
 									notifications={notifications}
 									setCenterMap={setCenterMap}
