@@ -52,7 +52,6 @@ export const Resource =
 				<Container
 					content={
 						<Fragment>
-							{console.log(isLoading, fetchingUser)}
 							<Loader display={isLoading || fetchingUser}/>
 							{resource.metadata && !isLoading && (
 								<ResourceContent
