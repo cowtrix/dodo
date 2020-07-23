@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="added xr favicon">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -73,7 +71,7 @@
           <entry key="json" value="520" />
           <entry key="jsx" value="42720" />
           <entry key="scss" value="10521" />
-          <entry key="txt" value="3905" />
+          <entry key="txt" value="3929" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -83,7 +81,7 @@
           <entry key="JSON" value="520" />
           <entry key="JSX Harmony" value="42720" />
           <entry key="JavaScript" value="22674" />
-          <entry key="PLAIN_TEXT" value="3951" />
+          <entry key="PLAIN_TEXT" value="3975" />
           <entry key="SCSS" value="10521" />
         </counts>
       </usages-collector>
@@ -120,11 +118,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
+            <state relative-caret-position="210">
+              <caret line="14" column="4" lean-forward="true" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -196,10 +194,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/domain/search/actions.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="502">
+            <state relative-caret-position="555">
               <caret line="37" column="15" selection-start-line="37" selection-start-column="15" selection-end-line="37" selection-end-column="15" />
               <folding>
                 <element signature="e#0#139#0" expanded="true" />
@@ -293,8 +291,8 @@
         <option value="$PROJECT_DIR$/src/app/dodo/routes/search/search.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/site-map/site-map.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/leaflet-map.jsx" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx" />
         <option value="$PROJECT_DIR$/src/app/domain/search/actions.js" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx" />
       </list>
     </option>
   </component>
@@ -522,13 +520,6 @@
       <workItem from="1592554001599" duration="24818000" />
       <workItem from="1594289628126" duration="10313000" />
       <workItem from="1594704476557" duration="28138000" />
-    </task>
-    <task id="LOCAL-00052" summary="added video component">
-      <created>1591287803546</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1591287803546</updated>
     </task>
     <task id="LOCAL-00053" summary="added parent link">
       <created>1591290002313</created>
@@ -866,7 +857,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595511497465</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="fixed filter bug on pan">
+      <created>1595516772636</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1595516772636</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -890,7 +888,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="393351000" />
+    <option name="totallyTimeSpent" value="393450000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
@@ -925,7 +923,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added menu state control" />
     <MESSAGE value="added user menu" />
     <MESSAGE value="created single source of truth for routes" />
     <MESSAGE value="changed my rebellion to your profile&#10;added email check" />
@@ -950,7 +947,8 @@
     <MESSAGE value="added xr favicon" />
     <MESSAGE value="removed redirect from your-profile" />
     <MESSAGE value="fixed search with event types filter" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed search with event types filter" />
+    <MESSAGE value="fixed filter bug on pan" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed filter bug on pan" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1342,25 +1340,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/components/selector/selector.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/search/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1372,10 +1351,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/app/domain/search/actions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="502">
+        <state relative-caret-position="555">
           <caret line="37" column="15" selection-start-line="37" selection-start-column="15" selection-end-line="37" selection-end-column="15" />
           <folding>
             <element signature="e#0#139#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/components/selector/selector.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/search/filter/events/events.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="4" lean-forward="true" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
