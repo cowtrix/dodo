@@ -27,7 +27,7 @@ export const login = (dispatch, username, password, rememberMe) => {
 	})
 	postLogin(username, password, rememberMe)
 		.then(response => {
-			if (response.status === 404) {
+			if (response.status) {
 				dispatch({
 					type: LOGIN + FAILURE,
 					payload: "Unknown username or password"

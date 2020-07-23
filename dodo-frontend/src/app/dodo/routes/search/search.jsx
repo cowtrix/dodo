@@ -34,6 +34,7 @@ export const Search = (
 				getSearchResults={getSearchResults}
 				searchParams={searchParams}
 				setSearchParams={setSearchParams}
+				selectedResourceTypes={searchParams.types}
 			/>
 			<Container
 				content={
