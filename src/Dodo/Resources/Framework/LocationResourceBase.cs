@@ -21,7 +21,7 @@ namespace Dodo.LocationResources
 	public enum EArrestRisk
 	{
 		High,
-		Medium,
+		Moderate,
 		Low,
 		None,
 	}
