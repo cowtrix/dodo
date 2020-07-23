@@ -26,6 +26,7 @@ export const LeafletMap = (
 		setCenterMap,
 		getSearchResults = () => {},
 		setSearchParams = () => {},
+		selectedResourceTypes
 	}) => {
 
 	const [mapCenter, setMapCenter] = useState(getDefaultCenter(sites, center))
@@ -44,11 +45,11 @@ export const LeafletMap = (
 		const newSearchDistance = e.target.getZoom()
 		const metersPerPx = (156543.03392 * Math.cos(newSearchCenter.lat * Math.PI / 180) / Math.pow(2, newSearchDistance)) / 2
 		if (userInitiated) {
-			getSearchResults({ distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng })
+			getSearchResults({ distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng, types: selectedResourceTypes })
 			setUserInitiated(false)
 		}
 		else {
-			setSearchParams({ distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng })
+			setSearchParams({ distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng, types: selectedResourceTypes })
 		}
 	}
 
@@ -82,5 +83,6 @@ LeafletMap.propTypes = {
 	markers: PropTypes.array,
 	location: PropTypes.array,
 	zoom: PropTypes.number,
-	setSearchParams: PropTypes.func
+	setSearchParams: PropTypes.func,
+	selectedResourceTypes:PropTypes.array,
 }

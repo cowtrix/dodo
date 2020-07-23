@@ -13,7 +13,8 @@ export const SiteMap = (
 		getSearchResults,
 		searchParams,
 		setSearchParams,
-		display = true
+		display = true,
+		selectedResourceTypes,
 	}) =>
 	display ?
 		<LeafletMap
@@ -26,6 +27,7 @@ export const SiteMap = (
 			getSearchResults={getSearchResults}
 			searchParams={searchParams}
 			setSearchParams={setSearchParams}
+			selectedResourceTypes={selectedResourceTypes}
 		/> :
 		null
 
@@ -35,4 +37,5 @@ SiteMap.propTypes = {
 	zoom: PropTypes.number,
 	className: PropTypes.string,
 	setLocation: PropTypes.func,
+	selectedResourceTypes:PropTypes.array,
 }
