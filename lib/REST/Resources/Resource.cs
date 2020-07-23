@@ -50,6 +50,8 @@ namespace Resources
 			error = null;
 			return true;
 		}
+
+		public abstract Type GetResourceType();
 	}
 
 	/// <summary>

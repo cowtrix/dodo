@@ -6,17 +6,17 @@ namespace Dodo.DodoResources
 {
 	public class ParentFilter : ISearchFilter
 	{
-		public Guid Parent { get; set; }
+		public string Parent { get; set; }
 
 		public bool Filter(IRESTResource rsc)
 		{
-			if(Parent == default)
+			if(string.IsNullOrEmpty(Parent))
 			{
 				return true;
 			}
 			if(rsc is IOwnedResource owned)
 			{
-				return owned.Parent.Guid == Parent;
+				return owned.Parent.Slug == Parent || owned.Parent.Guid.ToString() == Parent;
 			}
 			return false;
 		}

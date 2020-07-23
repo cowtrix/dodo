@@ -27,12 +27,14 @@ namespace Dodo.LocationResources
 		{
 		}
 
-		public EventSchema(string name, Guid parent, GeoLocation location, string description, DateTime start, DateTime end)
+		public EventSchema(string name, string parent, GeoLocation location, string description, DateTime start, DateTime end)
 			: base(name, parent, location, description)
 		{
 			Location = location;
 			StartDate = start;
 			EndDate = end;
 		}
+
+		public override Type GetResourceType() => typeof(Event);
 	}
 }

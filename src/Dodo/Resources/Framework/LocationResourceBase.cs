@@ -57,7 +57,7 @@ namespace Dodo.LocationResources
 			{
 				return;
 			}
-			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
+			var group = schema.GetParent();
 			Parent = group.CreateRef<IRESTResource>();
 			Location = schema.Location;
 			PublicDescription = schema.PublicDescription;

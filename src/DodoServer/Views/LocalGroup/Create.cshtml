@@ -3,6 +3,10 @@
 @{
 	// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n
 	ViewData["Title"] = "Create A New Local Group";
+	if (typeof(Resources.IOwnedResource).IsAssignableFrom(Model.GetResourceType()))
+	{
+		(Model as dynamic).ParentID = ViewContext.HttpContext.Request.Query["parent"];
+	}
 }
 
 <div class="container-md">

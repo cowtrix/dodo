@@ -93,7 +93,7 @@ namespace Dodo.SharedTest
 				new ResourceCreationRequest(context, GetRandomWorkinGroup(context)));
 			return new RoleSchema(RandomName<Role>(),
 				SampleDescription, SampleRoleInstructions, Dodo.DodoApp.DevEmail,
-				wg.Guid);
+				wg.Guid.ToString());
 		}
 
 		public static EventSchema GetRandomEvent(AccessContext context, GroupResource rb = null)
@@ -101,14 +101,14 @@ namespace Dodo.SharedTest
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomRebellion(context)));
 			var date = RandomDate;
-			return new EventSchema(RandomName<Event>(), rb.Guid, RandomLocation, SampleDescription, date, date + TimeSpan.FromHours(4));
+			return new EventSchema(RandomName<Event>(), rb.Guid.ToString(), RandomLocation, SampleDescription, date, date + TimeSpan.FromHours(4));
 		}
 
 		public static SiteSchema GetRandomSite(AccessContext context, Rebellion rb = null)
 		{
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomRebellion(context)));
-			return new SiteSchema(RandomName<Site>(), rb.Guid, RandomLocation, SampleDescription);
+			return new SiteSchema(RandomName<Site>(), rb.Guid.ToString(), RandomLocation, SampleDescription);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)
@@ -167,7 +167,7 @@ namespace Dodo.SharedTest
 			rsc = rsc ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomRebellion(context)));
 			var rand = workingGroups.Random();
-			return new WorkingGroupSchema(rand.Item1, rand.Item2, rsc.Guid);
+			return new WorkingGroupSchema(rand.Item1, rand.Item2, rsc.Guid.ToString());
 		}
 
 		public static LocalGroupSchema GetRandomLocalGroup(AccessContext context, GroupResource rsc = null)

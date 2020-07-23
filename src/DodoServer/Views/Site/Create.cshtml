@@ -3,6 +3,10 @@
 @{
 	// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n
 	ViewData["Title"] = "Create A New Site";
+	if (typeof(Resources.IOwnedResource).IsAssignableFrom(Model.GetResourceType()))
+	{
+		(Model as dynamic).ParentID = ViewContext.HttpContext.Request.Query["parent"];
+	}
 }
 
 <div class="container-md">
@@ -35,6 +39,7 @@
 						To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 					</small>
 				</div>
+					<input asp-for="Parent" class="sr-only"></input>
 <script>
 	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
 	var coordinates = document.getElementById('coordinates');

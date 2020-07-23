@@ -21,11 +21,13 @@ namespace Dodo.Roles
 
 		public RoleSchema() { }
 
-		public RoleSchema(string name, string publicDescription, string applicantQuestion, string contactEmail, Guid parent) : base(name, publicDescription, parent)
+		public RoleSchema(string name, string publicDescription, string applicantQuestion, string contactEmail, string parent) : base(name, publicDescription, parent)
 		{
 			ApplicantQuestion = applicantQuestion;
 			ContactEmail = contactEmail;
 		}
+
+		public override Type GetResourceType() => typeof(Role);
 	}
 
 	public class RoleFactory : DodoResourceFactory<Role, RoleSchema>

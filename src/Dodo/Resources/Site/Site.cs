@@ -11,10 +11,12 @@ namespace Dodo.LocationResources
 		{
 		}
 
-		public SiteSchema(string name, Guid parent, GeoLocation location, string description)
+		public SiteSchema(string name, string parent, GeoLocation location, string description)
 			: base(name, parent, location, description)
 		{
 		}
+
+		public override Type GetResourceType() => typeof(Site);
 	}
 
 	[Name("Site")]

@@ -9,7 +9,7 @@ namespace Dodo.LocationResources
 		[View]
 		public GeoLocation Location { get; set; } = new GeoLocation();
 
-		public LocationResourceSchema(string name, Guid parent, GeoLocation location, string description)
+		public LocationResourceSchema(string name, string parent, GeoLocation location, string description)
 			: base(name, description, parent)
 		{
 			Location = location;

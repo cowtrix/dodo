@@ -47,8 +47,7 @@ namespace Dodo.Roles
 
 		public Role(AccessContext context, RoleSchema schema) : base(context, schema)
 		{
-			var group = ResourceUtility.GetResourceByGuid<GroupResource>(schema.Parent);
-			Parent = group.CreateRef<IRESTResource>();
+			Parent = schema.GetParent().CreateRef();
 			PublicDescription = schema.PublicDescription;
 			ApplicantQuestion = schema.ApplicantQuestion;
 			ContactEmail = schema.ContactEmail;

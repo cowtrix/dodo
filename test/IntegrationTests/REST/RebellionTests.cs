@@ -55,7 +55,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var rebellion = CreateObject<Rebellion>(context);
-			var wg = CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test WG", "test", rebellion.Guid));
+			var wg = CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test WG", "test", rebellion.Guid.ToString()));
 
 			await Login(user.Slug, password);
 			var patch = GetPatchObject();

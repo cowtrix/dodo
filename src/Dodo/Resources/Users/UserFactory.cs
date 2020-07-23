@@ -33,6 +33,8 @@ namespace Dodo.Users
 		public UserSchema()
 		{
 		}
+
+		public override Type GetResourceType() => typeof(User);
 	}
 
 	public class UserFactory : DodoResourceFactory<User, UserSchema>

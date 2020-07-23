@@ -24,6 +24,8 @@ namespace Dodo.LocalGroups
 		{
 			Location = location;
 		}
+
+		public override Type GetResourceType() => typeof(LocalGroup);
 	}
 
 	public class LocalGroupFactory : DodoResourceFactory<LocalGroup, LocalGroupSchema>

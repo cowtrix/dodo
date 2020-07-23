@@ -9,9 +9,19 @@ namespace Dodo
 {
 	public abstract class OwnedResourceSchemaBase : DescribedResourceSchemaBase
 	{
-		public Guid Parent { get; set; }
+		[View(EPermissionLevel.PUBLIC, customDrawer:"null")]
+		public string Parent { get; set; }
 
-		public OwnedResourceSchemaBase(string name, string publicDescription, Guid parent)
+		public IRESTResource GetParent()
+		{
+			if(Guid.TryParse(Parent, out var guid))
+			{
+				return ResourceUtility.GetResourceByGuid(guid);
+			}
+			return ResourceUtility.GetResourceBySlug(Parent);
+		}
+
+		public OwnedResourceSchemaBase(string name, string publicDescription, string parent)
 			: base(name, publicDescription)
 		{
 			Parent = parent;

@@ -13,12 +13,12 @@ namespace Dodo.WorkingGroups
 		{
 		}
 
-		public WorkingGroupSchema(string name, string description, Guid parent)
+		public WorkingGroupSchema(string name, string description, string parent) 
+			: base(name, description, parent)
 		{
-			Name = name;
-			PublicDescription = description;
-			Parent = parent;
 		}
+
+		public override Type GetResourceType() => typeof(WorkingGroup);
 	}
 
 	public class WorkingGroupFactory : DodoResourceFactory<WorkingGroup, WorkingGroupSchema>

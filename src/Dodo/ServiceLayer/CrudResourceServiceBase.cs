@@ -5,14 +5,11 @@ using Dodo.Models;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchema>
@@ -142,7 +139,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> AddNotification(string id, NotificationModel notification)
 	{
-		if (typeof(INotificationResource).IsAssignableFrom(typeof(T)))
+		if (!typeof(INotificationResource).IsAssignableFrom(typeof(T)))
 		{
 			return ResourceRequestError.BadRequest("This resource type does not support notifications");
 		}
@@ -171,7 +168,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> DeleteNotification(string id, Guid notification)
 	{
-		if (typeof(INotificationResource).IsAssignableFrom(typeof(T)))
+		if (!typeof(INotificationResource).IsAssignableFrom(typeof(T)))
 		{
 			return ResourceRequestError.BadRequest("This resource type does not support notifications");
 		}

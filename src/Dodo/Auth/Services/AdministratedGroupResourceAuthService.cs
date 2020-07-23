@@ -56,7 +56,7 @@ namespace Dodo
 			// Does the user have permission to create a child of the parent?
 			if(schema is OwnedResourceSchemaBase owned)
 			{
-				var parent = ResourceUtility.GetResourceByGuid(owned.Parent) as T;
+				var parent = owned.GetParent() as T;
 				if (parent == null)
 				{
 					return ResourceRequestError.BadRequest();

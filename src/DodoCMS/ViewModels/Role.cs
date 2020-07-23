@@ -20,7 +20,7 @@ namespace Dodo.ViewModels
 		[Resources.SlugAttribute()]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public uint Revision { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]

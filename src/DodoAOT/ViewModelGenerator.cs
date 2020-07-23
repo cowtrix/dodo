@@ -15,14 +15,18 @@ namespace DodoAOT
 	{
 		private static string GetHeader(Type key)
 		{
-			return $"// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n" +
+			var str = $"// This is generated code from the DodoAOT project. DO NOT MODIFY.\r\n" +
 				"using System.ComponentModel;\r\n" +
 				"using Dodo.Controllers.Edit;\r\n" +
 				$"using {key.Namespace};\r\n" +
 				"using Resources;\r\n" +
 				"namespace Dodo.ViewModels\r\n{\r\n" +
-				$"\tpublic class {key.Name}ViewModel : IViewModel\r\n\t{{\r\n" +
-				$"\t\tpublic System.Type __Type => typeof({key.Name});\r\n";
+				$"\tpublic class {key.Name}ViewModel : IViewModel\r\n\t{{\r\n";
+			if(typeof(ResourceSchemaBase).IsAssignableFrom(key))
+				str += $"\t\tpublic System.Type __Type => typeof({key.Name});\r\n";
+			else
+				str += $"\t\tpublic System.Type __Type => typeof({key.Name});\r\n";
+			return str;
 		}
 
 		private static IEnumerable<string> BuildClass(Type targetType, int indentLevel)

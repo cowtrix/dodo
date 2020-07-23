@@ -37,6 +37,8 @@ namespace Dodo.Rebellions
 			StartDate = start;
 			EndDate = end;
 		}
+
+		public override Type GetResourceType() => typeof(Rebellion);
 	}
 
 	public class RebellionFactory : DodoResourceFactory<Rebellion, RebellionSchema>
