@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
 import { Header, Description, SignUpButton, ParentLink, Updates, Role } from "app/components/resources"
 
+import { ADMIN_PERMISSIONS } from 'app/constants'
 import { isSubscribedToResource } from './services'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT} from './constants'
 
@@ -11,7 +12,7 @@ import styles from './resource-content.module.scss'
 import { REGISTER_ROUTE } from '../../user-routes/register'
 
 export const ResourceContent =
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications }) => {
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications, hideMap }) => {
 		const { push } = useHistory()
 
 		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
@@ -21,7 +22,7 @@ export const ResourceContent =
 
 	return (
 		<div className={styles.resource}>
-			<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} />
+			<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap} />
 			<ParentLink parent={resource.parent}/>
 			<Video videoEmbedURL={resource.videoEmbedURL} />
 			<div className={styles.descriptionContainer}>
@@ -30,7 +31,7 @@ export const ResourceContent =
 			</div>
 			<Role applicantQuestion={resource.applicantQuestion} resourceColor={resourceColor} applyForRole={apply} isLoggedIn={isLoggedIn}/>
 			<SignUpButton
-				disable={isLoggedIn && resource.applicantQuestion}
+				disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
 				resourceColor={resourceColor}
 				isLoggedIn={isLoggedIn}
 				isSubscribed={isSubscribed}
@@ -51,5 +52,6 @@ ResourceContent.propTypes = {
 	notifications: PropTypes.object,
 	resourceColor: PropTypes.string,
 	resourceTypes: PropTypes.array,
-	setCenterMap: PropTypes.func
+	setCenterMap: PropTypes.func,
+	hideMap: PropTypes.bool
 }
