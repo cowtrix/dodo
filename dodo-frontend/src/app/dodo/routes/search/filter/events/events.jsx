@@ -11,7 +11,8 @@ export const Events = ({ resourceTypes, searchParams, search }) => (
 		isMulti
 		options={resourceTypes}
 		className={styles.selector}
-		onChange={value => search({ ...searchParams, types: value && value.length ? value : [], search: "" })}
+		onChange={value => search({ ...searchParams, types: value.length ? value : [], search: "" })
+		}
 	/>
 )
 

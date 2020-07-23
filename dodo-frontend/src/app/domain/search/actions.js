@@ -35,7 +35,7 @@ export const searchGet = (dispatch, params, cb) => {
 		type: SEARCH_FILTER_SEARCH,
 		payload: params.search
 	})
-	params.types && params.types.length &&
+	params.types &&
 	dispatch({
 		type: SEARCH_FILTER_TYPES,
 		payload: params.types
