@@ -1,5 +1,5 @@
 import { path } from 'ramda'
-import { LOGIN, GET_LOGGED_IN_USER } from './action-types'
+import { LOGIN, GET_LOGGED_IN_USER, REGISTER_USER } from './action-types'
 
 export const user = state =>
 	path(["domain", "user"], state)
@@ -30,3 +30,11 @@ export const isLoggingIn = state =>
 
 export const fetchingUser = state =>
 	path(["requests", GET_LOGGED_IN_USER, "isFetching"], state) && !path(["requests", GET_LOGGED_IN_USER, "hasErrored"], state)
+
+export const registeringUser = state =>
+	path(["requests", REGISTER_USER, "isFetching"], state) && !path(["requests", REGISTER_USER, "hasErrored"], state)
+
+export const registerError = state =>
+	path(["requests", REGISTER_USER, "error"], state)
+
+

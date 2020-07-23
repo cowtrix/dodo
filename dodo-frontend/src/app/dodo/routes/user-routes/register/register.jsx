@@ -4,6 +4,7 @@ import { Container, Submit, Input, Error } from 'app/components/forms/index'
 
 import styles from './register.module.scss'
 import { useHistory } from 'react-router-dom'
+import { Loader } from '../../../../components/loader'
 
 const REGISTER = "Register for XR"
 
@@ -11,7 +12,7 @@ const passwordRegex = (password) => /[!@#$%^&*()_+=\[{\]};:<>|./?,-£]/.test(pas
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
 const notEmptyAndLengthBelow = (minLength, str) => str && str.length < minLength
 
-export const Register = ({ register, isLoggedIn }) => {
+export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const history = useHistory()
 
 	if (isLoggedIn) {
@@ -38,6 +39,9 @@ export const Register = ({ register, isLoggedIn }) => {
 			title={REGISTER}
 			content={
 				<Fragment>
+					<Loader
+						display={registeringUser}
+					/>
 					{usernameShort ? <Error error="Username should be longer"/> : null}
 					<Input
 						name="Username"
@@ -92,6 +96,9 @@ export const Register = ({ register, isLoggedIn }) => {
 					<p>
 						By continuing, you agree to the Rebel Agreement and Privacy Policy.
 					</p>
+					<Error
+					 error={error ? error.status + ' ' + error.title : null}
+					/>
 					<Submit
 						className={hasError ? styles.disabled : null}
 						submit={register({
