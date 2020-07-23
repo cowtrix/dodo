@@ -20,11 +20,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
-	getResource: (resourceType, resourceID, setCenterMap) =>
-		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap),
-	getNotifications: (resourceType, resourceID) => resources.actions.notificationsGet(dispatch, resourceType, resourceID),
-	subscribeResource: (resourceType, resourceID, subscribe) =>
-		resources.actions.subscribeResource(dispatch, resourceType, resourceID, subscribe),
+	getResource: (resourceType, resourceID, setCenterMap) => {
+		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap)
+		resources.actions.notificationsGet(dispatch, resourceType, resourceID)
+	},
+	subscribeResource: (resourceType, resourceID, subscribe, body) =>
+		resources.actions.subscribeResource(dispatch, resourceType, resourceID, subscribe, body),
 })
 
 export const ResourceConnected = connect(

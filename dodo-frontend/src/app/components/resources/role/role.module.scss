@@ -1,0 +1,21 @@
+@import "~app/styles/styles";
+
+$text-area-min-height: 250px;
+
+.role {
+	padding: spacing(4);
+
+	@media (min-width: $responsive-breakpoint) {
+		padding: spacing(5);
+	}
+}
+
+.textArea {
+	margin: spacing(3) 0;
+	width: 100%;
+	min-height: $text-area-min-height;
+}
+
+.signUpButton {
+	padding: 0;
+}

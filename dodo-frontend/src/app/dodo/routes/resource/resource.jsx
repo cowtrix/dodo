@@ -3,13 +3,14 @@ import PropTypes from "prop-types"
 import { Container } from "app/components/resources"
 import { SiteMap, Loader } from "app/components"
 import { ResourceContent } from './resource-content'
+import { shouldHideMap } from './services'
+
 
 export const Resource =
 	(
 		{
 			match,
 			getResource,
-			getNotifications,
 			resource,
 			notifications,
 			isLoading,
@@ -27,7 +28,6 @@ export const Resource =
 
 		useEffect(() => {
 			getResource(resourceType, resourceId, setCenterMap)
-			getNotifications(resourceType, resourceId);
 		}, [match])
 
 
@@ -41,18 +41,21 @@ export const Resource =
 			? [location.latitude, location.longitude]
 			: []
 
+		const hideMap = shouldHideMap(resourceType)
+
 		return (
 			<Fragment>
 				<SiteMap
+					display={!hideMap}
 					centerMap={centerMap}
 					setCenterMap={setCenterMap}
 					center={defaultLocation}
 					sites={resource.sites && [...resource.sites, ...resource.workingGroups]}
 				/>
 				<Container
+					hideMap={hideMap}
 					content={
 						<Fragment>
-							{console.log(isLoading, fetchingUser)}
 							<Loader display={isLoading || fetchingUser}/>
 							{resource.metadata && !isLoading && (
 								<ResourceContent

@@ -22,6 +22,6 @@ export const eventTypesGet = (dispatch) =>
 export const notificationsGet = (dispatch, eventType, event, cb) =>
 	apiAction(dispatch, RESOURCE_NOTIFICATIONS_GET, API_URL + eventType + "/notifications/" + event, cb)
 
-export const subscribeResource = (dispatch, resourceType, resourceId, subscribe) =>
-	apiAction(dispatch, RESOURCE_JOIN, API_URL + resourceType + "/" + resourceId + '/' + subscribe, () => getLoggedInUser(dispatch), false, 'post')
+export const subscribeResource = (dispatch, resourceType, resourceId, subscribe, body) =>
+	apiAction(dispatch, RESOURCE_JOIN, API_URL + resourceType + "/" + resourceId + '/' + subscribe, () => getLoggedInUser(dispatch), false, 'post', body)
 

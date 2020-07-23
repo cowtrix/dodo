@@ -6,4 +6,5 @@ export { Description } from './description'
 export { Updates } from './updates'
 export { SignUpButton } from './sign-up-button'
 export { ParentLink } from './parent-link'
+export { Role } from './role'
 

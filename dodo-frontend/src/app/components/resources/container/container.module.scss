@@ -14,6 +14,12 @@ $rebellions-list-background: white;
 	}
 }
 
+.wrapperWithoutMap {
+	display: flex;
+	justify-content: center;
+	position: relative;
+}
+
 .eventListContainer {
 	display: flex;
 	background: $rebellions-list-background;
