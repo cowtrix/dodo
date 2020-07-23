@@ -3,7 +3,11 @@ using Resources;
 
 namespace Dodo.Users.Tokens
 {
-	public class UserJoinedGroupToken : Token, IRemovableToken
+	public interface IMyRebellionToken : IToken
+	{
+		public IResourceReference Reference { get; }
+	}
+	public class UserJoinedGroupToken : Token, IRemovableToken, IMyRebellionToken
 	{
 		[JsonProperty(TypeNameHandling = TypeNameHandling.None)]
 		public ResourceReference<IGroupResource> Resource { get; private set; }
@@ -11,6 +15,9 @@ namespace Dodo.Users.Tokens
 		public override bool Encrypted => true;
 
 		public bool ShouldRemove => false;
+
+		[JsonIgnore]
+		public IResourceReference Reference => Resource;
 
 		public UserJoinedGroupToken(IGroupResource rsc)
 		{

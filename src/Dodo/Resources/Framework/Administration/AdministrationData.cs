@@ -36,7 +36,6 @@ namespace Dodo
 			{
 				throw new ArgumentNullException(nameof(privateKey));
 			}
-			Resource = resource.CreateRef();
 			Administrators.Add(new AdministratorEntry(firstAdmin)
 			{
 				Permissions = new AdministratorPermissionSet
@@ -52,6 +51,7 @@ namespace Dodo
 				}
 			});
 			GroupPrivateKey = privateKey.Value;
+			Resource = resource.CreateRef();
 		}
 
 		internal bool AddOrUpdateAdministrator(AccessContext context, User newAdmin, AdministratorPermissionSet permissions = null)

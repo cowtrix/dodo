@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Dodo.Models;
 using static UserService;
+using Dodo.Users.Tokens;
+using System.Linq;
+using Dodo.Rebellions;
+using System.Collections.Generic;
+using System;
 
 namespace Dodo.Users
 {
@@ -11,6 +16,7 @@ namespace Dodo.Users
 	[Route(RootURL)]
 	public class UserAPIController : CrudResourceAPIController<User, UserSchema>
 	{
+		const string MY_REBELLION = "my-rebellion";
 		protected UserService UserService => new UserService(Context, HttpContext, new UserAuthService());
 
 		protected override AuthorizationService<User, UserSchema> AuthService => 
@@ -30,6 +36,52 @@ namespace Dodo.Users
 				return Forbid();
 			}
 			return Ok(Context.User.GenerateJsonView(EPermissionLevel.OWNER, Context.User, Context.Passphrase));
+		}
+
+		[HttpGet(MY_REBELLION)]
+		public async Task<IActionResult> GetMyRebellion()
+		{
+			if (Context.User == null)
+			{
+				return Forbid();
+			}
+			var ret = new Dictionary<Guid, MyRebellionNode>();
+			// Here we get a big ol' unsorted list
+			foreach (var token in Context.User.TokenCollection.GetAllTokens<IMyRebellionToken>(Context, EPermissionLevel.OWNER, Context.User))
+			{
+				if(!ret.TryGetValue(token.Reference.Guid, out var node))
+				{
+					node = new MyRebellionNode(token.Reference);
+					ret[token.Reference.Guid] = node;
+				}
+				if(token is UserAddedAsAdminToken)
+				{
+					node.Administrator = true;
+				}
+				else if (token is UserJoinedGroupToken)
+				{
+					node.Member = true;
+				}				
+			}
+			while(ret.Values.Any(t => !t.Checked))
+			{
+				// Ok, now it's time to actually build the tree out
+				foreach(var node in ret.Values)	// we leave the root nodes alone
+				{
+					if(node.Reference.Parent != default)
+					{
+						if (!ret.TryGetValue(node.Reference.Parent, out var parentNode))
+						{
+							parentNode = new MyRebellionNode(ResourceUtility.GetResourceByGuid(node.Reference.Parent).CreateRef());
+							ret[parentNode.Reference.Guid] = parentNode;
+						}
+						parentNode.Children.Add(node);
+					}
+					node.Checked = true;
+				}
+			}
+			var tree = ret.Values.Where(n => n.Reference.Parent == default).ToList();
+			return Ok(tree.GenerateJsonViewEnumerable(EPermissionLevel.OWNER, Context.User, Context.Passphrase));
 		}
 
 		[HttpGet(LOGOUT)]

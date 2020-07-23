@@ -3,12 +3,14 @@ using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Users;
 using Dodo.Users.Tokens;
+using Dodo.WorkingGroups;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
 using SharedTest;
 using System;
+using System.Linq;
 
 namespace UnitTests
 {
@@ -22,7 +24,7 @@ namespace UnitTests
 			using (var rscLock = new ResourceLock(user))
 			{
 				user.TokenCollection.AddOrUpdate(user, new ResourceCreationToken(typeof(Rebellion)));
-				user.TokenCollection.AddOrUpdate(user, new UserAddedAsAdminToken(CreateObject<LocalGroup>(), new Passphrase("1234"), user.AuthData.PublicKey));
+				user.TokenCollection.AddOrUpdate(user, new UserAddedAsAdminToken(CreateObject<WorkingGroup>(), new Passphrase("1234"), user.AuthData.PublicKey));
 				user.TokenCollection.AddOrUpdate(user, new ResetPasswordToken(user));
 				user.TokenCollection.AddOrUpdate(user, new TemporaryUserToken(new Passphrase("1234"), "1234"));
 				user.TokenCollection.AddOrUpdate(user, new SessionToken(user, "1234", new Passphrase("1234"), new System.Net.IPAddress(0)));
@@ -40,6 +42,8 @@ namespace UnitTests
 				Assert.IsTrue(ogJson == deserializedJson,
 					$"Unmatched:\n{ogJson}\n{deserializedJson}");
 			}
+			var adminToken = userInDB.TokenCollection.GetAllTokens<UserAddedAsAdminToken>(context, EPermissionLevel.OWNER, user).Single();
+			Assert.IsTrue(adminToken.Reference.Parent != default);
 		}
 
 		[TestMethod]

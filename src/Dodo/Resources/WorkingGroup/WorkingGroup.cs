@@ -29,12 +29,6 @@ namespace Dodo.WorkingGroups
 
 		public WorkingGroup(AccessContext context, WorkingGroupSchema schema) : base(context, schema)
 		{
-			var group = schema.GetParent();
-			if(group == null)
-			{
-				throw new Exception($"Invalid parent group ID in Working Group construction: {schema.Parent}");
-			}
-			Parent = group.CreateRef<IRESTResource>();
 		}
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
@@ -47,7 +41,7 @@ namespace Dodo.WorkingGroups
 		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority:-2, customDrawer: "parentRef")]
-		public ResourceReference<IRESTResource> Parent { get; private set; }
+		public ResourceReference<IRESTResource> Parent { get; set; }
 
 		public override bool CanContain(Type type)
 		{

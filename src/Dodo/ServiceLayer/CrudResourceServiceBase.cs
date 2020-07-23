@@ -1,5 +1,6 @@
 using Common;
 using Common.Config;
+using Common.Extensions;
 using Dodo;
 using Dodo.Models;
 using Dodo.Users;
@@ -72,24 +73,31 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		{
 			return request;
 		}
-		var req = (ResourceActionRequest)request;
-		T target;
-		using (var resourceLock = new ResourceLock(req.Result))
+		try
 		{
-			target = resourceLock.Value as T;
-			if (target == null)
+			var req = (ResourceActionRequest)request;
+			T target;
+			using (var resourceLock = new ResourceLock(req.Result))
 			{
-				return ResourceRequestError.NotFoundRequest();
+				target = resourceLock.Value as T;
+				if (target == null)
+				{
+					return ResourceRequestError.NotFoundRequest();
+				}
+				var jsonSettings = new JsonSerializerSettings()
+				{
+					TypeNameHandling = TypeNameHandling.All
+				};
+				target.PatchObject(values, req.PermissionLevel, req.AccessContext.User, req.AccessContext.Passphrase);
+				ResourceManager.Update(target, resourceLock);
 			}
-			var jsonSettings = new JsonSerializerSettings()
-			{
-				TypeNameHandling = TypeNameHandling.All
-			};
-			target.PatchObject(values, req.PermissionLevel, req.AccessContext.User, req.AccessContext.Passphrase);
-			ResourceManager.Update(target, resourceLock);
+			req.Result = target;
+			return req;
 		}
-		req.Result = target;
-		return req;
+		catch(PublicException e)
+		{
+			return ResourceRequestError.BadRequest(e.Message);
+		}
 	}
 
 	public virtual async Task<IRequestResult> Delete(string id)

@@ -14,6 +14,15 @@ namespace Dodo
 			{
 				Creator = SecurityExtensions.GenerateID(creator.User, creator.Passphrase);
 			}
+			if(this is IOwnedResource owned && schema is OwnedResourceSchemaBase ownedSchema)
+			{
+				var group = ownedSchema.GetParent();
+				if (group == null)
+				{
+					throw new Exception($"Invalid parent group ID in construction: {ownedSchema.Parent}");
+				}
+				owned.Parent = group.CreateRef<IRESTResource>();
+			}
 		}
 
 		public string Creator { get; private set; }

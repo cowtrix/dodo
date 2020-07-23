@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Common.Extensions
@@ -21,7 +22,26 @@ namespace Common.Extensions
 		bool VerifyExplicit(out string error);
 	}
 
-	public class MemberVerificationException : Exception
+	/// <summary>
+	/// This exception type should never contain sensitive info and can be used
+	/// to tell the user that something bad has happened
+	/// </summary>
+	public class PublicException : Exception
+	{
+		public PublicException()
+		{
+		}
+
+		public PublicException(string message) : base(message)
+		{
+		}
+
+		public PublicException(string message, Exception innerException) : base(message, innerException)
+		{
+		}
+	}
+
+	public class MemberVerificationException : PublicException
 	{
 		public MemberVerificationException(string message) : base(message)
 		{

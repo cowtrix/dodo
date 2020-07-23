@@ -14,7 +14,7 @@ namespace Resources
 	/// </summary>
 	public interface IOwnedResource : IRESTResource
 	{
-		ResourceReference<IRESTResource> Parent { get; }
+		ResourceReference<IRESTResource> Parent { get; set; }
 	}
 
 	public interface IDescribedResource : IRESTResource
@@ -87,6 +87,10 @@ namespace Resources
 			FullyQualifiedName = resource?.GetType().AssemblyQualifiedName;
 			if(resource is IOwnedResource owned)
 			{
+				if (owned.Parent.Guid == default)
+				{
+					throw new Exception("Orphan resource");
+				}
 				Parent = owned.Parent.Guid;
 			}
 			else
@@ -153,6 +157,11 @@ namespace Resources
 		{
 			error = null;
 			return true;
+		}
+
+		public override string ToString()
+		{
+			return $"REF: {Name} ({Type})";
 		}
 	}
 }

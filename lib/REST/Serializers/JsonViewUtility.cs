@@ -14,6 +14,15 @@ using System.Collections.Concurrent;
 
 namespace Resources
 {
+	public class PatchCallbackAttribute : Attribute
+	{
+		public string MethodName { get; set; }
+		public PatchCallbackAttribute(string methodName)
+		{
+			MethodName = methodName;
+		}
+	}
+
 	/// <summary>
 	/// Classes with this attribute won't have their revisions cached
 	/// </summary>

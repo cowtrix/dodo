@@ -6,7 +6,7 @@ using Resources.Security;
 
 namespace Dodo.Users.Tokens
 {
-	public class UserAddedAsAdminToken : AutoExecutableToken, INotificationToken, IRemovableToken
+	public class UserAddedAsAdminToken : AutoExecutableToken, INotificationToken, IRemovableToken, IMyRebellionToken
 	{
 		[JsonProperty(TypeNameHandling = TypeNameHandling.None)]
 		public ResourceReference<IAdministratedResource> Resource { get; private set; }
@@ -68,5 +68,8 @@ namespace Dodo.Users.Tokens
 		}
 
 		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
+
+		[JsonIgnore]
+		public IResourceReference Reference => Resource;
 	}
 }
