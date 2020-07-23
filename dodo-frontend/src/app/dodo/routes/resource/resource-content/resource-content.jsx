@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
 import { Header, Description, SignUpButton, ParentLink, Updates, Role } from "app/components/resources"
 
+import { ADMIN_PERMISSIONS } from 'app/constants'
 import { isSubscribedToResource } from './services'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT} from './constants'
 
@@ -30,7 +31,7 @@ export const ResourceContent =
 			</div>
 			<Role applicantQuestion={resource.applicantQuestion} resourceColor={resourceColor} applyForRole={apply} isLoggedIn={isLoggedIn}/>
 			<SignUpButton
-				disable={isLoggedIn && resource.applicantQuestion}
+				disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
 				resourceColor={resourceColor}
 				isLoggedIn={isLoggedIn}
 				isSubscribed={isSubscribed}

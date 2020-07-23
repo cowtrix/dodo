@@ -11,15 +11,18 @@ export const apiAction = async (dispatch, action, url, cb, abortSignal, method, 
 	})
 	return api(url, method, body, abortSignal)
 		.then(response => {
-			response.status === 200 ?
-			dispatch({
-				type: action + SUCCESS,
-				payload: response
-			}) :
-			dispatch({
-				type: action + FAILURE,
-				payload: response
-			})
+			if (response.status) {
+				dispatch({
+					type: action + FAILURE,
+					payload: response
+				})
+			}
+			else {
+				dispatch({
+					type: action + SUCCESS,
+					payload: response
+				})
+			}
 			if (cb) cb(response)
 		})
 		.catch(error => {

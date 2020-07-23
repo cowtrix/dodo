@@ -5,7 +5,6 @@ import { SiteMap, Loader } from "app/components"
 import { ResourceContent } from './resource-content'
 import { shouldHideMap } from './services'
 
-
 export const Resource =
 	(
 		{
