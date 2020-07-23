@@ -12,7 +12,7 @@ const MarkerIcon = leaflet.icon({
 	className: "xrMarker"
 })
 
-export const Markers = ({ markers }) =>
+export const Markers = ({ markers, userInitiated }) =>
 	markers.map(marker =>
 		marker.location ? (
 			<Marker
@@ -20,7 +20,7 @@ export const Markers = ({ markers }) =>
 				key={marker.guid}
 				position={[marker.location.latitude, marker.location.longitude]}
 			>
-				<Popup site={marker} />
+				{userInitiated ? <Popup site={marker} /> : null}
 			</Marker>
 		) : null
 	)

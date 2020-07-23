@@ -70,7 +70,7 @@ export const LeafletMap = (
 			onMoveend={setNewSearchParams}
 		>
 			<TitleLayers/>
-			<Markers markers={sites}/>
+			<Markers markers={sites} userInitiated={userInitiated}/>
 			{!sites.length && center.length ?
 				<Marker position={center} icon={MarkerIcon}/> :
 				null}
