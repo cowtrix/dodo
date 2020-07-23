@@ -66,7 +66,7 @@ namespace Dodo.Users
 
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
-			var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : (User)requester;
+			/*var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : (User)requester;
 			var accessContext = new AccessContext(requesterUser, passphrase);
 			if (permissionLevel == EPermissionLevel.OWNER)
 			{
@@ -75,7 +75,7 @@ namespace Dodo.Users
 
 				view.Add(MEMBER_OF_KEY, TokenCollection.GetAllTokens<UserJoinedGroupToken>(accessContext, EPermissionLevel.OWNER, this)
 					.Select(r => r.Resource.GenerateJsonView(permissionLevel, requester, passphrase)).ToList());
-			}
+			}*/
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 

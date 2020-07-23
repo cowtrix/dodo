@@ -67,10 +67,10 @@ namespace RESTTests
 			var joinReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/join", EHTTPRequestType.POST);
 			var verify = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreEqual(verify[Resource.METADATA]["isMember"].Value<string>(), "true");
-			var profile = await RequestJSON($"auth", EHTTPRequestType.GET);
+			/*var profile = await RequestJSON($"auth", EHTTPRequestType.GET);	// Membership no longer shown in user metadata
 			var metadata = profile["metadata"];
 			var memberOf = metadata["memberOf"];
-			Assert.IsTrue(memberOf.Any(x => x["slug"].Value<string>() == group.Slug));
+			Assert.IsTrue(memberOf.Any(x => x["slug"].Value<string>() == group.Slug));*/
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Join a {PostmanTypeName}" },
 				joinReq);
