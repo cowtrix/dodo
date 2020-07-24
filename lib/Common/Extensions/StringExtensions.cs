@@ -58,7 +58,7 @@ namespace Common.Extensions
 				{
 					var txt = match.Groups[1].Value;
 					var link = match.Groups[2].Value;
-					str = str.Substring(0, match.Index) + str.Substring(match.Index + match.Length);
+					str = str.Substring(0, match.Index) + $": {link}" + str.Substring(match.Index + match.Length);
 				}
 				catch { }
 				match = Regex.Match(str, fullLinkOnlyRegex);

@@ -16,15 +16,15 @@ namespace Dodo
 		public AdministratedGroupResource() : base() { }
 		public AdministratedGroupResource(AccessContext context, DescribedResourceSchemaBase schema) : base(context, schema)
 		{
+			// Creator gets super admin
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			m_publicKey = pk;
 			AdministratorData = new UserMultiSigStore<AdministrationData>(
 				new AdministrationData(this, context.User, new Passphrase(pv)), context);
-			
 			using (var userLock = new ResourceLock(context.User))
 			{
 				var newAdmin = userLock.Value as User;
-				newAdmin.TokenCollection.AddOrUpdate(newAdmin, new UserAddedAsAdminToken(this));
+				newAdmin.TokenCollection.AddOrUpdate(newAdmin, new UserAddedAsAdminToken(this, newAdmin));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 		}
@@ -130,7 +130,7 @@ namespace Dodo
 			using (var userLock = new ResourceLock(newAdmin))
 			{
 				newAdmin = userLock.Value as User;
-				newAdmin.TokenCollection.AddOrUpdate(newAdmin, new UserAddedAsAdminToken(this, newPass, newAdmin.AuthData.PublicKey));
+				newAdmin.TokenCollection.AddOrUpdate(newAdmin, new UserAddedAsAdminToken(this.CreateRef<IAdministratedResource>(), newPass, newAdmin.AuthData.PublicKey, newAdmin));
 				ResourceUtility.GetManager<User>().Update(newAdmin, userLock);
 			}
 			return true;

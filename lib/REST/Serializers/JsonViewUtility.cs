@@ -464,6 +464,20 @@ namespace Resources
 					}
 				}
 				targetMember.SetValue(targetObject, valueToSet);
+				var onPatch = targetMember.GetCustomAttribute<PatchCallbackAttribute>();
+				if(onPatch != null)
+				{
+					try
+					{
+						var method = targetMember.DeclaringType.GetMethod(onPatch.MethodName);
+						method.Invoke(targetObject, new[] { requester, passphrase, value, valueToSet });
+					}
+					catch (Exception e)
+					{
+						Logger.Exception(e, $"Patch callback failed");
+						throw e;
+					}
+				}
 			}
 			if (targetObject is IVerifiable verifiable && !verifiable.Verify(out error))
 			{

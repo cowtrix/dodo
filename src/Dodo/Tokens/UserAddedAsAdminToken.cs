@@ -1,4 +1,6 @@
+using Common.Extensions;
 using Common.Security;
+using Dodo.Utility;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
@@ -21,19 +23,29 @@ namespace Dodo.Users.Tokens
 
 		public UserAddedAsAdminToken() { }
 
-		public UserAddedAsAdminToken(ResourceReference<IAdministratedResource> resource) : base()
+		public UserAddedAsAdminToken(ResourceReference<IAdministratedResource> resource, User newAdmin)
 		{
 			Resource = resource;
-			m_notification = new Notification(Guid, resource.Name, $"You have been added as an Administrator to {Resource.Name}", null, ENotificationType.Alert, GetVisibility());
+			if(m_notification == null)
+			{
+				var subj = $"You have been added as an Administrator to {Resource.Name}";
+				var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{resource.Type}/{resource.Slug}";
+				m_notification = new Notification(Guid, resource.Name, subj, url, ENotificationType.Alert, GetVisibility());
+				
+				var txt = $"You're receiving this email because you are registered with an account at {Dodo.DodoApp.NetConfig.FullURI}\n\n" +
+					$"You have been added as an administrator of the {resource.Type} \"{Resource.Name}\". You can view this [here.]({url}) " +
+					$"You can view the Adminstrator Panel [here.]({Dodo.DodoApp.NetConfig.FullURI}/edit/{resource.Type}/{resource.Slug})";
+
+				EmailUtility.SendEmail(newAdmin.PersonalData.Email, newAdmin.Name, $"[{Dodo.DodoApp.PRODUCT_NAME}]: {subj}",
+					StringExtensions.StripMDLinks(txt), StringExtensions.TextToHtml(txt));
+			}			
 		}
 
-		public UserAddedAsAdminToken(IAdministratedResource resource) : this(resource.CreateRef()) { }
+		public UserAddedAsAdminToken(IAdministratedResource resource, User newAdmin) : this(resource.CreateRef(), newAdmin) { }
 
-		public UserAddedAsAdminToken(IAdministratedResource resource, Passphrase temporaryPassword, string publicKey) : base()
+		public UserAddedAsAdminToken(ResourceReference<IAdministratedResource> resource, Passphrase temporaryPassword, string publicKey, User newAdmin) : this(resource, newAdmin)
 		{
-			Resource = resource.CreateRef();
 			Token = AsymmetricSecurity.Encrypt(temporaryPassword.Value, publicKey);
-			m_notification = new Notification(Guid, resource.Name, $"You have been added as an Administrator to {Resource.Name}", null, ENotificationType.Alert, GetVisibility());
 		}
 
 		protected override bool OnExecuted(AccessContext context)
@@ -56,7 +68,7 @@ namespace Dodo.Users.Tokens
 			{
 				// Reset token so the new user can decrypt it
 				var user = rscLocker.Value as User;
-				user.TokenCollection.AddOrUpdate(user, new UserAddedAsAdminToken(Resource));
+				user.TokenCollection.AddOrUpdate(user, new UserAddedAsAdminToken(Resource, user));
 				ResourceUtility.GetManager<User>().Update(user, rscLocker);
 			}
 			return true;

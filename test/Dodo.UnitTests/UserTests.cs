@@ -1,4 +1,5 @@
 using Common.Extensions;
+using Dodo;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Users;
@@ -24,7 +25,8 @@ namespace UnitTests
 			using (var rscLock = new ResourceLock(user))
 			{
 				user.TokenCollection.AddOrUpdate(user, new ResourceCreationToken(typeof(Rebellion)));
-				user.TokenCollection.AddOrUpdate(user, new UserAddedAsAdminToken(CreateObject<WorkingGroup>(), new Passphrase("1234"), user.AuthData.PublicKey));
+				user.TokenCollection.AddOrUpdate(user, new UserAddedAsAdminToken(CreateObject<WorkingGroup>().CreateRef<IAdministratedResource>(), 
+					new Passphrase("1234"), user.AuthData.PublicKey, user));
 				user.TokenCollection.AddOrUpdate(user, new ResetPasswordToken(user));
 				user.TokenCollection.AddOrUpdate(user, new TemporaryUserToken(new Passphrase("1234"), "1234"));
 				user.TokenCollection.AddOrUpdate(user, new SessionToken(user, "1234", new Passphrase("1234"), new System.Net.IPAddress(0)));

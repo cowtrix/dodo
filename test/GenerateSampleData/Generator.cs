@@ -29,7 +29,7 @@ namespace GenerateSampleData
 
 		static string[] m_cities = new[]
 		{
-			"London", "Paris", "Rome", "Denver", "New York", "Los Angeles", "San Francisco", "Vancouver", "Amsterdam", "Sydney"
+			"London", //"Paris", "Rome", "Denver", "New York", "Los Angeles", "San Francisco", "Vancouver", "Amsterdam", "Sydney"
 		};
 
 		static async Task Main(string[] args)

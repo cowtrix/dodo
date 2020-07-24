@@ -297,16 +297,18 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		return req;
 	}
 
-	private IRequestResult SendEmailVerification(AccessContext context)
+	public static IRequestResult SendEmailVerification(AccessContext context)
 	{
 		if(context.User.PersonalData.EmailConfirmed)
 		{
 			return new OkRequestResult("User has already confirmed email");
 		}
-		var token = context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, context.User);
+		using var rscLock = new ResourceLock(context.User);
+		var user = rscLock.Value as User;
+		var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, context.User);
 		if (token == null)
 		{
-			return ResourceRequestError.BadRequest();
+			token = user.TokenCollection.AddOrUpdate(context.User, new VerifyEmailToken()) as VerifyEmailToken;
 		}
 		if(token.ConfirmationEmailRequestCount >= VerifyEmailToken.MAX_REQUEST_COUNT)
 		{
@@ -314,8 +316,6 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		EmailUtility.SendEmailVerificationEmail(context.User.PersonalData.Email, context.User.Name,
 			$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}");
-		using var rscLock = new ResourceLock(context.User);
-		var user = rscLock.Value as User;
 		token.ConfirmationEmailRequestCount++;
 		user.TokenCollection.AddOrUpdate(user, token);
 		ResourceManager.Update(user, rscLock);

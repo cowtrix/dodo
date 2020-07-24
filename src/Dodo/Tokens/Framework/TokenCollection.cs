@@ -30,7 +30,7 @@ namespace Dodo.Users.Tokens
 		private List<TokenEntry> m_tokens = new List<TokenEntry>();
 		[BsonIgnore]
 		public int Count => m_tokens.Count;
-		public void AddOrUpdate(ITokenResource parent, IToken token)
+		public IToken AddOrUpdate(ITokenResource parent, IToken token)
 		{
 			if(token == null)
 			{
@@ -65,6 +65,7 @@ namespace Dodo.Users.Tokens
 			{
 				entry.SetData(parent, token);
 			}
+			return token;
 		}
 
 		public bool RemoveAllOfType<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) 

@@ -26,7 +26,8 @@ namespace Resources
 
 		public override void OnActionExecuting(ActionExecutingContext actionContext)
 		{
-			ViewData["Timezone"] = Context.User != null ? Context.User.PersonalData.Timezone : TimeZoneInfo.Utc;
+			ViewData["Timezone"] = Context.User != null && !string.IsNullOrEmpty(Context.User.PersonalData.TimezoneID) 
+				? TimeZoneConverter.TZConvert.GetTimeZoneInfo(Context.User.PersonalData.TimezoneID) : TimeZoneInfo.Utc;
 			ViewData["Context"] = Context;
 			if (Context.User != null)
 			{
