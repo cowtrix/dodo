@@ -16,7 +16,46 @@
 			<div class="card-body">
 				<form asp-action="Create">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-									<div class="form-group">
+					@{
+	Resources.IRESTResource rsc = null;
+	if (System.Guid.TryParse(Model.ParentID, out System.Guid guid))
+	{
+		rsc = Resources.ResourceUtility.GetResourceByGuid(guid);
+	}
+	else
+	{
+		rsc = Resources.ResourceUtility.GetResourceBySlug(Model.ParentID);
+	}
+	var rscColor = @Dodo.APIController.GetDisplayColor(rsc.GetType());
+	var url = $"{rsc.GetType().Name}/{rsc.Slug}";
+}
+
+	<div class="card">
+		<div class="card-body">
+			<label class="control-label">Parent</label>
+			<input class="sr-only" asp-for="ParentID" />
+			<div class="row">
+				<div class="col">
+					<strong>
+						@rsc.Name
+					</strong>
+				</div>
+				<div class="col-auto">
+					<a class="btn btn-light" style="background-color:#@rscColor" role="button" href="~/@url">
+						<i class="fa fa-eye"></i>
+					</a>
+				</div>
+				<div class="col-auto">
+					<a class="btn btn-light" style="background-color:#@rscColor" role="button" href="~/edit/@url">
+						<i class="fa fa-edit">
+						</i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+				<div class="form-group">
 					<label asp-for="Name" class="control-label"></label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
@@ -39,7 +78,6 @@
 						To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 					</small>
 				</div>
-					<input asp-for="Parent" class="sr-only"></input>
 <script>
 	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
 	var coordinates = document.getElementById('coordinates');

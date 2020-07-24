@@ -61,7 +61,7 @@ namespace Dodo.Controllers.Edit
 				{
 					return BadRequest($"No parent resource found with ID {parent}");
 				}
-				owned.Parent = rsc.Guid.ToString();
+				owned.ParentID = rsc.Guid.ToString();
 				ViewData["Parent"] = rsc.Guid;
 			}
 			return View(schema);

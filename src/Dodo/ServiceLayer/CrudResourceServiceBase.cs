@@ -124,7 +124,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		{
 			return ResourceRequestError.BadRequest("This resource type does not support notifications");
 		}
-		var request = await Get(id);
+		var request = VerifyRequest(id, EHTTPRequestType.GET, INotificationResource.ACTION_NOTIFICATION);
 		if (!request.IsSuccess)
 		{
 			return request;

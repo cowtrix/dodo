@@ -46,6 +46,7 @@ namespace DodoServer
 
 			// ICorsService and ICorsPolicyProvider are added by AddControllers... but best to be explicit in case this changes
 			services.AddCors();
+			services.AddRouting(options => options.LowercaseUrls = true);
 			services.AddControllersWithViews().AddJsonOptions(opts =>
 			{
 				opts.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());

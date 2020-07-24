@@ -41,10 +41,13 @@ $(function () {
 			<div class="card-body">
 				<form asp-action="Edit">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-									@{ var rscColor = @Dodo.APIController.GetDisplayColor(Model.Parent.GetRefType()); }
-				<div class="navbar navbar-expand-lg navbar-dark" style="width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;">
-				<a class="navbar-brand" href="https://localhost:5001/@Model.Parent.GetRefType().Name/@Model.Parent.Slug">Part of the @Model.Parent.Name</a>
-				</div>
+										<label class="control-label">Parent</label>
+					<input class="sr-only" asp-for="Parent.Type"/>
+					<div class="row">
+					<div class="col"><strong>@Model.Parent.Name</strong></div>
+					<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Parent.GetRefType())" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i></a></div>
+					<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Parent.GetRefType())" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i></a></div>
+					</div>
 				<div class="form-check">
 					<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
 					<label asp-for="IsPublished" class="form-check-label"></label>

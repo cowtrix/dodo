@@ -9,22 +9,23 @@ namespace Dodo
 {
 	public abstract class OwnedResourceSchemaBase : DescribedResourceSchemaBase
 	{
-		[View(EPermissionLevel.PUBLIC, customDrawer:"null")]
-		public string Parent { get; set; }
+		[Name("Parent")]
+		[View(EPermissionLevel.PUBLIC, customDrawer:"parentRefString", priority:-1)]
+		public string ParentID { get; set; }
 
-		public IRESTResource GetParent()
+		public IRESTResource GetParent()	
 		{
-			if(Guid.TryParse(Parent, out var guid))
+			if(Guid.TryParse(ParentID, out var guid))
 			{
 				return ResourceUtility.GetResourceByGuid(guid);
 			}
-			return ResourceUtility.GetResourceBySlug(Parent);
+			return ResourceUtility.GetResourceBySlug(ParentID);
 		}
 
 		public OwnedResourceSchemaBase(string name, string publicDescription, string parent)
 			: base(name, publicDescription)
 		{
-			Parent = parent;
+			ParentID = parent;
 		}
 
 		public OwnedResourceSchemaBase() : base() { }

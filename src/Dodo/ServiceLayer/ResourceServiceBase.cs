@@ -1,4 +1,5 @@
 using Dodo;
+using Dodo.Analytics;
 using Dodo.Users;
 using Microsoft.AspNetCore.Http;
 using Resources;
@@ -49,6 +50,10 @@ public class ResourceServiceBase<T, TSchema>
 		{
 			return ResourceRequestError.NotFoundRequest();
 		}
+		if(actionName == null && type == EHTTPRequestType.GET)
+		{
+			Analytics.RegisterView(Context, target);
+		}		
 		if (!Context.Challenge())
 		{
 			return ResourceRequestError.ForbidRequest();

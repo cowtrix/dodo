@@ -19,7 +19,7 @@ namespace Groups
 			var baseWg = CreateObject<WorkingGroup>(creatorContext, SchemaGenerator.GetRandomSchema<WorkingGroup>(creatorContext));
 
 			var subWgSchema = SchemaGenerator.GetRandomSchema<WorkingGroup>(creatorContext) as WorkingGroupSchema;
-			subWgSchema.Parent = baseWg.Guid.ToString();
+			subWgSchema.ParentID = baseWg.Guid.ToString();
 			var subWg = CreateObject<WorkingGroup>(creatorContext, subWgSchema);
 			Assert.IsTrue((subWg.Parent.GetValue() as WorkingGroup).WorkingGroups.Any(g => g.Guid == subWg.Guid),
 				"Working Group was not included in Rebellion list after creation");

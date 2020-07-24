@@ -1,0 +1,38 @@
+@{
+	Resources.IRESTResource rsc = null;
+	if (System.Guid.TryParse(Model.{MEMBER}, out System.Guid guid))
+	{
+		rsc = Resources.ResourceUtility.GetResourceByGuid(guid);
+	}
+	else
+	{
+		rsc = Resources.ResourceUtility.GetResourceBySlug(Model.{MEMBER});
+	}
+	var rscColor = @Dodo.APIController.GetDisplayColor(rsc.GetType());
+	var url = $"{rsc.GetType().Name}/{rsc.Slug}";
+}
+
+	<div class="card">
+		<div class="card-body">
+			<label class="control-label">{NAME}</label>
+			<input class="sr-only" asp-for="{MEMBER}" />
+			<div class="row">
+				<div class="col">
+					<strong>
+						@rsc.Name
+					</strong>
+				</div>
+				<div class="col-auto">
+					<a class="btn btn-light" style="background-color:#@rscColor" role="button" href="~/@url">
+						<i class="fa fa-eye"></i>
+					</a>
+				</div>
+				<div class="col-auto">
+					<a class="btn btn-light" style="background-color:#@rscColor" role="button" href="~/edit/@url">
+						<i class="fa fa-edit">
+						</i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>

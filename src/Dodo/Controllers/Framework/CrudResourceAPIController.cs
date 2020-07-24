@@ -68,7 +68,8 @@ namespace Resources
 		[HttpGet("{id}")]
 		public virtual async Task<IActionResult> Get(string id)
 		{
-			return (await PublicService.Get(id)).ActionResult;
+			var result = await PublicService.Get(id);
+			return result.ActionResult;
 		}
 
 		[HttpGet("notifications/{id}")]

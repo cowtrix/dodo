@@ -35,10 +35,18 @@ namespace DodoAOT
 
 		private static Dictionary<string, CustomDrawerCallback> m_customExcplicitCallback = new Dictionary<string, CustomDrawerCallback>()
 		{
-			{ "parentRef", ParentRefDisplay },
+			{ "parentRef", RefView },
+			{ "parentRefString", ParentRefFromStringDisplay },
 			{ "markdown", MarkdownEditor },
 			{ "null", Null }
 		};
+
+		private static IEnumerable<string> ParentRefFromStringDisplay(string prefix, MemberInfo member, int indentLevel)
+		{
+			var template = Template("ParentRefStr");
+			yield return template.Replace("{NAME}", member.GetName())
+				.Replace("{MEMBER}", $"{prefix}{member.Name}");
+		}
 
 		private static IEnumerable<string> ListView(string prefix, MemberInfo member, int indentLevel)
 		{
@@ -86,13 +94,11 @@ namespace DodoAOT
 
 		private static IEnumerable<string> ParentRefDisplay(string prefix, MemberInfo member, int indentLevel)
 		{
-			var memberType = member.GetMemberType();
-			var memberName = member.Name;
-			var refType = memberType.GetGenericArguments().First();
-			yield return Indent(indentLevel) + $"@{{ var rscColor = @Dodo.APIController.GetDisplayColor(Model.{prefix}{memberName}.GetRefType()); }}";
-			yield return Indent(indentLevel) + $"<div class=\"navbar navbar-expand-lg navbar-dark\" style=\"width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;\">";
-			yield return Indent(indentLevel) + $"<a class=\"navbar-brand\" href=\"{Dodo.DodoApp.NetConfig.FullURI}/@Model.{prefix}{memberName}.GetRefType().Name/@Model.{prefix}{memberName}.Slug\">Part of the @Model.{prefix}{memberName}.Name</a>";
-			yield return Indent(indentLevel) + $"</div>";
+			var refType = member.GetMemberType().GetGenericArguments().First();
+			var template = Template("ParentRef");
+			yield return template.Replace("{NAME}", member.GetName())
+				.Replace("{MEMBER}", $"{prefix}{member.Name}")
+				.Replace("{TYPE}", $"{refType.Namespace}.{refType.Name}");
 		}
 
 		private static IEnumerable<string> Null(string prefix, MemberInfo member, int indentLevel)

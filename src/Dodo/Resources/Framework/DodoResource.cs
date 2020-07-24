@@ -19,7 +19,7 @@ namespace Dodo
 				var group = ownedSchema.GetParent();
 				if (group == null)
 				{
-					throw new Exception($"Invalid parent group ID in construction: {ownedSchema.Parent}");
+					throw new Exception($"Invalid parent group ID in construction: {ownedSchema.ParentID}");
 				}
 				owned.Parent = group.CreateRef<IRESTResource>();
 			}
