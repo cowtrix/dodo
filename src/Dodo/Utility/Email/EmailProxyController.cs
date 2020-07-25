@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System;
 using System.Text;
 using Dodo.Users;
+using StrongGrid.Models.Webhooks;
+using Common.Config;
 
 namespace Dodo.Utility
 {
@@ -46,7 +48,18 @@ namespace Dodo.Utility
 					.Replace(inboundEmail.From.Email, "anonymous");
 				var html = inboundEmail.Html.Replace(target, "anonymous")
 					.Replace(inboundEmail.From.Email, "anonymous");
-				var proxy = EmailProxy.GetProxyFromKey(inboundEmail.From.Email, target);
+
+				EmailProxy.ProxyInformation proxy = null;
+				try
+				{
+					proxy = EmailProxy.GetProxyFromKey(inboundEmail.From.Email, target);
+				}
+				catch (Exception e)
+				{
+					Logger.Warning($"New untargeted email: {inboundEmail.From.Email}");
+					SaveEmail(inboundEmail);
+					continue;
+				}
 				if (proxy == null)
 				{
 					Logger.Warning($"Couldn't resolve {target}");
@@ -59,17 +72,28 @@ namespace Dodo.Utility
 					// forward local emails to username
 					var username = remoteEmail.Substring(0, remoteEmail.Length - hostname.Length);
 					var user = ResourceUtility.GetManager<User>().GetSingle(u => u.Slug == username);
-					if(user == null)
+					if (user == null)
 					{
 						Logger.Error($"Unable to resolve username proxy {username}");
 						continue;
 					}
 					remoteEmail = user.PersonalData.Email;
 				}
-				EmailUtility.SendEmail(remoteEmail, Dodo.DodoApp.PRODUCT_NAME, proxy.ProxyEmail, Dodo.DodoApp.PRODUCT_NAME, 
+				EmailUtility.SendEmail(remoteEmail, Dodo.DodoApp.PRODUCT_NAME, proxy.ProxyEmail, Dodo.DodoApp.PRODUCT_NAME,
 					inboundEmail.Subject, text, html);
+
 			}
 			return Ok();
+		}
+
+		private void SaveEmail(InboundEmail inboundEmail)
+		{
+			var savePath = Path.GetFullPath(ConfigManager.GetValue("EmailSavePath", ".\\email\\"));
+			if (!Directory.Exists(savePath))
+			{
+				Directory.CreateDirectory(savePath);
+			}
+			System.IO.File.WriteAllText(Path.Combine(savePath, $"{inboundEmail.From.Email}-{DateTime.Now.Ticks}.txt"), inboundEmail.RawEmail);
 		}
 	}
 }
