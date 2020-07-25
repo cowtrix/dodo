@@ -11,6 +11,7 @@ using System.Text;
 using Dodo.Users;
 using StrongGrid.Models.Webhooks;
 using Common.Config;
+using Newtonsoft.Json;
 
 namespace Dodo.Utility
 {
@@ -93,7 +94,8 @@ namespace Dodo.Utility
 			{
 				Directory.CreateDirectory(savePath);
 			}
-			System.IO.File.WriteAllText(Path.Combine(savePath, $"{inboundEmail.From.Email}-{DateTime.Now.Ticks}.txt"), inboundEmail.RawEmail);
+			System.IO.File.WriteAllText(Path.Combine(savePath, $"{inboundEmail.From.Email}-{DateTime.Now.Ticks}.txt"), 
+				JsonConvert.SerializeObject(inboundEmail, Formatting.Indented));
 		}
 	}
 }
