@@ -13,6 +13,8 @@ namespace Dodo.LocationResources
 
 		public Event(AccessContext context, EventSchema schema) : base(context, schema)
 		{
+			StartDate = schema.StartDate;
+			EndDate = schema.EndDate;
 		}
 
 		[View(EPermissionLevel.PUBLIC)]
