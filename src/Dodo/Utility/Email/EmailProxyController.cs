@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using System.Text;
+using Dodo.Users;
 
 namespace Dodo.Utility
 {
@@ -51,7 +52,22 @@ namespace Dodo.Utility
 					Logger.Warning($"Couldn't resolve {target}");
 					continue;
 				}
-				EmailUtility.SendEmail(proxy.RemoteEmail, "", proxy.ProxyEmail, "", inboundEmail.Subject, text, html);
+				var remoteEmail = proxy.RemoteEmail;
+				var hostname = Dodo.DodoApp.NetConfig.GetHostname();
+				if (proxy.RemoteEmail.EndsWith(hostname))
+				{
+					// forward local emails to username
+					var username = remoteEmail.Substring(0, remoteEmail.Length - hostname.Length);
+					var user = ResourceUtility.GetManager<User>().GetSingle(u => u.Slug == username);
+					if(user == null)
+					{
+						Logger.Error($"Unable to resolve username proxy {username}");
+						continue;
+					}
+					remoteEmail = user.PersonalData.Email;
+				}
+				EmailUtility.SendEmail(remoteEmail, Dodo.DodoApp.PRODUCT_NAME, proxy.ProxyEmail, Dodo.DodoApp.PRODUCT_NAME, 
+					inboundEmail.Subject, text, html);
 			}
 			return Ok();
 		}

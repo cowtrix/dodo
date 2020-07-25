@@ -1,6 +1,7 @@
 using Common;
 using Common.Extensions;
 using Common.Security;
+using Dodo.Users;
 using Resources;
 using Resources.Security;
 using System;
@@ -13,7 +14,7 @@ namespace Dodo.Utility
 	/// </summary>
 	public static class EmailProxy
 	{
-		const int SaltSize = 16;
+		const int ProxyNameLength = 32;
 
 		public class ProxyInformation : IVerifiable
 		{
@@ -69,10 +70,18 @@ namespace Dodo.Utility
 
 		private static ProxyInformation GenerateNewProxy(string email)
 		{
+			var userManager = ResourceUtility.GetManager<User>();
 			ProxyInformation proxy;
 			do
 			{
-				var proxyEmail = $"{KeyGenerator.GetUniqueKey(SaltSize).ToLowerInvariant()}@{Dodo.DodoApp.NetConfig.GetHostname()}";
+				// Generate a random proxy name and make sure (unlikely) that its not a username
+				string proxyName;
+				do
+				{
+					proxyName = KeyGenerator.GetUniqueKey(ProxyNameLength).ToLowerInvariant();
+				}
+				while (userManager.GetSingle(u => u.Slug == proxyName) != null);
+				var proxyEmail = $"{proxyName}@{Dodo.DodoApp.NetConfig.GetHostname()}";
 				proxy = new ProxyInformation(email, proxyEmail);
 			} 
 			while (m_proxy.ContainsKey(proxy.GetKey()));
