@@ -29,7 +29,7 @@ namespace GenerateSampleData
 
 		static string[] m_cities = new[]
 		{
-			"London", //"Paris", "Rome", "Denver", "New York", "Los Angeles", "San Francisco", "Vancouver", "Amsterdam", "Sydney"
+			"London", "Paris", "Rome", "Denver", "New York", "Los Angeles", "San Francisco", "Vancouver", "Amsterdam", "Sydney"
 		};
 
 		static async Task Main(string[] args)
@@ -58,11 +58,11 @@ namespace GenerateSampleData
 			var location = await LocationManager.GetLocation(city);
 
 			// Make local groups
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema(city, SchemaGenerator.SampleDescription, location), seed: false);
+			/*TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema(city, SchemaGenerator.SampleDescription, location), seed: false);
 			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - .1)), seed: false);
 			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + .1)), seed: false);
 			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)), seed: false);
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)), seed: false);*/
 
 			var rnd = new Random();
 			var rootDate = DateTime.Today + TimeSpan.FromDays(rnd.Next(365));
