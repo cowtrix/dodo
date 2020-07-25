@@ -27,14 +27,14 @@ namespace Dodo
 		/// <summary>
 		/// This is a MarkDown formatted, public facing description of this resource
 		/// </summary>
-		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint:IDescribedResource.MARKDOWN_INPUT_HINT)]
 		[Name("Public Description")]
 		[Resources.MaxStringLength]
 		[ViewDrawer("html")]
 		public string PublicDescription { get; set; }
 
 		[Name("Published")]
-		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
+		[View(EPermissionLevel.ADMIN, customDrawer:"published", priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
 		[BsonElement]

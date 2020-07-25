@@ -1,5 +1,9 @@
 @{
 	Resources.IRESTResource rsc = null;
+	if (string.IsNullOrEmpty(Model.{MEMBER}))
+	{
+		Model.{MEMBER} = ViewContext.HttpContext.Request.Query["parent"];
+	}
 	if (System.Guid.TryParse(Model.{MEMBER}, out System.Guid guid))
 	{
 		rsc = Resources.ResourceUtility.GetResourceByGuid(guid);
@@ -8,10 +12,10 @@
 	{
 		rsc = Resources.ResourceUtility.GetResourceBySlug(Model.{MEMBER});
 	}
-	var rscColor = @Dodo.APIController.GetDisplayColor(rsc.GetType());
-	var url = $"{rsc.GetType().Name}/{rsc.Slug}";
-}
-
+	if (rsc != null)
+	{
+		var rscColor = @Dodo.APIController.GetDisplayColor(rsc.GetType());
+		var url = $"{Common.Extensions.StringExtensions.ToCamelCase(rsc.GetType().Name)}/{rsc.Slug}";
 	<div class="card">
 		<div class="card-body">
 			<label class="control-label">{NAME}</label>
@@ -36,3 +40,5 @@
 			</div>
 		</div>
 	</div>
+	}
+}

@@ -78,7 +78,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var props = new AuthenticationProperties
 		{
 			IsPersistent = true,
-			ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(1))
+			ExpiresUtc = DateTimeOffset.UtcNow.Add(login.RememberMe ? TimeSpan.FromHours(1) : TimeSpan.FromDays(1))
 		};
 		// issue authentication cookie with subject ID and username
 		await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);

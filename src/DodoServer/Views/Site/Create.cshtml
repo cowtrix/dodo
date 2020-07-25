@@ -18,6 +18,10 @@
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 					@{
 	Resources.IRESTResource rsc = null;
+	if (string.IsNullOrEmpty(Model.ParentID))
+	{
+		Model.ParentID = ViewContext.HttpContext.Request.Query["parent"];
+	}
 	if (System.Guid.TryParse(Model.ParentID, out System.Guid guid))
 	{
 		rsc = Resources.ResourceUtility.GetResourceByGuid(guid);
@@ -26,10 +30,10 @@
 	{
 		rsc = Resources.ResourceUtility.GetResourceBySlug(Model.ParentID);
 	}
-	var rscColor = @Dodo.APIController.GetDisplayColor(rsc.GetType());
-	var url = $"{rsc.GetType().Name}/{rsc.Slug}";
-}
-
+	if (rsc != null)
+	{
+		var rscColor = @Dodo.APIController.GetDisplayColor(rsc.GetType());
+		var url = $"{Common.Extensions.StringExtensions.ToCamelCase(rsc.GetType().Name)}/{rsc.Slug}";
 	<div class="card">
 		<div class="card-body">
 			<label class="control-label">Parent</label>
@@ -54,9 +58,11 @@
 			</div>
 		</div>
 	</div>
+	}
+}
 
 				<div class="form-group">
-					<label asp-for="Name" class="control-label"></label>
+					<label class="control-label">Name</label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
 					<small id="helpBlock" class="form-text text-muted">
@@ -72,10 +78,10 @@
 					</small>
 				</div>
 				<div class="form-group">
-				<label asp-for="PublicDescription" class="control-label"></label>
+				<label class="control-label">Public Description</label>
 				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
 					<small id="helpBlock" class="form-text text-muted">
-						To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 					</small>
 				</div>
 <script>

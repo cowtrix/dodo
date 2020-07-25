@@ -19,6 +19,15 @@ namespace Resources
 
 	public interface IDescribedResource : IRESTResource
 	{
+		public const string MARKDOWN_INPUT_HINT = 
+			"<script>" +
+				"$('form :input').change(function(){" +
+					"var v = 2048 - $(\"#PublicDescription\").val().length;" +
+					"$('#descriptionLength').text(v + ' characters remaining. ')" +
+				"});" +
+			"</script>" +
+			"<p id=\"descriptionLength\"></p>" +
+			"To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href=\"www.example.com\">My link text</a>";
 		public const int SHORT_DESC_LENGTH = 256;
 		string PublicDescription { get; }
 	}
@@ -68,7 +77,7 @@ namespace Resources
 			return ResourceUtility.GetResourceByGuid<T>(Guid);
 		}
 
-		public T2 GetValue<T2>() where T2: class, T
+		public T2 GetValue<T2>() where T2 : class, T
 		{
 			return GetValue() as T2;
 		}
@@ -85,7 +94,7 @@ namespace Resources
 			Name = resource?.Name;
 			Location = resource is ILocationalResource loc ? loc.Location : null;
 			FullyQualifiedName = resource?.GetType().AssemblyQualifiedName;
-			if(resource is IOwnedResource owned)
+			if (resource is IOwnedResource owned)
 			{
 				if (owned.Parent.Guid == default)
 				{
@@ -97,7 +106,7 @@ namespace Resources
 			{
 				Parent = default;
 			}
-			if(resource is IDescribedResource desc)
+			if (resource is IDescribedResource desc)
 			{
 				PublicDescription = StringExtensions.StripMDLinks(desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH)));
 			}
@@ -109,7 +118,7 @@ namespace Resources
 
 		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location, Guid parent, string desc)
 		{
-			if(type == null && !string.IsNullOrEmpty(name))
+			if (type == null && !string.IsNullOrEmpty(name))
 			{
 				throw new Exception("Failed to deserialize type");
 			}

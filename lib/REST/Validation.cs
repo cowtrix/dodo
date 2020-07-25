@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Resources
 {
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-	public abstract class CustomValidator : ValidationAttribute, IVerifiableMember
+	public abstract class CustomValidatorAttribute : ValidationAttribute, IVerifiableMember
 	{
 		public abstract bool Verify(object value, out string validationError);
 
@@ -17,7 +17,7 @@ namespace Resources
 		}
 	}
 
-	public class SlugAttribute : CustomValidator
+	public class SlugAttribute : CustomValidatorAttribute
 	{
 		public override bool Verify(object value, out string validationError)
 		{
@@ -30,7 +30,7 @@ namespace Resources
 		}
 	}
 
-	public class EmailAttribute : CustomValidator
+	public class EmailAttribute : CustomValidatorAttribute
 	{
 		public override bool Verify(object value, out string validationError)
 		{
@@ -39,7 +39,7 @@ namespace Resources
 		}
 	}
 
-	public class VerifyObjectAttribute : CustomValidator
+	public class VerifyObjectAttribute : CustomValidatorAttribute
 	{
 		public override bool Verify(object value, out string validationError)
 		{
@@ -57,7 +57,7 @@ namespace Resources
 		}
 	}
 
-	public class UserFriendlyNameAttribute : CustomValidator
+	public class UserFriendlyNameAttribute : CustomValidatorAttribute
 	{
 		public override bool Verify(object value, out string validationError)
 		{
@@ -70,7 +70,7 @@ namespace Resources
 		}
 	}
 
-	public class MaxStringLengthAttribute : CustomValidator
+	public class MaxStringLengthAttribute : CustomValidatorAttribute
 	{
 		private readonly int m_maxLength;
 
@@ -97,7 +97,7 @@ namespace Resources
 		}
 	}
 
-	public class PasswordAttribute : CustomValidator
+	public class PasswordAttribute : CustomValidatorAttribute
 	{
 		public override bool Verify(object value, out string validationError)
 		{

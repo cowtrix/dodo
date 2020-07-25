@@ -18,6 +18,12 @@ namespace Dodo
 			{
 				return d.Substring(4);
 			}
+#if DEBUG
+			if(d == "localhost")
+			{
+				d = $"{Dodo.DodoApp.PRODUCT_NAME}.com";
+			}
+#endif
 			return d;
 		}
 		public int SSLPort;

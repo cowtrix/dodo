@@ -14,9 +14,9 @@ namespace Dodo.Roles
 		[MaxStringLength]
 		[Name("Applicant Question")]
 		public string ApplicantQuestion { get; set; }
-		[View(EPermissionLevel.USER)]
-		[Email]
+		[View(EPermissionLevel.USER, inputHint:Role.ContactEmailHint)]
 		[Name("Contact Email")]
+		[EmailUsernameList]
 		public string ContactEmail { get; set; }
 
 		public RoleSchema() { }

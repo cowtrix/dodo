@@ -38,8 +38,14 @@ namespace DodoAOT
 			{ "parentRef", RefView },
 			{ "parentRefString", ParentRefFromStringDisplay },
 			{ "markdown", MarkdownEditor },
-			{ "null", Null }
+			{ "null", Null },
+			{ "published", Published },
 		};
+
+		private static IEnumerable<string> Published(string prefix, MemberInfo member, int indentLevel)
+		{
+			yield return Template("Published").Replace("{MEMBER}", $"{prefix}{member.Name}");
+		}
 
 		private static IEnumerable<string> ParentRefFromStringDisplay(string prefix, MemberInfo member, int indentLevel)
 		{
@@ -83,12 +89,16 @@ namespace DodoAOT
 			/*var txt = Template("MarkdownEditor");
 			txt = txt.Replace("{NAME}", $"{prefix}{member.Name}");
 			yield return txt;*/
+			var view = member.GetCustomAttribute<ViewAttribute>();
 			yield return Indent(indentLevel) + "<div class=\"form-group\">";
-			yield return Indent(indentLevel) + $"<label asp-for=\"{prefix}{member.Name}\" class=\"control-label\"></label>";
+			yield return Indent(indentLevel) + $"<label class=\"control-label\">{member.GetName()}</label>";
 			yield return Indent(indentLevel) + $"<textarea style=\"height:20em;\" asp-for=\"{prefix}{member.Name}\" class=\"form-control\"></textarea>";
-			yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
-			yield return Indent(indentLevel + 2) + "To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href=\"www.example.com\">My link text</a>";
-			yield return Indent(indentLevel + 1) + $"</small>";
+			if(!string.IsNullOrEmpty(view.InputHint))
+			{
+				yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
+				yield return Indent(indentLevel + 2) + view.InputHint;
+				yield return Indent(indentLevel + 1) + $"</small>";
+			}
 			yield return Indent(indentLevel) + "</div>";
 		}
 
@@ -272,7 +282,7 @@ namespace DodoAOT
 					//inputClass = "form-control-plaintext";
 				}
 				yield return Indent(indentLevel) + $"<div class=\"{divClass}\">";
-				var labelLine = Indent(indentLevel + 1) + $"<label asp-for=\"{prefix}{memberName}\" class=\"{labelClass}\"></label>";
+				var labelLine = Indent(indentLevel + 1) + $"<label class=\"{labelClass}\">{member.GetName()}</label>";
 				var inputLine = Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"{inputClass}\"></{inputType}>";
 				if (swapOrder)
 				{
@@ -289,7 +299,7 @@ namespace DodoAOT
 				{
 					yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
 					yield return Indent(indentLevel + 2) + viewAttr.InputHint;
-					if (viewAttr.CustomDrawer == "slugPreview")
+					if (viewAttr.CustomDrawer == "slugPreview")	// TODO move to input hint
 					{
 						yield return Indent(indentLevel + 2) + "<p id=\"slugPreview\"></p>";
 						yield return Indent(indentLevel + 2) + "<script>";

@@ -13,16 +13,58 @@ using Dodo.Utility;
 
 namespace Dodo.Roles
 {
+	public class EmailUsernameListAttribute : CustomValidatorAttribute
+	{
+		public static bool TryGetEmails(string value, out List<string> emails, out string error)
+		{
+			var userManager = ResourceUtility.GetManager<User>();
+			var split = value.Split(new[] { ", ", "," }, StringSplitOptions.RemoveEmptyEntries);
+			emails = new List<string>();
+			foreach (var str in split)
+			{
+				var email = str;
+				if (!ValidationExtensions.EmailIsValid(email))
+				{
+					// try username
+					var user = userManager.GetSingle(u => u.Slug == email);
+					if (user == null)
+					{
+						error = $"Couldn't parse value: {str}";
+						return false;
+					}
+					email = user.PersonalData.Email;
+				}
+				emails.Add(email);
+			}
+			error = null;
+			return true;
+		}
+
+
+		public override bool Verify(object value, out string validationError)
+		{
+			if(!(value is string str))
+			{
+				validationError = "Bad Type";
+				return false;
+			}
+			return TryGetEmails(str, out _, out validationError);
+		}
+	}
+
+
 	[SearchPriority(4)]
 	public class Role : DodoResource, IOwnedResource, IPublicResource
 	{
 		const string METADATA_APPLIED = "applied";
 		public const string ApplicantQuestionHint = "Here you can describe required skills, training and availabilities. All applicants will answer this prompt when applying for this role.";
+		public const string ContactEmailHint = "A list of emails or usernames seperated by commas that will receive applications for this role. " + 
+			"E.g. <code>mysampleemail@yahoo.com, myusername</code>";
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer:"parentRef")]
 		public ResourceReference<IRESTResource> Parent { get; set; }
 
-		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown")]
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint: IDescribedResource.MARKDOWN_INPUT_HINT)]
 		[MaxStringLength]
 		[Name("Public Description")]
 		[ViewDrawer("html")]
@@ -34,11 +76,12 @@ namespace Dodo.Roles
 		public string ApplicantQuestion { get; set; }
 
 		[Name("Published")]
-		[View(EPermissionLevel.ADMIN, priority: -1, inputHint: IPublicResource.PublishInputHint)]
+		[View(EPermissionLevel.ADMIN, customDrawer: "published", priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
 		[Name("Contact Email")]
-		[View(EPermissionLevel.ADMIN, inputHint: "This email will receive all applications for this role.")]
+		[View(EPermissionLevel.ADMIN, inputHint: ContactEmailHint)]
+		[EmailUsernameList]
 		public string ContactEmail { get; set; }
 
 		public SecureUserStore Applications = new SecureUserStore();
@@ -66,13 +109,21 @@ namespace Dodo.Roles
 				return false;
 			}
 			var applicantEmail = context.User.PersonalData.Email;
-			var proxy = EmailProxy.SetProxy(applicantEmail, ContactEmail);
-			var subject = $"You have a new applicant for {Name}: {context.User.Name}";
-			var content = $"{subject}\n\n{ApplicantQuestion}\n\n{application.Content}";
-			EmailUtility.SendEmail(proxy.RemoteEmail, "", 
-				proxy.ProxyEmail, "",
-				$"[{Dodo.DodoApp.PRODUCT_NAME}] {subject}",
-				content, content);
+			if(!EmailUsernameListAttribute.TryGetEmails(ContactEmail, out var emails, out error))
+			{
+				return false;
+			}
+			foreach(var contact in emails)
+			{
+				var proxy = EmailProxy.SetProxy(applicantEmail, contact);
+				var subject = $"You have a new applicant for {Name}: {context.User.Name}";
+				var content = $"{subject}\n\n{ApplicantQuestion}\n\n{application.Content}";
+				EmailUtility.SendEmail(proxy.RemoteEmail, "",
+					proxy.ProxyEmail, "",
+					$"[{Dodo.DodoApp.PRODUCT_NAME}] {subject}",
+					content, content);
+			}
+			
 			Applications.Add(context.User.CreateRef(), context.Passphrase);
 			error = null;
 			return true;

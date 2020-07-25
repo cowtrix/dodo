@@ -2,5 +2,5 @@
 	var rscColor = @Dodo.APIController.GetDisplayColor(Model.{MEMBER}.GetRefType());
 }
 <div class=\" navbar-expand-lg navbar-dark\" style=\"width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;\">";
-<a class=\"navbar-brand\" href=\"{Dodo.DodoApp.NetConfig.FullURI}/@Model.{prefix}{memberName}.GetRefType().Name/@Model.{prefix}{memberName}.Slug\">Part of the @Model.{MEMBER}.Name</a>
+<a class=\"navbar-brand\" href=\"{Dodo.DodoApp.NetConfig.FullURI}/@Common.Extensions.StringExtensions.ToCamelCase(Model.{prefix}{memberName}.GetRefType().Name)/@Model.{prefix}{memberName}.Slug\">Part of the @Model.{MEMBER}.Name</a>
 </div>
