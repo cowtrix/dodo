@@ -24,9 +24,6 @@ namespace Dodo
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 
-		/// <summary>
-		/// This is a MarkDown formatted, public facing description of this resource
-		/// </summary>
 		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint:IDescribedResource.MARKDOWN_INPUT_HINT)]
 		[Name("Public Description")]
 		[Resources.MaxStringLength]
@@ -48,7 +45,7 @@ namespace Dodo
 		}
 
 		#region Group
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, customDrawer:"null")]
 		public int MemberCount { get { return m_members.Count; } }
 
 		public bool IsMember(AccessContext context)

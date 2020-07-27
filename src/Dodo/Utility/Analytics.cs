@@ -28,5 +28,14 @@ namespace Dodo.Analytics
 			}
 			m_views[rsc.Guid] = info;
 		}
+
+		public static AnalyticInfo GetInfo(Guid guid)
+		{
+			if (!m_views.TryGetValue(guid, out var info))
+			{
+				return default;
+			}
+			return info;
+		}
 	}
 }
