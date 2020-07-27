@@ -17,18 +17,19 @@ namespace Dodo.Utility
 
 		static ConfigVariable<string> m_emailFrom = new ConfigVariable<string>("Email_FromEmail", $"noreply@{DodoApp.PRODUCT_NAME}.com");
 		static ConfigVariable<string> m_nameFrom = new ConfigVariable<string>("Email_FromName", $"{DodoApp.PRODUCT_NAME} SysAdmin");
-		static ConfigVariable<string> m_privacyPolicy = new ConfigVariable<string>("PrivacyPolicyURL", "http://www.todo.com/privacypolicy");
 		static ConfigVariable<string> m_sendGridAPIKey = new ConfigVariable<string>("SendGrid_APIKey", "");
 
 		static ConfigVariable<string> m_verifyEmailTemplateGUID = new ConfigVariable<string>($"{nameof(EmailUtility)}_SendGridTemplate_VerifyEmail", "d-abb66e4f174c470abeb5e6a1ecdaac85");
 		static ConfigVariable<string> m_resetPasswordTemplateGUID = new ConfigVariable<string>($"{nameof(EmailUtility)}_SendGridTemplate_ResetPassword", "d-43861bc9e0dd44b29b131da9b10a07d1");
+		static ConfigVariable<string> m_newApplicantTemplateGUID = new ConfigVariable<string>($"{nameof(EmailUtility)}_SendGridTemplate_NewApplicant", "d-582357f020794af095c55d31b4b924a2");
 
 		static StrongGrid.Client m_client;
 
 		static Dictionary<string, string> GetStandardTemplate() => new Dictionary<string, string>()
 		{
 			{ "product_name", DodoApp.PRODUCT_NAME },
-			{ "privacy_policy", m_privacyPolicy.Value }
+			{ "privacy_policy", DodoApp.PrivacyPolicyURL },
+			{ "url", DodoApp.NetConfig.FullURI },
 		};
 
 		static EmailUtility()
@@ -88,6 +89,19 @@ namespace Dodo.Utility
 		public static void SendEmailVerificationEmail(string targetEmail, string targetName, string callback)
 		{
 			SendCallbackEmail(targetEmail, targetName, callback, m_verifyEmailTemplateGUID.Value);
+		}
+
+		public static void SendNewRoleApplicantEmail(string targetEmail, string fromEmail, 
+			string roleUrl, string roleName, string question, string application)
+		{
+			var from = new MailAddress(fromEmail, Dodo.DodoApp.PRODUCT_NAME);
+			var to = new MailAddress(targetEmail, Dodo.DodoApp.PRODUCT_NAME);
+			var dynamicTemplateData = GetStandardTemplate();
+			dynamicTemplateData["role_name"] = roleName;
+			dynamicTemplateData["role_url"] = roleName;
+			dynamicTemplateData["role_question"] = question;
+			dynamicTemplateData["role_application"] = application;
+			SendTemplateEmail(from, to, m_newApplicantTemplateGUID.Value, dynamicTemplateData);
 		}
 
 		private static void SendCallbackEmail(string targetEmail, string targetName, string callback, string template)

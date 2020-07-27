@@ -52,6 +52,10 @@ namespace Resources
 		}
 
 		public abstract Type GetResourceType();
+
+		public virtual void OnView(object requester, Passphrase passphrase)
+		{
+		}
 	}
 
 	/// <summary>

@@ -1,8 +1,6 @@
 using Common;
-using Common.Security;
 using Microsoft.AspNetCore.Mvc;
 using Resources;
-using Resources.Security;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;

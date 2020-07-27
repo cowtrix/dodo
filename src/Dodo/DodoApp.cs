@@ -16,6 +16,7 @@ namespace Dodo
 			[Email]
 			public string Redirect { get; set; }
 		}
+		public static string PrivacyPolicyURL => ConfigManager.GetValue("PrivacyPolicyURL", "http://www.todo.com/privacypolicy");
 		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", $"admin@dodo.ovh");
 		public static EmailRedirect[] EmailRedirects => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_EmailRedirects",
 			new[] {

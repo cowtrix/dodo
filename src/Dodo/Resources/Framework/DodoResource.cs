@@ -52,5 +52,7 @@ namespace Dodo
 				}
 			}
 		}
+
+		public virtual string GetUrl() => $"{Dodo.DodoApp.NetConfig.FullURI}/{GetType().Name}/{Slug}";
 	}
 }

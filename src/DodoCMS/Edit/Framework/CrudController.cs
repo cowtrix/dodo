@@ -64,6 +64,7 @@ namespace Dodo.Controllers.Edit
 				owned.ParentID = rsc.Guid.ToString();
 				ViewData["Parent"] = rsc.Guid;
 			}
+			schema.OnView(Context.User, Context.Passphrase);
 			return View(schema);
 		}
 

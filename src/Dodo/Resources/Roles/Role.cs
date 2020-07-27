@@ -79,10 +79,10 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.ADMIN, customDrawer: "published", priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
-		[Name("Contact Email")]
+		[Name("Contacts")]
 		[View(EPermissionLevel.ADMIN, inputHint: ContactEmailHint)]
 		[EmailUsernameList]
-		public string ContactEmail { get; set; }
+		public string Contacts { get; set; }
 
 		public SecureUserStore Applications = new SecureUserStore();
 
@@ -93,7 +93,7 @@ namespace Dodo.Roles
 			Parent = schema.GetParent().CreateRef();
 			PublicDescription = schema.PublicDescription;
 			ApplicantQuestion = schema.ApplicantQuestion;
-			ContactEmail = schema.ContactEmail;
+			Contacts = schema.Contacts;
 		}
 
 		public bool Apply(AccessContext context, ApplicationModel application, out string error)
@@ -109,19 +109,15 @@ namespace Dodo.Roles
 				return false;
 			}
 			var applicantEmail = context.User.PersonalData.Email;
-			if(!EmailUsernameListAttribute.TryGetEmails(ContactEmail, out var emails, out error))
+			if(!EmailUsernameListAttribute.TryGetEmails(Contacts, out var emails, out error))
 			{
 				return false;
 			}
 			foreach(var contact in emails)
 			{
 				var proxy = EmailProxy.SetProxy(applicantEmail, contact);
-				var subject = $"You have a new applicant for {Name}: {context.User.Name}";
-				var content = $"{subject}\n\n{ApplicantQuestion}\n\n{application.Content}";
-				EmailUtility.SendEmail(proxy.RemoteEmail, "",
-					proxy.ProxyEmail, "",
-					$"[{Dodo.DodoApp.PRODUCT_NAME}] {subject}",
-					content, content);
+				EmailUtility.SendNewRoleApplicantEmail(proxy.RemoteEmail, proxy.ProxyEmail, GetUrl(),
+					Name, ApplicantQuestion, application.Content);
 			}
 			
 			Applications.Add(context.User.CreateRef(), context.Passphrase);
