@@ -11,7 +11,7 @@ export const Header = ({ resource, setCenterMap, resourceColor, hideMap }) =>
 	<div className={styles.header} style={{ backgroundColor: resourceColor }}>
 		<div className={styles.headerLeft}>
 			<Title name={resource.name}/>
-			<Dates startDate={resource.startDate} endDate={resource.endDate} resourceType={resource.metadata.type}/>
+			<Dates startDate={resource.startDate} endDate={resource.endDate} />
 		</div>
 		<div className={styles.headerRight}>
 			<CenterMap setCenterMap={setCenterMap} display={!hideMap} />
