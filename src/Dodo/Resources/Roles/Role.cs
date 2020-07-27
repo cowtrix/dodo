@@ -10,6 +10,7 @@ using Common;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using Dodo.Utility;
+using System.Linq;
 
 namespace Dodo.Roles
 {
@@ -35,6 +36,11 @@ namespace Dodo.Roles
 					email = user.PersonalData.Email;
 				}
 				emails.Add(email);
+			}
+			if(!emails.Any())
+			{
+				error = "Value cannot be empty";
+				return false;
 			}
 			error = null;
 			return true;
