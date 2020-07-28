@@ -25,6 +25,7 @@ export const SearchBar = withRouter((
 			}
 		}}
 		menuIsOpen={false}
+		components={{ IndicatorsContainer: () => null }}
 	/>)
 
 
