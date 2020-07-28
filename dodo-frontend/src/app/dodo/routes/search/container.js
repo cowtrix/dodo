@@ -21,8 +21,10 @@ const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
 	getSearchResults: (searchParams, cb) =>
 		actions.searchGet(dispatch, searchParams, cb),
-	setSearchParams: (searchParams) =>
+	setSearchParams: (searchParams) => {
+		console.log(searchParams)
 		actions.setSearchParams(dispatch, searchParams)
+	}
 })
 
 export const SearchConnected = connect(

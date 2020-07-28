@@ -5,16 +5,19 @@ import styles from "./events.module.scss"
 
 const placeholder = "Event types..."
 
-export const Events = ({ resourceTypes, searchParams, search }) => (
-	<Select
-		placeholder={placeholder}
-		isMulti
-		options={resourceTypes}
-		className={styles.selector}
-		onChange={value => search({ ...searchParams, types: value.length ? value : [], search: "" })
-		}
-	/>
-)
+export const Events = ({ resourceTypes, searchParams, search }) => {
+	return (
+		<Select
+			placeholder={placeholder}
+			isMulti
+			value={searchParams.types}
+			options={resourceTypes}
+			className={styles.selector}
+			onChange={value => search({ ...searchParams, types: value && value.length ? value : [], search: "" })
+			}
+		/>
+	)
+}
 
 Events.propTypes = {
 	resourceTypes: PropTypes.array,
