@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react"
 import PropTypes from "prop-types"
 import { Container } from "app/components/resources"
-import { SiteMap, Loader, CenterMap, List, Video } from "app/components"
+import { SiteMap, Loader, List } from "app/components"
 import { Filter } from "./filter"
 
 import styles from './search.module.scss'
