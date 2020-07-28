@@ -5,9 +5,10 @@
 	var canDelete = authManager.IsAuthorised(context, Model.Slug, Resources.EHTTPRequestType.DELETE).IsSuccess;
 	Dodo.Analytics.AnalyticInfo viewData = Dodo.Analytics.Analytics.GetInfo(Model.Guid);
 }
-	<div class="card">
-		<h5 class="card-header">Statistics</h5>
-		<div class="card-body">
+<div class="card">
+	<h5 class="card-header">Statistics</h5>
+	<div class="card-body">
+		<div class="col-auto">
 			<div class="form-group row">
 				<label class="col-sm-2 col-form-label">Total Views</label>
 				<div class="col-sm-10">
@@ -33,7 +34,11 @@
 				}
 			}
 		</div>
+		<div class="col">
+
+		</div>
 	</div>
+</div>
 @{ if (thisAdmin.Permissions.CanAddAdmin)
 	{
 		<div class="card">
@@ -161,16 +166,16 @@
 </div>
 @{ if (canDelete)
 	{
-	<div class="card">
-		<h5 class="card-header">Delete This Object</h5>
-		<div class="card-body">
-			<div class="alert alert-warning" role="alert">
-				<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
-			</div>
+		<div class="card">
+			<h5 class="card-header">Delete This Object</h5>
 			<div class="card-body">
-				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+				<div class="alert alert-warning" role="alert">
+					<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
+				</div>
+				<div class="card-body">
+					<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+				</div>
 			</div>
 		</div>
-	</div>
 	}
 }
