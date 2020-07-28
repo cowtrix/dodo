@@ -135,7 +135,7 @@ namespace Dodo.Roles
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var context = new AccessContext(user, passphrase);
-			view.Add(METADATA_APPLIED, HasApplied(context) ? "true" : "false");
+			view.Add(METADATA_APPLIED, HasApplied(context));
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 

@@ -73,11 +73,7 @@ $(function () {
 						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 					</small>
 				</div>
-				<div class="form-group">
-					<label class="control-label">MemberCount</label>
-					<input  readonly asp-for="MemberCount" class="form-control"></input>
-					<span asp-validation-for="MemberCount" class="text-danger"></span>
-				</div>
+					<input asp-for="MemberCount" class="sr-only"></input>
 					<input asp-for="AdministratorData" class="sr-only"></input>
 					<input asp-for="PublicKey" class="sr-only"></input>
 <script>
@@ -316,9 +312,10 @@ $(function () {
 	var canDelete = authManager.IsAuthorised(context, Model.Slug, Resources.EHTTPRequestType.DELETE).IsSuccess;
 	Dodo.Analytics.AnalyticInfo viewData = Dodo.Analytics.Analytics.GetInfo(Model.Guid);
 }
-	<div class="card">
-		<h5 class="card-header">Statistics</h5>
-		<div class="card-body">
+<div class="card">
+	<h5 class="card-header">Statistics</h5>
+	<div class="card-body">
+		<div class="col-auto">
 			<div class="form-group row">
 				<label class="col-sm-2 col-form-label">Total Views</label>
 				<div class="col-sm-10">
@@ -344,7 +341,11 @@ $(function () {
 				}
 			}
 		</div>
+		<div class="col">
+
+		</div>
 	</div>
+</div>
 @{ if (thisAdmin.Permissions.CanAddAdmin)
 	{
 		<div class="card">
@@ -472,17 +473,17 @@ $(function () {
 </div>
 @{ if (canDelete)
 	{
-	<div class="card">
-		<h5 class="card-header">Delete This Object</h5>
-		<div class="card-body">
-			<div class="alert alert-warning" role="alert">
-				<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
-			</div>
+		<div class="card">
+			<h5 class="card-header">Delete This Object</h5>
 			<div class="card-body">
-				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/LocalGroup/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+				<div class="alert alert-warning" role="alert">
+					<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
+				</div>
+				<div class="card-body">
+					<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/LocalGroup/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+				</div>
 			</div>
 		</div>
-	</div>
 	}
 }
 

@@ -81,11 +81,7 @@ $(function () {
 						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 					</small>
 				</div>
-				<div class="form-group">
-					<label class="control-label">MemberCount</label>
-					<input  readonly asp-for="MemberCount" class="form-control"></input>
-					<span asp-validation-for="MemberCount" class="text-danger"></span>
-				</div>
+					<input asp-for="MemberCount" class="sr-only"></input>
 				<div class="form-group">
 					<label class="control-label">Arrest Risk</label>
 					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EArrestRisk>()" asp-for="ArrestRisk" class="form-control"></select>
