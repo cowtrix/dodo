@@ -95,7 +95,7 @@ namespace Dodo
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var context = new AccessContext(user, passphrase);
-			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(context) ? "true" : "false");
+			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(context));
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 	}
