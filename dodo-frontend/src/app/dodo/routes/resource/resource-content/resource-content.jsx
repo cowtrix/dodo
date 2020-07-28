@@ -20,6 +20,8 @@ export const ResourceContent =
 		const unSubscribe = () => subscribeResource(resourceType, resource.guid, 'leave')
 		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', {content: body})
 
+		const shouldDisplayNotifications = resourceType !== 'role'
+
 	return (
 		<div className={styles.resource}>
 			<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap} />
@@ -27,7 +29,7 @@ export const ResourceContent =
 			<Video videoEmbedURL={resource.videoEmbedURL} />
 			<div className={styles.descriptionContainer}>
 				<Description description={resource.publicDescription} />
-				<Updates notifications={notifications}/>
+				{shouldDisplayNotifications && <Updates notifications={notifications}/>}
 			</div>
 			<Role applicantQuestion={resource.applicantQuestion} resourceColor={resourceColor} applyForRole={apply} isLoggedIn={isLoggedIn}/>
 			<SignUpButton
