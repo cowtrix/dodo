@@ -29,7 +29,13 @@ export const ResourceContent =
 				<Description description={resource.publicDescription} />
 				<Updates notifications={notifications}/>
 			</div>
-			<Role applicantQuestion={resource.applicantQuestion} resourceColor={resourceColor} applyForRole={apply} isLoggedIn={isLoggedIn}/>
+			<Role
+				applicantQuestion={resource.applicantQuestion}
+				resourceColor={resourceColor}
+				applyForRole={apply}
+				isLoggedIn={isLoggedIn}
+				hasApplied={resource.metadata.applied}
+			/>
 			<SignUpButton
 				disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
 				resourceColor={resourceColor}
