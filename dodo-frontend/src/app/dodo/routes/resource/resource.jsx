@@ -48,7 +48,7 @@ export const Resource =
 					centerMap={centerMap}
 					setCenterMap={setCenterMap}
 					center={defaultLocation}
-					sites={resource.sites && [...resource.sites, ...resource.workingGroups]}
+					sites={resource.sites && [...resource.sites, ...resource.workingGroups, ...resource.events]}
 					resourceType={resourceType}
 				/>
 				<Container

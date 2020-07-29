@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/app/components/leaflet-map/markers/pin/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/static/xr-pin-shadowed-blue.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/static/xr-pin-shadowed-green.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/static/xr-pin-shadowed-pink.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/static/xr-pin-shadowed-yellow.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/components/leaflet-map/markers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/components/leaflet-map/markers/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/static/xr-pin-shadowed-blue.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/static/xr-pin-shadowed-green.svg" beforeDir="false" />
-    </list>
+    <list default="true" id="c4846dd9-6a70-462a-af8b-4f7ebee19404" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -79,9 +69,9 @@
           <entry key="html" value="21" />
           <entry key="js" value="23138" />
           <entry key="json" value="520" />
-          <entry key="jsx" value="44079" />
+          <entry key="jsx" value="44099" />
           <entry key="scss" value="10521" />
-          <entry key="txt" value="4078" />
+          <entry key="txt" value="4127" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -89,9 +79,9 @@
           <entry key="Enforced Plain Text" value="100" />
           <entry key="HTML" value="22" />
           <entry key="JSON" value="520" />
-          <entry key="JSX Harmony" value="44079" />
+          <entry key="JSX Harmony" value="44099" />
           <entry key="JavaScript" value="23037" />
-          <entry key="PLAIN_TEXT" value="4124" />
+          <entry key="PLAIN_TEXT" value="4173" />
           <entry key="SCSS" value="10521" />
         </counts>
       </usages-collector>
@@ -108,17 +98,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/constants.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="49" selection-start-line="2" selection-start-column="49" selection-end-line="2" selection-end-column="49" />
+            <state relative-caret-position="135">
+              <caret line="9" column="6" lean-forward="true" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
+              <folding>
+                <element signature="e#0#63#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="775">
-              <caret line="85" column="32" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
+            <state relative-caret-position="250">
+              <caret line="50" column="81" selection-start-line="50" selection-start-column="81" selection-end-line="50" selection-end-column="81" />
               <folding>
                 <element signature="e#0#50#0" expanded="true" />
               </folding>
@@ -138,7 +131,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/app/components/leaflet-map/leaflet-map.jsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="734">
@@ -278,9 +271,9 @@
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/markers/pin/pin.js" />
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/markers/markers.jsx" />
         <option value="$PROJECT_DIR$/src/app/constants.js" />
-        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/site-map/site-map.jsx" />
         <option value="$PROJECT_DIR$/src/app/components/leaflet-map/leaflet-map.jsx" />
+        <option value="$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx" />
       </list>
     </option>
   </component>
@@ -494,14 +487,7 @@
       <workItem from="1592554001599" duration="24818000" />
       <workItem from="1594289628126" duration="10313000" />
       <workItem from="1594704476557" duration="28138000" />
-      <workItem from="1596030148787" duration="2260000" />
-    </task>
-    <task id="LOCAL-00060" summary="added expandable lists">
-      <created>1591713376379</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1591713376379</updated>
+      <workItem from="1596030148787" duration="2460000" />
     </task>
     <task id="LOCAL-00061" summary="color coded sites and events">
       <created>1591715058737</created>
@@ -839,7 +825,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595925291773</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="added different pins for different resource types">
+      <created>1596034391410</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1596034391410</updated>
+    </task>
+    <option name="localTasksCounter" value="110" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -863,7 +856,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="402878000" />
+    <option name="totallyTimeSpent" value="403078000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="23" width="1920" height="1057" extended-state="6" />
@@ -898,7 +891,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="created rebellion page with links to rebellion" />
     <MESSAGE value="updated user to be able to subscribe and unsubscribe to0 resources" />
     <MESSAGE value="tried to add subscribe / unsubscribe functionality to resource" />
     <MESSAGE value="added main loading screen and loading for subscribing&#10;added events lists&#10;updated styles" />
@@ -923,7 +915,8 @@
     <MESSAGE value="removed unused prop" />
     <MESSAGE value="fixed events filtering bug" />
     <MESSAGE value="added 'has applied' message to role" />
-    <option name="LAST_COMMIT_MESSAGE" value="added 'has applied' message to role" />
+    <MESSAGE value="added different pins for different resource types" />
+    <option name="LAST_COMMIT_MESSAGE" value="added different pins for different resource types" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1260,23 +1253,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/constants.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="49" selection-start-line="2" selection-start-column="49" selection-end-line="2" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="775">
-          <caret line="85" column="32" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#50#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app/components/site-map/site-map.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
@@ -1291,6 +1267,26 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="734">
           <caret line="67" column="56" selection-start-line="67" selection-start-column="56" selection-end-line="67" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="6" lean-forward="true" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#63#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app/dodo/routes/resource/resource.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="50" column="81" selection-start-line="50" selection-start-column="81" selection-end-line="50" selection-end-column="81" />
           <folding>
             <element signature="e#0#50#0" expanded="true" />
           </folding>
