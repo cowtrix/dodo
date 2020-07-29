@@ -48,7 +48,8 @@ export const Resource =
 					centerMap={centerMap}
 					setCenterMap={setCenterMap}
 					center={defaultLocation}
-					sites={resource.sites && [...resource.sites, ...resource.workingGroups]}
+					sites={resource.sites && [...resource.sites, ...resource.workingGroups, ...resource.events]}
+					resourceType={resourceType}
 				/>
 				<Container
 					hideMap={hideMap}
@@ -82,5 +83,7 @@ Resource.propTypes = {
 	getResource: PropTypes.func,
 	event: PropTypes.object,
 	resourceTypes: PropTypes.array,
+	resourceType: PropTypes.string,
 	fetchingUser: PropTypes.bool
+
 }

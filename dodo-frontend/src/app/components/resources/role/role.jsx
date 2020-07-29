@@ -8,11 +8,11 @@ import styles from './role.module.scss'
 const APPLICANT_ANSWER_INPUT = 'APPLICANT_ANSWER_INPUT'
 const APPY_NOW = 'Apply now'
 
-export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColor }) => {
+export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColor, hasApplied }) => {
 	const [ applicantAnswer, setApplicantAnswer ] = useState('')
 
 	return (
-		isLoggedIn && applicantQuestion ?
+		isLoggedIn && applicantQuestion && !hasApplied ?
 			<div className={styles.role}>
 				<div>
 					{applicantQuestion}
@@ -31,6 +31,8 @@ export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColo
 					className={styles.signUpButton}
 				/>
 			</div> :
+				hasApplied ?
+					<h2>You have already applied for this role</h2> :
 			null
 	)
 }
@@ -38,4 +40,8 @@ export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColo
 
 Role.propTypes = {
 	applicantQuestion: PropTypes.string,
+	hasApplied: PropTypes.bool,
+	isLoggedIn: PropTypes.bool,
+	applyForRole: PropTypes.func,
+	resourceColor: PropTypes.string,
 }

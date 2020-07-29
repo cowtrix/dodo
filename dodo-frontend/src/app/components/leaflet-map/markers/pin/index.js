@@ -1,0 +1,1 @@
+export { pin } from './pin'

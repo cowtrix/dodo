@@ -4,11 +4,9 @@ import "leaflet/dist/leaflet.css"
 import { Map, Marker } from "react-leaflet"
 
 import { TitleLayers } from "./title-layers"
-import { Markers } from "./markers"
+import { Markers, pin } from "./markers"
 
 import styles from "./leaflet-map.module.scss"
-import leaflet from 'leaflet'
-import GreenMarker from "static/xr-pin-shadowed-green.svg"
 
 const getDefaultCenter = (sites = [], location = []) => {
 	const sitesWithLocation = sites.length && sites.filter(site => site.location)
@@ -26,7 +24,8 @@ export const LeafletMap = (
 		setCenterMap,
 		getSearchResults = () => {},
 		setSearchParams = () => {},
-		selectedResourceTypes
+		selectedResourceTypes,
+		resourceType
 	}) => {
 
 	const [mapCenter, setMapCenter] = useState(getDefaultCenter(sites, center))
@@ -53,13 +52,6 @@ export const LeafletMap = (
 		}
 	}
 
-	const MarkerIcon = leaflet.icon({
-		iconUrl: GreenMarker,
-		iconSize: [50, 40],
-		iconAnchor: [25, 40],
-		className: "xrMarker"
-	})
-
 	return (
 		<Map
 			className={`${styles.map} ${className}`}
@@ -73,7 +65,7 @@ export const LeafletMap = (
 			<TitleLayers/>
 			<Markers markers={sites} userInitiated={userInitiated}/>
 			{!sites.length && center.length ?
-				<Marker position={center} icon={MarkerIcon}/> :
+				<Marker position={center} icon={pin(resourceType)}/> :
 				null}
 		</Map>
 	)
