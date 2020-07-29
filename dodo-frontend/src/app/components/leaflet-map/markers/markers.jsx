@@ -1,22 +1,15 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { Marker } from "react-leaflet"
-import leaflet from "leaflet"
-import GreenMarker from "static/xr-pin-shadowed-green.svg"
 import { Popup } from "./popup"
+import { pin } from './pin'
 
-const MarkerIcon = leaflet.icon({
-	iconUrl: GreenMarker,
-	iconSize: [50, 40],
-	iconAnchor: [25, 40],
-	className: "xrMarker"
-})
 
 export const Markers = ({ markers, userInitiated }) =>
 	markers.map(marker =>
 		marker.location ? (
 			<Marker
-				icon={MarkerIcon}
+				icon={pin(marker.metadata.type)}
 				key={marker.guid}
 				position={[marker.location.latitude, marker.location.longitude]}
 			>
