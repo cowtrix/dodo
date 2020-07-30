@@ -6,7 +6,7 @@ import styles from './register.module.scss'
 import { useHistory } from 'react-router-dom'
 import { Loader } from '../../../../components/loader'
 
-const REGISTER = "Register for XR"
+const REGISTER = "Register a new account"
 
 const passwordRegex = (password) => /[!@#$%^&*()_+=\[{\]};:<>|./?,-£]/.test(password)
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
