@@ -1,4 +1,4 @@
-import styles from "../updates.module.scss";
+import styles from "./update-meta.module.scss";
 import { dateFormatted, timeFormatted } from "../../header/dates/services";
 import React from "react";
 
