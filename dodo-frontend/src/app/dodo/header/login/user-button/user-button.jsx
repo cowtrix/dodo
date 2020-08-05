@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import userButton from 'static/resources_noun_User_3367734.png'
 import styles from './user-button.module.scss'

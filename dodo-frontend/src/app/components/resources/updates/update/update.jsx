@@ -49,7 +49,7 @@ export const Update = ({
 			setTrimmedMessage();
 			setShowMoreEnabled(true);
 		}
-	}, [message]);
+	}, [message, messageContent, setTrimmedMessage]);
 
 	const onShowMoreClick = (event) => {
 		event.preventDefault();

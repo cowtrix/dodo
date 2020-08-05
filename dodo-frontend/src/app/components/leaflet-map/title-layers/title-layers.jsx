@@ -1,5 +1,5 @@
 import React from "react"
-import { TileLayer, LayersControl } from "react-leaflet"
+import { TileLayer } from "react-leaflet"
 
 const TILE_LAYERS = [
 	{

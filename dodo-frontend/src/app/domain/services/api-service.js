@@ -1,5 +1,3 @@
-import i18n from 'i18next';
-
 let abortController = new AbortController()
 
 export const api = async(url, method = "get", body, abortSignal) => {

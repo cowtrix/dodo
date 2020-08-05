@@ -18,7 +18,7 @@ export const Countdown = ({ startDate, name }) => {
 		return () => {
 			clearInterval(interval)
 		}
-	}, [])
+	}, [time])
 
 	const timeLeft = generateTimeLeft(startDate)
 

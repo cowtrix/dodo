@@ -10,7 +10,6 @@ export const resourceGet = (dispatch, resourceType, resourceId, cb) =>
 export const eventTypesGet = (dispatch) =>
 	apiAction(dispatch, RESOURCES_GET, API_URL)
 
-
 export const notificationsGet = (dispatch, eventType, event, cb) =>
 	apiAction(dispatch, RESOURCE_NOTIFICATIONS_GET, API_URL + eventType + "/notifications/" + event, cb)
 
