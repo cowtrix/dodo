@@ -1,8 +1,9 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 export const Video = ({ videoEmbedURL }) =>
 	videoEmbedURL ? <iframe
+		title="Resource Video"
 		width="100%"
 		height="315"
 		src={videoEmbedURL}

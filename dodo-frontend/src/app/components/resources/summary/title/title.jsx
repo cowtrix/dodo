@@ -10,5 +10,8 @@ export const Title = ({ title, parent }) =>
 
 Title.propTypes = {
 	title: PropTypes.string,
-	parent: PropTypes.object
+	parent: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.object
+	]),
 }

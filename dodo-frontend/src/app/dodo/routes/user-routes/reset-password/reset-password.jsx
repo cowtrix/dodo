@@ -1,11 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import { Container, Input, Submit } from 'app/components/forms/index'
-import { api } from 'app/domain/services/index'
-import { RESET_PASSWORD} from 'app/domain/urls'
-
 
 const RESET_PASSWORD_COPY = "Reset my password"
-
 
 export const ResetPassword = ({ resetPassword }) => {
 	const [ email, setEmail ] = useState("")

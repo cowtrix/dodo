@@ -27,12 +27,11 @@ export const Resource =
 
 		useEffect(() => {
 			getResource(resourceType, resourceId, setCenterMap)
-		}, [match])
+		}, [ getResource, resourceId, resourceType, setCenterMap])
 
 
 		const resourceColor =
-			resourceTypes.length &&
-			'#' + resourceTypes.find(resource => resourceType === resource.value).displayColor || '000000'
+			resourceTypes.length ? '#' + resourceTypes.find(resource => resourceType === resource.value).displayColor : '000000'
 
 		const { location } = resource
 		const defaultLocation = resource.location
