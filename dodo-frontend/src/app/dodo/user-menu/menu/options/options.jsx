@@ -18,7 +18,7 @@ export const Options = ({ logout }) =>
 			<Link to="">Settings</Link>
 		</li>
 		<li>
-			<Link onClick={() => logout()}>Logout</Link>
+			<Link onClick={() => logout()} to="/">Logout</Link>
 		</li>
 	</ul>
 

@@ -10,5 +10,5 @@ export const Title = ({ title, parent }) =>
 
 Title.propTypes = {
 	title: PropTypes.string,
-	parent: PropTypes.string
+	parent: PropTypes.object
 }

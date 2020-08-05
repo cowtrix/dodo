@@ -8,7 +8,7 @@ import { Loader } from '../../../../components/loader'
 
 const REGISTER = "Register a new account"
 
-const passwordRegex = (password) => /[!@#$%^&*()_+=\[{\]};:<>|./?,-£]/.test(password)
+const passwordContainsSymbol = (password) => !/^(?=.*[@#$%^&+=!]).*$/.test(password)
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
 const notEmptyAndLengthBelow = (minLength, str) => str && str.length < minLength
 
@@ -29,7 +29,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const nameShort = notEmptyAndLengthBelow(3, name)
 	const emailInvalid = email && !emailRegex(email)
 	const passwordShort = notEmptyAndLengthBelow(8, password)
-	const passwordInvalid = password && !passwordRegex(password)
+	const passwordInvalid = password.length && passwordContainsSymbol(password)
 	const passwordsNotEqual = passwordConfirmation && password !== passwordConfirmation
 	const hasError = !username.length || !name.length || !email.length || !password.length || !passwordConfirmation.length ||
 		usernameShort || nameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual
