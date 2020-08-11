@@ -96,7 +96,7 @@ namespace Dodo.Users
 			return (await UserService.RequestPasswordReset(email)).ActionResult;
 		}
 
-		[HttpPost(RESET_PASSWORD)]
+		[HttpPost(REDEEM_PASSWORD_TOKEN)]
 		public async Task<IActionResult> ResetPassword(string token, [FromBody]string password)
 		{
 			return (await UserService.ResetPassword(token, password)).ActionResult;

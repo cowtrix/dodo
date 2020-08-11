@@ -173,7 +173,7 @@ namespace RESTTests
 				new PostmanEntryAddress { Category = UserCat, Request = "Request a Password Reset Token" },
 				request);
 
-			request = await Request($"{UserService.RootURL}/{UserService.RESET_PASSWORD}", EHTTPRequestType.POST,
+			request = await Request($"{UserService.RootURL}/{UserService.REDEEM_PASSWORD_TOKEN}", EHTTPRequestType.POST,
 				newPassword, new[] { ( UserService.PARAM_TOKEN, token.Key ) });
 
 			await Login(user.Slug, newPassword);

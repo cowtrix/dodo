@@ -26,6 +26,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 	public const string LOGOUT = "logout";
 	public const string REGISTER = "register";
 	public const string RESET_PASSWORD = "resetpassword";
+	public const string REDEEM_PASSWORD_TOKEN = "passtokenredeem";
 	public const string CHANGE_PASSWORD = "changepassword";
 	public const string PARAM_TOKEN = "token";
 	public const string VERIFY_EMAIL = "verifyemail";
@@ -131,7 +132,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 				targetUser.TokenCollection.AddOrUpdate(targetUser, resetToken);
 				UserManager.Update(targetUser, rscLock);
 				EmailUtility.SendPasswordResetEmail(targetUser.PersonalData.Email, targetUser.Name,
-					$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{RESET_PASSWORD}?token={resetToken.Key}");
+					$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{REDEEM_PASSWORD_TOKEN}?token={resetToken.Key}");
 			}
 		}
 		return new OkRequestResult("If an account with that email exists, you will receive a one-time link to reset your password.");
