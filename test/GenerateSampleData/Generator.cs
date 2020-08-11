@@ -51,9 +51,7 @@ namespace GenerateSampleData
 			var tasks = new List<Task>();
 			foreach (var city in m_cities)
 			{
-				var task = new Task(async () => await GenerateRebellion(city, admin1context));
-				task.Start();
-				tasks.Add(task);
+				tasks.Add(Task.Run(() => GenerateRebellion(city, admin1context)));
 			}
 			Task.WaitAll(tasks.ToArray());
 		}
