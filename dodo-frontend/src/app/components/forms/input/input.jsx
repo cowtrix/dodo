@@ -23,7 +23,7 @@ Input.propTypes = {
 	id: PropTypes.string,
 	name: PropTypes.string,
 	value: PropTypes.string,
-	error: PropTypes.string,
+	error: PropTypes.bool,
 	setValue: PropTypes.func,
 	maxLength: PropTypes.number
 }
