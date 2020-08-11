@@ -10,7 +10,7 @@ const REGISTER = "Register a new account"
 
 const passwordContainsSymbol = (password) => !/^(?=.*[@#$%^&+=!]).*$/.test(password)
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
-const notEmptyAndLengthBelow = (minLength, str) => str && str.length < minLength
+const notEmptyAndLengthBelow = (minLength, str) => !!str && str.length < minLength
 
 export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const history = useHistory()
@@ -27,10 +27,10 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 
 	const usernameShort = notEmptyAndLengthBelow(3, username)
 	const nameShort = notEmptyAndLengthBelow(3, name)
-	const emailInvalid = email && !emailRegex(email)
+	const emailInvalid = !!email && !emailRegex(email)
 	const passwordShort = notEmptyAndLengthBelow(8, password)
-	const passwordInvalid = password.length && passwordContainsSymbol(password)
-	const passwordsNotEqual = passwordConfirmation && password !== passwordConfirmation
+	const passwordInvalid = password.length > 0 && passwordContainsSymbol(password)
+	const passwordsNotEqual = !!passwordConfirmation && password !== passwordConfirmation
 	const hasError = !username.length || !name.length || !email.length || !password.length || !passwordConfirmation.length ||
 		usernameShort || nameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual
 
