@@ -14,6 +14,7 @@ using SharedTest;
 using System;
 using System.Threading.Tasks;
 using Dodo.Users.Tokens;
+using System.Collections.Generic;
 
 namespace GenerateSampleData
 {
@@ -47,11 +48,14 @@ namespace GenerateSampleData
 				sysAdmin.TokenCollection.AddOrUpdate(sysAdmin, new SysadminToken());
 				ResourceUtility.GetManager<User>().Update(sysAdmin, rscLock);
 			}
+			var tasks = new List<Task>();
 			foreach (var city in m_cities)
 			{
 				var task = new Task(async () => await GenerateRebellion(city, admin1context));
 				task.Start();
+				tasks.Add(task);
 			}
+			Task.WaitAll(tasks.ToArray());
 		}
 
 		public static async Task GenerateRebellion(string city, AccessContext context)
