@@ -9,6 +9,6 @@ export const AppLoadingScreen = ({ fetchingUser, username }) =>
 
 
 AppLoadingScreen.propTypes = {
-	username: PropTypes.bool,
+	username: PropTypes.string,
 	fetchingUser: PropTypes.bool,
 }

@@ -36,7 +36,7 @@ export const LeafletMap = (
 			setMapCenter(getDefaultCenter(sites, center))
 			setCenterMap(false)
 		}
-	}, [centerMap])
+	}, [centerMap, center, setCenterMap, sites])
 
 
 	const setNewSearchParams = (e) => {

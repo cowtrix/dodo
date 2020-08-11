@@ -27,7 +27,7 @@ export const Routes = ({ closeMenu }) => {
 
 	useEffect(() => {
 		closeMenu()
-	}, [history.location])
+	}, [history.location, closeMenu])
 
 	return (
 		<Switch>

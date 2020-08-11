@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useState } from "react";
-import styles from "../updates.module.scss";
+import styles from "./update.module.scss";
 import { UpdateMeta } from "../update-meta";
 import nounAttention from "static/noun_attention_2913340.png";
 import nounCalendar from "static/noun_Calendar_3368739.png";
@@ -49,7 +49,7 @@ export const Update = ({
 			setTrimmedMessage();
 			setShowMoreEnabled(true);
 		}
-	}, [message]);
+	}, [message, messageContent, setTrimmedMessage]);
 
 	const onShowMoreClick = (event) => {
 		event.preventDefault();

@@ -7,7 +7,8 @@ const MY_REBELLION = "Your profile"
 const UPDATE_DETAILS = "Update my details"
 
 export const YourProfile = (
-	{ currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid, resendVerificationEmail }
+	{
+		currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid, resendVerificationEmail }
 	) => {
 
 	const [username, setUserName] = useState(currentUsername)
