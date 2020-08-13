@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react"
 import PropTypes from 'prop-types'
 
 import { useTranslation } from "react-i18next"
-import { useHistory, Link } from 'react-router-dom'
+import { useHistory, Link, useLocation } from 'react-router-dom'
 
 import { Input, Container, Submit, Error, TickBox } from 'app/components/forms/index'
 
@@ -11,9 +11,11 @@ const LOGIN = 'Login'
 export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 
 	const history = useHistory()
+	const location = useLocation();
 
 	if (isLoggedIn) {
-		history.push('/')
+		const url = new URLSearchParams(location.search)
+		history.push(url.get('ReturnUrl') || url.get('ReturnURL') || '/');
 	}
 
 	const { t } = useTranslation("ui")
