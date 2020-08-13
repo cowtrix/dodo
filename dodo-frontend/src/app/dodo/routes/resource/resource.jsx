@@ -29,9 +29,8 @@ export const Resource =
 			getResource(resourceType, resourceId, setCenterMap)
 		}, [ getResource, resourceId, resourceType, setCenterMap])
 
-
-		const resourceColor =
-			resourceTypes.length ? '#' + resourceTypes.find(resource => resourceType === resource.value).displayColor : '000000'
+		const resourceTypeData = resourceTypes.find(resource => resourceType === resource.value) || {};
+		const resourceColor = '#' + (resourceTypeData.displayColor || '000000');
 
 		const { location } = resource
 		const defaultLocation = resource.location
