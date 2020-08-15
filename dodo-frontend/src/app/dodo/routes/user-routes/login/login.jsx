@@ -14,8 +14,8 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 	const location = useLocation();
 
 	if (isLoggedIn) {
-		const url = new URLSearchParams(location.search)
-		history.push(url.get('ReturnUrl') || url.get('ReturnURL') || '/');
+		const url = new URLSearchParams(location.search.replace(/returnurl/ig, 'returnurl'));
+		history.push(url.get('returnurl') || '/');
 	}
 
 	const { t } = useTranslation("ui")
