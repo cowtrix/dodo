@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import { Container } from "app/components/resources"
 import { SiteMap, Loader } from "app/components"
 import { ResourceContent } from './resource-content'
-import { shouldHideMap } from './services'
+import { getResourceTypeData, shouldHideMap } from './services'
 
 export const Resource =
 	(
@@ -29,7 +29,7 @@ export const Resource =
 			getResource(resourceType, resourceId, setCenterMap)
 		}, [ getResource, resourceId, resourceType, setCenterMap])
 
-		const resourceTypeData = resourceTypes.find(resource => resourceType === resource.value) || {};
+		const resourceTypeData = getResourceTypeData(resourceTypes, resourceType);
 		const resourceColor = '#' + (resourceTypeData.displayColor || '000000');
 
 		const { location } = resource
