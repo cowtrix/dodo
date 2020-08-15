@@ -46,7 +46,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 						<TickBox
 							name="Remember Me"
 							id="rememberMe"
-							value={rememberMe}
+							checked={rememberMe}
 							setValue={setRememberMe}
 						/>
 						<p>
