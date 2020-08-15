@@ -30,7 +30,7 @@ export const Resource =
 		}, [ getResource, resourceId, resourceType, setCenterMap])
 
 		const resourceTypeData = getResourceTypeData(resourceTypes, resourceType);
-		const resourceColor = '#' + (resourceTypeData.displayColor || '000000');
+		const resourceColor = '#' + (resourceTypeData.displayColor || '22A73D');
 
 		const { location } = resource
 		const defaultLocation = resource.location
