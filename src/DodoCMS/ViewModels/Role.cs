@@ -36,9 +36,8 @@ namespace Dodo.ViewModels
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }
-		[DisplayName("Contacts")]
+		[DisplayName("Applications")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		[Dodo.Roles.EmailUsernameListAttribute()]
-		public string Contacts { get; set; }
+		public System.Collections.Generic.Dictionary<string,Dodo.Roles.GroupUserEncryptedStore> Applications { get; set; }
 	}
 }

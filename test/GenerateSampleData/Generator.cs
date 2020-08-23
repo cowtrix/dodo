@@ -82,7 +82,7 @@ namespace GenerateSampleData
 			var rebelRiders = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Rebel Riders",
 				SchemaGenerator.SampleDescription, actionSupport.Guid.ToString().ToString()), seed: false);
 			var rebelRiderRole = TestBase.CreateNewObject<Role>(context, new RoleSchema("Rebel Rider Team",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", rebelRiders.Guid.ToString().ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, rebelRiders.Guid.ToString().ToString()), seed: false);
 
 			var deescalation = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Non-Violence & De-escalation",
 				SchemaGenerator.SampleDescription, actionSupport.Guid.ToString().ToString()), seed: false);
@@ -95,29 +95,29 @@ namespace GenerateSampleData
 			var sustenance = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Sustenance",
 				SchemaGenerator.SampleDescription, worldBuilding.Guid.ToString()), seed: false);
 			var kitchenHelper = TestBase.CreateNewObject<Role>(context, new RoleSchema("Kitchen Helper",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", sustenance.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, sustenance.Guid.ToString()), seed: false);
 			var cartCrew = TestBase.CreateNewObject<Role>(context, new RoleSchema("Food Cart Crew",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", sustenance.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, sustenance.Guid.ToString()), seed: false);
 
 			var sitebuilding = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Site Building",
 				SchemaGenerator.SampleDescription, worldBuilding.Guid.ToString()), seed: false);
 			var siteTeam = TestBase.CreateNewObject<Role>(context, new RoleSchema("Installation Team",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", sitebuilding.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, sitebuilding.Guid.ToString()), seed: false);
 			var sanitiationTeam = TestBase.CreateNewObject<Role>(context, new RoleSchema("Sanitation Team",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", sitebuilding.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, sitebuilding.Guid.ToString()), seed: false);
 			var transportTeam = TestBase.CreateNewObject<Role>(context, new RoleSchema("Transport Team",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", sitebuilding.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, sitebuilding.Guid.ToString()), seed: false);
 
 			var mediaandmessaging = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Media & Messaging",
 				SchemaGenerator.SampleDescription, currentRebellion.Guid.ToString()), seed: false);
 			var spokespeople = TestBase.CreateNewObject<Role>(context, new RoleSchema("Spokespeople & Training",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", mediaandmessaging.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, mediaandmessaging.Guid.ToString()), seed: false);
 			var press = TestBase.CreateNewObject<Role>(context, new RoleSchema("Press",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", mediaandmessaging.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, mediaandmessaging.Guid.ToString()), seed: false);
 			var video = TestBase.CreateNewObject<Role>(context, new RoleSchema("Video",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", mediaandmessaging.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, mediaandmessaging.Guid.ToString()), seed: false);
 			var photography = TestBase.CreateNewObject<Role>(context, new RoleSchema("Photography",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", mediaandmessaging.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, mediaandmessaging.Guid.ToString()), seed: false);
 
 			var movementSupp = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Movement Support",
 				SchemaGenerator.SampleDescription, currentRebellion.Guid.ToString()), seed: false);
@@ -125,16 +125,16 @@ namespace GenerateSampleData
 			var stewarding = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Stewards",
 				SchemaGenerator.SampleDescription, movementSupp.Guid.ToString()), seed: false);
 			var stewTeam = TestBase.CreateNewObject<Role>(context, new RoleSchema("Stewarding Team",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", stewarding.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, stewarding.Guid.ToString()), seed: false);
 
 			var outreach = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Outreach",
 				SchemaGenerator.SampleDescription, movementSupp.Guid.ToString()), seed: false);
 			var welcomeTeam = TestBase.CreateNewObject<Role>(context, new RoleSchema("Welcome Team",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", stewarding.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, stewarding.Guid.ToString()), seed: false);
 			var outreachTeam = TestBase.CreateNewObject<Role>(context, new RoleSchema("Roving Outreach Team",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", stewarding.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, stewarding.Guid.ToString()), seed: false);
 			var inductions = TestBase.CreateNewObject<Role>(context, new RoleSchema("Inductions & Training",
-				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, "testAdmin@example.com", stewarding.Guid.ToString()), seed: false);
+				SchemaGenerator.SampleDescription, SchemaGenerator.SampleRoleInstructions, stewarding.Guid.ToString()), seed: false);
 		}
 
 		private static User GenerateUser(UserSchema schema, out AccessContext context)

@@ -28,7 +28,7 @@ namespace Dodo.Users
 		[VerifyObject]
 		public AuthorizationData AuthData { get; set; }
 		[BsonIgnore]
-		public override string PublicKey => AuthData.PublicKey;
+		public override Passphrase PublicKey => new Passphrase(AuthData.PublicKey);
 		#endregion
 
 		public User() : base()

@@ -11,6 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Http\**" />
+    <EmbeddedResource Remove="Http\**" />
+    <None Remove="Http\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
     <PackageReference Include="GeoTimeZone" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
@@ -21,10 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Http\" />
   </ItemGroup>
 
 </Project>

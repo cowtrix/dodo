@@ -18,7 +18,7 @@ namespace Dodo
 		{
 			// Creator gets super admin
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
-			m_publicKey = pk;
+			m_publicKey = new Passphrase(pk);
 			AdministratorData = new UserMultiSigStore<AdministrationData>(
 				new AdministrationData(this, context.User, new Passphrase(pv)), context);
 			using (var userLock = new ResourceLock(context.User))
@@ -215,9 +215,9 @@ namespace Dodo
 		}
 
 		[View(EPermissionLevel.USER, customDrawer:"null")]
-		public override string PublicKey => m_publicKey;
+		public override Passphrase PublicKey => m_publicKey;
 		[BsonElement]
-		private string m_publicKey;
+		private Passphrase m_publicKey;
 
 		public override Passphrase GetPrivateKey(AccessContext context)
 		{

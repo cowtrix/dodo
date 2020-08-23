@@ -38,7 +38,7 @@ namespace Dodo
 		public abstract Passphrase GetPrivateKey(AccessContext context);
 		[BsonElement]
 		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM, customDrawer: "null")]
-		public virtual string PublicKey
+		public virtual Passphrase PublicKey
 		{
 			get
 			{
@@ -46,7 +46,7 @@ namespace Dodo
 				{
 					return owned.Parent.GetValue<ITokenResource>().PublicKey;
 				}
-				return null;
+				return default;
 			}
 		}
 		#endregion
