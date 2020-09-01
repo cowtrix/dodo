@@ -65,7 +65,7 @@ export const Update = ({
 	return (
 		<div className={styles.update} key={guid}>
 			<div className={styles.updateContent}>
-				<UpdateMeta timestamp={timestamp} />
+				<UpdateMeta timestamp={timestamp} source={source} />
 				<div
 					className={styles.message}
 					dangerouslySetInnerHTML={{ __html: messageContent }}
