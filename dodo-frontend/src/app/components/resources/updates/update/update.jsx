@@ -82,6 +82,11 @@ export const Update = ({
 						</button>
 					) : null}
 				</div>
+				{permissionLevel.toLowerCase() !== 'public' &&
+					<div className={styles.permissionText}>
+						This message is for '{permissionLevel.toLowerCase()}' only.
+					</div>
+				}
 			</div>
 			<div className={styles.updateIcon}>
 				<img
