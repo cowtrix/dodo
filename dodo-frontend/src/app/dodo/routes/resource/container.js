@@ -22,7 +22,9 @@ const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
 	getResource: (resourceType, resourceID, setCenterMap) => {
 		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap)
-		resources.actions.notificationsGet(dispatch, resourceType, resourceID)
+	},
+	getNotifications: (resourceType, resourceID, page) => {
+		resources.actions.notificationsGet(dispatch, resourceType, resourceID, page)
 	},
 	subscribeResource: (resourceType, resourceID, subscribe, body) =>
 		resources.actions.subscribeResource(dispatch, resourceType, resourceID, subscribe, body),
