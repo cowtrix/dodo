@@ -14,6 +14,7 @@ export const Resource =
 			resource,
 			notifications,
 			isLoading,
+			isLoadingNotifications,
 			centerMap,
 			setCenterMap,
 			resourceTypes = [],
@@ -64,6 +65,8 @@ export const Resource =
 									hideMap={hideMap}
 									resource={resource}
 									notifications={notifications}
+									getNotifications={() => getNotifications(resourceType, resourceId, notifications.nextPageToLoad)}
+									isLoadingNotifications={isLoadingNotifications}
 									setCenterMap={setCenterMap}
 									resourceTypes={resourceTypes}
 									resourceColor={resourceColor}

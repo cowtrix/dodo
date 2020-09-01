@@ -12,6 +12,7 @@ const mapStateToProps = state => ({
 	resource: resources.selectors.currentResource(state),
 	notifications: resources.selectors.currentNotifications(state),
 	isLoading: resources.selectors.resourceLoading(state),
+	isLoadingNotifications: resources.selectors.notificationsLoading(state),
 	resourceTypes: resources.selectors.resourceTypes(state),
 	memberOf: user.selectors.memberOf(state),
 	isLoggedIn: !!user.selectors.username(state),

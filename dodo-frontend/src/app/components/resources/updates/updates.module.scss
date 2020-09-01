@@ -17,5 +17,29 @@
 	}
 }
 
+.loadMore {
+	text-align: center;
+	margin-top: spacing(3);
+}
+
+.loadMoreButton {
+	margin-left: auto;
+	padding: 0;
+	border: none;
+	background: none;
+	font-size: 0.8rem;
+	color: $color-text-light;
+	text-decoration: underline;
+	outline: none;
+	cursor: pointer;
+	&:hover {
+		color: $color-text;
+	}
+	&:disabled {
+		color: $color-text-light;
+		cursor: wait;
+	}
+}
+
 
 
