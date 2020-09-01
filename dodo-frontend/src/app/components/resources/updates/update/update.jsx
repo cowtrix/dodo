@@ -62,8 +62,8 @@ export const Update = ({
 		}
 	};
 
-	return (
-		<div className={styles.update} key={guid}>
+	const content = (
+		<>
 			<div className={styles.updateContent}>
 				<UpdateMeta timestamp={timestamp} source={source} />
 				<div
@@ -90,6 +90,10 @@ export const Update = ({
 					className={styles.updateIconImg}
 				/>
 			</div>
-		</div>
-	);
+		</>
+	)
+
+	return link
+		? <a href={link} className={styles.update} key={guid}>{content}</a>
+		: <div className={styles.update} key={guid}>{content}</div>;
 };
