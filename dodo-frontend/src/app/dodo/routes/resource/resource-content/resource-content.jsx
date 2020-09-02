@@ -29,7 +29,11 @@ export const ResourceContent =
 			<Video videoEmbedURL={resource.videoEmbedURL} />
 			<div className={styles.descriptionContainer}>
 				<Description description={resource.publicDescription} />
-				{shouldDisplayNotifications && <Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>}
+				{shouldDisplayNotifications &&
+					<div>
+						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
+					</div>
+				}
 			</div>
 			<Role
 				applicantQuestion={resource.applicantQuestion}
