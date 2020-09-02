@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import React, { useCallback, useEffect, useState } from "react";
 import styles from "./update.module.scss";
 import { UpdateMeta } from "../update-meta";
+import { Dialog } from 'app/components/dialog';
 import nounAttention from "static/noun_attention_2913340.png";
 import nounCalendar from "static/noun_Calendar_3368739.png";
 import nounSpeechBubble from "static/noun_Speech Bubble_1588036.png";
@@ -55,12 +56,25 @@ export const Update = ({
 		event.preventDefault();
 		if (!showMore) {
 			setShowMore(true);
-			setMessageContent(message);
 		} else {
 			setShowMore(false);
-			setTrimmedMessage();
 		}
 	};
+
+	const dialogContent = (
+		<div className={styles.updateContent}>
+			<UpdateMeta timestamp={timestamp} source={source} />
+			<div
+				className={styles.message}
+				dangerouslySetInnerHTML={{ __html: message }}
+			/>
+			{permissionLevel.toLowerCase() !== 'public' &&
+				<div className={styles.permissionText}>
+					This message is for '{permissionLevel.toLowerCase()}' only.
+				</div>
+			}
+		</div>
+	);
 
 	const content = (
 		<>
@@ -71,16 +85,11 @@ export const Update = ({
 					dangerouslySetInnerHTML={{ __html: messageContent }}
 				/>
 				<div className={styles.updateActions}>
-					{showMoreEnabled ? (
-						<button
-							className={styles.showMoreUpdate}
-							onClick={onShowMoreClick}
-						>
-							{showMore
-								? t("notifications_show_less")
-								: t("notifications_show_more")}
+					{showMoreEnabled && (
+						<button className={styles.showMoreUpdate} onClick={onShowMoreClick}>
+							{t("notifications_show_more")}
 						</button>
-					) : null}
+					)}
 				</div>
 				{permissionLevel.toLowerCase() !== 'public' &&
 					<div className={styles.permissionText}>
@@ -95,6 +104,12 @@ export const Update = ({
 					className={styles.updateIconImg}
 				/>
 			</div>
+			<Dialog
+				active={showMore}
+				content={dialogContent}
+				close={() => setShowMore(false)}
+				update={() => setShowMore(false)}
+			/>
 		</>
 	)
 
