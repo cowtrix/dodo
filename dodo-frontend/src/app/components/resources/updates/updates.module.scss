@@ -18,6 +18,11 @@
 	}
 }
 
+.notifications {
+	max-height: 325px;
+	overflow: auto;
+}
+
 .loadMore {
 	text-align: center;
 	margin-top: spacing(3);

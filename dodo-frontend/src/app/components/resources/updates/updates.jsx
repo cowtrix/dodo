@@ -10,12 +10,12 @@ export const Updates = ({ notifications: { notifications = [], nextPageToLoad = 
 	return (
 		<div className={styles.container}>
 			<h3 className={styles.title}>{t("notifications_title")}</h3>
-			<div>
+			<div className={styles.notifications}>
 				{notifications.map((notification) => (
 					<Update key={notification.guid} notification={notification} />
 				))}
 			</div>
-			{nextPageToLoad === false &&
+			{nextPageToLoad !== false &&
 				<div className={styles.loadMore}>
 					<button className={styles.loadMoreButton} onClick={loadMore} disabled={isLoadingMore}>
 						{isLoadingMore ? 'Loading, please wait...' : 'See more...'}
