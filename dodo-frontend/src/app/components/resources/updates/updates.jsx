@@ -18,7 +18,7 @@ export const Updates = ({ notifications: { notifications = [], nextPageToLoad = 
 			{nextPageToLoad !== false &&
 				<div className={styles.loadMore}>
 					<button className={styles.loadMoreButton} onClick={loadMore} disabled={isLoadingMore}>
-						{isLoadingMore ? 'Loading, please wait...' : 'See more...'}
+						{isLoadingMore ? t("loading_please_wait") : t("notifications_show_more")}
 					</button>
 				</div>
 			}
