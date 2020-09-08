@@ -11,6 +11,7 @@ using Dodo.Utility;
 using Dodo.Users.Tokens;
 using Newtonsoft.Json;
 using System;
+using Common.Security;
 
 namespace Dodo.Roles
 {
@@ -21,13 +22,14 @@ namespace Dodo.Roles
 			public DateTime Timestamp { get; set; }
 			public string Content { get; set; }
 		}
-		public ResourceReference<User> Applicant { get; set; }
+		public string Applicant { get; set; }
+		[View(EPermissionLevel.ADMIN)]
 		public string Notes { get; set; }
 		public List<Message> Messages { get; set; } = new List<Message>();
 
-		public RoleApplicationData(User user)
+		public RoleApplicationData(AccessContext context, Role role)
 		{
-			Applicant = user.CreateRef();
+			Applicant = SecurityExtensions.GenerateID(context.User, context.Passphrase, role.Guid.ToString());
 		}
 	}
 
@@ -80,7 +82,7 @@ namespace Dodo.Roles
 				error = "User email not verified";
 				return false;
 			}
-			var app = new GroupUserEncryptedStore(new RoleApplicationData(context.User), Parent.GetValue<IAsymmCapableResource>(), context);
+			var app = new GroupUserEncryptedStore(new RoleApplicationData(context, this), Parent.GetValue<IAsymmCapableResource>(), context);
 			var id = SecurityExtensions.GenerateID(context.User, context.Passphrase, Guid.ToString());
 			Applications.Add(id, app);
 			error = null;

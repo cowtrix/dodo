@@ -35,5 +35,12 @@ namespace Dodo.Roles
 			m_groupPass = new AsymmEncryptedStore<string>(groupKey.Value, pub);
 			AddPermission(context.User.CreateRef<IAsymmCapableResource>(), context.Passphrase, group.CreateRef(), groupKey);
 		}
+
+		public RoleApplicationData GetValue(IAsymmCapableResource asymm, AccessContext context)
+		{
+			var pv = asymm.GetPrivateKey(context);
+			var pass = new Passphrase(m_groupPass.GetValue(pv));
+			return this.GetValue(asymm.CreateRef(), pass);
+		}
 	}
 }

@@ -119,6 +119,12 @@ namespace Dodo.Controllers.Edit
 			{
 				ViewData["Notifications"] = notificationResource.GetNotifications(Context, actionResult.PermissionLevel);
 			}
+			if(rsc is Roles.Role role)
+			{
+				var asymm = role.Parent.GetValue<IAsymmCapableResource>();
+				ViewData["applications"] = role.Applications.ToDictionary(kvp => kvp.Key,
+					kvp => kvp.Value.GetValue(asymm, Context));
+			}
 			var model = ViewModel(rsc);
 			return View(model);
 		}

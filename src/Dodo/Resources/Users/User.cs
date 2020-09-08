@@ -79,16 +79,6 @@ namespace Dodo.Users
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 
-		public IEnumerable<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel)
-		{
-			return TokenCollection.GetNotifications(accessContext, permissionLevel, this);
-		}
-
-		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
-		{
-			return TokenCollection.Remove<INotificationToken>(context, permissionLevel, notification, this);
-		}
-
 		public override Passphrase GetPrivateKey(AccessContext accessContext)
 		{
 			if (accessContext.User == null)

@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Security.Cryptography;
 using Common.Extensions;
 using System;
@@ -19,11 +19,8 @@ namespace Common.Security
 				return null;
 			}
 			byte[] data = Encoding.ASCII.GetBytes(plaintext);
-			using (var sha256 = new SHA256Managed())
-			{
-				var rawBytes = sha256.ComputeHash(data);
-				return BitConverter.ToString(rawBytes);
-			}
+			var rawBytes = new MD5CryptoServiceProvider().ComputeHash(data);
+			return BitConverter.ToString(rawBytes);
 		}
 	}
 }

@@ -36,7 +36,7 @@ namespace Dodo
 			return Creator == SecurityExtensions.GenerateID(context.User, context.Passphrase, Guid.ToString());
 		}
 
-		public virtual void OnDestroy()
+		public override void OnDestroy()
 		{
 			if (this is IOwnedResource owned && owned.Parent.HasValue())
 			{

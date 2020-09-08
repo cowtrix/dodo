@@ -6,6 +6,8 @@ using System;
 using Resources;
 using Microsoft.AspNetCore.Mvc;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
 namespace Dodo.Roles
 {
 	public class RoleService : ResourceServiceBase<Role, RoleSchema>
