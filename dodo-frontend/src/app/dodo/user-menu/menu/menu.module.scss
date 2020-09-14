@@ -11,7 +11,7 @@ $menu-max-width: 480px;
 	transition: 0.3s;
 	z-index: 9999999999;
 	top: 130px;
-	padding: spacing(3);
+	padding: spacing(2);
 
 	@media(min-width: $responsive-breakpoint) {
 		top: 100px;

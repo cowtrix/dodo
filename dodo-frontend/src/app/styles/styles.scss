@@ -4,12 +4,12 @@ $responsive-breakpoint: 760px;
 $xsmall-spacing-unit: 3px;
 $small-spacing-unit: 5px;
 
-@function spacing($multiple, $unit: $xsmall-spacing-unit) {
+@function spacingXS($multiple, $unit: $xsmall-spacing-unit) {
 	$result: $multiple * $unit;
 	@return $result;
 }
 
-@function spacingSmall($multiple, $unit: $small-spacing-unit) {
+@function spacing($multiple, $unit: $small-spacing-unit) {
 	$result: $multiple * $unit;
 	@return $result;
 }

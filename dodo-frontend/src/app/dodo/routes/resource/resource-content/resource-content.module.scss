@@ -1,11 +1,11 @@
 @import "~app/styles/styles";
 
 .resource {
-	margin-bottom: spacing(10);
+	margin-bottom: spacingXS(10);
 }
 
 .descriptionContainer {
-	padding: spacingSmall(2) spacingSmall(2);
+	padding: spacing(2) spacing(2);
 
 	@media (min-width: $responsive-breakpoint) {
 		display: flex;

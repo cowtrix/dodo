@@ -1,7 +1,7 @@
 @import "~app/styles/styles";
 
 .options {
-	margin-top: spacing(3);
+	margin-top: spacing(2);
 	font-family: "fucxed_capsregular";
 
 	li {
@@ -10,7 +10,7 @@
 	 }
 	a {
 		display: flex;
-		padding: spacing(3) spacing(6);
+		padding: spacing(2) spacingXS(6);
 		justify-content: flex-end;
 		text-decoration: none;
 		color: black;

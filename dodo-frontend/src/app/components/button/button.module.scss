@@ -2,7 +2,7 @@
 
 .button {
 	display: flex;
-	padding: spacing(3) spacing(6);
+	padding: spacing(2) spacingXS(6);
 	line-height: 1.2;
 	cursor: pointer;
 	text-decoration: none;
@@ -33,7 +33,7 @@
 	flex-direction: column;
 	width: 100%;
 	background: $extinction-rebellion-green;
-	padding: spacing(6) spacing(5) spacing(5);
+	padding: spacingXS(6) spacingXS(5) spacingXS(5);
 	h1 {
 		font-size: 2rem;
 	}
