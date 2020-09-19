@@ -1,5 +1,5 @@
 import { path } from "ramda"
-import { RESOURCE_GET } from "./action-types"
+import { RESOURCE_GET, RESOURCE_NOTIFICATIONS_GET } from "./action-types"
 
 export const currentResource = state => path(["domain", "resources", "currentResource"], state)
 
@@ -11,3 +11,5 @@ export const homeVideo = state => path(["domain", "resources", "resources", "ind
 
 export const resourceLoading = state =>
 	path(["requests", RESOURCE_GET, "isFetching"], state)
+
+export const notificationsLoading = state => path(["requests", RESOURCE_NOTIFICATIONS_GET, "isFetching"], state)

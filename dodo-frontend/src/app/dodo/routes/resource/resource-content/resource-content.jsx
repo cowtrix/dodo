@@ -12,7 +12,7 @@ import styles from './resource-content.module.scss'
 import { REGISTER_ROUTE } from '../../user-routes/register'
 
 export const ResourceContent =
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications, hideMap }) => {
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications, getNotifications, isLoadingNotifications, hideMap }) => {
 		const { push } = useHistory()
 
 		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
@@ -29,7 +29,11 @@ export const ResourceContent =
 			<Video videoEmbedURL={resource.videoEmbedURL} />
 			<div className={styles.descriptionContainer}>
 				<Description description={resource.publicDescription} />
-				{shouldDisplayNotifications && <Updates notifications={notifications}/>}
+				{shouldDisplayNotifications &&
+					<div>
+						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
+					</div>
+				}
 			</div>
 			<Role
 				applicantQuestion={resource.applicantQuestion}

@@ -4,15 +4,24 @@ import styles from "./updates.module.scss";
 import { useTranslation } from "react-i18next";
 import { Update } from "./update";
 
-export const Updates = ({ notifications: { notifications = [] } }) => {
+export const Updates = ({ notifications: { notifications = [], nextPageToLoad = false }, loadMore, isLoadingMore = false }) => {
 	const { t } = useTranslation("ui");
 
 	return (
 		<div className={styles.container}>
 			<h3 className={styles.title}>{t("notifications_title")}</h3>
-			{notifications.map((notification) => (
-				<Update key={notification.guid} notification={notification} />
-			))}
+			<div className={styles.notifications}>
+				{notifications.map((notification) => (
+					<Update key={notification.guid} notification={notification} />
+				))}
+			</div>
+			{nextPageToLoad !== false &&
+				<div className={styles.loadMore}>
+					<button className={styles.loadMoreButton} onClick={loadMore} disabled={isLoadingMore}>
+						{isLoadingMore ? t("loading_please_wait") : t("notifications_show_more")}
+					</button>
+				</div>
+			}
 		</div>
 	);
 };
