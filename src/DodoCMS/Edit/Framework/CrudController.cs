@@ -32,7 +32,7 @@ namespace Dodo.Controllers.Edit
 		protected TViewModel ViewModel(T rsc) => rsc.CopyByValue<TViewModel>(Context.User.CreateRef(), Context.Passphrase);
 
 		[Route("create")]
-		public IActionResult Create([FromQuery] string parent = null)
+		public virtual IActionResult Create([FromQuery] string parent = null)
 		{
 			if (Context.User == null)
 			{
@@ -71,7 +71,7 @@ namespace Dodo.Controllers.Edit
 		[HttpPost]
 		[Route("create")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([FromForm] TSchema schema)
+		public virtual async Task<IActionResult> Create([FromForm] TSchema schema)
 		{
 			if (Context.User == null)
 			{
@@ -100,7 +100,7 @@ namespace Dodo.Controllers.Edit
 		}
 
 		[Route("{id}")]
-		public async Task<IActionResult> Edit([FromRoute] string id)
+		public virtual async Task<IActionResult> Edit([FromRoute] string id)
 		{
 			if (Context.User == null)
 			{
@@ -132,7 +132,7 @@ namespace Dodo.Controllers.Edit
 		[HttpPost]
 		[Route("{id}")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit([FromRoute] string id, [FromForm] TViewModel modified)
+		public virtual async Task<IActionResult> Edit([FromRoute] string id, [FromForm] TViewModel modified)
 		{
 			if (Context.User == null)
 			{
@@ -163,7 +163,7 @@ namespace Dodo.Controllers.Edit
 
 		[HttpGet]
 		[Route("{id}/delete")]
-		public async Task<IActionResult> Delete([FromRoute]string id)
+		public virtual async Task<IActionResult> Delete([FromRoute]string id)
 		{
 			if (Context.User == null)
 			{
@@ -183,7 +183,7 @@ namespace Dodo.Controllers.Edit
 		[HttpPost]
 		[Route("{id}/delete")]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Delete(TViewModel view)
+		public virtual async Task<IActionResult> Delete(TViewModel view)
 		{
 			if (Context.User == null)
 			{

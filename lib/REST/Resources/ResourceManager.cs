@@ -48,6 +48,7 @@ namespace Resources
 		/// </summary>
 		private ConfigVariable<int> m_resourceLockTimeoutMs = new ConfigVariable<int>("ResourceLockTimeout", 10 * 1000);
 		public IMongoCollection<T> MongoDatabase { get; private set; }
+		private static object m_addlock = new object();
 
 		public ResourceManager()
 		{
@@ -88,15 +89,18 @@ namespace Resources
 		public virtual void Add(T newObject)
 		{
 			Logger.Debug($"{typeof(T).Name} ADD: {newObject.Name} ({newObject.Guid})");
-			if (ResourceUtility.GetResourceByGuid(newObject.Guid) != null)
+			lock(m_addlock)
 			{
-				throw new Exception("Conflicting GUID");
-			}
-			if (Get(r => r.Slug == newObject.Slug).Any())
-			{
-				throw new Exception("Conflicting slug");
-			}
-			MongoDatabase.InsertOne(newObject);
+				if (ResourceUtility.GetResourceByGuid(newObject.Guid) != null)
+				{
+					throw new Exception("Conflicting GUID");
+				}
+				if (Get(r => r.Slug == newObject.Slug).Any())
+				{
+					throw new Exception("Conflicting slug");
+				}
+				MongoDatabase.InsertOne(newObject);
+			}			
 		}
 
 		/// <summary>

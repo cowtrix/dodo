@@ -1,4 +1,5 @@
 {
   "LogLevel": 3,
-  "MongoDBServerURL": ""
+  "MongoDBServerURL": "",
+  "ResourceLockTimeout": 10000
 }

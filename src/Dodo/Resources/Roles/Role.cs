@@ -27,6 +27,8 @@ namespace Dodo.Roles
 		public string Notes { get; set; }
 		public List<Message> Messages { get; set; } = new List<Message>();
 
+		public RoleApplicationData() { }
+
 		public RoleApplicationData(AccessContext context, Role role)
 		{
 			Applicant = SecurityExtensions.GenerateID(context.User, context.Passphrase, role.Guid.ToString());

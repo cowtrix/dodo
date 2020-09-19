@@ -1,3 +1,4 @@
+using Common.Config;
 using Ryadel.Components.Security;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,10 @@ namespace Common.Extensions
 		}
 	}
 
+	/// <summary>
+	/// An exception that is thrown when an object member is in an invalid state
+	/// detected by IVerifiable
+	/// </summary>
 	public class MemberVerificationException : PublicException
 	{
 		public MemberVerificationException(string message) : base(message)
@@ -109,22 +114,23 @@ namespace Common.Extensions
 
 		public static bool EmailIsValid(string emailAddress)
 		{
+			if(string.IsNullOrEmpty(emailAddress))
+			{
+				return false;
+			}
 			bool isValid = ValidEmailRegex.IsMatch(emailAddress);
 			return isValid;
-		}
+		}		
 
-		static IList<string> m_reservedWords = new List<string>()
-		{
-			//"COORDINATOR", "ADMIN",
-		};
 		public static bool NameIsValid(string name, out string error)
 		{
+			var bannedWords = ConfigManager.GetValue<string[]>("BannedWords", new string[0]); // Words containing these strings will not be allowed  
 			if (string.IsNullOrEmpty(name) || name.Length < NAME_MIN_LENGTH || name.Length > NAME_MAX_LENGTH)
 			{
 				error = $"Name length must be between {NAME_MIN_LENGTH} and {NAME_MAX_LENGTH} characters long";
 				return false;
 			}
-			var reserved = m_reservedWords.FirstOrDefault(w => name.ToUpperInvariant().Contains(w));
+			var reserved = bannedWords.FirstOrDefault(w => name.ToUpperInvariant().Contains(w.ToUpperInvariant()));
 			if(!string.IsNullOrEmpty(reserved))
 			{
 				error = $"Name contains reserved word: " + reserved;

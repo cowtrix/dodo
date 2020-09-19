@@ -112,7 +112,7 @@ namespace SharedTest
 					admin.AddNewAdmin(context, GetRandomUser(out _, out _));
 					admin.AddNewAdmin(context, GetRandomUser(out _, out _));
 					ResourceUtility.GetManager(admin.GetType()).Update(admin, rscLock);
-				}				
+				}
 			}
 			if (publish && obj is INotificationResource not)
 			{
@@ -160,6 +160,20 @@ namespace SharedTest
 				{
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
+				}
+				else if (obj is Role role)
+				{
+					int appCount = new Random().Next(0, 3);
+					using (var rscLock = new ResourceLock(role))
+					{
+						for (var i = 0; i < appCount; ++i)
+						{
+							var applicant = GetRandomUser(out _, out var appcontext);
+							role.Apply(appcontext, new ApplicationModel() { Content = "Hello, this is a test application!" }, out _);
+
+						}
+						ResourceUtility.GetManager(role.GetType()).Update(role, rscLock);
+					}
 				}
 			}
 			return ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);

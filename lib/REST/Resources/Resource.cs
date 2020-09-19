@@ -103,13 +103,9 @@ namespace Resources
 			}
 			Name = schema.Name;
 			Slug = ValidationExtensions.StripStringForSlug(Name);
-			if(ResourceManager.Get(r => r.Slug == Slug).Any())
+			while(ResourceManager.Get(r => r.Slug == Slug).Any())
 			{
-				var existingCount = ResourceManager.Get(r => r.Slug.StartsWith(Slug)).Count();
-				if (existingCount > 0)
-				{
-					Slug += existingCount;
-				}
+				Slug += Common.Security.KeyGenerator.GetUniqueKey(2).ToLowerInvariant();
 			}
 			Guid = Guid.NewGuid();
 		}
