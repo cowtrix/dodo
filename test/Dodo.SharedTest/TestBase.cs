@@ -158,6 +158,9 @@ namespace SharedTest
 				}
 				else if (obj is LocalGroup lg)
 				{
+					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, lg));
+					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, lg));
+
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 				}
@@ -202,11 +205,15 @@ namespace SharedTest
 			// Verify email if flag has been set
 			if (verifyEmail)
 			{
-				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, user);
-				Assert.IsNotNull(verifyToken);
-				user.PersonalData.EmailConfirmed = true;
+				using(var rscLock = new ResourceLock(user.Guid))
+				{
+					var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, user);
+					Assert.IsNotNull(verifyToken);
+					verifyToken.Redeem(context);
+					user.PersonalData.EmailConfirmed = true;
+					UserManager.Update(user, rscLock);
+				}
 			}
-
 			return user;
 		}
 

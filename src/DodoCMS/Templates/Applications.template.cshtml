@@ -1,5 +1,5 @@
 @{
-	var applications = ViewData["applications"] as Dictionary<string, Dodo.Roles.RoleApplicationData>;
+	var applications = ViewData["applications"] as Dictionary<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>;
 	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<{FULL_TYPE}, {SCHEMA_TYPE}>);
 }
 <div class="card">
@@ -12,10 +12,10 @@
 
 					@{
 						var counter = 0;
-						foreach (KeyValuePair<string, Dodo.Roles.RoleApplicationData>
+						foreach (KeyValuePair<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>
 							kvp in applications)
 						{
-							Dodo.Roles.RoleApplicationData app = kvp.Value;
+							Resources.ResourceReference<Dodo.RoleApplications.RoleApplication> app = kvp.Value;
 							<div class="card">
 								<div class="card-header" id="heading@(counter)">
 									<div class="row">
@@ -34,16 +34,7 @@
 								<!-- Conversation -->
 								<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
 									<div class="card-body">
-										<form id="@app.Applicant)" method="post" action="@Model.Slug/" enctype="application/x-www-form-urlencoded">
-											<div class="card-body">
-												<div class="row">
-
-												</div>
-											</div>
-											<div class="card-body">
-												<input type="submit" value="Save" class="btn btn-primary btn-block" />
-											</div>
-										</form>
+										<iframe src="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid" loading="lazy" style="width:100%;height:auto;" />
 									</div>
 								</div>
 							</div>

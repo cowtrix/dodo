@@ -30,12 +30,14 @@ namespace Dodo.Roles
 			var role = actionReq.Result as Role;
 			using var rscLock = new ResourceLock(role);
 			role = rscLock.Value as Role;
-			if (!role.Apply(Context, application, out var error))
+			var appRsc = role.Apply(Context, application, out var error);
+			if (appRsc == default)
 			{
 				return ResourceRequestError.BadRequest(error);
 			}
 			ResourceManager.Update(role, rscLock);
-			return new OkRequestResult("Application successful");
+			// Send them to the application
+			return new ActionRequestResult(new RedirectResult($"{DodoApp.NetConfig.FullURI}/{nameof(RoleApplications).ToLowerInvariant()}/{appRsc.Guid}", false));
 		}
 	}
 }

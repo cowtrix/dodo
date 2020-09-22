@@ -1,0 +1,39 @@
+@model Dodo.ViewModels.RoleApplicationViewModel;
+@{
+	var authManager = ViewData["auth"] as Dodo.RoleAuthService;
+	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
+}
+<div class="card">
+	<h5 class="card-header">Messages</h5>
+	<div class="list-group">
+		<div class="card-body">
+			@{
+				foreach (Dodo.RoleApplications.Message message in Model.Data.Messages)
+				{
+					var isApplicant = message.Sender == null;
+					<li class="list-group-item">
+						<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+							<div class="row">
+								<div class="col" style="margin-left:10px;">
+									<div class="row">
+										<small>
+											@TimeZoneInfo.ConvertTimeFromUtc(message.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
+										</small>
+									</div>
+									<div class="row">
+										<strong>
+											@(isApplicant ? "Applicant" : "Admin"))
+										</strong>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div style="padding:10px;">
+							<p style="margin:0;"> @Html.Raw(message.Content) </p>
+						</div>
+					</li>
+				}
+			}
+		</div>
+	</div>
+</div>

@@ -36,8 +36,10 @@ namespace Resources.Serializers
 			var parent = context.Reader.ReadBinaryData().AsGuid;
 			context.Reader.ReadName();
 			var desc = context.Reader.ReadString();
+			context.Reader.ReadName();
+			var pub = context.Reader.ReadBoolean();
 			context.Reader.ReadEndDocument();
-			return new ResourceReference<T>(guid, slug, type, name, loc, parent, desc);
+			return new ResourceReference<T>(guid, slug, type, name, loc, parent, desc, pub);
 		}
 
 		public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, ResourceReference<T> value)
@@ -59,6 +61,8 @@ namespace Resources.Serializers
 			context.Writer.WriteBinaryData(value.Parent);
 			context.Writer.WriteName(nameof(value.PublicDescription));
 			context.Writer.WriteString(value.PublicDescription ?? string.Empty);
+			context.Writer.WriteName(nameof(value.IsPublished));
+			context.Writer.WriteBoolean(value.IsPublished);
 			context.Writer.WriteEndDocument();
 		}
 

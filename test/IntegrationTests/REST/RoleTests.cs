@@ -1,7 +1,11 @@
 using Dodo.Roles;
 using Dodo.Roles;
+using DodoTest.Framework.Postman;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
+using Resources;
+using System;
+using System.Threading.Tasks;
 
 namespace RESTTests
 {
@@ -24,50 +28,21 @@ namespace RESTTests
 			Assert.AreEqual(patchObj.Value<string>("PublicDescription"), rsc.PublicDescription);
 		}
 
-		/*[TestInitialize]
-		public void Setup()
+		[TestMethod]
+		[TestCategory("Joining & Leaving")]
+		public async Task CanApply()
 		{
-			RegisterUser(out _, DefaultUsername, "Test User", DefaultPassword, "test@web.com");
-			var rebellion = RequestJSON("rebellions/create", Method.POST,
-				new RebellionSchema("Test Rebellion", "Test description", new GeoLocation(45, 97), RebellionTests.DefaultStart, RebellionTests.DefaultEnd));
-			WorkingGroup = RequestJSON(rebellion.Value<string>("ResourceURL") + "/wg/create", Method.POST,
-				new WorkingGroupSchema("Test Working Group", "Test mandate", rebellion.Value<Guid>("GUID")));
+			var group = CreateObject<Role>();
+			var user = GetRandomUser(out var password, out var context);
+			await Login(user.Slug, password);
+			var joinReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/apply", EHTTPRequestType.POST,
+				new ApplicationModel { Content = "This is my test application data." }, 
+				validator: m => m.StatusCode == System.Net.HttpStatusCode.Redirect);
+			var verify = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
+			Assert.AreNotEqual(verify[Resource.METADATA]["applied"].Value<string>(), default(System.Guid).ToString());
+			Postman.Update(
+				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Apply for a Role" },
+				joinReq);
 		}
-
-		public override object GetCreationSchema(bool unique)
-		{
-			if(!unique)
-			{
-				return new RoleSchema("Test Role ", "Test mandate", WorkingGroup.Value<Guid>("GUID"));
-			}
-			return new RoleSchema("Test Role " + StringExtensions.RandomString(6), "Test mandate", WorkingGroup.Value<Guid>("GUID"));
-		}
-
-		public override object GetPatchSchema()
-		{
-			return new { PublicDescription = "New description" };
-		}
-
-		protected override void CheckPatchedObject(JObject obj)
-		{
-			Assert.AreEqual("New description", obj.Value<string>("PublicDescription"));
-			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Update a Role");
-		}
-
-		protected override void CheckCreatedObject(JObject obj)
-		{
-			var workingGroupGUID = WorkingGroup.Value<string>("GUID");
-			var workingGroupGUIDFromObj = obj.Value<JObject>("Parent").Value<string>("Guid");
-			Assert.AreEqual(workingGroupGUID, workingGroupGUIDFromObj);
-			var parent = RequestJSON(WorkingGroup.Value<string>("ResourceURL"), Method.GET);
-			Assert.IsTrue(parent.Value<JArray>("Roles").Values<string>().Contains(obj.Value<string>("GUID")));
-			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Create a new Role");
-		}
-
-		protected override void CheckGetObject(JObject obj)
-		{
-			base.CheckGetObject(obj);
-			m_postman.UpdateExampleJSON(obj.ToString(), "Roles", "Get a Role");
-		}*/
 	}
 }

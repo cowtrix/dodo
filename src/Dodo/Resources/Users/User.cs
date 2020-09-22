@@ -44,6 +44,9 @@ namespace Dodo.Users
 		{
 			AuthData = new AuthorizationData(schema.Password);
 			PersonalData.Email = schema.Email;
+#if DEBUG
+			PersonalData.EmailConfirmed = true;
+#endif
 			Slug = schema.Username;
 		}
 

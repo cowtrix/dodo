@@ -25,7 +25,7 @@ namespace Dodo
 			}
 		}
 
-		public string Creator { get; private set; }
+		public string Creator { get; set; }
 
 		public bool IsCreator(AccessContext context)
 		{

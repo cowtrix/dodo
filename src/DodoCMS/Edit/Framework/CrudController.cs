@@ -123,7 +123,7 @@ namespace Dodo.Controllers.Edit
 			{
 				var asymm = role.Parent.GetValue<IAsymmCapableResource>();
 				ViewData["applications"] = role.Applications.ToDictionary(kvp => kvp.Key,
-					kvp => kvp.Value.GetValue(asymm, Context));
+					kvp => kvp.Value);
 			}
 			var model = ViewModel(rsc);
 			return View(model);

@@ -28,7 +28,7 @@ namespace Security
 			[View(EPermissionLevel.OWNER)]
 			public GeoLocation Location = new GeoLocation(43, 62);
 			public ResourceReference<User> UserReference = 
-				new ResourceReference<User>(Guid.NewGuid(), "asdadw", typeof(User), "asdadw", null, default, default);
+				new ResourceReference<User>(Guid.NewGuid(), "asdadw", typeof(User), "asdadw", null, default, default, false);
 			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public SymmEncryptedStore<string> EncryptedString;
 			[View(EPermissionLevel.USER, EPermissionLevel.USER)]

@@ -144,6 +144,15 @@
 													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
 												</div>
+												@{
+													if (Model.__Type == typeof(Dodo.WorkingGroups.WorkingGroup))
+													{
+														<div class="form-check">
+															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageRoles ? "checked" : "")>
+															<label class="form-check-label" for="@getID("CanManageRoles")">Can Manage Roles</label>
+														</div>
+													}
+												}
 											</div>
 										</div>
 									</div>

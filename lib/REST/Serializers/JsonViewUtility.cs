@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using Resources.Location;
 using System.Collections.Concurrent;
-
+using MongoDB.Driver;
 
 namespace Resources
 {
@@ -52,8 +52,35 @@ namespace Resources
 		private static readonly Dictionary<Func<MemberInfo, bool>, CustomSerializer> m_customSerializers = new Dictionary<Func<MemberInfo, bool>, CustomSerializer>
 		{
 			{ m => typeof(IResourceReference).IsAssignableFrom(m.GetMemberType()), ResourceRefSerializer },
-			{ m => m.GetCustomAttribute<ViewDrawerAttribute>()?.DrawerName == "html", HtmlSerializer }
+			{ m => m.GetCustomAttribute<ViewDrawerAttribute>()?.DrawerName == "html", HtmlSerializer },
+			{ m => m.GetCustomAttribute<ViewDrawerAttribute>()?.DrawerName == "pubfilter", PublishedFilter },
 		};
+
+		private static object PublishedFilter(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase)
+		{
+			if (visibility >= EPermissionLevel.ADMIN)
+			{
+				return obj;
+			}
+			if (!(obj is IEnumerable pubEnum))
+			{
+				throw new Exception("Invalid type: must be IEnumerable<IPublicResource>");
+			}
+			var result = new List<IResourceReference>();
+			foreach (var r in pubEnum)
+			{
+				if (!(r is IResourceReference reference))
+				{
+					throw new Exception($"Bad type: {r.GetType()}");
+				}
+				if(reference == default || !reference.IsPublished)
+				{
+					continue;
+				}
+				result.Add(reference);
+			}
+			return result;
+		}
 
 		private static object HtmlSerializer(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase)
 		{
@@ -78,15 +105,15 @@ namespace Resources
 				{ nameof(IResourceReference.Name).ToCamelCase(),  reference.Name },
 				{ Resource.METADATA, new { type = reference.Type } },
 			};
-			if(!string.IsNullOrEmpty(reference.PublicDescription))
+			if (!string.IsNullOrEmpty(reference.PublicDescription))
 			{
 				ret[nameof(IResourceReference.PublicDescription).ToCamelCase()] = reference.PublicDescription;
 			}
-			if(reference.Parent != default)
+			if (reference.Parent != default)
 			{
 				ret[nameof(IResourceReference.Parent).ToCamelCase()] = reference.Parent;
 			}
-			if(reference.Location?.Latitude != 0 && reference.Location?.Longitude != 0 && typeof(ILocationalResource).IsAssignableFrom(reference.GetRefType()))
+			if (reference.Location?.Latitude != 0 && reference.Location?.Longitude != 0 && typeof(ILocationalResource).IsAssignableFrom(reference.GetRefType()))
 			{
 				ret[nameof(IResourceReference.Location).ToCamelCase()] = new
 				{
@@ -465,7 +492,7 @@ namespace Resources
 				}
 				targetMember.SetValue(targetObject, valueToSet);
 				var onPatch = targetMember.GetCustomAttribute<PatchCallbackAttribute>();
-				if(onPatch != null)
+				if (onPatch != null)
 				{
 					try
 					{

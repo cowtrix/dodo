@@ -32,6 +32,9 @@ namespace Dodo
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		[Name("Manage Announcements")]
 		public bool CanManageAnnouncements { get; set; }
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		[Name("Create and Manage Roles")]
+		public bool CanManageRoles { get; set; }
 
 		public override bool Equals(object obj)
 		{
@@ -42,12 +45,13 @@ namespace Dodo
 				   CanEditInfo == set.CanEditInfo &&
 				   CanCreateChildObjects == set.CanCreateChildObjects &&
 				   CanDeleteChildObjects == set.CanDeleteChildObjects &&
-				   CanManageAnnouncements == set.CanManageAnnouncements;
+				   CanManageAnnouncements == set.CanManageAnnouncements &&
+				   CanManageRoles == set.CanManageRoles;
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(CanChangePermissions, CanAddAdmin, CanRemoveAdmin, CanEditInfo, CanCreateChildObjects, CanDeleteChildObjects, CanManageAnnouncements);
+			return HashCode.Combine(CanChangePermissions, CanAddAdmin, CanRemoveAdmin, CanEditInfo, CanCreateChildObjects, CanDeleteChildObjects, CanManageAnnouncements, CanManageRoles);
 		}
 
 		public static bool operator ==(AdministratorPermissionSet left, AdministratorPermissionSet right)

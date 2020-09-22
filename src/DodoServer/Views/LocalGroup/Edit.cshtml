@@ -82,6 +82,44 @@ $(function () {
 					<input asp-for="MemberCount" class="sr-only"></input>
 					<input asp-for="AdministratorData" class="sr-only"></input>
 					<input asp-for="PublicKey" class="sr-only"></input>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Working Groups</h5>
+					<ul class="list-group">
+				@{ for(var i = 0; i < Model.WorkingGroups.Count; ++i) {
+				<li class="list-group-item">
+								<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
+								<div class="row">
+								<div class="col"><strong>@Model.WorkingGroups[i].Name</strong></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.WorkingGroups[i].GetRefType())" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.WorkingGroups[i].GetRefType())" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
+								</div>
+				</li>
+				}
+				}
+						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.WorkingGroups.WorkingGroup))" role="button" href="~/edit/WorkingGroup/create?parent=@Model.Slug">Create</a>
+						</ul>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Events</h5>
+					<ul class="list-group">
+				@{ for(var i = 0; i < Model.Events.Count; ++i) {
+				<li class="list-group-item">
+								<input class="sr-only" asp-for="Events[i].Type"/>
+								<div class="row">
+								<div class="col"><strong>@Model.Events[i].Name</strong></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Events[i].GetRefType())" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Events[i].GetRefType())" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i></a></div>
+								</div>
+				</li>
+				}
+				}
+						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.LocationResources.Event))" role="button" href="~/edit/Event/create?parent=@Model.Slug">Create</a>
+						</ul>
+					</div>
+				</div>
 <script>
 	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
 	var coordinates = document.getElementById('coordinates');
@@ -457,6 +495,15 @@ $(function () {
 													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
 												</div>
+												@{
+													if (Model.__Type == typeof(Dodo.WorkingGroups.WorkingGroup))
+													{
+														<div class="form-check">
+															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageRoles ? "checked" : "")>
+															<label class="form-check-label" for="@getID("CanManageRoles")">Can Manage Roles</label>
+														</div>
+													}
+												}
 											</div>
 										</div>
 									</div>

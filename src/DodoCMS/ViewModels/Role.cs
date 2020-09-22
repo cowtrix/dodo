@@ -38,6 +38,6 @@ namespace Dodo.ViewModels
 		public System.Boolean IsPublished { get; set; }
 		[DisplayName("Applications")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		public System.Collections.Generic.Dictionary<string,Dodo.Roles.GroupUserEncryptedStore> Applications { get; set; }
+		public System.Collections.Generic.Dictionary<string,Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>> Applications { get; set; }
 	}
 }

@@ -48,6 +48,7 @@ namespace Dodo
 					CanCreateChildObjects = true,
 					CanDeleteChildObjects = true,
 					CanManageAnnouncements = true,
+					CanManageRoles = true,
 				}
 			});
 			GroupPrivateKey = privateKey.Value;
