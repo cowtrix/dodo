@@ -2,4 +2,11 @@
 
 .description {
 	padding: spacing(3) spacing(2);
+
+	@media (min-width: $responsive-breakpoint) {
+		display: flex;
+		flex-grow: 3;
+		flex-basis: 0;
+		flex-direction: column;
+	}
 }

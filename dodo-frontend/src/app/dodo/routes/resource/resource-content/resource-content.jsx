@@ -6,7 +6,7 @@ import { Header, Description, SignUpButton, ParentLink, Updates, Role } from "ap
 
 import { ADMIN_PERMISSIONS } from 'app/constants'
 import { isSubscribedToResource } from './services'
-import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT} from './constants'
+import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT } from './constants'
 
 import styles from './resource-content.module.scss'
 import { REGISTER_ROUTE } from '../../user-routes/register'
@@ -18,44 +18,42 @@ export const ResourceContent =
 		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
 		const subscribe = () => subscribeResource(resourceType, resource.guid, 'join')
 		const unSubscribe = () => subscribeResource(resourceType, resource.guid, 'leave')
-		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', {content: body})
+		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', { content: body })
 
 		const shouldDisplayNotifications = resourceType !== 'role'
 
-	return (
-		<div className={styles.resource}>
-			<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap} />
-			<ParentLink parent={resource.parent}/>
-			<Video videoEmbedURL={resource.videoEmbedURL} />
-			<div className={styles.descriptionContainer}>
-				<Description description={resource.publicDescription} />
-				{shouldDisplayNotifications &&
-					<div>
-						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
-					</div>
-				}
+		return (
+			<div className={styles.resource}>
+				<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap}/>
+				<ParentLink parent={resource.parent}/>
+				<Video videoEmbedURL={resource.videoEmbedURL}/>
+				<div className={styles.descriptionContainer}>
+					<Description description={resource.publicDescription}/>
+					{shouldDisplayNotifications &&
+					<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
+					}
+				</div>
+				<Role
+					applicantQuestion={resource.applicantQuestion}
+					resourceColor={resourceColor}
+					applyForRole={apply}
+					isLoggedIn={isLoggedIn}
+					hasApplied={resource.metadata.applied}
+				/>
+				<SignUpButton
+					disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
+					resourceColor={resourceColor}
+					isLoggedIn={isLoggedIn}
+					isSubscribed={isSubscribed}
+					onClick={!isLoggedIn ? () => push(REGISTER_ROUTE) : !isSubscribed ? subscribe : unSubscribe}
+				/>
+				<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes}/>
+				<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes}/>
+				<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes}/>
+				<ExpandableList resources={resource.roles} title={VOLUNTEER_NOW} resourceTypes={resourceTypes}/>
 			</div>
-			<Role
-				applicantQuestion={resource.applicantQuestion}
-				resourceColor={resourceColor}
-				applyForRole={apply}
-				isLoggedIn={isLoggedIn}
-				hasApplied={resource.metadata.applied}
-			/>
-			<SignUpButton
-				disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
-				resourceColor={resourceColor}
-				isLoggedIn={isLoggedIn}
-				isSubscribed={isSubscribed}
-				onClick={!isLoggedIn ? () => push(REGISTER_ROUTE) : !isSubscribed ? subscribe : unSubscribe}
-			/>
-			<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes} />
-			<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes} />
-			<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />
-			<ExpandableList resources={resource.roles} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />
-		</div>
-	)
-}
+		)
+	}
 
 
 ResourceContent.propTypes = {
