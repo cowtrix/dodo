@@ -7,6 +7,8 @@ import { Routes } from "./routes"
 import { ErrorBoundary } from "./routes/error/"
 import { UserMenu } from './user-menu'
 import { AppLoadingScreen } from './app-loading-screen'
+import { CookieConsenter } from 'app/components'
+
 
 export const Dodo = ({ startup }) => {
 	startup()
@@ -18,6 +20,7 @@ export const Dodo = ({ startup }) => {
 				<UserMenu />
 				<Routes />
 			</Router>
+			<CookieConsenter />
 		</ErrorBoundary>
 	)
 }
