@@ -11,60 +11,66 @@
 
 {SCRIPTS}
 
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+	</li>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
 		<li class="nav-item">
-			<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
 		</li>
-		@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
-			</li>
-		}
-		@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
-			</li>
-		}
-		@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
-			</li>
-		}
-		<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/{TYPE}/@Model.Slug" target="_blank">View <i class="fa fa-link" aria-hidden="true"></i></a></li>
-	</ul>
-	<div class="tab-content" id="myTabContent">
-		<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-			<div class="card" style="width:100%;">
-				<div class="card-body">
-					<form asp-action="Edit">
-						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-						{DETAILS}
-						<div class="form-group">
-							<input type="submit" value="Save" class="btn btn-primary btn-block" />
-						</div>
-					</form>
-				</div>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
+		</li>
+	}
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
+		</li>
+	}
+	<li class="nav-item">
+		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="role" aria-selected="false">Analytics</a>
+	</li>
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/{TYPE}/@Model.Slug" target="_blank">View <i class="fa fa-link" aria-hidden="true"></i></a></li>
+</ul>
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="card" style="width:100%;">
+			<div class="card-body">
+				<form asp-action="Edit">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					{DETAILS}
+					<div class="form-group">
+						<input type="submit" value="Save" class="btn btn-primary btn-block" />
+					</div>
+				</form>
 			</div>
 		</div>
-		@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
-		{
-			<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-				{NOTIFICATIONS}
-			</div>
-		}
-		@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
-		{
-			<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-				{ADMIN}
-			</div>
-		}
-		@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
-		{
-			<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
-				{ROLES}
-			</div>
-		}
 	</div>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+			{NOTIFICATIONS}
+		</div>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+			{ADMIN}
+		</div>
+	}
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
+	{
+		<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
+			{ROLES}
+		</div>
+	}
+	<div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+		{ANALYTICS}
+	</div>
+</div>

@@ -45,23 +45,23 @@ namespace Resources.Serializers
 		public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, ResourceReference<T> value)
 		{
 			context.Writer.WriteStartDocument();
-			context.Writer.WriteName(nameof(value.Guid));
+			context.Writer.WriteName(nameof(value.Guid).Substring(0, 1));
 			context.Writer.WriteBinaryData(value.Guid);
-			context.Writer.WriteName(nameof(value.Slug));
+			context.Writer.WriteName(nameof(value.Slug).Substring(0, 1));
 			context.Writer.WriteString(value.Slug ?? string.Empty);
-			context.Writer.WriteName(nameof(value.FullyQualifiedName));
+			context.Writer.WriteName(nameof(value.FullyQualifiedName).Substring(0, 1));
 			context.Writer.WriteString(value.FullyQualifiedName ?? string.Empty);
-			context.Writer.WriteName(nameof(value.Name));
+			context.Writer.WriteName(nameof(value.Name).Substring(0, 1));
 			context.Writer.WriteString(value.Name ?? string.Empty);
-			context.Writer.WriteName(nameof(value.Location.Latitude));
+			context.Writer.WriteName(nameof(value.Location.Latitude).Substring(0, 2));
 			context.Writer.WriteDouble(value.Location != null ? value.Location.Latitude : 0);
-			context.Writer.WriteName(nameof(value.Location.Longitude));
+			context.Writer.WriteName(nameof(value.Location.Longitude).Substring(0, 2));
 			context.Writer.WriteDouble(value.Location != null ? value.Location.Longitude : 0);
-			context.Writer.WriteName(nameof(value.Guid));
+			context.Writer.WriteName(nameof(value.Guid).Substring(0, 1));
 			context.Writer.WriteBinaryData(value.Parent);
-			context.Writer.WriteName(nameof(value.PublicDescription));
+			context.Writer.WriteName(nameof(value.PublicDescription).Substring(0, 1));
 			context.Writer.WriteString(value.PublicDescription ?? string.Empty);
-			context.Writer.WriteName(nameof(value.IsPublished));
+			context.Writer.WriteName(nameof(value.IsPublished).Substring(0, 1));
 			context.Writer.WriteBoolean(value.IsPublished);
 			context.Writer.WriteEndDocument();
 		}

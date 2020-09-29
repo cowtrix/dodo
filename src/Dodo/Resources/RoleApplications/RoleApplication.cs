@@ -23,7 +23,7 @@ namespace Dodo.RoleApplications
 		public RoleApplicationData() { }
 		public RoleApplicationData(AccessContext applicant, RoleApplicationSchema schema)
 		{
-			Messages.Add(new Message(applicant, schema.Application.Content));
+			Messages.Add(new Message(applicant, schema.Application.Content, true));
 		}
 
 		[View(EPermissionLevel.ADMIN)]
@@ -34,6 +34,9 @@ namespace Dodo.RoleApplications
 
 	public class RoleApplication : DodoResource
 	{
+		public const string ROOT_URL = "roleapplication";
+		public const string MESSAGE = "message";
+
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM, priority: -2, customDrawer: "parentRef")]
 		public ResourceReference<Role> Parent { get; set; }
 		[View(EPermissionLevel.ADMIN)]

@@ -2,38 +2,58 @@
 @{
 	var authManager = ViewData["auth"] as Dodo.RoleAuthService;
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
+	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
+	var id = Resources.Security.SecurityExtensions.GenerateID(context.User, context.Passphrase, Model.Parent.Guid.ToString());
 }
-<div class="card">
-	<h5 class="card-header">Messages</h5>
-	<div class="list-group">
-		<div class="card-body">
+
+<script>
+	$(function () {
+		$('.chat-messages').scrollTop($('.chat-messages')[0].scrollHeight);
+	})
+</script>
+
+<div class="card chat-container">
+	<div class="card-body">
+		<div class="chat-messages">
 			@{
 				foreach (Dodo.RoleApplications.Message message in Model.Data.Messages)
 				{
-					var isApplicant = message.Sender == null;
-					<li class="list-group-item">
-						<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+					var isApplicant = string.IsNullOrEmpty(message.Sender);
+					var isYou = message.Sender == id;
+					<div class="card chat-entry chat-entry-@(isApplicant ? "user" : "admin")">
+						<div class="card-header chat-header">
 							<div class="row">
-								<div class="col" style="margin-left:10px;">
-									<div class="row">
-										<small>
-											@TimeZoneInfo.ConvertTimeFromUtc(message.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
-										</small>
-									</div>
-									<div class="row">
-										<strong>
-											@(isApplicant ? "Applicant" : "Admin"))
-										</strong>
-									</div>
+								<div class="col">
+									<small class="chat-text">
+										@TimeZoneInfo.ConvertTimeFromUtc(message.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
+									</small>
+								</div>
+								<div class="col-auto chat-text">
+									<strong>
+										@(isApplicant ? "You" : isYou? "You" : "Admin")
+									</strong>
 								</div>
 							</div>
 						</div>
-						<div style="padding:10px;">
-							<p style="margin:0;"> @Html.Raw(message.Content) </p>
+						<div class="card-body">
+							<p class="chat-text"> @Html.Raw(message.Content) </p>
 						</div>
-					</li>
+					</div>
 				}
 			}
 		</div>
+		<form id="newmessage" class="form chat-send" method="post" action="@(Model.Guid)/message" autocomplete="off">
+			<div class="row">
+				<div class="col">
+					<input type="text" class="form-control" id="content" name="content" placeholder="Enter new message...">
+				</div>
+				<div class="col-auto chat-button">
+					<input type="submit" value="Send" class="btn btn-primary" />
+				</div>
+			</div>
+		</form>
+		<small id="helpBlock" class="form-text text-muted chat-tip" style="text-align:left;">
+			Don't discuss sensitive information here. We recommend using secure channels such as Telegram and Signal.
+		</small>
 	</div>
 </div>

@@ -36,11 +36,11 @@ namespace Dodo.RoleApplications
 			AddPermission(context.User.CreateRef<IAsymmCapableResource>(), context.Passphrase, group.CreateRef(), groupKey);
 		}
 
-		public RoleApplicationData GetValue(IAsymmCapableResource asymm, AccessContext context)
+		public RoleApplicationData GetValueByGroup(AccessContext context, IAsymmCapableResource key)
 		{
-			var pv = asymm.GetPrivateKey(context);
+			var pv = key.GetPrivateKey(context);
 			var pass = new Passphrase(m_groupPass.GetValue(pv));
-			return this.GetValue(asymm.CreateRef(), pass);
+			return base.GetValue(key.CreateRef(), pass);
 		}
 	}
 }

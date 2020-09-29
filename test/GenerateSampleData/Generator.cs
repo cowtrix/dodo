@@ -15,6 +15,7 @@ using System;
 using System.Threading.Tasks;
 using Dodo.Users.Tokens;
 using System.Collections.Generic;
+using Dodo.Analytics;
 
 namespace GenerateSampleData
 {
@@ -42,6 +43,7 @@ namespace GenerateSampleData
 		public static async Task Generate()
 		{
 			ResourceUtility.ClearAllManagers();
+			Analytics.Clear();
 			var sysAdmin = GenerateUser(new UserSchema("Rebellion Tom", "test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
 			using (var rscLock = new ResourceLock(sysAdmin))
 			{
@@ -61,11 +63,11 @@ namespace GenerateSampleData
 			var location = await LocationManager.GetLocation(city);
 
 			// Make local groups
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema(city, SchemaGenerator.SampleDescription, location), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - .1)), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + .1)), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)), seed: false);
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema(city, SchemaGenerator.SampleDescription, location));
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - .1)));
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + .1)));
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)));
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)));
 
 			var rnd = new Random();
 			var rootDate = DateTime.Today + TimeSpan.FromDays(rnd.Next(365));

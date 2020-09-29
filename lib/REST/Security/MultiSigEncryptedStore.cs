@@ -49,7 +49,7 @@ namespace Resources.Security
 			m_data = new SymmEncryptedStore<TVal>(data, commonKey); // Encrypt the common data with the common passphrase
 		}
 
-		public TVal GetValue(TKey key, Passphrase password)
+		public virtual TVal GetValue(TKey key, Passphrase password)
 		{
 			if (!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, password, Guid), out var unlockPhrase))
 			{

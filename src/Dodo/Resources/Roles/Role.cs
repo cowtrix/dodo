@@ -63,9 +63,9 @@ namespace Dodo.Roles
 				return app;
 			}
 			var factory = new RoleApplicationFactory();
-			app = factory.CreateTypedObject(new ResourceCreationRequest(context, new RoleApplicationSchema($"Application for {Name}", this, application)))
-				.CreateRef();
-			Applications.Add(id, app);
+			var appRsc = factory.CreateTypedObject(new ResourceCreationRequest(context, new RoleApplicationSchema($"Application for {Name}", this, application)));
+			appRsc.Data.AddPermission(context, Parent.GetValue<Dodo.Users.Tokens.IAsymmCapableResource>());
+			Applications.Add(id, appRsc.CreateRef());
 			error = null;
 			return app;
 		}

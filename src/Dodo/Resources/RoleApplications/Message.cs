@@ -1,4 +1,4 @@
-﻿using Resources.Security;
+using Resources.Security;
 using System;
 
 namespace Dodo.RoleApplications
@@ -11,9 +11,12 @@ namespace Dodo.RoleApplications
 
 		public Message() { }
 
-		public Message(AccessContext context, string content)
+		public Message(AccessContext context, string content, bool noSender)
 		{
-			Sender = SecurityExtensions.GenerateID(context.User, context.Passphrase, context.User.Guid.ToString());
+			if (!noSender)
+			{
+				Sender = SecurityExtensions.GenerateID(context.User, context.Passphrase, context.User.Guid.ToString());
+			}
 			Content = content;
 			Timestamp = DateTime.UtcNow;
 		}

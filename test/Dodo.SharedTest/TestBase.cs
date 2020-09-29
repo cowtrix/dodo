@@ -15,6 +15,7 @@ using Resources;
 using Resources.Security;
 using System;
 using Dodo.LocalGroups;
+using Dodo.Analytics;
 
 namespace SharedTest
 {
@@ -23,7 +24,7 @@ namespace SharedTest
 	{
 		private static MongoDbRunner m_runner;
 		private static TestContext m_context;
-		private Random m_random = new Random();
+		private static Random m_random = new Random();
 		protected static PostmanCollection Postman { get; private set; } = new PostmanCollection(ConfigManager.GetValue($"{nameof(TestBase)}_PostmanCollection", ""));
 		protected static IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
 
@@ -119,6 +120,7 @@ namespace SharedTest
 				using (var rscLock = new ResourceLock(not))
 				{
 					not = rscLock.Value as INotificationResource;
+
 					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
 						"This is a test short Public announcement.", null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true));
 					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
@@ -128,6 +130,21 @@ namespace SharedTest
 					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
 						"This is a longer Public announcement: " + SchemaGenerator.SampleDescription, null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true));
 					ResourceUtility.GetManager(not.GetType()).Update(not, rscLock);
+				}
+			}
+			for (var i = 0; i <= 90; ++i)
+			{
+				var dt = DateTime.Now - TimeSpan.FromHours(i);
+				lock (m_random)
+				{
+					for (var j = 0; j < m_random.Next(10); ++j)
+					{
+						Analytics.RegisterView(default, obj, dt);
+					}
+					for (var j = 0; j < m_random.Next(10); ++j)
+					{
+						Analytics.RegisterView(context, obj, dt);
+					}
 				}
 			}
 			if (seed)

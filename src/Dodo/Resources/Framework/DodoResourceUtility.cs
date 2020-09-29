@@ -16,7 +16,7 @@ namespace Dodo.DodoResources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
-		private static IEnumerable<IRESTResource> Search(Func<IRESTResource, bool> selector, Guid? handle = null)
+		private static IEnumerable<IRESTResource> Search(Func<IRESTResource, bool> selector, Guid? handle = null, bool force = true)
 		{
 			foreach (var rc in ResourceUtility.ResourceManagers
 				.Where(rm => typeof(IPublicResource).IsAssignableFrom(rm.Key))
@@ -26,7 +26,7 @@ namespace Dodo.DodoResources
 				{
 					continue;
 				}
-				foreach (var rsc in rc.Value.Get(selector))
+				foreach (var rsc in rc.Value.Get(selector, handle, force))
 				{
 					yield return rsc;
 				}
@@ -44,12 +44,12 @@ namespace Dodo.DodoResources
 		}
 
 		private static IEnumerable<T> SearchInternal<T>(
-			Func<Func<IRESTResource, bool>, Guid?, IEnumerable<IRESTResource>> src, 
+			Func<Func<IRESTResource, bool>, Guid?, bool, IEnumerable<IRESTResource>> src, 
 			int index, 
 			int chunkSize, 
 			ISearchFilter[] filters)
 		{
-			return src.Invoke(rsc => filters.All(f => f.Filter(rsc)), null)
+			return src.Invoke(rsc => filters.All(f => f.Filter(rsc)), null, true)
 				.OfType<IPublicResource>()
 				.Where(rsc => rsc.IsPublished)
 				.Transpose(x =>

@@ -1,5 +1,6 @@
 using Dodo.Users.Tokens;
 using Resources;
+using Dodo.RoleApplications;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
@@ -43,6 +44,20 @@ namespace Dodo.RoleApplications
 				return ResourceRequestError.UnauthorizedRequest();
 			}
 			return base.IsAuthorised(context, target, requestType, action);
+		}
+
+		protected override IRequestResult CanPost(AccessContext context, RoleApplication target, string action = null)
+		{
+			if(action == RoleApplication.MESSAGE)
+			{
+				var permission = GetPermission(context, target);
+				if(permission < EPermissionLevel.ADMIN)
+				{
+					return context.User == null ? ResourceRequestError.ForbidRequest() : ResourceRequestError.UnauthorizedRequest();
+				}
+				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, permission, action);
+			}
+			return base.CanPost(context, target, action);
 		}
 	}
 }

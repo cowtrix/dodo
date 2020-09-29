@@ -32,6 +32,7 @@ namespace DodoAOT
 			template = template.Replace("{DETAILS}", viewBody);
 			template = template.Replace("{NOTIFICATIONS}", GetNotificationEditor(resourceType));
 			template = template.Replace("{ADMIN}", string.Join('\n', GetAdminEditor(resourceType)));
+			template = template.Replace("{ANALYTICS}", Template("Analytics"));
 			if (resourceType == typeof(Dodo.Roles.Role))
 			{
 				template = template.Replace("{ROLES}", GetApplicationsEditor());

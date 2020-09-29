@@ -45,6 +45,7 @@ namespace Resources
 			typeof(Enum),
 			typeof(DateTime),
 			typeof(GeoLocation),
+			typeof(Passphrase),
 			//typeof(IResourceReference)
 		};
 

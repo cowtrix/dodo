@@ -38,7 +38,7 @@ namespace DodoTest.Framework.Postman
 #if POSTMAN
 			if(string.IsNullOrEmpty(guid))
 			{
-				throw new ArgumentNullException(nameof(guid));
+				return;
 			}
 			m_guid = guid;
 			m_restClient.AddDefaultHeader("X-Api-Key", m_postmanAPIKey.Value);
