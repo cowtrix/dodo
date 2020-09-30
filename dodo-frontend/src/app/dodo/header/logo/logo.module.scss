@@ -6,10 +6,10 @@
 
 .logo {
 	width: 140px;
-	margin-bottom: spacing(4);
+	margin-bottom: spacingXS(4);
 
 	@media (min-width: $responsive-breakpoint) {
-		margin-left: spacing(5);
+		margin-left: spacingXS(5);
 		margin-bottom: 0;
 	}
 }

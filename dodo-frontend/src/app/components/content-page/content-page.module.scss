@@ -20,8 +20,8 @@
 	flex-grow: 1;
 
 	@media (min-width: $responsive-breakpoint) {
-		margin-left: spacing(5);
-		margin-right: spacing(5);
+		margin-left: spacingXS(5);
+		margin-right: spacingXS(5);
 		max-width: $application-max-width - 330px;
 	}
 }
