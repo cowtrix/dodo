@@ -8,6 +8,15 @@ $xsmall-spacing-unit: 3px;
 	@return $result;
 }
 
+@mixin input-stop-expansion {
+	height: 38px;
+  > div:first-of-type {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 $application-max-width: 1140px;
 
 $color-secondary: #6558f5;
