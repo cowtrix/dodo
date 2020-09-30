@@ -17,9 +17,10 @@
 			"footer_menu_link_text_climate_emergency": "The Climate Emergency",
 			"footer_menu_link_text_donate": "Donate",
 			"footer_menu_link_text_join": "Join",
+			"notifications_load_more": "Latest updates",
+			"loading_please_wait": "Loading, please wait...",
 			"notifications_title": "Latest updates",
-			"notifications_show_more": "See more...",
-			"notifications_show_less": "See less"
+			"notifications_show_more": "See more..."
 		}
 	},
 	"es": {

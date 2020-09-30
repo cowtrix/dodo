@@ -37,7 +37,7 @@ namespace Dodo
 		public override int GetHashCode()
 		{
 			var hashCode = 2085623975;
-			hashCode = hashCode * -1521134295 + SecurityExtensions.GenerateID(User, Passphrase).GetHashCode();
+			hashCode = hashCode * -1521134295 + SecurityExtensions.GenerateID(User, Passphrase, User.Guid.ToString()).GetHashCode();
 			return hashCode;
 		}
 

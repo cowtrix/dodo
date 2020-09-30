@@ -53,7 +53,7 @@ namespace Dodo.Utility
 				{
 					proxy = EmailProxy.GetProxyFromKey(inboundEmail.From.Email, target);
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					Logger.Warning($"New untargeted email: {inboundEmail.From.Email}");
 					SaveEmail(inboundEmail);

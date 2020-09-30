@@ -66,8 +66,7 @@ namespace Security
 		private void CanSetValue<T>(T data)
 		{
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
-			var store = new AsymmEncryptedStore<T>();
-			store.SetValue(data, new Passphrase(pk));
+			var store = new AsymmEncryptedStore<T>(data, new Passphrase(pk));
 			var decryptedData = store.GetValue(new Passphrase(pv));
 			Assert.AreEqual(data, decryptedData);
 		}

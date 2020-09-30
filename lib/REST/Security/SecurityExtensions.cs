@@ -1,4 +1,5 @@
 using Common.Security;
+using System;
 
 namespace Resources.Security
 {
@@ -11,9 +12,9 @@ namespace Resources.Security
 		/// <param name="key"></param>
 		/// <param name="passphrase"></param>
 		/// <returns></returns>
-		public static string GenerateID(object key, Passphrase passphrase)
+		public static string GenerateID(object key, Passphrase passphrase, string salt)
 		{
-			return GenerateID(key, passphrase.Value);
+			return GenerateID(key, passphrase.Value, salt);
 		}
 
 		/// <summary>
@@ -23,9 +24,17 @@ namespace Resources.Security
 		/// <param name="key"></param>
 		/// <param name="passphrase"></param>
 		/// <returns></returns>
-		public static string GenerateID(object key, string passphrase)
+		public static string GenerateID(object key, string passphrase, string salt)
 		{
-			return SHA256Utility.SHA256(key.GetHashCode() + passphrase);
+			if(key == null)
+			{
+				return string.Empty;
+			}
+			if(string.IsNullOrEmpty(salt))
+			{
+				throw new ArgumentNullException(nameof(salt));
+			}
+			return SHA256Utility.SHA256(key.GetHashCode() + passphrase + salt);
 		}
 	}
 }

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Dodo.DodoResources;
 using System;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
 namespace Dodo
 {
 	public abstract class SearchableResourceController<T, TSchema> : CrudResourceAPIController<T, TSchema>

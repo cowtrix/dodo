@@ -4,8 +4,6 @@ namespace Resources
 {
 	public class ResourceActionRequest : ResourceRequest
 	{
-		public readonly string ActionName;
-
 		public ResourceActionRequest(AccessContext context,
 			IDodoResource rsc,
 			EHTTPRequestType type,

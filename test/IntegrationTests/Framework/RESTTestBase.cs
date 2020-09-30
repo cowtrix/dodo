@@ -60,7 +60,7 @@ namespace RESTTests
 
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {PostmanTypeName}" },
-				LastRequest, 2, "Get as Owner");
+				LastRequest, 1, "Get as Owner");
 		}
 
 		[TestMethod]

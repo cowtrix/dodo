@@ -22,9 +22,12 @@ namespace Dodo.ViewModels
 		[DisplayName("Revision")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public uint Revision { get; set; }
+		public class PassphraseViewModel
+		{
+		}
 		[DisplayName("PublicKey")]
 		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
-		public string PublicKey { get; set; }
+		public PassphraseViewModel PublicKey { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		[Resources.MaxStringLengthAttribute(2048)]

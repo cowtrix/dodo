@@ -24,7 +24,7 @@ namespace Dodo.Users.Tokens
 
 		public override void SetData(ITokenResource owner, IToken token)
 		{
-			m_data = new AsymmEncryptedStore<IToken>(token, new Passphrase(owner.PublicKey));
+			m_data = new AsymmEncryptedStore<IToken>(token, owner.PublicKey);
 		}
 	}
 }

@@ -25,6 +25,7 @@ namespace Resources.Security
 		[JsonProperty]
 		private string m_passHash;
 
+		[Obsolete("Serializer only", true)]
 		public AsymmEncryptedStore() { }
 
 		public AsymmEncryptedStore(T value, Passphrase publicKey)

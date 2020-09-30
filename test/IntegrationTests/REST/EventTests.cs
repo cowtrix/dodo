@@ -34,7 +34,7 @@ namespace RESTTests
 			GetRandomUser(out var pass, out var context);
 			await Login(context.User.Slug, pass);
 			var site = CreateObject<Event>(context);
-			var date = SchemaGenerator.RandomDate;
+			var date = site.StartDate + TimeSpan.FromDays(1);
 			await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{site.Guid}", EHTTPRequestType.PATCH, new { endDate = date });
 			var updatedSite = ResourceManager.GetSingle(r => r.Guid == site.Guid) as Event;
 			Assert.IsTrue(date.ToUniversalTime() - updatedSite.EndDate.ToUniversalTime() < TimeSpan.FromMinutes(1));
