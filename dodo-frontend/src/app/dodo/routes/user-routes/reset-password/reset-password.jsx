@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import { Container, Input, Submit } from 'app/components/forms/index'
 
 const RESET_PASSWORD_COPY = "Reset my password"
@@ -11,7 +11,7 @@ export const ResetPassword = ({ resetPassword }) => {
 		<Container
 			title={RESET_PASSWORD_COPY}
 			content={
-				<Fragment>
+				<>
 					<p>
 						Enter the email associated with your account to request a one-time password reset code.
 					</p>
@@ -32,7 +32,7 @@ export const ResetPassword = ({ resetPassword }) => {
 						submit={() => resetPassword(email, setEmailSent)}
 					/>
 					<p>{emailSent}</p>
-				</Fragment>
+				</>
 			}
 		/>
 	)

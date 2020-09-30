@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styles from '../list/list.module.scss'
 import { List } from '../list'
@@ -8,7 +8,7 @@ export const ExpandableList = ({ resources = [], title, resourceTypes }) => {
 
 	return (
 		resources.length ?
-			<Fragment>
+			<>
 				{title ? <h3 className={styles.title}>{title}</h3> : null}
 				<div className={styles.listBox}>
 					<List
@@ -19,7 +19,7 @@ export const ExpandableList = ({ resources = [], title, resourceTypes }) => {
 						isExpandableList={setListExpanded && resources.length > 2}
 					/>
 				</div>
-			</Fragment>
+			</>
 			: null
 	)
 }

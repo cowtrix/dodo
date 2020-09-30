@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, EditableInput, Submit } from 'app/components/forms/index'
 import { UpdateEmail } from './update-email/index'
@@ -35,7 +35,7 @@ export const YourProfile = (
 			loading={fetchingUser}
 			title={MY_REBELLION}
 			content={
-				<Fragment>
+				<>
 					<EditableInput
 						name="Username"
 						id="username"
@@ -60,7 +60,7 @@ export const YourProfile = (
 						value={UPDATE_DETAILS}
 						submit={updateDetails(username, name, email, guid)}
 					/>
-				</Fragment>
+				</>
 			}
 		/>
 	)
