@@ -41,9 +41,12 @@ namespace Dodo.ViewModels
 		[DisplayName("AdministratorData")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public AdministrationDataViewModel AdministratorData { get; set; }
+		public class PassphraseViewModel
+		{
+		}
 		[DisplayName("PublicKey")]
 		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
-		public string PublicKey { get; set; }
+		public PassphraseViewModel PublicKey { get; set; }
 		[DisplayName("Location")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public Resources.Location.GeoLocation Location { get; set; }

@@ -16,7 +16,7 @@ namespace Resources.Security
 	/// </summary>
 	/// <typeparam name="TKey"></typeparam>
 	/// <typeparam name="TVal"></typeparam>
-	public class MultiSigEncryptedStore<TKey, TVal> : IKeyDecryptable<TKey,TVal>
+	public class MultiSigEncryptedStore<TKey, TVal> : IKeyDecryptable<TKey, TVal>
 	{
 		private class Keystore : ConcurrentDictionary<string, SymmEncryptedStore<string>>
 		{
@@ -35,19 +35,23 @@ namespace Resources.Security
 		[JsonProperty]
 		[BsonElement]
 		private SymmEncryptedStore<TVal> m_data;
+		[JsonProperty]
+		[BsonElement]
+		private string Guid { get; set; }
 
 		public MultiSigEncryptedStore() { }
 
 		public MultiSigEncryptedStore(TVal data, TKey key, Passphrase password)
 		{
-			var commonKey = new Passphrase(SHA256Utility.SHA256(Guid.NewGuid().ToString() + key.GetHashCode().ToString() + data?.GetHashCode()));	// Generate a passphrase
-			m_keyStore.TryAdd(SecurityExtensions.GenerateID(key, password), new SymmEncryptedStore<string>(commonKey.Value, password)); // Store the creating key and the passphrase with the given password
-			m_data = new SymmEncryptedStore<TVal>(data, commonKey);	// Encrypt the common data with the common passphrase
+			Guid = System.Guid.NewGuid().ToString();
+			var commonKey = new Passphrase(SHA256Utility.SHA256(System.Guid.NewGuid().ToString() + key.GetHashCode().ToString() + data?.GetHashCode()));    // Generate a passphrase
+			m_keyStore.TryAdd(SecurityExtensions.GenerateID(key, password, Guid), new SymmEncryptedStore<string>(commonKey.Value, password)); // Store the creating key and the passphrase with the given password
+			m_data = new SymmEncryptedStore<TVal>(data, commonKey); // Encrypt the common data with the common passphrase
 		}
 
 		public TVal GetValue(TKey key, Passphrase password)
 		{
-			if(!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, password), out var unlockPhrase))
+			if (!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, password, Guid), out var unlockPhrase))
 			{
 				throw new AuthenticationException("You are not authorized to access this resource");
 			}
@@ -57,7 +61,7 @@ namespace Resources.Security
 
 		public void SetValue(TVal data, TKey key, Passphrase password)
 		{
-			if (!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, password), out var unlockPhrase))
+			if (!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, password, Guid), out var unlockPhrase))
 			{
 				throw new AuthenticationException("You are not authorized to access this resource");
 			}
@@ -67,21 +71,23 @@ namespace Resources.Security
 
 		public bool IsAuthorised(TKey key, Passphrase passphrase)
 		{
-			return m_keyStore.ContainsKey(SecurityExtensions.GenerateID(key, passphrase));
+			return m_keyStore.ContainsKey(SecurityExtensions.GenerateID(key, passphrase, Guid));
 		}
 
 		public void AddPermission(TKey key, Passphrase ownerPass, TKey newKey, Passphrase newUserPass)
 		{
-			if (!m_keyStore.TryGetValue(SecurityExtensions.GenerateID(key, ownerPass), out var unlockPhrase))
+			var id = SecurityExtensions.GenerateID(key, ownerPass, Guid);
+			if (!m_keyStore.TryGetValue(id, out var unlockPhrase))
 			{
 				throw new AuthenticationException("You are not authorized to access this resource");
 			}
 			var passPhrase = unlockPhrase.GetValue(ownerPass);
-			if(key.Equals(newKey))
+			if (key.Equals(newKey))
 			{
-				m_keyStore.TryRemove(SecurityExtensions.GenerateID(key, ownerPass), out _);
+				m_keyStore.TryRemove(id, out _);
 			}
-			m_keyStore[SecurityExtensions.GenerateID(newKey, newUserPass)] = new SymmEncryptedStore<string>(passPhrase, newUserPass);
+			var newID = SecurityExtensions.GenerateID(newKey, newUserPass, Guid);
+			m_keyStore[newID] = new SymmEncryptedStore<string>(passPhrase, newUserPass);
 		}
 
 		public bool TryGetValue(object requester, Passphrase password, out object result)
@@ -115,7 +121,7 @@ namespace Resources.Security
 
 		public bool IsAuthorised(object requester, Passphrase passphrase)
 		{
-			return m_keyStore.TryGetValue(SecurityExtensions.GenerateID((TKey)requester, passphrase), out _);
+			return m_keyStore.TryGetValue(SecurityExtensions.GenerateID((TKey)requester, passphrase, Guid), out _);
 		}
 	}
 }

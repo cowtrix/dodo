@@ -8,6 +8,8 @@ using System;
 using Dodo.DodoResources;
 using Common.Config;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
 namespace Dodo
 {
 	[Route(Dodo.DodoApp.API_ROOT + RootURL)]

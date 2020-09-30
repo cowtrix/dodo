@@ -13,6 +13,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
 public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchema>
 	where T : class, IDodoResource
 	where TSchema : ResourceSchemaBase

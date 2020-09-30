@@ -10,9 +10,11 @@ export const Resource =
 		{
 			match,
 			getResource,
+			getNotifications,
 			resource,
 			notifications,
 			isLoading,
+			isLoadingNotifications,
 			centerMap,
 			setCenterMap,
 			resourceTypes = [],
@@ -28,6 +30,10 @@ export const Resource =
 		useEffect(() => {
 			getResource(resourceType, resourceId, setCenterMap)
 		}, [ getResource, resourceId, resourceType, setCenterMap])
+
+		useEffect(() => {
+			getNotifications(resourceType, resourceId)
+		}, [ getNotifications, resourceId, resourceType])
 
 		const resourceTypeData = getResourceTypeData(resourceTypes, resourceType);
 		const resourceColor = '#' + (resourceTypeData.displayColor || '22A73D');
@@ -59,6 +65,8 @@ export const Resource =
 									hideMap={hideMap}
 									resource={resource}
 									notifications={notifications}
+									getNotifications={() => getNotifications(resourceType, resourceId, notifications.nextPageToLoad)}
+									isLoadingNotifications={isLoadingNotifications}
 									setCenterMap={setCenterMap}
 									resourceTypes={resourceTypes}
 									resourceColor={resourceColor}

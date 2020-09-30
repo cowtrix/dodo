@@ -22,5 +22,7 @@ export { PageTitle } from "./page-title"
 export { List, ExpandableList } from './list'
 export { CenterMap } from './center-map'
 export { Video } from './video'
+export { CookieConsenter } from './cookie-consent'
+
 
 export { footer, events, tiles, forms }

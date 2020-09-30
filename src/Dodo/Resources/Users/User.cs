@@ -28,7 +28,7 @@ namespace Dodo.Users
 		[VerifyObject]
 		public AuthorizationData AuthData { get; set; }
 		[BsonIgnore]
-		public override string PublicKey => AuthData.PublicKey;
+		public override Passphrase PublicKey => new Passphrase(AuthData.PublicKey);
 		#endregion
 
 		public User() : base()
@@ -77,16 +77,6 @@ namespace Dodo.Users
 					.Select(r => r.Resource.GenerateJsonView(permissionLevel, requester, passphrase)).ToList());
 			}*/
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
-		}
-
-		public IEnumerable<Notification> GetNotifications(AccessContext accessContext, EPermissionLevel permissionLevel)
-		{
-			return TokenCollection.GetNotifications(accessContext, permissionLevel, this);
-		}
-
-		public bool DeleteNotification(AccessContext context, EPermissionLevel permissionLevel, Guid notification)
-		{
-			return TokenCollection.Remove<INotificationToken>(context, permissionLevel, notification, this);
 		}
 
 		public override Passphrase GetPrivateKey(AccessContext accessContext)

@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
 using System;
@@ -19,6 +19,14 @@ namespace Resources.Security
 		[JsonProperty]
 		[BsonElement]
 		private ConcurrentDictionary<string, byte> m_data = new ConcurrentDictionary<string, byte>();
+		[JsonProperty]
+		[BsonElement]
+		private string Guid { get; set; }
+
+		public MultiSigKeyStore()
+		{
+			Guid = System.Guid.NewGuid().ToString();
+		}
 
 		public int Count
 		{
@@ -27,13 +35,13 @@ namespace Resources.Security
 
 		public void Add(T key, Passphrase ownerPass)
 		{
-			var id = SecurityExtensions.GenerateID(key, ownerPass);
+			var id = SecurityExtensions.GenerateID(key, ownerPass, Guid);
 			m_data[id] = 0;
 		}
 
 		public bool Remove(T key, Passphrase ownerPass)
 		{
-			var id = SecurityExtensions.GenerateID(key, ownerPass);
+			var id = SecurityExtensions.GenerateID(key, ownerPass, Guid);
 			return m_data.TryRemove(id, out _);
 		}
 
@@ -43,7 +51,7 @@ namespace Resources.Security
 			{
 				return false;
 			}
-			var id = SecurityExtensions.GenerateID(key, ownerPass);
+			var id = SecurityExtensions.GenerateID(key, ownerPass, Guid);
 			return m_data.ContainsKey(id);
 		}
 	}

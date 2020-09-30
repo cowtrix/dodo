@@ -10,7 +10,7 @@ namespace Resources
 
 		public readonly AccessContext AccessContext;
 		public readonly EHTTPRequestType RequestType;
-		public readonly string ActionName;
+		public string ActionName;
 		public readonly EPermissionLevel PermissionLevel;
 
 		protected ResourceRequest(AccessContext context, EHTTPRequestType type, EPermissionLevel permissionLevel)

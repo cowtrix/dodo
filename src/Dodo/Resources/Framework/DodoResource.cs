@@ -12,7 +12,7 @@ namespace Dodo
 		{
 			if (creator.User != null)
 			{
-				Creator = SecurityExtensions.GenerateID(creator.User, creator.Passphrase);
+				Creator = SecurityExtensions.GenerateID(creator.User, creator.Passphrase, Guid.ToString());
 			}
 			if(this is IOwnedResource owned && schema is OwnedResourceSchemaBase ownedSchema)
 			{
@@ -33,10 +33,10 @@ namespace Dodo
 			{
 				return false;
 			}
-			return Creator == SecurityExtensions.GenerateID(context.User, context.Passphrase);
+			return Creator == SecurityExtensions.GenerateID(context.User, context.Passphrase, Guid.ToString());
 		}
 
-		public virtual void OnDestroy()
+		public override void OnDestroy()
 		{
 			if (this is IOwnedResource owned && owned.Parent.HasValue())
 			{

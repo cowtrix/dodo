@@ -9,6 +9,8 @@ using Dodo.Rebellions;
 using System.Collections.Generic;
 using System;
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
 namespace Dodo.Users
 {
 	[SecurityHeaders]

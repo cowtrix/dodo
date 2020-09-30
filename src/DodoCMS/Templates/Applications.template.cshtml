@@ -1,0 +1,63 @@
+@{
+	var applications = ViewData["applications"] as Dictionary<string, Dodo.Roles.RoleApplicationData>;
+	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<{FULL_TYPE}, {SCHEMA_TYPE}>);
+}
+<div class="card">
+	<h5 class="card-header">Applications</h5>
+	<div class="card-body">
+		@{
+			if (applications.Any())
+			{
+				<div id="accordion">
+
+					@{
+						var counter = 0;
+						foreach (KeyValuePair<string, Dodo.Roles.RoleApplicationData>
+							kvp in applications)
+						{
+							Dodo.Roles.RoleApplicationData app = kvp.Value;
+							<div class="card">
+								<div class="card-header" id="heading@(counter)">
+									<div class="row">
+										<div class="col-auto">
+											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
+												totle
+											</button>
+										</div>
+										<div class="col" style="text-align:right;">
+											<a class="btn btn-outline-danger" href="@Model.Slug/">
+												<p class="fas fa-trash"></p>
+											</a>
+										</div>
+									</div>
+								</div>
+								<!-- Conversation -->
+								<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
+									<div class="card-body">
+										<form id="@app.Applicant)" method="post" action="@Model.Slug/" enctype="application/x-www-form-urlencoded">
+											<div class="card-body">
+												<div class="row">
+
+												</div>
+											</div>
+											<div class="card-body">
+												<input type="submit" value="Save" class="btn btn-primary btn-block" />
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							counter++;
+						}
+					}
+				</div>
+			}
+			else
+			{
+				<div class="alert alert-info" role="alert">
+					There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
+				</div>
+			}
+		}
+	</div>
+</div>
