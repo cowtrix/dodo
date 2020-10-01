@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Container } from 'app/components/forms/index'
 import { Resource } from './resource'
@@ -10,11 +10,11 @@ export const MyRebellion = ({ memberOf = [], resourceTypes }) =>
 	<Container
 		title={MY_REBELLION}
 		content={
-			<Fragment>
+			<>
 				{memberOf.map(resource =>
 				<Resource {...resource} resourceTypes={resourceTypes}/>
 				)}
-			</Fragment>
+			</>
 		}
 	/>
 

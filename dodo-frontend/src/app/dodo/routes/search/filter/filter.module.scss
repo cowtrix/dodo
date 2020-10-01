@@ -7,18 +7,18 @@
 	flex-direction: column;
 
 	 > div {
-		 margin-bottom: spacing(5);
+		 margin-bottom: spacingXS(5);
 	 }
 
 	@media (min-width: $responsive-breakpoint) {
 		flex-direction: row;
 		flex-grow: 0.5;
-		padding: spacing(4) spacing(3);
+		padding: spacingXS(4) spacing(2);
 
 		> div {
 			margin-bottom: 0;
-			margin-left: spacing(3);
-			margin-right: spacing(3);
+			margin-left: spacing(2);
+			margin-right: spacing(2);
 		}
 
 	}

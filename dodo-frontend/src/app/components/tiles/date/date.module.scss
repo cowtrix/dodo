@@ -6,7 +6,7 @@
 	text-transform: uppercase;
 	width: 85px;
 	height: 85px;
-	margin-right: spacing(5);
+	margin-right: spacingXS(5);
 
 	@media (min-width: $responsive-breakpoint) {
 		font-size: 1rem;

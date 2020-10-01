@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react"
+import React, { useEffect } from "react"
 import PropTypes from "prop-types"
 import { Container } from "app/components/resources"
 import { SiteMap, Loader } from "app/components"
@@ -46,7 +46,7 @@ export const Resource =
 		const hideMap = shouldHideMap(resourceType)
 
 		return (
-			<Fragment>
+			<>
 				<SiteMap
 					display={!hideMap}
 					centerMap={centerMap}
@@ -58,7 +58,7 @@ export const Resource =
 				<Container
 					hideMap={hideMap}
 					content={
-						<Fragment>
+						<>
 							<Loader display={isLoading || fetchingUser}/>
 							{resource.metadata && !isLoading && (
 								<ResourceContent
@@ -77,10 +77,10 @@ export const Resource =
 									isLoggedIn={isLoggedIn}
 								/>
 							)}
-						</Fragment>
+						</>
 					}
 				/>
-			</Fragment>
+			</>
 		)
 	}
 

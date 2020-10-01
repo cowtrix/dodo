@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react"
+import React, { useState } from "react"
 import PropTypes from 'prop-types'
 
 import { useTranslation } from "react-i18next"
@@ -28,7 +28,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 			<Container
 				title={LOGIN}
 				content={
-					<Fragment>
+					<>
 						<Input
 							name="Username"
 							id="username"
@@ -62,7 +62,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 							value={t("header_sign_in_text")}
 							submit={login(username, password, rememberMe)}
 						/>
-					</Fragment>
+					</>
 				}
 				loading={isLoggingIn}
 			/>
