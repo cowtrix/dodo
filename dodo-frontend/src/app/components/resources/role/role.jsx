@@ -4,22 +4,15 @@ import { SignUpButton } from '../sign-up-button'
 import { TextArea } from '../../forms'
 import styles from './role.module.scss'
 
+
 const APPLICANT_ANSWER_INPUT = 'APPLICANT_ANSWER_INPUT'
-const APPLY_NOW = 'Apply Now'
-const VIEW_APPLICATION = 'View Application'
-const ALREADY_APPLIED = 'You have already applied for this role'
-const DEFAULT_GUID = '00000000-0000-0000-0000-000000000000'
+const APPY_NOW = 'Apply now'
 
 export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColor, hasApplied }) => {
-	const [applicantAnswer, setApplicantAnswer] = useState('')
-	event.preventDefault();
-	if (!showMore) {
-		setShowMore(true);
-	} else {
-		setShowMore(false);
-	}
+	const [ applicantAnswer, setApplicantAnswer ] = useState('')
+
 	return (
-		isLoggedIn && applicantQuestion && hasApplied == DEFAULT_GUID ?
+		isLoggedIn && applicantQuestion && !hasApplied ?
 			<div className={styles.role}>
 				<div>
 					{applicantQuestion}
@@ -33,17 +26,14 @@ export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColo
 				/>
 				<SignUpButton
 					onClick={() => applyForRole(applicantAnswer)}
-					CTA={APPLY_NOW}
+					CTA={APPY_NOW}
 					resourceColor={resourceColor}
 					className={styles.signUpButton}
 				/>
 			</div> :
-			hasApplied && hasApplied != DEFAULT_GUID ?
-				<div>
-					<h2>{ALREADY_APPLIED}</h2>
-					<a href={ '/roleapplication/' + hasApplied }>{VIEW_APPLICATION}</a>
-				</div> :
-				null
+				hasApplied ?
+					<h2>You have already applied for this role</h2> :
+			null
 	)
 }
 
