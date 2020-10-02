@@ -29,6 +29,7 @@ namespace Resources
 			ViewData["Timezone"] = Context.User != null && !string.IsNullOrEmpty(Context.User.PersonalData.TimezoneID) 
 				? TimeZoneConverter.TZConvert.GetTimeZoneInfo(Context.User.PersonalData.TimezoneID) : TimeZoneInfo.Utc;
 			ViewData["Context"] = Context;
+			ViewData["header"] = !Request.Query.TryGetValue("header", out var headerVal) || headerVal.Single() == "true";
 			if (Context.User != null)
 			{
 				foreach (var token in Context.User.TokenCollection.GetAllTokens<IAutoExecuteToken>(Context, EPermissionLevel.OWNER, Context.User))

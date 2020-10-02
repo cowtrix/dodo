@@ -4,6 +4,8 @@
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
 	var id = Resources.Security.SecurityExtensions.GenerateID(context.User, context.Passphrase, Model.Parent.Guid.ToString());
+	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
+	var hasHeader = (bool)ViewData["header"];
 }
 
 <script>
@@ -12,14 +14,14 @@
 	})
 </script>
 
-<div class="card chat-container">
+<div class="card chat-container @(hasHeader ? "chat-container-navbar" : "")">
 	<div class="card-body">
-		<div class="chat-messages">
+		<div class="chat-messages" id="scroller">
 			@{
 				foreach (Dodo.RoleApplications.Message message in Model.Data.Messages)
 				{
 					var isApplicant = string.IsNullOrEmpty(message.Sender);
-					var isYou = message.Sender == id;
+					var isYou =  message.Sender == id;
 					<div class="card chat-entry chat-entry-@(isApplicant ? "user" : "admin")">
 						<div class="card-header chat-header">
 							<div class="row">
@@ -30,7 +32,7 @@
 								</div>
 								<div class="col-auto chat-text">
 									<strong>
-										@(isApplicant ? "You" : isYou? "You" : "Admin")
+										@(isApplicant ? (isYou ? "You" : "Applicant") : (isYou? "You" : "Admin"))
 									</strong>
 								</div>
 							</div>
@@ -41,8 +43,9 @@
 					</div>
 				}
 			}
+			<div id="anchor"></div>
 		</div>
-		<form id="newmessage" class="form chat-send" method="post" action="@(Model.Guid)/message" autocomplete="off">
+		<form id="newmessage" class="form chat-send" method="post" action="@(Model.Guid)/message?@(ViewData["header"])" autocomplete="off">
 			<div class="row">
 				<div class="col">
 					<input type="text" class="form-control" id="content" name="content" placeholder="Enter new message...">
@@ -52,7 +55,7 @@
 				</div>
 			</div>
 		</form>
-		<small id="helpBlock" class="form-text text-muted chat-tip" style="text-align:left;">
+		<small id="helpBlock" class="form-text text-muted chat-tip">
 			Don't discuss sensitive information here. We recommend using secure channels such as Telegram and Signal.
 		</small>
 	</div>

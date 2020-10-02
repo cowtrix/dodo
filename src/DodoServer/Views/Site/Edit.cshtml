@@ -42,11 +42,11 @@ $(function () {
 	<li class="nav-item">
 		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="role" aria-selected="false">Analytics</a>
 	</li>
-	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Site/@Model.Slug" target="_blank">View <i class="fa fa-link" aria-hidden="true"></i></a></li>
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Site/@Model.Slug" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a></li>
 </ul>
 <div class="tab-content" id="myTabContent">
 	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-		<div class="card" style="width:100%;">
+		<div class="card">
 			<div class="card-body">
 				<form asp-action="Edit">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -54,8 +54,8 @@ $(function () {
 					<input class="sr-only" asp-for="Parent.Type"/>
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
-					<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Parent.GetRefType())" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i></a></div>
-					<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Parent.GetRefType())" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i></a></div>
+					<div class="col-auto"><a class="btn btn-light irestresource-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i></a></div>
+					<div class="col-auto"><a class="btn btn-light irestresource-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i></a></div>
 					</div>
 <div class="form-check">
 	<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
@@ -85,7 +85,7 @@ $(function () {
 					<input asp-for="PublicKey" class="sr-only"></input>
 				<div class="form-group">
 				<label class="control-label">Public Description</label>
-				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
+				<textarea asp-for="PublicDescription" class="form-control description-entry"></textarea>
 					<small id="helpBlock" class="form-text text-muted">
 						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 					</small>
@@ -340,10 +340,10 @@ $(function () {
 		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
 			<div class="card">
 	<h5 class="card-header">Post an Announcement</h5>
-	<div class="card-body" style="text-align:right;">
+	<div class="card-body">
 		<form id="newannouncement" method="post" action="notifications/@Model.Slug/new">
 			<div class="form-group">
-				<textarea id="Message" name="Message" class="form-control" style="height:10em;"></textarea>
+				<textarea id="Message" name="Message" class="form-control description-entry"></textarea>
 			</div>
 			<small id="helpBlock" class="form-text text-muted" style="text-align:left;">
 				Announcements are messages that will be displayed on the public page and be visible for all users. You can use them to give short updates or messages.<br />
@@ -361,9 +361,9 @@ $(function () {
 			@{foreach (var notification in notifications)
 				{
 					<li class="list-group-item">
-						<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+						<div class="card-header notification-header">
 							<div class="row">
-								<div class="col" style="margin-left:10px;">
+								<div class="col notification-nudge1">
 									<div class="row">
 										<small>
 											@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
@@ -401,8 +401,8 @@ $(function () {
 								</div>
 							</div>
 						</div>
-						<div style="padding:10px;">
-							<p style="margin:0;"> @Html.Raw(notification.Message) </p>
+						<div class="notification-text">
+							<p> @Html.Raw(notification.Message) </p>
 						</div>
 					</li>
 				}}

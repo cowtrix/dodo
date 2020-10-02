@@ -7,15 +7,8 @@
 	color: white;
 }
 
-.chat-entry-user {
-}
-
-.chat-header {
-}
-
 .chat-messages {
 	margin: auto;
-	max-width: 680px;
 	overflow-y: scroll;
 	position: absolute;
 	top: 10px;
@@ -31,14 +24,21 @@
 }
 
 .chat-container {
-	margin: auto !important;
-	max-width: 700px;
+	margin: auto !important;	
 	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.chat-container-navbar {
 	top: 64px;
 	bottom: 10px;
 	left: 10px;
 	right: 10px;
 	margin: 10px;
+	max-width: 700px;
 }
 
 .dodo-navbar {
@@ -61,4 +61,70 @@
 	bottom: 20px;
 	left: 20px;
 	right: 25px;
+}
+
+.chat-iframe {
+	width: 100%;
+	min-height: 500px;
+	border:none;
+}
+
+.resource-reference {
+	width: 100%;
+	margin: -20px;
+	margin-bottom: 20px;
+}
+
+.workinggroup-reference {
+	background-color: #FFC113;
+}
+
+.rebellion-reference {
+	background-color: #22A73D;
+}
+
+.localgroup-reference {
+	background-color: #71D0F1;
+}
+
+.event-reference {
+	background-color: #ED9BC4;
+}
+
+.site-reference {
+	background-color: #22A73D;
+}
+
+.role-reference {
+	background-color: #E53D33;
+}
+
+.description-entry {
+	height: 20em;
+}
+
+.notification-header {
+	margin-left: -20px;
+	margin-right: -20px;
+	margin-top: -12px;
+}
+
+.notification-nudge1 {
+	margin-left: 10px;
+}
+
+.notification-text {
+	margin-top: 10px;
+}
+
+#scroller * {
+	/* don't allow the children of the scrollable element to be selected as an anchor node */
+	overflow-anchor: none;
+}
+
+#anchor {
+	/* allow the final child to be selected as an anchor node */
+	overflow-anchor: auto;
+	/* anchor nodes are required to have non-zero area */
+	height: 1px;
 }

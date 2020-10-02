@@ -19,22 +19,20 @@
 							<div class="card">
 								<div class="card-header" id="heading@(counter)">
 									<div class="row">
-										<div class="col-auto">
+										<div class="col">
 											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
-												totle
+												Application Reference: @app.Guid.ToString().Substring(0, 8)
 											</button>
 										</div>
-										<div class="col" style="text-align:right;">
-											<a class="btn btn-outline-danger" href="@Model.Slug/">
-												<p class="fas fa-trash"></p>
-											</a>
+										<div class="col-auto">
+											<a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a>
 										</div>
 									</div>
 								</div>
 								<!-- Conversation -->
 								<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
-									<div class="card-body">
-										<iframe src="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid" loading="lazy" style="width:100%;height:auto;" />
+									<div class="card-body chat-iframe">
+										<iframe src="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid?header=false" loading="lazy" class="chat-iframe" />
 									</div>
 								</div>
 							</div>

@@ -42,11 +42,11 @@ $(function () {
 	<li class="nav-item">
 		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="role" aria-selected="false">Analytics</a>
 	</li>
-	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Rebellion/@Model.Slug" target="_blank">View <i class="fa fa-link" aria-hidden="true"></i></a></li>
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Rebellion/@Model.Slug" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a></li>
 </ul>
 <div class="tab-content" id="myTabContent">
 	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-		<div class="card" style="width:100%;">
+		<div class="card">
 			<div class="card-body">
 				<form asp-action="Edit">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -77,7 +77,7 @@ $(function () {
 					<input asp-for="Revision" class="sr-only"></input>
 				<div class="form-group">
 				<label class="control-label">Public Description</label>
-				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
+				<textarea asp-for="PublicDescription" class="form-control description-entry"></textarea>
 					<small id="helpBlock" class="form-text text-muted">
 						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 					</small>
@@ -94,13 +94,13 @@ $(function () {
 								<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
 								<div class="row">
 								<div class="col"><strong>@Model.WorkingGroups[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.WorkingGroups[i].GetRefType())" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.WorkingGroups[i].GetRefType())" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light workinggroup-reference" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light workinggroup-reference" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
 								</div>
 				</li>
 				}
 				}
-						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.WorkingGroups.WorkingGroup))" role="button" href="~/edit/WorkingGroup/create?parent=@Model.Slug">Create</a>
+						<a class="btn btn-light btn-block workinggroup-reference" role="button" href="~/edit/WorkingGroup/create?parent=@Model.Slug">Create New</a>
 						</ul>
 					</div>
 				</div>
@@ -113,13 +113,13 @@ $(function () {
 								<input class="sr-only" asp-for="Sites[i].Type"/>
 								<div class="row">
 								<div class="col"><strong>@Model.Sites[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Sites[i].GetRefType())" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Sites[i].GetRefType())" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light site-reference" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light site-reference" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i></a></div>
 								</div>
 				</li>
 				}
 				}
-						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.LocationResources.Site))" role="button" href="~/edit/Site/create?parent=@Model.Slug">Create</a>
+						<a class="btn btn-light btn-block site-reference" role="button" href="~/edit/Site/create?parent=@Model.Slug">Create New</a>
 						</ul>
 					</div>
 				</div>
@@ -132,13 +132,13 @@ $(function () {
 								<input class="sr-only" asp-for="Events[i].Type"/>
 								<div class="row">
 								<div class="col"><strong>@Model.Events[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Events[i].GetRefType())" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Events[i].GetRefType())" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light event-reference" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light event-reference" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i></a></div>
 								</div>
 				</li>
 				}
 				}
-						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.LocationResources.Event))" role="button" href="~/edit/Event/create?parent=@Model.Slug">Create</a>
+						<a class="btn btn-light btn-block event-reference" role="button" href="~/edit/Event/create?parent=@Model.Slug">Create New</a>
 						</ul>
 					</div>
 				</div>
@@ -311,10 +311,10 @@ $(function () {
 		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
 			<div class="card">
 	<h5 class="card-header">Post an Announcement</h5>
-	<div class="card-body" style="text-align:right;">
+	<div class="card-body">
 		<form id="newannouncement" method="post" action="notifications/@Model.Slug/new">
 			<div class="form-group">
-				<textarea id="Message" name="Message" class="form-control" style="height:10em;"></textarea>
+				<textarea id="Message" name="Message" class="form-control description-entry"></textarea>
 			</div>
 			<small id="helpBlock" class="form-text text-muted" style="text-align:left;">
 				Announcements are messages that will be displayed on the public page and be visible for all users. You can use them to give short updates or messages.<br />
@@ -332,9 +332,9 @@ $(function () {
 			@{foreach (var notification in notifications)
 				{
 					<li class="list-group-item">
-						<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+						<div class="card-header notification-header">
 							<div class="row">
-								<div class="col" style="margin-left:10px;">
+								<div class="col notification-nudge1">
 									<div class="row">
 										<small>
 											@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
@@ -372,8 +372,8 @@ $(function () {
 								</div>
 							</div>
 						</div>
-						<div style="padding:10px;">
-							<p style="margin:0;"> @Html.Raw(notification.Message) </p>
+						<div class="notification-text">
+							<p> @Html.Raw(notification.Message) </p>
 						</div>
 					</li>
 				}}
@@ -469,40 +469,40 @@ $(function () {
 										<div class="row">
 											<div class="col">
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanAddAdmin" name="CanAddAdmin" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanAddAdmin_@(admin.User.Guid.ToString())" name="CanAddAdmin" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanAddAdmin")" style="">Can Add New Admins</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanRemoveAdmin" name="CanRemoveAdmin" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanRemoveAdmin_@(admin.User.Guid.ToString())" name="CanRemoveAdmin" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admins</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanChangePermissions" name="CanChangePermissions" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanChangePermissions_@(admin.User.Guid.ToString())" name="CanChangePermissions" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Admin Permissions</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditInfo" name="CanEditInfo" @(admin.Permissions.CanEditInfo ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditInfo_@(admin.User.Guid.ToString())" name="CanEditInfo" @(admin.Permissions.CanEditInfo ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Details</label>
 												</div>
 											</div>
 											<div class="col">
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateChildObjects" name="CanCreateChildObjects" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateChildObjects_@(admin.User.Guid.ToString())" name="CanCreateChildObjects" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDeleteChildObjects" name="CanDeleteChildObjects" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDeleteChildObjects_@(admin.User.Guid.ToString())" name="CanDeleteChildObjects" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements_@(admin.User.Guid.ToString())" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
 												</div>
 												@{
 													if (Model.__Type == typeof(Dodo.WorkingGroups.WorkingGroup))
 													{
 														<div class="form-check">
-															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageRoles ? "checked" : "")>
+															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageRoles_@(admin.User.Guid.ToString())" name="CanManageAnnouncements" @(admin.Permissions.CanManageRoles ? "checked" : "")>
 															<label class="form-check-label" for="@getID("CanManageRoles")">Can Manage Roles</label>
 														</div>
 													}

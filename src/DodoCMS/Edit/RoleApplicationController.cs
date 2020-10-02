@@ -19,7 +19,7 @@ namespace Dodo.RoleApplications
 	[Route(RoleApplication.ROOT_URL)]
 	public class RoleApplicationController : CustomController
 	{
-		protected RoleApplicationViewModel ViewModel(RoleApplication rsc, object requester, Resources.Security.Passphrase passphrase) => 
+		protected RoleApplicationViewModel ViewModel(RoleApplication rsc, object requester, Resources.Security.Passphrase passphrase) =>
 			rsc.CopyByValue<RoleApplicationViewModel>(requester, passphrase);
 		protected AuthorizationService<RoleApplication, RoleApplicationSchema> AuthService => new RoleApplicationAuthService();
 		protected CrudResourceServiceBase<RoleApplication, RoleApplicationSchema> PublicService =>
@@ -28,6 +28,7 @@ namespace Dodo.RoleApplications
 		[Route("{id}")]
 		public virtual async Task<IActionResult> ViewApplication([FromRoute] string id)
 		{
+			Response.Headers.Add("Content-Security-Policy", $"frame-ancestors 'self' {DodoApp.NetConfig.FullURI}");
 			if (Context.User == null)
 			{
 				// redirect to login
@@ -44,22 +45,23 @@ namespace Dodo.RoleApplications
 			object requester = null;
 			Passphrase pass = default;
 			IAsymmCapableResource parentRsc = null;
-			if(actionResult.PermissionLevel == EPermissionLevel.ADMIN)
+			if (actionResult.PermissionLevel == EPermissionLevel.ADMIN)
 			{
 				var rscRef = new ResourceReference<IAsymmCapableResource>(rsc.Parent.Parent);   // the working group
 				requester = rscRef;
 				parentRsc = rscRef.GetValue();
 				pass = parentRsc.GetPrivateKey(Context);
 			}
-			else if(actionResult.PermissionLevel == EPermissionLevel.OWNER)
+			else if (actionResult.PermissionLevel == EPermissionLevel.OWNER)
 			{
 				requester = Context.User.CreateRef<IAsymmCapableResource>();
 				pass = Context.Passphrase;
 			}
 			var model = ViewModel(rsc, requester, pass);
-			if(model.Data == null)
+			if (model.Data == null)
 			{
-				model.Data = rsc.Data.GetValueByGroup(actionResult.AccessContext, parentRsc);
+				var rawData = rsc.Data.GetValueByGroup(actionResult.AccessContext, parentRsc);
+				model.Data = rawData.CopyByValue<RoleApplicationViewModel.RoleApplicationDataViewModel>(null, default);
 			}
 			return View(model);
 		}
@@ -98,9 +100,9 @@ namespace Dodo.RoleApplications
 
 		[HttpPost("{id}/" + RoleApplication.MESSAGE)]
 		//[ValidateAntiForgeryToken]
-		public virtual async Task<IActionResult> SendMessage([FromRoute] string id, [FromForm] string content)
+		public virtual async Task<IActionResult> SendMessage([FromRoute] string id, [FromForm] string content, [FromQuery]bool header = true)
 		{
-			if(string.IsNullOrEmpty(content))
+			if (string.IsNullOrEmpty(content))
 			{
 				return Redirect($"/{RoleApplication.ROOT_URL}/{id}");
 			}
@@ -112,16 +114,32 @@ namespace Dodo.RoleApplications
 			var resourceReq = result as ResourceActionRequest;
 			using var rscLock = new ResourceLock(resourceReq.Result);
 			var roleApp = rscLock.Value as RoleApplication;
-			if(!roleApp.Data.TryGetValue(resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>(), 
-				resourceReq.AccessContext.Passphrase, out var dataObj) ||
-				! (dataObj is RoleApplicationData roleAppData))
+			if (resourceReq.PermissionLevel == EPermissionLevel.ADMIN)
 			{
-				return BadRequest();
+				var groupRef = new ResourceReference<IAsymmCapableResource>(roleApp.Parent.Parent);
+				var group = groupRef.GetValue();
+				var requester = groupRef;
+				var roleAppData = roleApp.Data.GetValueByGroup(resourceReq.AccessContext, group);
+				if (roleAppData == null)
+				{
+					return BadRequest();
+				}
+				roleApp.Data.SetValueByGroup(roleAppData, resourceReq.AccessContext, group);
 			}
-			roleAppData.Messages.Add(new Message(resourceReq.AccessContext, content, resourceReq.PermissionLevel == EPermissionLevel.OWNER));
-			roleApp.Data.SetValue(roleAppData, resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>(), resourceReq.AccessContext.Passphrase);
+			else if (resourceReq.PermissionLevel == EPermissionLevel.OWNER)
+			{
+				object requester = resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>();
+				Passphrase passphrase = resourceReq.AccessContext.Passphrase;
+				if (!roleApp.Data.TryGetValue(requester, passphrase, out var dataObj) ||
+					!(dataObj is RoleApplicationData roleAppData))
+				{
+					return BadRequest();
+				}
+				roleAppData.Messages.Add(new Message(resourceReq.AccessContext, content, resourceReq.PermissionLevel == EPermissionLevel.OWNER));
+				roleApp.Data.SetValue(roleAppData, resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>(), resourceReq.AccessContext.Passphrase);
+			}
 			ResourceUtility.GetManager<RoleApplication>().Update(roleApp, rscLock);
-			return Redirect($"/{RoleApplication.ROOT_URL}/{id}");
+			return Redirect($"/{RoleApplication.ROOT_URL}/{id}{(header ? "" : "header=false")}");
 		}
 	}
 }

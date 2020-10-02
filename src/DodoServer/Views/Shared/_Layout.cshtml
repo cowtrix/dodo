@@ -2,12 +2,13 @@
 
 @{
 	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
+	bool drawNavbar = (bool)ViewData["header"];
 }
 
 <html>
 <head>
 	<meta name="viewport" content="width=device-width" />
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+
 	<title>@Dodo.DodoApp.PRODUCT_NAME - @ViewBag.Title</title>
 
 	<link rel="stylesheet" href="~/lib/twitter-bootstrap/css/bootstrap.min.css" />
@@ -28,22 +29,30 @@
 	<script src="~/lib/chartjs/Chart.min.js"></script>
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-dark dodo-navbar">
-		<a class="navbar-brand" href="@Dodo.DodoApp.NetConfig.FullURI">@Dodo.DodoApp.PRODUCT_NAME</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-			<div class="navbar-nav">
-				<span class="navbar-text dodo-navbar-text">
-					Logged in as @@@context.User.Slug
-				</span>
-				<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/auth/logout">Logout</a>
+	@{ if (drawNavbar)
+		{
+			<nav class="navbar navbar-expand-lg navbar-dark dodo-navbar">
+				<a class="navbar-brand" href="@Dodo.DodoApp.NetConfig.FullURI">@Dodo.DodoApp.PRODUCT_NAME</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+					<div class="navbar-nav">
+						<span class="navbar-text dodo-navbar-text">
+							Logged in as @@@context.User.Slug
+						</span>
+						<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/auth/logout">Logout</a>
+					</div>
+				</div>
+			</nav>
+			<div class="container-md">
+				@RenderBody()
 			</div>
-		</div>
-	</nav>
-	<div class="container-md">
-		@RenderBody()
-	</div>
+		}
+		else
+		{
+			@RenderBody()
+		}
+	}
 </body>
 </html>

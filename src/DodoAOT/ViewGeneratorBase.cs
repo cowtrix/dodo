@@ -74,9 +74,8 @@ namespace DodoAOT
 			{
 				// Create button!
 				var type = typeMember.GetGenericArguments().First();
-				var style = $"style=\"background-color:#@Dodo.APIController.GetDisplayColor(typeof({type.Namespace}.{type.Name}))\"";
 				string parent = "?parent=@Model.Slug";
-				yield return Indent(indentLevel + 2) + $"<a class=\"btn btn-light btn-block\" {style} role=\"button\" href=\"~/edit/{type.Name}/create{parent}\">Create</a>";
+				yield return Indent(indentLevel + 2) + $"<a class=\"btn btn-light btn-block {type.Name.ToLowerInvariant()}-reference\" role=\"button\" href=\"~/edit/{type.Name}/create{parent}\">Create New</a>";
 			}
 			yield return Indent(indentLevel + 2) + $"</ul>";
 			yield return Indent(indentLevel + 1) + $"</div>";
@@ -92,7 +91,7 @@ namespace DodoAOT
 			var view = member.GetCustomAttribute<ViewAttribute>();
 			yield return Indent(indentLevel) + "<div class=\"form-group\">";
 			yield return Indent(indentLevel) + $"<label class=\"control-label\">{member.GetName()}</label>";
-			yield return Indent(indentLevel) + $"<textarea style=\"height:20em;\" asp-for=\"{prefix}{member.Name}\" class=\"form-control\"></textarea>";
+			yield return Indent(indentLevel) + $"<textarea asp-for=\"{prefix}{member.Name}\" class=\"form-control description-entry\"></textarea>";
 			if(!string.IsNullOrEmpty(view.InputHint))
 			{
 				yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
@@ -168,7 +167,7 @@ namespace DodoAOT
 
 		private static IEnumerable<string> RefView(string prefix, MemberInfo member, int indentLevel)
 		{
-			var memberType = member.GetMemberType();
+			var memberType = member.GetMemberType().GetGenericArguments().Single();
 			if (memberType == typeof(User))
 			{
 				throw new Exception("Can't link to user profiles");
@@ -180,8 +179,6 @@ namespace DodoAOT
 			var memberName = member != null ? $"{member.Name}." : "";
 			var nameStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Name)}";
 			var urlStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Type)}/@Model.{prefix}{memberName}{nameof(IResourceReference.Slug)}";
-			//yield return Indent(indentLevel) + $"<div class=\"card\">";
-			//yield return Indent(indentLevel) + $"<div class=\"card-body\">";
 			if (member != null)
 			{
 				yield return Indent(indentLevel + 1) + $"<label class=\"control-label\">{member.GetName()}</label>";
@@ -189,11 +186,9 @@ namespace DodoAOT
 			yield return Indent(indentLevel + 1) + $"<input class=\"sr-only\" asp-for=\"{prefix}{memberName}{nameof(IResourceReference.Type)}\"/>";
 			yield return Indent(indentLevel + 1) + "<div class=\"row\">";
 			yield return Indent(indentLevel + 1) + $"<div class=\"col\"><strong>{nameStr}</strong></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light\" style=\"background-color:#@Dodo.APIController.GetDisplayColor(Model.{prefix}{memberName}GetRefType())\" role=\"button\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i></a></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light\" style=\"background-color:#@Dodo.APIController.GetDisplayColor(Model.{prefix}{memberName}GetRefType())\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i></a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light {memberType.Name.ToLowerInvariant()}-reference\" role=\"button\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i></a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light {memberType.Name.ToLowerInvariant()}-reference\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i></a></div>";
 			yield return Indent(indentLevel + 1) + "</div>";
-			//yield return Indent(indentLevel) + $"</div>";
-			//yield return Indent(indentLevel) + $"</div>";
 		}
 
 		private static IEnumerable<string> GetLocationEditor(string prefix, MemberInfo member, int indentLevel)

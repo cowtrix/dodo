@@ -32,7 +32,7 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.ADMIN, customDrawer: "published", priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
-		[View(EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM, customDrawer:"null")]
 		public Dictionary<string, ResourceReference<RoleApplication>> Applications = new Dictionary<string, ResourceReference<RoleApplication>>();
 
 		public Role() : base() { }
@@ -64,7 +64,7 @@ namespace Dodo.Roles
 			}
 			var factory = new RoleApplicationFactory();
 			var appRsc = factory.CreateTypedObject(new ResourceCreationRequest(context, new RoleApplicationSchema($"Application for {Name}", this, application)));
-			appRsc.Data.AddPermission(context, Parent.GetValue<Dodo.Users.Tokens.IAsymmCapableResource>());
+
 			Applications.Add(id, appRsc.CreateRef());
 			error = null;
 			return app;

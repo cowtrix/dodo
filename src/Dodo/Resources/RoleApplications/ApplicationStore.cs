@@ -42,5 +42,12 @@ namespace Dodo.RoleApplications
 			var pass = new Passphrase(m_groupPass.GetValue(pv));
 			return base.GetValue(key.CreateRef(), pass);
 		}
+
+		public void SetValueByGroup(RoleApplicationData data, AccessContext context, IAsymmCapableResource key)
+		{
+			var pv = key.GetPrivateKey(context);
+			var pass = new Passphrase(m_groupPass.GetValue(pv));
+			base.SetValue(data, key.CreateRef(), pass);
+		}
 	}
 }
