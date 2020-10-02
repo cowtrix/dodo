@@ -3,8 +3,8 @@
 .inputWrapper {
 	display: flex;
 	flex-direction: column;
-	margin-bottom: spacing(3);
-	margin-top: spacing(3);
+	margin-bottom: spacing(2);
+	margin-top: spacing(2);
 
 	@media (min-width: $responsive-breakpoint) {
 		flex-direction: row;
@@ -13,7 +13,7 @@
 	}
 
 	label {
-		margin-bottom: spacing(3);
+		margin-bottom: spacing(2);
 
 		@media (min-width: $responsive-breakpoint) {
 			flex-basis: 0;

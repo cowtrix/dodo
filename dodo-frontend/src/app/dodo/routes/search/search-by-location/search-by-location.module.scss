@@ -1,15 +1,15 @@
 @import "~app/styles/styles";
 
 .searchByLocation {
-	margin-bottom: spacing(4);
+	margin-bottom: spacingXS(4);
 	opacity: 0.5;
-	margin-left: spacing(5);
+	margin-left: spacingXS(5);
 	font-size: 1rem;
-	padding: spacing(4) spacing(3) 0;
+	padding: spacingXS(4) spacing(2) 0;
 
 	svg {
-		width: spacing(5);
-		height: spacing(7);
+		width: spacingXS(5);
+		height: spacingXS(7);
 	}
 }
 

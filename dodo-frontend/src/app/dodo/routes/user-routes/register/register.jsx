@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Submit, Input, Error } from 'app/components/forms/index'
 
@@ -38,7 +38,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 		<Container
 			title={REGISTER}
 			content={
-				<Fragment>
+				<>
 					<Loader
 						display={registeringUser}
 					/>
@@ -109,7 +109,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 						})}
 						value={REGISTER}
 					/>
-				</Fragment>
+				</>
 			}
 		/>
 	)
