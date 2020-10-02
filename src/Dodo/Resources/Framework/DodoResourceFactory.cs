@@ -61,8 +61,8 @@ namespace Dodo.DodoResources
 					// Add listing to parent resource if needed
 					using var rscLock = new ResourceLock(owned.Parent.Guid);
 					{
-						var parent = rscLock.Value as AdministratedGroupResource;
-						parent.AddChild(owned);
+						var parent = rscLock.Value as IParentResource;
+						parent.AddChild(request.AccessContext, owned);
 						ResourceUtility.GetManager(parent.GetType()).Update(parent, rscLock);
 					}
 				}

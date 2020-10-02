@@ -1,9 +1,10 @@
 using Resources.Security;
 using Dodo.Users;
-using Resources;
 
 namespace Dodo
 {
+
+
 	public interface IAdministratedResource : IDodoResource
 	{
 		bool IsAdmin(User target, AccessContext requesterContext, out AdministratorPermissionSet permissions);

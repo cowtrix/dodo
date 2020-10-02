@@ -8,10 +8,11 @@ namespace Dodo.RoleApplications
 		public string Sender { get; set; }
 		public DateTime Timestamp { get; set; }
 		public string Content { get; set; }
+		public bool AdminOnly { get; set; }
 
 		public Message() { }
 
-		public Message(AccessContext context, string content, bool noSender)
+		public Message(AccessContext context, string content, bool noSender, bool adminOnly)
 		{
 			if (!noSender)
 			{
@@ -19,6 +20,7 @@ namespace Dodo.RoleApplications
 			}
 			Content = content;
 			Timestamp = DateTime.UtcNow;
+			AdminOnly = adminOnly;
 		}
 	}
 }

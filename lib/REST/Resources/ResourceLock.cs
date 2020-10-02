@@ -49,7 +49,7 @@ namespace Resources
 		private System.Diagnostics.StackTrace m_stackTrace;
 #endif
 
-		public ResourceLock(Guid resource) : this(ResourceUtility.GetResourceByGuid(resource))
+		public ResourceLock(Guid resource) : this(ResourceUtility.GetResourceByGuid(resource, force:true))
 		{
 		}
 

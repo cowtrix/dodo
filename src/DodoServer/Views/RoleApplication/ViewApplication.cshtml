@@ -20,9 +20,13 @@
 			@{
 				foreach (Dodo.RoleApplications.Message message in Model.Data.Messages)
 				{
+					if(permissionLevel == Resources.EPermissionLevel.OWNER && message.AdminOnly)
+					{
+						continue;
+					}
 					var isApplicant = string.IsNullOrEmpty(message.Sender);
-					var isYou =  message.Sender == id;
-					<div class="card chat-entry chat-entry-@(isApplicant ? "user" : "admin")">
+					var isYou = message.Sender == id;
+					<div class="card chat-entry chat-entry-@(message.AdminOnly ? "adminonly" : isApplicant ? "user" : "admin")">
 						<div class="card-header chat-header">
 							<div class="row">
 								<div class="col">
@@ -45,7 +49,7 @@
 			}
 			<div id="anchor"></div>
 		</div>
-		<form id="newmessage" class="form chat-send" method="post" action="@(Model.Guid)/message?@(ViewData["header"])" autocomplete="off">
+		<form id="newmessage" class="form chat-send" method="post" action="@(Model.Guid)/message?header=@(ViewData["header"])" autocomplete="off">
 			<div class="row">
 				<div class="col">
 					<input type="text" class="form-control" id="content" name="content" placeholder="Enter new message...">
@@ -54,6 +58,20 @@
 					<input type="submit" value="Send" class="btn btn-primary" />
 				</div>
 			</div>
+			@{
+				if (permissionLevel == Resources.EPermissionLevel.ADMIN)
+				{
+					<div class="row">
+						<div class="col-auto"><input type="checkbox" id="adminOnly" name="adminOnly" value="true" /></div>
+						<div class="col-auto"><label for="adminOnly">Admin Only Message</label></div>
+						<div class="col-auto">
+							<small id="helpBlock" class="form-text text-muted">
+								If checked, only other admins will see this message.
+							</small>
+						</div>
+					</div>
+				}
+			}
 		</form>
 		<small id="helpBlock" class="form-text text-muted chat-tip">
 			Don't discuss sensitive information here. We recommend using secure channels such as Telegram and Signal.

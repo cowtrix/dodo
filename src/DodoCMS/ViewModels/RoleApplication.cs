@@ -24,12 +24,9 @@ namespace Dodo.ViewModels
 		public uint Revision { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		public Resources.ResourceReference<Dodo.Roles.Role> Parent { get; set; }
+		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }
 		public class RoleApplicationDataViewModel
 		{
-			[DisplayName("Notes")]
-			[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-			public string Notes { get; set; }
 			[DisplayName("Messages")]
 			[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 			public System.Collections.Generic.List<Dodo.RoleApplications.Message> Messages { get; set; }

@@ -52,7 +52,7 @@ namespace Dodo.WorkingGroups
 			return false;
 		}
 
-		public override void AddChild<T>(T rsc)
+		public override void AddChild<T>(AccessContext context, T rsc)
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
@@ -74,18 +74,18 @@ namespace Dodo.WorkingGroups
 			{
 				throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 			}
-			base.AddChild(rsc);
+			base.AddChild(context, rsc);
 		}
 
-		public override bool RemoveChild<T>(T rsc)
+		public override bool RemoveChild<T>(AccessContext context, T rsc)
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				return WorkingGroups.Remove(wg.CreateRef()) && base.RemoveChild(rsc);
+				return WorkingGroups.Remove(wg.CreateRef()) && base.RemoveChild(context, rsc);
 			}
 			else if (rsc is Role s && s.Parent.Guid == Guid)
 			{
-				return Roles.Remove(s.CreateRef()) && base.RemoveChild(rsc);
+				return Roles.Remove(s.CreateRef()) && base.RemoveChild(context, rsc);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}

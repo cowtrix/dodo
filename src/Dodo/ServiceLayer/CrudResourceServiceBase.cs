@@ -110,6 +110,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 			return request;
 		}
 		var req = (ResourceActionRequest)request;
+		
 		ResourceManager.Delete(req.Result as T);
 		return new OkRequestResult("Resource deleted");
 	}

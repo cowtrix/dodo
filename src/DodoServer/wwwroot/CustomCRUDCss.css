@@ -7,6 +7,10 @@
 	color: white;
 }
 
+.chat-entry-adminonly {
+	background-color: #FFC113;
+}
+
 .chat-messages {
 	margin: auto;
 	overflow-y: scroll;
@@ -41,6 +45,14 @@
 	max-width: 700px;
 }
 
+.chat-notes {
+	position: fixed;
+	width:280px;
+	right: 10px;
+	top:10px;
+	bottom: 10px;
+}
+
 .dodo-navbar {
 	background-color: #22a73d;
 }
@@ -51,7 +63,7 @@
 
 .chat-send {
 	position: absolute;
-	bottom: 60px;
+	bottom: 40px;
 	left: 10px;
 	right: 10px;
 }

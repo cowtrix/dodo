@@ -184,16 +184,8 @@ namespace SharedTest
 				else if (obj is Role role)
 				{
 					int appCount = new Random().Next(0, 3);
-					using (var rscLock = new ResourceLock(role))
-					{
-						for (var i = 0; i < appCount; ++i)
-						{
-							var applicant = GetRandomUser(out _, out var appcontext);
-							role.Apply(appcontext, new ApplicationModel() { Content = "Hello, this is a test application!" }, out _);
-
-						}
-						ResourceUtility.GetManager(role.GetType()).Update(role, rscLock);
-					}
+					var applicant = GetRandomUser(out _, out var appcontext);
+					role.Apply(appcontext, new ApplicationModel() { Content = "Hello, this is a test application!" }, out _);
 				}
 			}
 			return ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);

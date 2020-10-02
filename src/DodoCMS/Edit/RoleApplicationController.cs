@@ -99,8 +99,7 @@ namespace Dodo.RoleApplications
 		}
 
 		[HttpPost("{id}/" + RoleApplication.MESSAGE)]
-		//[ValidateAntiForgeryToken]
-		public virtual async Task<IActionResult> SendMessage([FromRoute] string id, [FromForm] string content, [FromQuery]bool header = true)
+		public virtual async Task<IActionResult> SendMessage([FromRoute] string id, [FromForm] string content, [FromForm] bool adminOnly = false, [FromQuery]bool header = true)
 		{
 			if (string.IsNullOrEmpty(content))
 			{
@@ -124,6 +123,9 @@ namespace Dodo.RoleApplications
 				{
 					return BadRequest();
 				}
+				roleAppData.Messages.Add(
+					new Message(resourceReq.AccessContext, content,
+						resourceReq.PermissionLevel == EPermissionLevel.OWNER, adminOnly));
 				roleApp.Data.SetValueByGroup(roleAppData, resourceReq.AccessContext, group);
 			}
 			else if (resourceReq.PermissionLevel == EPermissionLevel.OWNER)
@@ -135,11 +137,11 @@ namespace Dodo.RoleApplications
 				{
 					return BadRequest();
 				}
-				roleAppData.Messages.Add(new Message(resourceReq.AccessContext, content, resourceReq.PermissionLevel == EPermissionLevel.OWNER));
+				roleAppData.Messages.Add(new Message(resourceReq.AccessContext, content, resourceReq.PermissionLevel == EPermissionLevel.OWNER, false));
 				roleApp.Data.SetValue(roleAppData, resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>(), resourceReq.AccessContext.Passphrase);
 			}
 			ResourceUtility.GetManager<RoleApplication>().Update(roleApp, rscLock);
-			return Redirect($"/{RoleApplication.ROOT_URL}/{id}{(header ? "" : "header=false")}");
+			return Redirect($"/{RoleApplication.ROOT_URL}/{id}?{(header ? "" : "header=false")}");
 		}
 	}
 }

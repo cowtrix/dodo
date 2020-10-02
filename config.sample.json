@@ -1,5 +1,12 @@
 {
-  "LogLevel": 2,
+  "LogLevel": 3,
   "MongoDBServerURL": "",
-  "ResourceLockTimeout": 10000
+  "ResourceLockTimeout": 10000,
+  "Email_FromEmail": "noreply@Dodo.com",
+  "Email_FromName": "Dodo SysAdmin",
+  "SendGrid_APIKey": "",
+  "EmailUtility_SendGridTemplate_VerifyEmail": "d-abb66e4f174c470abeb5e6a1ecdaac85",
+  "EmailUtility_SendGridTemplate_ResetPassword": "d-43861bc9e0dd44b29b131da9b10a07d1",
+  "EmailUtility_SendGridTemplate_NewApplicant": "d-582357f020794af095c55d31b4b924a2",
+  "PostmanAPIKey": ""
 }

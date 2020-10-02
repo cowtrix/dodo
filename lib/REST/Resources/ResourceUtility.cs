@@ -80,7 +80,7 @@ namespace Resources
 			GetManagerForResource(resource).Add(resource);
 		}
 
-		public static IEnumerable<T> GetResource<T>(Func<IRESTResource, bool> func, Guid? handle = null) where T : class, IRESTResource
+		public static IEnumerable<T> GetResource<T>(Func<IRESTResource, bool> func, Guid? handle = null, bool force = false) where T : class, IRESTResource
 		{
 			if (func == default)
 			{
@@ -89,7 +89,7 @@ namespace Resources
 			foreach (var rm in ResourceManagers.Where(rm => rm.Value is ISearchableResourceManager)
 				.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
 			{
-				var result = rm.Value.Get(x => func(x), handle).OfType<T>();
+				var result = rm.Value.Get(x => func(x), handle, force).OfType<T>();
 				foreach (var r in result)
 				{
 					yield return r;
@@ -97,12 +97,12 @@ namespace Resources
 			}
 		}
 
-		public static IEnumerable<IRESTResource> GetResource(Func<IRESTResource, bool> func, Guid? handle = null)
+		public static IEnumerable<IRESTResource> GetResource(Func<IRESTResource, bool> func, Guid? handle = null, bool force = false)
 		{
-			return GetResource<IRESTResource>(func, handle);
+			return GetResource<IRESTResource>(func, handle, force);
 		}
 
-		public static T GetResourceByGuid<T>(this Guid guid, Guid? handle = null) where T : class, IRESTResource
+		public static T GetResourceByGuid<T>(this Guid guid, Guid? handle = null, bool force = false) where T : class, IRESTResource
 		{
 			if(guid == default)
 			{
@@ -111,7 +111,7 @@ namespace Resources
 			T result;
 			foreach(var rm in ResourceManagers.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
 			{
-				result = (T)rm.Value.GetSingle(x => x.Guid == guid, handle);
+				result = (T)rm.Value.GetSingle(x => x.Guid == guid, handle, force);
 				if(result != null)
 				{
 					return result;
@@ -120,9 +120,9 @@ namespace Resources
 			return null;
 		}
 
-		public static IRESTResource GetResourceByGuid(this Guid guid, Guid? handle = null)
+		public static IRESTResource GetResourceByGuid(this Guid guid, Guid? handle = null, bool force = false)
 		{
-			return GetResourceByGuid<IRESTResource>(guid, handle);
+			return GetResourceByGuid<IRESTResource>(guid, handle, force);
 		}
 
 		public static IEnumerable<T> Search<T>(string query) where T : class, IRESTResource

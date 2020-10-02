@@ -1,6 +1,8 @@
 using Resources.Security;
 using Resources;
 using System;
+using Dodo.Users;
+using Common;
 
 namespace Dodo
 {
@@ -44,9 +46,9 @@ namespace Dodo
 				using var rscLock = new ResourceLock(owned.Parent.Guid);
 				{
 					var parent = rscLock.Value as AdministratedGroupResource;
-					if (!parent.RemoveChild(owned))
+					if (!parent.RemoveChild(default, owned))
 					{
-						throw new Exception($"Unexpectedly failed to remove child object {Guid} from parent resource");
+						Logger.Warning($"Unexpectedly failed to remove child object {Guid} from parent resource");
 					}
 					ResourceUtility.GetManager(parent.GetType()).Update(parent, rscLock);
 				}
