@@ -5,6 +5,7 @@ using Dodo;
 using System.Threading.Tasks;
 using Dodo.DodoResources;
 using System;
+using Common;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
@@ -31,6 +32,7 @@ namespace Dodo
 			}
 			catch (Exception e)
 			{
+				Logger.Exception(e, "Excception in search");
 #if DEBUG
 				return BadRequest(e.Message);
 #else

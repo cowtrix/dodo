@@ -9,9 +9,8 @@ using Dodo.DodoResources;
 namespace Dodo.RoleApplications
 {
 
-	public class RoleApplicationResourceManager : ResourceManager<RoleApplication>
+	public class RoleApplicationResourceManager : DodoResourceManager<RoleApplication>
 	{
-		protected override string MongoDBDatabaseName => nameof(RoleApplication);
 	}
 
 	public class RoleApplicationFactory : DodoResourceFactory<RoleApplication, RoleApplicationSchema> { }
