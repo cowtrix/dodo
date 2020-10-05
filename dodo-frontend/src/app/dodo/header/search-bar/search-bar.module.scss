@@ -1,13 +1,13 @@
 @import "~app/styles/styles";
 
-
-
 .searchBar {
-  min-width: 250px;
-  width: 100%;
+	min-width: 250px;
+	width: 100%;
 
-  @media (min-width: $responsive-breakpoint) {
-    min-width: 450px;
-    margin-left: spacingXS(5);
-  }
+	@include input-stop-expansion;
+
+	@media (min-width: $responsive-breakpoint) {
+		min-width: 450px;
+		margin-left: spacingXS(5);
+	}
 }

@@ -5,29 +5,35 @@ import { withRouter } from 'react-router-dom'
 
 
 import styles from "./search-bar.module.scss"
+import { useDebouncedCallback } from "use-debounce"
+import { RSMaxInput } from "app/components/forms"
 
 const placeholder = "Search location..."
 
-export const SearchBar = withRouter((
-	{
+export const SearchBar = withRouter(
+	({
 		searchString,
 		search,
 		history,
 		setCenterMap,
-	}) =>
-	<AsyncSelect
-		className={styles.searchBar}
-		placeholder={placeholder}
-		onInputChange={value => {
-			if(value.length) {
-				search({ search: value }, setCenterMap)
-				value.length && history.push("/")
-			}
-		}}
-		menuIsOpen={false}
-		components={{ IndicatorsContainer: () => null }}
-	/>)
+	}) => {
+		const searchDebounce = useDebouncedCallback(
+			value => {
+				if (value.length) {
+					search({ search: value }, setCenterMap)
+					value.length && history.push("/")
+				}
+			}, 500
+		)
 
+		return <AsyncSelect
+			className={styles.searchBar}
+			placeholder={placeholder}
+			onInputChange={searchDebounce.callback}
+			menuIsOpen={false}
+			components={{ IndicatorsContainer: () => null, Input: RSMaxInput }}
+		/>
+	})
 
 SearchBar.propTypes = {
 	searchString: PropTypes.string,
