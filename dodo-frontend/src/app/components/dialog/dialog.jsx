@@ -13,20 +13,26 @@ export const Dialog = ({
 	content,
 	update,
 	buttonText,
-	close
+	close,
+	fullScreen
 }) => (
-	<MuDialog open={active} className={styles.dialogWrapper} fullWidth fullScreen>
+	<MuDialog open={active} className={styles.dialogWrapper} fullWidth={fullScreen} fullScreen={fullScreen} PaperProps={{square: true}}>
 		<div className={styles.dialog}>
 			<Header onClose={close} title={title} />
 			<Content content={content} />
-			<Footer update={update} buttonText={buttonText} />
+			{update && <Footer update={update} buttonText={buttonText} />}
 		</div>
 	</MuDialog>
 )
+
+Dialog.defaultProps = {
+	fullScreen: true
+}
 
 Dialog.propTypes = {
 	active: PropTypes.bool,
 	title: PropTypes.string,
 	content: PropTypes.node,
-	update: PropTypes.func
+	update: PropTypes.func,
+	fullScreen: PropTypes.bool
 }

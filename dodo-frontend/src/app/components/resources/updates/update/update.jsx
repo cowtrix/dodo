@@ -108,7 +108,7 @@ export const Update = ({
 				active={showMore}
 				content={dialogContent}
 				close={() => setShowMore(false)}
-				update={() => setShowMore(false)}
+				fullScreen={false}
 			/>
 		</>
 	)

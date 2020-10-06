@@ -1,3 +1,6 @@
+@import "~app/styles/styles";
+
 .selector {
 	width: 100%;
+  @include input-stop-expansion
 }
