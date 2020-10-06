@@ -29,7 +29,7 @@ namespace UnitTests
 					new Passphrase("1234"), user.AuthData.PublicKey, user));
 				user.TokenCollection.AddOrUpdate(user, new ResetPasswordToken(user));
 				user.TokenCollection.AddOrUpdate(user, new TemporaryUserToken(new Passphrase("1234"), "1234"));
-				user.TokenCollection.AddOrUpdate(user, new SessionToken(user, "1234", new Passphrase("1234"), new System.Net.IPAddress(0)));
+				user.TokenCollection.AddOrUpdate(user, new SessionToken(user, "1234", new Passphrase("1234"), new System.Net.IPAddress(0), DateTime.UtcNow + TimeSpan.FromHours(1)));
 				UserManager.Update(user, rscLock);
 			}
 			var userInDB = UserManager.GetSingle(u => u.Guid == user.Guid);

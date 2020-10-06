@@ -44,6 +44,7 @@ namespace Resources
 		string PublicDescription { get; }
 		bool HasValue();
 		bool IsPublished { get; set; }
+		string FullyQualifiedName { get; set; }
 		Type GetRefType();
 	}
 

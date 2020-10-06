@@ -65,7 +65,9 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var key = new Passphrase(KeyGenerator.GetUniqueKey(SessionToken.KEYSIZE));
 
 		// Create the session token
-		var token = new SessionToken(user, passphrase, key, HttpContext.Connection.RemoteIpAddress);
+		
+		var sessionTimeout = login.RememberMe ? SessionToken.ShortSessionExpiryTime : SessionToken.LongSessionExpiryTime;
+		var token = new SessionToken(user, passphrase, key, HttpContext.Connection.RemoteIpAddress, DateTime.UtcNow + sessionTimeout);
 		using (var rscLock = new ResourceLock(user))
 		{
 			user = rscLock.Value as User;
@@ -81,7 +83,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var props = new AuthenticationProperties
 		{
 			IsPersistent = true,
-			ExpiresUtc = DateTimeOffset.UtcNow.Add(login.RememberMe ? TimeSpan.FromHours(1) : TimeSpan.FromDays(1))
+			ExpiresUtc = DateTimeOffset.UtcNow.Add(sessionTimeout),
 		};
 		// issue authentication cookie with subject ID and username
 		await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
