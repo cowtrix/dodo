@@ -13,6 +13,19 @@ export const api = async(url, method = "get", body, abortSignal) => {
 		},
 		credentials: "include",
 		signal: abortSignal ? abortController.signal : null,
-	}).then(resp => resp.json())
+	})
+	.then(resp => {
+		if(resp.ok) {
+			return resp.text()
+			.then(responseText => {
+				const contentType = resp.headers.get('content-type');
+				if(contentType && contentType.search('application/json' !== -1)) {
+					return JSON.parse(responseText);
+				}
+				return responseText;
+			})
+		}
+		throw resp;
+	})
 }
 
