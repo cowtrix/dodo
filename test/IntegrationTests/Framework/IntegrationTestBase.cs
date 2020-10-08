@@ -55,6 +55,8 @@ namespace RESTTests
 			var content = await response.Content.ReadAsStringAsync();
 			Assert.IsTrue(content.IsValidJson(),
 				$"Invalid JSON: {response.StatusCode} | {response.ReasonPhrase} | {content}");
+			var contentType = response.Content.Headers.GetValues("Content-Type").Single();
+			Assert.AreEqual("application/json; charset=utf-8", contentType);
 			return JsonConvert.DeserializeObject<T>(content);
 		}
 
