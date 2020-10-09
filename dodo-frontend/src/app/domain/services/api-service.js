@@ -19,7 +19,7 @@ export const api = async(url, method = "get", body, abortSignal) => {
 			return resp.text()
 			.then(responseText => {
 				const contentType = resp.headers.get('content-type');
-				if(contentType && contentType.search('application/json' !== -1)) {
+				if(contentType && contentType.search('application/json') !== -1) {
 					return JSON.parse(responseText);
 				}
 				return responseText;
