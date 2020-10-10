@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 namespace Resources
 {
+
 	/// <summary>
 	/// An owned resource has a "parent" resource that it sits under
 	/// E.g. Working Groups, Roles, Sites

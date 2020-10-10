@@ -140,3 +140,20 @@
 	/* anchor nodes are required to have non-zero area */
 	height: 1px;
 }
+
+.admin-message {
+	color:white;
+	background-color:black;
+	font-family: Consolas, 'Courier New';
+}
+
+.chat-clear {
+	position: fixed;
+	width: 32px;
+	height: 32px;
+	right: 25px;
+	top: 25px;
+	margin: 0;
+	padding: 0;
+	padding-top: .2em;
+}

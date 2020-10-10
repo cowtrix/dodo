@@ -1,8 +1,9 @@
-﻿using Common.Extensions;
+using Common.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,12 +47,12 @@ namespace Common.Commands
 		/// </summary>
 		private struct CommandData
 		{
-			public Action<CommandArguments> Method;
+			public Func<CommandArguments, string> Method;
 			public CommandAttribute Attribute;
 		}
 		private static Dictionary<Regex, CommandData> m_commands = new Dictionary<Regex, CommandData>();
 		private static CommandData m_fallbackCommand;   // The command to run when no other command matches - default is help
-		public static Action HelpOverride;  // Help is a built-in thing but we can override it if we wish
+		public static Func<string> HelpOverride;  // Help is a built-in thing but we can override it if we wish
 		public static Action<CommandArguments> OnPreExecute;    // Sometimes we want to jump in before the command is fired
 
 		/// <summary>
@@ -64,7 +65,15 @@ namespace Common.Commands
 
 		static CommandManager()
 		{
-			LoadCommands();
+			try
+			{
+				LoadCommands();
+			}
+			catch(Exception e)
+			{
+				Logger.Exception(e);
+				Environment.Exit(23);
+			}
 		}
 
 		/// <summary>
@@ -73,8 +82,8 @@ namespace Common.Commands
 		/// </summary>
 		private static void LoadCommands()
 		{
-			var allTypes = AppDomain.CurrentDomain.GetAssemblies().Where(ass => !m_ignoredAssemblies.Any(ign => ass.FullName.StartsWith(ign)))
-				.Select(assembly => assembly.GetTypes()).ConcatenateCollection();
+			var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(ass => !m_ignoredAssemblies.Any(ign => ass.FullName.StartsWith(ign))).ToList();
+			var allTypes = assemblies.Select(assembly => assembly.GetTypes()).ConcatenateCollection();
 			var allMethods = allTypes.Select(x => x.GetMethods().Where(method => method.GetCustomAttribute<CommandAttribute>() != null)).ConcatenateCollection();
 			foreach (var method in allMethods)
 			{
@@ -87,6 +96,10 @@ namespace Common.Commands
 				{
 					throw new Exception($"Method {method.DeclaringType.Name}:{method.Name} parameter must be a single CommandArguments variable");
 				}
+				if(method.ReturnType != typeof(string))
+				{
+					throw new Exception($"Method {method.DeclaringType.Name}:{method.Name} must have a return type of string");
+				}
 				var attr = method.GetCustomAttribute<CommandAttribute>();
 				var cmdData = new CommandData
 				{
@@ -95,7 +108,7 @@ namespace Common.Commands
 					{
 						if (typeof(Task).IsAssignableFrom(method.ReturnType))
 						{
-							var t = method.Invoke(null, new object[] { args }) as Task;
+							var t = method.Invoke(null, new object[] { args }) as Task<string>;
 							while (!t.IsCompleted)
 							{
 								Thread.Sleep(10);
@@ -104,9 +117,9 @@ namespace Common.Commands
 							{
 								throw t.Exception;
 							}
-							return;
+							return t.Result;
 						}
-						method.Invoke(null, new object[] { args });
+						return (string)method.Invoke(null, new object[] { args });
 					}
 				};
 				if (attr.CommandRegex == null)
@@ -130,8 +143,9 @@ namespace Common.Commands
 		/// </summary>
 		/// <param name="args">The arguments to be executed</param>
 		/// <param name="parameters">The parameters to parse the arguments</param>
-		public static void Execute(IEnumerable<string> args, CommandArgumentParameters parameters)
+		public static string Execute(IEnumerable<string> args, CommandArgumentParameters parameters)
 		{
+			string result = "ERROR";
 			try
 			{
 				// TODO: rejoining strings like this will sometimes result in incorrect result.
@@ -159,7 +173,7 @@ namespace Common.Commands
 				}
 				var cmdArgs = new CommandArguments(args, parameters);
 				OnPreExecute?.Invoke(cmdArgs);
-				cmd.Method.Invoke(cmdArgs);
+				result = cmd.Method.Invoke(cmdArgs);
 			}
 			catch (Exception e)
 			{
@@ -168,22 +182,24 @@ namespace Common.Commands
 					e = agg.InnerException;
 				}
 				Logger.Exception(e);
+				result = $"Exception: {e.InnerException?.Message ?? e.Message}";
 			}
+			return result;
 		}
 
-		public static void Execute(string line, CommandArgumentParameters parameters)
+		public static string Execute(string line, CommandArgumentParameters parameters)
 		{
-			Execute(CommandArguments.Split(line, parameters), parameters);
+			return Execute(CommandArguments.Split(line, parameters), parameters);
 		}
 
-		public static void Execute(string[] args)
+		public static string Execute(string[] args)
 		{
-			Execute(args, CommandArgumentParameters.Default);
+			return Execute(args, CommandArgumentParameters.Default);
 		}
 
-		public static void Execute(string line)
+		public static string Execute(string line)
 		{
-			Execute(line, CommandArgumentParameters.Default);
+			return Execute(line, CommandArgumentParameters.Default);
 		}
 
 		/// <summary>
@@ -191,26 +207,25 @@ namespace Common.Commands
 		/// </summary>
 		/// <param name="args"></param>
 		[Command(@"^help$", "help", "List all commands")]
-		public static void Help(CommandArguments args)
+		public static string Help(CommandArguments args)
 		{
 			if (HelpOverride != null)
 			{
-				// If the override exists, use that instead
-				HelpOverride.Invoke();
-				return;
+				// If the override exists, use that instead				
+				return HelpOverride.Invoke();
 			}
 			Console.WriteLine();
 			var consoleWidth = Console.BufferWidth;
 			const int margin = 4;
+			StringBuilder sb = new StringBuilder();
 			foreach (var cmd in m_commands.Where(x => !string.IsNullOrEmpty(x.Value.Attribute.FriendlyName))
 				.OrderBy(x => x.Value.Attribute.FriendlyName))
 			{
 				var friendlyName = cmd.Value.Attribute.FriendlyName;
 				var description = cmd.Value.Attribute.Description;
-
+				sb.AppendLine($"{friendlyName}\t........\t{description}");
 				if (friendlyName.Length + (margin * 2) + description.Length < consoleWidth)
 				{
-					Console.Write("".PadLeft(margin, ' ') + friendlyName);
 					var filler = "".PadLeft(consoleWidth - friendlyName.Length - description.Length - (margin * 2), '·');
 					var fore = Console.ForegroundColor;
 					Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -226,6 +241,7 @@ namespace Common.Commands
 					Console.WriteLine();
 				}
 			}
+			return sb.ToString();
 		}
 
 	}

@@ -46,6 +46,7 @@ namespace Resources
 			typeof(DateTime),
 			typeof(GeoLocation),
 			typeof(Passphrase),
+			typeof(HashedResourceReference),
 			//typeof(IResourceReference)
 		};
 

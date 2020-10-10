@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace Common.Commands
 	/// </summary>
 	public struct CommandArguments
 	{
+		public string Raw { get; private set; }
 		private Dictionary<string, string> m_args;
 
 		public CommandArguments(string args, CommandArgumentParameters parameters) :
@@ -32,7 +33,8 @@ namespace Common.Commands
 		public CommandArguments(IEnumerable<string> args, CommandArgumentParameters parameters)
 		{
 			m_args = new Dictionary<string, string>();
-			foreach(var arg in args)
+			Raw = string.Join(" ", args);
+			foreach (var arg in args)
 			{
 				if(!arg.StartsWith(parameters.CommandPrefix.ToString()))
 				{
@@ -277,6 +279,11 @@ namespace Common.Commands
 			}
 			result.Add(sb.ToString());
 			return result;
+		}
+
+		public override string ToString()
+		{
+			return base.ToString();
 		}
 	}
 }

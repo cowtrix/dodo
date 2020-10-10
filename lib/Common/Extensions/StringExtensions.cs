@@ -37,7 +37,8 @@ namespace Common.Extensions
 			// Finally replace linebreaks with <br/>
 			return str
 				.Replace(Environment.NewLine, "</br>")
-				.Replace("\n", "</br>");
+				.Replace("\n", "</br>")
+				.Replace("\t", "&emsp;");
 		}
 		public static string StripMDLinks(string str)
 		{

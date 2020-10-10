@@ -1,5 +1,12 @@
 {
   "LogLevel": 3,
   "MongoDBServerURL": "",
-  "ResourceLockTimeout": 10000
+  "ResourceLockTimeout": 10000,
+  "DefaultCommandArgumentParameters": {
+    "CommandParamSeperator": ":",
+    "CommandSeperator": " ",
+    "CommandPrefix": "/",
+    "QuotationChar": "\"",
+    "OnValidate": null
+  }
 }
