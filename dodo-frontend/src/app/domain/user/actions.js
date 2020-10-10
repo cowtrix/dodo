@@ -1,4 +1,3 @@
-import { postLogin } from '../services'
 import {
 	LOGIN,
 	RESET_PASSWORD,
@@ -8,7 +7,7 @@ import {
 	LOGOUT,
 	RESEND_VALIDATION_EMAIL
 } from './action-types'
-import { apiAction, authAction } from '../factories'
+import { apiAction, authAction, loginAction } from '../factories'
 
 import {
 	RESET_PASSWORD as RESET_PASSWORD_URL,
@@ -18,33 +17,10 @@ import {
 	RESEND_VALIDATION_EMAIL_URL
 } from '../urls'
 
-import { REQUEST, SUCCESS, FAILURE } from '../constants'
+import { SUCCESS } from '../constants'
 
 export const login = (dispatch, username, password, rememberMe) => {
-	dispatch({
-		type: LOGIN + REQUEST,
-		payload: LOGIN
-	})
-	postLogin(username, password, rememberMe)
-		.then(response => {
-			if (response.status) {
-				dispatch({
-					type: LOGIN + FAILURE,
-					payload: "Unknown username or password"
-				})
-			} else {
-				dispatch({
-					type: LOGIN + SUCCESS,
-					payload: response
-				})
-			}
-		})
-		.catch(error => {
-			dispatch({
-				type: LOGIN + FAILURE,
-				payload: error
-			})
-		})
+	loginAction(dispatch, username, password, rememberMe);
 }
 
 export const resetPassword = (dispatch, email, cb) =>
