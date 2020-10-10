@@ -1,7 +1,7 @@
-import { api } from "../services"
+import { api, auth } from "../services"
 import { REQUEST, FAILURE, SUCCESS } from "../constants"
 
-export const apiAction = async (dispatch, action, url, cb, abortSignal, method, body) => {
+const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal, method, body) => {
 	dispatch({
 		type: action + REQUEST,
 		payload: {
@@ -9,7 +9,7 @@ export const apiAction = async (dispatch, action, url, cb, abortSignal, method, 
 			url
 		}
 	})
-	return api(url, method, body, abortSignal)
+	return service(url, method, body, abortSignal)
 		.then(response => {
 			if (response.status) {
 				dispatch({
@@ -33,4 +33,12 @@ export const apiAction = async (dispatch, action, url, cb, abortSignal, method, 
 				payload: error
 			})
 		})
+}
+
+export const apiAction = (dispatch, action, url, cb, abortSignal, method, body) => {
+	return apiActionHandler(api, dispatch, action, url, cb, abortSignal, method, body);
+}
+
+export const authAction = (dispatch, action, url, cb, abortSignal, method, body) => {
+	return apiActionHandler(auth, dispatch, action, url, cb, abortSignal, method, body);
 }

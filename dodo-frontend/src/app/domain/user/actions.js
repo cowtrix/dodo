@@ -8,7 +8,7 @@ import {
 	LOGOUT,
 	RESEND_VALIDATION_EMAIL
 } from './action-types'
-import { apiAction } from '../factories'
+import { apiAction, authAction } from '../factories'
 
 import {
 	RESET_PASSWORD as RESET_PASSWORD_URL,
@@ -56,10 +56,10 @@ export const registerUser = (dispatch, userDetails) =>
 }), false, 'post', userDetails)
 
 export const getLoggedInUser = (dispatch) =>
-	apiAction(dispatch, GET_LOGGED_IN_USER, AUTH_URL)
+	authAction(dispatch, GET_LOGGED_IN_USER, AUTH_URL)
 
 export const updateDetails = (dispatch, guid, details) =>
-	apiAction(dispatch, UPDATE_DETAILS, AUTH_URL + guid, (success) => dispatch({
+	authAction(dispatch, UPDATE_DETAILS, AUTH_URL + guid, (success) => dispatch({
 		type: LOGIN + SUCCESS, payload: success
 	}), false, 'PATCH', details)
 
