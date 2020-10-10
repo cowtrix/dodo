@@ -1,8 +1,5 @@
-import { api, auth, login } from "../services"
+import { api, auth } from "../services"
 import { REQUEST, FAILURE, SUCCESS } from "../constants"
-
-import { LOGIN } from '../user/action-types';
-import { LOGIN as LOGIN_URL } from '../urls';
 
 const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal, method, body) => {
 	dispatch({
@@ -44,14 +41,4 @@ export const apiAction = (dispatch, action, url, cb, abortSignal, method, body) 
 
 export const authAction = (dispatch, action, url, cb, abortSignal, method, body) => {
 	return apiActionHandler(auth, dispatch, action, url, cb, abortSignal, method, body);
-}
-
-export const loginAction = (dispatch, username, password, rememberMe) => {
-	const body = JSON.stringify({
-		username: username,
-		password: password,
-		rememberMe: rememberMe,
-		redirect: ""
-	});
-	return apiActionHandler(login, dispatch, LOGIN, LOGIN_URL, undefined, undefined, 'post', body);
 }

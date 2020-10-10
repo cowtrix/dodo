@@ -7,12 +7,13 @@ import {
 	LOGOUT,
 	RESEND_VALIDATION_EMAIL
 } from './action-types'
-import { apiAction, authAction, loginAction } from '../factories'
+import { apiAction, authAction } from '../factories'
 
 import {
 	RESET_PASSWORD as RESET_PASSWORD_URL,
 	REGISTER_USER as REGISTER_USER_URL,
 	AUTH_URL,
+	LOGIN as LOGIN_URL,
 	LOGOUT_URL,
 	RESEND_VALIDATION_EMAIL_URL
 } from '../urls'
@@ -20,7 +21,13 @@ import {
 import { SUCCESS } from '../constants'
 
 export const login = (dispatch, username, password, rememberMe) => {
-	loginAction(dispatch, username, password, rememberMe);
+	const body = JSON.stringify({
+		username: username,
+		password: password,
+		rememberMe: rememberMe,
+		redirect: ""
+	});
+	return apiAction(dispatch, LOGIN, LOGIN_URL, undefined, undefined, 'post', body);
 }
 
 export const resetPassword = (dispatch, email, cb) =>
