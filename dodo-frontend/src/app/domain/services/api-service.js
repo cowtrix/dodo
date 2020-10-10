@@ -19,10 +19,20 @@ export const api = async(url, method = "get", body, abortSignal) => {
 			return resp.text()
 			.then(responseText => {
 				const contentType = resp.headers.get('content-type');
+
+				// If content-type is application/json, parse response. Invalid JSON will throw error, causing promise to reject.
 				if(contentType && contentType.search('application/json') !== -1) {
 					return JSON.parse(responseText);
 				}
-				return responseText;
+
+				// If content-type is not application/json, try to parse response. If parse fails, just return response text.
+				try {
+					const data = JSON.parse(responseText);
+					console.warn(`'${url}' returned JSON with incorrect content-type header of '${contentType}'`);
+					return data;
+				} catch(e) {
+					return responseText;
+				}
 			})
 		}
 		throw resp;
