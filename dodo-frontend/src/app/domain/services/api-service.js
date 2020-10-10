@@ -1,6 +1,8 @@
+import { parseJSON } from './services';
+
 let abortController = new AbortController()
 
-export const api = async(url, method = "get", body, abortSignal) => {
+export const api = async(url, method = "get", body, abortPrevious) => {
 	abortController.abort()
 	abortController = new AbortController()
 
@@ -12,12 +14,12 @@ export const api = async(url, method = "get", body, abortSignal) => {
 			Accept: "application/json"
 		},
 		credentials: "include",
-		signal: abortSignal ? abortController.signal : null,
+		signal: abortPrevious ? abortController.signal : null,
 	})
 	.then(resp => {
-		if(resp.ok) {
-			return resp.text()
-			.then(responseText => {
+		return resp.text()
+		.then(responseText => {
+			if(resp.ok) {
 				const contentType = resp.headers.get('content-type');
 
 				// If content-type is application/json, parse response. Invalid JSON will throw error, causing promise to reject.
@@ -33,7 +35,23 @@ export const api = async(url, method = "get", body, abortSignal) => {
 				} catch(e) {
 					return responseText;
 				}
-			})
+			}
+			// eslint-disable-next-line no-throw-literal
+			throw {
+				response: parseJSON(responseText),
+				status: resp.status,
+				message: resp.statusText
+			}
+		})
+	})
+	.catch(resp => {
+		if(resp instanceof Error) {
+			// eslint-disable-next-line no-throw-literal
+			throw {
+				response: undefined,
+				status: 0,
+				message: 'Network error'
+			}
 		}
 		throw resp;
 	})

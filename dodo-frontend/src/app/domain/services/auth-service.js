@@ -1,9 +1,11 @@
+import { parseJSON } from './services';
+
 let abortController = new AbortController()
 
 // The auth URLs are a bit odd. They return the HTML for the login page if you are not logged in, or JSON if you are.
 // That is why we have this special service for them.
 
-export const auth = async(url, method = "get", body, abortSignal) => {
+export const auth = async(url, method = "get", body, abortPrevious) => {
 	abortController.abort()
 	abortController = new AbortController()
 
@@ -15,7 +17,7 @@ export const auth = async(url, method = "get", body, abortSignal) => {
 			Accept: "application/json"
 		},
 		credentials: "include",
-		signal: abortSignal ? abortController.signal : null,
+		signal: abortPrevious ? abortController.signal : null,
 	})
 	.then(resp => {
 		return resp.text()
@@ -24,14 +26,32 @@ export const auth = async(url, method = "get", body, abortSignal) => {
 				try {
 					return JSON.parse(responseText);
 				} catch(e) {
-					throw new Error('User is not logged in');
+					// eslint-disable-next-line no-throw-literal
+					throw {
+						response: parseJSON(responseText),
+						status: resp.status,
+						message: 'User is not logged in'
+					}
 				}
 			}
-			throw new Error('Server error');
+			// eslint-disable-next-line no-throw-literal
+			throw {
+				response: parseJSON(responseText),
+				status: resp.status,
+				message: resp.statusText
+			}
 		})
 	})
 	.catch(resp => {
-		throw new Error('Network error');
+		if(resp instanceof Error) {
+			// eslint-disable-next-line no-throw-literal
+			throw {
+				response: undefined,
+				status: 0,
+				message: 'Network error'
+			}
+		}
+		throw resp;
 	})
 }
 
