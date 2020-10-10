@@ -64,7 +64,8 @@ namespace Dodo
 		[HttpGet]
 		public IActionResult Get()
 		{
-			return Content(JsonConvert.SerializeObject(MetadataObject, JsonExtensions.NetworkSettings));
+			return Content(JsonConvert.SerializeObject(MetadataObject, JsonExtensions.NetworkSettings),
+				"application/json; charset=utf-8");
 		}
 	}
 }
