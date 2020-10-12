@@ -145,7 +145,7 @@ namespace Common.Commands
 		/// <param name="parameters">The parameters to parse the arguments</param>
 		public static string Execute(IEnumerable<string> args, CommandArgumentParameters parameters)
 		{
-			string result = "ERROR";
+			string result = "";
 			try
 			{
 				// TODO: rejoining strings like this will sometimes result in incorrect result.
@@ -160,7 +160,8 @@ namespace Common.Commands
 				}
 				else
 				{
-					Logger.Error($"No matching command found");
+					result += "No matching command found\n";
+					Logger.Error("No matching command found");
 					var bestMatches = m_commands.ToDictionary(x => x.Value.Attribute,
 						x => LevenshteinDistance.Compute(x.Value.Attribute.CommandRegex,
 						reconstructedCmdLine.Substring(0, Math.Min(reconstructedCmdLine.Length, x.Value.Attribute.CommandRegex.Length))));
@@ -173,7 +174,7 @@ namespace Common.Commands
 				}
 				var cmdArgs = new CommandArguments(args, parameters);
 				OnPreExecute?.Invoke(cmdArgs);
-				result = cmd.Method.Invoke(cmdArgs);
+				result += cmd.Method.Invoke(cmdArgs);
 			}
 			catch (Exception e)
 			{
