@@ -17,6 +17,9 @@
 		var url = $"{Common.Extensions.StringExtensions.ToCamelCase(rsc.GetType().Name)}/{rsc.Slug}";
 		<div class="card">
 			<div class="card-body">
+				<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Resources.IResourceReference)}_{nameof(Resources.IResourceReference.Parent)}")))">
+					<i class="fas fa-question-circle"></i>
+				</button>
 				<label class="control-label">{NAME}</label>
 				<input class="sr-only" asp-for="{MEMBER}" />
 				<div class="row">

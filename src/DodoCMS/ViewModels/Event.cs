@@ -101,10 +101,10 @@ namespace Dodo.ViewModels
 		[DisplayName("Video Embed URL")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string VideoEmbedURL { get; set; }
-		[DisplayName("StartDate")]
+		[DisplayName("Start Date")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public System.DateTime StartDate { get; set; }
-		[DisplayName("EndDate")]
+		[DisplayName("End Date")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public System.DateTime EndDate { get; set; }
 	}

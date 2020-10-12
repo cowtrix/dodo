@@ -19,6 +19,7 @@ namespace Dodo.LocationResources
 
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+		[Name("Start Date")]
 		public DateTime StartDate 
 		{ 
 			get 
@@ -39,6 +40,7 @@ namespace Dodo.LocationResources
 
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+		[Name("End Date")]
 		public DateTime EndDate { get { return __endDate; } set { __endDate = value.ToUniversalTime(); } }
 		[BsonElement]
 		private DateTime __endDate;

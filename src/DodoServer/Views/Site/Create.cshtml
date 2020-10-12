@@ -35,6 +35,9 @@
 		var url = $"{Common.Extensions.StringExtensions.ToCamelCase(rsc.GetType().Name)}/{rsc.Slug}";
 		<div class="card">
 			<div class="card-body">
+				<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Resources.IResourceReference)}_{nameof(Resources.IResourceReference.Parent)}")))">
+					<i class="fas fa-question-circle"></i>
+				</button>
 				<label class="control-label">Parent</label>
 				<input class="sr-only" asp-for="ParentID" />
 				<div class="row">
@@ -60,7 +63,8 @@
 	}
 }
 
-				<div class="form-group">
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Name</label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
@@ -98,7 +102,7 @@
 			mapboxgl: mapboxgl
 		});
 		geocoder.on('result', function (result) {
-			
+
 			var coords = result["result"]["center"];
 			console.warn(JSON.stringify(
 				coords,
@@ -208,19 +212,20 @@
 
 @{ var data = Model.Location.LocationData; }
 <div class="card">
-	<div class="card-body">
-		<h5 class="card-title">Location</h5>
-		<div id="map" style="height: 20em; width: 100%;"></div>
-		<div class="form-group">
-			<label asp-for="Location.Latitude" class="control-label"></label>
-			<input id="Model.Location_lat" asp-for="Location.Latitude" class="form-control"></input>
-			<span asp-validation-for="Location.Latitude" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-			<label asp-for="Location.Longitude" class="control-label"></label>
-			<input id="Model.Location_lng" asp-for="Location.Longitude" class="form-control"></input>
-			<span asp-validation-for="Location.Longitude" class="text-danger"></span>
-		</div>
+	<div class="card-header"><h5 class="card-title">Location</h5></div>
+	<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML(nameof(Resources.Location.GeoLocation)))">
+		<i class="fas fa-question-circle"></i>
+	</button>
+	<div id="map" style="height: 20em; width: 100%;"></div>
+	<div class="form-group sr-only">
+		<label asp-for="Location.Latitude" class="control-label"></label>
+		<input id="Model.Location_lat" asp-for="Location.Latitude" class="form-control"></input>
+		<span asp-validation-for="Location.Latitude" class="text-danger"></span>
+	</div>
+	<div class="form-group sr-only">
+		<label asp-for="Location.Longitude" class="control-label"></label>
+		<input id="Model.Location_lng" asp-for="Location.Longitude" class="form-control"></input>
+		<span asp-validation-for="Location.Longitude" class="text-danger"></span>
 	</div>
 </div>
 

@@ -17,6 +17,14 @@ $(function () {
 </script>
 
 
+<script>
+	$("input").change(function () {
+		alert("The text has been changed.");
+	});
+</script>
+
+<div id="unsaved-changes-message" class="unsaved-changes"></div>
+
 <ul class="nav nav-tabs" id="myTab" role="tablist">
 	<li class="nav-item">
 		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
@@ -48,33 +56,39 @@ $(function () {
 	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
 		<div class="card">
 			<div class="card-body">
-				<form asp-action="Edit">
+				<form id="edit" asp-action="Edit">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 										<label class="control-label">Parent</label>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
 					<input class="sr-only" asp-for="Parent.Type"/>
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
 					<div class="col-auto"><a class="btn btn-light irestresource-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i></a></div>
 					<div class="col-auto"><a class="btn btn-light irestresource-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i></a></div>
 					</div>
-<div class="form-check">
-	<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
-	<label class="form-check-label">Published</label>
-	<span asp-validation-for="IsPublished" class="text-danger"></span>
-	<small id="helpBlock" class="form-text text-muted">
-		This indicates whether or not this is publicly viewable by all users.
-	</small>
-	@{
-		if (!Model.IsPublished)
-		{
-		<div class="alert alert-warning" role="alert">
-			This is not yet published, so it won't show up in search results or be visible to non-administrators.
+@{
+	if (!Model.IsPublished)
+	{
+		<div class="form-check">
+			<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+			<label class="form-check-label">Published</label>
+			<span asp-validation-for="IsPublished" class="text-danger"></span>
+			<small id="helpBlock" class="form-text text-muted">
+				This indicates whether or not this is publicly viewable by all users. This is not yet published, so it won't show up in search results or be visible to non-administrators. Once a resource is published, it cannot be unpublished.
+			</small>
 		</div>
-		}
 	}
-</div>
+	else
+	{
+		<div class="alert alert-warning published-message" role="alert">
+			This resource is now published and publicly visible.
+		</div>
+	}
+}
 
-				<div class="form-group">
+
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Name</label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
@@ -152,7 +166,7 @@ $(function () {
 				Announcements are messages that will be displayed on the public page and be visible for all users. You can use them to give short updates or messages.<br />
 				To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 			</small>
-			<input type="submit" value="Post" class="btn btn-primary" style="width:100px;" />
+			<input type="submit" value="Post" class="btn btn-primary btn-block form-field" />
 		</form>
 	</div>
 </div>
@@ -391,13 +405,13 @@ $(function () {
 <div class="card">
 	<h5 class="card-header">Statistics</h5>
 	<div class="card-body">
-		<div class="col-auto">
+		<div class="col">
 			@{
 				if (typeof(Dodo.IGroupResource).IsAssignableFrom(Model.__Type))
 				{
 					// Draw member count
 					<div class="form-group row">
-						<label class="col-sm-2 col-form-label" style="min-width:200px">Members</label>
+						<label class="col-md col-form-label">Members</label>
 						<div class="col-sm-10">
 							<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@((Model as dynamic).MemberCount)">
 						</div>
@@ -405,13 +419,13 @@ $(function () {
 				}
 			}
 			<div class="form-group row">
-				<label class="col-sm-2 col-form-label" style="width:50%">Total Views</label>
+				<label class="col-md col-form-label">Total Views</label>
 				<div class="col-sm-10">
 					<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@viewData?.Pool.Sum(p => p.Value.UnauthenticatedViewCount)">
 				</div>
 			</div>
 			<div class="form-group row">
-				<label class="col-sm-2 col-form-label" style="width:50%">Signed-in Views</label>
+				<label class="col-md col-form-label">Signed-in Views</label>
 				<div class="col-sm-10">
 					<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@viewData?.Pool.Sum(p => p.Value.AuthenticatedViewCount)">
 				</div>

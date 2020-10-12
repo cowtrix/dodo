@@ -1,3 +1,6 @@
-<div class="navbar-expand-lg navbar-dark resource-reference @(Model.{MEMBER}.GetRefType().Name.ToLowerInvariant())-reference">";
+<div class="navbar-expand-lg navbar-dark resource-reference @(Model.{MEMBER}.GetRefType().Name.ToLowerInvariant())-reference">
+	<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Resources.IResourceReference)}_{nameof(Resources.IResourceReference.Parent)}")))">
+		<i class="fas fa-question-circle"></i>
+	</button>
 	<a class="navbar-brand" href="{Dodo.DodoApp.NetConfig.FullURI}/@Common.Extensions.StringExtensions.ToCamelCase(Model.{prefix}{memberName}.GetRefType().Name)/@Model.{prefix}{memberName}.Slug">Part of the @Model.{MEMBER}.Name</a>
 </div>

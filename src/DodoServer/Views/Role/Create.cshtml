@@ -35,6 +35,9 @@
 		var url = $"{Common.Extensions.StringExtensions.ToCamelCase(rsc.GetType().Name)}/{rsc.Slug}";
 		<div class="card">
 			<div class="card-body">
+				<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Resources.IResourceReference)}_{nameof(Resources.IResourceReference.Parent)}")))">
+					<i class="fas fa-question-circle"></i>
+				</button>
 				<label class="control-label">Parent</label>
 				<input class="sr-only" asp-for="ParentID" />
 				<div class="row">
@@ -60,7 +63,8 @@
 	}
 }
 
-				<div class="form-group">
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Name</label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
