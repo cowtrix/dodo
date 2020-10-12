@@ -148,14 +148,13 @@
 }
 
 .chat-clear {
-	position: fixed;
-	width: 32px;
-	height: 32px;
-	right: 40px;
+	position: absolute;
+	margin: auto;
+	height: 24px;
+	right: 25px;
 	top: 25px;
 	margin: 0;
-	padding: 0;
-	padding-top: .2em;
+	padding: 1px;
 }
 
 .form-field

@@ -10,9 +10,16 @@
 	$(function () {
 		$('.chat-messages').scrollTop($('.chat-messages')[0].scrollHeight);
 	})
+
+	function promptMe() {
+		if (confirm("Are you absolutely sure you want to clear the console history? This action cannot be undone!"))
+		{
+			window.location.href = './admin/clear';
+		}
+	}
 </script>
 
-<div class="card chat-container">
+<div class="card chat-container chat-container-navbar">
 	<div class="card-body">
 		<div class="chat-messages admin-message" id="scroller">
 			<p>
@@ -20,8 +27,8 @@
 			</p>
 			<div id="anchor"></div>
 		</div>
-		<a class="btn btn-light chat-clear" role="button" href="./admin/clear">
-			<i class="fa fa-trash"></i>
+		<a class="btn btn-light btn-sm chat-clear" role="button" onclick="promptMe()">
+			<i class="fa fa-trash"></i>Clear History
 		</a>
 		<form asp-action="Command" autocomplete="off" class="form chat-send">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
