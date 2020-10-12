@@ -1,4 +1,4 @@
-import { parseJSON } from './services';
+import { tryToParseJSON } from './services';
 
 let abortController = new AbortController()
 
@@ -28,7 +28,7 @@ export const auth = async(url, method = "get", body, abortPrevious) => {
 				} catch(e) {
 					// eslint-disable-next-line no-throw-literal
 					throw {
-						response: parseJSON(responseText),
+						response: tryToParseJSON(responseText),
 						status: resp.status,
 						message: 'User is not logged in'
 					}
@@ -36,7 +36,7 @@ export const auth = async(url, method = "get", body, abortPrevious) => {
 			}
 			// eslint-disable-next-line no-throw-literal
 			throw {
-				response: parseJSON(responseText),
+				response: tryToParseJSON(responseText),
 				status: resp.status,
 				message: resp.statusText
 			}

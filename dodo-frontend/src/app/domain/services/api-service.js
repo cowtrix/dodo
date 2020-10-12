@@ -1,4 +1,4 @@
-import { parseJSON } from './services';
+import { tryToParseJSON } from './services';
 
 let abortController = new AbortController()
 
@@ -38,7 +38,7 @@ export const api = async(url, method = "get", body, abortPrevious) => {
 			}
 			// eslint-disable-next-line no-throw-literal
 			throw {
-				response: parseJSON(responseText),
+				response: tryToParseJSON(responseText),
 				status: resp.status,
 				message: resp.statusText
 			}
