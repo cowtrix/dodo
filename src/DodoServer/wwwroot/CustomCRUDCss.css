@@ -55,6 +55,7 @@
 
 .dodo-navbar {
 	background-color: #22a73d;
+	z-index: 9999;
 }
 
 .dodo-navbar-text {
