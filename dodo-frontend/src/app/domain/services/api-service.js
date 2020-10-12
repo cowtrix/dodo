@@ -46,10 +46,18 @@ export const api = async(url, method = "get", body, abortPrevious) => {
 	})
 	.catch(resp => {
 		if(resp instanceof Error) {
+			if(resp.name === 'AbortError') {
+				// eslint-disable-next-line no-throw-literal
+				throw {
+					response: undefined,
+					status: 0,
+					message: resp.message
+				}
+			}
 			// eslint-disable-next-line no-throw-literal
 			throw {
 				response: undefined,
-				status: 0,
+				status: -1,
 				message: 'Network error'
 			}
 		}

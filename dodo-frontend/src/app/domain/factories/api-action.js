@@ -1,5 +1,5 @@
 import { api, auth } from "../services"
-import { REQUEST, FAILURE, SUCCESS } from "../constants"
+import { CANCELLED, REQUEST, FAILURE, SUCCESS } from "../constants"
 
 const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal, method, body) => {
 	dispatch({
@@ -26,12 +26,21 @@ const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal,
 			if (cb) cb(response)
 		})
 		.catch(error => {
-			console.log(error)
-			if (cb) cb(false)
-			dispatch({
-				type: action + FAILURE,
-				payload: error
-			})
+			if(error.status === 0) {
+				if (cb) cb(false)
+				dispatch({
+					type: action + CANCELLED,
+					payload: error
+				})
+			}
+			else {
+				console.log(error)
+				if (cb) cb(false)
+				dispatch({
+					type: action + FAILURE,
+					payload: error
+				})
+			}
 		})
 }
 

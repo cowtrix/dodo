@@ -27,7 +27,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 	let errorMessage;
 	if(error) {
 		switch(error.status) {
-			case 0:
+			case -1:
 				errorMessage = t('login_network_error');
 				break;
 			case 400:

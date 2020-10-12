@@ -1,4 +1,4 @@
-import { FAILURE, REQUEST, SUCCESS } from "../constants"
+import { CANCELLED, FAILURE, REQUEST, SUCCESS } from "../constants"
 
 const initialStateFactory = actionType => ({
 	isFetching: false,
@@ -17,7 +17,8 @@ export const apiReducerFactory = actionType => (
 				hasErrored: false,
 			}
 		}
-		case actionType + SUCCESS: {
+		case actionType + SUCCESS:
+		case actionType + CANCELLED: {
 			return {
 				...state,
 				isFetching: false,
