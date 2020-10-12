@@ -17,14 +17,6 @@ $(function () {
 </script>
 
 
-<script>
-	$("input").change(function () {
-		alert("The text has been changed.");
-	});
-</script>
-
-<div id="unsaved-changes-message" class="unsaved-changes"></div>
-
 <ul class="nav nav-tabs" id="myTab" role="tablist">
 	<li class="nav-item">
 		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
@@ -106,7 +98,7 @@ $(function () {
 				</div>
 					<input asp-for="MemberCount" class="sr-only"></input>
 				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"ArrestRisk")))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Arrest Risk</label>
 					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EArrestRisk>()" asp-for="ArrestRisk" class="form-control"></select>
 					<span asp-validation-for="ArrestRisk" class="text-danger"></span>

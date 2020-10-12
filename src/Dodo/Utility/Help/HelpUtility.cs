@@ -9,13 +9,20 @@ namespace Dodo
 	{
 		static Dictionary<string, string> m_helpTooltips = new Dictionary<string, string>()
 		{
-			{ 
-				nameof(GeoLocation), 
-				"Use the <i class=\"fas fa-search\"></i> Search bar to look for a location.<br/>You can drag the blue marker around for small adjustments." 
+			{
+				nameof(GeoLocation),
+				"Use the <i class=\"fas fa-search\"></i> Search bar to look for a location.<br/>You can drag the blue marker around for small adjustments."
 			},
-			{ 
-				$"{nameof(Resources.IResourceReference)}_{nameof(Resources.IResourceReference.Parent)}", 
-				"The parent is the group that owns and controls this object. You cannot alter the parent of an object."  
+			{
+				$"{nameof(Resources.IResourceReference)}_{nameof(Resources.IResourceReference.Parent)}",
+				"The parent is the group that owns and controls this object. You cannot alter the parent of an object."
+			},
+			{
+				nameof(LocationResources.LocationResourceBase.ArrestRisk),
+				"<b>High</b>: law enforcement is actively making arrests or engaging in crowd suppression at this site. Rebels who are not prepared to be in high-risk situations should not come to this location.<br />" +
+				"<b>Moderate</b>: the organiser anticipates or has already experienced a small number of arrests, and that rebels may find themselves in arrestable situations. However, protesters will generally not be arrested without warning or without cause.<br />" +
+				"<b>Low</b>: there is or will be law enforcement present. Rebels should stay informed about the ongoing arrest risk, but engagement with law enforcement is unlikely.<br />" +
+				"<b>None</b>: there is no risk of arrest at this location right now or for the foreseeable future."
 			},
 			// Facilities
 			{

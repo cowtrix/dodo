@@ -181,3 +181,8 @@
 {
 	margin:10px;
 }
+
+.tooltip-inner {
+	min-width: 300px;
+	text-align:left;
+}
