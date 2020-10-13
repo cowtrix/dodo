@@ -62,7 +62,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		}
 		catch (Exception e)
 		{
-			return ResourceRequestError.BadRequest($"Failed to deserialise JSON: {e.Message}");
+			return ResourceRequestError.BadRequest($"Error: {e.Message}");
 		}
 		req.Result = createdObject;
 		return req;
