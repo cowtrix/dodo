@@ -13,10 +13,21 @@ namespace Dodo
 				nameof(GeoLocation),
 				"Use the <i class=\"fas fa-search\"></i> Search bar to look for a location.<br/>You can drag the blue marker around for small adjustments."
 			},
+		#region RESOURCES
 			{
-				$"{nameof(Resources.IResourceReference)}_{nameof(Resources.IResourceReference.Parent)}",
+				nameof(Resources.IResourceReference.Parent),
 				"The parent is the group that owns and controls this object. You cannot alter the parent of an object."
 			},
+			{
+				nameof(Resources.IResourceReference.Name),
+				"The public name of this object, visible to everyone. Make this descriptive but short."
+			},
+			{
+				nameof(Resources.IResourceReference.PublicDescription),
+				"This is where you should put all the necessary information about this. The maximum length is 2000 characters. " + 
+				"To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href=\"www.example.com\">My link text</a>"
+			},
+		#endregion
 			{
 				nameof(LocationResources.LocationResourceBase.ArrestRisk),
 				"<b>High</b>: law enforcement is actively making arrests or engaging in crowd suppression at this site. Rebels who are not prepared to be in high-risk situations should not come to this location.<br />" +
@@ -24,7 +35,19 @@ namespace Dodo
 				"<b>Low</b>: there is or will be law enforcement present. Rebels should stay informed about the ongoing arrest risk, but engagement with law enforcement is unlikely.<br />" +
 				"<b>None</b>: there is no risk of arrest at this location right now or for the foreseeable future."
 			},
-			// Facilities
+			{
+				nameof(Dodo.IVideoResource.VideoEmbedURL),
+				"This will appear as a banner video on this page if set. Usually a YouTube embed link, which looks like this: https://www.youtube.com/embed/d4QDM_Isi24"
+			},
+			{
+				nameof(Dodo.ITimeBoundResource.StartDate),
+				"When this starts, in Universal Standard Time (UTC+0)."
+			},
+			{
+				nameof(Dodo.ITimeBoundResource.EndDate),
+				"When this ends, in Universal Standard Time (UTC+0). Note that the end date always has to be after the start date."
+			},
+		#region SITE FACILITIES
 			{
 				nameof(Dodo.LocationResources.SiteFacilities),
 				"Here, you can indicate what facilities are available at this location."
@@ -93,6 +116,7 @@ namespace Dodo
 				$"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Welfare)}",
 				"Is there a welfare group here that can take care of Rebels in distress?"
 			},
+		#endregion
 		};
 
 		public static string GetHelpHTML(string key)

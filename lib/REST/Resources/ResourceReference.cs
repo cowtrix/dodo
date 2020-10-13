@@ -28,8 +28,7 @@ namespace Resources
 					"$('#descriptionLength').text(v + ' characters remaining. ')" +
 				"});" +
 			"</script>" +
-			"<p id=\"descriptionLength\"></p>" +
-			"To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href=\"www.example.com\">My link text</a>";
+			"<p id=\"descriptionLength\"></p>";
 		public const int SHORT_DESC_LENGTH = 256;
 		string PublicDescription { get; }
 	}

@@ -64,7 +64,7 @@ namespace DodoAOT
 		private static IEnumerable<string> ListView(string prefix, MemberInfo member, int indentLevel)
 		{
 			var typeMember = member.GetMemberType().GetGenericArguments().First();
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
+			yield return Indent(indentLevel) + $"<div class=\"form-field card\">";
 			yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
 			yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
 			yield return Indent(indentLevel + 1) + $"<ul class=\"list-group\">";
@@ -96,7 +96,8 @@ namespace DodoAOT
 			txt = txt.Replace("{NAME}", $"{prefix}{member.Name}");
 			yield return txt;*/
 			var view = member.GetCustomAttribute<ViewAttribute>();
-			yield return Indent(indentLevel) + "<div class=\"form-group\">";
+			yield return Indent(indentLevel) + "<div class=\"form-field form-group\">";
+			yield return Indent(indentLevel) + GetHelp(member.Name);
 			yield return Indent(indentLevel) + $"<label class=\"control-label\">{member.GetName()}</label>";
 			yield return Indent(indentLevel) + $"<textarea asp-for=\"{prefix}{member.Name}\" class=\"form-control description-entry\"></textarea>";
 			if(!string.IsNullOrEmpty(view.InputHint))
@@ -208,7 +209,7 @@ namespace DodoAOT
 #endif
 				return $"<button type =\"button\" class=\"help-button\" data-toggle=\"tooltip\" data-html=\"true\" title=\"No Help Specified\"><i class=\"fas fa-question-circle\"></i></button>";
 			}
-			return $"<button type =\"button\" class=\"help-button\" data-toggle=\"tooltip\" data-html=\"true\" title=\"@(Dodo.HelpUtility.GetHelpHTML($\"{key}\")))\"><i class=\"fas fa-question-circle\"></i></button>";
+			return $"<button type =\"button\" class=\"help-button\" data-toggle=\"tooltip\" data-html=\"true\" title=\"@(Dodo.HelpUtility.GetHelpHTML($\"{key}\"))\"><i class=\"fas fa-question-circle\"></i></button>";
 		}
 
 		private static IEnumerable<string> GetLocationEditor(string prefix, MemberInfo member, int indentLevel)
@@ -254,7 +255,7 @@ namespace DodoAOT
 			var memberName = member.Name;
 			if (!memberType.IsPrimitive && !memberType.IsEnum && !memberType.Namespace.StartsWith(nameof(System)))
 			{
-				yield return Indent(indentLevel) + $"<div class=\"card\">";
+				yield return Indent(indentLevel) + $"<div class=\"form-field card\">";
 				yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
 				yield return Indent(indentLevel + 1) + GetHelp(member.Name);
 				yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";

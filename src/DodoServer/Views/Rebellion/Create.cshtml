@@ -17,7 +17,7 @@
 				<form asp-action="Create">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 									<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Name"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Name</label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
@@ -33,11 +33,12 @@
 						</script>
 					</small>
 				</div>
-				<div class="form-group">
+				<div class="form-field form-group">
+				<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"PublicDescription"))"><i class="fas fa-question-circle"></i></button>
 				<label class="control-label">Public Description</label>
 				<textarea asp-for="PublicDescription" class="form-control description-entry"></textarea>
 					<small id="helpBlock" class="form-text text-muted">
-						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>
 					</small>
 				</div>
 <script>
@@ -164,7 +165,7 @@
 </script>
 
 @{ var data = Model.Location.LocationData; }
-<div class="card">
+<div class="form-field card">
 	<div class="card-header"><h5 class="card-title">Location</h5></div>
 	<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML(nameof(Resources.Location.GeoLocation)))">
 		<i class="fas fa-question-circle"></i>
@@ -183,13 +184,13 @@
 </div>
 
 				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"StartDate"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">StartDate</label>
 					<input  asp-for="StartDate" class="form-control"></input>
 					<span asp-validation-for="StartDate" class="text-danger"></span>
 				</div>
 				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"EndDate"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">EndDate</label>
 					<input  asp-for="EndDate" class="form-control"></input>
 					<span asp-validation-for="EndDate" class="text-danger"></span>

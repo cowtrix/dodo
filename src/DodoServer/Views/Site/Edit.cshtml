@@ -51,7 +51,7 @@ $(function () {
 				<form id="edit" asp-action="Edit">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 										<label class="control-label">Parent</label>
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Parent"))"><i class="fas fa-question-circle"></i></button>
 					<input class="sr-only" asp-for="Parent.Type"/>
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
@@ -80,7 +80,7 @@ $(function () {
 
 
 				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Name"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Name</label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
@@ -89,16 +89,17 @@ $(function () {
 					<input asp-for="Guid" class="sr-only"></input>
 					<input asp-for="Revision" class="sr-only"></input>
 					<input asp-for="PublicKey" class="sr-only"></input>
-				<div class="form-group">
+				<div class="form-field form-group">
+				<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"PublicDescription"))"><i class="fas fa-question-circle"></i></button>
 				<label class="control-label">Public Description</label>
 				<textarea asp-for="PublicDescription" class="form-control description-entry"></textarea>
 					<small id="helpBlock" class="form-text text-muted">
-						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>
 					</small>
 				</div>
 					<input asp-for="MemberCount" class="sr-only"></input>
 				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"ArrestRisk")))"><i class="fas fa-question-circle"></i></button>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"ArrestRisk"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Arrest Risk</label>
 					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EArrestRisk>()" asp-for="ArrestRisk" class="form-control"></select>
 					<span asp-validation-for="ArrestRisk" class="text-danger"></span>
@@ -227,7 +228,7 @@ $(function () {
 </script>
 
 @{ var data = Model.Location.LocationData; }
-<div class="card">
+<div class="form-field card">
 	<div class="card-header"><h5 class="card-title">Location</h5></div>
 	<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML(nameof(Resources.Location.GeoLocation)))">
 		<i class="fas fa-question-circle"></i>
@@ -246,7 +247,7 @@ $(function () {
 </div>
 
 				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"VideoEmbedURL"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Video Embed URL</label>
 					<input  asp-for="VideoEmbedURL" class="form-control"></input>
 					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
@@ -404,7 +405,7 @@ $(function () {
 </div>
 
 
-					<div class="form-group">
+					<div class="form-field form-group">
 						<input type="submit" value="Save" class="btn btn-primary btn-block" />
 					</div>
 				</form>

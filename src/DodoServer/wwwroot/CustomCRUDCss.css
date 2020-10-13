@@ -55,7 +55,7 @@
 
 .dodo-navbar {
 	background-color: #22a73d;
-	z-index: 9999;
+	z-index: 9998;
 }
 
 .dodo-navbar-text {
@@ -180,6 +180,10 @@
 .published-message
 {
 	margin:10px;
+}
+
+.tooltip {
+	z-index: 9999;
 }
 
 .tooltip-inner {
