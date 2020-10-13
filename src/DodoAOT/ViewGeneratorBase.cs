@@ -13,6 +13,7 @@ using System.Text;
 using Dodo.Users.Tokens;
 using Dodo;
 using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DodoAOT
 {
@@ -64,29 +65,17 @@ namespace DodoAOT
 		private static IEnumerable<string> ListView(string prefix, MemberInfo member, int indentLevel)
 		{
 			var typeMember = member.GetMemberType().GetGenericArguments().First();
-			yield return Indent(indentLevel) + $"<div class=\"form-field card\">";
-			yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
-			yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
-			yield return Indent(indentLevel + 1) + $"<ul class=\"list-group\">";
-			yield return Indent(indentLevel) + $"@{{ for(var i = 0; i < Model.{prefix}{member.Name}.Count; ++i) {{";
-			yield return Indent(indentLevel) + "<li class=\"list-group-item\">";
+			var template = Template("List");
+			var sb = new StringBuilder();
 			foreach (var line in BuildDataField(typeMember, indentLevel + 3, $"{prefix}{member.Name}[i]."))
 			{
-				yield return line;
+				sb.AppendLine(line);
 			}
-			yield return Indent(indentLevel) + "</li>";
-			yield return Indent(indentLevel) + "}";
-			yield return Indent(indentLevel) + "}";
-			if (typeof(IResourceReference).IsAssignableFrom(typeMember))
-			{
-				// Create button!
-				var type = typeMember.GetGenericArguments().First();
-				string parent = "?parent=@Model.Slug";
-				yield return Indent(indentLevel + 2) + $"<a class=\"btn btn-light btn-block {type.Name.ToLowerInvariant()}-reference\" role=\"button\" href=\"~/edit/{type.Name}/create{parent}\">Create New</a>";
-			}
-			yield return Indent(indentLevel + 2) + $"</ul>";
-			yield return Indent(indentLevel + 1) + $"</div>";
-			yield return Indent(indentLevel) + $"</div>";
+			yield return template.Replace("{MEMBER}", $"{prefix}{member.Name}")
+				.Replace("{TYPE}", typeMember.GetRealTypeName(true))
+				.Replace("{REFTYPE}", typeMember.GetGenericArguments().First().Name.ToLowerInvariant())
+				.Replace("{FIELD}", sb.ToString())
+				.Replace("{NAME}", member.GetName());
 		}
 
 		private static IEnumerable<string> MarkdownEditor(string prefix, MemberInfo member, int indentLevel)
@@ -187,16 +176,19 @@ namespace DodoAOT
 			var memberName = member != null ? $"{member.Name}." : "";
 			var nameStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Name)}";
 			var urlStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Type)}/@Model.{prefix}{memberName}{nameof(IResourceReference.Slug)}";
+			var salt = Guid.NewGuid().ToString().Replace("-", "");
 			if (member != null)
 			{
 				yield return Indent(indentLevel + 1) + $"<label class=\"control-label\">{member.GetName()}</label>";
 				yield return Indent(indentLevel + 1) + GetHelp($"{member.Name}");
+				salt = member?.GetHashCode().ToString();
 			}
-			yield return Indent(indentLevel + 1) + $"<input class=\"sr-only\" asp-for=\"{prefix}{memberName}{nameof(IResourceReference.Type)}\"/>";			
+			yield return Indent(indentLevel + 1) + $"<input class=\"sr-only\" asp-for=\"{prefix}{memberName}{nameof(IResourceReference.Type)}\"/>";
+			yield return Indent(indentLevel + 1) + $"@{{ var reftype{salt} = @Model.{prefix}{memberName}Type.ToLowerInvariant(); }}";
 			yield return Indent(indentLevel + 1) + "<div class=\"row\">";
 			yield return Indent(indentLevel + 1) + $"<div class=\"col\"><strong>{nameStr}</strong></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light {memberType.Name.ToLowerInvariant()}-reference\" role=\"button\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i></a></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light {memberType.Name.ToLowerInvariant()}-reference\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i></a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light @(reftype{salt})-reference\" role=\"button\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i>View</a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light @(reftype{salt})-reference\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i>Edit</a></div>";
 			yield return Indent(indentLevel + 1) + "</div>";
 		}
 
@@ -226,7 +218,7 @@ namespace DodoAOT
 			return new string('\t', indent);
 		}
 
-		protected static IEnumerable<string> BuildDataField(MemberInfo member, int indentLevel, string prefix, bool forcereadonly = false)
+		public static IEnumerable<string> BuildDataField(MemberInfo member, int indentLevel, string prefix, bool forcereadonly = false)
 		{
 			var viewAttr = member.GetCustomAttribute<ViewAttribute>();
 			var memberType = member.GetMemberType();

@@ -87,7 +87,9 @@ namespace Dodo.Controllers.Edit
 				var request = await CrudService.Create(schema);
 				if (!request.IsSuccess)
 				{
-					return request.ActionResult;
+					var error = request as ResourceRequestError;
+					ModelState.AddModelError("", error.Message ?? error.ActionResult.ToString());
+					return View(schema);
 				}
 				var creationReq = request as ResourceCreationRequest;
 				return RedirectToAction(nameof(Edit), new { id = creationReq.Result.Slug });
@@ -119,7 +121,17 @@ namespace Dodo.Controllers.Edit
 			{
 				ViewData["Notifications"] = notificationResource.GetNotifications(Context, actionResult.PermissionLevel);
 			}
-			if(rsc is Roles.Role role)
+			if (rsc is IAdministratedResource admin)
+			{
+				admin.IsAdmin(Context.User, Context, out var permissions);
+				ViewData["permissions"] = permissions;
+			}
+			else if (rsc is IOwnedResource owned)
+			{
+				owned.Parent.GetValue<IAdministratedResource>().IsAdmin(Context.User, Context, out var permissions);
+				ViewData["permissions"] = permissions;
+			}
+			if (rsc is Roles.Role role)
 			{
 				var asymm = role.Parent.GetValue<IAsymmCapableResource>();
 				ViewData["applications"] = role.Applications.ToDictionary(kvp => kvp.Key,

@@ -7,6 +7,7 @@
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
+	Dodo.AdministratorPermissionSet permissions = ViewData["permissions"] as Dodo.AdministratorPermissionSet;
 }
 
 <script>
@@ -33,7 +34,7 @@ $(function () {
 			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
 		</li>
 	}
-	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
 	{
 		<li class="nav-item">
 			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
@@ -53,10 +54,11 @@ $(function () {
 										<label class="control-label">Parent</label>
 					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Parent"))"><i class="fas fa-question-circle"></i></button>
 					<input class="sr-only" asp-for="Parent.Type"/>
+					@{ var reftype11958757 = @Model.Parent.Type.ToLowerInvariant(); }
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
-					<div class="col-auto"><a class="btn btn-light irestresource-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i></a></div>
-					<div class="col-auto"><a class="btn btn-light irestresource-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i></a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype11958757)-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype11958757)-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
 					</div>
 @{
 	if (!Model.IsPublished)
@@ -412,10 +414,10 @@ $(function () {
 			</div>
 		</div>
 	</div>
-	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-			<div class="card">
+	@{ if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+		{
+			<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+				<div class="card">
 	<h5 class="card-header">Post an Announcement</h5>
 	<div class="card-body">
 		<form id="newannouncement" method="post" action="notifications/@Model.Slug/new">
@@ -487,20 +489,20 @@ $(function () {
 	</div>
 </div>
 
-		</div>
-	}
-	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-			
-		</div>
-	}
-	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
-			{ROLES}
-		</div>
-	}
+			</div>
+		} }
+	@{if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+		{
+			<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+				
+			</div>
+		} }
+	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+		{
+			<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
+				{ROLES}
+			</div>
+		}}
 	<div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
 		@{
 	Dodo.Analytics.AnalyticInfo viewData = Dodo.Analytics.Analytics.GetInfo(Model.Guid);

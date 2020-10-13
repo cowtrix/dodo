@@ -7,6 +7,7 @@
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
+	Dodo.AdministratorPermissionSet permissions = ViewData["permissions"] as Dodo.AdministratorPermissionSet;
 }
 
 <script>
@@ -33,7 +34,7 @@ $(function () {
 			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
 		</li>
 	}
-	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
 	{
 		<li class="nav-item">
 			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
@@ -53,10 +54,11 @@ $(function () {
 										<label class="control-label">Parent</label>
 					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Parent"))"><i class="fas fa-question-circle"></i></button>
 					<input class="sr-only" asp-for="Parent.Type"/>
+					@{ var reftype20031746 = @Model.Parent.Type.ToLowerInvariant(); }
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
-					<div class="col-auto"><a class="btn btn-light irestresource-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i></a></div>
-					<div class="col-auto"><a class="btn btn-light irestresource-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i></a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype20031746)-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype20031746)-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
 					</div>
 @{
 	if (!Model.IsPublished)
@@ -113,38 +115,35 @@ $(function () {
 			</div>
 		</div>
 	</div>
-	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-			
-		</div>
-	}
-	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-			
-		</div>
-	}
-	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
-			@{
-	var applications = ViewData["applications"] as Dictionary<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>;
-	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<Dodo.Roles.Role, Dodo.Roles.RoleSchema>);
-}
-<div class="card">
-	<div class="card-header">
-		<h5 class="card-header">Applications</h5>
-	</div>
-	@{
-		if (applications.Any())
+	@{ if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 		{
-			<div id="accordion">
-
+			<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+				
+			</div>
+		} }
+	@{if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+		{
+			<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+				
+			</div>
+		} }
+	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+		{
+			<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
 				@{
+	var applications = ViewData["applications"] as Dictionary<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>;
+	
+	if (permissions != null && permissions.CanManageRoles) {
+	<div class="card">
+		<div class="card-header">
+			<h5 class="card-title">Applications</h5>
+		</div>
+		<div id="accordion">
+			@{if (applications.Any())
+				{
 					var counter = 0;
 					foreach (KeyValuePair<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>
-						kvp in applications)
+							kvp in applications)
 					{
 						Resources.ResourceReference<Dodo.RoleApplications.RoleApplication> app = kvp.Value;
 						<div class="card">
@@ -170,19 +169,20 @@ $(function () {
 						counter++;
 					}
 				}
-			</div>
-		}
-		else
-		{
-			<div class="alert alert-info" role="alert">
-				There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
-			</div>
-		}
-	}
-</div>
-
+				else
+				{
+					<div class="alert alert-info" role="alert">
+						There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
+					</div>
+				}
+			}
 		</div>
+	</div>
 	}
+}
+
+			</div>
+		}}
 	<div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
 		@{
 	Dodo.Analytics.AnalyticInfo viewData = Dodo.Analytics.Analytics.GetInfo(Model.Guid);

@@ -1,20 +1,17 @@
 @{
 	var applications = ViewData["applications"] as Dictionary<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>;
-	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<{FULL_TYPE}, {SCHEMA_TYPE}>);
-}
-<div class="card">
-	<div class="card-header">
-		<h5 class="card-header">Applications</h5>
-	</div>
-	@{
-		if (applications.Any())
-		{
-			<div id="accordion">
-
-				@{
+	
+	if (permissions != null && permissions.CanManageRoles) {
+	<div class="card">
+		<div class="card-header">
+			<h5 class="card-title">Applications</h5>
+		</div>
+		<div id="accordion">
+			@{if (applications.Any())
+				{
 					var counter = 0;
 					foreach (KeyValuePair<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>
-						kvp in applications)
+							kvp in applications)
 					{
 						Resources.ResourceReference<Dodo.RoleApplications.RoleApplication> app = kvp.Value;
 						<div class="card">
@@ -40,13 +37,14 @@
 						counter++;
 					}
 				}
-			</div>
-		}
-		else
-		{
-			<div class="alert alert-info" role="alert">
-				There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
-			</div>
-		}
+				else
+				{
+					<div class="alert alert-info" role="alert">
+						There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
+					</div>
+				}
+			}
+		</div>
+	</div>
 	}
-</div>
+}

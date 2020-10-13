@@ -7,6 +7,7 @@
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
+	Dodo.AdministratorPermissionSet permissions = ViewData["permissions"] as Dodo.AdministratorPermissionSet;
 }
 
 <script>
@@ -33,7 +34,7 @@ $(function () {
 			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
 		</li>
 	}
-	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
 	{
 		<li class="nav-item">
 			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
@@ -91,63 +92,120 @@ $(function () {
 					<input asp-for="MemberCount" class="sr-only"></input>
 					<input asp-for="AdministratorData" class="sr-only"></input>
 					<input asp-for="PublicKey" class="sr-only"></input>
-				<div class="form-field card">
-					<div class="card-body">
-						<h5 class="card-title">Working Groups</h5>
-					<ul class="list-group">
-				@{ for(var i = 0; i < Model.WorkingGroups.Count; ++i) {
-				<li class="list-group-item">
-								<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
+<div class="form-field card">
+	<div class="card-header"><h5 class="card-title">Working Groups</h5></div>
+	<div class="card-body">
+		<ul class="list-group">
+			@{
+				if (!Model.WorkingGroups.Any())
+				{
+					<div class="alert alert-info" role="alert">
+						There are no entries in this list. To create a new entry, click "Create"
+					</div>
+				}
+				else
+				{
+					for (var i = 0; i < Model.WorkingGroups.Count; ++i)
+					{
+						<li class="list-group-item">
+															<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
+								@{ var reftypeaaa55c0049744192a95952bea13efe09 = @Model.WorkingGroups[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.WorkingGroups[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light workinggroup-reference" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light workinggroup-reference" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftypeaaa55c0049744192a95952bea13efe09)-reference" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftypeaaa55c0049744192a95952bea13efe09)-reference" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
-				</li>
+
+						</li>
+					}
 				}
+				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>)))
+				{
+					// Create button!
+					string parent = $"?parent={@Model.Slug}";
+					<a class="btn btn-light btn-block workinggroup-reference form-field" role="button" href="~/edit/workinggroup/create@(parent)">Create New</a>
 				}
-						<a class="btn btn-light btn-block workinggroup-reference" role="button" href="~/edit/WorkingGroup/create?parent=@Model.Slug">Create New</a>
-						</ul>
+			}
+		</ul>
+	</div>
+</div>
+
+<div class="form-field card">
+	<div class="card-header"><h5 class="card-title">Sites</h5></div>
+	<div class="card-body">
+		<ul class="list-group">
+			@{
+				if (!Model.Sites.Any())
+				{
+					<div class="alert alert-info" role="alert">
+						There are no entries in this list. To create a new entry, click "Create"
 					</div>
-				</div>
-				<div class="form-field card">
-					<div class="card-body">
-						<h5 class="card-title">Sites</h5>
-					<ul class="list-group">
-				@{ for(var i = 0; i < Model.Sites.Count; ++i) {
-				<li class="list-group-item">
-								<input class="sr-only" asp-for="Sites[i].Type"/>
+				}
+				else
+				{
+					for (var i = 0; i < Model.Sites.Count; ++i)
+					{
+						<li class="list-group-item">
+															<input class="sr-only" asp-for="Sites[i].Type"/>
+								@{ var reftypec20836fea5014fc4b66f7c88fe3706ee = @Model.Sites[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Sites[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light site-reference" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light site-reference" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftypec20836fea5014fc4b66f7c88fe3706ee)-reference" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftypec20836fea5014fc4b66f7c88fe3706ee)-reference" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
-				</li>
+
+						</li>
+					}
 				}
+				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Site>)))
+				{
+					// Create button!
+					string parent = $"?parent={@Model.Slug}";
+					<a class="btn btn-light btn-block site-reference form-field" role="button" href="~/edit/site/create@(parent)">Create New</a>
 				}
-						<a class="btn btn-light btn-block site-reference" role="button" href="~/edit/Site/create?parent=@Model.Slug">Create New</a>
-						</ul>
+			}
+		</ul>
+	</div>
+</div>
+
+<div class="form-field card">
+	<div class="card-header"><h5 class="card-title">Events</h5></div>
+	<div class="card-body">
+		<ul class="list-group">
+			@{
+				if (!Model.Events.Any())
+				{
+					<div class="alert alert-info" role="alert">
+						There are no entries in this list. To create a new entry, click "Create"
 					</div>
-				</div>
-				<div class="form-field card">
-					<div class="card-body">
-						<h5 class="card-title">Events</h5>
-					<ul class="list-group">
-				@{ for(var i = 0; i < Model.Events.Count; ++i) {
-				<li class="list-group-item">
-								<input class="sr-only" asp-for="Events[i].Type"/>
+				}
+				else
+				{
+					for (var i = 0; i < Model.Events.Count; ++i)
+					{
+						<li class="list-group-item">
+															<input class="sr-only" asp-for="Events[i].Type"/>
+								@{ var reftypeaba4bc71c2b042ec9671490c4139c737 = @Model.Events[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Events[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light event-reference" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light event-reference" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftypeaba4bc71c2b042ec9671490c4139c737)-reference" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftypeaba4bc71c2b042ec9671490c4139c737)-reference" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
-				</li>
+
+						</li>
+					}
 				}
+				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Event>)))
+				{
+					// Create button!
+					string parent = $"?parent={@Model.Slug}";
+					<a class="btn btn-light btn-block event-reference form-field" role="button" href="~/edit/event/create@(parent)">Create New</a>
 				}
-						<a class="btn btn-light btn-block event-reference" role="button" href="~/edit/Event/create?parent=@Model.Slug">Create New</a>
-						</ul>
-					</div>
-				</div>
+			}
+		</ul>
+	</div>
+</div>
+
 				<div class="form-field form-group">
 					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"StartDate"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Start Date</label>
@@ -316,10 +374,10 @@ $(function () {
 			</div>
 		</div>
 	</div>
-	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
-			<div class="card">
+	@{ if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+		{
+			<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+				<div class="card">
 	<h5 class="card-header">Post an Announcement</h5>
 	<div class="card-body">
 		<form id="newannouncement" method="post" action="notifications/@Model.Slug/new">
@@ -391,12 +449,12 @@ $(function () {
 	</div>
 </div>
 
-		</div>
-	}
-	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-			@{
+			</div>
+		} }
+	@{if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+		{
+			<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+				@{
 	var adminData = Model.AdministratorData;
 	Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
 	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<Dodo.Rebellions.Rebellion, Dodo.Rebellions.RebellionSchema>);
@@ -553,14 +611,14 @@ $(function () {
 	}
 }
 
-		</div>
-	}
-	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
-	{
-		<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
-			{ROLES}
-		</div>
-	}
+			</div>
+		} }
+	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+		{
+			<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
+				{ROLES}
+			</div>
+		}}
 	<div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
 		@{
 	Dodo.Analytics.AnalyticInfo viewData = Dodo.Analytics.Analytics.GetInfo(Model.Guid);
