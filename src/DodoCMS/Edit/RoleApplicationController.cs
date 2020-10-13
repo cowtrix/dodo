@@ -99,9 +99,10 @@ namespace Dodo.RoleApplications
 		}
 
 		[HttpPost("{id}/" + RoleApplication.MESSAGE)]
-		public virtual async Task<IActionResult> SendMessage([FromRoute] string id, [FromForm] string content, [FromForm] bool adminOnly = false, [FromQuery]bool header = true)
+		public virtual async Task<IActionResult> SendMessage([FromRoute] string id, [FromForm] Guid salt,
+			[FromForm] string content, [FromForm] bool adminOnly = false, [FromQuery] bool header = true)
 		{
-			if (string.IsNullOrEmpty(content))
+			if (string.IsNullOrEmpty(content) || salt == default)
 			{
 				return Redirect($"/{RoleApplication.ROOT_URL}/{id}");
 			}
@@ -123,10 +124,13 @@ namespace Dodo.RoleApplications
 				{
 					return BadRequest();
 				}
-				roleAppData.Messages.Add(
+				if (!roleAppData.Messages.Any(m => m.Guid == salt)) // Prevent double post
+				{
+					roleAppData.Messages.Add(
 					new Message(resourceReq.AccessContext, content,
-						resourceReq.PermissionLevel == EPermissionLevel.OWNER, adminOnly));
-				roleApp.Data.SetValueByGroup(roleAppData, resourceReq.AccessContext, group);
+						resourceReq.PermissionLevel == EPermissionLevel.OWNER, adminOnly, salt));
+					roleApp.Data.SetValueByGroup(roleAppData, resourceReq.AccessContext, group);
+				}
 			}
 			else if (resourceReq.PermissionLevel == EPermissionLevel.OWNER)
 			{
@@ -137,8 +141,11 @@ namespace Dodo.RoleApplications
 				{
 					return BadRequest();
 				}
-				roleAppData.Messages.Add(new Message(resourceReq.AccessContext, content, resourceReq.PermissionLevel == EPermissionLevel.OWNER, false));
-				roleApp.Data.SetValue(roleAppData, resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>(), resourceReq.AccessContext.Passphrase);
+				if (!roleAppData.Messages.Any(m => m.Guid == salt)) // Prevent double post
+				{
+					roleAppData.Messages.Add(new Message(resourceReq.AccessContext, content, resourceReq.PermissionLevel == EPermissionLevel.OWNER, false, salt));
+					roleApp.Data.SetValue(roleAppData, resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>(), resourceReq.AccessContext.Passphrase);
+				}
 			}
 			ResourceUtility.GetManager<RoleApplication>().Update(roleApp, rscLock);
 			return Redirect($"/{RoleApplication.ROOT_URL}/{id}?{(header ? "" : "header=false")}");

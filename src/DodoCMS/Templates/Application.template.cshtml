@@ -6,6 +6,7 @@
 	var id = Resources.Security.SecurityExtensions.GenerateID(context.User, context.Passphrase, Model.Parent.Guid.ToString());
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	var hasHeader = (bool)ViewData["header"];
+	var salt = System.Guid.NewGuid().ToString();
 }
 
 <script>
@@ -14,8 +15,8 @@
 	})
 </script>
 
-<div class="card chat-container @(hasHeader ? "chat-container-navbar" : "")">
-	<div class="card-body">
+<div class="@(hasHeader ? "card chat-container chat-container-navbar" : "")">
+	<div class="@(hasHeader ? "card-body" : "")">
 		<div class="chat-messages" id="scroller">
 			@{
 				foreach (Dodo.RoleApplications.Message message in Model.Data.Messages)
@@ -50,6 +51,7 @@
 			<div id="anchor"></div>
 		</div>
 		<form id="newmessage" class="form chat-send" method="post" action="@(Model.Guid)/message?header=@(ViewData["header"])" autocomplete="off">
+			<input class="sr-only" readonly type="text" id="salt" name="salt" value="@salt">
 			<div class="row">
 				<div class="col">
 					<input type="text" class="form-control" id="content" name="content" placeholder="Enter new message...">

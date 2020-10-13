@@ -5,6 +5,7 @@ using Dodo.Users;
 using Dodo.Roles;
 using Resources.Serializers;
 using Dodo.DodoResources;
+using System;
 
 namespace Dodo.RoleApplications
 {
@@ -22,7 +23,7 @@ namespace Dodo.RoleApplications
 		public RoleApplicationData() { }
 		public RoleApplicationData(AccessContext applicant, RoleApplicationSchema schema)
 		{
-			Messages.Add(new Message(applicant, schema.Application.Content, true, false));
+			Messages.Add(new Message(applicant, schema.Application.Content, true, false, Guid.NewGuid()));
 		}
 		[View(EPermissionLevel.ADMIN)]
 		public List<Message> Messages { get; set; } = new List<Message>();
