@@ -1,12 +1,5 @@
 @import "~app/styles/styles";
 
 .address {
-	padding: spacing(3) spacing(1);
-
-	@media (min-width: $responsive-breakpoint) {
-		display: flex;
-		flex-grow: 3;
-		flex-basis: 0;
-		flex-direction: row;
-	}
+	padding: 1em;
 }
