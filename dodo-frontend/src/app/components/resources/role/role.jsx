@@ -35,7 +35,7 @@ export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColo
 			hasApplied && hasApplied != DEFAULT_GUID ?
 				<div>
 					<h2>{ALREADY_APPLIED}</h2>
-					<a href={ '/roleapplication/' + hasApplied }>{VIEW_APPLICATION}</a>
+					<h2><a href={'/roleapplication/' + hasApplied}>{VIEW_APPLICATION}</a></h2>
 				</div> :
 				null
 	)

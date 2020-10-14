@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 import styles from './parent-link.module.scss'
 
 
-const PART_OF = "Part of the"
+const PART_OF = "Part of:"
 
 const parentLink = (parent) =>
-	'/' + parent.metadata.type + '/' + parent.guid
+	'/' + parent.metadata.type + '/' + parent.slug
 
 export const ParentLink = ({ parent }) =>
 	parent ?

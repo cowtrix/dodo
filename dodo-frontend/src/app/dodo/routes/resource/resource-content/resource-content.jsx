@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
-import { Header, Description, SignUpButton, ParentLink, Updates, Role } from "app/components/resources"
+import { Header, Description, SignUpButton, ParentLink, Updates, Role, Address } from "app/components/resources"
 
 import { ADMIN_PERMISSIONS } from 'app/constants'
 import { isSubscribedToResource } from './services'
@@ -21,16 +21,21 @@ export const ResourceContent =
 		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', { content: body })
 
 		const shouldDisplayNotifications = resourceType !== 'role'
+		const shouldShowAddress = resourceType === 'event' || resourceType === 'site'
+		const shouldShowAdmin = resource.metadata.permission === 'owner' || resource.metadata.permission === 'admin'
 
 		return (
 			<div className={styles.resource}>
 				<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap}/>
 				<ParentLink parent={resource.parent}/>
-				<Video videoEmbedURL={resource.videoEmbedURL}/>
+				<Video videoEmbedURL={resource.videoEmbedURL} />
+				{shouldShowAddress &&
+					<Address address={resource.location.address} />
+				}
 				<div className={styles.descriptionContainer}>
 					<Description description={resource.publicDescription}/>
 					{shouldDisplayNotifications &&
-					<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
+						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
 					}
 				</div>
 				<Role

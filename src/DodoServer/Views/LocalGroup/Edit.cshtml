@@ -109,11 +109,11 @@ $(function () {
 					{
 						<li class="list-group-item">
 															<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
-								@{ var reftype673c536415324741873d6232e3e8da70 = @Model.WorkingGroups[i].Type.ToLowerInvariant(); }
+								@{ var reftype21cb2a6e4d7d4d34890d7b5341d1c7a9 = @Model.WorkingGroups[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.WorkingGroups[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype673c536415324741873d6232e3e8da70)-reference" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i>View</a></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype673c536415324741873d6232e3e8da70)-reference" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype21cb2a6e4d7d4d34890d7b5341d1c7a9)-reference" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype21cb2a6e4d7d4d34890d7b5341d1c7a9)-reference" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
 
 						</li>
@@ -147,11 +147,11 @@ $(function () {
 					{
 						<li class="list-group-item">
 															<input class="sr-only" asp-for="Events[i].Type"/>
-								@{ var reftype1dc76d85d88043528fe235c1622a68f8 = @Model.Events[i].Type.ToLowerInvariant(); }
+								@{ var reftype03579405fc604f2aae8afb4901eed067 = @Model.Events[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Events[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype1dc76d85d88043528fe235c1622a68f8)-reference" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i>View</a></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype1dc76d85d88043528fe235c1622a68f8)-reference" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype03579405fc604f2aae8afb4901eed067)-reference" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype03579405fc604f2aae8afb4901eed067)-reference" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
 
 						</li>
@@ -291,7 +291,6 @@ $(function () {
 	}
 </script>
 
-@{ var data = Model.Location.LocationData; }
 <div class="form-field card">
 	<div class="card-header"><h5 class="card-title">Location</h5></div>
 	<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML(nameof(Resources.Location.GeoLocation)))">
