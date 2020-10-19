@@ -4,6 +4,7 @@ import { Container } from "app/components/resources"
 import { SiteMap, Loader } from "app/components"
 import { ResourceContent } from './resource-content'
 import { getResourceTypeData, shouldHideMap } from './services'
+import { NotFound } from '../error';
 
 export const Resource =
 	(
@@ -13,6 +14,8 @@ export const Resource =
 			getNotifications,
 			resource,
 			notifications,
+			error,
+			hasFailed,
 			isLoading,
 			isLoadingNotifications,
 			centerMap,
@@ -47,39 +50,48 @@ export const Resource =
 
 		return (
 			<>
-				<SiteMap
-					display={!hideMap}
-					centerMap={centerMap}
-					setCenterMap={setCenterMap}
-					center={defaultLocation}
-					sites={resource.sites && [...resource.sites, ...resource.workingGroups, ...resource.events]}
-					resourceType={resourceType}
-				/>
-				<Container
-					hideMap={hideMap}
-					content={
-						<>
-							<Loader display={isLoading || fetchingUser}/>
-							{resource.metadata && !isLoading && (
-								<ResourceContent
-									hideMap={hideMap}
-									resource={resource}
-									notifications={notifications}
-									getNotifications={() => getNotifications(resourceType, resourceId, notifications.nextPageToLoad)}
-									isLoadingNotifications={isLoadingNotifications}
-									setCenterMap={setCenterMap}
-									resourceTypes={resourceTypes}
-									resourceColor={resourceColor}
-									resourceType={resourceType}
-									subscribeResource={subscribeResource}
-									leaveResource={leaveResource}
-									memberOf={memberOf}
-									isLoggedIn={isLoggedIn}
-								/>
-							)}
-						</>
-					}
-				/>
+				{!hasFailed
+					? <>
+						<SiteMap
+							display={!hideMap}
+							centerMap={centerMap}
+							setCenterMap={setCenterMap}
+							center={defaultLocation}
+							sites={resource.sites && [...resource.sites, ...resource.workingGroups, ...resource.events]}
+							resourceType={resourceType}
+						/>
+						<Container
+							hideMap={hideMap}
+							content={
+								<>
+									<Loader display={isLoading || fetchingUser}/>
+									{resource.metadata && !isLoading && (
+										<ResourceContent
+											hideMap={hideMap}
+											resource={resource}
+											notifications={notifications}
+											getNotifications={() => getNotifications(resourceType, resourceId, notifications.nextPageToLoad)}
+											isLoadingNotifications={isLoadingNotifications}
+											setCenterMap={setCenterMap}
+											resourceTypes={resourceTypes}
+											resourceColor={resourceColor}
+											resourceType={resourceType}
+											subscribeResource={subscribeResource}
+											leaveResource={leaveResource}
+											memberOf={memberOf}
+											isLoggedIn={isLoggedIn}
+										/>
+									)}
+								</>
+							}
+						/>
+					</>
+					: <>
+						{error.status === 404 && (
+							<NotFound/>
+						)}
+					</>
+				}
 			</>
 		)
 	}
