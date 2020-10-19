@@ -1,7 +1,7 @@
-import { api } from "../services"
-import { REQUEST, FAILURE, SUCCESS } from "../constants"
+import { api, auth } from "../services"
+import { CANCELLED, REQUEST, FAILURE, SUCCESS } from "../constants"
 
-export const apiAction = async (dispatch, action, url, cb, abortSignal, method, body) => {
+const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal, method, body) => {
 	dispatch({
 		type: action + REQUEST,
 		payload: {
@@ -9,7 +9,7 @@ export const apiAction = async (dispatch, action, url, cb, abortSignal, method, 
 			url
 		}
 	})
-	return api(url, method, body, abortSignal)
+	return service(url, method, body, abortSignal)
 		.then(response => {
 			if (response.status) {
 				dispatch({
@@ -26,11 +26,28 @@ export const apiAction = async (dispatch, action, url, cb, abortSignal, method, 
 			if (cb) cb(response)
 		})
 		.catch(error => {
-			console.log(error)
-			if (cb) cb(false)
-			dispatch({
-				type: action + FAILURE,
-				payload: error
-			})
+			if(error.status === 0) {
+				if (cb) cb(false)
+				dispatch({
+					type: action + CANCELLED,
+					payload: error
+				})
+			}
+			else {
+				console.log(error)
+				if (cb) cb(false)
+				dispatch({
+					type: action + FAILURE,
+					payload: error
+				})
+			}
 		})
+}
+
+export const apiAction = (dispatch, action, url, cb, abortSignal, method, body) => {
+	return apiActionHandler(api, dispatch, action, url, cb, abortSignal, method, body);
+}
+
+export const authAction = (dispatch, action, url, cb, abortSignal, method, body) => {
+	return apiActionHandler(auth, dispatch, action, url, cb, abortSignal, method, body);
 }

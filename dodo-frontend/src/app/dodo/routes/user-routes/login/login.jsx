@@ -24,6 +24,20 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 	const [password, setPassword] = useState("")
 	const [rememberMe, setRememberMe] = useState(true)
 
+	let errorMessage;
+	if(error) {
+		switch(error.status) {
+			case -1:
+				errorMessage = t('login_network_error');
+				break;
+			case 400:
+				errorMessage = t('login_user_not_found');
+				break;
+			default:
+				errorMessage = undefined;
+		}
+	}
+
 	return (
 			<Container
 				title={LOGIN}
@@ -57,7 +71,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 						<p>
 							Forgot your password? <Link to="/reset-password">Click here</Link>
 						</p>
-						<Error error={error}/>
+						{errorMessage && <Error error={errorMessage}/>}
 						<Submit
 							value={t("header_sign_in_text")}
 							submit={login(username, password, rememberMe)}
@@ -73,5 +87,5 @@ Login.propTypes = {
 	login: PropTypes.func,
 	isLoggedIn: PropTypes.bool,
 	isLoggingIn: PropTypes.bool,
-	error: PropTypes.string,
+	error: PropTypes.object,
 }
