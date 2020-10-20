@@ -25,11 +25,18 @@
 		border-radius: 4px;
 		font-size: 1rem;
 		line-height: 32px;
+		width: 100%;
+	}
 
+	.fieldWrapper {
 		@media (min-width: $responsive-breakpoint) {
 			flex-basis: 0;
 			flex-grow: .7;
 		}
+	}
+
+	.message {
+		margin-top: spacing(1);
 	}
 }
 
