@@ -34,6 +34,12 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const hasError = !username.length || !name.length || !email.length || !password.length || !passwordConfirmation.length ||
 		usernameShort || nameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual
 
+	const validationErrors = (error && error.response && error.response.errors) || {};
+
+	const getValidationMessage = fieldName => {
+		return Array.isArray(validationErrors[fieldName]) ? validationErrors[fieldName][0] : validationErrors[fieldName];
+	}
+
 	return (
 		<Container
 			title={REGISTER}
@@ -49,8 +55,9 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 						type="text"
 						value={username}
 						setValue={setUsername}
-						error={usernameShort}
+						error={usernameShort || !!validationErrors['Username']}
 						maxLength={63}
+						message={getValidationMessage('Username')}
 					/>
 					{nameShort ? <Error error="Name should be longer"/> : null}
 					<Input
@@ -59,8 +66,9 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 						type="text"
 						value={name}
 						setValue={setName}
-						error={nameShort}
+						error={nameShort || !!validationErrors['Name']}
 						maxLength={63}
+						message={getValidationMessage('Name')}
 					/>
 					{emailInvalid ? <Error error="Email is invalid"/> : null}
 					<Input
@@ -69,8 +77,9 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 						type="email"
 						value={email}
 						setValue={setEmail}
-						error={emailInvalid}
+						error={emailInvalid || !!validationErrors['Email']}
 						maxLength={253}
+						message={getValidationMessage('Email')}
 					/>
 					{passwordShort ? <Error error="Password should be longer"/> : null}
 					{passwordInvalid ? <Error error="Password should contain a symbol"/> : null}
@@ -80,8 +89,9 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 						type="password"
 						value={password}
 						setValue={setPassword}
-						error={passwordShort || passwordInvalid}
+						error={passwordShort || passwordInvalid || !!validationErrors['Password']}
 						maxLength={63}
+						message={getValidationMessage('Password')}
 					/>
 					{passwordsNotEqual ? <Error error="Passwords should match"/> : null}
 					<Input
@@ -90,7 +100,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 						type="password"
 						value={passwordConfirmation}
 						setValue={setPasswordConfirmation}
-						error={passwordsNotEqual}
+						error={passwordsNotEqual || !!validationErrors['Password']}
 						maxLength={63}
 					/>
 					<p>
