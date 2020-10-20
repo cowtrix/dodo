@@ -21,12 +21,12 @@ import {
 import { SUCCESS } from '../constants'
 
 export const login = (dispatch, username, password, rememberMe) => {
-	const body = JSON.stringify({
+	const body = {
 		username: username,
 		password: password,
 		rememberMe: rememberMe,
 		redirect: ""
-	});
+	};
 	return apiAction(dispatch, LOGIN, LOGIN_URL, undefined, undefined, 'post', body);
 }
 
