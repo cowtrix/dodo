@@ -1,3 +1,4 @@
-export { api } from './api-service'
 export { addParamsToUrl } from './url-modifiers'
-export { postLogin } from './login'
+export { api } from './api-service'
+export { auth } from './auth-service'
+export { tryToParseJSON } from './services';

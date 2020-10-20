@@ -2,7 +2,10 @@ import { tryToParseJSON } from './services';
 
 let abortController = new AbortController()
 
-export const api = async(url, method = "get", body, abortPrevious) => {
+// The auth URLs are a bit odd. They return the HTML for the login page if you are not logged in, or JSON if you are.
+// That is why we have this special service for them.
+
+export const auth = async(url, method = "get", body, abortPrevious) => {
 	abortController.abort()
 	abortController = new AbortController()
 
@@ -20,20 +23,15 @@ export const api = async(url, method = "get", body, abortPrevious) => {
 		return resp.text()
 		.then(responseText => {
 			if(resp.ok) {
-				const contentType = resp.headers.get('content-type');
-
-				// If content-type is application/json, parse response. Invalid JSON will throw error, causing promise to reject.
-				if(contentType && contentType.search('application/json') !== -1) {
-					return JSON.parse(responseText);
-				}
-
-				// If content-type is not application/json, try to parse response. If parse fails, just return response text.
 				try {
-					const data = JSON.parse(responseText);
-					console.warn(`'${url}' returned JSON with incorrect content-type header of '${contentType}'`);
-					return data;
+					return JSON.parse(responseText);
 				} catch(e) {
-					return responseText;
+					// eslint-disable-next-line no-throw-literal
+					throw {
+						response: tryToParseJSON(responseText),
+						status: resp.status,
+						message: 'User is not logged in'
+					}
 				}
 			}
 			// eslint-disable-next-line no-throw-literal
@@ -57,7 +55,7 @@ export const api = async(url, method = "get", body, abortPrevious) => {
 			// eslint-disable-next-line no-throw-literal
 			throw {
 				response: undefined,
-				status: -1,
+				status: 0,
 				message: 'Network error'
 			}
 		}
