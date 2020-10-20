@@ -96,9 +96,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 					<p>
 						By continuing, you agree to the Rebel Agreement and Privacy Policy.
 					</p>
-					<Error
-					 error={error ? error.status + ' ' + error.title : null}
-					/>
+					<Error error={error}/>
 					<Submit
 						className={hasError ? styles.disabled : null}
 						submit={register({
