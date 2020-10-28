@@ -1,4 +1,4 @@
-const rootUrl = process.env.REACT_APP_ROOT_URL || "https://www.dodo.ovh/"
+const rootUrl = process.env.REACT_APP_ROOT_URL || "/"
 const apiUrl = process.env.REACT_APP_API_URL || rootUrl + "api/"
 export const authUrl = process.env.REACT_APP_AUTH_URL || rootUrl + "auth/"
 
