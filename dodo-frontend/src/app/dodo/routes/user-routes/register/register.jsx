@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Submit, Input, Error } from 'app/components/forms/index'
+import { getReturnPath } from '../../../../domain/services/services';
 
 import styles from './register.module.scss'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { Loader } from '../../../../components/loader'
 
 const REGISTER = "Register a new account"
@@ -14,9 +15,10 @@ const notEmptyAndLengthBelow = (minLength, str) => !!str && str.length < minLeng
 
 export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const history = useHistory()
+	const location = useLocation()
 
 	if (isLoggedIn) {
-		history.push('/')
+		history.push(getReturnPath(location) ||'/')
 	}
 
 	const [username, setUsername] = useState("")

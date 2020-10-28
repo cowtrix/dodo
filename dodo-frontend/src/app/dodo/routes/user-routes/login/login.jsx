@@ -1,10 +1,9 @@
-import React, { useState } from "react"
-import PropTypes from 'prop-types'
-
-import { useTranslation } from "react-i18next"
-import { useHistory, Link, useLocation } from 'react-router-dom'
-
-import { Input, Container, Submit, Error, TickBox } from 'app/components/forms/index'
+import { Container, Error, Input, Submit, TickBox } from 'app/components/forms';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { getReturnPath, keepReturnPathParam } from '../../../../domain/services/services';
 
 const LOGIN = 'Login'
 
@@ -14,8 +13,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 	const location = useLocation();
 
 	if (isLoggedIn) {
-		const url = new URLSearchParams(location.search.replace(/returnurl/ig, 'returnurl'));
-		history.push(url.get('returnurl') || '/');
+		history.push(getReturnPath(location) || '/');
 	}
 
 	const { t } = useTranslation("ui")
@@ -66,14 +64,14 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 							setValue={setRememberMe}
 						/>
 						<p>
-							Not a member? <Link to="/register">Click here to register</Link>
+							Not a member? <Link to={keepReturnPathParam("/register", location)}>Click here to register</Link>
 						</p>
 						<p>
 							Forgot your password? <Link to="/reset-password">Click here</Link>
 						</p>
 						{errorMessage && <Error error={errorMessage}/>}
 						<Submit
-							value={t("header_sign_in_text")}
+							value={t("sign_in_button_text")}
 							submit={login(username, password, rememberMe)}
 						/>
 					</>
