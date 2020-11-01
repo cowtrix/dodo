@@ -24,6 +24,11 @@ export const ResourceContent =
 
 		const shouldDisplayNotifications = resourceType !== 'role'
 
+		if (location.pathname.slice(-5) === '/join') {
+			subscribe();
+			push(location.pathname.slice(0, -5));
+		}
+
 		return (
 			<div className={styles.resource}>
 				<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap}/>
