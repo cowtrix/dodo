@@ -16,7 +16,9 @@ import {
 	MyRebellion,
 	MY_REBELLION_ROUTE,
 	Login,
-	LOGIN_ROUTE
+	LOGIN_ROUTE,
+	Settings,
+	SETTINGS_ROUTE
 } from './user-routes'
 
 
@@ -39,6 +41,7 @@ export const Routes = ({ closeMenu }) => {
 			<Route path={YOUR_PROFILE_ROUTE} component={YourProfile} exact/>
 			<Route path={MY_REBELLION_ROUTE} component={MyRebellion} exact/>
 			<Route path={[RESOURCE_ROUTE, JOIN_RESOURCE_ROUTE]} component={Resource} exact/>
+			<Route path={SETTINGS_ROUTE} component={Settings} exact/>
 			<Route component={NotFound}/>
 		</Switch>
 	)

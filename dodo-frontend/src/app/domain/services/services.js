@@ -14,7 +14,6 @@ const PLACEHOLDER_BASE_URL = "http://example.com";
 export const addReturnPathToRoute = (route, returnPath) => {
 	const url = new URL(route, PLACEHOLDER_BASE_URL);
 	url.searchParams.set(REDIRECT_URL_PARAM, returnPath);
-	console.log(url.pathname + url.search);
 	return url.pathname + url.search;
 };
 
