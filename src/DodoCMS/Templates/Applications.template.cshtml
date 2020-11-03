@@ -1,50 +1,69 @@
 @{
 	var applications = ViewData["applications"] as Dictionary<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>;
-	
-	if (permissions != null && permissions.CanManageRoles) {
-	<div class="card">
-		<div class="card-header">
-			<h5 class="card-title">Applications</h5>
-		</div>
-		<div id="accordion">
-			@{if (applications.Any())
-				{
-					var counter = 0;
-					foreach (KeyValuePair<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>
-							kvp in applications)
-					{
-						Resources.ResourceReference<Dodo.RoleApplications.RoleApplication> app = kvp.Value;
-						<div class="card">
-							<div class="card-header" id="heading@(counter)">
-								<div class="row">
-									<div class="col">
-										<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
-											Application Reference: @app.Guid.ToString().Substring(0, 8)
-										</button>
-									</div>
-									<div class="col-auto">
-										<a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a>
-									</div>
-								</div>
-							</div>
-							<!-- Conversation -->
-							<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
-								<div class="chat-iframe">
-									<iframe src="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid?header=false" loading="lazy" class="chat-iframe" />
-								</div>
-							</div>
+
+	if (permissions != null && permissions.CanManageRoles)
+	{
+		if (applications.Any())
+		{
+			<div class="card">
+				<h5 class="card-header">Send Message To All Applicants</h5>
+				<div class="card-body">
+					<form id="newbroadcast" method="post" action="applications/@Model.Slug/broadcast">
+						<div class="form-group">
+							<textarea id="Message" name="Message" class="form-control description-entry"></textarea>
 						</div>
-						counter++;
+						<small id="helpBlock" class="form-text text-muted" style="text-align:left;">
+							This message will be sent to all current applicants for this role.<br />
+							To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+						</small>
+						<input type="submit" value="Post" class="btn btn-primary btn-block form-field" />
+					</form>
+				</div>
+			</div>
+		}
+		<div class="card">
+			<div class="card-header">
+				<h5 class="card-title">Applications</h5>
+			</div>
+			<div id="accordion">
+				@{if (applications.Any())
+					{
+						var counter = 0;
+						foreach (KeyValuePair<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>
+								kvp in applications)
+						{
+							Resources.ResourceReference<Dodo.RoleApplications.RoleApplication> app = kvp.Value;
+							<div class="card">
+								<div class="card-header" id="heading@(counter)">
+									<div class="row">
+										<div class="col">
+											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
+												Application Reference: @app.Guid.ToString().Substring(0, 8)
+											</button>
+										</div>
+										<div class="col-auto">
+											<a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a>
+										</div>
+									</div>
+								</div>
+								<!-- Conversation -->
+								<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
+									<div class="chat-iframe">
+										<iframe src="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid?header=false" loading="lazy" class="chat-iframe" />
+									</div>
+								</div>
+							</div>
+							counter++;
+						}
+					}
+					else
+					{
+						<div class="alert alert-info" role="alert">
+							There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
+						</div>
 					}
 				}
-				else
-				{
-					<div class="alert alert-info" role="alert">
-						There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
-					</div>
-				}
-			}
+			</div>
 		</div>
-	</div>
 	}
 }

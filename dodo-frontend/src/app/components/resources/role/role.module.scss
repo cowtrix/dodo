@@ -19,3 +19,19 @@ $text-area-min-height: 250px;
 .signUpButton {
 	padding: 0;
 }
+
+.applicationFrame {
+	overflow: hidden;
+	height:50em;
+	width:100%;
+	max-width:50em;
+	padding:1em;
+	border-style: none;
+}
+
+.applicationFrameContainer
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

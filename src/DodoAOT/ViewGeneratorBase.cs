@@ -164,6 +164,7 @@ namespace DodoAOT
 
 		private static IEnumerable<string> RefView(string prefix, MemberInfo member, int indentLevel)
 		{
+			var salt = member.GetHashCode().ToString();
 			var memberType = member.GetMemberType().GetGenericArguments().Single();
 			if (memberType == typeof(User))
 			{
@@ -176,12 +177,12 @@ namespace DodoAOT
 			var memberName = member != null ? $"{member.Name}." : "";
 			var nameStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Name)}";
 			var urlStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Type)}/@Model.{prefix}{memberName}{nameof(IResourceReference.Slug)}";
-			var salt = Guid.NewGuid().ToString().Replace("-", "");
+			
 			if (member != null)
 			{
 				yield return Indent(indentLevel + 1) + $"<label class=\"control-label\">{member.GetName()}</label>";
 				yield return Indent(indentLevel + 1) + GetHelp($"{member.Name}");
-				salt = member?.GetHashCode().ToString();
+				salt = member.GetHashCode().ToString();
 			}
 			yield return Indent(indentLevel + 1) + $"<input class=\"sr-only\" asp-for=\"{prefix}{memberName}{nameof(IResourceReference.Type)}\"/>";
 			yield return Indent(indentLevel + 1) + $"@{{ var reftype{salt} = @Model.{prefix}{memberName}Type.ToLowerInvariant(); }}";

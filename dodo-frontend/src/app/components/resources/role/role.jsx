@@ -7,7 +7,6 @@ import styles from './role.module.scss'
 const APPLICANT_ANSWER_INPUT = 'APPLICANT_ANSWER_INPUT'
 const APPLY_NOW = 'Apply Now'
 const VIEW_APPLICATION = 'View Application'
-const ALREADY_APPLIED = 'You have already applied for this role'
 const DEFAULT_GUID = '00000000-0000-0000-0000-000000000000'
 
 export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColor, hasApplied }) => {
@@ -33,9 +32,8 @@ export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColo
 				/>
 			</div> :
 			hasApplied && hasApplied != DEFAULT_GUID ?
-				<div>
-					<h2>{ALREADY_APPLIED}</h2>
-					<h2><a href={'/roleapplication/' + hasApplied}>{VIEW_APPLICATION}</a></h2>
+				<div className={styles.applicationFrameContainer}>
+					<iframe id="applicationframe" className={styles.applicationFrame} src={'/roleapplication/' + hasApplied + '?header=false'} />
 				</div> :
 				null
 	)
