@@ -23,7 +23,7 @@ namespace Dodo.DodoResources
 				return;
 			}
 			m_generatedData = true;
-			m_startDate = string.IsNullOrEmpty(StartDate) ? DateTime.MinValue : DateTime.Parse(StartDate);
+			m_startDate = string.IsNullOrEmpty(StartDate) ? DateTime.UtcNow : DateTime.Parse(StartDate);
 			m_endDate = string.IsNullOrEmpty(EndDate) ? DateTime.MaxValue : DateTime.Parse(EndDate);
 			if (string.IsNullOrEmpty(StartDate) && string.IsNullOrEmpty(EndDate))
 			{

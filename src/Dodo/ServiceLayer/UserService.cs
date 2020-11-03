@@ -53,12 +53,12 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		if (user == null)
 		{
 			Logger.Debug($"{logstr} User was not found with that username.");
-			return ResourceRequestError.NotFoundRequest();
+			return ResourceRequestError.UnauthorizedRequest("User was not found with that username.");
 		}
 		if (!user.AuthData.ChallengePassword(login.Password, out var passphrase))
 		{
 			Logger.Debug($"{logstr} User provided incorrect password.");
-			return ResourceRequestError.BadRequest();
+			return ResourceRequestError.UnauthorizedRequest("User provided incorrect password.");
 		}
 
 		// Generate an encryption key that we will include in the cookie and throw away on our end

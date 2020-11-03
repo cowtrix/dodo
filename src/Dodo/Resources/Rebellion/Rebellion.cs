@@ -130,5 +130,24 @@ namespace Dodo.Rebellions
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 		}
+
+		public override void OnDestroy()
+		{
+			var wgrm = ResourceUtility.GetManager<WorkingGroup>();
+			foreach(var wg in WorkingGroups)
+			{
+				wgrm.Delete(wg.GetValue());
+			}
+			var srm = ResourceUtility.GetManager<Site>();
+			foreach (var s in Sites)
+			{
+				srm.Delete(s.GetValue());
+			}
+			var erm = ResourceUtility.GetManager<Event>();
+			foreach (var e in Events)
+			{
+				erm.Delete(e.GetValue());
+			}
+		}
 	}
 }
