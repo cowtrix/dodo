@@ -28,15 +28,15 @@ export const Resource =
 			fetchingUser
 		}
 	) => {
-		const { resourceId, resourceType } = match.params
+		const { slug, resourceType } = match.params
 
 		useEffect(() => {
-			getResource(resourceType, resourceId, setCenterMap)
-		}, [ getResource, resourceId, resourceType, setCenterMap])
+			getResource(resourceType, slug, setCenterMap)
+		}, [ getResource, slug, resourceType, setCenterMap])
 
 		useEffect(() => {
-			getNotifications(resourceType, resourceId)
-		}, [ getNotifications, resourceId, resourceType])
+			getNotifications(resourceType, slug)
+		}, [ getNotifications, slug, resourceType])
 
 		const resourceTypeData = getResourceTypeData(resourceTypes, resourceType);
 		const resourceColor = '#' + (resourceTypeData.displayColor || '22A73D');
@@ -70,7 +70,7 @@ export const Resource =
 											hideMap={hideMap}
 											resource={resource}
 											notifications={notifications}
-											getNotifications={() => getNotifications(resourceType, resourceId, notifications.nextPageToLoad)}
+											getNotifications={() => getNotifications(resourceType, slug, notifications.nextPageToLoad)}
 											isLoadingNotifications={isLoadingNotifications}
 											setCenterMap={setCenterMap}
 											resourceTypes={resourceTypes}
