@@ -15,14 +15,14 @@ export const Summary = (
 		startDate,
 		endDate,
 		publicDescription,
-		guid,
+		slug,
 		metadata,
 		resourceTypes,
 		parent,
 	}) =>
 	<li className={styles.eventSummmary}>
 		<Link
-			to={`${"/" + metadata.type + "/" + guid}`}
+			to={`${"/" + metadata.type + "/" + slug}`}
 			className={styles.link}
 		>
 			<div className={styles.summaryLeft}>

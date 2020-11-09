@@ -24,14 +24,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	setCenterMap: (centerMap) => dispatch(setCenterMap(centerMap)),
-	getResource: (resourceType, resourceID, setCenterMap) => {
-		resources.actions.resourceGet(dispatch, resourceType, resourceID, setCenterMap)
+	getResource: (resourceType, slug, setCenterMap) => {
+		resources.actions.resourceGet(dispatch, resourceType, slug, setCenterMap)
 	},
-	getNotifications: (resourceType, resourceID, page) => {
-		resources.actions.notificationsGet(dispatch, resourceType, resourceID, page)
+	getNotifications: (resourceType, slug, page) => {
+		resources.actions.notificationsGet(dispatch, resourceType, slug, page)
 	},
-	subscribeResource: (resourceType, resourceID, subscribe, body) =>
-		resources.actions.subscribeResource(dispatch, resourceType, resourceID, subscribe, body),
+	subscribeResource: (resourceType, slug, subscribe, body) =>
+		resources.actions.subscribeResource(dispatch, resourceType, slug, subscribe, body),
 })
 
 export const ResourceConnected = connect(
