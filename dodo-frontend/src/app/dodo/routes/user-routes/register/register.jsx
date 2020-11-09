@@ -34,7 +34,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const hasError = !username.length || !name.length || !email.length || !password.length || !passwordConfirmation.length ||
 		usernameShort || nameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual
 
-	const validationErrors = (error && error.response && error.response.errors) || {};
+	const validationErrors = error?.response?.errors || {};
 
 	const getValidationMessage = fieldName => {
 		return Array.isArray(validationErrors[fieldName]) ? validationErrors[fieldName][0] : validationErrors[fieldName];
