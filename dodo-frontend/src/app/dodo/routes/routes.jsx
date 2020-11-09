@@ -21,6 +21,7 @@ import {
 
 
 import { useHistory } from 'react-router-dom'
+import { JOIN_RESOURCE_ROUTE } from "./resource/route"
 
 export const Routes = ({ closeMenu }) => {
 	const history = useHistory()
@@ -37,7 +38,7 @@ export const Routes = ({ closeMenu }) => {
 			<Route path={REGISTER_ROUTE} component={Register} exact/>
 			<Route path={YOUR_PROFILE_ROUTE} component={YourProfile} exact/>
 			<Route path={MY_REBELLION_ROUTE} component={MyRebellion} exact/>
-			<Route path={RESOURCE_ROUTE} component={Resource} exact strict/>
+			<Route path={[RESOURCE_ROUTE, JOIN_RESOURCE_ROUTE]} component={Resource} exact/>
 			<Route component={NotFound}/>
 		</Switch>
 	)

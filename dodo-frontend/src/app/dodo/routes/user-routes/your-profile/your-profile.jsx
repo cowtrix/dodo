@@ -4,6 +4,7 @@ import { Container, EditableInput, Submit } from 'app/components/forms/index'
 import { UpdateEmail } from './update-email/index'
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { LOGIN_ROUTE } from '../login/route';
+import { addReturnPathToRoute } from '../../../../domain/services/services';
 
 const MY_REBELLION = "Your profile"
 const UPDATE_DETAILS = "Update my details"
@@ -13,11 +14,13 @@ export const YourProfile = (
 		currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid, resendVerificationEmail }
 	) => {
 
-	const history = useHistory();
-	const match = useRouteMatch();
+	const { push } = useHistory();
+	const { path } = useRouteMatch();
 
 	if(!currentUsername && !fetchingUser) {
-		history.push(LOGIN_ROUTE + `?ReturnUrl=${match.path}`);
+		push(
+			addReturnPathToRoute(LOGIN_ROUTE, path)
+		);
 	}
 
 	const [username, setUserName] = useState(currentUsername)

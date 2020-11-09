@@ -11,6 +11,8 @@ const mapStateToProps = state => ({
 	centerMap: centerMap(state),
 	resource: resources.selectors.currentResource(state),
 	notifications: resources.selectors.currentNotifications(state),
+	error: resources.selectors.resourceError(state),
+	hasFailed: resources.selectors.resourceFailed(state),
 	isLoading: resources.selectors.resourceLoading(state),
 	isLoadingNotifications: resources.selectors.notificationsLoading(state),
 	resourceTypes: resources.selectors.resourceTypes(state),

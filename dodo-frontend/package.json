@@ -52,5 +52,6 @@
 	"devDependencies": {
 		"redux-devtools-extension": "^2.13.8",
 		"url-loader": "^4.1.0"
-	}
+	},
+	"proxy": "https://www.dodo.ovh"
 }
