@@ -5,7 +5,6 @@ import { Video, ExpandableList } from "app/components"
 import { Header, Description, SignUpButton, ParentLink, Updates, Role, Address } from "app/components/resources"
 
 import { ADMIN_PERMISSIONS } from 'app/constants'
-import { isSubscribedToResource } from './services'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT } from './constants'
 
 import styles from './resource-content.module.scss'
@@ -13,16 +12,15 @@ import { LOGIN_ROUTE } from '../../user-routes/login'
 import { addReturnPathToRoute } from '../../../../domain/services/services'
 
 export const ResourceContent =
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications, getNotifications, isLoadingNotifications, hideMap }) => {
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, isLoggedIn, isMember, notifications, getNotifications, isLoadingNotifications, hideMap }) => {
 		const { push } = useHistory()
 		const location = useLocation();
 
-		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
 		const subscribe = () => subscribeResource(resourceType, resource.guid, 'join')
 		const unSubscribe = () => subscribeResource(resourceType, resource.guid, 'leave')
 		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', { content: body })
 
-		const shouldDisplayNotifications = resourceType !== 'role'
+		const shouldDisplayNotifications = resourceType !== 'role' && !!notifications?.notifications?.length
 		const shouldShowAddress = resourceType === 'event' || resourceType === 'site'
 		const shouldShowAdmin = resource.metadata.permission === 'owner' || resource.metadata.permission === 'admin'
 
@@ -56,11 +54,11 @@ export const ResourceContent =
 					disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
 					resourceColor={resourceColor}
 					isLoggedIn={isLoggedIn}
-					isSubscribed={isSubscribed}
+					isSubscribed={isMember}
 					onClick={
 						!isLoggedIn
 							? () => push(addReturnPathToRoute(LOGIN_ROUTE, location.pathname + '/join'))
-							: !isSubscribed ? subscribe : unSubscribe}
+							: !isMember ? subscribe : unSubscribe}
 				/>
 				<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes}/>
 				<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes}/>
