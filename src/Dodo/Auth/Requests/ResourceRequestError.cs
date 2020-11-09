@@ -9,7 +9,7 @@ namespace Resources
 		public static IRequestResult BadRequest() => new ResourceRequestError(new BadRequestResult());
 		public static IRequestResult BadRequest(string error = null) => new ResourceRequestError(new BadRequestObjectResult(error), error);
 		public static IRequestResult ForbidRequest(string error = null) => new ResourceRequestError(new ForbidResult(error), error);
-		public static IRequestResult UnauthorizedRequest(string error = null) => new ResourceRequestError(new UnauthorizedResult(), error);
+		public static IRequestResult UnauthorizedRequest(string error = null) => new ResourceRequestError(new UnauthorizedObjectResult(error), error);
 		public static IRequestResult NotFoundRequest() => new ResourceRequestError(new NotFoundResult());
 
 		public bool IsSuccess => false;
