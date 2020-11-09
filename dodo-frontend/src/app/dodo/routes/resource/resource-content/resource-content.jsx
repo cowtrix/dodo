@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
 import { Header, Description, SignUpButton, ParentLink, Updates, Role, Address } from "app/components/resources"
 
@@ -9,11 +9,13 @@ import { isSubscribedToResource } from './services'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT } from './constants'
 
 import styles from './resource-content.module.scss'
-import { REGISTER_ROUTE } from '../../user-routes/register'
+import { LOGIN_ROUTE } from '../../user-routes/login'
+import { addReturnPathToRoute } from '../../../../domain/services/services'
 
 export const ResourceContent =
 	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications, getNotifications, isLoadingNotifications, hideMap }) => {
 		const { push } = useHistory()
+		const location = useLocation();
 
 		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
 		const subscribe = () => subscribeResource(resourceType, resource.guid, 'join')
@@ -23,6 +25,11 @@ export const ResourceContent =
 		const shouldDisplayNotifications = resourceType !== 'role'
 		const shouldShowAddress = resourceType === 'event' || resourceType === 'site'
 		const shouldShowAdmin = resource.metadata.permission === 'owner' || resource.metadata.permission === 'admin'
+
+		if (location.pathname.slice(-5) === '/join') {
+			subscribe();
+			push(location.pathname.slice(0, -5));
+		}
 
 		return (
 			<div className={styles.resource}>
@@ -50,7 +57,10 @@ export const ResourceContent =
 					resourceColor={resourceColor}
 					isLoggedIn={isLoggedIn}
 					isSubscribed={isSubscribed}
-					onClick={!isLoggedIn ? () => push(REGISTER_ROUTE) : !isSubscribed ? subscribe : unSubscribe}
+					onClick={
+						!isLoggedIn
+							? () => push(addReturnPathToRoute(LOGIN_ROUTE, location.pathname + '/join'))
+							: !isSubscribed ? subscribe : unSubscribe}
 				/>
 				<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes}/>
 				<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes}/>
