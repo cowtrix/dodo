@@ -10,7 +10,7 @@ import { AppLoadingScreen } from './app-loading-screen'
 import { CookieConsenter } from 'app/components'
 
 
-export const Dodo = ({ startup }) => {
+export const Dodo = ({ startup, privacyPolicy }) => {
 	startup()
 	return (
 		<ErrorBoundary>
@@ -20,7 +20,7 @@ export const Dodo = ({ startup }) => {
 				<UserMenu />
 				<Routes />
 			</Router>
-			<CookieConsenter />
+			<CookieConsenter privacyPolicyHref={privacyPolicy}/>
 		</ErrorBoundary>
 	)
 }
