@@ -24,7 +24,6 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 
 	return (
 			<Container
-				title={LOGIN}
 				content={
 					<>
 						<Input

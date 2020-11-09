@@ -2,12 +2,10 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Submit, Input, Error } from 'app/components/forms/index'
 import { getReturnPath } from '../../../../domain/services/services';
-
+import { useTranslation } from 'react-i18next';
 import styles from './register.module.scss'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Loader } from '../../../../components/loader'
-
-const REGISTER = "Register a new account"
 
 const passwordContainsSymbol = (password) => !/^(?=.*[@#$%^&+=!]).*$/.test(password)
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
@@ -16,7 +14,7 @@ const notEmptyAndLengthBelow = (minLength, str) => !!str && str.length < minLeng
 export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const history = useHistory()
 	const location = useLocation()
-
+	const { t } = useTranslation("ui")
 	if (isLoggedIn) {
 		history.push(getReturnPath(location) ||'/')
 	}
@@ -44,7 +42,6 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 
 	return (
 		<Container
-			title={REGISTER}
 			content={
 				<>
 					<Loader
@@ -52,7 +49,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 					/>
 					{usernameShort ? <Error error="Username should be longer"/> : null}
 					<Input
-						name="Username"
+						name={t("Username")}
 						id="username"
 						type="text"
 						value={username}
@@ -63,7 +60,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 					/>
 					{nameShort ? <Error error="Name should be longer"/> : null}
 					<Input
-						name="Name"
+						name={t("Name")}
 						id="name"
 						type="text"
 						value={name}
@@ -74,7 +71,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 					/>
 					{emailInvalid ? <Error error="Email is invalid"/> : null}
 					<Input
-						name="Email"
+						name={t("Email")}
 						id="email"
 						type="email"
 						value={email}
@@ -86,7 +83,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 					{passwordShort ? <Error error="Password should be longer"/> : null}
 					{passwordInvalid ? <Error error="Password should contain a symbol"/> : null}
 					<Input
-						name="Password"
+						name={t("Password")}
 						id="password"
 						type="password"
 						value={password}
@@ -97,7 +94,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 					/>
 					{passwordsNotEqual ? <Error error="Passwords should match"/> : null}
 					<Input
-						name="Confirm Password"
+						name={t("Confirm Password")}
 						id="confirmPassword"
 						type="password"
 						value={passwordConfirmation}
@@ -106,7 +103,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 						maxLength={63}
 					/>
 					<p>
-						By continuing, you agree to the Rebel Agreement and Privacy Policy.
+						{t("By continuing, you agree to the Rebel Agreement and Privacy Policy.")}
 					</p>
 					<Error error={error}/>
 					<Submit
@@ -117,7 +114,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 							email,
 							name,
 						})}
-						value={REGISTER}
+						value={t("Register a new account")}
 					/>
 				</>
 			}
