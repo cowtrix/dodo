@@ -3,6 +3,7 @@ import { Resource } from "./resource"
 
 import { resources, user } from "app/domain"
 import { actions, selectors } from 'app/dodo/redux'
+import { selectors as resourceSelectors } from 'app/domain/resources';
 
 const { centerMap } = selectors
 const { setCenterMap } = actions
@@ -16,8 +17,8 @@ const mapStateToProps = state => ({
 	isLoading: resources.selectors.resourceLoading(state),
 	isLoadingNotifications: resources.selectors.notificationsLoading(state),
 	resourceTypes: resources.selectors.resourceTypes(state),
-	memberOf: user.selectors.memberOf(state),
 	isLoggedIn: !!user.selectors.username(state),
+	isMember: resourceSelectors.isMember(state),
 	fetchingUser: user.selectors.fetchingUser(state)
 })
 
