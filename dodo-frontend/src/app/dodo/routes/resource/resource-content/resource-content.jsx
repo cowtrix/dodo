@@ -22,7 +22,7 @@ export const ResourceContent =
 		const unSubscribe = () => subscribeResource(resourceType, resource.guid, 'leave')
 		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', { content: body })
 
-		const shouldDisplayNotifications = resourceType !== 'role'
+		const shouldDisplayNotifications = resourceType !== 'role' && notifications?.notifications?.length
 		const shouldShowAddress = resourceType === 'event' || resourceType === 'site'
 		const shouldShowAdmin = resource.metadata.permission === 'owner' || resource.metadata.permission === 'admin'
 
