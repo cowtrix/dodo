@@ -23,8 +23,8 @@ export const Resource =
 			resourceTypes = [],
 			subscribeResource,
 			leaveResource,
-			memberOf = [],
 			isLoggedIn,
+			isMember,
 			fetchingUser
 		}
 	) => {
@@ -78,8 +78,8 @@ export const Resource =
 											resourceType={resourceType}
 											subscribeResource={subscribeResource}
 											leaveResource={leaveResource}
-											memberOf={memberOf}
 											isLoggedIn={isLoggedIn}
+											isMember={isMember}
 										/>
 									)}
 								</>

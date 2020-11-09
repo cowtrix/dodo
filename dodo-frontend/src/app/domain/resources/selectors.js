@@ -16,3 +16,5 @@ export const resourceFailed = state => path(["requests", RESOURCE_GET, "hasError
 export const resourceLoading = state => path(["requests", RESOURCE_GET, "isFetching"], state)
 
 export const notificationsLoading = state => path(["requests", RESOURCE_NOTIFICATIONS_GET, "isFetching"], state)
+
+export const isMember = state => path(["domain", "resources", "currentResource", "metadata", "isMember"], state)
