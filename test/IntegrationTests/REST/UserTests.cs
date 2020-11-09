@@ -138,7 +138,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out _);
 			await AssertX.ThrowsAsync<Exception>(Login(user.Slug, "not the password"),
-				e => e.Message.Contains("Bad Request"));
+				e => e.Message.Contains("Unauthorised"));
 		}
 
 		[TestMethod]

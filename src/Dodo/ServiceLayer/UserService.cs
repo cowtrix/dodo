@@ -240,10 +240,15 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return request;
 		}
 		var req = (ResourceCreationRequest)request;
-		var user = ResourceManager.GetSingle(x => x.Slug == schema.Username || x.PersonalData.Email == schema.Email);
+		var user = ResourceManager.GetSingle(x => x.Slug == schema.Username);
 		if (user != null)
 		{
-			return ResourceRequestError.Conflict();
+			return ResourceRequestError.UnauthorizedRequest("A user already exists with that username");
+		}
+		user = ResourceManager.GetSingle(x => x.PersonalData.Email == schema.Email);
+		if(user != null)
+		{
+			return ResourceRequestError.UnauthorizedRequest("A user already exists with that email address");
 		}
 		var factory = ResourceUtility.GetFactory<User>();
 		user = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));
