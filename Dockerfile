@@ -11,4 +11,4 @@ WORKDIR /app/src/DodoServer
 RUN ln -s /bin/echo /usr/bin/xcopy
 
 WORKDIR /app/src/DodoServer/src/DodoServer/
-RUN dotnet run
+RUN ls
