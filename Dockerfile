@@ -6,7 +6,7 @@ RUN dpkg -i packages-microsoft-prod.deb
 
 RUN apt-get update
 RUN apt-get install -y dotnet-sdk-3.1 aspnetcore-runtime-3.1
-RUN dotnet run --project /app/src/DodoServer/src/DodoServer.csproj
+RUN dotnet run --project "/app/src/DodoServer/src/DodoServer.csproj"
 
 WORKDIR /app/src/DodoServer
 
