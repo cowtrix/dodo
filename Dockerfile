@@ -10,4 +10,4 @@ RUN apt-get install -y dotnet-sdk-3.1 aspnetcore-runtime-3.1
 WORKDIR /app/src/DodoServer
 
 RUN ln -s /bin/echo /usr/bin/xcopy
-RUN dotnet run
+RUN dotnet run --project ./src/DodoServer/
