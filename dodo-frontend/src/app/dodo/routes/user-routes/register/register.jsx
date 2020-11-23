@@ -11,7 +11,7 @@ const passwordContainsSymbol = (password) => !/^(?=.*[@#$%^&+=!]).*$/.test(passw
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
 const notEmptyAndLengthBelow = (minLength, str) => !!str && str.length < minLength
 
-export const Register = ({ register, isLoggedIn, registeringUser, error, privacyPolicy }) => {
+export const Register = ({ register, isLoggedIn, registeringUser, error, privacyPolicy, rebelAgreement }) => {
 	const history = useHistory()
 	const location = useLocation()
 	const { t } = useTranslation("ui")
@@ -109,7 +109,11 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 						setValue={val => setAcceptTerms(val)}
 						useAriaLabel={true}
 						message={<>
-							{t("I agree to the Rebel Agreement and ")}
+							{t("I agree to the")}{' '}
+							<a href={rebelAgreement} target="_blank" rel="noreferrer noopener">
+								{t("Rebel Agreement")}
+							</a>{' '}
+							{' '}{t("and")}{' '}
 							<a href={privacyPolicy} target="_blank" rel="noreferrer noopener">
 								{t("Privacy Policy")}
 							</a>

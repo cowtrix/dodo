@@ -20,3 +20,5 @@ export const notificationsLoading = state => path(["requests", RESOURCE_NOTIFICA
 export const isMember = state => path(["domain", "resources", "currentResource", "metadata", "isMember"], state)
 
 export const privacyPolicy = state => path(["domain", "resources", "resources", "privacyPolicy"], state)
+
+export const rebelAgreement = state => path(["domain", "resources", "resources", "rebelAgreement"], state)
