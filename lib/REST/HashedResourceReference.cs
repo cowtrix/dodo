@@ -15,7 +15,7 @@ namespace Resources
 
 		public HashedResourceReference(IRESTResource rsc, string salt)
 		{
-			if (!string.IsNullOrEmpty(salt))
+			if (string.IsNullOrEmpty(salt))
 			{
 				Key = null;
 				return;
@@ -25,7 +25,7 @@ namespace Resources
 
 		public bool IsResource(IRESTResource rsc, string salt)
 		{
-			if (!string.IsNullOrEmpty(Key))
+			if (string.IsNullOrEmpty(Key))
 			{
 				return false;
 			}

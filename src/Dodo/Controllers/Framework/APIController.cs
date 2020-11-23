@@ -54,7 +54,6 @@ namespace Dodo
 						displayColor = TypeDisplayColors[t],
 						schema = JsonViewUtility.GetJsonSchema(t)
 					}).ToList(),
-				indexVideoEmbed = ConfigManager.GetValue("IndexVideoEmbedURL", "https://www.youtube.com/embed/d4QDM_Isi24"),
 				privacyPolicy = DodoApp.PrivacyPolicyURL,
 				rebelAgreement = DodoApp.RebelAgreementURL,
 			};

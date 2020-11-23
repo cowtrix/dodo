@@ -148,6 +148,7 @@ namespace Dodo.Rebellions
 			{
 				erm.Delete(e.GetValue());
 			}
+			base.OnDestroy();
 		}
 	}
 }

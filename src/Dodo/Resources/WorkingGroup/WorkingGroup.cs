@@ -93,6 +93,7 @@ namespace Dodo.WorkingGroups
 			{
 				rrm.Delete(s.GetValue());
 			}
+			base.OnDestroy();
 		}
 	}
 }

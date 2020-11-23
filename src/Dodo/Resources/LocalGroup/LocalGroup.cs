@@ -97,6 +97,7 @@ namespace Dodo.LocalGroups
 			{
 				erm.Delete(e.GetValue());
 			}
+			base.OnDestroy();
 		}
 	}
 }
