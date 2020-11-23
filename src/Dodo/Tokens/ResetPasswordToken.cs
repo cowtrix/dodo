@@ -1,9 +1,6 @@
-using Resources.Security;
 using Resources;
 using System;
 using Common.Security;
-using Dodo.Utility;
-using System.Net;
 using Newtonsoft.Json;
 using MongoDB.Bson.Serialization.Attributes;
 

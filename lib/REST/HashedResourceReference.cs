@@ -34,6 +34,17 @@ namespace Resources
 
 		private static string GetKey(IRESTResource rsc, string salt)
 			=> SecurityExtensions.GenerateID(rsc, salt);
+
+		public override bool Equals(object obj)
+		{
+			return obj is HashedResourceReference reference &&
+				   Key == reference.Key;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(Key);
+		}
 	}
 
 	public class HashedResourceReferenceSerialzer :

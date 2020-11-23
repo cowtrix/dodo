@@ -2,6 +2,7 @@ using Common;
 using System;
 using Resources;
 using MongoDB.Bson.Serialization.Attributes;
+using Resources.Security;
 
 namespace Dodo.LocationResources
 {
@@ -20,6 +21,7 @@ namespace Dodo.LocationResources
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("Start Date")]
+		[PatchCallback(nameof(OnDateChange))]
 		public DateTime StartDate 
 		{ 
 			get 
@@ -41,6 +43,7 @@ namespace Dodo.LocationResources
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("End Date")]
+		[PatchCallback(nameof(OnDateChange))]
 		public DateTime EndDate { get { return __endDate; } set { __endDate = value.ToUniversalTime(); } }
 		[BsonElement]
 		private DateTime __endDate;
@@ -53,6 +56,11 @@ namespace Dodo.LocationResources
 				return false;
 			}
 			return base.VerifyExplicit(out error);
+		}
+
+		public void OnDateChange(object requester, Passphrase passphrase, DateTime oldValue, DateTime newValue)
+		{
+			
 		}
 	}
 }

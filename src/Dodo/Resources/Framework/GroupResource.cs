@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc.Formatters.Internal;
 
 namespace Dodo
 {
-
 	public class GroupResourceReferenceSerializer : ResourceReferenceSerializer<GroupResource> { }
 
 	public abstract class GroupResource :
@@ -35,7 +34,7 @@ namespace Dodo
 		public bool IsPublished { get; set; }
 
 		[BsonElement]
-		private SecureUserStore m_members { get; set; } = new SecureUserStore();
+		protected UserStore Members { get; set; } = new UserStore();
 
 		public GroupResource() : base() { }
 
@@ -46,20 +45,16 @@ namespace Dodo
 
 		#region Group
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, customDrawer:"null")]
-		public int MemberCount { get { return m_members.Count; } }
+		public int MemberCount { get { return Members.Count; } }
 
-		public bool IsMember(AccessContext context)
+		public bool IsMember(User user)
 		{
-			if (!context.Challenge())
-			{
-				return false;
-			}
-			return m_members.IsAuthorised(context);
+			return Members.IsSubscribed(this, user);
 		}
 
 		public void Leave(AccessContext accessContext)
 		{
-			m_members.Remove(accessContext.User.CreateRef(), accessContext.Passphrase);
+			Members.Unsubscribe(this, accessContext);
 			using var rscLock = new ResourceLock(accessContext.User);
 			var user = rscLock.Value as User;
 			if(!user.TokenCollection.Remove<UserJoinedGroupToken>(accessContext, EPermissionLevel.OWNER, 
@@ -73,7 +68,7 @@ namespace Dodo
 
 		public void Join(AccessContext accessContext)
 		{
-			m_members.Add(accessContext.User.CreateRef(), accessContext.Passphrase);
+			Members.Subscribe(this, accessContext);
 			using var rscLock = new ResourceLock(accessContext.User);
 			var user = rscLock.Value as User;
 			user.TokenCollection.AddOrUpdate(user, new UserJoinedGroupToken(this));
@@ -95,7 +90,7 @@ namespace Dodo
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var context = new AccessContext(user, passphrase);
-			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(context));
+			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(context.User));
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 	}

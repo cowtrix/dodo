@@ -5,7 +5,7 @@ using Dodo;
 using Dodo.Models;
 using Dodo.Users;
 using Dodo.Users.Tokens;
-using Dodo.Utility;
+using Dodo.Email;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +15,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
@@ -65,7 +66,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var key = new Passphrase(KeyGenerator.GetUniqueKey(SessionToken.KEYSIZE));
 
 		// Create the session token
-		
+
 		var sessionTimeout = login.RememberMe ? SessionToken.ShortSessionExpiryTime : SessionToken.LongSessionExpiryTime;
 		var token = new SessionToken(user, passphrase, key, HttpContext.Connection.RemoteIpAddress, DateTime.UtcNow + sessionTimeout);
 		using (var rscLock = new ResourceLock(user))
@@ -117,7 +118,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 
 	public async Task<IRequestResult> RequestPasswordReset(string email)
 	{
-		if(string.IsNullOrEmpty(email))
+		if (string.IsNullOrEmpty(email))
 		{
 			return ResourceRequestError.BadRequest("Email can't be empty.");
 		}
@@ -135,8 +136,23 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 				var resetToken = new ResetPasswordToken(targetUser);
 				targetUser.TokenCollection.AddOrUpdate(targetUser, resetToken);
 				UserManager.Update(targetUser, rscLock);
-				EmailUtility.SendPasswordResetEmail(targetUser.PersonalData.Email, targetUser.Name,
-					$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{REDEEM_PASSWORD_TOKEN}?token={resetToken.Key}");
+
+				var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{REDEEM_PASSWORD_TOKEN}?token={resetToken.Key}";
+				EmailUtility.SendEmail(
+					new EmailAddress
+					{
+						Email = targetUser.PersonalData.Email,
+						Name = targetUser.Name
+					},
+					$"Reset Your Password on {Dodo.DodoApp.PRODUCT_NAME}",
+					"Callback",
+					new Dictionary<string, string>
+					{
+						{ "MESSAGE", $"You've asked to reset your password on {Dodo.DodoApp.PRODUCT_NAME}. To set a new password, please follow the link below. " +
+						"Please note that resetting your password will remove you as an administrator on any groups that you currently administrate." },
+						{ "CALLBACK_NAME", "Reset Password" },
+						{ "CALLBACK_URL", url }
+					});
 			}
 		}
 		return new OkRequestResult("If an account with that email exists, you will receive a one-time link to reset your password.");
@@ -157,7 +173,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		using (var rscLock = new ResourceLock(user))
 		{
-			user = rscLock.Value as User;			
+			user = rscLock.Value as User;
 			// This will wipe the private key and passphrase, so the user needs to start fresh
 			user.AuthData = new AuthorizationData(password);
 			// Get rid of the password reset token immediately, as opposed to just waiting for it to get cleaned up
@@ -203,15 +219,15 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context, EPermissionLevel.OWNER, Context.User);
 		if (string.IsNullOrEmpty(token))
 		{
-			if(verifyToken.ConfirmationEmailRequestCount < VerifyEmailToken.MAX_REQUEST_COUNT)
+			if (verifyToken.ConfirmationEmailRequestCount < VerifyEmailToken.MAX_REQUEST_COUNT)
 			{
 				// user is requesting new email
 				SendEmailVerification(Context);
 				return new OkRequestResult($"A new email verification link has been sent to {Context.User.PersonalData.Email}");
 			}
-			
+
 		}
-		
+
 		if (verifyToken == null)
 		{
 			return ResourceRequestError.BadRequest();
@@ -246,7 +262,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return ResourceRequestError.UnauthorizedRequest("A user already exists with that username");
 		}
 		user = ResourceManager.GetSingle(x => x.PersonalData.Email == schema.Email);
-		if(user != null)
+		if (user != null)
 		{
 			return ResourceRequestError.UnauthorizedRequest("A user already exists with that email address");
 		}
@@ -258,9 +274,9 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		return new ResourceCreationRequest(
 			new AccessContext(user, user.AuthData.PassPhrase.GetValue(schema.Password)),
 			schema)
-			{ 
-				Result = user 
-			};
+		{
+			Result = user
+		};
 	}
 
 	public async Task<IRequestResult> RegisterWithToken(string token, UserSchema schema)
@@ -309,7 +325,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 
 	public static IRequestResult SendEmailVerification(AccessContext context)
 	{
-		if(context.User.PersonalData.EmailConfirmed)
+		if (context.User.PersonalData.EmailConfirmed)
 		{
 			return new OkRequestResult("User has already confirmed email");
 		}
@@ -320,12 +336,25 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			token = user.TokenCollection.AddOrUpdate(context.User, new VerifyEmailToken()) as VerifyEmailToken;
 		}
-		if(token.ConfirmationEmailRequestCount >= VerifyEmailToken.MAX_REQUEST_COUNT)
+		if (token.ConfirmationEmailRequestCount >= VerifyEmailToken.MAX_REQUEST_COUNT)
 		{
 			return ResourceRequestError.BadRequest("User has requested maximum number of email verifications");
 		}
-		EmailUtility.SendEmailVerificationEmail(context.User.PersonalData.Email, context.User.Name,
-			$"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}");
+		var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{VERIFY_EMAIL}?token={token.Token}";
+		EmailUtility.SendEmail(
+			new EmailAddress
+			{
+				Email = context.User.PersonalData.Email,
+				Name = context.User.Name
+			},
+			$"Verify Your Email With {Dodo.DodoApp.PRODUCT_NAME}",
+			"Callback",
+			new Dictionary<string, string>
+			{
+				{ "MESSAGE", $"You just changed your {Dodo.DodoApp.PRODUCT_NAME}. To verify your email address, please click the button below." },
+				{ "CALLBACK_NAME", "Verify Email Address" },
+				{ "CALLBACK_URL", $"{Dodo.DodoApp.NetConfig.FullURI}/{UserService.RootURL}/{UserService.VERIFY_EMAIL}?token={token.Token}" }
+			});
 		token.ConfirmationEmailRequestCount++;
 		user.TokenCollection.AddOrUpdate(user, token);
 		ResourceManager.Update(user, rscLock);
@@ -343,7 +372,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		var token = KeyGenerator.GetUniqueKey(32).ToLowerInvariant();
 		var tokenChallenge = PasswordHasher.HashPassword(token);
 #if DEBUG
-		if(!PasswordHasher.VerifyHashedPassword(tokenChallenge, token))
+		if (!PasswordHasher.VerifyHashedPassword(tokenChallenge, token))
 		{
 			throw new Exception("Failed to generate challenge");
 		}
@@ -354,9 +383,22 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			newUser.TokenCollection.AddOrUpdate(newUser, new TemporaryUserToken(temporaryPassword, tokenChallenge));
 			ResourceUtility.GetManager<User>().Update(newUser, rscLock);
 		}
-		EmailUtility.SendEmail(email, "New Rebel",
-			$"You've been invited to create an account on {Dodo.DodoApp.PRODUCT_NAME}",
-			$"To create your account, please following the following link:\n\n{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{REGISTER}?token={token}");
+
+		var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{REGISTER}?token={token}";
+		EmailUtility.SendEmail(
+				new EmailAddress
+				{
+					Email = newUser.PersonalData.Email,
+					Name = ""
+				},
+				$"You've been invited to create an account on {Dodo.DodoApp.PRODUCT_NAME}",
+				"Callback",
+				new Dictionary<string, string>
+				{
+					{ "MESSAGE", $"You've been invited to create an account on {Dodo.DodoApp.PRODUCT_NAME}. To create your account, please follow the link below." },
+					{ "CALLBACK_NAME", "Verify Email Address" },
+					{ "CALLBACK_URL", url }
+				});
 		return newUser;
 	}
 }

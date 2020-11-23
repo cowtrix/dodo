@@ -33,7 +33,7 @@ namespace Resources
 		void Update(T objToUpdate, ResourceLock locker);
 		T GetSingle(Func<T, bool> selector, Guid? handle = null, bool force = false);
 		T GetFirst(Func<T, bool> selector, Guid? handle = null, bool force = false);
-		IEnumerable<T> Get(Func<T, bool> selector, Guid? handle = null);
+		IEnumerable<T> Get(Func<T, bool> selector = null, Guid? handle = null, bool force = false);
 	}
 
 	/// <summary>
@@ -91,11 +91,11 @@ namespace Resources
 			Logger.Debug($"{typeof(T).Name} ADD: {newObject.Name} ({newObject.Guid})");
 			lock (m_addlock)
 			{
-				if (ResourceUtility.GetResourceByGuid(newObject.Guid) != null)
+				if (ResourceUtility.GetResourceByGuid(newObject.Guid, force:true) != null)
 				{
 					throw new Exception("Conflicting GUID");
 				}
-				if (Get(r => r.Slug == newObject.Slug).Any())
+				if (Get(r => r.Slug == newObject.Slug, force:true).Any())
 				{
 					throw new Exception("Conflicting slug");
 				}
@@ -168,10 +168,15 @@ namespace Resources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
-		public virtual IEnumerable<T> Get(Func<T, bool> selector, Guid? handle = null)
+		public virtual IEnumerable<T> Get(Func<T, bool> selector = null, Guid? handle = null, bool force = false)
 		{
 			Logger.Debug($"{typeof(T).Name} GET: {selector.Method.Name} ({handle})");
-			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle).Cast<T>();
+			if(selector == null)
+			{
+				// performance case for getting everything
+				return WaitForAllUnlocked(MongoDatabase.AsQueryable(), handle, force).Cast<T>();
+			}
+			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle, force).Cast<T>();
 		}
 
 		/// <summary>

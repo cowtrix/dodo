@@ -125,7 +125,7 @@ namespace Dodo
 			{
 				return EPermissionLevel.OWNER;
 			}			
-			if ((target is IGroupResource group) && group.IsMember(context))
+			if ((target is IGroupResource group) && group.IsMember(context.User))
 			{
 				return EPermissionLevel.MEMBER;
 			}

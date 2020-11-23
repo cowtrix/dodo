@@ -1,10 +1,10 @@
 using Common.Extensions;
 using Common.Security;
-using Dodo.Utility;
-using MongoDB.Bson.Serialization.Attributes;
+using Dodo.Email;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
+using System.Collections.Generic;
 
 namespace Dodo.Users.Tokens
 {
@@ -26,19 +26,22 @@ namespace Dodo.Users.Tokens
 		public UserAddedAsAdminToken(ResourceReference<IAdministratedResource> resource, User newAdmin)
 		{
 			Resource = resource;
-			if(m_notification == null)
+			if (m_notification == null)
 			{
 				var subj = $"You have been added as an Administrator to {Resource.Name}";
 				var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{resource.Type}/{resource.Slug}";
 				m_notification = new Notification(Guid, resource.Name, subj, url, ENotificationType.Alert, GetVisibility());
-				
+
 				var txt = $"You're receiving this email because you are registered with an account at {Dodo.DodoApp.NetConfig.FullURI}\n\n" +
 					$"You have been added as an administrator of the {resource.Type} \"{Resource.Name}\". You can view this [here.]({url}) " +
 					$"You can view the Adminstrator Panel [here.]({Dodo.DodoApp.NetConfig.FullURI}/edit/{resource.Type}/{resource.Slug})";
 
-				EmailUtility.SendEmail(newAdmin.PersonalData.Email, newAdmin.Name, $"[{Dodo.DodoApp.PRODUCT_NAME}]: {subj}",
-					StringExtensions.StripMDLinks(txt), StringExtensions.TextToHtml(txt));
-			}			
+				EmailUtility.SendEmail(
+					new EmailAddress { Email = newAdmin.PersonalData.Email, Name = newAdmin.Name },
+					$"[{Dodo.DodoApp.PRODUCT_NAME}] {subj}",
+					"Notification",
+					new Dictionary<string, string> { { "MESSAGE", txt } });
+			}
 		}
 
 		public UserAddedAsAdminToken(IAdministratedResource resource, User newAdmin) : this(resource.CreateRef(), newAdmin) { }
