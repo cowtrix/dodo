@@ -3,6 +3,7 @@ import {
 	RESET_PASSWORD,
 	REGISTER_USER,
 	GET_LOGGED_IN_USER,
+	GET_MY_REBELLION,
 	UPDATE_DETAILS,
 	LOGOUT,
 	RESEND_VALIDATION_EMAIL
@@ -15,6 +16,7 @@ import {
 	AUTH_URL,
 	LOGIN as LOGIN_URL,
 	LOGOUT_URL,
+	MY_REBELLION_URL,
 	RESEND_VALIDATION_EMAIL_URL
 } from '../urls'
 
@@ -40,6 +42,9 @@ export const registerUser = (dispatch, userDetails) =>
 
 export const getLoggedInUser = (dispatch) =>
 	authAction(dispatch, GET_LOGGED_IN_USER, AUTH_URL)
+
+export const getMyRebellion = (dispatch) =>
+	authAction(dispatch, GET_MY_REBELLION, MY_REBELLION_URL)
 
 export const updateDetails = (dispatch, guid, details) =>
 	authAction(dispatch, UPDATE_DETAILS, AUTH_URL + guid, (success) => dispatch({
