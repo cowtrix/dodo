@@ -24,11 +24,6 @@ namespace DodoServer
 			CreateHostBuilder(args).Build().Run();
 		}
 
-		private static void PrintDependencies()
-		{
-			throw new System.NotImplementedException();
-		}
-
 		private static IEnumerable<string> GetUrls()
 		{
 			var config = Dodo.DodoApp.NetConfig;

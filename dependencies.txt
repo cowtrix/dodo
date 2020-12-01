@@ -17,6 +17,7 @@ Project 'Resources' has the following package references
 Project 'Dodo' has the following package references
    [netstandard2.1]: 
    Top-level Package                                      Requested   Resolved
+   > MailKit                                              2.10.0      2.10.0  
    > Microsoft.AspNetCore.Cryptography.KeyDerivation      3.1.8       3.1.8   
    > Microsoft.AspNetCore.Mvc                             2.2.0       2.2.0   
    > System.Text.Json                                     4.7.2       4.7.2   

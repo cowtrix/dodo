@@ -26,7 +26,7 @@ namespace Resources.Security
 		/// <returns></returns>
 		public static string GenerateID(IRESTResource key, string salt)
 		{
-			return GenerateID(key, key.Guid.ToString(), salt);
+			return GenerateID(key, key?.Guid.ToString(), salt);
 		}
 
 		/// <summary>
