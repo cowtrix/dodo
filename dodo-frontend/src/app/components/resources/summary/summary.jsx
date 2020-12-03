@@ -26,9 +26,9 @@ export const Summary = (
 			className={styles.link}
 		>
 			<div className={styles.summaryLeft}>
-				<Tile type={metadata.type} resourceTypes={resourceTypes}/>
-				<Title title={name} parent={parent} />
-				<Description description={publicDescription}/>
+				<Tile type={metadata.type} resourceTypes={resourceTypes} />
+				<Title title={name} parent={parent} startDate={startDate} endDate={endDate} type={metadata.type} />
+				<Description description={publicDescription + '...'}/>
 			</div>
 			<div className={styles.summaryRight}>
 				<Icon icon="chevron-right"/>
@@ -37,10 +37,10 @@ export const Summary = (
 	</li>
 
 Summary.propTypes = {
-	Name: PropTypes.string,
+	name: PropTypes.string,
 	location: PropTypes.object,
-	StartDate: PropTypes.string,
-	EndDate: PropTypes.string,
+	startDate: PropTypes.instanceOf(Date),
+	endDate: PropTypes.instanceOf(Date),
 	summary: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 	metadata: PropTypes.object,
 	resourceTypes: PropTypes.array,
