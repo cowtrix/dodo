@@ -45,16 +45,7 @@ namespace Dodo.Email
 		}
 
 		private static EmailConfiguration m_emailConfig =
-			new ConfigVariable<EmailConfiguration>("EmailConfiguration", 
-				new EmailConfiguration
-				{
-					FromEmail = $"noreply@{DodoApp.NetConfig.GetHostname()}",
-					FromName = DodoApp.PRODUCT_NAME,
-					SMTPAddress = "smtp.ethereal.email",
-					SMTPPort = 537,
-					SMTPUsername = "katharina6@ethereal.email",
-					SMTPPassword = "dkJPsNmgmj14JDqAZP",
-				}).Value;
+			new ConfigVariable<EmailConfiguration>("Dodo_EmailConfiguration").Value;
 		private static string[] m_banners;
 		private static PersistentStore<string, bool> m_unsubscribed = new PersistentStore<string, bool>(DodoApp.PRODUCT_NAME, "UnsubbedEmails");
 		private static Dictionary<string, string> m_templateCache = new Dictionary<string, string>();

@@ -43,6 +43,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Update="DodoServer_config.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	  <Content Update="wwwroot\CustomCRUDCss.css">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>

@@ -1,4 +1,5 @@
-﻿using System;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace Common.Config
@@ -18,6 +19,8 @@ namespace Common.Config
 			{
 				if(ConfigManager.TryGetValue(this, out var obj))
 					return obj;
+				if (m_required)
+					throw new Exception($"{ConfigManager.ConfigPath}\nConfig variable '{ConfigKey}' is required\n{JsonConvert.SerializeObject(default(T), Formatting.Indented)}");
 				return DefaultValue;
 			}
 			set
@@ -25,11 +28,22 @@ namespace Common.Config
 				ConfigManager.SetValue(ConfigKey, value);
 			}
 		}
+		private bool m_required { get; set; }
 		public T DefaultValue { get; private set; }
 		public string ConfigKey { get; private set; }
 		public ConfigVariable(string key, T defaultValue)
 		{
 			DefaultValue = defaultValue;
+			ConfigKey = key;
+			m_required = false;
+#if DEBUG
+			ConfigManager.Register(this);
+#endif
+		}
+		public ConfigVariable(string key)
+		{
+			DefaultValue = default;
+			m_required = true;
 			ConfigKey = key;
 #if DEBUG
 			ConfigManager.Register(this);
