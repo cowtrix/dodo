@@ -12,7 +12,7 @@ export const Header = ({ resource, setCenterMap, resourceColor, hideMap }) =>
 		<div className={styles.headerLeft}>
 			<Title name={resource.name}/>
 			<Dates startDate={resource.startDate} endDate={resource.endDate} />
-			{resource.location.address ?
+			{(resource.location && resource.location.address) ?
 				<div className={styles.address}>
 					<h4>{resource.location.address}</h4>
 				</div>

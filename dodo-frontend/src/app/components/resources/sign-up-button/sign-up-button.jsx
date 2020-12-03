@@ -5,6 +5,7 @@ import styles from './sign-up-button.module.scss'
 
 
 const SIGN_UP_NOW = 'Sign up now'
+const SUBSCRIBE = 'Subscribe'
 const T0_RECEIVE_UPDATES = 'To receive updates and news'
 const UNSUBSCRIBE = 'Unsubscribe'
 
@@ -26,8 +27,8 @@ export const SignUpButton = (
 				variant="cta"
 				style={{ backgroundColor: resourceColor }}
 			>
-				{CTA ? <h1>{CTA}</h1> : <h1>{!isLoggedIn || !isSubscribed ? SIGN_UP_NOW : UNSUBSCRIBE}</h1>}
-				{updates ? <h3>{T0_RECEIVE_UPDATES}</h3> : null}
+				<h1>{isLoggedIn ? (!isSubscribed ? SUBSCRIBE : UNSUBSCRIBE) : SIGN_UP_NOW}</h1>
+				{(isLoggedIn && !isSubscribed) ? <h3>{T0_RECEIVE_UPDATES}</h3> : null}
 			</Button>
 		</div> :
 		null

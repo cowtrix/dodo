@@ -29,8 +29,11 @@ export const Countdown = ({ startDate, name }) => {
 
 	const days = Math.floor(timeLeft / _day)
 	const hours = Math.floor((timeLeft % _day) / _hour)
-	const minutes = Math.floor((timeLeft % _hour) / _minute)
-	const seconds = Math.floor((timeLeft % _minute) / _second)
+	const hoursStr = (hours < 10 ? ' ' + hours : hours) + ' hour' + (hours > 1 ? 's' : '')
+	const minutes = Math.floor((timeLeft % _hour) / _minute) + 1
+	const minStr = (minutes < 10 ? ' ' + minutes : minutes) + ' minute' + (minutes > 1 ? 's' : '')
+	const seconds = Math.floor((timeLeft % _minute) / _second) + 1
+	const secStr = (seconds < 10 ? ' ' + seconds : seconds) + ' second' + (seconds > 1 ? 's' : ' ')
 
 	return (
 		startDate ? <div className={styles.countdown}>
@@ -38,7 +41,7 @@ export const Countdown = ({ startDate, name }) => {
 				{name} begins in
 			</h2>
 			<h2>
-				{days} days, {hours} hours, {minutes} minutes, {seconds} seconds
+				{days} days, {hoursStr}, {minStr}, {secStr}
 			</h2>
 		</div> :
 			null
