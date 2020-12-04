@@ -22,10 +22,6 @@ namespace Dodo
 		public static string RebelAgreementURL => ConfigManager.GetValue("RebelAgreementURL", $"https://extinctionrebellion.uk/wp-content/uploads/2019/04/Extinction-Rebellion-Rebel-Agreement.pdf");
 		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", $"admin@dodo.ovh");
 		public static string ServerSalt { get; set; }
-		public static EmailRedirect[] EmailRedirects => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_EmailRedirects",
-			new[] {
-				new EmailRedirect{ Email = DevEmail, Redirect = "youremail@dodo.ovh" }
-				});
 		public const string PRODUCT_NAME = "Dodo";
 		public const string API_ROOT = "api/";
 		private static CommandReader m_commandReader = new CommandReader();
