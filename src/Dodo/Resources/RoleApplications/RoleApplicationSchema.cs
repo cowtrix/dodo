@@ -11,7 +11,7 @@ namespace Dodo.RoleApplications
 		{
 		}
 
-		public RoleApplicationSchema(string name, Role role, ApplicationModel application) : base(name)
+		public RoleApplicationSchema(string name, Role role, string application) : base(name)
 		{
 			Role = role;
 			ParentGroup = role.Parent.GetValue() as IAsymmCapableResource;
@@ -19,7 +19,7 @@ namespace Dodo.RoleApplications
 		}
 
 		public Role Role { get; set; }
-		public ApplicationModel Application { get; set; }
+		public string Application { get; set; }
 		public IAsymmCapableResource ParentGroup { get; internal set; }
 
 		public override Type GetResourceType() => typeof(RoleApplication);

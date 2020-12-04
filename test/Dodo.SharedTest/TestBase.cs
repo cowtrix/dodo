@@ -16,6 +16,7 @@ using Resources.Security;
 using System;
 using Dodo.LocalGroups;
 using Dodo.Analytics;
+using Dodo.RoleApplications;
 
 namespace SharedTest
 {
@@ -185,7 +186,7 @@ namespace SharedTest
 				{
 					int appCount = new Random().Next(0, 3);
 					var applicant = GetRandomUser(out _, out var appcontext);
-					role.Apply(appcontext, new ApplicationModel() { Content = "Hello, this is a test application!" }, out _);
+					RoleApplicationService.Apply(appcontext, role, "This is a sample application", out _);
 				}
 			}
 			return ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);

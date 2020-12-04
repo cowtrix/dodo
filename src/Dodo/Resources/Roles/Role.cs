@@ -47,30 +47,6 @@ namespace Dodo.Roles
 			ApplicantQuestion = schema.ApplicantQuestion;
 		}
 
-		public ResourceReference<RoleApplication> Apply(AccessContext context, ApplicationModel application, out string error)
-		{
-			if (context.User == null)
-			{
-				error = "User not logged in";
-				return default;
-			}
-			if (!context.User.PersonalData.EmailConfirmed)
-			{
-				error = "User email not verified";
-				return default;
-			}
-			if(HasApplied(context, out _, out var app))
-			{
-				error = "You have already applied for this role.";
-				return app;
-			}
-			var factory = new RoleApplicationFactory();
-			var appRsc = factory.CreateTypedObject(new ResourceCreationRequest(context, new RoleApplicationSchema($"Application for {Name}", this, application)));
-			app = appRsc.CreateRef();
-			error = null;
-			return app;
-		}
-
 		private string GetID(AccessContext context) => SecurityExtensions.GenerateID(context.User, context.Passphrase, Guid.ToString());
 
 		public bool HasApplied(AccessContext context, out string id, out ResourceReference<RoleApplication> application)

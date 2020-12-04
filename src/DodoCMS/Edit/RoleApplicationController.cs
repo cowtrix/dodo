@@ -9,11 +9,24 @@ using System.Collections.Generic;
 using System;
 using Dodo.ViewModels;
 using Resources.Security;
+using Dodo.Roles;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
 namespace Dodo.RoleApplications
 {
+	public class RoleApplicationModel
+	{
+		public RoleApplicationModel(Role role, string applicantQuestion)
+		{
+			Question = applicantQuestion;
+			RoleGuid = role.Guid;
+		}
+
+		public string Question { get; set; }
+		public Guid RoleGuid { get; set; }
+	}
+
 	[SecurityHeaders]
 	[ApiController]
 	[Route(RoleApplication.ROOT_URL)]
@@ -22,8 +35,44 @@ namespace Dodo.RoleApplications
 		protected RoleApplicationViewModel ViewModel(RoleApplication rsc, object requester, Resources.Security.Passphrase passphrase) =>
 			rsc.CopyByValue<RoleApplicationViewModel>(requester, passphrase);
 		protected AuthorizationService<RoleApplication, RoleApplicationSchema> AuthService => new RoleApplicationAuthService();
+		protected RoleApplicationService RoleService => new RoleApplicationService(Context, HttpContext, AuthService);
 		protected CrudResourceServiceBase<RoleApplication, RoleApplicationSchema> PublicService =>
 			new CrudResourceServiceBase<RoleApplication, RoleApplicationSchema>(Context, HttpContext, AuthService);
+
+		[Route("{id}/" + RoleApplicationService.APPLY)]
+		public async Task<IActionResult> CreateApplication([FromRoute] string id)
+		{
+			Response.Headers.Add("Content-Security-Policy", $"frame-ancestors 'self' {DodoApp.NetConfig.FullURI}");
+			if (Context.User == null)
+			{
+				// redirect to login
+				return Forbid();
+			}
+			var role = ResourceUtility.GetManager<Role>().GetSingle(r => r.Guid.ToString() == id || r.Slug == id);
+			if(role == null)
+			{
+				return NotFound();
+			}
+			if (role.HasApplied(Context, out var applicationID, out var application))
+			{
+				return RedirectToAction(nameof(ViewApplication), applicationID);
+			}
+			ViewData["Permission"] = EPermissionLevel.OWNER;
+			return base.View(new RoleApplicationModel(role, role.ApplicantQuestion));
+		}
+
+		[Route("{id}/" + RoleApplicationService.APPLY)]
+		[HttpPost]
+		public async Task<IActionResult> CreateApplication([FromRoute] string id, [FromForm]string application)
+		{
+			Response.Headers.Add("Content-Security-Policy", $"frame-ancestors 'self' {DodoApp.NetConfig.FullURI}");
+			if (Context.User == null)
+			{
+				// redirect to login
+				return Forbid();
+			}
+			return RoleService.Apply(id, application).ActionResult;
+		}
 
 		[Route("{id}")]
 		public virtual async Task<IActionResult> ViewApplication([FromRoute] string id)

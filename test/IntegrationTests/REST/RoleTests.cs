@@ -1,3 +1,4 @@
+using Dodo.RoleApplications;
 using Dodo.Roles;
 using Dodo.Roles;
 using DodoTest.Framework.Postman;
@@ -35,8 +36,8 @@ namespace RESTTests
 			var group = CreateObject<Role>();
 			var user = GetRandomUser(out var password, out var context);
 			await Login(user.Slug, password);
-			var joinReq = await Request($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}/apply", EHTTPRequestType.POST,
-				new ApplicationModel { Content = "This is my test application data." }, 
+			var joinReq = await Request($"{Dodo.DodoApp.API_ROOT}{RoleApplicationAPIController.RootURL}/{group.Guid}/apply", EHTTPRequestType.POST,
+				"This is my test application", 
 				validator: m => m.StatusCode == System.Net.HttpStatusCode.Redirect);
 			var verify = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
 			Assert.AreNotEqual(verify[Resource.METADATA]["applied"].Value<string>(), default(System.Guid).ToString());

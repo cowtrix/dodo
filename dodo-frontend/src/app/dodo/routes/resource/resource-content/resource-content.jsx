@@ -19,7 +19,6 @@ export const ResourceContent =
 
 		const subscribe = () => subscribeResource(resourceType, resource.guid, 'join')
 		const unSubscribe = () => subscribeResource(resourceType, resource.guid, 'leave')
-		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', { content: body })
 
 		const shouldDisplayNotifications = resourceType !== 'role' && !!notifications?.notifications?.length
 		const shouldShowAdmin = resource.metadata.permission === 'owner' || resource.metadata.permission === 'admin'
@@ -39,14 +38,15 @@ export const ResourceContent =
 					{shouldDisplayNotifications &&
 						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
 					}
-                </div>
-				<Role
-					applicantQuestion={resource.applicantQuestion}
-					resourceColor={resourceColor}
-					applyForRole={apply}
-					isLoggedIn={isLoggedIn}
-					hasApplied={resource.metadata.applied}
-				/>
+				</div>
+				{resourceType == 'role' ?
+					<Role
+						resource={resource}
+						isLoggedIn={isLoggedIn}
+						hasApplied={resource.metadata.applied}
+					/>
+					: null
+				}
 				<SignUpButton
 					disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
 					resourceColor={resourceColor}

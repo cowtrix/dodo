@@ -20,10 +20,6 @@ namespace Dodo
 			{
 				return ResourceRequestError.ForbidRequest();
 			}
-			if(action == RoleService.APPLY)
-			{
-				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.USER, action);
-			}
 			// Everything below requires admin
 			if (!target.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out var permissionSet) || !permissionSet.CanManageRoles)
 			{

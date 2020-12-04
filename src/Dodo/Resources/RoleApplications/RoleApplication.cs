@@ -23,7 +23,7 @@ namespace Dodo.RoleApplications
 		public RoleApplicationData() { }
 		public RoleApplicationData(AccessContext applicant, RoleApplicationSchema schema)
 		{
-			Messages.Add(new Message(applicant, schema.Application.Content, true, false, Guid.NewGuid()));
+			Messages.Add(new Message(applicant, schema.Application, true, false, Guid.NewGuid()));
 		}
 		[View(EPermissionLevel.ADMIN)]
 		public List<Message> Messages { get; set; } = new List<Message>();

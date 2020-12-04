@@ -35,7 +35,7 @@ public class ResourceServiceBase<T, TSchema>
 		AuthService = authService;
 	}
 
-	protected IRequestResult VerifyRequest(string id, EHTTPRequestType type, string actionName = null)
+	protected virtual IRequestResult VerifyRequest(string id, EHTTPRequestType type, string actionName = null)
 	{
 		T target;
 		if(Guid.TryParse(id, out var guid))
@@ -61,7 +61,7 @@ public class ResourceServiceBase<T, TSchema>
 		return AuthService.IsAuthorised(Context, target, type, actionName);
 	}
 
-	protected IRequestResult VerifyRequest(TSchema schema)
+	protected virtual IRequestResult VerifyRequest(TSchema schema)
 	{
 		if (!Context.Challenge())
 		{

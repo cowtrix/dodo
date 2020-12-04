@@ -1,0 +1,40 @@
+@model Dodo.RoleApplications.RoleApplicationModel;
+@{
+	var authManager = ViewData["auth"] as Dodo.RoleAuthService;
+	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
+	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
+	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
+	var salt = Guid.NewGuid().ToString();
+}
+
+<div class="card chat-entry chat-entry-admin">
+	<div class="card-header chat-header">
+		<div class="row">
+			<div class="col-auto chat-text">
+				<strong>
+					Application Question
+				</strong>
+			</div>
+		</div>
+	</div>
+	<div class="card-body">
+		<p class="chat-text"> @Html.Raw(Model.Question) </p>
+	</div>
+</div>
+<form id="createapplication" class="form" method="post" action="apply" autocomplete="off">
+	<input class="sr-only" readonly type="text" id="salt" name="salt" value="@salt">
+	<div class="row chat-application-area">
+		<textarea class="form-control" rows="5" name ="application" id="application"></textarea>
+	</div>
+	<div class="row">
+		<div class="col-auto chat-button">
+			<input type="submit" value="Submit Application" class="btn btn-primary" />
+		</div>
+		<div class="col">
+			<small id="helpBlock" class="form-text text-muted">
+				Don't discuss sensitive information here. We recommend using secure channels such as Telegram and Signal.
+			</small>
+		</div>
+	</div>
+</form>
+

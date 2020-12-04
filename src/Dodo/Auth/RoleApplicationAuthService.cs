@@ -12,7 +12,18 @@ namespace Dodo.RoleApplications
 		{
 		}
 
-		protected override IRequestResult CanCreate(AccessContext context, RoleApplicationSchema target) => ResourceRequestError.BadRequest($"Applications must be created by user interaction");
+		protected override IRequestResult CanCreate(AccessContext context, RoleApplicationSchema target)
+		{
+			if(target.Role == null)
+			{
+				return ResourceRequestError.NotFoundRequest();
+			}
+			if(target.Role.HasApplied(context, out _, out _))
+			{
+				return ResourceRequestError.Conflict();
+			}
+			return new ResourceCreationRequest(context, target);
+		}
 		
 		protected override EPermissionLevel GetPermission(AccessContext context, RoleApplication target)
 		{
@@ -56,6 +67,10 @@ namespace Dodo.RoleApplications
 					return context.User == null ? ResourceRequestError.ForbidRequest() : ResourceRequestError.UnauthorizedRequest();
 				}
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, permission, action);
+			}
+			if (action == RoleApplicationService.APPLY)
+			{
+				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.USER, action);
 			}
 			return base.CanPost(context, target, action);
 		}

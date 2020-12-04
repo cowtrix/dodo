@@ -4,21 +4,18 @@ import styles from './role.module.scss'
 
 const DEFAULT_GUID = '00000000-0000-0000-0000-000000000000'
 
-export const Role = ({ applicantQuestion, isLoggedIn, applyForRole, resourceColor, hasApplied }) => {
+export const Role = ({ isLoggedIn, resource, hasApplied }) => {
 	return (
-		isLoggedIn && applicantQuestion && hasApplied == DEFAULT_GUID ?
+		isLoggedIn ?
 			<div className={styles.applicationFrameContainer}>
-				<iframe id="applicationframe" className={styles.applicationFrame} src={'/roleapplication/' + (hasApplied != DEFAULT_GUID ? hasApplied : 'create') + '?header=false'} />
+				<iframe id="applicationframe" className={styles.applicationFrame} src={'/roleapplication/' + (hasApplied != DEFAULT_GUID ? hasApplied : resource.guid + '/apply') + '?header=false'} />
 			</div>
 			: null
 	)
 }
 
-
 Role.propTypes = {
-	applicantQuestion: PropTypes.string,
 	hasApplied: PropTypes.bool,
 	isLoggedIn: PropTypes.bool,
-	applyForRole: PropTypes.func,
 	resourceColor: PropTypes.string,
 }

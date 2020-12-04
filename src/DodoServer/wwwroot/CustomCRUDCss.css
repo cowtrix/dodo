@@ -88,6 +88,11 @@
 	margin-bottom: 20px;
 }
 
+.chat-application-area {
+	margin:10px;
+	max-width: 700px;
+}
+
 .workinggroup-reference {
 	background-color: #FFC113;
 }
