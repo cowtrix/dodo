@@ -53,14 +53,21 @@ namespace Dodo.Email
 
 		static EmailUtility()
 		{
-			var webroot = DodoApp.WebRoot;
-			m_banners = Directory.GetFiles(Path.Combine(webroot, "img", "email"), "banner*.jpg")
-				.Select(s => s.Replace(webroot, DodoApp.NetConfig.FullURI).Replace('\\', '/'))
-				.ToArray();
+			try
+			{
+				var webroot = DodoApp.WebRoot;
+				m_banners = Directory.GetFiles(Path.Combine(webroot, "img", "email"), "banner*.jpg")
+					.Select(s => s.Replace(webroot, DodoApp.NetConfig.FullURI).Replace('\\', '/'))
+					.ToArray();
 
-			SMTPClient = new SmtpClient();
-			SMTPClient.Connect(m_emailConfig.SMTPAddress, m_emailConfig.SMTPPort, SecureSocketOptions.StartTls);
-			SMTPClient.Authenticate(m_emailConfig.SMTPUsername, m_emailConfig.SMTPPassword);
+				SMTPClient = new SmtpClient();
+				SMTPClient.Connect(m_emailConfig.SMTPAddress, m_emailConfig.SMTPPort, SecureSocketOptions.StartTls);
+				SMTPClient.Authenticate(m_emailConfig.SMTPUsername, m_emailConfig.SMTPPassword);
+			}
+			catch(Exception e)
+			{
+				Logger.Exception(e, "Exception in EmailUtility");
+			}
 		}
 
 		static Dictionary<string, string> GetStandardTemplateData(EmailAddress target, string subject) => new Dictionary<string, string>()

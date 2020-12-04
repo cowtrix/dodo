@@ -205,7 +205,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var resource = CreateObject<T>(context) as IPublicResource;
-			resource.Publish();
+			resource.SetPublished(true);
 			resource = ResourceManager.GetSingle(rsc => rsc.Guid == resource.Guid) as IPublicResource;
 			Assert.IsTrue(resource.IsPublished);
 		}

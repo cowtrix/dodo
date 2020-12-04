@@ -103,7 +103,7 @@ namespace SharedTest
 			var obj = factory.CreateTypedObject(new ResourceCreationRequest(context, schema));
 			if (publish && obj is IPublicResource pubRsc)
 			{
-				obj = (T)pubRsc.Publish();
+				obj = (T)pubRsc.SetPublished(true);
 			}
 			if (publish && obj is IAdministratedResource admin)
 			{
@@ -181,12 +181,6 @@ namespace SharedTest
 
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
-				}
-				else if (obj is Role role)
-				{
-					int appCount = new Random().Next(0, 3);
-					var applicant = GetRandomUser(out _, out var appcontext);
-					RoleApplicationService.Apply(appcontext, role, "This is a sample application", out _);
 				}
 			}
 			return ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);

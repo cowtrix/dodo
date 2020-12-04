@@ -62,22 +62,23 @@ $(function () {
 					</div>
 @{
 	if (!Model.IsPublished)
-	{
-		<div class="form-check">
-			<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
-			<label class="form-check-label">Published</label>
-			<span asp-validation-for="IsPublished" class="text-danger"></span>
-			<small id="helpBlock" class="form-text text-muted">
-				This indicates whether or not this is publicly viewable by all users. This is not yet published, so it won't show up in search results or be visible to non-administrators. Once a resource is published, it cannot be unpublished.
-			</small>
-		</div>
-	}
-	else
-	{
-		<div class="alert alert-warning published-message" role="alert">
-			This resource is now published and publicly visible.
-		</div>
-	}
+{
+<div class="form-check">
+	<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+	<label class="form-check-label">Published</label>
+	<span asp-validation-for="IsPublished" class="text-danger"></span>
+	<small id="helpBlock" class="form-text text-muted">
+		This indicates whether or not this is publicly viewable by all users. This is not yet published, so it won't show up in search results or be visible to non-administrators. Once a resource is published, it cannot be unpublished.
+	</small>
+</div>
+}
+else
+{
+	<input class="sr-only" type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+	<div class="alert alert-warning published-message" role="alert">
+		This resource is now published and publicly visible.
+	</div>
+}
 }
 
 
