@@ -150,7 +150,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 					{
 						{ "MESSAGE", $"You've asked to reset your password on {Dodo.DodoApp.PRODUCT_NAME}. To set a new password, please follow the link below. " +
 						"Please note that resetting your password will remove you as an administrator on any groups that you currently administrate." },
-						{ "CALLBACK_NAME", "Reset Password" },
+						{ "CALLBACK_MESSAGE", "Reset Password" },
 						{ "CALLBACK_URL", url }
 					});
 			}
@@ -351,8 +351,8 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			"Callback",
 			new Dictionary<string, string>
 			{
-				{ "MESSAGE", $"You just changed your {Dodo.DodoApp.PRODUCT_NAME}. To verify your email address, please click the button below." },
-				{ "CALLBACK_NAME", "Verify Email Address" },
+				{ "MESSAGE", $"You just registered at {Dodo.DodoApp.PRODUCT_NAME}. To verify your email address, please click the button below." },
+				{ "CALLBACK_MESSAGE", "Verify Your Email Address" },
 				{ "CALLBACK_URL", $"{Dodo.DodoApp.NetConfig.FullURI}/{UserService.RootURL}/{UserService.VERIFY_EMAIL}?token={token.Token}" }
 			});
 		token.ConfirmationEmailRequestCount++;
@@ -396,7 +396,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 				new Dictionary<string, string>
 				{
 					{ "MESSAGE", $"You've been invited to create an account on {Dodo.DodoApp.PRODUCT_NAME}. To create your account, please follow the link below." },
-					{ "CALLBACK_NAME", "Verify Email Address" },
+					{ "CALLBACK_MESSAGE", "Verify Your Email Address" },
 					{ "CALLBACK_URL", url }
 				});
 		return newUser;

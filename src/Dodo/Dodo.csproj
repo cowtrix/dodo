@@ -26,10 +26,4 @@
     <ProjectReference Include="..\..\lib\REST\Resources.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Utility\Email\Templates\Callback.template.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

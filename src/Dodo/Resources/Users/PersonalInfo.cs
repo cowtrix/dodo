@@ -63,7 +63,7 @@ namespace Dodo.Users
 				new Dictionary<string, string>
 				{
 					{ "MESSAGE", $"You just changed your {Dodo.DodoApp.PRODUCT_NAME}. To verify your email address, please click the button below." },
-					{ "CALLBACK_NAME", "Verify Email Address" },
+					{ "CALLBACK_MESSAGE", "Verify Email Address" },
 					{ "CALLBACK_URL", $"{Dodo.DodoApp.NetConfig.FullURI}/{UserService.RootURL}/{UserService.VERIFY_EMAIL}?token={token.Token}" }
 				});
 			token.ConfirmationEmailRequestCount++;
