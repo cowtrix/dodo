@@ -35,8 +35,10 @@ export const Countdown = ({ startDate, name }) => {
 	const seconds = Math.floor((timeLeft % _minute) / _second) + 1
 	const secStr = (seconds < 10 ? ' ' + seconds : seconds) + ' second' + (seconds > 1 ? 's' : ' ')
 
+	const isFuture = Date.parse(startDate) > Date.now()
+
 	return (
-		startDate ? <div className={styles.countdown}>
+		(startDate && isFuture) ? <div className={styles.countdown}>
 			<h2>
 				{name} begins in
 			</h2>
