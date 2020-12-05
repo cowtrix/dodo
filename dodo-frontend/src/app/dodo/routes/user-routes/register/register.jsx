@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Container, Submit, Input, Error } from 'app/components/forms/index'
+import { Container, Submit, Input, Error, TickBox } from 'app/components/forms/index'
 import { getReturnPath } from '../../../../domain/services/services';
 import { useTranslation } from 'react-i18next';
 import styles from './register.module.scss'
@@ -11,7 +11,7 @@ const passwordContainsSymbol = (password) => !/^(?=.*[@#$%^&+=!]).*$/.test(passw
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
 const notEmptyAndLengthBelow = (minLength, str) => !!str && str.length < minLength
 
-export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
+export const Register = ({ register, isLoggedIn, registeringUser, error, privacyPolicy, rebelAgreement }) => {
 	const history = useHistory()
 	const location = useLocation()
 	const { t } = useTranslation("ui")
@@ -24,6 +24,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [passwordConfirmation, setPasswordConfirmation] = useState("")
+	const [acceptTerms, setAcceptTerms] = useState(false);
 
 	const usernameShort = notEmptyAndLengthBelow(3, username)
 	const nameShort = notEmptyAndLengthBelow(3, name)
@@ -32,7 +33,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 	const passwordInvalid = password.length > 0 && passwordContainsSymbol(password)
 	const passwordsNotEqual = !!passwordConfirmation && password !== passwordConfirmation
 	const hasError = !username.length || !name.length || !email.length || !password.length || !passwordConfirmation.length ||
-		usernameShort || nameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual
+		usernameShort || nameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual || !acceptTerms
 
 	const validationErrors = error?.response?.errors || {};
 
@@ -102,9 +103,23 @@ export const Register = ({ register, isLoggedIn, registeringUser, error }) => {
 						error={passwordsNotEqual || !!validationErrors['Password']}
 						maxLength={63}
 					/>
-					<p>
-						{t("By continuing, you agree to the Rebel Agreement and Privacy Policy.")}
-					</p>
+					<TickBox
+						id="termsConditions"
+						value={acceptTerms}
+						setValue={val => setAcceptTerms(val)}
+						useAriaLabel={true}
+						message={<>
+							{t("I agree to the")}{' '}
+							<a href={rebelAgreement} target="_blank" rel="noreferrer noopener">
+								{t("Rebel Agreement")}
+							</a>{' '}
+							{' '}{t("and")}{' '}
+							<a href={privacyPolicy} target="_blank" rel="noreferrer noopener">
+								{t("Privacy Policy")}
+							</a>
+							.
+						</>}
+					/>
 					<Error error={error}/>
 					<Submit
 						className={hasError ? styles.disabled : null}
