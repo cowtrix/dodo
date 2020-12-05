@@ -9,7 +9,7 @@ import { ADMIN_PERMISSIONS } from 'app/constants'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT } from './constants'
 
 import styles from './resource-content.module.scss'
-import { LOGIN_ROUTE } from '../../user-routes/login'
+import { REGISTER_ROUTE } from '../../user-routes/register'
 import { addReturnPathToRoute } from '../../../../domain/services/services'
 
 export const ResourceContent =
@@ -54,7 +54,7 @@ export const ResourceContent =
 					isSubscribed={isMember}
 					onClick={
 						!isLoggedIn
-							? () => push(addReturnPathToRoute(LOGIN_ROUTE, location.pathname + '/join'))
+							? () => push(addReturnPathToRoute(REGISTER_ROUTE, location.pathname + '/join'))
 							: !isMember ? subscribe : unSubscribe}
 				/>
 				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h3>EDIT  <Icon icon="edit" size="1x" /></h3></a> : null}
