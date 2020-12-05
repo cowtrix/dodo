@@ -2,9 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styles from './tick-box.module.scss'
 
-export const TickBox = ({ id, name, value, checked, setValue }) =>
-	<div className={styles.tickBox}>
-		<label htmlFor={id}><h3>{name}</h3></label>
+export const TickBox = ({ id, name, value, checked, setValue, message }) =>
+	<div className={`${styles.tickBox} ${message ? styles.withMessage : ''}`}>
+		{name && (
+			<label htmlFor={id} className={styles.label}>
+				<h3>{name}</h3>
+			</label>
+		)}
 		<div className={styles.box}>
 			<input
 				type="checkbox"
@@ -14,6 +18,9 @@ export const TickBox = ({ id, name, value, checked, setValue }) =>
 				onChange={e => setValue(e.target.checked)}
 			/>
 		</div>
+		{message && (
+			<label htmlFor={id} className={styles.message}>{message}</label>
+		)}
 	</div>
 
 TickBox.propTypes = {
@@ -22,4 +29,6 @@ TickBox.propTypes = {
 	checked: PropTypes.bool,
 	value: PropTypes.string,
 	setValue: PropTypes.func,
+	message: PropTypes.string,
+	useAriaLabel: PropTypes.bool
 }
