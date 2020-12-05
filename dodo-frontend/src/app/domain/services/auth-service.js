@@ -1,13 +1,19 @@
 import { tryToParseJSON } from './services';
 
-let abortController = new AbortController()
+const previousAbortControllers = {};
+
+function handleAborting(abortController, url) {
+	const urlPath = url.split(/[?#]/)[0]; // Get URL path without params or hashes  to use as request key
+	if(previousAbortControllers[urlPath]) previousAbortControllers[urlPath].abort(); // Abort last request if there is one
+	previousAbortControllers[urlPath] = abortController; // Sotre controller so we can cancel the next request
+}
 
 // The auth URLs are a bit odd. They return the HTML for the login page if you are not logged in, or JSON if you are.
 // That is why we have this special service for them.
 
 export const auth = async(url, method = "get", body, abortPrevious) => {
-	abortController.abort()
-	abortController = new AbortController()
+	const abortController = new AbortController();
+	if (abortPrevious) handleAborting(abortController, url);
 
 	return fetch(url, {
 		method,
