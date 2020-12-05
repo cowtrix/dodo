@@ -1,10 +1,16 @@
 import { tryToParseJSON } from './services';
 
-let abortController = new AbortController()
+const previousAbortControllers = {};
+
+function handleAborting(abortController, url) {
+	const urlPath = url.split(/[?#]/)[0]; // Get URL path without params or hashes  to use as request key
+	if(previousAbortControllers[urlPath]) previousAbortControllers[urlPath].abort(); // Abort last request if there is one
+	previousAbortControllers[urlPath] = abortController; // Sotre controller so we can cancel the next request
+}
 
 export const api = async(url, method = "get", body, abortPrevious) => {
-	abortController.abort()
-	abortController = new AbortController()
+	const abortController = new AbortController();
+	if (abortPrevious) handleAborting(abortController, url);
 
 	return fetch(url, {
 		method,
