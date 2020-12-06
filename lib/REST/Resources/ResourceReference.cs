@@ -4,6 +4,7 @@ using Microsoft.Win32.SafeHandles;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources.Location;
+using Resources.Security;
 using System;
 using System.Collections.Generic;
 
@@ -48,7 +49,7 @@ namespace Resources
 		Type GetRefType();
 	}
 
-	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
+	public struct ResourceReference<T> : IViewMetadataProvider, IResourceReference where T : class, IRESTResource
 	{
 		[JsonProperty]
 		[BsonElement]
@@ -174,6 +175,11 @@ namespace Resources
 		public override string ToString()
 		{
 			return $"REF: {Name} ({Type})";
+		}
+
+		public void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
+		{
+			view.Add(Resource.METADATA_TYPE, GetRefType().Name.ToCamelCase());
 		}
 	}
 }

@@ -22,7 +22,7 @@ export const Summary = (
 	}) =>
 	<li className={styles.eventSummmary}>
 		<Link
-			to={`${"/" + metadata.type + "/" + slug}`}
+			to={`${"/" + metadata.type.toLowerCase() + "/" + slug}`}
 			className={styles.link}
 		>
 			<div className={styles.summaryLeft}>

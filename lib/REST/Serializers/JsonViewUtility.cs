@@ -60,26 +60,22 @@ namespace Resources
 
 		private static object PublishedFilter(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase)
 		{
-			if (visibility >= EPermissionLevel.ADMIN)
-			{
-				return obj;
-			}
 			if (!(obj is IEnumerable pubEnum))
 			{
 				throw new Exception("Invalid type: must be IEnumerable<IPublicResource>");
 			}
-			var result = new List<IResourceReference>();
+			var result = new List<object>();
 			foreach (var r in pubEnum)
 			{
 				if (!(r is IResourceReference reference))
 				{
 					throw new Exception($"Bad type: {r.GetType()}");
 				}
-				if(reference == default || !reference.IsPublished)
+				if(/*visibility < EPermissionLevel.ADMIN && */( reference == default || !reference.IsPublished))
 				{
 					continue;
 				}
-				result.Add(reference);
+				result.Add(ResourceRefSerializer(reference, visibility, requester, passphrase));
 			}
 			return result;
 		}
@@ -522,6 +518,7 @@ namespace Resources
 			{
 				return null;
 			}
+			var memberName = member.Name;
 			var serializer = m_customSerializers.SingleOrDefault(kvp => kvp.Key(member)).Value;
 			if (serializer != null)
 			{
@@ -554,7 +551,16 @@ namespace Resources
 					}
 					else
 					{
-						list.Add(innerVal.GenerateJsonView(visibility, requester, passphrase));
+						serializer = m_customSerializers.SingleOrDefault(kvp => kvp.Key(innerVal?.GetType())).Value;
+						if (serializer != null)
+						{
+							list.Add((Dictionary<string, object>)serializer(innerVal, visibility, requester, passphrase));
+						}
+						else
+						{
+							list.Add(innerVal.GenerateJsonView(visibility, requester, passphrase));
+						}
+						
 					}
 				}
 				return list;

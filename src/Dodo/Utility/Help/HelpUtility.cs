@@ -121,7 +121,11 @@ namespace Dodo
 
 		public static string GetHelpHTML(string key)
 		{
-			return m_helpTooltips[key];
+			if(!m_helpTooltips.TryGetValue(key, out var val))
+			{
+				return "No Help Defined";
+			}
+			return val;
 		}
 
 		public static bool HasHelp(string key)
