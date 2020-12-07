@@ -10,6 +10,10 @@ namespace Dodo
 			rsc = rscLock.Value as IPublicResource;
 			rsc.IsPublished = value;
 			ResourceUtility.GetManager(rsc.GetType()).Update(rsc, rscLock);
+			if(rsc is IOwnedResource owned)
+			{
+				JsonViewUtility.FlushCache(owned.Parent);
+			}
 			return rsc;
 		}
 	}

@@ -70,6 +70,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> Update(string id, object values)
 	{
+		using var _ = new FunctionTimer(TimeSpan.FromSeconds(2));
 		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
 		if (!request.IsSuccess)
 		{

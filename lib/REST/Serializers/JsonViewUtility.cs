@@ -58,6 +58,15 @@ namespace Resources
 			{ m => m.GetCustomAttribute<ViewDrawerAttribute>()?.DrawerName == "pubfilter", PublishedFilter },
 		};
 
+		public static void FlushCache(ResourceReference<IRESTResource> obj)
+		{
+			var toRemove = m_cache.Keys.Where(kvp => kvp.Item1 != obj.Guid).ToList();
+			foreach (var tr in toRemove)
+			{
+				m_cache.TryRemove(tr, out _);
+			}
+		}
+
 		private static object PublishedFilter(object obj, EPermissionLevel visibility, object requester, Passphrase passphrase)
 		{
 			if (!(obj is IEnumerable pubEnum))
@@ -71,7 +80,7 @@ namespace Resources
 				{
 					throw new Exception($"Bad type: {r.GetType()}");
 				}
-				if(/*visibility < EPermissionLevel.ADMIN && */( reference == default || !reference.IsPublished))
+				if(r is ResourceReference<IPublicResource> pub && !pub.GetValue().IsPublished)
 				{
 					continue;
 				}
@@ -574,5 +583,7 @@ namespace Resources
 			return (targetType.IsValueType && targetType.IsPrimitive)
 					|| m_explicitValueTypes.Any(t => t.IsAssignableFrom(targetType));
 		}
+
+		
 	}
 }

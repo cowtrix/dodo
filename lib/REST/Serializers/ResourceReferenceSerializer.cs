@@ -21,7 +21,6 @@ namespace Resources.Serializers
 			{ nameof(IResourceReference.PublicDescription),     "D" },
 			{ nameof(IResourceReference.Location),              "L" },
 			{ nameof(IResourceReference.Location.Longitude),    "l" },
-			{ nameof(IResourceReference.IsPublished),           "I" },
 		};
 		static Dictionary<string, string> m_reverseFieldMapping = m_fieldMapping.ToDictionary(k => k.Value, k => k.Key);
 
@@ -74,9 +73,6 @@ namespace Resources.Serializers
 							loc = new GeoLocation(lat, lng);
 						}
 						break;
-					case nameof(IResourceReference.IsPublished):
-						isPublished = context.Reader.ReadBoolean();
-						break;
 				}
 			}
 			while (currentName != nameof(IResourceReference.Guid));
@@ -123,11 +119,6 @@ namespace Resources.Serializers
 				context.Writer.WriteDouble(value.Location.Latitude);
 				context.Writer.WriteName(ShortenName(nameof(value.Location.Longitude)));
 				context.Writer.WriteDouble(value.Location.Longitude);
-			}
-			if (typeof(IPublicResource).IsAssignableFrom(value.GetRefType()))
-			{
-				context.Writer.WriteName(ShortenName(nameof(value.IsPublished)));
-				context.Writer.WriteBoolean(value.IsPublished);
 			}
 			if (value.Parent != default)
 			{

@@ -44,7 +44,6 @@ namespace Resources
 		GeoLocation Location { get; }
 		string PublicDescription { get; }
 		bool HasValue();
-		bool IsPublished { get; set; }
 		string FullyQualifiedName { get; set; }
 		Type GetRefType();
 	}
@@ -75,9 +74,6 @@ namespace Resources
 		[JsonProperty]
 		[BsonElement]
 		public string PublicDescription { get; set; }
-		[JsonProperty]
-		[BsonElement]
-		public bool IsPublished { get; set; }
 
 		public T GetValue()
 		{
@@ -116,7 +112,6 @@ namespace Resources
 			PublicDescription = resource is IDescribedResource desc
 				? StringExtensions.StripMDLinks(desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH)))
 				: default;
-			IsPublished = resource is IPublicResource pub ? pub.IsPublished : false;
 		}
 
 		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location, Guid parent, string desc, bool isPublished)
@@ -133,7 +128,6 @@ namespace Resources
 			FullyQualifiedName = type?.AssemblyQualifiedName;
 			Parent = parent;
 			PublicDescription = desc;
-			IsPublished = isPublished;
 		}
 
 		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)
