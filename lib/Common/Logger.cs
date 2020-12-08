@@ -121,7 +121,7 @@ namespace Common
 			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Info, GetSource());
 		}
 
-		//[Conditional("DEBUG")] todo
+		[Conditional("DEBUG")]
 		public static void Debug(string message)
 		{
 			DoLog(message, Console.ForegroundColor, Console.BackgroundColor, ELogLevel.Debug, GetSource());

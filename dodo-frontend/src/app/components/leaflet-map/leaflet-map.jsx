@@ -36,13 +36,19 @@ export const LeafletMap = (
 			setMapCenter(getDefaultCenter(sites, center))
 			setCenterMap(false)
 		}
+
+		setNewSearchParams(this);
 	}, [centerMap, center, setCenterMap, sites])
 
 
 	const setNewSearchParams = (e) => {
+		if (!e || !e.target) {
+			console.warn("target was undefined")
+			return
+		}
 		const newSearchCenter = e.target.getCenter()
 		const newSearchDistance = e.target.getZoom()
-		const metersPerPx = (156543.03392 * Math.cos(newSearchCenter.lat * Math.PI / 180) / Math.pow(2, newSearchDistance)) / 2
+		const metersPerPx = (156543.03392 * Math.cos(newSearchCenter.lat * Math.PI / 180) / Math.pow(2, newSearchDistance))
 		if (userInitiated) {
 			getSearchResults({ distance: metersPerPx.toString(), latlong: newSearchCenter.lat + '+' + newSearchCenter.lng, types: selectedResourceTypes })
 			setUserInitiated(false)

@@ -11,7 +11,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Dodo
 {
-	public abstract class AdministratedGroupResource : GroupResource, IAdministratedResource
+	public abstract class AdministratedGroupResource : GroupResource, IAdministratedResource, IParentResource
 	{
 		public AdministratedGroupResource() : base() { }
 		public AdministratedGroupResource(AccessContext context, DescribedResourceSchemaBase schema) : base(context, schema)
@@ -35,13 +35,13 @@ namespace Dodo
 		#region Child Objects
 		public abstract bool CanContain(Type type);
 
-		public virtual void AddChild<T>(T rsc) where T : class, IOwnedResource
+		public virtual void AddChild<T>(AccessContext context, T rsc) where T : class, IOwnedResource
 		{
 			TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"",
 				$"{Dodo.DodoApp.NetConfig.FullURI}/{rsc.GetType().Name.ToLowerInvariant()}/{rsc.Slug}", ENotificationType.Alert, EPermissionLevel.ADMIN, false));
 		}
 
-		public virtual bool RemoveChild<T>(T rsc) where T : class, IOwnedResource
+		public virtual bool RemoveChild<T>(AccessContext context, T rsc) where T : class, IOwnedResource
 		{
 			TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));

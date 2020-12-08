@@ -1,0 +1,82 @@
+@model Dodo.ViewModels.RoleApplicationViewModel;
+@{
+	var authManager = ViewData["auth"] as Dodo.RoleAuthService;
+	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
+	Dodo.AccessContext context = (Dodo.AccessContext)ViewData["Context"];
+	var id = Resources.Security.SecurityExtensions.GenerateID(context.User, context.Passphrase, Model.Parent.Guid.ToString());
+	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
+	var hasHeader = (bool)ViewData["header"];
+	var salt = System.Guid.NewGuid().ToString();
+}
+
+<script>
+	$(function () {
+		$('.chat-messages').scrollTop($('.chat-messages')[0].scrollHeight);
+	})
+</script>
+
+<div class="@(hasHeader ? "card chat-container chat-container-navbar" : "")">
+	<div class="@(hasHeader ? "card-body" : "")">
+		<div class="chat-messages" id="scroller">
+			@{
+				foreach (Dodo.RoleApplications.Message message in Model.Data.Messages)
+				{
+					if(permissionLevel == Resources.EPermissionLevel.OWNER && message.AdminOnly)
+					{
+						continue;
+					}
+					var isApplicant = string.IsNullOrEmpty(message.Sender);
+					var isYou = message.Sender == id;
+					<div class="card chat-entry chat-entry-@(message.AdminOnly ? "adminonly" : isApplicant ? "user" : "admin")">
+						<div class="card-header chat-header">
+							<div class="row">
+								<div class="col">
+									<small class="chat-text">
+										@TimeZoneInfo.ConvertTimeFromUtc(message.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
+									</small>
+								</div>
+								<div class="col-auto chat-text">
+									<strong>
+										@(isApplicant ? (isYou ? "You" : "Applicant") : (isYou? "You" : "Admin"))
+									</strong>
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<p class="chat-text"> @Html.Raw(message.Content) </p>
+						</div>
+					</div>
+				}
+			}
+			<div id="anchor"></div>
+		</div>
+		<form id="newmessage" class="form chat-send" method="post" action="@(Model.Guid)/message?header=@(ViewData["header"])" autocomplete="off">
+			<input class="sr-only" readonly type="text" id="salt" name="salt" value="@salt">
+			<div class="row">
+				<div class="col">
+					<input type="text" class="form-control" id="content" name="content" placeholder="Enter new message...">
+				</div>
+				<div class="col-auto chat-button">
+					<input type="submit" value="Send" class="btn btn-primary" />
+				</div>
+			</div>
+			@{
+				if (permissionLevel == Resources.EPermissionLevel.ADMIN)
+				{
+					<div class="row">
+						<div class="col-auto"><input type="checkbox" id="adminOnly" name="adminOnly" value="true" /></div>
+						<div class="col-auto"><label for="adminOnly">Admin Only Message</label></div>
+						<div class="col-auto">
+							<small id="helpBlock" class="form-text text-muted">
+								If checked, only other admins will see this message.
+							</small>
+						</div>
+					</div>
+				}
+			}
+		</form>
+		<small id="helpBlock" class="form-text text-muted chat-tip">
+			Don't discuss sensitive information here. We recommend using secure channels such as Telegram and Signal.
+		</small>
+	</div>
+</div>

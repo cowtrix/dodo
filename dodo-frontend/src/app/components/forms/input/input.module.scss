@@ -26,13 +26,20 @@
 		font-size: 1rem;
 		line-height: 32px;
 		padding-left: 8px;
+		width: 100%;
+	}
 
+	.fieldWrapper {
 		@media (min-width: $responsive-breakpoint) {
 			flex-basis: 0;
 			flex-grow: 7;
 			padding-left: 10px;
 		}
 	}
+}
+
+.message {
+	margin-top: spacing(1);
 }
 
 .error {

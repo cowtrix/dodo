@@ -6,7 +6,7 @@ using Resources;
 using Resources.Security;
 using System;
 
-namespace Dodo.Utility
+namespace Dodo.Email
 {
 	/// <summary>
 	/// This is a simple email anonimization service that routes conversations between

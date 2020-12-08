@@ -42,6 +42,37 @@
 		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.min.js.map" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Content Update="DodoServer_config.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="wwwroot\CustomCRUDCss.css">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="wwwroot\img\email\banner1.JPG">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="wwwroot\img\email\banner2.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="wwwroot\img\email\banner3.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="wwwroot\img\email\banner4.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\img\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="EmailTemplates\Callback.template.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
 		<!-- Ensure Node.js is installed -->
 		<Exec Command="node --version" ContinueOnError="true">

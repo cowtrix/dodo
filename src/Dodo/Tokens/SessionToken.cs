@@ -12,8 +12,9 @@ namespace Dodo.Users.Tokens
 {
 	public class SessionToken : ExpiringToken
 	{
-		public static TimeSpan SessionExpiryTime => ConfigManager.GetValue($"{nameof(SessionToken)}_{nameof(SessionExpiryTime)}", TimeSpan.FromDays(1));
-		public const int KEYSIZE = 64;
+		public static TimeSpan ShortSessionExpiryTime => ConfigManager.GetValue($"{nameof(SessionToken)}_{nameof(ShortSessionExpiryTime)}", TimeSpan.FromHours(1));
+		public static TimeSpan LongSessionExpiryTime => ConfigManager.GetValue($"{nameof(SessionToken)}_{nameof(LongSessionExpiryTime)}", TimeSpan.FromDays(1));
+		public const int KEYSIZE = 128;
 
 		[JsonProperty]
 		[BsonElement]
@@ -31,7 +32,7 @@ namespace Dodo.Users.Tokens
 		[BsonConstructor]
 		public SessionToken() { }
 
-		public SessionToken(User user, string passphrase, Passphrase encryptionKey, IPAddress address) : base(DateTime.Now + SessionExpiryTime)
+		public SessionToken(User user, string passphrase, Passphrase encryptionKey, IPAddress address, DateTime expiry) : base(expiry)
 		{
 			UserKey = KeyGenerator.GetUniqueKey(KEYSIZE);
 #if DEBUG

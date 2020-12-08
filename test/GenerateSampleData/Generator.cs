@@ -15,6 +15,7 @@ using System;
 using System.Threading.Tasks;
 using Dodo.Users.Tokens;
 using System.Collections.Generic;
+using Dodo.Analytics;
 
 namespace GenerateSampleData
 {
@@ -42,6 +43,7 @@ namespace GenerateSampleData
 		public static async Task Generate()
 		{
 			ResourceUtility.ClearAllManagers();
+			Analytics.Clear();
 			var sysAdmin = GenerateUser(new UserSchema("Rebellion Tom", "test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
 			using (var rscLock = new ResourceLock(sysAdmin))
 			{
@@ -60,22 +62,23 @@ namespace GenerateSampleData
 		{
 			var location = await LocationManager.GetLocation(city);
 
-			// Make local groups
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema(city, SchemaGenerator.SampleDescription, location), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - .1)), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + .1)), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1, location.Longitude)), seed: false);
-
 			var rnd = new Random();
-			var rootDate = DateTime.Today + TimeSpan.FromDays(rnd.Next(365));
+			// Make local groups
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema(city, SchemaGenerator.SampleDescription, location), seed:false);
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - .1 * rnd.NextDouble())), seed: false);
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + .1 * rnd.NextDouble())), seed: false);
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1 * rnd.NextDouble(), location.Longitude)), seed: false);
+			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .1 * rnd.NextDouble(), location.Longitude)), seed: false);
+
+			var offset = TimeSpan.FromDays(rnd.Next(365));
+			DateTime rootDate() => DateTime.Today + offset + TimeSpan.FromHours(rnd.Next(20));
 			var currentRebellion = TestBase.CreateNewObject<Rebellion>(context,
-				new RebellionSchema($"{city} Rebellion", SchemaGenerator.SampleDescription, location, rootDate - TimeSpan.FromDays(2), rootDate + TimeSpan.FromDays(2)), seed: false);
+				new RebellionSchema($"{city} Rebellion", SchemaGenerator.SampleDescription, location, rootDate() - TimeSpan.FromDays(2), rootDate() + TimeSpan.FromDays(2)), seed: false);
 			var siteOccupation = TestBase.CreateNewObject<Site>(context, new SiteSchema("Central Occupation", currentRebellion.Guid.ToString().ToString(), location, SchemaGenerator.SampleDescription), seed: false);
-			var actionOccupation = TestBase.CreateNewObject<Event>(context, new EventSchema("Protest For Nature", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude + 0.05, location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, currentRebellion.StartDate + TimeSpan.FromDays(1), currentRebellion.StartDate + TimeSpan.FromDays(1) + TimeSpan.FromHours(4)));
-			var march = TestBase.CreateNewObject<Event>(context, new EventSchema("Youth March", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, currentRebellion.StartDate + TimeSpan.FromDays(1), currentRebellion.StartDate + TimeSpan.FromDays(1) + TimeSpan.FromHours(4)));
-			var sanctuary = TestBase.CreateNewObject<Site>(context, new SiteSchema("Second Occupation", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
-			var evt = TestBase.CreateNewObject<Event>(context, new EventSchema("Activism Workshop", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05, location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription, currentRebellion.StartDate + TimeSpan.FromDays(1), currentRebellion.StartDate + TimeSpan.FromDays(1) + TimeSpan.FromHours(4)));
+			var actionOccupation = TestBase.CreateNewObject<Event>(context, new EventSchema("Protest For Nature", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude + 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
+			var march = TestBase.CreateNewObject<Event>(context, new EventSchema("Youth March", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
+			var sanctuary = TestBase.CreateNewObject<Site>(context, new SiteSchema("Second Occupation", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
+			var evt = TestBase.CreateNewObject<Event>(context, new EventSchema("Activism Workshop", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
 
 			var actionSupport = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Action Support",
 				SchemaGenerator.SampleDescription, currentRebellion.Guid.ToString().ToString()), seed: false);

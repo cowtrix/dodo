@@ -117,7 +117,7 @@ namespace Dodo.SharedTest
 			return new UserSchema(nm,
 				ValidationExtensions.StripStringForSlug(nm),
 				ValidationExtensions.GenerateStrongPassword(),
-				$"{StringExtensions.RandomString(16)}@{StringExtensions.RandomString(16)}.com"
+				$"{StringExtensions.RandomString(16)}@example.com"
 			);
 		}
 

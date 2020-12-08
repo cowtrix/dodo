@@ -62,7 +62,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		}
 		catch (Exception e)
 		{
-			return ResourceRequestError.BadRequest($"Failed to deserialise JSON: {e.Message}");
+			return ResourceRequestError.BadRequest($"Error: {e.Message}");
 		}
 		req.Result = createdObject;
 		return req;
@@ -110,6 +110,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 			return request;
 		}
 		var req = (ResourceActionRequest)request;
+		
 		ResourceManager.Delete(req.Result as T);
 		return new OkRequestResult("Resource deleted");
 	}

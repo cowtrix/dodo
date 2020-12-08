@@ -37,7 +37,7 @@ namespace Dodo.ViewModels
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public System.Boolean IsPublished { get; set; }
 		[DisplayName("Applications")]
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		public System.Collections.Generic.Dictionary<string,Dodo.Roles.GroupUserEncryptedStore> Applications { get; set; }
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		public System.Collections.Generic.Dictionary<string,Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>> Applications { get; set; }
 	}
 }

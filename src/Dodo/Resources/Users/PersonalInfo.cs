@@ -1,11 +1,9 @@
-using Common;
-using Common.Extensions;
 using Dodo.LocalGroups;
 using Dodo.Users.Tokens;
-using Dodo.Utility;
+using Dodo.Email;
 using Resources;
 using Resources.Security;
-using System;
+using System.Collections.Generic;
 
 namespace Dodo.Users
 {
@@ -54,8 +52,20 @@ namespace Dodo.Users
 			EmailConfirmed = false;
 			user.TokenCollection.RemoveAllOfType<VerifyEmailToken>(context, EPermissionLevel.OWNER, context.User);
 			var token = user.TokenCollection.AddOrUpdate(context.User, new VerifyEmailToken()) as VerifyEmailToken;
-			EmailUtility.SendEmailVerificationEmail(context.User.PersonalData.Email, context.User.Name,
-				$"{Dodo.DodoApp.NetConfig.FullURI}/{UserService.RootURL}/{UserService.VERIFY_EMAIL}?token={token.Token}");
+			EmailUtility.SendEmail(
+				new EmailAddress
+				{
+					Email = context.User.PersonalData.Email,
+					Name = context.User.Name
+				},
+				$"Verify Your Email With {Dodo.DodoApp.PRODUCT_NAME}",
+				"Callback",
+				new Dictionary<string, string>
+				{
+					{ "MESSAGE", $"You just changed your {Dodo.DodoApp.PRODUCT_NAME}. To verify your email address, please click the button below." },
+					{ "CALLBACK_MESSAGE", "Verify Email Address" },
+					{ "CALLBACK_URL", $"{Dodo.DodoApp.NetConfig.FullURI}/{UserService.RootURL}/{UserService.VERIFY_EMAIL}?token={token.Token}" }
+				});
 			token.ConfirmationEmailRequestCount++;
 			user.TokenCollection.AddOrUpdate(user, token);
 		}

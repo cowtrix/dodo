@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Text;
 
-namespace Dodo.Roles
+namespace Dodo.RoleApplications
 {
 	/// <summary>
 	/// With this class we want to allow a single user AND any administrators of a resource to
@@ -19,7 +19,7 @@ namespace Dodo.Roles
 	/// </summary>
 	/// <typeparam name="ResourceReference<User>"></typeparam>
 	/// <typeparam name="RoleApplicationData"></typeparam>
-	public class GroupUserEncryptedStore : MultiSigEncryptedStore<ResourceReference<IAsymmCapableResource>, RoleApplicationData>
+	public class ApplicationStore : MultiSigEncryptedStore<ResourceReference<IAsymmCapableResource>, RoleApplicationData>
 	{
 		const int KEY_SIZE = 128;
 
@@ -27,7 +27,7 @@ namespace Dodo.Roles
 		[BsonElement]
 		private Resources.Security.AsymmEncryptedStore<string> m_groupPass;
 
-		public GroupUserEncryptedStore(RoleApplicationData data, IAsymmCapableResource group, AccessContext context) : 
+		public ApplicationStore(RoleApplicationData data, IAsymmCapableResource group, AccessContext context) : 
 			base(data, context.User.CreateRef<IAsymmCapableResource>(), context.Passphrase)
 		{
 			var groupKey = new Passphrase(KeyGenerator.GetUniqueKey(KEY_SIZE));
@@ -36,11 +36,18 @@ namespace Dodo.Roles
 			AddPermission(context.User.CreateRef<IAsymmCapableResource>(), context.Passphrase, group.CreateRef(), groupKey);
 		}
 
-		public RoleApplicationData GetValue(IAsymmCapableResource asymm, AccessContext context)
+		public RoleApplicationData GetValueByGroup(AccessContext context, IAsymmCapableResource key)
 		{
-			var pv = asymm.GetPrivateKey(context);
+			var pv = key.GetPrivateKey(context);
 			var pass = new Passphrase(m_groupPass.GetValue(pv));
-			return this.GetValue(asymm.CreateRef(), pass);
+			return base.GetValue(key.CreateRef(), pass);
+		}
+
+		public void SetValueByGroup(RoleApplicationData data, AccessContext context, IAsymmCapableResource key)
+		{
+			var pv = key.GetPrivateKey(context);
+			var pass = new Passphrase(m_groupPass.GetValue(pv));
+			base.SetValue(data, key.CreateRef(), pass);
 		}
 	}
 }

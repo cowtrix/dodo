@@ -15,6 +15,8 @@ using Resources;
 using Resources.Security;
 using System;
 using Dodo.LocalGroups;
+using Dodo.Analytics;
+using Dodo.RoleApplications;
 
 namespace SharedTest
 {
@@ -23,7 +25,7 @@ namespace SharedTest
 	{
 		private static MongoDbRunner m_runner;
 		private static TestContext m_context;
-		private Random m_random = new Random();
+		private static Random m_random = new Random();
 		protected static PostmanCollection Postman { get; private set; } = new PostmanCollection(ConfigManager.GetValue($"{nameof(TestBase)}_PostmanCollection", ""));
 		protected static IResourceManager<User> UserManager => ResourceUtility.GetManager<User>();
 
@@ -101,7 +103,7 @@ namespace SharedTest
 			var obj = factory.CreateTypedObject(new ResourceCreationRequest(context, schema));
 			if (publish && obj is IPublicResource pubRsc)
 			{
-				obj = (T)pubRsc.Publish();
+				obj = (T)pubRsc.SetPublished(true);
 			}
 			if (publish && obj is IAdministratedResource admin)
 			{
@@ -119,6 +121,7 @@ namespace SharedTest
 				using (var rscLock = new ResourceLock(not))
 				{
 					not = rscLock.Value as INotificationResource;
+
 					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
 						"This is a test short Public announcement.", null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true));
 					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
@@ -128,6 +131,21 @@ namespace SharedTest
 					not.TokenCollection.AddOrUpdate(not, new SimpleNotificationToken(context.User, null,
 						"This is a longer Public announcement: " + SchemaGenerator.SampleDescription, null, ENotificationType.Announcement, EPermissionLevel.PUBLIC, true));
 					ResourceUtility.GetManager(not.GetType()).Update(not, rscLock);
+				}
+			}
+			for (var i = 0; i <= 90; ++i)
+			{
+				var dt = DateTime.Now - TimeSpan.FromHours(i);
+				lock (m_random)
+				{
+					for (var j = 0; j < m_random.Next(10); ++j)
+					{
+						Analytics.RegisterView(default, obj, dt);
+					}
+					for (var j = 0; j < m_random.Next(10); ++j)
+					{
+						Analytics.RegisterView(context, obj, dt);
+					}
 				}
 			}
 			if (seed)
@@ -158,22 +176,11 @@ namespace SharedTest
 				}
 				else if (obj is LocalGroup lg)
 				{
-					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
-					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
-				}
-				else if (obj is Role role)
-				{
-					int appCount = new Random().Next(0, 3);
-					using (var rscLock = new ResourceLock(role))
-					{
-						for (var i = 0; i < appCount; ++i)
-						{
-							var applicant = GetRandomUser(out _, out var appcontext);
-							role.Apply(appcontext, new ApplicationModel() { Content = "Hello, this is a test application!" }, out _);
+					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, lg));
+					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, lg));
 
-						}
-						ResourceUtility.GetManager(role.GetType()).Update(role, rscLock);
-					}
+					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
+					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 				}
 			}
 			return ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);
@@ -202,11 +209,15 @@ namespace SharedTest
 			// Verify email if flag has been set
 			if (verifyEmail)
 			{
-				var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, user);
-				Assert.IsNotNull(verifyToken);
-				user.PersonalData.EmailConfirmed = true;
+				using(var rscLock = new ResourceLock(user.Guid))
+				{
+					var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, user);
+					Assert.IsNotNull(verifyToken);
+					verifyToken.Redeem(context);
+					user.PersonalData.EmailConfirmed = true;
+					UserManager.Update(user, rscLock);
+				}
 			}
-
 			return user;
 		}
 

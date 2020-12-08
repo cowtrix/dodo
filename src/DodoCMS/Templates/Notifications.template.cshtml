@@ -1,15 +1,15 @@
 <div class="card">
 	<h5 class="card-header">Post an Announcement</h5>
-	<div class="card-body" style="text-align:right;">
+	<div class="card-body">
 		<form id="newannouncement" method="post" action="notifications/@Model.Slug/new">
 			<div class="form-group">
-				<textarea id="Message" name="Message" class="form-control" style="height:10em;"></textarea>
+				<textarea id="Message" name="Message" class="form-control description-entry"></textarea>
 			</div>
 			<small id="helpBlock" class="form-text text-muted" style="text-align:left;">
 				Announcements are messages that will be displayed on the public page and be visible for all users. You can use them to give short updates or messages.<br />
 				To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 			</small>
-			<input type="submit" value="Post" class="btn btn-primary" style="width:100px;" />
+			<input type="submit" value="Post" class="btn btn-primary btn-block form-field" />
 		</form>
 	</div>
 </div>
@@ -21,9 +21,9 @@
 			@{foreach (var notification in notifications)
 				{
 					<li class="list-group-item">
-						<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+						<div class="card-header notification-header">
 							<div class="row">
-								<div class="col" style="margin-left:10px;">
+								<div class="col notification-nudge1">
 									<div class="row">
 										<small>
 											@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
@@ -61,8 +61,8 @@
 								</div>
 							</div>
 						</div>
-						<div style="padding:10px;">
-							<p style="margin:0;"> @Html.Raw(notification.Message) </p>
+						<div class="notification-text">
+							<p> @Html.Raw(notification.Message) </p>
 						</div>
 					</li>
 				}}

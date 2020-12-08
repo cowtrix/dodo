@@ -1,6 +1,7 @@
 using Common;
 using Common.Config;
 using Common.Extensions;
+using Dodo.Expiry;
 using Dodo.Security;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -21,12 +22,8 @@ namespace DodoServer
 			Logger.Warning($"Running in Debug mode");
 #endif
 			SessionTokenStore.Initialise();
+			ExpiryWorker.Initialise();
 			CreateHostBuilder(args).Build().Run();
-		}
-
-		private static void PrintDependencies()
-		{
-			throw new System.NotImplementedException();
 		}
 
 		private static IEnumerable<string> GetUrls()

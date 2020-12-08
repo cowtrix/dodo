@@ -119,7 +119,8 @@ namespace Dodo.Users.Tokens
 
 		public T GetSingleToken<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) where T: class, IToken
 		{
-			return GetSingleToken(context, typeof(T), permissionLevel, parent) as T;
+			return GetAllTokens<T>(context, permissionLevel, parent)
+				.SingleOrDefault();
 		}
 
 		public IToken GetSingleToken(AccessContext context, Type tokenType, EPermissionLevel permissionLevel, ITokenResource parent)
@@ -130,7 +131,27 @@ namespace Dodo.Users.Tokens
 
 		public IEnumerable<T> GetAllTokens<T>(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent) where T : class, IToken
 		{
-			return GetAllTokens(context, permissionLevel, parent).OfType<T>();
+			var pk = parent != null ? parent.GetPrivateKey(context) : default;
+			foreach (var token in m_tokens.Where(t => t.PermissionLevel <= permissionLevel))
+			{
+				IToken t = null;
+				if (!typeof(T).IsAssignableFrom(token.Type))
+				{
+					continue;
+				}
+				try
+				{
+					t = token.GetToken(pk);
+				}
+				catch (Exception e)
+				{
+					Logger.Exception(e);
+				}
+				if (t != null)
+				{
+					yield return (T)t;
+				}
+			}
 		}
 
 		public IEnumerable<IToken> GetAllTokens(AccessContext context, EPermissionLevel permissionLevel, ITokenResource parent)

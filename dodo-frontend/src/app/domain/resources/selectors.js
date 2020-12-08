@@ -9,7 +9,16 @@ export const resourceTypes = state => path(["domain", "resources", "resources", 
 
 export const homeVideo = state => path(["domain", "resources", "resources", "indexVideoEmbed"], state)
 
-export const resourceLoading = state =>
-	path(["requests", RESOURCE_GET, "isFetching"], state)
+export const resourceError = state => path(["requests", RESOURCE_GET, "error"], state)
+
+export const resourceFailed = state => path(["requests", RESOURCE_GET, "hasErrored"], state)
+
+export const resourceLoading = state => path(["requests", RESOURCE_GET, "isFetching"], state)
 
 export const notificationsLoading = state => path(["requests", RESOURCE_NOTIFICATIONS_GET, "isFetching"], state)
+
+export const isMember = state => path(["domain", "resources", "currentResource", "metadata", "isMember"], state)
+
+export const privacyPolicy = state => path(["domain", "resources", "resources", "privacyPolicy"], state)
+
+export const rebelAgreement = state => path(["domain", "resources", "resources", "rebelAgreement"], state)

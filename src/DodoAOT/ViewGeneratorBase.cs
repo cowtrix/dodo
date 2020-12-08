@@ -13,6 +13,7 @@ using System.Text;
 using Dodo.Users.Tokens;
 using Dodo;
 using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DodoAOT
 {
@@ -31,6 +32,7 @@ namespace DodoAOT
 			{ typeof(GeoLocation), GetLocationEditor },
 			{ typeof(IResourceReference), RefView },
 			{ typeof(IList), ListView },
+			{ typeof(Dodo.LocationResources.SiteFacilities), Facilities },
 		};
 
 		private static Dictionary<string, CustomDrawerCallback> m_customExcplicitCallback = new Dictionary<string, CustomDrawerCallback>()
@@ -54,33 +56,26 @@ namespace DodoAOT
 				.Replace("{MEMBER}", $"{prefix}{member.Name}");
 		}
 
+		private static IEnumerable<string> Facilities(string prefix, MemberInfo member, int indentLevel)
+		{
+			yield return Template("Facilities").Replace("{NAME}", member.GetName())
+				.Replace("{MEMBER}", $"{prefix}{member.Name}");
+		}
+
 		private static IEnumerable<string> ListView(string prefix, MemberInfo member, int indentLevel)
 		{
 			var typeMember = member.GetMemberType().GetGenericArguments().First();
-			yield return Indent(indentLevel) + $"<div class=\"card\">";
-			yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
-			yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
-			yield return Indent(indentLevel + 1) + $"<ul class=\"list-group\">";
-			yield return Indent(indentLevel) + $"@{{ for(var i = 0; i < Model.{prefix}{member.Name}.Count; ++i) {{";
-			yield return Indent(indentLevel) + "<li class=\"list-group-item\">";
+			var template = Template("List");
+			var sb = new StringBuilder();
 			foreach (var line in BuildDataField(typeMember, indentLevel + 3, $"{prefix}{member.Name}[i]."))
 			{
-				yield return line;
+				sb.AppendLine(line);
 			}
-			yield return Indent(indentLevel) + "</li>";
-			yield return Indent(indentLevel) + "}";
-			yield return Indent(indentLevel) + "}";
-			if (typeof(IResourceReference).IsAssignableFrom(typeMember))
-			{
-				// Create button!
-				var type = typeMember.GetGenericArguments().First();
-				var style = $"style=\"background-color:#@Dodo.APIController.GetDisplayColor(typeof({type.Namespace}.{type.Name}))\"";
-				string parent = "?parent=@Model.Slug";
-				yield return Indent(indentLevel + 2) + $"<a class=\"btn btn-light btn-block\" {style} role=\"button\" href=\"~/edit/{type.Name}/create{parent}\">Create</a>";
-			}
-			yield return Indent(indentLevel + 2) + $"</ul>";
-			yield return Indent(indentLevel + 1) + $"</div>";
-			yield return Indent(indentLevel) + $"</div>";
+			yield return template.Replace("{MEMBER}", $"{prefix}{member.Name}")
+				.Replace("{TYPE}", typeMember.GetRealTypeName(true))
+				.Replace("{REFTYPE}", typeMember.GetGenericArguments().First().Name.ToLowerInvariant())
+				.Replace("{FIELD}", sb.ToString())
+				.Replace("{NAME}", member.GetName());
 		}
 
 		private static IEnumerable<string> MarkdownEditor(string prefix, MemberInfo member, int indentLevel)
@@ -90,9 +85,10 @@ namespace DodoAOT
 			txt = txt.Replace("{NAME}", $"{prefix}{member.Name}");
 			yield return txt;*/
 			var view = member.GetCustomAttribute<ViewAttribute>();
-			yield return Indent(indentLevel) + "<div class=\"form-group\">";
+			yield return Indent(indentLevel) + "<div class=\"form-field form-group\">";
+			yield return Indent(indentLevel) + GetHelp(member.Name);
 			yield return Indent(indentLevel) + $"<label class=\"control-label\">{member.GetName()}</label>";
-			yield return Indent(indentLevel) + $"<textarea style=\"height:20em;\" asp-for=\"{prefix}{member.Name}\" class=\"form-control\"></textarea>";
+			yield return Indent(indentLevel) + $"<textarea asp-for=\"{prefix}{member.Name}\" class=\"form-control description-entry\"></textarea>";
 			if(!string.IsNullOrEmpty(view.InputHint))
 			{
 				yield return Indent(indentLevel + 1) + $"<small id=\"helpBlock\" class=\"form-text text-muted\">";
@@ -168,7 +164,8 @@ namespace DodoAOT
 
 		private static IEnumerable<string> RefView(string prefix, MemberInfo member, int indentLevel)
 		{
-			var memberType = member.GetMemberType();
+			var salt = member.GetHashCode().ToString();
+			var memberType = member.GetMemberType().GetGenericArguments().Single();
 			if (memberType == typeof(User))
 			{
 				throw new Exception("Can't link to user profiles");
@@ -180,20 +177,32 @@ namespace DodoAOT
 			var memberName = member != null ? $"{member.Name}." : "";
 			var nameStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Name)}";
 			var urlStr = $"@Model.{prefix}{memberName}{nameof(IResourceReference.Type)}/@Model.{prefix}{memberName}{nameof(IResourceReference.Slug)}";
-			//yield return Indent(indentLevel) + $"<div class=\"card\">";
-			//yield return Indent(indentLevel) + $"<div class=\"card-body\">";
+			
 			if (member != null)
 			{
 				yield return Indent(indentLevel + 1) + $"<label class=\"control-label\">{member.GetName()}</label>";
+				yield return Indent(indentLevel + 1) + GetHelp($"{member.Name}");
+				salt = member.GetHashCode().ToString();
 			}
 			yield return Indent(indentLevel + 1) + $"<input class=\"sr-only\" asp-for=\"{prefix}{memberName}{nameof(IResourceReference.Type)}\"/>";
+			yield return Indent(indentLevel + 1) + $"@{{ var reftype{salt} = @Model.{prefix}{memberName}Type.ToLowerInvariant(); }}";
 			yield return Indent(indentLevel + 1) + "<div class=\"row\">";
 			yield return Indent(indentLevel + 1) + $"<div class=\"col\"><strong>{nameStr}</strong></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light\" style=\"background-color:#@Dodo.APIController.GetDisplayColor(Model.{prefix}{memberName}GetRefType())\" role=\"button\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i></a></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light\" style=\"background-color:#@Dodo.APIController.GetDisplayColor(Model.{prefix}{memberName}GetRefType())\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i></a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light @(reftype{salt})-reference\" role=\"button\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i>View</a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light @(reftype{salt})-reference\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i>Edit</a></div>";
 			yield return Indent(indentLevel + 1) + "</div>";
-			//yield return Indent(indentLevel) + $"</div>";
-			//yield return Indent(indentLevel) + $"</div>";
+		}
+
+		static string GetHelp(string key)
+		{
+			if(!HelpUtility.HasHelp(key))
+			{
+#if !DEBUG
+				return "";
+#endif
+				return $"<button type =\"button\" class=\"help-button\" data-toggle=\"tooltip\" data-html=\"true\" title=\"No Help Specified\"><i class=\"fas fa-question-circle\"></i></button>";
+			}
+			return $"<button type =\"button\" class=\"help-button\" data-toggle=\"tooltip\" data-html=\"true\" title=\"@(Dodo.HelpUtility.GetHelpHTML($\"{key}\"))\"><i class=\"fas fa-question-circle\"></i></button>";
 		}
 
 		private static IEnumerable<string> GetLocationEditor(string prefix, MemberInfo member, int indentLevel)
@@ -210,7 +219,7 @@ namespace DodoAOT
 			return new string('\t', indent);
 		}
 
-		protected static IEnumerable<string> BuildDataField(MemberInfo member, int indentLevel, string prefix, bool forcereadonly = false)
+		public static IEnumerable<string> BuildDataField(MemberInfo member, int indentLevel, string prefix, bool forcereadonly = false)
 		{
 			var viewAttr = member.GetCustomAttribute<ViewAttribute>();
 			var memberType = member.GetMemberType();
@@ -239,8 +248,9 @@ namespace DodoAOT
 			var memberName = member.Name;
 			if (!memberType.IsPrimitive && !memberType.IsEnum && !memberType.Namespace.StartsWith(nameof(System)))
 			{
-				yield return Indent(indentLevel) + $"<div class=\"card\">";
+				yield return Indent(indentLevel) + $"<div class=\"form-field card\">";
 				yield return Indent(indentLevel + 1) + $"<div class=\"card-body\">";
+				yield return Indent(indentLevel + 1) + GetHelp(member.Name);
 				yield return Indent(indentLevel + 2) + $"<h5 class=\"card-title\">{member.GetName()}</h5>";
 				foreach (var line in BuildDataFields(memberType, indentLevel + 3, $"{prefix}{memberName}.", isReadonly))
 				{
@@ -281,7 +291,8 @@ namespace DodoAOT
 					inputExtras += " readonly";
 					//inputClass = "form-control-plaintext";
 				}
-				yield return Indent(indentLevel) + $"<div class=\"{divClass}\">";
+				yield return Indent(indentLevel) + $"<div class=\"form-field {divClass}\">";
+				yield return Indent(indentLevel + 1) + GetHelp(member.Name);
 				var labelLine = Indent(indentLevel + 1) + $"<label class=\"{labelClass}\">{member.GetName()}</label>";
 				var inputLine = Indent(indentLevel + 1) + $"<{inputType} {inputExtras} asp-for=\"{prefix}{memberName}\" class=\"{inputClass}\"></{inputType}>";
 				if (swapOrder)

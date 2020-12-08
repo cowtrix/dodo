@@ -1,18 +1,9 @@
 using Common;
-using Common.Extensions;
-using Resources.Security;
-using Dodo.Rebellions;
 using Dodo.Roles;
-using Dodo.Users;
-using Microsoft.AspNetCore.Http;
 using Resources;
-using Resources.Serializers;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using MongoDB.Bson.Serialization.Attributes;
-using Resources.Location;
 
 namespace Dodo.WorkingGroups
 {
@@ -52,7 +43,7 @@ namespace Dodo.WorkingGroups
 			return false;
 		}
 
-		public override void AddChild<T>(T rsc)
+		public override void AddChild<T>(AccessContext context, T rsc)
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
@@ -74,20 +65,35 @@ namespace Dodo.WorkingGroups
 			{
 				throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 			}
-			base.AddChild(rsc);
+			base.AddChild(context, rsc);
 		}
 
-		public override bool RemoveChild<T>(T rsc)
+		public override bool RemoveChild<T>(AccessContext context, T rsc)
 		{
 			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				return WorkingGroups.Remove(wg.CreateRef()) && base.RemoveChild(rsc);
+				return WorkingGroups.Remove(wg.CreateRef()) && base.RemoveChild(context, rsc);
 			}
 			else if (rsc is Role s && s.Parent.Guid == Guid)
 			{
-				return Roles.Remove(s.CreateRef()) && base.RemoveChild(rsc);
+				return Roles.Remove(s.CreateRef()) && base.RemoveChild(context, rsc);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
+		}
+
+		public override void OnDestroy()
+		{
+			var wgrm = ResourceUtility.GetManager<WorkingGroup>();
+			foreach (var wg in WorkingGroups)
+			{
+				wgrm.Delete(wg.GetValue());
+			}
+			var rrm = ResourceUtility.GetManager<Role>();
+			foreach (var s in Roles)
+			{
+				rrm.Delete(s.GetValue());
+			}
+			base.OnDestroy();
 		}
 	}
 }

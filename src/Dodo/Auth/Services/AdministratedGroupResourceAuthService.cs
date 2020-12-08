@@ -31,7 +31,7 @@ namespace Dodo
 			{
 				return EPermissionLevel.ADMIN;
 			}
-			if (target is IGroupResource group && group.IsMember(context))
+			if (target is IGroupResource group && group.IsMember(context.User))
 			{
 				return EPermissionLevel.MEMBER;
 			}

@@ -36,7 +36,7 @@ namespace Dodo.Security
 					var now = DateTime.Now;
 					foreach (var token in m_tokenStore.GetQueryable())
 					{
-						if(now > token.Value.DateCreated + SessionToken.SessionExpiryTime)
+						if(now > token.Value.DateCreated + SessionToken.LongSessionExpiryTime)
 						{
 							toRemove.Add(token.Key);
 						}

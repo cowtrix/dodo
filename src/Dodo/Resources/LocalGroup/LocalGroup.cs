@@ -12,6 +12,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 using System.Linq;
 using Dodo.Users.Tokens;
+using Dodo.WorkingGroups;
 
 namespace Dodo.LocalGroups
 {
@@ -19,32 +20,13 @@ namespace Dodo.LocalGroups
 	[SearchPriority(1)]
 	public class LocalGroup : AdministratedGroupResource, ILocationalResource
 	{
-		[BsonElement]
-		private List<Guid> m_events = new List<Guid>();
-		[BsonElement]
-		private List<Guid> m_roles = new List<Guid>();
-
+		[Name("Working Groups")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public IEnumerable<Role> Roles
-		{
-			get
-			{
-				var rm = ResourceUtility.GetManager<Role>();
-				return m_roles.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
-					.Where(rsc => rsc != null);
-			}
-		}
-
+		[ViewDrawer("pubfilter")]
+		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public IEnumerable<Event> Events
-		{
-			get
-			{
-				var rm = ResourceUtility.GetManager<Event>();
-				return m_events.Select(guid => rm.GetSingle(rsc => rsc.Guid == guid))
-					.Where(rsc => rsc != null);
-			}
-		}
+		[ViewDrawer("pubfilter")]
+		public List<ResourceReference<Event>> Events { get; set; } = new List<ResourceReference<Event>>();
 
 		public LocalGroup() : base() { }
 
@@ -58,49 +40,64 @@ namespace Dodo.LocalGroups
 
 		public override bool CanContain(Type type)
 		{
-			if (type == typeof(Role) || type == typeof(Event))
+			if (type == typeof(WorkingGroup) || type == typeof(Event))
 			{
 				return true;
 			}
 			return false;
 		}
 
-		public override void AddChild<T>(T rsc)
+		public override void AddChild<T>(AccessContext context, T rsc)
 		{
-			if (rsc is Role role && role.Parent.Guid == Guid)
+			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				if (m_roles.Contains(role.Guid))
+				if (WorkingGroups.Any(w => w.Guid == wg.Guid))
 				{
-					throw new Exception($"Adding duplicated child object {role.Guid} to {Guid}");
+					throw new Exception($"Adding duplicated child object {wg.Guid} to {Guid}");
 				}
-				m_roles.Add(role.Guid);
+				WorkingGroups.Add(wg.CreateRef());
 			}
-			else if (rsc is Event evt && evt.Parent.Guid == Guid)
+			else if (rsc is Event e && e.Parent.Guid == Guid)
 			{
-				if (m_events.Contains(evt.Guid))
+				if (Events.Any(w => w.Guid == e.Guid))
 				{
-					throw new Exception($"Adding duplicated child object {evt.Guid} to {Guid}");
+					throw new Exception($"Adding duplicated child object {e.Guid} to {Guid}");
 				}
-				m_events.Add(evt.Guid);
+				Events.Add(e.CreateRef());
 			}
 			else
 			{
 				throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
 			}
-			base.AddChild(rsc);
+			base.AddChild(context, rsc);
 		}
 
-		public override bool RemoveChild<T>(T rsc)
+		public override bool RemoveChild<T>(AccessContext context, T rsc)
 		{
-			if (rsc is Role role && role.Parent.Guid == Guid)
+			if (rsc is WorkingGroup wg && wg.Parent.Guid == Guid)
 			{
-				return m_roles.Remove(role.Guid) && base.RemoveChild(rsc);
+				return WorkingGroups.Remove(wg.CreateRef()) && base.RemoveChild(context, rsc);
 			}
-			else if (rsc is Event s && s.Parent.Guid == Guid)
+			else if (rsc is Event e && e.Parent.Guid == Guid)
 			{
-				return m_events.Remove(s.Guid) && base.RemoveChild(rsc);
+				return Events.Remove(e.CreateRef()) && base.RemoveChild(context, rsc);
 			}
 			throw new Exception($"Unsupported sub-resource type {rsc.GetType()}");
+		}
+
+		public override void OnDestroy()
+		{
+			var wgrm = ResourceUtility.GetManager<WorkingGroup>();
+			foreach (var wg in WorkingGroups)
+			{
+				wgrm.Delete(wg.GetValue());
+			}
+			var erm = ResourceUtility.GetManager<Event>();
+			foreach (var e in Events)
+			{
+				erm.Delete(e.GetValue());
+			}
+			base.OnDestroy();
 		}
 	}
 }

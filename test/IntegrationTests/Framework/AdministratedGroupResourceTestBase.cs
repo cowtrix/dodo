@@ -6,8 +6,6 @@ using Resources;
 using System.Linq;
 using System.Threading.Tasks;
 using DodoTest.Framework.Postman;
-using Dodo.Users;
-using Dodo.Utility;
 
 namespace RESTTests
 {

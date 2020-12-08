@@ -1,7 +1,7 @@
 using Dodo.Roles;
 using Dodo.ViewModels;
-using Dodo.Roles;
-using Dodo.Sites;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Dodo.Controllers.Edit
 {
@@ -9,5 +9,11 @@ namespace Dodo.Controllers.Edit
 	{
 		protected override AuthorizationService<Role, RoleSchema> AuthService =>
 			new RoleAuthService();
+
+		public override Task<IActionResult> Edit([FromRoute] string id)
+		{
+			Response.Headers.Add("Content-Security-Policy", $"frame-ancestors 'self' {DodoApp.NetConfig.FullURI}");
+			return base.Edit(id);
+		}
 	}
 }

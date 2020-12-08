@@ -1,42 +1,17 @@
 using Resources.Security;
 using Dodo.Users;
-using Microsoft.AspNetCore.Http;
 using Resources;
-using Resources.Serializers;
 using System.Collections.Generic;
-using Resources.Location;
 using Common;
-using MongoDB.Bson.Serialization.Attributes;
-using Dodo.Utility;
-using Dodo.Users.Tokens;
-using Newtonsoft.Json;
 using System;
-using Common.Security;
+using Dodo.RoleApplications;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Dodo.Roles
 {
-	public class RoleApplicationData
-	{
-		public class Message
-		{
-			public DateTime Timestamp { get; set; }
-			public string Content { get; set; }
-		}
-		public string Applicant { get; set; }
-		[View(EPermissionLevel.ADMIN)]
-		public string Notes { get; set; }
-		public List<Message> Messages { get; set; } = new List<Message>();
-
-		public RoleApplicationData() { }
-
-		public RoleApplicationData(AccessContext context, Role role)
-		{
-			Applicant = SecurityExtensions.GenerateID(context.User, context.Passphrase, role.Guid.ToString());
-		}
-	}
-
 	[SearchPriority(4)]
-	public class Role : DodoResource, IOwnedResource, IPublicResource
+	public class Role : DodoResource, IOwnedResource, IPublicResource, IParentResource
 	{
 		const string METADATA_APPLIED = "applied";
 		public const string ApplicantQuestionHint = "Here you can describe required skills, training and availabilities. All applicants will answer this prompt when applying for this role.";
@@ -59,8 +34,8 @@ namespace Dodo.Roles
 		[View(EPermissionLevel.ADMIN, customDrawer: "published", priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
-		[View(EPermissionLevel.ADMIN)]
-		public Dictionary<string, GroupUserEncryptedStore> Applications { get; set; } = new Dictionary<string, GroupUserEncryptedStore>();
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM, customDrawer:"null")]
+		public Dictionary<string, ResourceReference<RoleApplication>> Applications = new Dictionary<string, ResourceReference<RoleApplication>>();
 
 		public Role() : base() { }
 
@@ -72,37 +47,46 @@ namespace Dodo.Roles
 			ApplicantQuestion = schema.ApplicantQuestion;
 		}
 
-		public bool Apply(AccessContext context, ApplicationModel application, out string error)
+		private string GetID(AccessContext context) => SecurityExtensions.GenerateID(context.User, context.Passphrase, Guid.ToString());
+
+		public bool HasApplied(AccessContext context, out string id, out ResourceReference<RoleApplication> application)
 		{
-			if (context.User == null)
-			{
-				error = "User not logged in";
-				return false;
-			}
-			if (!context.User.PersonalData.EmailConfirmed)
-			{
-				error = "User email not verified";
-				return false;
-			}
-			var app = new GroupUserEncryptedStore(new RoleApplicationData(context, this), Parent.GetValue<IAsymmCapableResource>(), context);
-			var id = SecurityExtensions.GenerateID(context.User, context.Passphrase, Guid.ToString());
-			Applications.Add(id, app);
-			error = null;
-			return true;
+			id = GetID(context);
+			return Applications.TryGetValue(id, out application);
 		}
 
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
 			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
 			var context = new AccessContext(user, passphrase);
-			view.Add(METADATA_APPLIED, HasApplied(context));
+			view.Add(METADATA_APPLIED, HasApplied(context, out _, out var application) ? application.Guid : default);
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 
-		private bool HasApplied(AccessContext context)
+		public bool CanContain(Type type) => type == typeof(RoleApplication);
+
+		void IParentResource.AddChild<T>(AccessContext context, T rsc)
 		{
-			var id = SecurityExtensions.GenerateID(context.User, context.Passphrase, Guid.ToString());
-			return Applications.ContainsKey(id);
+			if(!(rsc is RoleApplication app))
+			{
+				throw new InvalidCastException($"Resource must be a RoleApplication");
+			}
+			var id = GetID(context);
+			Applications.Add(id, app.CreateRef());
+		}
+
+		bool IParentResource.RemoveChild<T>(AccessContext context, T rsc)
+		{
+			if (!(rsc is RoleApplication app))
+			{
+				throw new InvalidCastException($"Resource must be a RoleApplication");
+			}
+			var contained = Applications.FirstOrDefault(a => a.Value.Guid == rsc.Guid);
+			if(string.IsNullOrEmpty(contained.Key))
+			{
+				return false;
+			}
+			return Applications.Remove(contained.Key);
 		}
 	}
 }

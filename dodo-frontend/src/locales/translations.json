@@ -22,8 +22,7 @@
 			"loading_please_wait": "Loading, please wait...",
 			"notifications_title": "Latest updates",
 			"notifications_show_more": "See more...",
-			"login_network_error": "Unable to contact the server. Please check your internet connection and try again.",
-			"login_user_not_found": "Unknown username or password"
+			"Register a new account": "Register a new account"
 		}
 	},
 	"es": {
@@ -47,9 +46,7 @@
 			"notifications_load_more": "ES Latest updates",
 			"loading_please_wait": "ES Loading, please wait...",
 			"notifications_title": "ES Latest updates",
-			"notifications_show_more": "ES See more...",
-			"login_network_error": "ES Unable to contact the server. Please check your internet connection and try again.",
-			"login_user_not_found": "ES Unknown username or password"
+			"notifications_show_more": "ES See more..."
 		}
 	}
 }

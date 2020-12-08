@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		dependencies.txt = dependencies.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -37,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DodoServer", "src\DodoServe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DodoAOT", "src\DodoAOT\DodoAOT.csproj", "{45001C92-2E5C-4A26-8FE3-EF58506A2E6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DodoCMS", "src\DodoCMS\DodoCMS.csproj", "{147CF4F3-2D87-4DB8-B031-F55F67FCE14E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DodoCMS", "src\DodoCMS\DodoCMS.csproj", "{147CF4F3-2D87-4DB8-B031-F55F67FCE14E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

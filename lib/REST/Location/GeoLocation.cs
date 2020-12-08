@@ -18,7 +18,7 @@ namespace Resources.Location
 		[BsonIgnore]
 		[Name("Address")]
 		[View]
-		public LocationData LocationData
+		public string Address
 		{
 			get
 			{
@@ -26,7 +26,7 @@ namespace Resources.Location
 				{
 					m_data = LocationManager.GetLocationData(this);
 				}
-				return m_data;
+				return m_data?.ToString();
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace Resources.Location
 
 		public override string ToString()
 		{
-			return $"Lat:{Latitude} Long:{Longitude}" + (LocationData != null ? $" {LocationData}" : "");
+			return $"Lat:{Latitude} Long:{Longitude} {Address}";
 		}
 
 		public bool VerifyExplicit(out string error)

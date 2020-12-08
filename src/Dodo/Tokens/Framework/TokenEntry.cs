@@ -14,7 +14,7 @@ namespace Dodo.Users.Tokens
 		)]
 	public abstract class TokenEntry
 	{
-		public ResourceReference<ITokenResource> Owner;
+		public HashedResourceReference Owner;
 		public Guid Guid;
 		public bool Removed;
 
@@ -24,13 +24,15 @@ namespace Dodo.Users.Tokens
 		[BsonElement]
 		private string m_typeName;
 
+		public override string ToString() => $"Token [{m_typeName}]";
+
 		public TokenEntry(ITokenResource owner, IToken token)
 		{
 			if (token == null || owner == null)
 			{
 				throw new ArgumentNullException();
 			}
-			Owner = owner.CreateRef();
+			Owner = new HashedResourceReference(owner, token.Guid.ToString());
 			Guid = token.Guid;
 			PermissionLevel = token.GetVisibility();
 			m_typeName = token.GetType().FullName;

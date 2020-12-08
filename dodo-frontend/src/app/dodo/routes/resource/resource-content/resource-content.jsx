@@ -1,28 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Icon } from '../../../../components/icon'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
-import { Header, Description, SignUpButton, ParentLink, Updates, Role } from "app/components/resources"
+import { Header, Description, SignUpButton, ParentLink, Updates, Role, Address } from "app/components/resources"
 
 import { ADMIN_PERMISSIONS } from 'app/constants'
-import { isSubscribedToResource } from './services'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT } from './constants'
 
 import styles from './resource-content.module.scss'
-import { LOGIN_ROUTE } from '../../user-routes/login'
+import { REGISTER_ROUTE } from '../../user-routes/register'
 import { addReturnPathToRoute } from '../../../../domain/services/services'
 
 export const ResourceContent =
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, memberOf, isLoggedIn, notifications, getNotifications, isLoadingNotifications, hideMap }) => {
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, isLoggedIn, isMember, notifications, getNotifications, isLoadingNotifications, hideMap }) => {
 		const { push } = useHistory()
 		const location = useLocation();
 
-		const isSubscribed = isSubscribedToResource(memberOf, resource.guid)
 		const subscribe = () => subscribeResource(resourceType, resource.guid, 'join')
 		const unSubscribe = () => subscribeResource(resourceType, resource.guid, 'leave')
-		const apply = (body) => subscribeResource(resourceType, resource.guid, 'apply', { content: body })
 
-		const shouldDisplayNotifications = resourceType !== 'role'
+		const shouldDisplayNotifications = resourceType !== 'role' && !!notifications?.notifications?.length
+		const shouldShowAdmin = resource.metadata.permission === 'owner' || resource.metadata.permission === 'admin'
 
 		if (location.pathname.slice(-5) === '/join') {
 			subscribe();
@@ -33,30 +32,32 @@ export const ResourceContent =
 			<div className={styles.resource}>
 				<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap}/>
 				<ParentLink parent={resource.parent}/>
-				<Video videoEmbedURL={resource.videoEmbedURL}/>
+				<Video videoEmbedURL={resource.videoEmbedURL} />				
 				<div className={styles.descriptionContainer}>
 					<Description description={resource.publicDescription}/>
 					{shouldDisplayNotifications &&
-					<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
+						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
 					}
 				</div>
-				<Role
-					applicantQuestion={resource.applicantQuestion}
-					resourceColor={resourceColor}
-					applyForRole={apply}
-					isLoggedIn={isLoggedIn}
-					hasApplied={resource.metadata.applied}
-				/>
+				{resourceType == 'role' ?
+					<Role
+						resource={resource}
+						isLoggedIn={isLoggedIn}
+						hasApplied={resource.metadata.applied}
+					/>
+					: null
+				}
 				<SignUpButton
 					disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
 					resourceColor={resourceColor}
 					isLoggedIn={isLoggedIn}
-					isSubscribed={isSubscribed}
+					isSubscribed={isMember}
 					onClick={
 						!isLoggedIn
-							? () => push(addReturnPathToRoute(LOGIN_ROUTE, location.pathname + '/join'))
-							: !isSubscribed ? subscribe : unSubscribe}
+							? () => push(addReturnPathToRoute(REGISTER_ROUTE, location.pathname + '/join'))
+							: !isMember ? subscribe : unSubscribe}
 				/>
+				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h3>EDIT  <Icon icon="edit" size="1x" /></h3></a> : null}
 				<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes}/>
 				<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes}/>
 				<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes}/>

@@ -1,14 +1,5 @@
-using Common.Extensions;
-using Resources;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Dodo.Utility;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Dodo.WorkingGroups;
 
 namespace Dodo.WorkingGroups
 {

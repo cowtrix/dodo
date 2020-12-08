@@ -7,6 +7,7 @@
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
+	Dodo.AdministratorPermissionSet permissions = ViewData["permissions"] as Dodo.AdministratorPermissionSet;
 }
 
 <script>
@@ -17,54 +18,63 @@ $(function () {
 </script>
 
 
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+	</li>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
 		<li class="nav-item">
-			<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
 		</li>
-		@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
-			</li>
-		}
-		@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
-			</li>
-		}
-		@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
-			</li>
-		}
-		<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Rebellion/@Model.Slug" target="_blank">View <i class="fa fa-link" aria-hidden="true"></i></a></li>
-	</ul>
-	<div class="tab-content" id="myTabContent">
-		<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-			<div class="card" style="width:100%;">
-				<div class="card-body">
-					<form asp-action="Edit">
-						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-						<div class="form-check">
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
+		</li>
+	}
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
+		</li>
+	}
+	<li class="nav-item">
+		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="role" aria-selected="false">Analytics</a>
+	</li>
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Rebellion/@Model.Slug" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a></li>
+</ul>
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="card">
+			<div class="card-body">
+				<form id="edit" asp-action="Edit">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					@{
+	if (!Model.IsPublished)
+{
+<div class="form-check">
 	<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
 	<label class="form-check-label">Published</label>
 	<span asp-validation-for="IsPublished" class="text-danger"></span>
 	<small id="helpBlock" class="form-text text-muted">
-		This indicates whether or not this is publicly viewable by all users.
+		This indicates whether or not this is publicly viewable by all users. This is not yet published, so it won't show up in search results or be visible to non-administrators. Once a resource is published, it cannot be unpublished.
 	</small>
-	@{
-		if (!Model.IsPublished)
-		{
-		<div class="alert alert-warning" role="alert">
-			This is not yet published, so it won't show up in search results or be visible to non-administrators.
-		</div>
-		}
-	}
 </div>
+}
+else
+{
+	<input class="sr-only" type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+	<div class="alert alert-warning published-message" role="alert">
+		This resource is now published and publicly visible.
+	</div>
+}
+}
 
-				<div class="form-group">
+
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Name"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Name</label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
@@ -72,79 +82,139 @@ $(function () {
 					<input asp-for="Slug" class="sr-only"></input>
 					<input asp-for="Guid" class="sr-only"></input>
 					<input asp-for="Revision" class="sr-only"></input>
-				<div class="form-group">
+				<div class="form-field form-group">
+				<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"PublicDescription"))"><i class="fas fa-question-circle"></i></button>
 				<label class="control-label">Public Description</label>
-				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
+				<textarea asp-for="PublicDescription" class="form-control description-entry"></textarea>
 					<small id="helpBlock" class="form-text text-muted">
-						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>
 					</small>
 				</div>
 					<input asp-for="MemberCount" class="sr-only"></input>
 					<input asp-for="AdministratorData" class="sr-only"></input>
 					<input asp-for="PublicKey" class="sr-only"></input>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Working Groups</h5>
-					<ul class="list-group">
-				@{ for(var i = 0; i < Model.WorkingGroups.Count; ++i) {
-				<li class="list-group-item">
-								<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
+<div class="form-field card">
+	<div class="card-header"><h5 class="card-title">Working Groups</h5></div>
+	<div class="card-body">
+		<ul class="list-group">
+			@{
+				if (!Model.WorkingGroups.Any())
+				{
+					<div class="alert alert-info" role="alert">
+						There are no entries in this list. To create a new entry, click "Create"
+					</div>
+				}
+				else
+				{
+					for (var i = 0; i < Model.WorkingGroups.Count; ++i)
+					{
+						<li class="list-group-item">
+															<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
+								@{ var reftype13583655 = @Model.WorkingGroups[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.WorkingGroups[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.WorkingGroups[i].GetRefType())" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.WorkingGroups[i].GetRefType())" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype13583655)-reference" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype13583655)-reference" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
-				</li>
+
+						</li>
+					}
 				}
+				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>)))
+				{
+					// Create button!
+					string parent = $"?parent={@Model.Slug}";
+					<a class="btn btn-light btn-block workinggroup-reference form-field" role="button" href="~/edit/workinggroup/create@(parent)">Create New</a>
 				}
-						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.WorkingGroups.WorkingGroup))" role="button" href="~/edit/WorkingGroup/create?parent=@Model.Slug">Create</a>
-						</ul>
+			}
+		</ul>
+	</div>
+</div>
+
+<div class="form-field card">
+	<div class="card-header"><h5 class="card-title">Sites</h5></div>
+	<div class="card-body">
+		<ul class="list-group">
+			@{
+				if (!Model.Sites.Any())
+				{
+					<div class="alert alert-info" role="alert">
+						There are no entries in this list. To create a new entry, click "Create"
 					</div>
-				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Sites</h5>
-					<ul class="list-group">
-				@{ for(var i = 0; i < Model.Sites.Count; ++i) {
-				<li class="list-group-item">
-								<input class="sr-only" asp-for="Sites[i].Type"/>
+				}
+				else
+				{
+					for (var i = 0; i < Model.Sites.Count; ++i)
+					{
+						<li class="list-group-item">
+															<input class="sr-only" asp-for="Sites[i].Type"/>
+								@{ var reftype54848996 = @Model.Sites[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Sites[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Sites[i].GetRefType())" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Sites[i].GetRefType())" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype54848996)-reference" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype54848996)-reference" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
-				</li>
+
+						</li>
+					}
 				}
+				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Site>)))
+				{
+					// Create button!
+					string parent = $"?parent={@Model.Slug}";
+					<a class="btn btn-light btn-block site-reference form-field" role="button" href="~/edit/site/create@(parent)">Create New</a>
 				}
-						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.LocationResources.Site))" role="button" href="~/edit/Site/create?parent=@Model.Slug">Create</a>
-						</ul>
+			}
+		</ul>
+	</div>
+</div>
+
+<div class="form-field card">
+	<div class="card-header"><h5 class="card-title">Events</h5></div>
+	<div class="card-body">
+		<ul class="list-group">
+			@{
+				if (!Model.Events.Any())
+				{
+					<div class="alert alert-info" role="alert">
+						There are no entries in this list. To create a new entry, click "Create"
 					</div>
-				</div>
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Events</h5>
-					<ul class="list-group">
-				@{ for(var i = 0; i < Model.Events.Count; ++i) {
-				<li class="list-group-item">
-								<input class="sr-only" asp-for="Events[i].Type"/>
+				}
+				else
+				{
+					for (var i = 0; i < Model.Events.Count; ++i)
+					{
+						<li class="list-group-item">
+															<input class="sr-only" asp-for="Events[i].Type"/>
+								@{ var reftype21007413 = @Model.Events[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Events[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Events[i].GetRefType())" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i></a></div>
-								<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Events[i].GetRefType())" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i></a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype21007413)-reference" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype21007413)-reference" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
-				</li>
+
+						</li>
+					}
 				}
+				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Event>)))
+				{
+					// Create button!
+					string parent = $"?parent={@Model.Slug}";
+					<a class="btn btn-light btn-block event-reference form-field" role="button" href="~/edit/event/create@(parent)">Create New</a>
 				}
-						<a class="btn btn-light btn-block" style="background-color:#@Dodo.APIController.GetDisplayColor(typeof(Dodo.LocationResources.Event))" role="button" href="~/edit/Event/create?parent=@Model.Slug">Create</a>
-						</ul>
-					</div>
-				</div>
-				<div class="form-group">
+			}
+		</ul>
+	</div>
+</div>
+
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"StartDate"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Start Date</label>
 					<input  asp-for="StartDate" class="form-control"></input>
 					<span asp-validation-for="StartDate" class="text-danger"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"EndDate"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">End Date</label>
 					<input  asp-for="EndDate" class="form-control"></input>
 					<span asp-validation-for="EndDate" class="text-danger"></span>
@@ -164,7 +234,7 @@ $(function () {
 			mapboxgl: mapboxgl
 		});
 		geocoder.on('result', function (result) {
-			
+
 			var coords = result["result"]["center"];
 			console.warn(JSON.stringify(
 				coords,
@@ -272,52 +342,53 @@ $(function () {
 	}
 </script>
 
-@{ var data = Model.Location.LocationData; }
-<div class="card">
-	<div class="card-body">
-		<h5 class="card-title">Location</h5>
-		<div id="map" style="height: 20em; width: 100%;"></div>
-		<div class="form-group">
-			<label asp-for="Location.Latitude" class="control-label"></label>
-			<input id="Model.Location_lat" asp-for="Location.Latitude" class="form-control"></input>
-			<span asp-validation-for="Location.Latitude" class="text-danger"></span>
-		</div>
-		<div class="form-group">
-			<label asp-for="Location.Longitude" class="control-label"></label>
-			<input id="Model.Location_lng" asp-for="Location.Longitude" class="form-control"></input>
-			<span asp-validation-for="Location.Longitude" class="text-danger"></span>
-		</div>
+<div class="form-field card">
+	<div class="card-header"><h5 class="card-title">Location</h5></div>
+	<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML(nameof(Resources.Location.GeoLocation)))">
+		<i class="fas fa-question-circle"></i>
+	</button>
+	<div id="map" style="height: 20em; width: 100%;"></div>
+	<div class="form-group sr-only">
+		<label asp-for="Location.Latitude" class="control-label"></label>
+		<input id="Model.Location_lat" asp-for="Location.Latitude" class="form-control"></input>
+		<span asp-validation-for="Location.Latitude" class="text-danger"></span>
+	</div>
+	<div class="form-group sr-only">
+		<label asp-for="Location.Longitude" class="control-label"></label>
+		<input id="Model.Location_lng" asp-for="Location.Longitude" class="form-control"></input>
+		<span asp-validation-for="Location.Longitude" class="text-danger"></span>
 	</div>
 </div>
 
-				<div class="form-group">
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"VideoEmbedURL"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Banner Video Embed URL</label>
 					<input  asp-for="VideoEmbedURL" class="form-control"></input>
 					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
 				</div>
 
-						<div class="form-group">
-							<input type="submit" value="Save" class="btn btn-primary btn-block" />
-						</div>
-					</form>
-				</div>
+					<div class="form-field form-group">
+						<input type="submit" value="Save" class="btn btn-primary btn-block" />
+					</div>
+				</form>
 			</div>
 		</div>
-		@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	</div>
+	@{ if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 		{
 			<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
 				<div class="card">
 	<h5 class="card-header">Post an Announcement</h5>
-	<div class="card-body" style="text-align:right;">
+	<div class="card-body">
 		<form id="newannouncement" method="post" action="notifications/@Model.Slug/new">
 			<div class="form-group">
-				<textarea id="Message" name="Message" class="form-control" style="height:10em;"></textarea>
+				<textarea id="Message" name="Message" class="form-control description-entry"></textarea>
 			</div>
 			<small id="helpBlock" class="form-text text-muted" style="text-align:left;">
 				Announcements are messages that will be displayed on the public page and be visible for all users. You can use them to give short updates or messages.<br />
 				To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
 			</small>
-			<input type="submit" value="Post" class="btn btn-primary" style="width:100px;" />
+			<input type="submit" value="Post" class="btn btn-primary btn-block form-field" />
 		</form>
 	</div>
 </div>
@@ -329,9 +400,9 @@ $(function () {
 			@{foreach (var notification in notifications)
 				{
 					<li class="list-group-item">
-						<div class="card-header" style="margin-left:-20px; margin-right:-20px; margin-top:-12px;">
+						<div class="card-header notification-header">
 							<div class="row">
-								<div class="col" style="margin-left:10px;">
+								<div class="col notification-nudge1">
 									<div class="row">
 										<small>
 											@TimeZoneInfo.ConvertTimeFromUtc(notification.Timestamp.ToUniversalTime(), Timezone ?? TimeZoneInfo.Utc).ToString("HH:mm d/M/y")
@@ -369,8 +440,8 @@ $(function () {
 								</div>
 							</div>
 						</div>
-						<div style="padding:10px;">
-							<p style="margin:0;"> @Html.Raw(notification.Message) </p>
+						<div class="notification-text">
+							<p> @Html.Raw(notification.Message) </p>
 						</div>
 					</li>
 				}}
@@ -379,8 +450,8 @@ $(function () {
 </div>
 
 			</div>
-		}
-		@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+		} }
+	@{if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
 		{
 			<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
 				@{
@@ -388,42 +459,8 @@ $(function () {
 	Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
 	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<Dodo.Rebellions.Rebellion, Dodo.Rebellions.RebellionSchema>);
 	var canDelete = authManager.IsAuthorised(context, Model.Slug, Resources.EHTTPRequestType.DELETE).IsSuccess;
-	Dodo.Analytics.AnalyticInfo viewData = Dodo.Analytics.Analytics.GetInfo(Model.Guid);
 }
-<div class="card">
-	<h5 class="card-header">Statistics</h5>
-	<div class="card-body">
-		<div class="col-auto">
-			<div class="form-group row">
-				<label class="col-sm-2 col-form-label">Total Views</label>
-				<div class="col-sm-10">
-					<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@viewData?.TotalViewCount">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label class="col-sm-2 col-form-label">Signed-in Views</label>
-				<div class="col-sm-10">
-					<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@viewData?.AuthenticatedViewCount">
-				</div>
-			</div>
-			@{
-				if (typeof(Dodo.IGroupResource).IsAssignableFrom(Model.__Type))
-				{
-					// Draw member count
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label">Members</label>
-						<div class="col-sm-10">
-							<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@Model.MemberCount">
-						</div>
-					</div>
-				}
-			}
-		</div>
-		<div class="col">
 
-		</div>
-	</div>
-</div>
 @{ if (thisAdmin.Permissions.CanAddAdmin)
 	{
 		<div class="card">
@@ -500,35 +537,44 @@ $(function () {
 										<div class="row">
 											<div class="col">
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanAddAdmin" name="CanAddAdmin" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanAddAdmin_@(admin.User.Guid.ToString())" name="CanAddAdmin" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanAddAdmin")" style="">Can Add New Admins</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanRemoveAdmin" name="CanRemoveAdmin" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanRemoveAdmin_@(admin.User.Guid.ToString())" name="CanRemoveAdmin" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admins</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanChangePermissions" name="CanChangePermissions" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanChangePermissions_@(admin.User.Guid.ToString())" name="CanChangePermissions" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Admin Permissions</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditInfo" name="CanEditInfo" @(admin.Permissions.CanEditInfo ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditInfo_@(admin.User.Guid.ToString())" name="CanEditInfo" @(admin.Permissions.CanEditInfo ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Details</label>
 												</div>
 											</div>
 											<div class="col">
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateChildObjects" name="CanCreateChildObjects" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateChildObjects_@(admin.User.Guid.ToString())" name="CanCreateChildObjects" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDeleteChildObjects" name="CanDeleteChildObjects" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDeleteChildObjects_@(admin.User.Guid.ToString())" name="CanDeleteChildObjects" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
 												</div>
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements_@(admin.User.Guid.ToString())" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
 													<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
 												</div>
+												@{
+													if (Model.__Type == typeof(Dodo.WorkingGroups.WorkingGroup))
+													{
+														<div class="form-check">
+															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageRoles_@(admin.User.Guid.ToString())" name="CanManageAnnouncements" @(admin.Permissions.CanManageRoles ? "checked" : "")>
+															<label class="form-check-label" for="@getID("CanManageRoles")">Can Manage Roles</label>
+														</div>
+													}
+												}
 											</div>
 										</div>
 									</div>
@@ -566,11 +612,49 @@ $(function () {
 }
 
 			</div>
-		}
-		@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
+		} }
+	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
 		{
 			<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
 				{ROLES}
 			</div>
-		}
+		}}
+	<div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+		@{
+	Dodo.Analytics.AnalyticInfo viewData = Dodo.Analytics.Analytics.GetInfo(Model.Guid);
+}
+
+<div class="card">
+	<h5 class="card-header">Statistics</h5>
+	<div class="card-body">
+		<div class="col">
+			@{
+				if (typeof(Dodo.IGroupResource).IsAssignableFrom(Model.__Type))
+				{
+					// Draw member count
+					<div class="form-group row">
+						<label class="col-md col-form-label">Members</label>
+						<div class="col-sm-10">
+							<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@((Model as dynamic).MemberCount)">
+						</div>
+					</div>
+				}
+			}
+			<div class="form-group row">
+				<label class="col-md col-form-label">Total Views</label>
+				<div class="col-sm-10">
+					<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@viewData?.Pool.Sum(p => p.Value.UnauthenticatedViewCount)">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-md col-form-label">Signed-in Views</label>
+				<div class="col-sm-10">
+					<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@viewData?.Pool.Sum(p => p.Value.AuthenticatedViewCount)">
+				</div>
+			</div>
+		</div>
 	</div>
+</div>
+
+	</div>
+</div>

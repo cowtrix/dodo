@@ -12,16 +12,23 @@ export const Header = ({ resource, setCenterMap, resourceColor, hideMap }) =>
 		<div className={styles.headerLeft}>
 			<Title name={resource.name}/>
 			<Dates startDate={resource.startDate} endDate={resource.endDate} />
+			{(resource.location && resource.location.address) ?
+				<div className={styles.address}>
+					<h4>{resource.location.address}</h4>
+				</div>
+				: null
+			}
 		</div>
 		<div className={styles.headerRight}>
 			<CenterMap setCenterMap={setCenterMap} display={!hideMap} />
 			<Countdown startDate={resource.startDate} name={resource.name} />
-		</div>
+		</div>		
 	</div>
 
 Header.propTypes = {
 	hideMap: PropTypes.bool,
 	resource: PropTypes.object,
 	setCenterMap: PropTypes.func,
-	resourceColor: PropTypes.string
+	resourceColor: PropTypes.string,
+	address: PropTypes.string,
 }

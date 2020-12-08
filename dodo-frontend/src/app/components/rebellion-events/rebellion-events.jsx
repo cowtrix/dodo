@@ -22,7 +22,7 @@ export const RebellionEvents = ({ events }) => {
 			<div className={styles.events}>
 				{events.map(event => (
 					<div key={event.guid} className={styles.event}>
-						<Link to={`/site/${event.guid}`}>
+						<Link to={`/site/${event.slug}`}>
 							<strong>{event.name}</strong>
 						</Link>
 						<div className={styles.date}>26th March 2020</div>

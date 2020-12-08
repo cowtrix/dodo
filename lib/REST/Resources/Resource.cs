@@ -103,7 +103,7 @@ namespace Resources
 			}
 			Name = schema.Name;
 			Slug = ValidationExtensions.StripStringForSlug(Name);
-			while(ResourceManager.Get(r => r.Slug == Slug).Any())
+			while(ResourceManager.Get(r => r.Slug == Slug, force:true).Any())
 			{
 				Slug += Common.Security.KeyGenerator.GetUniqueKey(2).ToLowerInvariant();
 			}

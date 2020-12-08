@@ -5,20 +5,21 @@ Project 'Common' has the following package references
 
 Project 'Resources' has the following package references
    [netstandard2.1]: 
-   Top-level Package                           Requested   Resolved
-   > GeoCoordinate.NetCore                     1.0.0.1     1.0.0.1 
-   > GeoTimeZone                               4.0.0       4.0.0   
-   > Microsoft.AspNetCore.Http.Extensions      2.2.0       2.2.0   
-   > MongoDB.Driver                            2.10.3      2.10.3  
-   > System.ComponentModel.Annotations         4.7.0       4.7.0   
-   > TimeZoneConverter                         3.2.0       3.2.0   
+   Top-level Package                                      Requested   Resolved
+   > GeoCoordinate.NetCore                                1.0.0.1     1.0.0.1 
+   > GeoTimeZone                                          4.0.0       4.0.0   
+   > Microsoft.AspNetCore.Cryptography.KeyDerivation      3.1.8       3.1.8   
+   > Microsoft.AspNetCore.Http.Extensions                 2.2.0       2.2.0   
+   > MongoDB.Driver                                       2.10.3      2.10.3  
+   > System.ComponentModel.Annotations                    4.7.0       4.7.0   
+   > TimeZoneConverter                                    3.2.0       3.2.0   
 
 Project 'Dodo' has the following package references
    [netstandard2.1]: 
    Top-level Package                                      Requested   Resolved
+   > MailKit                                              2.10.0      2.10.0  
    > Microsoft.AspNetCore.Cryptography.KeyDerivation      3.1.8       3.1.8   
    > Microsoft.AspNetCore.Mvc                             2.2.0       2.2.0   
-   > StrongGrid                                           0.72.1      0.72.1  
    > System.Text.Json                                     4.7.2       4.7.2   
 
 Project 'Dodo.IntegrationTests' has the following package references

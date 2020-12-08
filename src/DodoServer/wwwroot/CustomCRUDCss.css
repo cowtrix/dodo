@@ -1,4 +1,197 @@
-#epiceditor {
-	border: 1px solid #ced4da;
-	border-radius: .25rem;
+.chat-entry {
+	margin-bottom: 1em;
+}
+
+.chat-entry-admin {
+	background-color: #22a73d;
+	color: white;
+}
+
+.chat-entry-adminonly {
+	background-color: #FFC113;
+}
+
+.chat-messages {
+	margin: auto;
+	overflow-y: scroll;
+	position: absolute;
+	top: 10px;
+	bottom: 120px;
+	left: 10px;
+	right: 10px;
+	border: solid;
+	border-color: lightgray;
+	border-radius: 6px;
+	border-width: 1px;
+	padding: 4px;
+	box-shadow: 1px 1px 3px inset lightgray;
+}
+
+.chat-container {
+	margin: auto !important;	
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.chat-container-navbar {
+	top: 64px;
+	bottom: 10px;
+	left: 10px;
+	right: 10px;
+	margin: 10px;
+	max-width: 700px;
+}
+
+.chat-notes {
+	position: fixed;
+	width:280px;
+	right: 10px;
+	top:10px;
+	bottom: 10px;
+}
+
+.dodo-navbar {
+	background-color: #22a73d;
+	z-index: 9998;
+}
+
+.dodo-navbar-text {
+	padding-right: 1em;
+}
+
+.chat-send {
+	position: absolute;
+	bottom: 40px;
+	left: 10px;
+	right: 10px;
+}
+
+.chat-tip {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	right: 25px;
+}
+
+.chat-iframe {
+	width: 100%;
+	min-height: 500px;
+	border:none;
+}
+
+.resource-reference {
+	width: 100%;
+	margin: -20px;
+	margin-bottom: 20px;
+}
+
+.chat-application-area {
+	margin:10px;
+	max-width: 700px;
+}
+
+.workinggroup-reference {
+	background-color: #FFC113;
+}
+
+.rebellion-reference {
+	background-color: #22A73D;
+}
+
+.localgroup-reference {
+	background-color: #71D0F1;
+}
+
+.event-reference {
+	background-color: #ED9BC4;
+}
+
+.site-reference {
+	background-color: #22A73D;
+}
+
+.role-reference {
+	background-color: #E53D33;
+}
+
+.description-entry {
+	height: 20em;
+}
+
+.notification-header {
+	margin-left: -20px;
+	margin-right: -20px;
+	margin-top: -12px;
+}
+
+.notification-nudge1 {
+	margin-left: 10px;
+}
+
+.notification-text {
+	margin-top: 10px;
+}
+
+#scroller * {
+	/* don't allow the children of the scrollable element to be selected as an anchor node */
+	overflow-anchor: none;
+}
+
+#anchor {
+	/* allow the final child to be selected as an anchor node */
+	overflow-anchor: auto;
+	/* anchor nodes are required to have non-zero area */
+	height: 1px;
+}
+
+.admin-message {
+	color:white;
+	background-color:black;
+	font-family: Consolas, 'Courier New';
+}
+
+.chat-clear {
+	position: absolute;
+	margin: auto;
+	height: 24px;
+	right: 25px;
+	top: 25px;
+	margin: 0;
+	padding: 1px;
+}
+
+.form-field
+{
+	position:relative;
+	margin-top:10px;
+}
+
+.help-button {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	right: 1em;
+	top: 0;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	color: lightgray;
+}
+
+.published-message
+{
+	margin:10px;
+}
+
+.tooltip {
+	z-index: 9999;
+}
+
+.tooltip-inner {
+	min-width: 300px;
+	text-align:left;
 }

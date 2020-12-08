@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom"
 
 const goToEvent = (history, data) => () => {
 	const event = data
-	const eventString = "/" + event.metadata.type + "/" + event.guid
+	const eventString = "/" + event.metadata.type + "/" + event.slug
 	history.push(eventString)
 }
 

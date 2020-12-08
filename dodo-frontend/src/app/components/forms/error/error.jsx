@@ -5,7 +5,9 @@ import styles from './error.module.scss'
 
 export const Error = ({ error }) => (
 	error
-		? <div className={styles.error}>{error.message || error}</div>
+		? <div className={styles.error}>
+			{(error.response?.title) || error.message || error}
+		</div>
 		: null
 )
 

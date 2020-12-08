@@ -1,16 +1,21 @@
+@{
+	if (!Model.{MEMBER})
+{
 <div class="form-check">
 	<input type="checkbox" asp-for="{MEMBER}" class="form-check-input"></input>
 	<label class="form-check-label">Published</label>
 	<span asp-validation-for="{MEMBER}" class="text-danger"></span>
 	<small id="helpBlock" class="form-text text-muted">
-		This indicates whether or not this is publicly viewable by all users.
+		This indicates whether or not this is publicly viewable by all users. This is not yet published, so it won't show up in search results or be visible to non-administrators. Once a resource is published, it cannot be unpublished.
 	</small>
-	@{
-		if (!Model.{MEMBER})
-		{
-		<div class="alert alert-warning" role="alert">
-			This is not yet published, so it won't show up in search results or be visible to non-administrators.
-		</div>
-		}
-	}
 </div>
+}
+else
+{
+	<input class="sr-only" type="checkbox" asp-for="{MEMBER}" class="form-check-input"></input>
+	<div class="alert alert-warning published-message" role="alert">
+		This resource is now published and publicly visible.
+	</div>
+}
+}
+

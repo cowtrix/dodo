@@ -6,19 +6,36 @@
 	margin-bottom: spacingXS(6);
 	align-items: center;
 
-	label {
+	.label {
 		flex-basis: 0;
 		flex-grow: 0.3;
+	}
+
+	.box {
+		justify-content: flex-start;
+		flex-basis: 0;
+		flex-grow: 0.7;
+	}
+
+	.message {
+		justify-content: flex-start;
+		margin-left: spacing(3);
+		flex-basis: 0;
+		flex-grow: 1;
 	}
 
 	input {
 		margin: 0;
 		zoom: 1.8;
 	}
+
+	&.withMessage {
+		.box {
+			justify-content: flex-start;
+			flex-basis: 0;
+			flex-grow: 0;
+		}
+	}
 }
 
-.box {
-	justify-content: flex-start;
-	flex-basis: 0;
-	flex-grow: 0.7;
-}
+

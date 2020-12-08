@@ -153,6 +153,11 @@ namespace Common.Extensions
 				error = "Username can only contain alphanumeric characters and _";
 				return false;
 			}
+			if (slug == "create")
+			{
+				error = "'create' is a reserved word. You cannot use this as a name.";
+				return false;
+			}
 			error = null;
 			return true;
 		}

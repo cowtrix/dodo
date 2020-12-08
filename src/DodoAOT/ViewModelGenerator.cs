@@ -46,7 +46,7 @@ namespace DodoAOT
 				}
 				if (typeof(IDecryptable).IsAssignableFrom(memberType))
 				{
-					memberType = memberType.InheritanceHierarchy().First(t => t.IsGenericType).GetGenericArguments().First();
+					memberType = memberType.InheritanceHierarchy().First(t => t.IsGenericType).GetGenericArguments().Last();
 				}
 				var typeName = memberType.GetRealTypeName(true);
 				var memberName = member.Name;

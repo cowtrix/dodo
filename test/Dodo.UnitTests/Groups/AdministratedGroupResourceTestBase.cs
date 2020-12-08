@@ -1,4 +1,4 @@
-﻿using Dodo;
+using Dodo;
 using Dodo.SharedTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
@@ -8,38 +8,6 @@ namespace Groups
 {
 	public abstract class AdministratedGroupResourceTestBase<T> : GroupResourceTestBase<T> where T : AdministratedGroupResource
 	{
-		protected IResourceManager<T> ResourceManager => ResourceUtility.GetManager<T>();
-
-		[TestMethod]
-		public void CanJoinAndLeave()
-		{
-			var creator = GenerateUser(SchemaGenerator.GetRandomUser(default), out var creatorContext);
-			var newGroup = CreateObject<T>(creatorContext, SchemaGenerator.GetRandomSchema<T>(creatorContext));
-
-			// Join
-			var user = GenerateUser(SchemaGenerator.GetRandomUser(default), out var joinerContext);
-			using (var rscLock = new ResourceLock(newGroup))
-			{
-				newGroup = rscLock.Value as T;
-				newGroup.Join(joinerContext);
-				Assert.IsTrue(newGroup.IsMember(joinerContext));
-				ResourceManager.Update(newGroup, rscLock);
-			}
-			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsTrue(updatedGroup.IsMember(joinerContext));
-
-			// Leave
-			using (var rscLock = new ResourceLock(newGroup))
-			{
-				newGroup = rscLock.Value as T;
-				newGroup.Leave(joinerContext);
-				Assert.IsFalse(newGroup.IsMember(joinerContext));
-				ResourceManager.Update(newGroup, rscLock);
-			}
-			updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsFalse(updatedGroup.IsMember(joinerContext));
-		}
-
 		[TestMethod]
 		[TestCategory("Administration")]
 		public void CanAddAdmin()

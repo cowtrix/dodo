@@ -1,5 +1,6 @@
 using Common;
 using Common.Extensions;
+using Microsoft.Win32.SafeHandles;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources.Location;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 
 namespace Resources
 {
+
 	/// <summary>
 	/// An owned resource has a "parent" resource that it sits under
 	/// E.g. Working Groups, Roles, Sites
@@ -26,8 +28,7 @@ namespace Resources
 					"$('#descriptionLength').text(v + ' characters remaining. ')" +
 				"});" +
 			"</script>" +
-			"<p id=\"descriptionLength\"></p>" +
-			"To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href=\"www.example.com\">My link text</a>";
+			"<p id=\"descriptionLength\"></p>";
 		public const int SHORT_DESC_LENGTH = 256;
 		string PublicDescription { get; }
 	}
@@ -42,6 +43,8 @@ namespace Resources
 		GeoLocation Location { get; }
 		string PublicDescription { get; }
 		bool HasValue();
+		bool IsPublished { get; set; }
+		string FullyQualifiedName { get; set; }
 		Type GetRefType();
 	}
 
@@ -71,6 +74,9 @@ namespace Resources
 		[JsonProperty]
 		[BsonElement]
 		public string PublicDescription { get; set; }
+		[JsonProperty]
+		[BsonElement]
+		public bool IsPublished { get; set; }
 
 		public T GetValue()
 		{
@@ -106,17 +112,13 @@ namespace Resources
 			{
 				Parent = default;
 			}
-			if (resource is IDescribedResource desc)
-			{
-				PublicDescription = StringExtensions.StripMDLinks(desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH)));
-			}
-			else
-			{
-				PublicDescription = default;
-			}
+			PublicDescription = resource is IDescribedResource desc
+				? StringExtensions.StripMDLinks(desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH)))
+				: default;
+			IsPublished = resource is IPublicResource pub ? pub.IsPublished : false;
 		}
 
-		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location, Guid parent, string desc)
+		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location, Guid parent, string desc, bool isPublished)
 		{
 			if (type == null && !string.IsNullOrEmpty(name))
 			{
@@ -130,6 +132,7 @@ namespace Resources
 			FullyQualifiedName = type?.AssemblyQualifiedName;
 			Parent = parent;
 			PublicDescription = desc;
+			IsPublished = isPublished;
 		}
 
 		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)

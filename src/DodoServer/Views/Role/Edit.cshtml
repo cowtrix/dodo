@@ -7,6 +7,7 @@
 	Resources.EPermissionLevel permissionLevel = (Resources.EPermissionLevel)ViewData["Permission"];
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
+	Dodo.AdministratorPermissionSet permissions = ViewData["permissions"] as Dodo.AdministratorPermissionSet;
 }
 
 <script>
@@ -17,61 +18,72 @@ $(function () {
 </script>
 
 
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+	</li>
+	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	{
 		<li class="nav-item">
-			<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
 		</li>
-		@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
-			</li>
-		}
-		@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
-			</li>
-		}
-		@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
-		{
-			<li class="nav-item">
-				<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
-			</li>
-		}
-		<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Role/@Model.Slug" target="_blank">View <i class="fa fa-link" aria-hidden="true"></i></a></li>
-	</ul>
-	<div class="tab-content" id="myTabContent">
-		<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-			<div class="card" style="width:100%;">
-				<div class="card-body">
-					<form asp-action="Edit">
-						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-											<label class="control-label">Parent</label>
+	}
+	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
+		</li>
+	}
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+	{
+		<li class="nav-item">
+			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
+		</li>
+	}
+	<li class="nav-item">
+		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="role" aria-selected="false">Analytics</a>
+	</li>
+	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/Role/@Model.Slug" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a></li>
+</ul>
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+		<div class="card">
+			<div class="card-body">
+				<form id="edit" asp-action="Edit">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+										<label class="control-label">Parent</label>
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Parent"))"><i class="fas fa-question-circle"></i></button>
 					<input class="sr-only" asp-for="Parent.Type"/>
+					@{ var reftype20031746 = @Model.Parent.Type.ToLowerInvariant(); }
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
-					<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Parent.GetRefType())" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i></a></div>
-					<div class="col-auto"><a class="btn btn-light" style="background-color:#@Dodo.APIController.GetDisplayColor(Model.Parent.GetRefType())" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i></a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype20031746)-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype20031746)-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
 					</div>
+@{
+	if (!Model.IsPublished)
+{
 <div class="form-check">
 	<input type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
 	<label class="form-check-label">Published</label>
 	<span asp-validation-for="IsPublished" class="text-danger"></span>
 	<small id="helpBlock" class="form-text text-muted">
-		This indicates whether or not this is publicly viewable by all users.
+		This indicates whether or not this is publicly viewable by all users. This is not yet published, so it won't show up in search results or be visible to non-administrators. Once a resource is published, it cannot be unpublished.
 	</small>
-	@{
-		if (!Model.IsPublished)
-		{
-		<div class="alert alert-warning" role="alert">
-			This is not yet published, so it won't show up in search results or be visible to non-administrators.
-		</div>
-		}
-	}
 </div>
+}
+else
+{
+	<input class="sr-only" type="checkbox" asp-for="IsPublished" class="form-check-input"></input>
+	<div class="alert alert-warning published-message" role="alert">
+		This resource is now published and publicly visible.
+	</div>
+}
+}
 
-				<div class="form-group">
+
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Name"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Name</label>
 					<input  asp-for="Name" class="form-control"></input>
 					<span asp-validation-for="Name" class="text-danger"></span>
@@ -79,112 +91,154 @@ $(function () {
 					<input asp-for="Slug" class="sr-only"></input>
 					<input asp-for="Guid" class="sr-only"></input>
 					<input asp-for="Revision" class="sr-only"></input>
-				<div class="form-group">
+				<div class="form-field form-group">
+				<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"PublicDescription"))"><i class="fas fa-question-circle"></i></button>
 				<label class="control-label">Public Description</label>
-				<textarea style="height:20em;" asp-for="PublicDescription" class="form-control"></textarea>
+				<textarea asp-for="PublicDescription" class="form-control description-entry"></textarea>
 					<small id="helpBlock" class="form-text text-muted">
-						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+						<script>$('form :input').change(function(){var v = 2048 - $("#PublicDescription").val().length;$('#descriptionLength').text(v + ' characters remaining. ')});</script><p id="descriptionLength"></p>
 					</small>
 				</div>
-				<div class="form-group">
+				<div class="form-field form-group">
+				<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="No Help Specified"><i class="fas fa-question-circle"></i></button>
 				<label class="control-label">Applicant Question</label>
-				<textarea style="height:20em;" asp-for="ApplicantQuestion" class="form-control"></textarea>
+				<textarea asp-for="ApplicantQuestion" class="form-control description-entry"></textarea>
 					<small id="helpBlock" class="form-text text-muted">
 						Here you can describe required skills, training and availabilities. All applicants will answer this prompt when applying for this role.
 					</small>
 				</div>
-				<div class="form-group">
-					<label class="control-label">Applications</label>
-					<input  asp-for="Applications" class="form-control"></input>
-					<span asp-validation-for="Applications" class="text-danger"></span>
-				</div>
+					<input asp-for="Applications" class="sr-only"></input>
 
-						<div class="form-group">
-							<input type="submit" value="Save" class="btn btn-primary btn-block" />
-						</div>
-					</form>
-				</div>
+					<div class="form-field form-group">
+						<input type="submit" value="Save" class="btn btn-primary btn-block" />
+					</div>
+				</form>
 			</div>
 		</div>
-		@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
+	</div>
+	@{ if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 		{
 			<div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
 				
 			</div>
-		}
-		@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
+		} }
+	@{if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
 		{
 			<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
 				
 			</div>
-		}
-		@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
+		} }
+	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
 		{
 			<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
 				@{
-	var applications = ViewData["applications"] as Dictionary<string, Dodo.Roles.RoleApplicationData>;
-	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<Dodo.Roles.Role, Dodo.Roles.RoleSchema>);
-}
-<div class="card">
-	<h5 class="card-header">Applications</h5>
-	<div class="card-body">
-		@{
-			if (applications.Any())
-			{
-				<div id="accordion">
+	var applications = ViewData["applications"] as Dictionary<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>;
 
-					@{
+	if (permissions != null && permissions.CanManageRoles)
+	{
+		if (applications.Any())
+		{
+			<div class="card">
+				<h5 class="card-header">Send Message To All Applicants</h5>
+				<div class="card-body">
+					<form id="newbroadcast" method="post" action="applications/@Model.Slug/broadcast">
+						<div class="form-group">
+							<textarea id="Message" name="Message" class="form-control description-entry"></textarea>
+						</div>
+						<small id="helpBlock" class="form-text text-muted" style="text-align:left;">
+							This message will be sent to all current applicants for this role.<br />
+							To insert hyperlinks, use the following format: [My link text](www.example.com). This will display as: <a href="www.example.com">My link text</a>
+						</small>
+						<input type="submit" value="Post" class="btn btn-primary btn-block form-field" />
+					</form>
+				</div>
+			</div>
+		}
+		<div class="card">
+			<div class="card-header">
+				<h5 class="card-title">Applications</h5>
+			</div>
+			<div id="accordion">
+				@{if (applications.Any())
+					{
 						var counter = 0;
-						foreach (KeyValuePair<string, Dodo.Roles.RoleApplicationData>
-							kvp in applications)
+						foreach (KeyValuePair<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>
+								kvp in applications)
 						{
-							Dodo.Roles.RoleApplicationData app = kvp.Value;
+							Resources.ResourceReference<Dodo.RoleApplications.RoleApplication> app = kvp.Value;
 							<div class="card">
 								<div class="card-header" id="heading@(counter)">
 									<div class="row">
-										<div class="col-auto">
+										<div class="col">
 											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse@(counter)" aria-expanded="false" aria-controls="collapse@(counter)">
-												totle
+												Application Reference: @app.Guid.ToString().Substring(0, 8)
 											</button>
 										</div>
-										<div class="col" style="text-align:right;">
-											<a class="btn btn-outline-danger" href="@Model.Slug/">
-												<p class="fas fa-trash"></p>
-											</a>
+										<div class="col-auto">
+											<a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a>
 										</div>
 									</div>
 								</div>
 								<!-- Conversation -->
 								<div id="collapse@(counter)" class="collapse" aria-labelledby="heading@counter" data-parent="#accordion">
-									<div class="card-body">
-										<form id="@app.Applicant)" method="post" action="@Model.Slug/" enctype="application/x-www-form-urlencoded">
-											<div class="card-body">
-												<div class="row">
-
-												</div>
-											</div>
-											<div class="card-body">
-												<input type="submit" value="Save" class="btn btn-primary btn-block" />
-											</div>
-										</form>
+									<div class="chat-iframe">
+										<iframe src="@Dodo.DodoApp.NetConfig.FullURI/roleapplication/@app.Guid?header=false" loading="lazy" class="chat-iframe" />
 									</div>
 								</div>
 							</div>
 							counter++;
 						}
 					}
-				</div>
+					else
+					{
+						<div class="alert alert-info" role="alert">
+							There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
+						</div>
+					}
+				}
+			</div>
+		</div>
+	}
+}
+
+			</div>
+		}}
+	<div class="tab-pane fade" id="analytics" role="tabpanel" aria-labelledby="analytics-tab">
+		@{
+	Dodo.Analytics.AnalyticInfo viewData = Dodo.Analytics.Analytics.GetInfo(Model.Guid);
+}
+
+<div class="card">
+	<h5 class="card-header">Statistics</h5>
+	<div class="card-body">
+		<div class="col">
+			@{
+				if (typeof(Dodo.IGroupResource).IsAssignableFrom(Model.__Type))
+				{
+					// Draw member count
+					<div class="form-group row">
+						<label class="col-md col-form-label">Members</label>
+						<div class="col-sm-10">
+							<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@((Model as dynamic).MemberCount)">
+						</div>
+					</div>
+				}
 			}
-			else
-			{
-				<div class="alert alert-info" role="alert">
-					There haven't been any applications for this role yet. When there are, you will be able to see and respond to them here.
+			<div class="form-group row">
+				<label class="col-md col-form-label">Total Views</label>
+				<div class="col-sm-10">
+					<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@viewData?.Pool.Sum(p => p.Value.UnauthenticatedViewCount)">
 				</div>
-			}
-		}
+			</div>
+			<div class="form-group row">
+				<label class="col-md col-form-label">Signed-in Views</label>
+				<div class="col-sm-10">
+					<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@viewData?.Pool.Sum(p => p.Value.AuthenticatedViewCount)">
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
-			</div>
-		}
 	</div>
+</div>

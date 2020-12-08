@@ -11,7 +11,7 @@ const SEE_LESS = "See Less..."
 
 export const List = ({ resources = [], resourceTypes, listExpanded, setListExpanded, isExpandableList, isMasterList = false }) =>
 	<ul className={`${styles.eventList} ${isMasterList ? styles.masterList : ''}`}>
-		{resources.map(event => <Summary {...event} key={event.guid} resourceTypes={resourceTypes}/>)}
+		{resources.map(event => <Summary {...event} key={event.slug} resourceTypes={resourceTypes}/>)}
 		{isExpandableList ?
 			<li>
 				<Button

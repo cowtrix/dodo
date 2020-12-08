@@ -1,6 +1,6 @@
-@{
-	var rscColor = @Dodo.APIController.GetDisplayColor(Model.{MEMBER}.GetRefType());
-}
-<div class=\" navbar-expand-lg navbar-dark\" style=\"width=100%; background-color:#@rscColor; margin:-20px; margin-bottom:20px;\">";
-<a class=\"navbar-brand\" href=\"{Dodo.DodoApp.NetConfig.FullURI}/@Common.Extensions.StringExtensions.ToCamelCase(Model.{prefix}{memberName}.GetRefType().Name)/@Model.{prefix}{memberName}.Slug\">Part of the @Model.{MEMBER}.Name</a>
+<div class="navbar-expand-lg navbar-dark resource-reference {REFTYPE}-reference">
+	<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(nameof(Resources.IResourceReference.Parent))">
+		<i class="fas fa-question-circle"></i>
+	</button>
+	<a class="navbar-brand" href="{Dodo.DodoApp.NetConfig.FullURI}/@lowername)/@Model.{prefix}{memberName}.Slug">Part of @Model.{MEMBER}.Name</a>
 </div>

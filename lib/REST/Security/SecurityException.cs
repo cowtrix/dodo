@@ -1,7 +1,9 @@
 using Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Text;
 
 namespace Resources.Security
 {
@@ -11,7 +13,18 @@ namespace Resources.Security
 		public Exception Exception { get; set; }
 		public string Message { get; set; }
 		public DateTime TimeStampUTC { get; set; }
-		public ResourceReference<IRESTResource> Actor { get; set; } 
+		public ResourceReference<IRESTResource> Actor { get; set; }
+
+		public override string ToString()
+		{
+			return JsonConvert.SerializeObject(new
+			{
+				Message,
+				TimeStampUTC,
+				Exception = Exception?.Message,
+				Actor,
+			}, Formatting.Indented);
+		}
 	}
 
 	public static class SecurityWatcher	

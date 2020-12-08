@@ -36,6 +36,7 @@ namespace Dodo
 			}
 			catch (Exception e)
 			{
+				Common.Logger.Exception(e, "Exception in search");
 #if DEBUG
 				return BadRequest(e.Message);
 #else

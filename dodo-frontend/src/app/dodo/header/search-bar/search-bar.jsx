@@ -8,7 +8,7 @@ import styles from "./search-bar.module.scss"
 import { useDebouncedCallback } from "use-debounce"
 import { RSMaxInput } from "app/components/forms"
 
-const placeholder = "Search location..."
+const placeholder = "Search..."
 
 export const SearchBar = withRouter(
 	({

@@ -5,8 +5,8 @@ import { Link } from "react-router-dom"
 
 export const Popup = ({ site }) => (
 	<LeafletPopup>
-		<Link to={`${"/" + site.metadata.type + "/" + site.guid}`}>
-			<h4>{site.metadata.type} {site.name}</h4>
+		<Link to={`${"/" + site.metadata.type + "/" + site.slug}`}>
+			<h3>{site.name}</h3><h4>{site.metadata.type}</h4>
 			</Link>
 	</LeafletPopup>
 )

@@ -12,7 +12,7 @@ namespace Dodo.Users.Tokens
 	[SingletonToken]
 	public class VerifyEmailToken : RedeemableToken, INotificationToken
 	{
-		public const int MAX_REQUEST_COUNT = 4;
+		public const int MAX_REQUEST_COUNT = 10;
 		const int TOKEN_SIZE = 64;
 
 		[JsonProperty]

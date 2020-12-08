@@ -29,22 +29,22 @@ namespace Groups
 			{
 				newGroup = rscLock.Value as T;
 				newGroup.Join(joinerContext);
-				Assert.IsTrue(newGroup.IsMember(joinerContext));
+				Assert.IsTrue(newGroup.IsMember(joinerContext.User));
 				ResourceManager.Update(newGroup, rscLock);
 			}
 			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsTrue(updatedGroup.IsMember(joinerContext));
+			Assert.IsTrue(updatedGroup.IsMember(joinerContext.User));
 
 			// Leave
 			using (var rscLock = new ResourceLock(newGroup))
 			{
 				newGroup = rscLock.Value as T;
 				newGroup.Leave(joinerContext);
-				Assert.IsFalse(newGroup.IsMember(joinerContext));
+				Assert.IsFalse(newGroup.IsMember(joinerContext.User));
 				ResourceManager.Update(newGroup, rscLock);
 			}
 			updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsFalse(updatedGroup.IsMember(joinerContext));
+			Assert.IsFalse(updatedGroup.IsMember(joinerContext.User));
 		}
 
 		[TestMethod]

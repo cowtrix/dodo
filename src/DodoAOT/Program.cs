@@ -9,6 +9,7 @@ using Dodo;
 using Common.Commands;
 using Common;
 using System;
+using Dodo.RoleApplications;
 
 namespace DodoAOT
 {
@@ -47,7 +48,8 @@ namespace DodoAOT
 					typeof(WorkingGroup),
 					typeof(Role),
 					typeof(Event),
-					typeof(Site)
+					typeof(Site),
+					typeof(RoleApplication)
 				})
 			{
 				using (var fs = new StreamWriter(Path.Combine(viewModelPath, $"{rmType.Name}.cs")))
@@ -83,16 +85,22 @@ namespace DodoAOT
 				OutputReadonlyFile(EditViewGenerator.Generate(rmType), Path.Combine(folderPath, $"Edit.cshtml"));
 				OutputReadonlyFile(DeleteViewGenerator.Generate(rmType), Path.Combine(folderPath, $"Delete.cshtml"));
 			}
+
+			{
+				var folderPath = Path.Combine(viewPath, nameof(RoleApplication));
+				OutputReadonlyFile(RoleApplicationViewGenerator.Generate(), Path.Combine(folderPath, $"ViewApplication.cshtml"));
+			}
 		}
 
 		static void OutputReadonlyFile(string fileContents, string path)
 		{
 			FileInfo fileInfo = new FileInfo(path);
-			if (fileInfo.IsReadOnly)
+			if (fileInfo.Exists && fileInfo.IsReadOnly)
 			{
 				fileInfo.IsReadOnly = false;
 			}
-			using (var fs = new StreamWriter(path))
+			Directory.CreateDirectory(Path.GetDirectoryName(path));
+			using (var fs = new StreamWriter(path, false))
 			{
 				fs.Write(fileContents);
 			}
