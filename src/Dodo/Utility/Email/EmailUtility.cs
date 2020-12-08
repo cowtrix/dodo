@@ -98,7 +98,7 @@ namespace Dodo.Email
 
 		public static void SendEmail(EmailAddress target, string subject, string template, Dictionary<string, string> data)
 		{
-			if(m_emailConfig.Equals(default))
+			if(string.IsNullOrEmpty(m_emailConfig.SMTPAddress))
 			{
 				return;
 			}
