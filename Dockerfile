@@ -8,7 +8,7 @@ RUN apt-get update
 RUN apt-get install -y dotnet-sdk-3.1 aspnetcore-runtime-3.1
 
 WORKDIR /app/src/DodoServer
-
 RUN ln -s /bin/echo /usr/bin/xcopy
 EXPOSE 80
 ENTRYPOINT ["dotnet", "DodoServer.dll"]
+RUN ls
