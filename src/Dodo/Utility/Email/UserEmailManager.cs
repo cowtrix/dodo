@@ -1,3 +1,4 @@
+using Common;
 using Dodo.Users;
 using Resources;
 using System;
@@ -50,7 +51,7 @@ namespace Dodo.Email
 		{
 			while(true)
 			{
-				await Task.Delay(TimeSpan.FromMinutes(30));
+				await Task.Delay(TimeSpan.FromMinutes(10));
 				// Clear the queue for work
 				Dictionary<Guid, List<Update>> updates;
 				lock (m_pendingUpdates)
@@ -95,6 +96,7 @@ namespace Dodo.Email
 				Text = updateText,
 				Timestamp = DateTime.UtcNow,
 			};
+			Logger.Debug($"Registered update for {rsc} @ {DateTime.UtcNow}: {updateText}");
 			lock (m_pendingUpdates)
 			{
 				if (!m_pendingUpdates.TryGetValue(rsc.Guid, out var list))

@@ -30,13 +30,14 @@ export const ResourceContent =
 
 		return (
 			<div className={styles.resource}>
-				<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap}/>
-				<ParentLink parent={resource.parent}/>
-				<Video videoEmbedURL={resource.videoEmbedURL} />				
+				<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap} />
+				<ParentLink parent={resource.parent} />
+				<Video videoEmbedURL={resource.videoEmbedURL} />
+				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h2>EDIT  <Icon icon="edit" size="1x" /></h2></a> : null}
 				<div className={styles.descriptionContainer}>
-					<Description description={resource.publicDescription}/>
+					<Description description={resource.publicDescription} />
 					{shouldDisplayNotifications &&
-						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
+						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
 					}
 				</div>
 				{resourceType == 'role' ?
@@ -57,11 +58,10 @@ export const ResourceContent =
 							? () => push(addReturnPathToRoute(REGISTER_ROUTE, location.pathname + '/join'))
 							: !isMember ? subscribe : unSubscribe}
 				/>
-				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h3>EDIT  <Icon icon="edit" size="1x" /></h3></a> : null}
-				<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes}/>
-				<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes}/>
-				<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes}/>
-				<ExpandableList resources={resource.roles} title={VOLUNTEER_NOW} resourceTypes={resourceTypes}/>
+				<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes} />
+				<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes} />
+				<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />
+				<ExpandableList resources={resource.roles} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />
 			</div>
 		)
 	}
