@@ -1,5 +1,43 @@
 @import "~app/styles/styles";
 
 .h3Title {
-  margin-bottom: spacing(2);
+	margin-bottom: spacing(2);
+}
+
+.text {
+	margin-bottom: spacing(4);
+}
+
+.warning {
+	padding-top: spacing(2);
+	padding-bottom: spacing(2);
+	background-color: $warning-yellow;
+	margin-bottom: spacing(2);
+}
+
+.dangerZoneTitle {
+	background: repeating-linear-gradient(
+		135deg,
+		$dangerZoneColor1,
+		$dangerZoneColor1 $dangerZoneStripeWidth,
+		$dangerZoneColor2 $dangerZoneStripeWidth,
+		$dangerZoneColor2 $dangerZoneStripeWidth * 2
+	);
+
+	h2 {
+		padding: spacing(2) spacing(2) spacing(1);
+	}
+}
+
+.dangerZoneInner {
+	padding: spacing(2);
+	> div {
+		font-size: 0.85em;
+		font-weight: bold;
+		padding: 0 spacing(2) spacing(2);
+	}
+}
+
+.dangerZoneBox {
+	padding: 0;
 }

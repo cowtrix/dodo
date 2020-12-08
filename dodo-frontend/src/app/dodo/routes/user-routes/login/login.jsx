@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { getReturnPath, keepReturnPathParam } from '../../../../domain/services/services';
 
-const LOGIN = 'Login'
-
 export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 
 	const history = useHistory()

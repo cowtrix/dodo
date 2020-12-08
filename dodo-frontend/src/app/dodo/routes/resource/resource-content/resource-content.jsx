@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Icon } from '../../../../components/icon'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
-import { Header, Description, SignUpButton, ParentLink, Updates, Role, Address } from "app/components/resources"
+import { Header, Description, SignUpButton, ParentLink, Updates, Role } from "app/components/resources"
 
 import { ADMIN_PERMISSIONS } from 'app/constants'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT } from './constants'
@@ -39,7 +39,7 @@ export const ResourceContent =
 						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications}/>
 					}
 				</div>
-				{resourceType == 'role' ?
+				{resourceType === 'role' ?
 					<Role
 						resource={resource}
 						isLoggedIn={isLoggedIn}

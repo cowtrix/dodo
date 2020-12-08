@@ -10,7 +10,7 @@ export const Submit = ({ submit, value, className }) =>
 			onClick={() => submit()}
 			className={className}
 		>
-			<h1>{value}</h1>
+			<div>{value}</div>
 		</Button>
 	</div>
 
