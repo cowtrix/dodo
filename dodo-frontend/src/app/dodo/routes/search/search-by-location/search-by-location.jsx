@@ -10,7 +10,7 @@ const getSearchByCurrentLocation = (getSearchResults, searchParams, setCenterMap
 	navigator.geolocation.getCurrentPosition(position => {
 		const loc = position.coords
 		const latlong = loc.latitude + "+" + loc.longitude
-		getSearchResults({ latlong, distance: "250" }, setCenterMap)
+		getSearchResults({ distance: "250", latlong }, setCenterMap)
 	})
 }
 
