@@ -53,6 +53,10 @@ namespace Dodo.Email
 
 		static EmailUtility()
 		{
+			if (string.IsNullOrEmpty(m_emailConfig.SMTPAddress))
+			{
+				return;
+			}
 			try
 			{
 				var webroot = DodoApp.WebRoot;
