@@ -1,0 +1,35 @@
+@import "~app/styles/styles";
+
+.tree {
+	width: 100%;
+
+	&.child {
+		padding-left: spacing(5);
+	}
+
+	li {
+		display: flex;
+		margin-top: spacing(2);
+		width: 100%;
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		&.hidden {
+			display: none;
+		}
+	}
+}
+
+.button {
+	cursor: pointer;
+	padding: spacing(2);
+	margin-right: spacing(2);
+
+	&:disabled {
+		cursor: not-allowed;
+	}
+}
+
+
