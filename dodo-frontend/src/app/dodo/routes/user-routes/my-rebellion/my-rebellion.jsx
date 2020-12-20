@@ -26,7 +26,11 @@ function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', close
 								aria-hidden={true}>
 								<FontAwesomeIcon icon={isClosed ? faPlus : faMinus} />
 							</button>
-							<Resource {...subscription.reference} resourceTypes={resourceTypes}/>
+							<Resource
+								{...subscription.reference}
+								resourceTypes={resourceTypes}
+								administrator={subscription.administrator}
+							/>
 						</li>
 						{subscription.children.length > 0 && (
 							<li className={isClosed ? styles.hidden : ''}>

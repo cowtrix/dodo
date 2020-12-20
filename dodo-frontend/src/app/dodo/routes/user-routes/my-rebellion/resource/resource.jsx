@@ -1,11 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import styles from './resource.module.scss'
 import { Icon } from 'app/components/index'
+import styles from './resource.module.scss'
 
-
-export const Resource = ({ name, guid, metadata, resourceTypes = [] }) => {
+export const Resource = ({ name, guid, metadata, resourceTypes = [], administrator }) => {
 	const resourceType = resourceTypes.find(thisType => thisType.value === metadata.type)
 	const backgroundColor = resourceType && '#' + resourceType.displayColor
 
@@ -16,11 +15,13 @@ export const Resource = ({ name, guid, metadata, resourceTypes = [] }) => {
 			style={{
 				backgroundColor: backgroundColor}}>
 			<h3>{name}</h3>
-			<Icon icon="chevron-right" size="1x" className={styles.icon} />
+			<div className={styles.icons}>
+				{administrator && <Icon icon="edit" size="1x" className={styles.icon} />}
+				<Icon icon="chevron-right" size="1x" className={styles.icon} />
+			</div>
 		</Link>
 	)
 }
-
 
 Resource.propTypes = {
 	name: PropTypes.string,
