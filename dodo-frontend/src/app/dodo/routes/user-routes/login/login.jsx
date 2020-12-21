@@ -13,7 +13,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 	const location = useLocation();
 
 	if (isLoggedIn) {
-		history.push(getReturnPath(location) || '/');
+		history.replace(getReturnPath(location) || '/');
 	}
 
 	const { t } = useTranslation("ui")

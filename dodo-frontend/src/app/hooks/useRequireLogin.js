@@ -15,7 +15,7 @@ export const useRequireLogin = () => {
 
 	useEffect(() => {
 		if(!_username && !_fetchingUser) {
-			history.push(
+			history.replace(
 				addReturnPathToRoute(LOGIN_ROUTE, path)
 			);
 		}
