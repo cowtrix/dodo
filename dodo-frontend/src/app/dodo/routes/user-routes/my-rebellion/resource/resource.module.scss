@@ -11,12 +11,12 @@
 	width: 100%;
 }
 
-.icons {
-	display: flex;
-	white-space: nowrap;
-};
-
 .icon {
 	opacity: 0.5;
+	margin-left: spacing(1);
+}
+
+.edit {
+	flex: 0;
 	margin-left: spacing(1);
 }

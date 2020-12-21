@@ -17,13 +17,14 @@ function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', close
 				const isClosed = closed.includes(subscription.reference.guid);
 
 				return (
-					<>
+					<React.Fragment key={subscription.reference.guid}>
 						<li>
 							<button
 								className={styles.button}
 								onClick={() => onToggleList(subscription.reference.guid, !isClosed)}
 								disabled={subscription.children.length === 0}
-								aria-hidden={true}>
+								aria-hidden={true}
+								title={isClosed ? 'Expand' : 'Collapse'}>
 								<FontAwesomeIcon icon={isClosed ? faPlus : faMinus} />
 							</button>
 							<Resource
@@ -37,7 +38,7 @@ function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', close
 								{getSubscriptionTree(subscription.children, resourceTypes, 'child', closed, onToggleList)}
 							</li>
 						)}
-					</>
+					</React.Fragment>
 				);
 			})}
 		</ul>
@@ -45,7 +46,7 @@ function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', close
 }
 
 export const MyRebellion = ({ error, getMyRebellion, isFetching, myRebellion = [], resourceTypes }) => {
-	useEffect(() => { getMyRebellion() }, []);
+	useEffect(() => { getMyRebellion() }, [getMyRebellion]);
 
 	const [closed, setClosed] = useState([]);
 
