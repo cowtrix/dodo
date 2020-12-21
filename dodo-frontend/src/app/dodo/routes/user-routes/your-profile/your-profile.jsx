@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, EditableInput, Submit } from 'app/components/forms/index'
 import { UpdateEmail } from './update-email/index'
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { LOGIN_ROUTE } from '../login/route';
-import { addReturnPathToRoute } from '../../../../domain/services/services';
+import useRequireLogin from 'app/hooks/useRequireLogin';
 
 const MY_REBELLION = "Your profile"
 const UPDATE_DETAILS = "Update my details"
@@ -13,15 +11,6 @@ export const YourProfile = (
 	{
 		currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid, resendVerificationEmail }
 	) => {
-
-	const { push } = useHistory();
-	const { path } = useRouteMatch();
-
-	if(!currentUsername && !fetchingUser) {
-		push(
-			addReturnPathToRoute(LOGIN_ROUTE, path)
-		);
-	}
 
 	const [username, setUserName] = useState(currentUsername)
 	const [name, setName] = useState(currentName)
@@ -32,6 +21,10 @@ export const YourProfile = (
 		setName(currentName)
 		setEmail(currentEmail)
 	}, [currentUsername, currentEmail, currentName])
+
+	// Ensure user is logged in
+	const loggedIn = useRequireLogin();
+	if(!loggedIn) return null;
 
 	return (
 		<Container
