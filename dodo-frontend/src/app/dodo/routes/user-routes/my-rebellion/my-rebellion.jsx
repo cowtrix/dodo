@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container } from 'app/components/forms/index'
 import { Resource } from './resource'
+import useRequireLogin from 'app/hooks/useRequireLogin';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
@@ -49,6 +50,10 @@ export const MyRebellion = ({ error, getMyRebellion, isFetching, myRebellion = [
 	useEffect(() => { getMyRebellion() }, [getMyRebellion]);
 
 	const [closed, setClosed] = useState([]);
+
+	// Ensure user is logged in
+	const loggedIn = useRequireLogin();
+	if(!loggedIn) return null;
 
 	const onToggleList = (guid, closing) => {
 		if(closing) {
