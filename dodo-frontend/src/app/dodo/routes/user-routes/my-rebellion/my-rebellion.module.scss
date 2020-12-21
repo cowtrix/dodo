@@ -23,12 +23,15 @@
 }
 
 .button {
+	all: unset;
 	cursor: pointer;
 	padding: spacing(2);
-	margin-right: spacing(2);
+	margin-right: spacing(1);
 
 	&:disabled {
 		cursor: not-allowed;
+		background-color: $color-light-grey;
+		color: $color-text-light;
 	}
 }
 

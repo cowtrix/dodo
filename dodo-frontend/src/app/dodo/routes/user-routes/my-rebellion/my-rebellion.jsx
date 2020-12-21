@@ -16,14 +16,18 @@ function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', close
 		<ul className={`${styles.tree} ${styles[level]}`}>
 			{subscriptions.map(subscription => {
 				const isClosed = closed.includes(subscription.reference.guid);
+				const resourceType = resourceTypes.find(thisType => thisType.value === subscription.reference.metadata.type)
+				const backgroundColor = resourceType && '#' + resourceType.displayColor
+				const hasChildren = subscription.children.length > 0
 
 				return (
 					<React.Fragment key={subscription.reference.guid}>
 						<li>
 							<button
 								className={styles.button}
+								style={{backgroundColor: hasChildren ? backgroundColor : undefined}}
 								onClick={() => onToggleList(subscription.reference.guid, !isClosed)}
-								disabled={subscription.children.length === 0}
+								disabled={!hasChildren}
 								aria-hidden={true}
 								title={isClosed ? 'Expand' : 'Collapse'}>
 								<FontAwesomeIcon icon={isClosed ? faPlus : faMinus} />
