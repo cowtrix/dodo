@@ -51,7 +51,7 @@ export const ResourceContent =
 					: null
 				}
 				<SignUpButton
-					disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
+					disable={resource.metadata.permission === ADMIN_PERMISSIONS}
 					resourceColor={resourceColor}
 					isLoggedIn={isLoggedIn}
 					isSubscribed={isMember}
