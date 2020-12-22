@@ -69,7 +69,7 @@ export const MyRebellion = ({ error, getMyRebellion, isFetching, myRebellion = [
 
 	let content;
 	if(isFetching) {
-		content = <p>Loading, please wait...</p>;
+		content = <p></p>;
 	}
 	else if(error) {
 		content = <>There was an error loading the data.</>;
@@ -85,7 +85,11 @@ export const MyRebellion = ({ error, getMyRebellion, isFetching, myRebellion = [
 	}
 
 	return (
-		<Container title={MY_REBELLION} content={content} />
+		<Container
+			title={MY_REBELLION}
+			loading={isFetching}
+			content={content}
+		/>
 	)
 }
 
