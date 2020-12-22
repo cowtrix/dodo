@@ -25,7 +25,9 @@ export const Resource =
 			leaveResource,
 			isLoggedIn,
 			isMember,
-			fetchingUser
+			fetchingUser,
+			emailConfirmed,
+			resendVerificationEmail
 		}
 	) => {
 		const { slug, resourceType } = match.params
@@ -78,6 +80,8 @@ export const Resource =
 											resourceType={resourceType}
 											subscribeResource={subscribeResource}
 											leaveResource={leaveResource}
+											resendVerificationEmail={resendVerificationEmail}
+											isEmailConfirmed={emailConfirmed}
 											isLoggedIn={isLoggedIn}
 											isMember={isMember}
 										/>
