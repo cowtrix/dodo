@@ -1,17 +1,6 @@
 import { tryToParseJSON } from './services';
 
-const previousAbortControllers = {};
-
-function handleAborting(abortController, url) {
-	const urlPath = url.split(/[?#]/)[0]; // Get URL path without params or hashes  to use as request key
-	if(previousAbortControllers[urlPath]) previousAbortControllers[urlPath].abort(); // Abort last request if there is one
-	previousAbortControllers[urlPath] = abortController; // Sotre controller so we can cancel the next request
-}
-
-export const api = async(url, method = "get", body, abortPrevious) => {
-	const abortController = new AbortController();
-	if (abortPrevious) handleAborting(abortController, url);
-
+export const api = async(url, method = "get", body, abortController) => {
 	return fetch(url, {
 		method,
 		body: JSON.stringify(body),
@@ -20,7 +9,7 @@ export const api = async(url, method = "get", body, abortPrevious) => {
 			Accept: "application/json"
 		},
 		credentials: "include",
-		signal: abortPrevious ? abortController.signal : null,
+		signal: abortController ? abortController.signal : undefined,
 	})
 	.then(resp => {
 		return resp.text()
@@ -52,7 +41,7 @@ export const api = async(url, method = "get", body, abortPrevious) => {
 	})
 	.catch(resp => {
 		if(resp instanceof Error) {
-			if(resp.name === 'AbortError') {
+			if(resp.name !== 'AbortError') {
 				// eslint-disable-next-line no-throw-literal
 				throw {
 					response: undefined,

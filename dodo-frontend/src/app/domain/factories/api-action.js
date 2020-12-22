@@ -1,7 +1,39 @@
 import { api, auth } from "../services"
 import { CANCELLED, REQUEST, FAILURE, SUCCESS } from "../constants"
 
-const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal, method, body) => {
+const abortControllers = {};
+
+function abortPreviousRequest(requestKey, dispatch, action, cb) {
+	if(abortControllers[requestKey]) {
+		abortControllers[requestKey].abort(); // Abort last request if there is one
+		delete abortControllers[requestKey];
+		if (cb) cb(false); // Call callback function if one exists
+
+		// Dispatch cancelled action
+		dispatch({
+			type: action + CANCELLED,
+			payload: {
+				status: 0,
+				message: "The user aborted the request."
+			}
+		})
+	}
+}
+
+const apiActionHandler = async (service, dispatch, action, url, cb, abortPrevious, method, body) => {
+	let abortController;
+	const requestKey = method + ':' + url.split(/[?#]/)[0]; // Get method:URL (path without params or hashes) to use as request key
+
+	if(abortPrevious) {
+		abortController = new AbortController();
+
+		// Cancel previous request if abortPrevious flag is set
+		if(abortPrevious) abortPreviousRequest(requestKey, dispatch, action, cb);
+
+		// Store abortController so we can cancel request later if we need to
+		abortControllers[requestKey] = abortController;
+	}
+
 	dispatch({
 		type: action + REQUEST,
 		payload: {
@@ -9,7 +41,8 @@ const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal,
 			url
 		}
 	})
-	return service(url, method, body, abortSignal)
+
+	return service(url, method, body, abortController)
 		.then(response => {
 			if (response.status) {
 				dispatch({
@@ -23,18 +56,13 @@ const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal,
 					payload: response
 				})
 			}
+			delete abortControllers[requestKey];
 			if (cb) cb(response)
 		})
 		.catch(error => {
-			if(error.status === 0) {
-				if (cb) cb(false)
-				dispatch({
-					type: action + CANCELLED,
-					payload: error
-				})
-			}
-			else {
+			if(error.status > 0) { // status of 0 is cancelled, anything above that is a failure
 				console.log(error)
+				delete abortControllers[requestKey];
 				if (cb) cb(false)
 				dispatch({
 					type: action + FAILURE,
@@ -44,10 +72,10 @@ const apiActionHandler = async (service, dispatch, action, url, cb, abortSignal,
 		})
 }
 
-export const apiAction = (dispatch, action, url, cb, abortSignal, method, body) => {
-	return apiActionHandler(api, dispatch, action, url, cb, abortSignal, method, body);
+export const apiAction = (dispatch, action, url, cb, abortPrevious, method, body) => {
+	return apiActionHandler(api, dispatch, action, url, cb, abortPrevious, method, body);
 }
 
-export const authAction = (dispatch, action, url, cb, abortSignal, method, body) => {
-	return apiActionHandler(auth, dispatch, action, url, cb, abortSignal, method, body);
+export const authAction = (dispatch, action, url, cb, abortPrevious, method, body) => {
+	return apiActionHandler(auth, dispatch, action, url, cb, abortPrevious, method, body);
 }
