@@ -19,7 +19,8 @@ export const addReturnPathToRoute = (route, returnPath) => {
 
 export const getReturnPath = (location) => {
 	const search = new URLSearchParams(location.search);
-	return search.get(REDIRECT_URL_PARAM);
+	const param = [...search.entries()].find(entry => entry[0].toLowerCase() === REDIRECT_URL_PARAM.toLowerCase());
+	return param?.[1];
 };
 
 export const keepReturnPathParam = (newRoute, location) => {
