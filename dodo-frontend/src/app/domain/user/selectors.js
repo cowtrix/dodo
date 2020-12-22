@@ -1,5 +1,5 @@
 import { path } from 'ramda'
-import { LOGIN, GET_LOGGED_IN_USER, REGISTER_USER, GET_MY_REBELLION } from './action-types'
+import { LOGIN, GET_LOGGED_IN_USER, REGISTER_USER, GET_MY_REBELLION, UPDATE_DETAILS } from './action-types'
 
 export const user = state =>
 	path(["domain", "user"], state)
@@ -45,3 +45,9 @@ export const registeringUser = state =>
 
 export const registerError = state =>
 	path(["requests", REGISTER_USER, "error"], state)
+
+export const updateError = state =>
+	path(["requests", UPDATE_DETAILS, "error"], state)
+
+export const isUpdating = state =>
+	path(["requests", UPDATE_DETAILS, "isFetching"], state)
