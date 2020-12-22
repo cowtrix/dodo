@@ -13,7 +13,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 
 	if (isLoggedIn) {
 		const returnPath = getReturnPath(location) || '/';
-		const isRoute = returnPath.substring(0, 6) !== '/edit/'; // We may need to expand this at some point
+		const isRoute = !['/edit/', '/auth/'].includes(returnPath.substring(0, 6)) && returnPath.substring(0, 5) !== '/api/';
 
 		if(isRoute) {
 			history.replace(returnPath);
