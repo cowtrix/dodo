@@ -2,6 +2,7 @@ using Common;
 using Common.Config;
 using Common.Extensions;
 using Dodo;
+using Dodo.Email;
 using Dodo.Models;
 using Dodo.Users;
 using Dodo.Users.Tokens;
@@ -26,6 +27,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> Create(TSchema schema)
 	{
+		using var _ = new FunctionTimer(TimeSpan.FromSeconds(2));
 		var request = VerifyRequest(schema);
 		if (!request.IsSuccess)
 		{
@@ -70,6 +72,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> Update(string id, object values)
 	{
+		using var _ = new FunctionTimer(TimeSpan.FromSeconds(2));
 		var request = VerifyRequest(id, EHTTPRequestType.PATCH);
 		if (!request.IsSuccess)
 		{
@@ -104,6 +107,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> Delete(string id)
 	{
+		using var _ = new FunctionTimer(TimeSpan.FromSeconds(2));
 		var request = VerifyRequest(id, EHTTPRequestType.DELETE);
 		if (!request.IsSuccess)
 		{
@@ -117,6 +121,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> Get(string id)
 	{
+		using var _ = new FunctionTimer(TimeSpan.FromSeconds(1));
 		return VerifyRequest(id, EHTTPRequestType.GET);
 	}
 
@@ -169,9 +174,14 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 			{
 				return ResourceRequestError.NotFoundRequest();
 			}
-			var notificationToken = new SimpleNotificationToken(Context.User, null, notification.Message, null, ENotificationType.Announcement, notification.PermissionLevel, true);
+			var notificationToken = new SimpleNotificationToken(Context.User, null, 
+				notification.Message, null, ENotificationType.Announcement, notification.PermissionLevel, true);
 			notificationRsc.TokenCollection.AddOrUpdate(notificationRsc, notificationToken);
 			ResourceManager.Update(target, resourceLock);
+			if(target is IPublicResource pub)
+			{
+				UserEmailManager.RegisterUpdate(pub, notification.Message);
+			}
 		}
 		req.Result = target;
 		return req;

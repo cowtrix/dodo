@@ -68,6 +68,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Update="EmailTemplates\Update.template.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	  <None Update="EmailTemplates\Callback.template.html">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>

@@ -4,6 +4,7 @@ using Microsoft.Win32.SafeHandles;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources.Location;
+using Resources.Security;
 using System;
 using System.Collections.Generic;
 
@@ -43,12 +44,11 @@ namespace Resources
 		GeoLocation Location { get; }
 		string PublicDescription { get; }
 		bool HasValue();
-		bool IsPublished { get; set; }
 		string FullyQualifiedName { get; set; }
 		Type GetRefType();
 	}
 
-	public struct ResourceReference<T> : IResourceReference where T : class, IRESTResource
+	public struct ResourceReference<T> : IViewMetadataProvider, IResourceReference where T : class, IRESTResource
 	{
 		[JsonProperty]
 		[BsonElement]
@@ -74,9 +74,6 @@ namespace Resources
 		[JsonProperty]
 		[BsonElement]
 		public string PublicDescription { get; set; }
-		[JsonProperty]
-		[BsonElement]
-		public bool IsPublished { get; set; }
 
 		public T GetValue()
 		{
@@ -115,7 +112,6 @@ namespace Resources
 			PublicDescription = resource is IDescribedResource desc
 				? StringExtensions.StripMDLinks(desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH)))
 				: default;
-			IsPublished = resource is IPublicResource pub ? pub.IsPublished : false;
 		}
 
 		public ResourceReference(Guid guid, string slug, Type type, string name, GeoLocation location, Guid parent, string desc, bool isPublished)
@@ -132,7 +128,6 @@ namespace Resources
 			FullyQualifiedName = type?.AssemblyQualifiedName;
 			Parent = parent;
 			PublicDescription = desc;
-			IsPublished = isPublished;
 		}
 
 		public ResourceReference(Guid guid) : this(ResourceUtility.GetResourceByGuid(guid) as T)
@@ -174,6 +169,11 @@ namespace Resources
 		public override string ToString()
 		{
 			return $"REF: {Name} ({Type})";
+		}
+
+		public void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
+		{
+			view.Add(Resource.METADATA_TYPE, GetRefType().Name.ToCamelCase());
 		}
 	}
 }

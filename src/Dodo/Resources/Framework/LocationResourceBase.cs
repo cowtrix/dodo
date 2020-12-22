@@ -15,6 +15,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using Resources.Location;
 using Dodo.DodoResources;
 using Dodo.Users.Tokens;
+using System.Threading.Tasks;
 
 namespace Dodo.LocationResources
 {
@@ -58,8 +59,10 @@ namespace Dodo.LocationResources
 				return;
 			}
 			var group = schema.GetParent();
-			Parent = group.CreateRef<IRESTResource>();
+			Parent = group.CreateRef();
 			Location = schema.Location;
+			// force location lookup
+			new Task(() => LocationManager.GetLocationData(Location)).Start();
 			PublicDescription = schema.PublicDescription;
 			Facilities = new SiteFacilities();
 		}

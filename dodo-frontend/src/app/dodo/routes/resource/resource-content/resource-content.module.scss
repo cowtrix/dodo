@@ -13,14 +13,19 @@
 }
 
 .adminbutton {
-	position: absolute;
-	left: 10px;
-	top: -50px;
+	text-align:center;
+	margin:auto;
+	margin-bottom:10px;
+	margin-top:10px;
+	max-width:500px;
+	height:50px;
 	display: block;
 	padding: 14px;
 	background-color: $extinction-rebellion-green;
 	font-family: $title-font;
-	z-index:9999;
-	text-decoration:none;
-	color:black;
+	z-index: 9999;
+	font-size:16px;
+	text-decoration: none;
+	color: black;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

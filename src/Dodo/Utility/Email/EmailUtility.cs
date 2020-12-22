@@ -45,7 +45,7 @@ namespace Dodo.Email
 		}
 
 		private static EmailConfiguration m_emailConfig =
-			new ConfigVariable<EmailConfiguration>("Dodo_EmailConfiguration").Value;
+			new ConfigVariable<EmailConfiguration>("Dodo_EmailConfiguration", default).Value;
 		private static string[] m_banners;
 		private static PersistentStore<string, bool> m_unsubscribed = new PersistentStore<string, bool>(DodoApp.PRODUCT_NAME, "UnsubbedEmails");
 		private static Dictionary<string, string> m_templateCache = new Dictionary<string, string>();
@@ -53,6 +53,10 @@ namespace Dodo.Email
 
 		static EmailUtility()
 		{
+			if (string.IsNullOrEmpty(m_emailConfig.SMTPAddress))
+			{
+				return;
+			}
 			try
 			{
 				var webroot = DodoApp.WebRoot;
@@ -98,6 +102,10 @@ namespace Dodo.Email
 
 		public static void SendEmail(EmailAddress target, string subject, string template, Dictionary<string, string> data)
 		{
+			if(string.IsNullOrEmpty(m_emailConfig.SMTPAddress))
+			{
+				return;
+			}
 			var from = new EmailAddress(m_emailConfig.FromEmail, m_emailConfig.FromName);
 			if (m_unsubscribed.ContainsKey(target.Email))
 			{

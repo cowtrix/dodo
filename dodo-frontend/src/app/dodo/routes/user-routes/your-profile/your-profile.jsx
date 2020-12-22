@@ -1,31 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Container, EditableInput, Submit } from 'app/components/forms/index'
+import { Container, EditableInput, Submit, Error } from 'app/components/forms/index'
 import { UpdateEmail } from './update-email/index'
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { LOGIN_ROUTE } from '../login/route';
-import { addReturnPathToRoute } from '../../../../domain/services/services';
+import useRequireLogin from 'app/hooks/useRequireLogin';
 
 const MY_REBELLION = "Your profile"
 const UPDATE_DETAILS = "Update my details"
 
 export const YourProfile = (
 	{
-		currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid, resendVerificationEmail }
+		currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, isUpdating, updateError, guid, resendVerificationEmail }
 	) => {
-
-	const { push } = useHistory();
-	const { path } = useRouteMatch();
-
-	if(!currentUsername && !fetchingUser) {
-		push(
-			addReturnPathToRoute(LOGIN_ROUTE, path)
-		);
-	}
 
 	const [username, setUserName] = useState(currentUsername)
 	const [name, setName] = useState(currentName)
 	const [email, setEmail] = useState(currentEmail)
+	const [firstRun, setFirstRun] = useState(undefined);
 
 	useEffect(() => {
 		setUserName(currentUsername)
@@ -33,9 +23,18 @@ export const YourProfile = (
 		setEmail(currentEmail)
 	}, [currentUsername, currentEmail, currentName])
 
+	const handleUpdate = () => {
+		updateDetails(username, name, email, guid);
+		setFirstRun(false);
+	}
+
+	// Ensure user is logged in
+	const loggedIn = useRequireLogin();
+	if(!loggedIn) return null;
+
 	return (
 		<Container
-			loading={fetchingUser}
+			loading={fetchingUser || isUpdating}
 			title={MY_REBELLION}
 			content={
 				<>
@@ -59,9 +58,10 @@ export const YourProfile = (
 						isConfirmed={isConfirmed}
 						resendVerificationEmail={resendVerificationEmail}
 					/>
+					{!firstRun && updateError && (<Error error={updateError} marginTop />)}
 					<Submit
 						value={UPDATE_DETAILS}
-						submit={updateDetails(username, name, email, guid)}
+						submit={handleUpdate}
 					/>
 				</>
 			}

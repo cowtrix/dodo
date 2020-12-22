@@ -6,8 +6,8 @@ import styles from './tile.module.scss'
 
 
 export const Tile = ({ type, resourceTypes = [] }) => {
-
-	const eventColor = resourceTypes.find(resType => type === resType.value).displayColor
+	
+	const eventColor = resourceTypes.find(resType => type.toLowerCase() === resType.value.toLowerCase()).displayColor
 
 	const tileStyles = {
 		color: "black",

@@ -9,7 +9,7 @@ namespace Dodo
 	{
 		public override bool Encrypted => false;
 
-		public ResourceReference<User> Creator { get; set; }
+		public HashedResourceReference Creator { get; set; }
 
 		public bool ShouldRemove { get; set; }
 
@@ -29,7 +29,7 @@ namespace Dodo
 
 		public SimpleNotificationToken(User creator, string source, string message, string link, ENotificationType type, EPermissionLevel permissionLevel, bool canDelete) : base()
 		{
-			Creator = creator.CreateRef();
+			Creator = new HashedResourceReference(creator, message);
 			PermissionLevel = permissionLevel;
 			m_notification = new Notification(Guid, source, message, link, type, permissionLevel, canDelete);
 		}

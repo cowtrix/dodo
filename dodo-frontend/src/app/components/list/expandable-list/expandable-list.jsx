@@ -12,11 +12,11 @@ export const ExpandableList = ({ resources = [], title, resourceTypes }) => {
 				{title ? <h3 className={styles.title}>{title}</h3> : null}
 				<div className={styles.listBox}>
 					<List
-						resources={listExpanded ? resources : resources.map((r, i) => i < 2 && r).filter(x =>  x)}
+						resources={listExpanded ? resources : resources.map((r, i) => i < 3 && r).filter(x =>  x)}
 						resourceTypes={resourceTypes}
 						setListExpanded={setListExpanded}
 						listExpanded={listExpanded}
-						isExpandableList={setListExpanded && resources.length > 2}
+						isExpandableList={setListExpanded && resources.length > 3}
 					/>
 				</div>
 			</>
