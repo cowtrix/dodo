@@ -15,6 +15,7 @@ export const apiReducerFactory = actionType => (
 				...state,
 				isFetching: true,
 				hasErrored: false,
+				error: undefined
 			}
 		}
 		case actionType + SUCCESS:
@@ -22,7 +23,8 @@ export const apiReducerFactory = actionType => (
 			return {
 				...state,
 				isFetching: false,
-				hasErrored: false
+				hasErrored: false,
+				error: undefined
 			}
 		}
 		case actionType + FAILURE: {
