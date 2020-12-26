@@ -1,0 +1,53 @@
+@import "~app/styles/styles";
+
+$yellow: #FFEB84;
+$orange: #F2B166;
+$red: #E53D33;
+
+.arrestRisk {
+	background-color: $yellow;
+	padding: spacing(2);
+
+	&.high {
+		background: repeating-linear-gradient(-45deg, $yellow, $yellow 75px, $orange 75px, $orange 150px);
+
+		.label {
+			font-size: 24px;
+		}
+		.level {
+			color: $red;
+		}
+	}
+}
+
+.top {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.icon {
+	transform: rotate(180deg);
+	margin-left: spacingXS(1);
+
+	&.hide {
+		transform: rotate(-90deg);
+	}
+}
+
+.text {
+	margin-top: spacingXS(2);
+}
+
+.label,
+.toggle {
+	border: none;
+	background: transparent;
+	font-family: $title-font;
+	font-size: 14px;
+}
+
+.toggle {
+	cursor: pointer;
+}
