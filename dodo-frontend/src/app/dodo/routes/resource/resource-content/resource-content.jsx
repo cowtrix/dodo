@@ -13,7 +13,7 @@ import { REGISTER_ROUTE } from '../../user-routes/register'
 import { addReturnPathToRoute } from '../../../../domain/services/services'
 
 export const ResourceContent =
-	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, isLoggedIn, isMember, notifications, getNotifications, isLoadingNotifications, hideMap }) => {
+	({ resource, setCenterMap, resourceTypes, resourceColor, resourceType, subscribeResource, isEmailConfirmed, isLoggedIn, isMember, notifications, getNotifications, isLoadingNotifications, hideMap, resendVerificationEmail }) => {
 		const { push } = useHistory()
 		const location = useLocation();
 
@@ -40,16 +40,18 @@ export const ResourceContent =
 						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
 					}
 				</div>
-				{resourceType == 'role' ?
+				{resourceType === 'role' ?
 					<Role
 						resource={resource}
+						isEmailConfirmed={isEmailConfirmed}
 						isLoggedIn={isLoggedIn}
 						hasApplied={resource.metadata.applied}
+						resendVerificationEmail={resendVerificationEmail}
 					/>
 					: null
 				}
 				<SignUpButton
-					disable={(isLoggedIn && resource.applicantQuestion) || resource.metadata.permission === ADMIN_PERMISSIONS}
+					disable={resource.metadata.permission === ADMIN_PERMISSIONS}
 					resourceColor={resourceColor}
 					isLoggedIn={isLoggedIn}
 					isSubscribed={isMember}

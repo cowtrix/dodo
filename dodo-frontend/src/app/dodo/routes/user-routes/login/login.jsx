@@ -2,18 +2,24 @@ import { Container, Error, Input, Submit, TickBox } from 'app/components/forms';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { getReturnPath, keepReturnPathParam } from '../../../../domain/services/services';
 
 const LOGIN = 'Login'
 
 export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
-
 	const history = useHistory()
 	const location = useLocation();
 
 	if (isLoggedIn) {
-		history.replace(getReturnPath(location) || '/');
+		const returnPath = getReturnPath(location) || '/';
+		const isRoute = !['/edit/', '/auth/'].includes(returnPath.substring(0, 6)) && returnPath.substring(0, 5) !== '/api/';
+
+		if(isRoute) {
+			history.replace(returnPath);
+		} else {
+			window.location = returnPath;
+		}
 	}
 
 	const { t } = useTranslation("ui")

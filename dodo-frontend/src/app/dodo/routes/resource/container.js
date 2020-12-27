@@ -19,7 +19,8 @@ const mapStateToProps = state => ({
 	resourceTypes: resources.selectors.resourceTypes(state),
 	isLoggedIn: !!user.selectors.username(state),
 	isMember: resourceSelectors.isMember(state),
-	fetchingUser: user.selectors.fetchingUser(state)
+	fetchingUser: user.selectors.fetchingUser(state),
+	emailConfirmed: user.selectors.emailConfirmed(state),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -30,6 +31,7 @@ const mapDispatchToProps = dispatch => ({
 	getNotifications: (resourceType, slug, page) => {
 		resources.actions.notificationsGet(dispatch, resourceType, slug, page)
 	},
+	resendVerificationEmail: () => user.actions.resendVerificationEmail(dispatch),
 	subscribeResource: (resourceType, slug, subscribe, body) =>
 		resources.actions.subscribeResource(dispatch, resourceType, slug, subscribe, body),
 })
