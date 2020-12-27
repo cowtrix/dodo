@@ -22,6 +22,13 @@ namespace Dodo.Users
 		
 		public string Token { get; set; }
 
+		public bool WeeklyUpdate { get; set; }
+
+		public bool DailyUpdate { get; set; }
+
+		public bool NewNotifications { get; set; } = true;
+
+
 		public UserSchema(string name, string username, string password, string email, string token = null) : base(name)
 		{
 			Username = username;

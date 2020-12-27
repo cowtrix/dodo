@@ -48,6 +48,9 @@ namespace Dodo.Users
 			PersonalData.EmailConfirmed = true;
 #endif
 			Slug = schema.Username;
+			PersonalData.EmailPreferences.DailyUpdate = schema.DailyUpdate;
+			PersonalData.EmailPreferences.WeeklyUpdate = schema.WeeklyUpdate;
+			PersonalData.EmailPreferences.NewNotifications = schema.NewNotifications;
 		}
 
 		public override bool VerifyExplicit(out string error)
