@@ -16,7 +16,7 @@ export const Title = ({ title, type, parent, startDate, endDate }) => {
 		if (!d) {
 			return "";
 		}
-		var str = d.getDate() + '/' + d.getMonth();
+		var str = d.getDate() + '/' + (d.getMonth() + 1);
 		var delta = Date.now() - d;
 		if (delta < 2 * 24 * 60 * 60 * 1000) {
 
