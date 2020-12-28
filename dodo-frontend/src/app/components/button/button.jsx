@@ -5,7 +5,7 @@ import styles from "./button.module.scss"
 
 export const Button = ({
 	children,
-	className,
+	className = undefined,
 	variant = "primary",
 	as = <button />,
 	...props

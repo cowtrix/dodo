@@ -1,31 +1,71 @@
-import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { Container, Input, Submit, TickBox } from 'app/components/forms'
-import { addReturnPathToRoute } from 'app/domain/services/services'
-import { useHistory, useLocation } from 'react-router-dom';
-import { LOGIN_ROUTE } from '../login/route';
-import styles from './settings.module.scss';
-import { Button } from '../../../../components/button';
+import { Button, ExpandPanel } from "app/components";
+import { Container, TickBox } from "app/components/forms";
+import { isFetching as _isFetching } from "app/domain/search/selectors";
+import { addReturnPathToRoute } from "app/domain/services/services";
+import { updateDetails as _updateDetails } from "app/domain/user/actions";
+import {
+	emailPreferences as _emailPreferences,
+	fetchingUser as _fetchingUser,
+	guid as _guid,
+	username as _username,
+} from "app/domain/user/selectors";
+import { useAction } from "app/hooks/useAction";
+import PropTypes from "prop-types";
+import React, { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce/lib";
 
-export const Settings = (
-	{
-		currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, guid, resendVerificationEmail }
-	) => {
+import { LOGIN_ROUTE } from "../login/route";
+import { ChangePw } from "./change-pw/change-pw";
+import styles from "./settings.module.scss";
+
+export const Settings = () => {
+	const fetchingUser = useSelector(_fetchingUser);
+	const isFetching = useSelector(_isFetching);
+
+	const guid = useSelector(_guid);
+	const username = useSelector(_username);
+	const { dailyUpdate, weeklyUpdate, newNotifications } =
+		useSelector(_emailPreferences) || {};
 
 	const history = useHistory();
 	const { pathname } = useLocation();
 
-	if(!currentUsername && !fetchingUser) {
+	if (!username && !fetchingUser) {
 		history.push(addReturnPathToRoute(LOGIN_ROUTE, pathname));
 	}
 
-	const [currentPw, setCurrentPw] = useState('');
-	const [newPw, setNewPw] = useState('');
-	const [confirmNewPw, setConfirmNewPw] = useState('');
+	const [DUToggle, setDUToggle] = useState(dailyUpdate);
+	const [WUToggle, setWUToggle] = useState(weeklyUpdate);
+	const [NNToggle, setNNToggle] = useState(newNotifications);
 
-	useEffect(() => {
+	const updateEmailPrefs = useAction(_updateDetails);
+	const updatePrefsDebounce = useDebouncedCallback(updateEmailPrefs, 500);
+	const updatePrefsDebounced = useCallback(
+		(emailPreferences) => {
+			return updatePrefsDebounce.callback(guid, {
+				personalData: {
+					emailPreferences: {
+						dailyUpdate: DUToggle,
+						weeklyUpdate: WUToggle,
+						newNotifications: NNToggle,
+						...emailPreferences,
+					},
+				},
+			});
+		},
+		[updatePrefsDebounce, guid, DUToggle, WUToggle, NNToggle]
+	);
 
-	}, [currentUsername, currentEmail, currentName])
+	if (!updatePrefsDebounce.pending() && !isFetching) {
+		dailyUpdate === DUToggle || setDUToggle(dailyUpdate);
+		weeklyUpdate === WUToggle || setWUToggle(weeklyUpdate);
+		newNotifications === NNToggle || setNNToggle(newNotifications);
+	}
+
+	// runs when component unmounts, immediately sends any debounced updates
+	useEffect(() => () => updatePrefsDebounce.flush(), [updatePrefsDebounce]);
 
 	return (
 		<Container
@@ -36,73 +76,60 @@ export const Settings = (
 					<div>
 						<h3 className={styles.h3Title}>Email Preferences</h3>
 						<div className={styles.text}>
-							Here you can adjust what emails you receive
-							from us.
+							Here you can adjust what emails you receive from us.
 						</div>
 					</div>
 					<TickBox
 						name="Daily Update"
 						id="dailyUpdate"
+						checked={DUToggle}
+						setValue={v => {
+							updatePrefsDebounced({ dailyUpdate: v });
+							setDUToggle(v);
+						}}
 					/>
 					<TickBox
 						name="Weekly Update"
 						id="weeklyUpdate"
+						checked={WUToggle}
+						setValue={v => {
+							updatePrefsDebounced({ weeklyUpdate: v });
+							setWUToggle(v);
+						}}
 					/>
 					<TickBox
 						name="Notifications"
-						id="notifications"
+						id="newNotifications"
+						checked={NNToggle}
+						setValue={v => {
+							updatePrefsDebounced({ newNotifications: v });
+							setNNToggle(v);
+						}}
 					/>
-					<div className={styles.warning}>
-						<h3 className={styles.h3Title}>Change your password</h3>
-						<Input
-							id="current-pw"
-							type="password"
-							placeholder="Current password..."
-							value={currentPw}
-							setValue={setCurrentPw}
-						/>
-						<Input
-							id="new-pw"
-							type="password"
-							placeholder="New password..."
-							value={newPw}
-							setValue={setNewPw}
-						/>
-						<Input
-							id="confirm-new-pw"
-							type="password"
-							placeholder="Confirm password..."
-							value={confirmNewPw}
-							setValue={setConfirmNewPw}
-						/>
-						<Submit
-							value="Change Password"
-							submit={()=>{}}
-						/>
-					</div>
 
-					<div className={styles.dangerZoneBox}>
-						<div className={styles.dangerZoneTitle}>
-							<h2>Danger Zone</h2>
-						</div>
+					<ChangePw />
+
+					<ExpandPanel
+						header={<h2>Danger Zone</h2>}
+						headerClassName={styles.dangerZoneTitle}
+					>
 						<div className={styles.dangerZoneInner}>
 							<div>
 								This will permanently and irreversibly delete
-								your account and all activity associated with it.
-								This action cannot be undone.
+								your account and all activity associated with
+								it. This action cannot be undone.
 							</div>
 							<Button variant="cta-danger">
 								<div>Delete Your Account</div>
 							</Button>
 						</div>
-					</div>
+					</ExpandPanel>
 				</>
 			}
 		/>
-	)
-}
-
+	);
+};
 
 Settings.propTypes = {
-	currentUsername: PropTypes.string
-}
+	currentUsername: PropTypes.string,
+};

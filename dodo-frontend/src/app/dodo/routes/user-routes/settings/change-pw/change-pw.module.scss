@@ -1,0 +1,12 @@
+@import "~app/styles/styles";
+
+.h3Title {
+	margin-bottom: spacing(2);
+}
+
+.warning {
+	padding-top: spacing(2);
+	padding-bottom: spacing(2);
+	background-color: $warning-yellow;
+	margin-bottom: spacing(2);
+}

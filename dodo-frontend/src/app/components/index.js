@@ -23,6 +23,7 @@ export { List, ExpandableList } from './list'
 export { CenterMap } from './center-map'
 export { Video } from './video'
 export { CookieConsenter } from './cookie-consent'
+export { ExpandPanel } from './expand-panel'
 
 
 export { footer, events, tiles, forms }

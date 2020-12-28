@@ -1,2 +1,2 @@
-export { SettingsConnected as Settings } from './container'
-export { SETTINGS_ROUTE } from './route'
+export { Settings } from './settings'
+export const SETTINGS_ROUTE = '/settings'

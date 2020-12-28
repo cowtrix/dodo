@@ -22,6 +22,10 @@ export const memberOf = state =>
 export const emailConfirmed = state =>
 	path(["domain", "user", "personalData", "emailConfirmed"], state)
 
+// object: { dailyUpdate, weeklyUpdate, newNotifications }
+export const emailPreferences = state =>
+	path(["domain", "user", "personalData", "emailPreferences"], state)
+
 export const myRebellion = state =>
 	path(["domain", "user", "myRebellion"], state)
 
