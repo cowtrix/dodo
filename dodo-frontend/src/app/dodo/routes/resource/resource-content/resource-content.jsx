@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Icon } from '../../../../components/icon'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
-import { Header, Description, SignUpButton, ParentLink, Updates, Role, Address } from "app/components/resources"
+import { Header, Description, SignUpButton, ParentLink, Updates, Role, ArrestRisk } from "app/components/resources"
 
 import { ADMIN_PERMISSIONS } from 'app/constants'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT } from './constants'
@@ -31,6 +31,9 @@ export const ResourceContent =
 		return (
 			<div className={styles.resource}>
 				<Header resource={resource} setCenterMap={setCenterMap} resourceColor={resourceColor} hideMap={hideMap} />
+				{resource.arrestRisk && (
+					<ArrestRisk level={resource.arrestRisk.toLowerCase()} />
+				)}
 				<ParentLink parent={resource.parent} />
 				<Video videoEmbedURL={resource.videoEmbedURL} />
 				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h2>EDIT  <Icon icon="edit" size="1x" /></h2></a> : null}
