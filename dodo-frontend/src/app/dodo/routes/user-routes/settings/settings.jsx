@@ -1,12 +1,12 @@
 import { Button, ExpandPanel } from "app/components";
 import { Container, TickBox } from "app/components/forms";
-import { isFetching as _isFetching } from "app/domain/search/selectors";
 import { addReturnPathToRoute } from "app/domain/services/services";
 import { updateDetails as _updateDetails } from "app/domain/user/actions";
 import {
 	emailPreferences as _emailPreferences,
 	fetchingUser as _fetchingUser,
 	guid as _guid,
+	isUpdating as _isUpdating,
 	username as _username,
 } from "app/domain/user/selectors";
 import { useAction } from "app/hooks/useAction";
@@ -22,12 +22,15 @@ import styles from "./settings.module.scss";
 
 export const Settings = () => {
 	const fetchingUser = useSelector(_fetchingUser);
-	const isFetching = useSelector(_isFetching);
+	const isUpdating = useSelector(_isUpdating);
 
 	const guid = useSelector(_guid);
 	const username = useSelector(_username);
-	const { dailyUpdate, weeklyUpdate, newNotifications } =
-		useSelector(_emailPreferences) || {};
+	const {
+		dailyUpdate = false,
+		weeklyUpdate = false,
+		newNotifications = false,
+	} = useSelector(_emailPreferences) || {};
 
 	const history = useHistory();
 	const { pathname } = useLocation();
@@ -58,11 +61,22 @@ export const Settings = () => {
 		[updatePrefsDebounce, guid, DUToggle, WUToggle, NNToggle]
 	);
 
-	if (!updatePrefsDebounce.pending() && !isFetching) {
-		dailyUpdate === DUToggle || setDUToggle(dailyUpdate);
-		weeklyUpdate === WUToggle || setWUToggle(weeklyUpdate);
-		newNotifications === NNToggle || setNNToggle(newNotifications);
-	}
+	useEffect(() => {
+		if (!updatePrefsDebounce.pending() && !isUpdating) {
+			dailyUpdate === DUToggle || setDUToggle(dailyUpdate);
+			weeklyUpdate === WUToggle || setWUToggle(weeklyUpdate);
+			newNotifications === NNToggle || setNNToggle(newNotifications);
+		}
+	}, [
+		DUToggle,
+		NNToggle,
+		WUToggle,
+		dailyUpdate,
+		isUpdating,
+		newNotifications,
+		updatePrefsDebounce,
+		weeklyUpdate,
+	]);
 
 	// runs when component unmounts, immediately sends any debounced updates
 	useEffect(() => () => updatePrefsDebounce.flush(), [updatePrefsDebounce]);
@@ -83,7 +97,7 @@ export const Settings = () => {
 						name="Daily Update"
 						id="dailyUpdate"
 						checked={DUToggle}
-						setValue={v => {
+						setValue={(v) => {
 							updatePrefsDebounced({ dailyUpdate: v });
 							setDUToggle(v);
 						}}
@@ -92,7 +106,7 @@ export const Settings = () => {
 						name="Weekly Update"
 						id="weeklyUpdate"
 						checked={WUToggle}
-						setValue={v => {
+						setValue={(v) => {
 							updatePrefsDebounced({ weeklyUpdate: v });
 							setWUToggle(v);
 						}}
@@ -101,7 +115,7 @@ export const Settings = () => {
 						name="Notifications"
 						id="newNotifications"
 						checked={NNToggle}
-						setValue={v => {
+						setValue={(v) => {
 							updatePrefsDebounced({ newNotifications: v });
 							setNNToggle(v);
 						}}
