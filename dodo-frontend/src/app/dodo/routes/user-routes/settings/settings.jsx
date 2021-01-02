@@ -44,7 +44,7 @@ export const Settings = () => {
 	const [NNToggle, setNNToggle] = useState(newNotifications);
 
 	const updateEmailPrefs = useAction(_updateDetails);
-	const updatePrefsDebounce = useDebouncedCallback(updateEmailPrefs, 500);
+	const updatePrefsDebounce = useDebouncedCallback(updateEmailPrefs, 1500);
 	const updatePrefsDebounced = useCallback(
 		(emailPreferences) => {
 			return updatePrefsDebounce.callback(guid, {
@@ -61,22 +61,11 @@ export const Settings = () => {
 		[updatePrefsDebounce, guid, DUToggle, WUToggle, NNToggle]
 	);
 
-	useEffect(() => {
-		if (!updatePrefsDebounce.pending() && !isUpdating) {
-			dailyUpdate === DUToggle || setDUToggle(dailyUpdate);
-			weeklyUpdate === WUToggle || setWUToggle(weeklyUpdate);
-			newNotifications === NNToggle || setNNToggle(newNotifications);
-		}
-	}, [
-		DUToggle,
-		NNToggle,
-		WUToggle,
-		dailyUpdate,
-		isUpdating,
-		newNotifications,
-		updatePrefsDebounce,
-		weeklyUpdate,
-	]);
+	if (!updatePrefsDebounce.pending() && !isUpdating) {
+		dailyUpdate === DUToggle || setDUToggle(dailyUpdate);
+		weeklyUpdate === WUToggle || setWUToggle(weeklyUpdate);
+		newNotifications === NNToggle || setNNToggle(newNotifications);
+	}
 
 	// runs when component unmounts, immediately sends any debounced updates
 	useEffect(() => () => updatePrefsDebounce.flush(), [updatePrefsDebounce]);
