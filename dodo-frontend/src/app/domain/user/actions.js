@@ -6,12 +6,14 @@ import {
 	GET_MY_REBELLION,
 	UPDATE_DETAILS,
 	LOGOUT,
-	RESEND_VALIDATION_EMAIL
+	RESEND_VALIDATION_EMAIL,
+	CHANGE_PASSWORD
 } from './action-types'
 import { apiAction, authAction } from '../factories'
 
 import {
 	RESET_PASSWORD as RESET_PASSWORD_URL,
+	CHANGE_PASSWORD as CHANGE_PASSWORD_URL,
 	REGISTER_USER as REGISTER_USER_URL,
 	AUTH_URL,
 	LOGIN as LOGIN_URL,
@@ -34,6 +36,12 @@ export const login = (dispatch, username, password, rememberMe) => {
 
 export const resetPassword = (dispatch, email, cb) =>
 	apiAction(dispatch, RESET_PASSWORD, RESET_PASSWORD_URL + '?email=' + email, cb)
+
+export const changePassword = (dispatch, currentpassword, newpassword, cb) =>
+	apiAction( dispatch, CHANGE_PASSWORD, CHANGE_PASSWORD_URL, cb, undefined, "post", {
+		currentpassword,
+		newpassword,
+	});
 
 export const registerUser = (dispatch, userDetails) =>
 	apiAction(dispatch, REGISTER_USER, REGISTER_USER_URL, (success) => dispatch({

@@ -19,7 +19,9 @@ export const addReturnPathToRoute = (route, returnPath) => {
 
 export const getReturnPath = (location) => {
 	const search = new URLSearchParams(location.search);
-	const param = [...search.entries()].find(entry => entry[0].toLowerCase() === REDIRECT_URL_PARAM.toLowerCase());
+	const param = [...search.entries()].find(
+		(entry) => entry[0].toLowerCase() === REDIRECT_URL_PARAM.toLowerCase()
+	);
 	return param?.[1];
 };
 
@@ -27,3 +29,9 @@ export const keepReturnPathParam = (newRoute, location) => {
 	const returnURL = getReturnPath(location);
 	return returnURL ? addReturnPathToRoute(newRoute, returnURL) : newRoute;
 };
+
+export const passwordContainsNoSymbol = (password) =>
+	!/^(?=.*[@#$%^&+=!]).*$/.test(password);
+export const emailIsValid = (email) => /\w+@\w+\.\w{2,}/.test(email);
+export const strNotEmptyAndLengthBelow = (minLength, str) =>
+	!!str && str.length < minLength;

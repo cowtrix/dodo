@@ -10,6 +10,12 @@
 	align-items: center;
 }
 
+.disabled {
+	opacity: 0.5;
+	pointer-events: none;
+	cursor: pointer;
+}
+
 .link {
 	color: inherit;
 	display: inherit;

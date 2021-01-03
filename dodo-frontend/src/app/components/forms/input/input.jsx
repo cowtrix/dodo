@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styles from './input.module.scss'
 
-export const Input = ({ name, id, type, value, setValue, maxLength, error, message, placeholder }) =>
+export const Input = ({ name, id, type, value, setValue, maxLength, error, message, placeholder, errorJustOnMsg }) =>
 	<div className={styles.inputWrapper}>
 		{name &&
 			<label htmlFor={id} className={error ? styles.error : ''}>
@@ -15,10 +15,9 @@ export const Input = ({ name, id, type, value, setValue, maxLength, error, messa
 			className={error ? styles.error : ''}
 			{...{type, id, name, value, maxLength, placeholder}}
 		/>
-		{message && <div className={`${styles.message} ${error ? styles.error : ''}`}>{message}</div>}
+		{message && <div className={`${styles.message} ${error || errorJustOnMsg ? styles.error : ''}`}>{message}</div>}
 	</div>
 </div>
-
 
 Input.propTypes = {
 	type: PropTypes.string,
@@ -29,5 +28,6 @@ Input.propTypes = {
 	error: PropTypes.bool,
 	setValue: PropTypes.func,
 	maxLength: PropTypes.number,
-	message: PropTypes.string
+	message: PropTypes.string,
+	errorJustOnMsg: PropTypes.bool
 }

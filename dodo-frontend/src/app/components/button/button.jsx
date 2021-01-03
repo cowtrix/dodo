@@ -1,27 +1,35 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from "react";
+import PropTypes from "prop-types";
 
-import styles from "./button.module.scss"
+import styles from "./button.module.scss";
 
 export const Button = ({
 	children,
 	className = undefined,
 	variant = "primary",
 	as = <button />,
+	disabled = false,
 	...props
 }) => {
 	const buttonProps = {
 		...props,
-		className: `${className} ${styles[variant]} ${styles.button}`
-	}
+		className: [
+			className,
+			styles[variant],
+			styles.button,
+			disabled ? styles.disabled : "",
+		].join(" "),
+		disabled,
+	};
 
-	return React.cloneElement(as, buttonProps, children)
-}
+	return React.cloneElement(as, buttonProps, children);
+};
 
 Button.propTypes = {
 	children: PropTypes.node.isRequired,
 	to: PropTypes.string,
 	variant: PropTypes.string,
 	onClick: PropTypes.func,
-	as: PropTypes.node
-}
+	as: PropTypes.node,
+	disabled: PropTypes.bool
+};

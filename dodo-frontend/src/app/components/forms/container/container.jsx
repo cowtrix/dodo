@@ -7,7 +7,7 @@ export const Container = ({ title, content, loading = false }) =>
 	<div className={styles.containerWrapper}>
 		<div className={styles.container}>
 			<Loader display={loading}/>
-			<h1 className={styles.title}>{title}</h1>
+			{(title && <h1 className={styles.title}>{title}</h1>) || null}
 			{content}
 		</div>
 	</div>

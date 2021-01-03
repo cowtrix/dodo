@@ -1,15 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Submit, Input, Error, TickBox } from 'app/components/forms/index'
-import { getReturnPath } from '../../../../domain/services/services';
+import { emailIsValid, getReturnPath, passwordContainsNoSymbol, strNotEmptyAndLengthBelow } from 'app/domain/services/services';
 import { useTranslation } from 'react-i18next';
-import styles from './register.module.scss'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Loader } from '../../../../components/loader'
-
-const passwordContainsSymbol = (password) => !/^(?=.*[@#$%^&+=!]).*$/.test(password)
-const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
-const notEmptyAndLengthBelow = (minLength, str) => !!str && str.length < minLength
 
 export const Register = ({ register, isLoggedIn, registeringUser, error, privacyPolicy, rebelAgreement }) => {
 	const history = useHistory()
@@ -26,11 +21,11 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 	const [passwordConfirmation, setPasswordConfirmation] = useState("")
 	const [acceptTerms, setAcceptTerms] = useState(false);
 
-	const usernameShort = notEmptyAndLengthBelow(3, username)
-	const nameShort = notEmptyAndLengthBelow(3, name)
-	const emailInvalid = !!email && !emailRegex(email)
-	const passwordShort = notEmptyAndLengthBelow(8, password)
-	const passwordInvalid = password.length > 0 && passwordContainsSymbol(password)
+	const usernameShort = strNotEmptyAndLengthBelow(3, username)
+	const nameShort = strNotEmptyAndLengthBelow(3, name)
+	const emailInvalid = !!email && !emailIsValid(email)
+	const passwordShort = strNotEmptyAndLengthBelow(8, password)
+	const passwordInvalid = password.length > 0 && passwordContainsNoSymbol(password)
 	const passwordsNotEqual = !!passwordConfirmation && password !== passwordConfirmation
 	const hasError = !username.length || !name.length || !email.length || !password.length || !passwordConfirmation.length ||
 		usernameShort || nameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual || !acceptTerms
@@ -122,7 +117,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 					/>
 					<Error error={error}/>
 					<Submit
-						className={hasError ? styles.disabled : null}
+						disabled={hasError}
 						submit={register({
 							username,
 							password,
