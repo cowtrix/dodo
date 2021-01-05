@@ -4,6 +4,6 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding-left: spacingXS(6);
+	padding: spacingXS(2) 0 spacingXS(2) spacingXS(6);
 	border-bottom: 1px solid $color-light-grey;
 }

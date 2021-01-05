@@ -34,5 +34,6 @@ Dialog.propTypes = {
 	title: PropTypes.string,
 	content: PropTypes.node,
 	update: PropTypes.func,
+	buttonText: PropTypes.string,
 	fullScreen: PropTypes.bool
 }

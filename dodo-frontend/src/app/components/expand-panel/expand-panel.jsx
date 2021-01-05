@@ -16,12 +16,14 @@ export const ExpandPanel = ({
 
 	return (
 		<>
-			<div className={[styles.header, headerClassName].join(" ")}>
+			<div
+				className={[styles.header, headerClassName].join(" ")}
+				onClick={toggleExpanded}
+			>
 				<div>{header}</div>
 				<Icon
 					icon={`chevron-${expanded ? "up" : "down"}`}
 					className={styles.icon}
-					onClick={toggleExpanded}
 				/>
 			</div>
 			{expanded && <div className={styles.content}>{children}</div>}

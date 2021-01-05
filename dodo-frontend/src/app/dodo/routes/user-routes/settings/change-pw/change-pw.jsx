@@ -53,10 +53,15 @@ export const ChangePw = () => {
 		setConfirmNewPw("");
 	};
 
+	const changePwCallback = (response) => {
+		response === false ? clearForm() : logUserOut();
+	};
+
 	return (
 		<div className={styles.warning}>
 			<Container
 				loading={changingPw}
+				isSubContainer
 				content={
 					<form
 						onSubmit={(e) => {
@@ -64,9 +69,11 @@ export const ChangePw = () => {
 							e.preventDefault();
 
 							!formInvalid &&
-								changePassword(currentPw, confirmNewPw, (v) => {
-									v === false ? clearForm() : logUserOut();
-								});
+								changePassword(
+									currentPw,
+									confirmNewPw,
+									changePwCallback
+								);
 						}}
 					>
 						<h3 className={styles.h3Title}>Change your password</h3>
@@ -90,8 +97,7 @@ export const ChangePw = () => {
 								(changePwErrorUnauth &&
 									"Current password was entered incorrectly. Please try again") ||
 								(changePwErrorResponse &&
-									"Oops, something went wrong. Please try again") ||
-								undefined
+									"Oops, something went wrong. Please try again")
 							}
 						/>
 						<Input
@@ -106,8 +112,7 @@ export const ChangePw = () => {
 								(newPwIsSameAsCurr &&
 									"You must choose a different password to your current one") ||
 								(newPwIsInvalid &&
-									"Password must be 8 characters or longer, and contain a symbol") ||
-								undefined
+									"Password must be 8 characters or longer, and contain a symbol")
 							}
 						/>
 						<Input
@@ -119,9 +124,8 @@ export const ChangePw = () => {
 							maxLength={63}
 							error={confirmNewPwIsInvalid}
 							message={
-								(confirmNewPwIsInvalid &&
-									"New passwords must match") ||
-								undefined
+								confirmNewPwIsInvalid &&
+								"New passwords must match"
 							}
 						/>
 						<div className={styles.greyBackground}>

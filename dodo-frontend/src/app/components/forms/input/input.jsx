@@ -28,6 +28,9 @@ Input.propTypes = {
 	error: PropTypes.bool,
 	setValue: PropTypes.func,
 	maxLength: PropTypes.number,
-	message: PropTypes.string,
+	message: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.bool
+	]),
 	errorJustOnMsg: PropTypes.bool
 }

@@ -1,6 +1,6 @@
 import { tryToParseJSON } from './services';
 
-export const api = async(url, method = "get", body, abortController) => {
+export const api = async (url, method = "get", body, abortController, keepalive = false) => {
 	return fetch(url, {
 		method,
 		body: JSON.stringify(body),
@@ -10,6 +10,7 @@ export const api = async(url, method = "get", body, abortController) => {
 		},
 		credentials: "include",
 		signal: abortController ? abortController.signal : undefined,
+		keepalive
 	})
 	.then(resp => {
 		return resp.text()

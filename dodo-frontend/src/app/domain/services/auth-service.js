@@ -3,7 +3,7 @@ import { tryToParseJSON } from './services';
 // The auth URLs / requests are a bit odd. They return the HTML for the login page if you are not logged in, or JSON if you are.
 // That is why we have this special service for them.
 
-export const auth = async(url, method = "get", body, abortController) => {
+export const auth = async(url, method = "get", body, abortController, keepalive = false) => {
 	return fetch(url, {
 		method,
 		body: JSON.stringify(body),
@@ -13,6 +13,7 @@ export const auth = async(url, method = "get", body, abortController) => {
 		},
 		credentials: "include",
 		signal: abortController ? abortController.signal : undefined,
+		keepalive
 	})
 	.then(resp => {
 		return resp.text()

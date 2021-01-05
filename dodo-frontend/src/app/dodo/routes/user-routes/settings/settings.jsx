@@ -1,28 +1,33 @@
-import { Button, ExpandPanel } from "app/components";
-import { Container, TickBox } from "app/components/forms";
-import { addReturnPathToRoute } from "app/domain/services/services";
+import { Container, Error, TickBox } from "app/components/forms";
+import {
+	addReturnPathToRoute,
+	WARNING__BLOCK_JS_THREAD_FOR_MS
+} from "app/domain/services/services";
 import { updateDetails as _updateDetails } from "app/domain/user/actions";
 import {
 	emailPreferences as _emailPreferences,
 	fetchingUser as _fetchingUser,
 	guid as _guid,
 	isUpdating as _isUpdating,
-	username as _username,
+	updateError as _updateError,
+	username as _username
 } from "app/domain/user/selectors";
 import { useAction } from "app/hooks/useAction";
+import { useBeforeUnload } from "app/hooks/useBeforeUnload";
 import PropTypes from "prop-types";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce/lib";
-
 import { LOGIN_ROUTE } from "../login/route";
 import { ChangePw } from "./change-pw/change-pw";
+import { DeleteUser } from "./delete-user/delete-user";
 import styles from "./settings.module.scss";
 
 export const Settings = () => {
 	const fetchingUser = useSelector(_fetchingUser);
 	const isUpdating = useSelector(_isUpdating);
+	const updateError = useSelector(_updateError);
 
 	const guid = useSelector(_guid);
 	const username = useSelector(_username);
@@ -32,34 +37,18 @@ export const Settings = () => {
 		newNotifications = false,
 	} = useSelector(_emailPreferences) || {};
 
+	const updateEmailPrefs = useAction(_updateDetails);
+	const updatePrefsDebounce = useDebouncedCallback(updateEmailPrefs, 1500);
+
 	const history = useHistory();
 	const { pathname } = useLocation();
-
-	if (!username && !fetchingUser) {
+	!username &&
+		!fetchingUser &&
 		history.push(addReturnPathToRoute(LOGIN_ROUTE, pathname));
-	}
 
 	const [DUToggle, setDUToggle] = useState(dailyUpdate);
 	const [WUToggle, setWUToggle] = useState(weeklyUpdate);
 	const [NNToggle, setNNToggle] = useState(newNotifications);
-
-	const updateEmailPrefs = useAction(_updateDetails);
-	const updatePrefsDebounce = useDebouncedCallback(updateEmailPrefs, 1500);
-	const updatePrefsDebounced = useCallback(
-		(emailPreferences) => {
-			return updatePrefsDebounce.callback(guid, {
-				personalData: {
-					emailPreferences: {
-						dailyUpdate: DUToggle,
-						weeklyUpdate: WUToggle,
-						newNotifications: NNToggle,
-						...emailPreferences,
-					},
-				},
-			});
-		},
-		[updatePrefsDebounce, guid, DUToggle, WUToggle, NNToggle]
-	);
 
 	if (!updatePrefsDebounce.pending() && !isUpdating) {
 		dailyUpdate === DUToggle || setDUToggle(dailyUpdate);
@@ -67,8 +56,48 @@ export const Settings = () => {
 		newNotifications === NNToggle || setNNToggle(newNotifications);
 	}
 
-	// runs when component unmounts, immediately sends any debounced updates
-	useEffect(() => () => updatePrefsDebounce.flush(), [updatePrefsDebounce]);
+	/** Puts the needed preferences into an args array. Don't forget to use '...' to unpack! */
+	const getUpdatePrefsParameters = useCallback(
+		/**
+		 * @param {boolean} keepalive
+		 * @return {[string, any, boolean]}
+		 */
+		(additionalUpdates = {}, keepalive = false) => [
+			guid,
+			{
+				personalData: {
+					emailPreferences: {
+						dailyUpdate: DUToggle,
+						weeklyUpdate: WUToggle,
+						newNotifications: NNToggle,
+						...additionalUpdates,
+					},
+				},
+			},
+			keepalive,
+		],
+		[DUToggle, NNToggle, WUToggle, guid]
+	);
+
+	const updatePrefsDebounced = useCallback(
+		(emailPreferences) =>
+			updatePrefsDebounce.callback(
+				...getUpdatePrefsParameters(emailPreferences)
+			),
+		[updatePrefsDebounce, getUpdatePrefsParameters]
+	);
+
+	/** Immediately sends any pending updates */
+	const sendUpdateBeforePageCloses = useCallback(() => {
+		if (updatePrefsDebounce.pending()) {
+			updatePrefsDebounce.cancel();
+			updateEmailPrefs(...getUpdatePrefsParameters({}, true));
+			WARNING__BLOCK_JS_THREAD_FOR_MS(500); // freezes for just long enough to get request out
+		}
+	}, [getUpdatePrefsParameters, updateEmailPrefs, updatePrefsDebounce]);
+
+	useBeforeUnload(sendUpdateBeforePageCloses); // runs if page is closing or reloading
+	useEffect(() => updatePrefsDebounce.flush, [updatePrefsDebounce]); // runs when component unmounts
 
 	return (
 		<Container
@@ -109,24 +138,14 @@ export const Settings = () => {
 							setNNToggle(v);
 						}}
 					/>
-
+					<Error
+						error={
+							updateError &&
+							"Oops, something went wrong. Please refresh the page and try again"
+						}
+					/>
 					<ChangePw />
-
-					<ExpandPanel
-						header={<h2>Danger Zone</h2>}
-						headerClassName={styles.dangerZoneTitle}
-					>
-						<div className={styles.dangerZoneInner}>
-							<div>
-								This will permanently and irreversibly delete
-								your account and all activity associated with
-								it. This action cannot be undone.
-							</div>
-							<Button variant="cta-danger">
-								<div>Delete Your Account</div>
-							</Button>
-						</div>
-					</ExpandPanel>
+					<DeleteUser />
 				</>
 			}
 		/>
