@@ -23,10 +23,10 @@
 }
 
 .button {
-	all: unset;
+	border: 0;
 	cursor: pointer;
 	padding: spacing(2);
-	margin-right: spacing(1);
+	margin: 0 spacing(1) 0 0;
 
 	&:disabled {
 		cursor: not-allowed;

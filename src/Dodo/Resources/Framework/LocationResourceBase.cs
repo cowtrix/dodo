@@ -37,10 +37,10 @@ namespace Dodo.LocationResources
 	public abstract class LocationResourceBase : GroupResource,
 		ILocationalResource, IOwnedResource, IVideoResource, IPublicResource
 	{
-		[View(EPermissionLevel.USER)]
+		[View(EPermissionLevel.PUBLIC)]
 		[Name("Arrest Risk")]
 		public EArrestRisk ArrestRisk { get; set; }
-		[View(EPermissionLevel.USER, priority: 512)]
+		[View(EPermissionLevel.PUBLIC, priority: 512)]
 		public SiteFacilities Facilities { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; } = new GeoLocation();

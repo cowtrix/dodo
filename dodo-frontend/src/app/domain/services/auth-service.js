@@ -51,7 +51,7 @@ export const auth = async(url, method = "get", body, abortController, keepalive 
 			// eslint-disable-next-line no-throw-literal
 			throw {
 				response: undefined,
-				status: 0,
+				status: -1,
 				message: 'Network error'
 			}
 		}

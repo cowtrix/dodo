@@ -49,7 +49,9 @@ namespace Dodo.Users
 			}
 			var ret = new Dictionary<Guid, MyRebellionNode>();
 			// Here we get a big ol' unsorted list
-			foreach (var token in Context.User.TokenCollection.GetAllTokens<IMyRebellionToken>(Context, EPermissionLevel.OWNER, Context.User))
+			foreach (var token in 
+				Context.User.TokenCollection.GetAllTokens<IMyRebellionToken>(Context, EPermissionLevel.OWNER, Context.User)
+				.ToList())
 			{
 				if(!ret.TryGetValue(token.Reference.Guid, out var node))
 				{
@@ -65,7 +67,7 @@ namespace Dodo.Users
 					node.Member = true;
 				}				
 			}
-			while(ret.Values.Any(t => !t.Checked))
+			while(ret.Values.ToList().Any(t => !t.Checked))
 			{
 				// Ok, now it's time to actually build the tree out
 				foreach(var node in ret.Values)	// we leave the root nodes alone

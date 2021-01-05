@@ -44,9 +44,11 @@ namespace RESTTests
 				Name = newName,
 				PersonalData = new
 				{
-					LocalGroup = new 
+					EmailPreferences = new EmailPreferences
 					{
-						Guid = lg.Guid
+						DailyUpdate = true,
+						WeeklyUpdate = true,
+						NewNotifications = true,
 					}
 				}
 			};
@@ -54,7 +56,9 @@ namespace RESTTests
 			Assert.IsTrue(response.IsSuccessStatusCode);
 			user = ResourceUtility.GetManager<User>().GetSingle(x => x.Guid == user.Guid);
 			Assert.AreEqual(newName, user.Name);
-			Assert.AreEqual(user.PersonalData.LocalGroup.Guid, lg.Guid);
+			Assert.IsTrue(user.PersonalData.EmailPreferences.WeeklyUpdate);
+			Assert.IsTrue(user.PersonalData.EmailPreferences.DailyUpdate);
+			Assert.IsTrue(user.PersonalData.EmailPreferences.NewNotifications);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Update a User" },
 				LastRequest);
@@ -77,7 +81,7 @@ namespace RESTTests
 		{
 			await AssertX.ThrowsAsync<Exception>(RequestJSON($"{UserService.RootURL}", EHTTPRequestType.GET),
 				e => e.Message.Contains("StatusCode: 302, ReasonPhrase: 'Found'"));
-			
+
 		}
 
 		[TestMethod]
@@ -164,7 +168,7 @@ namespace RESTTests
 		{
 			var user = GetRandomUser(out var password, out var context);
 			var request = await Request($"{UserService.RootURL}/{UserService.RESET_PASSWORD}", EHTTPRequestType.GET,
-				null, new[] { ( "email", user.PersonalData.Email) } );
+				null, new[] { ("email", user.PersonalData.Email) });
 			var newPassword = ValidationExtensions.GenerateStrongPassword();
 			user = UserManager.GetSingle(u => u.Guid == user.Guid);
 			var token = user.TokenCollection.GetSingleToken<ResetPasswordToken>(context, EPermissionLevel.OWNER, user);
@@ -174,7 +178,7 @@ namespace RESTTests
 				request);
 
 			request = await Request($"{UserService.RootURL}/{UserService.REDEEM_PASSWORD_TOKEN}", EHTTPRequestType.POST,
-				newPassword, new[] { ( UserService.PARAM_TOKEN, token.Key ) });
+				newPassword, new[] { (UserService.PARAM_TOKEN, token.Key) });
 
 			await Login(user.Slug, newPassword);
 			Postman.Update(

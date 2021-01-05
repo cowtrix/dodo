@@ -60,7 +60,7 @@ const apiActionHandler = async (service, dispatch, action, url, cb, abortPreviou
 			if (cb) cb(response)
 		})
 		.catch(error => {
-			if(error.status > 0) { // status of 0 is cancelled, anything above that is a failure
+			if(error.status !== 0) { // status of 0 is cancelled, anything above that is a failure, less than is network error
 				console.log(error)
 				delete abortControllers[requestKey];
 				if (cb) cb(false)

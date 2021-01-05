@@ -49,8 +49,6 @@ namespace Dodo.Email
 		private static string[] m_banners;
 		private static PersistentStore<string, bool> m_unsubscribed = new PersistentStore<string, bool>(DodoApp.PRODUCT_NAME, "UnsubbedEmails");
 		private static Dictionary<string, string> m_templateCache = new Dictionary<string, string>();
-		private static SmtpClient SMTPClient;
-
 		static EmailUtility()
 		{
 			if (string.IsNullOrEmpty(m_emailConfig.SMTPAddress))
@@ -63,10 +61,6 @@ namespace Dodo.Email
 				m_banners = Directory.GetFiles(Path.Combine(webroot, "img", "email"), "banner*.jpg")
 					.Select(s => s.Replace(webroot, DodoApp.NetConfig.FullURI).Replace('\\', '/'))
 					.ToArray();
-
-				SMTPClient = new SmtpClient();
-				SMTPClient.Connect(m_emailConfig.SMTPAddress, m_emailConfig.SMTPPort, SecureSocketOptions.StartTls);
-				SMTPClient.Authenticate(m_emailConfig.SMTPUsername, m_emailConfig.SMTPPassword);
 			}
 			catch(Exception e)
 			{
@@ -133,7 +127,10 @@ namespace Dodo.Email
 					email.Body = new TextPart(TextFormat.Html) { Text = content };
 
 					// send email
-					SMTPClient.Send(email);
+					using var client = new SmtpClient();
+					client.Connect(m_emailConfig.SMTPAddress, m_emailConfig.SMTPPort, SecureSocketOptions.StartTls);
+					client.Authenticate(m_emailConfig.SMTPUsername, m_emailConfig.SMTPPassword);
+					client.Send(email);
 				}
 				catch (Exception e)
 				{

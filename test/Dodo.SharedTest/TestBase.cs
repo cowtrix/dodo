@@ -215,6 +215,9 @@ namespace SharedTest
 					Assert.IsNotNull(verifyToken);
 					verifyToken.Redeem(context);
 					user.PersonalData.EmailConfirmed = true;
+					user.PersonalData.EmailPreferences.NewNotifications = true;
+					user.PersonalData.EmailPreferences.DailyUpdate = true;
+					user.PersonalData.EmailPreferences.WeeklyUpdate = true;
 					UserManager.Update(user, rscLock);
 				}
 			}

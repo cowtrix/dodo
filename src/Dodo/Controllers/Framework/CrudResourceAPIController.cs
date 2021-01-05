@@ -49,6 +49,12 @@ namespace Resources
 							case JsonValueKind.Null:
 								result[sub.Key] = null;
 								break;
+							case JsonValueKind.True:
+								result[sub.Key] = true;
+								break;
+							case JsonValueKind.False:
+								result[sub.Key] = false;
+								break;
 							default:
 								throw new Exception($"Unsupported JsonValueKind {sub.Value.ValueKind}");
 						}

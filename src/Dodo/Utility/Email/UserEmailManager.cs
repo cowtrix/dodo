@@ -51,7 +51,7 @@ namespace Dodo.Email
 		{
 			while(true)
 			{
-				await Task.Delay(TimeSpan.FromMinutes(10));
+				await Task.Delay(TimeSpan.FromSeconds(10));
 				// Clear the queue for work
 				Dictionary<Guid, List<Update>> updates;
 				lock (m_pendingUpdates)
@@ -70,6 +70,7 @@ namespace Dodo.Email
 					{
 						continue;
 					}
+					Logger.Debug($"Sending out update for {rsc} @ {DateTime.UtcNow}: {updateText}");
 					foreach (var user in userList
 						.Where(u => u.PersonalData.EmailPreferences.NewNotifications && rsc.IsMember(u)))
 					{

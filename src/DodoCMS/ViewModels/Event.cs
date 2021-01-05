@@ -36,7 +36,7 @@ namespace Dodo.ViewModels
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get; set; }
 		[DisplayName("Arrest Risk")]
-		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public Dodo.LocationResources.EArrestRisk ArrestRisk { get; set; }
 		public class SiteFacilitiesViewModel
 		{
@@ -90,7 +90,7 @@ namespace Dodo.ViewModels
 			public Dodo.LocationResources.EAccessType Electricity { get; set; }
 		}
 		[DisplayName("Facilities")]
-		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public SiteFacilitiesViewModel Facilities { get; set; }
 		[DisplayName("Location")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
