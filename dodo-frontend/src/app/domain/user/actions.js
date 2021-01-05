@@ -21,6 +21,7 @@ import {
 } from '../urls'
 
 import { SUCCESS } from '../constants'
+import { addParamsToUrl } from '../services'
 
 export const login = (dispatch, username, password, rememberMe) => {
 	const body = {
@@ -35,10 +36,22 @@ export const login = (dispatch, username, password, rememberMe) => {
 export const resetPassword = (dispatch, email, cb) =>
 	apiAction(dispatch, RESET_PASSWORD, RESET_PASSWORD_URL + '?email=' + email, cb)
 
-export const registerUser = (dispatch, userDetails) =>
-	apiAction(dispatch, REGISTER_USER, REGISTER_USER_URL, (success) => dispatch({
-	type: LOGIN + SUCCESS, payload: success
-}), false, 'post', userDetails)
+export const registerUser = (dispatch, { token, ...userDetails }) =>
+	apiAction(
+		dispatch,
+		REGISTER_USER,
+		token
+			? addParamsToUrl(REGISTER_USER_URL, { token })
+			: REGISTER_USER_URL,
+		(success) =>
+			dispatch({
+				type: LOGIN + SUCCESS,
+				payload: success,
+			}),
+		false,
+		"post",
+		userDetails
+	);
 
 export const getLoggedInUser = (dispatch) =>
 	authAction(dispatch, GET_LOGGED_IN_USER, AUTH_URL)

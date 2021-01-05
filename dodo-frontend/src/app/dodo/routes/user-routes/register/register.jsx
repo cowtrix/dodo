@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Submit, Input, Error, TickBox } from 'app/components/forms/index'
-import { getReturnPath } from '../../../../domain/services/services';
+import { getReturnPath } from 'app/domain/services/services';
 import { useTranslation } from 'react-i18next';
 import styles from './register.module.scss'
 import { useHistory, useLocation } from 'react-router-dom'
-import { Loader } from '../../../../components/loader'
+import { Loader } from 'app/components/loader'
+import { useURLParams } from 'app/hooks/useURLParams';
 
 const passwordContainsSymbol = (password) => !/^(?=.*[@#$%^&+=!]).*$/.test(password)
 const emailRegex = (email) => /\w+@\w+\.\w{2,}/.test(email)
@@ -14,7 +15,10 @@ const notEmptyAndLengthBelow = (minLength, str) => !!str && str.length < minLeng
 export const Register = ({ register, isLoggedIn, registeringUser, error, privacyPolicy, rebelAgreement }) => {
 	const history = useHistory()
 	const location = useLocation()
+
+	const { token } = useURLParams();
 	const { t } = useTranslation("ui")
+
 	if (isLoggedIn) {
 		history.push(getReturnPath(location) ||'/')
 	}
@@ -45,9 +49,11 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 		<Container
 			content={
 				<>
-					<Loader
-						display={registeringUser}
-					/>
+					<Loader display={registeringUser}/>
+					<div className={styles.tokenBox}>
+						<h3>Invite token:</h3>
+						<p>{token}</p>
+					</div>
 					{usernameShort ? <Error error="Username should be longer"/> : null}
 					<Input
 						name={t("Username")}
@@ -128,6 +134,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 							password,
 							email,
 							name,
+							token
 						})}
 						value={t("Register a new account")}
 					/>
