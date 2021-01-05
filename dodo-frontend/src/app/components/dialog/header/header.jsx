@@ -5,8 +5,10 @@ import CloseIcon from "@material-ui/icons/Close"
 import styles from "./header.module.scss"
 
 export const Header = ({ title, onClose }) => (
-	<div className={styles.dialogHeader}>
-		<h3>{title}</h3>
+	<div className={styles.dialogHeaderOuter}>
+		<div className={styles.dialogHeader}>
+			<h3>{title}</h3>
+		</div>
 		{onClose ? (
 			<IconButton aria-label="close" onClick={onClose}>
 				<CloseIcon />
