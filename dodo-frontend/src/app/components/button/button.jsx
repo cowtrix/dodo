@@ -5,7 +5,7 @@ import styles from "./button.module.scss";
 
 export const Button = ({
 	children,
-	className = undefined,
+	className,
 	variant = "primary",
 	as = <button />,
 	disabled = false,
@@ -27,6 +27,7 @@ export const Button = ({
 
 Button.propTypes = {
 	children: PropTypes.node.isRequired,
+	className: PropTypes.string,
 	to: PropTypes.string,
 	variant: PropTypes.string,
 	onClick: PropTypes.func,
