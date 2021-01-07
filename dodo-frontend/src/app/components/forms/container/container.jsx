@@ -8,7 +8,7 @@ export const Container = ({ title, content, loading = false, isSubContainer }) =
 		<div className={
 			[styles.container, isSubContainer ? '' : styles.notSubContainer].join(' ')}>
 			<Loader display={loading}/>
-			{(title && <h1 className={styles.title}>{title}</h1>) || null}
+			{(title && <h1 className={styles.title}>{title}</h1>)}
 			{content}
 		</div>
 	</div>
