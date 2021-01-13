@@ -121,7 +121,7 @@ export const DeleteUser = () => {
 							variant="cta-danger"
 							onClick={confirmAccountDelete}
 						>
-							<div>Confirm Account Detete</div>
+							<div>Confirm Account Delete</div>
 						</Button>
 					</div>
 				}
