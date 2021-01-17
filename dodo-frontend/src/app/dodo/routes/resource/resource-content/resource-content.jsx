@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Icon } from '../../../../components/icon'
 import { useHistory, useLocation } from 'react-router-dom'
 import { Video, ExpandableList } from "app/components"
-import { Header, Description, SignUpButton, ParentLink, Updates, Role, ArrestRisk } from "app/components/resources"
+import { Header, Description, SignUpButton, ParentLink, Updates, Role, ArrestRisk, Facilities } from "app/components/resources"
 
 import { ADMIN_PERMISSIONS } from 'app/constants'
 import { VOLUNTEER_NOW, JOIN_US_SITES, COME_TO_EVENT } from './constants'
@@ -39,11 +39,12 @@ export const ResourceContent =
 				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h2>EDIT  <Icon icon="edit" size="1x" /></h2></a> : null}
 				<div className={styles.descriptionContainer}>
 					<Description description={resource.publicDescription} />
-					{shouldDisplayNotifications && (
+					{(shouldDisplayNotifications || resource.facilities) && (
 						<div className={styles.panelsContainer}>
 							{shouldDisplayNotifications &&
 								<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
 							}
+							<Facilities facilities={resource.facilities} />
 						</div>
 					)}
 				</div>

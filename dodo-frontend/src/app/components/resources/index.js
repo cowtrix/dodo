@@ -10,3 +10,4 @@ export { Role } from './role'
 export { Address } from './address'
 export { ArrestRisk } from './arrest-risk';
 export { Panel } from './panel';
+export { Facilities } from './facilities';
