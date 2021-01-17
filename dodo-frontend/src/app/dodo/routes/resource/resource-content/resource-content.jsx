@@ -39,9 +39,13 @@ export const ResourceContent =
 				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h2>EDIT  <Icon icon="edit" size="1x" /></h2></a> : null}
 				<div className={styles.descriptionContainer}>
 					<Description description={resource.publicDescription} />
-					{shouldDisplayNotifications &&
-						<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
-					}
+					{shouldDisplayNotifications && (
+						<div className={styles.panelsContainer}>
+							{shouldDisplayNotifications &&
+								<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
+							}
+						</div>
+					)}
 				</div>
 				{resourceType === 'role' ?
 					<Role
