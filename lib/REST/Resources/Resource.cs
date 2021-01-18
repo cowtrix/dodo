@@ -29,9 +29,9 @@ namespace Resources
 
 	public abstract class ResourceSchemaBase : IVerifiable
 	{
-		[View(EPermissionLevel.PUBLIC, customDrawer:"slugPreview", inputHint:"Must be between 3-64 characters")]
+		[View(EPermissionLevel.PUBLIC, customDrawer: "slugPreview", inputHint: "Must be between 3-64 characters")]
 		[UserFriendlyName]
-		public string Name { get; set; }
+		public string Name { get; set; } = "Untitled Resource";
 
 		public ResourceSchemaBase(string name)
 		{
@@ -79,7 +79,7 @@ namespace Resources
 		[View(EPermissionLevel.PUBLIC, priority: 0)]
 		[JsonProperty]
 		[UserFriendlyName]
-		public string Name { get; set; }
+		public virtual string Name { get; set; }
 
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN, priority:1, customDrawer:"null")]
 		[JsonProperty]

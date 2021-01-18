@@ -9,22 +9,20 @@ const UPDATE_DETAILS = "Update my details"
 
 export const YourProfile = (
 	{
-		currentUsername, currentName, currentEmail, fetchingUser, updateDetails, isConfirmed, isUpdating, updateError, guid, resendVerificationEmail }
+		currentUsername, currentEmail, fetchingUser, updateDetails, isConfirmed, isUpdating, updateError, guid, resendVerificationEmail }
 	) => {
 
 	const [username, setUserName] = useState(currentUsername)
-	const [name, setName] = useState(currentName)
 	const [email, setEmail] = useState(currentEmail)
 	const [firstRun, setFirstRun] = useState(undefined);
 
 	useEffect(() => {
 		setUserName(currentUsername)
-		setName(currentName)
 		setEmail(currentEmail)
-	}, [currentUsername, currentEmail, currentName])
+	}, [currentUsername, currentEmail])
 
 	const handleUpdate = () => {
-		updateDetails(username, name, email, guid);
+		updateDetails(username, email, guid);
 		setFirstRun(false);
 	}
 
@@ -44,13 +42,6 @@ export const YourProfile = (
 						type="text"
 						value={username}
 						setValue={setUserName}
-					/>
-					<EditableInput
-						name="Name"
-						id="name"
-						type="text"
-						value={name}
-						setValue={setName}
 					/>
 					<UpdateEmail
 						email={email}
