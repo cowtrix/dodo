@@ -30,23 +30,21 @@ const icons = {
 	parking: 'parking',
 };
 
-export const Facilities = ({ facilities }) => {
+export const Facilities = ({ facilities = {} }) => {
 	const { t } = useTranslation("ui");
-
-	const facilitiesCount = facilities ? Object.keys(facilities).reduce((acc, key) => (
-		acc + (facilities[key] === false || facilities[key] === 'None') ? 0 : 1
-	), 0) : 0;
+	const facilityKeys = Object.keys(facilities).filter(key => {
+		return facilities[key] !== false && facilities[key] !== 'None';
+	});
 
 	return (
 		<Panel>
-			<ul className={styles.facilities}>
-				{facilitiesCount ? (
-					<p>{t('This event offers no facilities')}.</p>
-				)
-				: (
-					Object.keys(facilities).map(key => {
+			{!facilityKeys.length ? (
+				<p>{t('This event offers no facilities')}.</p>
+			)
+			: (
+				<ul className={styles.facilities}>
+					{facilityKeys.map(key => {
 						const value = facilities[key];
-						//if(value === false || value === 'None') return null;
 						const text = camelToSentenceCase(key);
 
 						return (
@@ -55,14 +53,14 @@ export const Facilities = ({ facilities }) => {
 									{text}
 									<Icon icon={icons[key]} title={text} className={styles.icon} />
 								</div>
-								<div className={styles.value}>
+								<div className={`${styles.value} ${styles[value.toString().toLowerCase()]}`}>
 									{value === true ? t('Yes') : value}
 								</div>
 							</li>
 						)
-					})
-				)}
-			</ul>
+					})}
+				</ul>
+			)}
 		</Panel>
 	);
 };

@@ -44,7 +44,7 @@ export const ResourceContent =
 							{shouldDisplayNotifications &&
 								<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
 							}
-							<Facilities facilities={resource.facilities} />
+							{resource.facilities && <Facilities facilities={resource.facilities} />}
 						</div>
 					)}
 				</div>

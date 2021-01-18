@@ -39,5 +39,13 @@
 	.value {
 		text-align: center;
 		width: 100px;
+
+		&.paid {
+			color: $warning-yellow;
+		}
+
+		&.free {
+			color: $extinction-rebellion-green;
+		}
 	}
 }
