@@ -44,7 +44,7 @@ namespace GenerateSampleData
 		{
 			ResourceUtility.ClearAllManagers();
 			Analytics.Clear();
-			var sysAdmin = GenerateUser(new UserSchema("Rebellion Tom", "test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
+			var sysAdmin = GenerateUser(new UserSchema("test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
 			using (var rscLock = new ResourceLock(sysAdmin))
 			{
 				sysAdmin.TokenCollection.AddOrUpdate(sysAdmin, new SysadminToken());
