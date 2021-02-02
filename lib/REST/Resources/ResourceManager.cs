@@ -53,7 +53,7 @@ namespace Resources
 		public ResourceManager()
 		{
 			// Connect to the database
-			var database = ResourceUtility.MongoDB.GetDatabase(MongoDBDatabaseName);
+			var database = ResourceUtility.MongoDB.GetDatabase(MongoDBDatabaseName.Replace(".", "_"));
 			// Get the collection (which is the name of this type by default)
 			MongoDatabase = database.GetCollection<T>(MongoDBCollectionName);
 
