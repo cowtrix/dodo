@@ -6,6 +6,7 @@ using Dodo;
 using Dodo.Expiry;
 using Dodo.Security;
 using Dodo.Users;
+using Dodo.Users.Tokens;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -32,27 +33,28 @@ namespace DodoServer
 			var usrManager = ResourceUtility.GetManager<User>();
 			if(usrManager.Count == 0)
 			{
-				GenerateSysadmin();
+				// Generate sysadmin account if no account is registered and print
+				var schema = new UserSchema($"admin_{KeyGenerator.GetUniqueKey(6).ToLowerInvariant()}",
+					ValidationExtensions.GenerateStrongPassword(), DodoApp.DevEmail);
+				var user = ResourceUtility.GetFactory<User>()
+					.CreateTypedObject(new ResourceCreationRequest(default, schema));
+
+				using var rscLock = new ResourceLock(user);
+				user.PersonalData.EmailConfirmed = true;
+				user.TokenCollection.AddOrUpdate(user, new SysadminToken());
+				usrManager.Update(user, rscLock);
+
+				Console.BackgroundColor = ConsoleColor.Red;
+				Console.ForegroundColor = ConsoleColor.Black;
+				Console.WriteLine($"THIS IS IMPORTANT. A system admin account has been generated.");
+				Console.WriteLine($"Username: {schema.Username}");
+				Console.WriteLine($"Email: {schema.Email}");
+				Console.WriteLine($"Password: {schema.Password}");
+				Console.WriteLine($"THE FIRST THING YOU SHOULD DO IS CHANGE THIS PASSWORD.");
+				Console.ResetColor();
 			}
 
 			CreateHostBuilder(args).Build().Run();
-		}
-
-		private static void GenerateSysadmin()
-		{
-			// Generate sysadmin account if no account is registered and print
-			var schema = new UserSchema($"admin_{KeyGenerator.GetUniqueKey(6).ToLowerInvariant()}", 
-				ValidationExtensions.GenerateStrongPassword(), DodoApp.DevEmail);
-			ResourceUtility.GetFactory<User>()
-				.CreateTypedObject(new ResourceCreationRequest(default, schema));
-			Console.BackgroundColor = ConsoleColor.Red;
-			Console.ForegroundColor = ConsoleColor.Black;
-			Console.WriteLine($"THIS IS IMPORTANT. A system admin account has been generated.");
-			Console.WriteLine($"Username: {schema.Username}");
-			Console.WriteLine($"Email: {schema.Email}");
-			Console.WriteLine($"Password: {schema.Password}");
-			Console.WriteLine($"THE FIRST THING YOU SHOULD DO IS CHANGE THIS PASSWORD.");
-			Console.ResetColor();
 		}
 
 		private static IEnumerable<string> GetUrls()
