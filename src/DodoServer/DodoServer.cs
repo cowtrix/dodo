@@ -1,6 +1,7 @@
 using Common;
 using Common.Config;
 using Common.Extensions;
+using Common.Security;
 using Dodo;
 using Dodo.Expiry;
 using Dodo.Security;
@@ -40,7 +41,8 @@ namespace DodoServer
 		private static void GenerateSysadmin()
 		{
 			// Generate sysadmin account if no account is registered and print
-			var schema = new UserSchema($"admin_{DodoApp.ServerSalt.Substring(0, 6)}", ValidationExtensions.GenerateStrongPassword(), DodoApp.DevEmail);
+			var schema = new UserSchema($"admin_{KeyGenerator.GetUniqueKey(6).ToLowerInvariant()}", 
+				ValidationExtensions.GenerateStrongPassword(), DodoApp.DevEmail);
 			ResourceUtility.GetFactory<User>()
 				.CreateTypedObject(new ResourceCreationRequest(default, schema));
 			Console.BackgroundColor = ConsoleColor.Red;
