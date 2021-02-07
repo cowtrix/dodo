@@ -29,6 +29,9 @@ namespace Dodo.Users
 		public AuthorizationData AuthData { get; set; }
 		[BsonIgnore]
 		public override Passphrase PublicKey => new Passphrase(AuthData.PublicKey);
+		[BsonIgnore]
+		public override string Name { get => Slug; set { } }
+
 		#endregion
 
 		public User() : base()

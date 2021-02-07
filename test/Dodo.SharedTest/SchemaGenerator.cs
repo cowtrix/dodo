@@ -114,7 +114,7 @@ namespace Dodo.SharedTest
 		public static UserSchema GetRandomUser(AccessContext context = default)
 		{
 			var nm = RandomName<User>();
-			return new UserSchema(nm,
+			return new UserSchema(
 				ValidationExtensions.StripStringForSlug(nm),
 				ValidationExtensions.GenerateStrongPassword(),
 				$"{StringExtensions.RandomString(16)}@example.com"

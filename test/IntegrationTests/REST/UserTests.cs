@@ -38,12 +38,13 @@ namespace RESTTests
 			var user = GetRandomUser(out var password, out var context);
 			var lg = CreateObject<LocalGroup>(context, SchemaGenerator.GetRandomLocalGroup(context));
 			await Login(user.Slug, password);
-			const string newName = "My New Name";
+			const string newEmail = "test777@example.com";
 			var patchObj = new
 			{
-				Name = newName,
+				
 				PersonalData = new
 				{
+					Email = newEmail,
 					EmailPreferences = new EmailPreferences
 					{
 						DailyUpdate = true,
@@ -55,7 +56,7 @@ namespace RESTTests
 			var response = await Request($"{UserService.RootURL}/{user.Guid}", EHTTPRequestType.PATCH, patchObj);
 			Assert.IsTrue(response.IsSuccessStatusCode);
 			user = ResourceUtility.GetManager<User>().GetSingle(x => x.Guid == user.Guid);
-			Assert.AreEqual(newName, user.Name);
+			Assert.AreEqual(newEmail, user.PersonalData.Email);
 			Assert.IsTrue(user.PersonalData.EmailPreferences.WeeklyUpdate);
 			Assert.IsTrue(user.PersonalData.EmailPreferences.DailyUpdate);
 			Assert.IsTrue(user.PersonalData.EmailPreferences.NewNotifications);

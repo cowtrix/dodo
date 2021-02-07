@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useLocation } from "react-router-dom";
+
 import {
 	getReturnPath,
 	isExternalRoute,
-	keepReturnPathParam
+	keepReturnPathParam,
 } from "../../../../domain/services/services";
 
 export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {

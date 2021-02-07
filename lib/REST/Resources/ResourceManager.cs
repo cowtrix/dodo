@@ -16,6 +16,7 @@ namespace Resources
 {
 	public interface IResourceManager
 	{
+		long Count { get; }
 		void Clear();
 		void Add(IRESTResource newObject);
 		void Update(IRESTResource objToUpdate, ResourceLock locker);
@@ -48,12 +49,13 @@ namespace Resources
 		/// </summary>
 		private ConfigVariable<int> m_resourceLockTimeoutMs = new ConfigVariable<int>("ResourceLockTimeout", 10 * 1000);
 		public IMongoCollection<T> MongoDatabase { get; private set; }
+		public long Count => MongoDatabase.CountDocuments(x => true);
 		private static object m_addlock = new object();
 
 		public ResourceManager()
 		{
 			// Connect to the database
-			var database = ResourceUtility.MongoDB.GetDatabase(MongoDBDatabaseName);
+			var database = ResourceUtility.MongoDB.GetDatabase(MongoDBDatabaseName.Replace(".", "_"));
 			// Get the collection (which is the name of this type by default)
 			MongoDatabase = database.GetCollection<T>(MongoDBCollectionName);
 

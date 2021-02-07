@@ -67,10 +67,11 @@ namespace Dodo.Users
 					node.Member = true;
 				}				
 			}
-			while(ret.Values.ToList().Any(t => !t.Checked))
+			var retList = ret.Values.ToList();
+			while (retList.Any(t => !t.Checked))
 			{
 				// Ok, now it's time to actually build the tree out
-				foreach(var node in ret.Values)	// we leave the root nodes alone
+				foreach(var node in retList)	// we leave the root nodes alone
 				{
 					if(node.Reference.Parent != default)
 					{
