@@ -30,7 +30,7 @@ export const keepReturnPathParam = (newRoute, location) => {
 	return returnURL ? addReturnPathToRoute(newRoute, returnURL) : newRoute;
 };
 
-export const isExternalRoute = (route) =>
-	["/edit/", "/auth/", "/api/"].some((item) =>
+export const isRouterRoute = (route) =>
+	!["/edit/", "/auth/", "/api/", "/rsc/", "/admin/"].some((item) =>
 		route.substring(0, 6).includes(item)
 	);

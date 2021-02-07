@@ -6,7 +6,7 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 
 import {
 	getReturnPath,
-	isExternalRoute,
+	isRouterRoute,
 	keepReturnPathParam,
 } from "../../../../domain/services/services";
 
@@ -17,9 +17,11 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 	if (isLoggedIn) {
 		const returnPath = getReturnPath(location) || "/";
 
-		isExternalRoute(returnPath)
-			? (window.location = returnPath)
-			: history.replace(returnPath);
+		if (isRouterRoute(returnPath)) {
+			history.replace(returnPath);
+		} else {
+			window.location = returnPath;
+		}
 	}
 
 	const { t } = useTranslation("ui");
