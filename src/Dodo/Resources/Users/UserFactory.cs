@@ -29,7 +29,7 @@ namespace Dodo.Users
 		public bool NewNotifications { get; set; } = true;
 
 
-		public UserSchema(string name, string username, string password, string email, string token = null) : base(name)
+		public UserSchema(string username, string password, string email, string token = null) : base("user")
 		{
 			Username = username;
 			Password = password;

@@ -11,7 +11,9 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 
 	if (isLoggedIn) {
 		const returnPath = getReturnPath(location) || '/';
-		const isRoute = !['/edit/', '/auth/'].includes(returnPath.substring(0, 6)) && returnPath.substring(0, 5) !== '/api/';
+		const isRoute = !['/edit/', '/auth/'].includes(returnPath.substring(0, 6))
+			&& !['/api/', '/rsc/'].includes(returnPath.substring(0, 5))
+			&& !['/admin/'].includes(returnPath.substring(0, 7));
 
 		if(isRoute) {
 			history.replace(returnPath);

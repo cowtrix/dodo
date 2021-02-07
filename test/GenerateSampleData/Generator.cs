@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Dodo.Users.Tokens;
 using System.Collections.Generic;
 using Dodo.Analytics;
+using System.Linq;
 
 namespace GenerateSampleData
 {
@@ -36,15 +37,22 @@ namespace GenerateSampleData
 
 		static async Task Main(string[] args)
 		{
+			bool purgeOnly = args.FirstOrDefault() == "--purgeonly";
 			Logger.CurrentLogLevel = ELogLevel.Debug;
-			await Generate();
+			await Generate(purgeOnly);
 		}
 
-		public static async Task Generate()
+		public static async Task Generate(bool purgeOnly)
 		{
 			ResourceUtility.ClearAllManagers();
 			Analytics.Clear();
-			var sysAdmin = GenerateUser(new UserSchema("Rebellion Tom", "test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
+
+			if(purgeOnly)
+			{
+				return;
+			}
+
+			var sysAdmin = GenerateUser(new UserSchema("test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
 			using (var rscLock = new ResourceLock(sysAdmin))
 			{
 				sysAdmin.TokenCollection.AddOrUpdate(sysAdmin, new SysadminToken());

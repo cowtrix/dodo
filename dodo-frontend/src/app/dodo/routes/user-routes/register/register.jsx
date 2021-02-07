@@ -15,20 +15,18 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 	}
 
 	const [username, setUsername] = useState("")
-	const [name, setName] = useState("")
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [passwordConfirmation, setPasswordConfirmation] = useState("")
 	const [acceptTerms, setAcceptTerms] = useState(false);
 
 	const usernameShort = strNotEmptyAndLengthBelow(3, username)
-	const nameShort = strNotEmptyAndLengthBelow(3, name)
 	const emailInvalid = !!email && !emailIsValid(email)
 	const passwordShort = strNotEmptyAndLengthBelow(8, password)
 	const passwordInvalid = password.length > 0 && passwordContainsNoSymbol(password)
 	const passwordsNotEqual = !!passwordConfirmation && password !== passwordConfirmation
-	const hasError = !username.length || !name.length || !email.length || !password.length || !passwordConfirmation.length ||
-		usernameShort || nameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual || !acceptTerms
+	const hasError = !username.length || !email.length || !password.length || !passwordConfirmation.length ||
+		usernameShort || emailInvalid || passwordShort || passwordInvalid || passwordsNotEqual || !acceptTerms
 
 	const validationErrors = error?.response?.errors || {};
 
@@ -53,17 +51,6 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 						error={usernameShort || !!validationErrors['Username']}
 						maxLength={63}
 						message={getValidationMessage('Username')}
-					/>
-					{nameShort ? <Error error="Name should be longer"/> : null}
-					<Input
-						name={t("Name")}
-						id="name"
-						type="text"
-						value={name}
-						setValue={setName}
-						error={nameShort || !!validationErrors['Name']}
-						maxLength={63}
-						message={getValidationMessage('Name')}
 					/>
 					{emailInvalid ? <Error error="Email is invalid"/> : null}
 					<Input
@@ -100,7 +87,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 					/>
 					<TickBox
 						id="termsConditions"
-						value={acceptTerms}
+						checked={acceptTerms}
 						setValue={val => setAcceptTerms(val)}
 						useAriaLabel={true}
 						message={<>
@@ -122,7 +109,6 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 							username,
 							password,
 							email,
-							name,
 						})}
 						value={t("Register a new account")}
 					/>

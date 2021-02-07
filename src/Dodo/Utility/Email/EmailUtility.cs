@@ -47,7 +47,7 @@ namespace Dodo.Email
 		private static EmailConfiguration m_emailConfig =
 			new ConfigVariable<EmailConfiguration>("Dodo_EmailConfiguration", default).Value;
 		private static string[] m_banners;
-		private static PersistentStore<string, bool> m_unsubscribed = new PersistentStore<string, bool>(DodoApp.PRODUCT_NAME, "UnsubbedEmails");
+		private static PersistentStore<string, bool> m_unsubscribed = new PersistentStore<string, bool>(DodoApp.PRODUCT_NAME.Replace(".", "_"), "UnsubbedEmails");
 		private static Dictionary<string, string> m_templateCache = new Dictionary<string, string>();
 		static EmailUtility()
 		{
