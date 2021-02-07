@@ -14,3 +14,13 @@
 	background-color: $warning-yellow;
 	margin-bottom: spacing(2);
 }
+
+.noPad {
+	@media (min-width: $responsive-breakpoint) {
+		padding: 0;
+	}
+}
+
+.updateButton {
+	margin: spacing(2) 0 spacing(3);
+}

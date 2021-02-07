@@ -35,11 +35,3 @@ export const passwordContainsNoSymbol = (password) =>
 export const emailIsValid = (email) => /\w+@\w+\.\w{2,}/.test(email);
 export const strNotEmptyAndLengthBelow = (minLength, str) =>
 	!!str && str.length < minLength;
-
-export const WARNING__BLOCK_JS_THREAD_FOR_MS = (milliseconds) => {
-	const start = new Date().getTime();
-	for (let i = 0; i < 1e7; i++)
-		if (new Date().getTime() - start > milliseconds) {
-			break;
-		}
-};

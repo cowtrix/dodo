@@ -58,10 +58,10 @@ export const getLoggedInUser = (dispatch) =>
 export const getMyRebellion = (dispatch) =>
 	authAction(dispatch, GET_MY_REBELLION, MY_REBELLION_URL)
 
-export const updateDetails = (dispatch, guid, details, keepalive = false) =>
+export const updateDetails = (dispatch, guid, details) =>
 	authAction(dispatch, UPDATE_DETAILS, AUTH_URL + guid, (success) => dispatch({
 		type: LOGIN + SUCCESS, payload: success
-	}), false, 'PATCH', details, keepalive)
+	}), false, 'PATCH', details)
 
 export const logUserOut = (dispatch, customCb = undefined) =>
 	apiAction(dispatch, LOGOUT, LOGOUT_URL, () => {

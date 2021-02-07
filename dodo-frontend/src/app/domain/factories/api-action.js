@@ -20,7 +20,7 @@ function abortPreviousRequest(requestKey, dispatch, action, cb) {
 	}
 }
 
-const apiActionHandler = async (service, dispatch, action, url, cb, abortPrevious, method, body, keepalive = false) => {
+const apiActionHandler = async (service, dispatch, action, url, cb, abortPrevious, method, body) => {
 	let abortController;
 	const requestKey = method + ':' + url.split(/[?#]/)[0]; // Get method:URL (path without params or hashes) to use as request key
 
@@ -42,7 +42,7 @@ const apiActionHandler = async (service, dispatch, action, url, cb, abortPreviou
 		}
 	})
 
-	return service(url, method, body, abortController, keepalive)
+	return service(url, method, body, abortController)
 		.then(response => {
 			if (response.status) {
 				dispatch({
@@ -72,10 +72,10 @@ const apiActionHandler = async (service, dispatch, action, url, cb, abortPreviou
 		})
 }
 
-export const apiAction = (dispatch, action, url, cb, abortPrevious, method, body, keepalive = false) => {
-	return apiActionHandler(api, dispatch, action, url, cb, abortPrevious, method, body, keepalive);
+export const apiAction = (dispatch, action, url, cb, abortPrevious, method, body) => {
+	return apiActionHandler(api, dispatch, action, url, cb, abortPrevious, method, body);
 }
 
-export const authAction = (dispatch, action, url, cb, abortPrevious, method, body, keepalive = false) => {
-	return apiActionHandler(auth, dispatch, action, url, cb, abortPrevious, method, body, keepalive);
+export const authAction = (dispatch, action, url, cb, abortPrevious, method, body) => {
+	return apiActionHandler(auth, dispatch, action, url, cb, abortPrevious, method, body);
 }
