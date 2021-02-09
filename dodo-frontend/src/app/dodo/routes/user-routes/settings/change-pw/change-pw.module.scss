@@ -1,0 +1,18 @@
+@import "~app/styles/styles";
+
+.h3Title {
+	margin-bottom: spacing(2);
+}
+
+.paragraph {
+	margin: spacing(2) 0;
+}
+
+.warning {
+	background-color: $warning-yellow;
+	padding: 0;
+}
+
+.greyBackground {
+	background: rgb(179, 179, 179);
+}

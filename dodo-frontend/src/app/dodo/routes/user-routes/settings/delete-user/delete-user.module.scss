@@ -1,0 +1,44 @@
+@import "~app/styles/styles";
+
+.dangerZoneTitle {
+	background: repeating-linear-gradient(
+		135deg,
+		$dangerZoneColor1,
+		$dangerZoneColor1 $dangerZoneStripeWidth,
+		$dangerZoneColor2 $dangerZoneStripeWidth,
+		$dangerZoneColor2 $dangerZoneStripeWidth * 2
+	);
+
+	margin-top: spacing(5);
+
+	h2 {
+		padding: spacing(2) spacing(2) spacing(1);
+	}
+}
+
+.dangerZoneInner {
+	padding: spacing(2);
+	> div {
+		font-size: 0.85em;
+		font-weight: bold;
+		padding: 0 spacing(2) spacing(2);
+	}
+}
+
+.dangerZoneBox {
+	padding: 0;
+}
+
+.modalTextContent {
+	p {
+		margin-top: 0;
+	}
+}
+.finalModalTextContent {
+	p {
+		margin-top: 0;
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}

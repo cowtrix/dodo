@@ -1,1 +1,0 @@
-export const YOUR_PROFILE_ROUTE = '/your-profile'

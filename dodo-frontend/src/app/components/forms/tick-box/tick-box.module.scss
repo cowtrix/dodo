@@ -8,13 +8,13 @@
 
 	.label {
 		flex-basis: 0;
-		flex-grow: 0.3;
+		flex-grow: 1;
 	}
 
 	.box {
 		justify-content: flex-start;
 		flex-basis: 0;
-		flex-grow: 0.7;
+		flex-grow: 0;
 	}
 
 	.message {

@@ -17,7 +17,8 @@
 		padding-left: spacing(2);
 		padding-right: spacing(2);
 	}
-
+}
+.notSubContainer {
 	@media (min-width: $responsive-breakpoint) {
 		width: 500px;
 		flex-grow: initial;

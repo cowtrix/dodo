@@ -6,12 +6,15 @@ import {
 	GET_MY_REBELLION,
 	UPDATE_DETAILS,
 	LOGOUT,
-	RESEND_VALIDATION_EMAIL
+	RESEND_VALIDATION_EMAIL,
+	CHANGE_PASSWORD,
+	DELETE_USER
 } from './action-types'
 import { apiAction, authAction } from '../factories'
 
 import {
 	RESET_PASSWORD as RESET_PASSWORD_URL,
+	CHANGE_PASSWORD as CHANGE_PASSWORD_URL,
 	REGISTER_USER as REGISTER_USER_URL,
 	AUTH_URL,
 	LOGIN as LOGIN_URL,
@@ -53,6 +56,15 @@ export const registerUser = (dispatch, { token, ...userDetails }) =>
 		userDetails
 	);
 
+export const changePassword = (dispatch, currentpassword, newpassword, cb) =>
+	apiAction(dispatch, CHANGE_PASSWORD, CHANGE_PASSWORD_URL, cb, undefined, "post", {
+		currentpassword,
+		newpassword,
+	});
+
+export const deleteUser = (dispatch, guid, cb) => 
+	authAction(dispatch, DELETE_USER, AUTH_URL + guid, cb, undefined, 'delete')
+
 export const getLoggedInUser = (dispatch) =>
 	authAction(dispatch, GET_LOGGED_IN_USER, AUTH_URL)
 
@@ -64,8 +76,11 @@ export const updateDetails = (dispatch, guid, details) =>
 		type: LOGIN + SUCCESS, payload: success
 	}), false, 'PATCH', details)
 
-export const logUserOut = (dispatch) =>
-	apiAction(dispatch, LOGOUT, LOGOUT_URL, refreshPage)
+export const logUserOut = (dispatch, customCb = undefined) =>
+	apiAction(dispatch, LOGOUT, LOGOUT_URL, () => {
+		customCb && customCb();
+		refreshPage();
+	})
 
 export const resendVerificationEmail = (dispatch) =>
 	apiAction(dispatch, RESEND_VALIDATION_EMAIL, RESEND_VALIDATION_EMAIL_URL)
