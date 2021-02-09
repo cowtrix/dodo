@@ -12,7 +12,7 @@ export const auth = async(url, method = "get", body, abortController) => {
 			Accept: "application/json"
 		},
 		credentials: "include",
-		signal: abortController ? abortController.signal : undefined,
+		signal: abortController ? abortController.signal : undefined
 	})
 	.then(resp => {
 		return resp.text()

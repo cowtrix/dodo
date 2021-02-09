@@ -1,0 +1,14 @@
+@import "~app/styles/styles";
+
+.header {
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.icon {
+  margin-right: spacing(2);
+}
+.content {
+  padding: 0;
+}

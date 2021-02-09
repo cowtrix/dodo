@@ -1,7 +1,9 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
 	faBullseye,
+  faChevronDown,
 	faChevronRight,
+  faChevronUp,
 	faSlidersH,
 	faCrosshairs,
 	faEdit,
@@ -34,6 +36,8 @@ export const initiateFontAwesomeLibrary = () => {
 		faYoutube,
 		faBullseye,
 		faChevronRight,
+		faChevronDown,
+		faChevronUp,
 		faSlidersH,
 		faCrosshairs,
 		faEdit,

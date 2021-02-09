@@ -18,11 +18,11 @@ namespace Dodo
 			[Email]
 			public string Redirect { get; set; }
 		}
-		public static string PrivacyPolicyURL => ConfigManager.GetValue("PrivacyPolicyURL", $"https://extinctionrebellion.uk/privacy-policy/");
-		public static string RebelAgreementURL => ConfigManager.GetValue("RebelAgreementURL", $"https://extinctionrebellion.uk/wp-content/uploads/2019/04/Extinction-Rebellion-Rebel-Agreement.pdf");
+		public static string PrivacyPolicyURL => ConfigManager.GetValue("PrivacyPolicyURL", "rsc/privacypolicy");
+		public static string RebelAgreementURL => ConfigManager.GetValue("RebelAgreementURL", "rsc/rebelagreement");
 		public static string DevEmail => ConfigManager.GetValue($"{Dodo.DodoApp.PRODUCT_NAME}_DevEmail", $"admin@dodo.ovh");
 		public static string ServerSalt { get; set; }
-		public const string PRODUCT_NAME = "Dodo";
+		public const string PRODUCT_NAME = "resistance.earth";
 		public const string API_ROOT = "api/";
 		private static CommandReader m_commandReader = new CommandReader();
 		public static NetworkConfig NetConfig =>

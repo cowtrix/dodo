@@ -1,51 +1,54 @@
-import { CANCELLED, FAILURE, REQUEST, SUCCESS } from "../constants"
+import { CANCELLED, FAILURE, REQUEST, SUCCESS } from "../constants";
 
-const initialStateFactory = actionType => ({
+const initialStateFactory = (actionType) => ({
 	isFetching: false,
-	hasErrored: false
-})
+	hasErrored: false,
+	totalFetching: 0,
+});
 
-export const apiReducerFactory = actionType => (
+export const apiReducerFactory = (actionType) => (
 	state = initialStateFactory(actionType),
 	action
 ) => {
+	const totalFetching = Math.max(
+		state.totalFetching + (action.type.includes(REQUEST) ? 1 : -1),
+		0
+	);
 	switch (action.type) {
-		case actionType + REQUEST: {
-			return {
-				...state,
-				isFetching: true,
-				hasErrored: false,
-				error: undefined
-			}
-		}
+		case actionType + REQUEST:
 		case actionType + SUCCESS:
 		case actionType + CANCELLED: {
 			return {
 				...state,
-				isFetching: false,
+				isFetching: !!totalFetching,
+				totalFetching,
 				hasErrored: false,
-				error: undefined
-			}
+				error: undefined,
+			};
 		}
 		case actionType + FAILURE: {
 			return {
 				...state,
 				isFetching: false,
+				totalFetching: 0,
 				hasErrored: true,
-				error: action.payload
-			}
+				error: action.payload,
+			};
 		}
 		default:
-			return state
+			return state;
 	}
-}
+};
 
-export const reducerFactory = (actionType, defaultState = []) => (state = defaultState, action) => {
+export const reducerFactory = (actionType, defaultState = []) => (
+	state = defaultState,
+	action
+) => {
 	switch (action.type) {
 		case actionType + SUCCESS: {
-			return action.payload
+			return action.payload;
 		}
 		default:
-			return state
+			return state;
 	}
-}
+};

@@ -14,5 +14,6 @@ export const requestsReducer = combineReducers({
 	[user.GET_MY_REBELLION]: apiReducerFactory(user.GET_MY_REBELLION),
 	[user.REGISTER_USER]: apiReducerFactory(user.REGISTER_USER),
 	[user.UPDATE_DETAILS]: apiReducerFactory(user.UPDATE_DETAILS),
+	[user.CHANGE_PASSWORD]: apiReducerFactory(user.CHANGE_PASSWORD),
 	[event.RESOURCES_GET]: apiReducerFactory(event.RESOURCES_GET)
 })
