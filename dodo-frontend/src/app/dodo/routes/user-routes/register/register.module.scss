@@ -1,0 +1,9 @@
+@import "~app/styles/styles";
+
+.tokenBox {
+	margin-bottom: spacing(6);
+	color: $extinction-rebellion-green;
+	p {
+		margin: spacing(1) 0 -2px;
+	}
+}

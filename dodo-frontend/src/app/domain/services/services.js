@@ -30,6 +30,11 @@ export const keepReturnPathParam = (newRoute, location) => {
 	return returnURL ? addReturnPathToRoute(newRoute, returnURL) : newRoute;
 };
 
+export const isRouterRoute = (route) =>
+	!["/edit/", "/auth/", "/api/", "/rsc/", "/admin/"].some((item) =>
+		route.substring(0, 6).includes(item)
+	);
+
 export const passwordContainsNoSymbol = (password) =>
 	!/^(?=.*[@#$%^&+=!]).*$/.test(password);
 export const emailIsValid = (email) => /\w+@\w+\.\w{2,}/.test(email);
