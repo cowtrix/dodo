@@ -10,6 +10,12 @@
 	align-items: center;
 }
 
+.disabled {
+	opacity: 0.5;
+	pointer-events: none;
+	cursor: pointer;
+}
+
 .link {
 	color: inherit;
 	display: inherit;
@@ -34,8 +40,25 @@
 	width: 100%;
 	background: $extinction-rebellion-green;
 	padding: spacingXS(6) spacingXS(5) spacingXS(5);
-	h1 {
+	div {
 		font-size: 2rem;
+		font-family: $title-font;
+		font-weight: bolder;
+		color: black;
+	}
+}
+
+.cta-danger {
+	display:flex;
+	flex-direction: column;
+	width: 100%;
+	background: $danger-red;
+	padding: spacingXS(3) spacingXS(5) spacingXS(1.5);
+	div {
+		font-size: 1.2rem;
+		font-family: $title-font;
+		font-weight: bolder;
+		color: black;
 	}
 }
 

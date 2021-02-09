@@ -1,7 +1,14 @@
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faBullseye, faChevronRight, faSlidersH, faCrosshairs, faEdit } from '@fortawesome/free-solid-svg-icons'
-
-import { faFacebook, faTwitter, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import {
+  faBullseye,
+  faChevronDown,
+  faChevronRight,
+  faChevronUp,
+  faCrosshairs,
+  faEdit,
+  faSlidersH,
+} from '@fortawesome/free-solid-svg-icons';
 
 export const initiateFontAwesomeLibrary = () => {
 	library.add(
@@ -11,6 +18,8 @@ export const initiateFontAwesomeLibrary = () => {
 		faYoutube,
 		faBullseye,
 		faChevronRight,
+		faChevronDown,
+		faChevronUp,
 		faSlidersH,
 		faCrosshairs,
 		faEdit

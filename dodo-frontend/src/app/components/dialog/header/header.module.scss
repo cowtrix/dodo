@@ -1,9 +1,11 @@
 @import "~app/styles/styles";
 
-.dialogHeader {
+.dialogHeaderOuter {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding-left: spacingXS(6);
 	border-bottom: 1px solid $color-light-grey;
+}
+.dialogHeader {
+	padding: spacingXS(2.5) 0 spacingXS(1) spacingXS(6);
 }

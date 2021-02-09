@@ -1,0 +1,26 @@
+@import "~app/styles/styles";
+
+.h3Title {
+	margin-bottom: spacing(2);
+}
+
+.text {
+	margin-bottom: spacing(4);
+}
+
+.warning {
+	padding-top: spacing(2);
+	padding-bottom: spacing(2);
+	background-color: $warning-yellow;
+	margin-bottom: spacing(2);
+}
+
+.noPad {
+	@media (min-width: $responsive-breakpoint) {
+		padding: 0;
+	}
+}
+
+.updateButton {
+	margin: spacing(2) 0 spacing(3);
+}
