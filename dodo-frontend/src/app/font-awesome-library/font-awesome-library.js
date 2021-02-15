@@ -1,14 +1,32 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faBullseye,
+	faBullseye,
   faChevronDown,
-  faChevronRight,
+	faChevronRight,
   faChevronUp,
-  faCrosshairs,
-  faEdit,
-  faSlidersH,
-} from '@fortawesome/free-solid-svg-icons';
+	faSlidersH,
+	faCrosshairs,
+	faEdit,
+	faToilet,
+	faBath,
+	faUtensils,
+	faSink,
+	faWheelchair,
+	faCampground,
+	faWarehouse,
+	faBed,
+	faMapSigns,
+	faComment,
+	faFirstAid,
+	faHandsHelping,
+	faHandPaper,
+	faBabyCarriage,
+	faWifi,
+	faPlug,
+	faParking
+} from '@fortawesome/free-solid-svg-icons'
+
+import { faFacebook, faTwitter, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 
 export const initiateFontAwesomeLibrary = () => {
 	library.add(
@@ -22,6 +40,23 @@ export const initiateFontAwesomeLibrary = () => {
 		faChevronUp,
 		faSlidersH,
 		faCrosshairs,
-		faEdit
+		faEdit,
+		faToilet,
+		faBath,
+		faUtensils,
+		faSink,
+		faWheelchair,
+		faCampground,
+		faWarehouse,
+		faBed,
+		faMapSigns,
+		faComment,
+		faFirstAid,
+		faHandsHelping,
+		faHandPaper,
+		faBabyCarriage,
+		faWifi,
+		faPlug,
+		faParking,
 	)
 }
