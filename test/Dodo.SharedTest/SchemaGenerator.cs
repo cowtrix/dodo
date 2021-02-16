@@ -41,10 +41,13 @@ namespace Dodo.SharedTest
 		}
 
 		private static Random m_random = new Random();
-		public static string SampleDescription => "We are unprepared for the danger our future holds. We face floods, wildfires, extreme weather, crop failure, mass displacement and the breakdown of society. The time for denial is over. It is time to act.\n\nConventional approaches of voting, lobbying, petitions and protest have failed because powerful political and economic interests prevent change. Our strategy is therefore one of non-violent, disruptive civil disobedience – a rebellion.\n\nHistorical evidence shows that we need the involvement of 3.5% of the population to succeed – in the UK that’s about 2 million people.\nHelp XR mobilise and donate [here](https://rebellion.earth/donate/)\n\n[Extinction Rebellion](https://rebellion.earth/)\n[XR International](https://rebellion.global/)\n\n1. #TellTheTruth \n2. #ActNow \n3. #BeyondPolitics";
+		public static string SampleDescription =>
+			new string[] {
+				"We are unprepared for the danger our future holds. We face floods, wildfires, extreme weather, crop failure, mass displacement and the breakdown of society. The time for denial is over. It is time to act.\n\nConventional approaches of voting, lobbying, petitions and protest have failed because powerful political and economic interests prevent change. Our strategy is therefore one of non-violent, disruptive civil disobedience – a rebellion.\n\nHistorical evidence shows that we need the involvement of 3.5% of the population to succeed – in the UK that’s about 2 million people.\nHelp XR mobilise and donate [here](https://rebellion.earth/donate/)\n\n[Extinction Rebellion](https://rebellion.earth/)\n[XR International](https://rebellion.global/)\n\n1. #TellTheTruth \n2. #ActNow \n3. #BeyondPolitics"
+			}.Random();
 		public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
 		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
-		public static string RandomVideoURL => "https://www.youtube.com/embed/d4QDM_Isi24";
+		public static string RandomVideoURL => new string[] { "https://www.youtube.com/embed/d4QDM_Isi24", "", "" }.Random();
 		private static EAccessType RandomAccessType => new[] { EAccessType.Free, EAccessType.None, EAccessType.Paid }.Random();
 		private static bool RandomBool => new Random().NextDouble() > .5;
 		public static SiteFacilities RandomFacilities =>
