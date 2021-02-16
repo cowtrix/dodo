@@ -6,41 +6,58 @@
 	IEnumerable<string> messages = (IEnumerable<string>)ViewData[Dodo.Sites.SysadminController.COMMAND_HISTORY];
 }
 
+<link rel="stylesheet" href="~/AdminPanel.css" />
+
 <script>
 	$(function () {
-		$('.chat-messages').scrollTop($('.chat-messages')[0].scrollHeight);
+		$('.admin-messages').scrollTop($('.admin-messages')[0].scrollHeight);
 	})
 
 	function promptMe() {
-		if (confirm("Are you absolutely sure you want to clear the console history? This action cannot be undone!"))
-		{
+		if (confirm("Are you absolutely sure you want to clear the console history? This action cannot be undone!")) {
 			window.location.href = './admin/clear';
 		}
 	}
 </script>
 
-<div class="card chat-container chat-container-navbar">
-	<div class="card-body">
-		<div class="chat-messages admin-message" id="scroller">
-			<p>
-				@( Html.Raw(string.Join("<br />", messages.Select(s => "> " + Common.Extensions.StringExtensions.TextToHtml(s)))) )
-			</p>
-			<div id="anchor"></div>
-		</div>
-		<a class="btn btn-light btn-sm chat-clear" role="button" onclick="promptMe()">
-			<i class="fa fa-trash"></i>Clear History
-		</a>
-		<form asp-action="Command" autocomplete="off" class="form chat-send">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<div class="row">
-				<div class="col">
-					<input asp-for="Command" class="form-control" placeholder="..."></input>
-					<span asp-validation-for="Command" class="text-danger"></span>
-				</div>
-				<div class="col-auto chat-button">
-					<input type="submit" value="Send" class="btn btn-primary" />
-				</div>
+<div class="admin-container row">
+	<div class="col-auto card" id="consolecontainer">
+		<div class="card-body">
+			<div class="admin-messages" id="scroller">
+				<p>
+					@( Html.Raw(string.Join("<br />", messages.Select(s => "> " + Common.Extensions.StringExtensions.TextToHtml(s)))) )
+				</p>
+				<div id="anchor"></div>
 			</div>
-		</form>
+			<a class="btn btn-light btn-sm chat-clear" role="button" onclick="promptMe()">
+				<i class="fa fa-trash"></i>Clear History
+			</a>
+			<form asp-action="Command" autocomplete="off" class="form">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="row">
+					<div class="col">
+						<input asp-for="Command" class="form-control" placeholder="..."></input>
+						<span asp-validation-for="Command" class="text-danger"></span>
+					</div>
+					<div class="col-auto">
+						<input type="submit" value="Submit ⮨" class="btn btn-primary" />
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="col-md card" id="help">
+		<div class="card-body">
+			<h3 class="card-title">
+				Help
+			</h3>
+			@foreach (Common.Commands.CommandManager.CommandData cmd in Common.Commands.CommandManager.AllCommands)
+			{
+				<div class="col-auto">
+					<h4>@cmd.Attribute.FriendlyName</h4>
+					<p>@Html.Raw(Common.Extensions.StringExtensions.TextToHtml(cmd.Attribute.Description))</p>
+				</div>
+			}
+		</div>
 	</div>
 </div>

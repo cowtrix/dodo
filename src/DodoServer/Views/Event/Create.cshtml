@@ -229,6 +229,164 @@
 </div>
 
 				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"VideoEmbedURL"))"><i class="fas fa-question-circle"></i></button>
+					<label class="control-label">VideoEmbedURL</label>
+					<input  asp-for="VideoEmbedURL" class="form-control"></input>
+					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
+				</div>
+<div class="card">
+	<div class="card-header">
+		<h5 class="card-title">Facilities</h5>
+	</div>
+	<div class="card-body">
+		<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML(nameof(Dodo.LocationResources.SiteFacilities)))">
+			<i class="fas fa-question-circle"></i>
+		</button>
+		<div class="row">
+			<div class="col-sm">
+				<div class="form-field form-group">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Toilets)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<label class="control-label">Toilets</label>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Toilets" class="form-control"></select>
+					<span asp-validation-for="Facilities.Toilets" class="text-danger"></span>
+				</div>
+				<div class="form-field form-group">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Bathrooms)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<label class="control-label">Bathrooms</label>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Bathrooms" class="form-control"></select>
+					<span asp-validation-for="Facilities.Bathrooms" class="text-danger"></span>
+				</div>
+				<div class="form-field form-group">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Food)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<label class="control-label">Food</label>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Food" class="form-control"></select>
+					<span asp-validation-for="Facilities.Food" class="text-danger"></span>
+				</div>
+				<div class="form-field form-group">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.OutdoorCamping)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<label class="control-label">Outdoor Camping</label>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.OutdoorCamping" class="form-control"></select>
+					<span asp-validation-for="Facilities.OutdoorCamping" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-sm">
+				<div class="form-field form-group">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.IndoorCamping)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<label class="control-label">Indoor Camping</label>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.IndoorCamping" class="form-control"></select>
+					<span asp-validation-for="Facilities.IndoorCamping" class="text-danger"></span>
+				</div>
+				<div class="form-field form-group">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Accomodation)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<label class="control-label">Accomodation</label>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Accomodation" class="form-control"></select>
+					<span asp-validation-for="Facilities.Accomodation" class="text-danger"></span>
+				</div>
+				<div class="form-field form-group">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Internet)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<label class="control-label">Internet</label>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Internet" class="form-control"></select>
+					<span asp-validation-for="Facilities.Internet" class="text-danger"></span>
+				</div>
+				<div class="form-field form-group">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Electricity)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<label class="control-label">Electricity</label>
+					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EAccessType>()" asp-for="Facilities.Electricity" class="form-control"></select>
+					<span asp-validation-for="Facilities.Electricity" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm">
+				<div class="form-field form-check">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Kitchen)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<input type="checkbox" asp-for="Facilities.Kitchen" class="form-check-input"></input>
+					<label class="form-check-label">Kitchen</label>
+					<span asp-validation-for="Facilities.Kitchen" class="text-danger"></span>
+				</div>
+				<div class="form-field form-check">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.DisabilityFriendly)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<input type="checkbox" asp-for="Facilities.DisabilityFriendly" class="form-check-input"></input>
+					<label class="form-check-label">Disability Friendly</label>
+					<span asp-validation-for="Facilities.DisabilityFriendly" class="text-danger"></span>
+				</div>
+				<div class="form-field form-check">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Inductions)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<input type="checkbox" asp-for="Facilities.Inductions" class="form-check-input"></input>
+					<label class="form-check-label">Inductions</label>
+					<span asp-validation-for="Facilities.Inductions" class="text-danger"></span>
+				</div>
+				<div class="form-field form-check">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.TalksAndTraining)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<input type="checkbox" asp-for="Facilities.TalksAndTraining" class="form-check-input"></input>
+					<label class="form-check-label">Talks And Training</label>
+					<span asp-validation-for="Facilities.TalksAndTraining" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-sm">
+				<div class="form-field form-check">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.Welfare)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<input type="checkbox" asp-for="Facilities.Welfare" class="form-check-input"></input>
+					<label class="form-check-label">Welfare</label>
+					<span asp-validation-for="Facilities.Welfare" class="text-danger"></span>
+				</div>
+				<div class="form-field form-check">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.AffinityGroupFormation)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<input type="checkbox" asp-for="Facilities.AffinityGroupFormation" class="form-check-input"></input>
+					<label class="form-check-label">Affinity Group Formation</label>
+					<span asp-validation-for="Facilities.AffinityGroupFormation" class="text-danger"></span>
+				</div>
+				<div class="form-field form-check">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.VolunteersNeeded)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<input type="checkbox" asp-for="Facilities.VolunteersNeeded" class="form-check-input"></input>
+					<label class="form-check-label">Volunteers Needed</label>
+					<span asp-validation-for="Facilities.VolunteersNeeded" class="text-danger"></span>
+				</div>
+				<div class="form-field form-check">
+					<button type="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"{nameof(Dodo.LocationResources.SiteFacilities)}_{nameof(Dodo.LocationResources.SiteFacilities.FamilyFriendly)}"))">
+						<i class="fas fa-question-circle"></i>
+					</button>
+					<input type="checkbox" asp-for="Facilities.FamilyFriendly" class="form-check-input"></input>
+					<label class="form-check-label">Family Friendly</label>
+					<span asp-validation-for="Facilities.FamilyFriendly" class="text-danger"></span>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+				<div class="form-field form-group">
 					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"StartDate"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">StartDate</label>
 					<input  asp-for="StartDate" class="form-control"></input>

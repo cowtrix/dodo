@@ -9,7 +9,7 @@ using Dodo.Users;
 using Dodo.WorkingGroups;
 using Resources;
 using Resources.Location;
-using Resources.Security;
+using Common.Extensions;
 using SharedTest;
 using System;
 using System.Threading.Tasks;
@@ -82,11 +82,11 @@ namespace GenerateSampleData
 			DateTime rootDate() => DateTime.Today + offset + TimeSpan.FromHours(rnd.Next(20));
 			var currentRebellion = TestBase.CreateNewObject<Rebellion>(context,
 				new RebellionSchema($"{city} Rebellion", SchemaGenerator.SampleDescription, location, rootDate() - TimeSpan.FromDays(2), rootDate() + TimeSpan.FromDays(2)), seed: false);
-			var siteOccupation = TestBase.CreateNewObject<Site>(context, new SiteSchema("Central Occupation", currentRebellion.Guid.ToString().ToString(), location, SchemaGenerator.SampleDescription), seed: false);
-			var actionOccupation = TestBase.CreateNewObject<Event>(context, new EventSchema("Protest For Nature", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude + 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
-			var march = TestBase.CreateNewObject<Event>(context, new EventSchema("Youth March", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
-			var sanctuary = TestBase.CreateNewObject<Site>(context, new SiteSchema("Second Occupation", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription));
-			var evt = TestBase.CreateNewObject<Event>(context, new EventSchema("Activism Workshop", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
+			var siteOccupation = TestBase.CreateNewObject<Site>(context, new SiteSchema("Central Occupation", currentRebellion.Guid.ToString().ToString(), location, SchemaGenerator.SampleDescription, SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL), seed: false);
+			var actionOccupation = TestBase.CreateNewObject<Event>(context, new EventSchema("Protest For Nature", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude + 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
+			var march = TestBase.CreateNewObject<Event>(context, new EventSchema("Youth March", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
+			var sanctuary = TestBase.CreateNewObject<Site>(context, new SiteSchema("Second Occupation", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription, SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL));
+			var evt = TestBase.CreateNewObject<Event>(context, new EventSchema("Activism Workshop", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude - 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude - 0.05), SchemaGenerator.SampleDescription, SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));
 
 			var actionSupport = TestBase.CreateNewObject<WorkingGroup>(context, new WorkingGroupSchema("Action Support",
 				SchemaGenerator.SampleDescription, currentRebellion.Guid.ToString().ToString()), seed: false);

@@ -107,6 +107,12 @@ else
 					<select asp-items="@Html.GetEnumSelectList<Dodo.LocationResources.EArrestRisk>()" asp-for="ArrestRisk" class="form-control"></select>
 					<span asp-validation-for="ArrestRisk" class="text-danger"></span>
 				</div>
+				<div class="form-field form-group">
+					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"VideoEmbedURL"))"><i class="fas fa-question-circle"></i></button>
+					<label class="control-label">Video Embed URL</label>
+					<input  asp-for="VideoEmbedURL" class="form-control"></input>
+					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
+				</div>
 <script>
 	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
 	var coordinates = document.getElementById('coordinates');
@@ -248,12 +254,6 @@ else
 	</div>
 </div>
 
-				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"VideoEmbedURL"))"><i class="fas fa-question-circle"></i></button>
-					<label class="control-label">Video Embed URL</label>
-					<input  asp-for="VideoEmbedURL" class="form-control"></input>
-					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
-				</div>
 				<div class="form-field form-group">
 					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"StartDate"))"><i class="fas fa-question-circle"></i></button>
 					<label class="control-label">Start Date</label>

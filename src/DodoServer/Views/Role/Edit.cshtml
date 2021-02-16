@@ -54,11 +54,11 @@ $(function () {
 										<label class="control-label">Parent</label>
 					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Parent"))"><i class="fas fa-question-circle"></i></button>
 					<input class="sr-only" asp-for="Parent.Type"/>
-					@{ var reftype20031746 = @Model.Parent.Type.ToLowerInvariant(); }
+					@{ var reftype46964992 = @Model.Parent.Type.ToLowerInvariant(); }
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
-					<div class="col-auto"><a class="btn btn-light @(reftype20031746)-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
-					<div class="col-auto"><a class="btn btn-light @(reftype20031746)-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype46964992)-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype46964992)-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
 					</div>
 @{
 	if (!Model.IsPublished)

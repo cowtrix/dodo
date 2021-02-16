@@ -1,7 +1,7 @@
 {
   "LogLevel": 3,
   "MongoDBServerURL": "",
+  "ResourceLockTimeout": 10000,
   "CmdOutput": "cmdIn.data",
-  "CmdInput": "cmdOut.data",
-  "ResourceLockTimeout": 10000
+  "CmdInput": "cmdOut.data"
 }

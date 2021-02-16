@@ -20,6 +20,8 @@ namespace Dodo.LocalGroups
 	[SearchPriority(1)]
 	public class LocalGroup : AdministratedGroupResource, ILocationalResource
 	{
+		[View(EPermissionLevel.PUBLIC)]
+		public GeoLocation Location { get; set; } = new GeoLocation();
 		[Name("Working Groups")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		[ViewDrawer("pubfilter")]
@@ -34,9 +36,6 @@ namespace Dodo.LocalGroups
 		{
 			Location = schema.Location;
 		}
-
-		[View(EPermissionLevel.PUBLIC)]
-		public GeoLocation Location { get; set; } = new GeoLocation();
 
 		public override bool CanContain(Type type)
 		{

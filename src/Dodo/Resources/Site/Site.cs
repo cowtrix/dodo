@@ -11,8 +11,8 @@ namespace Dodo.LocationResources
 		{
 		}
 
-		public SiteSchema(string name, string parent, GeoLocation location, string description)
-			: base(name, parent, location, description)
+		public SiteSchema(string name, string parent, GeoLocation location, string description, SiteFacilities facilities, string videoEmbedURL)
+			: base(name, parent, location, description, facilities, videoEmbedURL)
 		{
 		}
 

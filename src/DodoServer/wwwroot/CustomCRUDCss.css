@@ -59,6 +59,7 @@
 }
 
 .dodo-navbar-text {
+	padding-left: 1em;
 	padding-right: 1em;
 }
 
@@ -147,11 +148,6 @@
 	height: 1px;
 }
 
-.admin-message {
-	color:white;
-	background-color:black;
-	font-family: Consolas, 'Courier New';
-}
 
 .chat-clear {
 	position: absolute;

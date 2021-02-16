@@ -1,6 +1,8 @@
 using Common;
 using Common.Commands;
 using Common.Extensions;
+using Dodo.LocalGroups;
+using Dodo.Rebellions;
 using Dodo.Users;
 using Newtonsoft.Json;
 using System;
@@ -13,7 +15,11 @@ namespace Resources
 	{
 		const string SEARCH_CMD_REGEX = @"^approve";
 		const string SEARCH_REGEX = "^approve\\s+(.+?)\\s+(.+?)$";
-		[Command(SEARCH_CMD_REGEX, "approve <type> <user>", "Approve a user to create a given resource")]
+		[Command(SEARCH_CMD_REGEX, "approve <type> <user>", "Approve a user to create a given resource.\n" + 
+			"type: The type of resource to approve. Can be:\n" +
+			"\t - " + nameof(Rebellion) + "\n" +
+			"\t - " + nameof(LocalGroup) + "\n" +
+			"\nuser: A user ID, either their username of GUID.")]
 		public static string SearchCommand(CommandArguments cmd)
 		{
 			var s = cmd.Raw;

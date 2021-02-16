@@ -12,8 +12,7 @@ namespace Dodo.Controllers.Edit
 		protected AdministratedGroupResourceService<T, TSchema> AdminService =>
 			new AdministratedGroupResourceService<T, TSchema>(Context, HttpContext, AuthService);
 
-		[HttpPost]
-		[Route("{guid}/updateadmin")]
+		[HttpPost("{guid}/updateadmin")]
 		public async Task<IActionResult> UpdateAdmin([FromRoute]string guid, [FromQuery]string id,
 			[FromForm] AdministratorPermissionSet permissionSet)
 		{

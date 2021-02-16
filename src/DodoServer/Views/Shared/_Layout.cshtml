@@ -38,21 +38,26 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<div class="navbar-nav">
-						<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.PrivacyPolicyURL">Privacy Policy</a>
+						<div class="btn-group" role="group" aria-label="Links">
+							<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.PrivacyPolicyURL">Privacy Policy</a>
+							@if (context.User != null)
+							{
+								if (context.User.TokenCollection.HasToken<Dodo.Users.Tokens.SysadminToken>())
+								{
+									<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/admin/">Admin Console</a>
+								}
+								<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/auth/logout">Logout</a>
+							}
+							else
+							{
+								<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/login">Login</a>
+							}
+						</div>
 						@if (context.User != null)
 						{
 							<span class="navbar-text dodo-navbar-text">
 								Logged in as @@@context.User.Slug
 							</span>
-							if (context.User.TokenCollection.HasToken<Dodo.Users.Tokens.SysadminToken>())
-							{
-								<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/admin/">Admin Console</a>
-							}
-							<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/auth/logout">Logout</a>
-						}
-						else
-						{
-							<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/login">Login</a>
 						}
 					</div>
 				</div>

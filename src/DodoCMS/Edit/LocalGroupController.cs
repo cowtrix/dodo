@@ -4,7 +4,7 @@ using Dodo;
 
 namespace Dodo.Controllers.Edit
 {
-	public class LocalGroupController : GroupResourceCrudController<LocalGroup, LocalGroupSchema, LocalGroupViewModel>
+	public class LocalGroupController : AdministratedGroupResourceCrudController<LocalGroup, LocalGroupSchema, LocalGroupViewModel>
 	{
 		protected override AuthorizationService<LocalGroup, LocalGroupSchema> AuthService =>
 			new AdministratedGroupResourceAuthService<LocalGroup, LocalGroupSchema>();

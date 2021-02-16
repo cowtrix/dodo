@@ -45,6 +45,28 @@ namespace Dodo.SharedTest
 		public static GeoLocation RandomLocation => new GeoLocation(m_random.NextDouble() * 90, m_random.NextDouble() * 90);
 		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays(m_random.NextDouble() * 365);
 		public static string RandomVideoURL => "https://www.youtube.com/embed/d4QDM_Isi24";
+		private static EAccessType RandomAccessType => new[] { EAccessType.Free, EAccessType.None, EAccessType.Paid }.Random();
+		private static bool RandomBool => new Random().NextDouble() > .5;
+		public static SiteFacilities RandomFacilities =>
+			new SiteFacilities
+			{
+				Accomodation = RandomAccessType,
+				AffinityGroupFormation = RandomBool,
+				Bathrooms = RandomAccessType,
+				DisabilityFriendly = RandomBool,
+				Electricity = RandomAccessType,
+				FamilyFriendly = RandomBool,
+				Food = RandomAccessType,
+				IndoorCamping = RandomAccessType,
+				Inductions = RandomBool,
+				Internet = RandomAccessType,
+				Kitchen = RandomBool,
+				OutdoorCamping = RandomAccessType,
+				TalksAndTraining = RandomBool,
+				Toilets = RandomAccessType,
+				VolunteersNeeded = RandomBool,
+				Welfare = RandomBool,
+			};
 		public static string SampleRoleInstructions => "This is some sample instructions. Here you might ask if a volunteer has First Aid training, or to outline their previous XR experience, or to tell you about shift availabilites. You should have made this clear in the Applicant Question for the Role.";
 
 		private static string RandomName<T>() => m_nameGenerators[typeof(T)].Invoke();
@@ -101,14 +123,14 @@ namespace Dodo.SharedTest
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomRebellion(context)));
 			var date = RandomDate;
-			return new EventSchema(RandomName<Event>(), rb.Guid.ToString(), RandomLocation, SampleDescription, date, date + TimeSpan.FromHours(4));
+			return new EventSchema(RandomName<Event>(), rb.Guid.ToString(), RandomLocation, SampleDescription, RandomFacilities, RandomVideoURL, date, date + TimeSpan.FromHours(4));
 		}
 
 		public static SiteSchema GetRandomSite(AccessContext context, Rebellion rb = null)
 		{
 			rb = rb ?? ResourceUtility.GetFactory<Rebellion>().CreateTypedObject(
 				new ResourceCreationRequest(context, GetRandomRebellion(context)));
-			return new SiteSchema(RandomName<Site>(), rb.Guid.ToString(), RandomLocation, SampleDescription);
+			return new SiteSchema(RandomName<Site>(), rb.Guid.ToString(), RandomLocation, SampleDescription, RandomFacilities, RandomVideoURL);
 		}
 
 		public static UserSchema GetRandomUser(AccessContext context = default)

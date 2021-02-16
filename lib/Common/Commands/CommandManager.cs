@@ -45,7 +45,7 @@ namespace Common.Commands
 		/// <summary>
 		/// Represents constructed metadata around each `CommandAttribute` usage
 		/// </summary>
-		private struct CommandData
+		public struct CommandData
 		{
 			public Func<CommandArguments, string> Method;
 			public CommandAttribute Attribute;
@@ -54,6 +54,8 @@ namespace Common.Commands
 		private static CommandData m_fallbackCommand;   // The command to run when no other command matches - default is help
 		public static Func<string> HelpOverride;  // Help is a built-in thing but we can override it if we wish
 		public static Action<CommandArguments> OnPreExecute;    // Sometimes we want to jump in before the command is fired
+
+		public static IEnumerable<CommandData> AllCommands => m_commands.Values;
 
 		/// <summary>
 		/// Necessary to prevent reflection errors when inspecting assembly for commands
@@ -207,7 +209,7 @@ namespace Common.Commands
 		/// This will print a auto-generated help with all registered commands
 		/// </summary>
 		/// <param name="args"></param>
-		[Command(@"^help$", "help", "List all commands")]
+		//[Command(@"^help$", "help", "List all commands")]
 		public static string Help(CommandArguments args)
 		{
 			if (HelpOverride != null)

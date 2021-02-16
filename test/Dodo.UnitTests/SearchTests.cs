@@ -28,16 +28,16 @@ namespace SearchTests
 			var positives = new List<ILocationalResource>()
 			{
 				rebellion,
-				CreateObject<Site>(context, new SiteSchema("Test Site 1", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Latitude + .1, TrueLocation.Longitude), ""), false),
-				CreateObject<Event>(context, new EventSchema("Test Site 2", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Latitude - .1, TrueLocation.Longitude +.1), "", baseDate, baseDate), false),
+				CreateObject<Site>(context, new SiteSchema("Test Site 1", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Latitude + .1, TrueLocation.Longitude), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL), false),
+				CreateObject<Event>(context, new EventSchema("Test Site 2", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Latitude - .1, TrueLocation.Longitude +.1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, baseDate, baseDate), false),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", TrueLocation), false)
 			};
 			
 			var negatives = new List<ILocationalResource>()
 			{
 				CreateObject<Rebellion>(),
-				CreateObject<Site>(context, new SiteSchema("Test Site 1", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Longitude + .1, TrueLocation.Latitude), "")),
-				CreateObject<Event>(context, new EventSchema("Test Site 2", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1), "", baseDate, baseDate)),
+				CreateObject<Site>(context, new SiteSchema("Test Site 1", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Longitude + .1, TrueLocation.Latitude), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL)),
+				CreateObject<Event>(context, new EventSchema("Test Site 2", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, baseDate, baseDate)),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1)))
 			};
 			var guids = DodoResourceUtility.Search(0, 100, new DistanceFilter() { LatLong = $"{TrueLocation.Latitude} {TrueLocation.Longitude}", Distance = 100 })
@@ -114,8 +114,8 @@ namespace SearchTests
 			{
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Guid.ToString()), false),
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid.ToString()), false),
-				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.EndDate), false),
-				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.EndDate), false),
+				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
+				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
@@ -149,8 +149,8 @@ namespace SearchTests
 			{
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working asfafsd 1", "", rebellion1.Guid.ToString()), false),
 				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("asfafsd Working Group 2", "", rebellion1.Guid.ToString()), false),
-				CreateObject<Event>(context, new EventSchema("Test asfafsd Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
-				CreateObject<Event>(context, new EventSchema("Test March asfafsd", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema("Test asfafsd Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema("Test March asfafsd", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{

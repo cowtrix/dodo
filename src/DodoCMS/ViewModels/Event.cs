@@ -92,15 +92,15 @@ namespace Dodo.ViewModels
 		[DisplayName("Facilities")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public SiteFacilitiesViewModel Facilities { get; set; }
+		[DisplayName("Video Embed URL")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		public string VideoEmbedURL { get; set; }
 		[DisplayName("Location")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public Resources.Location.GeoLocation Location { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public Resources.ResourceReference<Resources.IRESTResource> Parent { get; set; }
-		[DisplayName("Video Embed URL")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		public string VideoEmbedURL { get; set; }
 		[DisplayName("Start Date")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public System.DateTime StartDate { get; set; }

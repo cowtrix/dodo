@@ -27,8 +27,8 @@ namespace Dodo.LocationResources
 		{
 		}
 
-		public EventSchema(string name, string parent, GeoLocation location, string description, DateTime start, DateTime end)
-			: base(name, parent, location, description)
+		public EventSchema(string name, string parent, GeoLocation location, string description, SiteFacilities facilities, string videoEmbedURL, DateTime start, DateTime end)
+			: base(name, parent, location, description, facilities, videoEmbedURL)
 		{
 			Location = location;
 			StartDate = start;

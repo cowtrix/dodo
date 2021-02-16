@@ -1,19 +1,7 @@
 using Common;
-using Common.Extensions;
 using Resources.Security;
-using Dodo.Rebellions;
-using Dodo.Roles;
-using Dodo.Users;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
 using Resources;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using MongoDB.Bson.Serialization.Attributes;
 using Resources.Location;
-using Dodo.DodoResources;
 using Dodo.Users.Tokens;
 using System.Threading.Tasks;
 
@@ -41,14 +29,15 @@ namespace Dodo.LocationResources
 		[Name("Arrest Risk")]
 		public EArrestRisk ArrestRisk { get; set; }
 		[View(EPermissionLevel.PUBLIC, priority: 512)]
-		public SiteFacilities Facilities { get; set; }
+		public SiteFacilities Facilities { get; set; }		
+		[View(EPermissionLevel.PUBLIC)]
+		[Name("Video Embed URL")]
+		public string VideoEmbedURL { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; } = new GeoLocation();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer: "parentRef")]
 		public ResourceReference<IRESTResource> Parent { get; set; }
-		[View(EPermissionLevel.PUBLIC)]
-		[Name("Video Embed URL")]
-		public string VideoEmbedURL { get; set; }
+		
 
 		public LocationResourceBase() : base() { }
 
@@ -64,7 +53,8 @@ namespace Dodo.LocationResources
 			// force location lookup
 			new Task(() => LocationManager.GetLocationData(Location)).Start();
 			PublicDescription = schema.PublicDescription;
-			Facilities = new SiteFacilities();
+			Facilities = schema.Facilities;
+			VideoEmbedURL = schema.VideoEmbedURL;
 		}
 
 		public override Passphrase GetPrivateKey(AccessContext context)

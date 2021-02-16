@@ -23,14 +23,6 @@ namespace Dodo.Rebellions
 	{
 		public const string ROOT = "rebellions";
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		[Name("Working Groups")]
-		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public List<ResourceReference<Site>> Sites { get; set; } = new List<ResourceReference<Site>>();
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public List<ResourceReference<Event>> Events { get; set; } = new List<ResourceReference<Event>>();
-
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("Start Date")]
@@ -65,6 +57,14 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.PUBLIC)]
 		[Name("Banner Video Embed URL")]
 		public string VideoEmbedURL { get; set; }
+
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[Name("Working Groups")]
+		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public List<ResourceReference<Site>> Sites { get; set; } = new List<ResourceReference<Site>>();
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		public List<ResourceReference<Event>> Events { get; set; } = new List<ResourceReference<Event>>();
 
 		public Rebellion() : base() { }
 

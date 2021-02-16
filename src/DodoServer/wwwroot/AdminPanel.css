@@ -1,0 +1,17 @@
+.admin-container {
+	margin-top: 1em;
+}
+
+.admin-messages {
+	margin-top: -20px;
+	margin-left: -32px;
+	margin-right: -32px;
+	margin-bottom: 10px;
+	color: white;
+	background-color: black;
+	font-family: Consolas, 'Courier New';
+	min-height: 300px;
+	max-height: 100%;
+	overflow: scroll;
+	padding: 10px;
+}
