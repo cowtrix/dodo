@@ -8,6 +8,14 @@ export const Links = ({ privacyPolicy, rebelAgreement }) => {
 	const { t } = useTranslation("ui")
 	const links = [
 		{
+			href: '/rsc/about',
+			translationKey: 'footer_menu_link_text_about'
+		},
+		{
+			href: `/rsc/faq`,
+			translationKey: 'footer_menu_link_text_faq'
+		},
+		{
 			href: `/${privacyPolicy}`,
 			translationKey: 'footer_menu_link_text_privacy_policy'
 		},
