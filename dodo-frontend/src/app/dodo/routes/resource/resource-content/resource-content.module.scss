@@ -12,6 +12,15 @@
 	}
 }
 
+.panelsContainer {
+	@media (min-width: $responsive-breakpoint) {
+		display: flex;
+		flex-grow: 2;
+		flex-basis: 0;
+		flex-direction: column;
+	}
+}
+
 .adminbutton {
 	text-align:center;
 	margin:auto;
@@ -29,3 +38,4 @@
 	color: black;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+

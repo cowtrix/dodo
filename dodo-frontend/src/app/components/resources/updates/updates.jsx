@@ -2,14 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./updates.module.scss";
 import { useTranslation } from "react-i18next";
+import { Panel } from 'app/components/resources';
 import { Update } from "./update";
 
 export const Updates = ({ notifications: { notifications = [], nextPageToLoad = false }, loadMore, isLoadingMore = false }) => {
 	const { t } = useTranslation("ui");
 
 	return (
-		<div className={styles.container}>
-			<h3 className={styles.title}>{t("notifications_title")}</h3>
+		<Panel title={t("notifications_title")}>
 			<div className={styles.notifications}>
 				{notifications.map((notification) => (
 					<Update key={notification.guid} notification={notification} />
@@ -22,7 +22,7 @@ export const Updates = ({ notifications: { notifications = [], nextPageToLoad = 
 					</button>
 				</div>
 			}
-		</div>
+		</Panel>
 	);
 };
 

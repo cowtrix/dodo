@@ -1,0 +1,53 @@
+@import "~app/styles/styles";
+
+.facilities {
+	display: table;
+	width: 100%;
+}
+
+.facility {
+	display: table-row;
+	width: 100%;
+	font-family: $title-font;
+
+	> * {
+		display: table-cell;
+		padding: spacing(1) spacing(2);
+		vertical-align: middle;
+
+		&:first-child {
+			padding-left: 0;
+		}
+
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+
+	.title {
+		text-align: right;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		font-size: 1.1rem;
+
+		.icon {
+			margin: 0 spacing(3);
+			width: 40px;
+		}
+	}
+
+	.value {
+		text-align: center;
+		width: 100px;
+		font-size: 1.1rem;
+
+		&.paid {
+			color: $warning-yellow;
+		}
+
+		&.free {
+			color: $extinction-rebellion-green;
+		}
+	}
+}
