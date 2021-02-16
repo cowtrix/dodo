@@ -4,11 +4,12 @@ import { resources, user } from "app/domain"
 import { Dodo } from "./dodo"
 
 const { eventTypesGet } = resources.actions
-const { privacyPolicy } = resources.selectors
+const { privacyPolicy, rebelAgreement } = resources.selectors
 const { getLoggedInUser } = user.actions
 
 const mapStateToProps = state => ({
-	privacyPolicy: privacyPolicy(state)
+	privacyPolicy: privacyPolicy(state),
+	rebelAgreement: rebelAgreement(state),
 });
 
 const mapDispatchToProps = dispatch => ({

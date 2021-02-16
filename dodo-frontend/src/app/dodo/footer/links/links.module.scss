@@ -1,11 +1,10 @@
 @import "~app/styles/styles";
 
 .linksBox {
-	flex-grow: 1;
-	flex-basis: 25%;
+	white-space: nowrap;
 
 	@media (min-width: $responsive-breakpoint) {
-		padding-right: spacingXS(20);
+		padding-right: spacing(9);
 	}
 }
 
@@ -15,8 +14,11 @@
 	padding: 0;
 	margin: 0;
 
-
 	li {
-		margin-bottom: spacing(2);
+		margin-bottom: spacingXS(2);
+	}
+
+	a {
+		color: $color-light-grey;
 	}
 }

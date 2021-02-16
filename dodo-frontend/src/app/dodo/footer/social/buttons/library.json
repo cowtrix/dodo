@@ -2,21 +2,21 @@
 	{
 		"icon": ["fab", "twitter"],
 		"title": "Link to XR twitter page",
-		"link": "https://www.facebook.com/ExtinctionRebellion/"
+		"link": "https://twitter.com/xrebellionuk"
 	},
 	{
 		"icon": ["fab", "facebook"],
 		"title": "Link to XR facebook page",
-		"link": "https://www.facebook.com/ExtinctionRebellion/"
+		"link": "https://www.facebook.com/XRebellionUK/"
 	},
 	{
 		"icon": ["fab", "youtube"],
 		"title": "Link to XR youtube page",
-		"link": "https://www.facebook.com/ExtinctionRebellion/"
+		"link": "https://www.youtube.com/channel/UCYThdLKE6TDwBJh-qDC6ICA"
 	},
 	{
 		"icon": ["fab", "instagram"],
 		"title": "Link to XR instagram page",
-		"link": "https://www.facebook.com/ExtinctionRebellion/"
+		"link": "https://www.instagram.com/xrebellionuk/"
 	}
 ]

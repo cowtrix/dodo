@@ -4,10 +4,10 @@ import styles from './footer.module.scss'
 import { Copyright } from "./copyright"
 import { Social } from './social'
 
-export const Footer = () =>
+export const Footer = ({ privacyPolicy, rebelAgreement }) =>
 	<div className={styles.footerContainer}>
 		<div className={styles.footer}>
-			<Links/>
+			<Links {...{ privacyPolicy, rebelAgreement }} />
 			<Copyright/>
 	    <Social/>
 		</div>

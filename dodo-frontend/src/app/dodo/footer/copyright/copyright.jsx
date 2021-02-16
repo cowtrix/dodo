@@ -10,7 +10,7 @@ export const Copyright = () => {
 	return (
 		<div className={styles.copyright}>
 			<Title title={t("copyright_info_title")} />
-			<div>{t("copyright_info_copy")}</div>
+			<div dangerouslySetInnerHTML={{__html: t("copyright_info_copy")}}></div>
 		</div>
 	)
 }
