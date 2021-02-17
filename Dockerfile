@@ -1,14 +1,20 @@
-FROM ubuntu:latest
-
-RUN apt update; apt install -y wget apt-transport-https
-RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-RUN dpkg -i packages-microsoft-prod.deb
-
-RUN apt-get update
-RUN apt-get install -y dotnet-sdk-3.1 aspnetcore-runtime-3.1
-
-WORKDIR /app/src/DodoServer
-RUN ln -s /bin/echo /usr/bin/xcopy
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+WORKDIR /app
 EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+WORKDIR /src
+COPY ["src/DodoServer/DodoServer.csproj", "DodoServer/"]
+RUN dotnet restore "DodoServer/DodoServer.csproj"
+COPY . .
+WORKDIR "/src/DodoServer"
+RUN dotnet build "DodoServer.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "DodoServer.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "DodoServer.dll"]
-RUN ls
