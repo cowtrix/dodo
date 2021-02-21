@@ -36,7 +36,7 @@ export const isRouterRoute = (route) =>
 	);
 
 export const passwordContainsNoSymbol = (password) =>
-	!/^(?=.*[@#$%^&+=!]).*$/.test(password);
+	!/[!@#$%^&*()_+=\[{\]};:<>|.\/?,\-£]/.test(password);
 export const emailIsValid = (email) => /\w+@\w+\.\w{2,}/.test(email);
 export const strNotEmptyAndLengthBelow = (minLength, str) =>
 	!!str && str.length < minLength;
