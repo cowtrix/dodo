@@ -57,13 +57,13 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 						setValue={setRememberMe}
 					/>
 					<p>
-						Not a member?
+						Not a member?{' '}
 						<Link to={keepReturnPathParam("/register", location)}>
 							Click here to register
 						</Link>
 					</p>
 					<p>
-						Forgot your password?
+						Forgot your password?{' '}
 						<Link to="/reset-password">Click here</Link>
 					</p>
 					<Error error={error} />

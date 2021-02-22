@@ -23,6 +23,9 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordConfirmation, setPasswordConfirmation] = useState("");
+	const [dailyUpdate, setDailyUpdate] = useState(false);
+	const [weeklyUpdate, setWeeklyUpdate] = useState(false);
+	const [newNotifications, setNewNotifications] = useState(false);
 	const [acceptTerms, setAcceptTerms] = useState(false);
 
 	const usernameShort = strNotEmptyAndLengthBelow(3, username)
@@ -111,32 +114,67 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 						maxLength={63}
 					/>
 					<TickBox
-						id="termsConditions"
-						checked={acceptTerms}
-						setValue={val => setAcceptTerms(val)}
+						id="dailyUpdate"
+						checked={dailyUpdate}
+						setValue={val => setDailyUpdate(val)}
 						useAriaLabel={true}
 						message={
 							<>
-								{t("I agree to the")}{" "}
-								<a
-									href={rebelAgreement}
-									target="_blank"
-									rel="noreferrer noopener"
-								>
-									{t("Rebel Agreement")}
-								</a>{" "}
-								{t("and")}{" "}
-								<a
-									href={privacyPolicy}
-									target="_blank"
-									rel="noreferrer noopener"
-								>
-									{t("Privacy Policy")}
-								</a>
-								.
+								Please send me daily updates via email
 							</>
 						}
 					/>
+					<TickBox
+						id="weeklyUpdate"
+						checked={weeklyUpdate}
+						setValue={val => setWeeklyUpdate(val)}
+						useAriaLabel={true}
+						message={
+							<>
+								Please send me weekly updates via email
+							</>
+						}
+					/>
+					<TickBox
+						id="newNotifications"
+						checked={newNotifications}
+						setValue={val => setNewNotifications(val)}
+						useAriaLabel={true}
+						message={
+							<>
+								Please send me new notifications via email
+							</>
+						}
+					/>
+					<div className={`${styles.termsBox}`}>
+						<TickBox
+							id="termsConditions"
+							checked={acceptTerms}
+							setValue={val => setAcceptTerms(val)}
+							useAriaLabel={true}
+							message={
+								<>
+									{t("I agree to the")}{" "}
+									<a
+										href={rebelAgreement}
+										target="_blank"
+										rel="noreferrer noopener"
+									>
+										{t("Rebel Agreement")}
+									</a>{" "}
+									{t("and")}{" "}
+									<a
+										href={privacyPolicy}
+										target="_blank"
+										rel="noreferrer noopener"
+									>
+										{t("Privacy Policy")}
+									</a>
+									.
+								</>
+							}
+						/>
+					</div>
 					<Error error={error} />
 					<Submit
 						disabled={hasError}
@@ -145,6 +183,9 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 							password,
 							email,
 							token,
+							dailyUpdate,
+							weeklyUpdate,
+							newNotifications
 						})}
 						value={t("Register a new account")}
 					/>
