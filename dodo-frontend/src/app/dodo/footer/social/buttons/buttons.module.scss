@@ -1,15 +1,20 @@
 @import "~app/styles/styles";
 
-$social-icons-color: $color-dark-grey;
-
 .buttons {
+	display: flex;
 	list-style: none;
 	padding: 0;
 	margin: 0;
-	margin-bottom: spacingXS(8);
+
+	a {
+		color: $color-light-grey;
+	}
 }
 
-.button {
-	color: $social-icons-color;
-	margin-right: spacingXS(10);
+.listItem {
+	margin-right: spacingXS(6);
+
+	&:last-child {
+		margin-right: 0;
+	}
 }

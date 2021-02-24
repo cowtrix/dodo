@@ -30,7 +30,10 @@ body {
   background: white;
   position: relative;
   overflow-x: hidden;
-  min-height: 100vh;}
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 ul {
   list-style: none;
