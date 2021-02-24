@@ -56,9 +56,6 @@ namespace Dodo.ViewModels
 		[DisplayName("Banner Video Embed URL")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public string VideoEmbedURL { get; set; }
-		[DisplayName("Working Groups")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
-		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>> WorkingGroups { get; set; }
 		[DisplayName("Sites")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public System.Collections.Generic.List<Resources.ResourceReference<Dodo.LocationResources.Site>> Sites { get; set; }

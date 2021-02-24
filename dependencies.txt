@@ -14,6 +14,14 @@ Project 'Resources' has the following package references
    > System.ComponentModel.Annotations                    4.7.0       4.7.0   
    > TimeZoneConverter                                    3.2.0       3.2.0   
 
+Project 'Dodo' has the following package references
+   [netstandard2.1]: 
+   Top-level Package                                      Requested   Resolved
+   > MailKit                                              2.10.0      2.10.0  
+   > Microsoft.AspNetCore.Cryptography.KeyDerivation      3.1.8       3.1.8   
+   > Microsoft.AspNetCore.Mvc                             2.2.0       2.2.0   
+   > System.Text.Json                                     4.7.2       4.7.2   
+
 Project 'Dodo.IntegrationTests' has the following package references
    [netcoreapp3.1]: 
    Top-level Package                    Requested   Resolved
@@ -27,6 +35,8 @@ Project 'Dodo.IntegrationTests' has the following package references
    > Newtonsoft.Json                    12.0.3      12.0.3  
    > System.Runtime                     4.3.1       4.3.1   
 
+Project 'DodoCmd' has the following package references
+   [netcoreapp3.1]: No packages were found for this framework.
 Project 'Dodo.UnitTests' has the following package references
    [netcoreapp3.1]: 
    Top-level Package             Requested   Resolved
@@ -47,24 +57,17 @@ Project 'Dodo.SharedTest' has the following package references
 
 Project 'GenerateSampleData' has the following package references
    [netcoreapp3.1]: No packages were found for this framework.
-Project 'Dodo' has the following package references
-   [netstandard2.1]: 
-   Top-level Package                                      Requested   Resolved
-   > MailKit                                              2.10.0      2.10.0  
-   > Microsoft.AspNetCore.Cryptography.KeyDerivation      3.1.8       3.1.8   
-   > Microsoft.AspNetCore.Mvc                             2.2.0       2.2.0   
-   > System.Text.Json                                     4.7.2       4.7.2   
-
-Project 'DodoAOT' has the following package references
-   [netcoreapp3.1]: No packages were found for this framework.
-Project 'DodoCMS' has the following package references
-   [netcoreapp3.1]: No packages were found for this framework.
 Project 'DodoServer' has the following package references
    [netcoreapp3.1]: 
    Top-level Package                                       Requested   Resolved
    > McMaster.AspNetCore.LetsEncrypt                       0.4.0       0.4.0   
    > Microsoft.AspNet.WebApi.Client                        5.2.7       5.2.7   
+   > Microsoft.AspNetCore.HttpOverrides                    2.2.0       2.2.0   
    > Microsoft.AspNetCore.SpaServices.Extensions           3.1.8       3.1.8   
    > Microsoft.VisualStudio.Web.CodeGeneration.Design      3.1.4       3.1.4   
    > Microsoft.Web.LibraryManager.Build                    2.1.76      2.1.76  
 
+Project 'DodoAOT' has the following package references
+   [netcoreapp3.1]: No packages were found for this framework.
+Project 'DodoCMS' has the following package references
+   [netcoreapp3.1]: No packages were found for this framework.

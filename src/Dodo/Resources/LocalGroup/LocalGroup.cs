@@ -22,8 +22,9 @@ namespace Dodo.LocalGroups
 	{
 		[View(EPermissionLevel.PUBLIC)]
 		public GeoLocation Location { get; set; } = new GeoLocation();
+
+		//[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		[Name("Working Groups")]
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		[ViewDrawer("pubfilter")]
 		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]

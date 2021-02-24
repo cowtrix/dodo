@@ -3,18 +3,15 @@ using Common.Config;
 using Common.Extensions;
 using Common.Security;
 using Dodo;
-using Dodo.Expiry;
 using Dodo.Security;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace DodoServer
 {
@@ -28,7 +25,6 @@ namespace DodoServer
 			Logger.Warning($"Running in Debug mode");
 #endif
 			SessionTokenStore.Initialise();
-			ExpiryWorker.Initialise();
 
 			var usrManager = ResourceUtility.GetManager<User>();
 			if(usrManager.Count == 0)
@@ -72,7 +68,7 @@ namespace DodoServer
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<DodoStartup>();
-					webBuilder.UseUrls(GetUrls().ToArray()); ;
+					//webBuilder.UseUrls(GetUrls().ToArray()); ;
 					// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2
 					webBuilder.UseKestrel(options =>
 						options.ConfigureEndpointDefaults(defaults =>

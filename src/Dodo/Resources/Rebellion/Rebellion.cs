@@ -58,12 +58,15 @@ namespace Dodo.Rebellions
 		[Name("Banner Video Embed URL")]
 		public string VideoEmbedURL { get; set; }
 
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		//[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[ViewDrawer("pubfilter")]
 		[Name("Working Groups")]
 		public List<ResourceReference<WorkingGroup>> WorkingGroups { get; set; } = new List<ResourceReference<WorkingGroup>>();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[ViewDrawer("pubfilter")]
 		public List<ResourceReference<Site>> Sites { get; set; } = new List<ResourceReference<Site>>();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
+		[ViewDrawer("pubfilter")]
 		public List<ResourceReference<Event>> Events { get; set; } = new List<ResourceReference<Event>>();
 
 		public Rebellion() : base() { }

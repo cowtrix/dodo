@@ -235,44 +235,6 @@ else
 </div>
 
 <div class="form-field card">
-	<div class="card-header"><h5 class="card-title">Working Groups</h5></div>
-	<div class="card-body">
-		<ul class="list-group">
-			@{
-				if (!Model.WorkingGroups.Any())
-				{
-					<div class="alert alert-info" role="alert">
-						There are no entries in this list. To create a new entry, click "Create"
-					</div>
-				}
-				else
-				{
-					for (var i = 0; i < Model.WorkingGroups.Count; ++i)
-					{
-						<li class="list-group-item">
-															<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
-								@{ var reftype23878916 = @Model.WorkingGroups[i].Type.ToLowerInvariant(); }
-								<div class="row">
-								<div class="col"><strong>@Model.WorkingGroups[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype23878916)-reference" role="button" href="../../@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-eye"></i>View</a></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype23878916)-reference" role="button" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
-								</div>
-
-						</li>
-					}
-				}
-				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>)))
-				{
-					// Create button!
-					string parent = $"?parent={@Model.Slug}";
-					<a class="btn btn-light btn-block workinggroup-reference form-field" role="button" href="~/edit/workinggroup/create@(parent)">Create New</a>
-				}
-			}
-		</ul>
-	</div>
-</div>
-
-<div class="form-field card">
 	<div class="card-header"><h5 class="card-title">Events</h5></div>
 	<div class="card-body">
 		<ul class="list-group">
