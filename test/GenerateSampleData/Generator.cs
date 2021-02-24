@@ -73,10 +73,10 @@ namespace GenerateSampleData
 			var rnd = new Random();
 			// Make local groups
 			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema(city, SchemaGenerator.SampleDescription, location), seed:false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - .3 * rnd.NextDouble())), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + .3 * rnd.NextDouble())), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .3 * rnd.NextDouble(), location.Longitude)), seed: false);
-			TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .3 * rnd.NextDouble(), location.Longitude)), seed: false);
+			//TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"East {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude - .3 * rnd.NextDouble())), seed: false);
+			//TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"West {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude, location.Longitude + .3 * rnd.NextDouble())), seed: false);
+			//TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"North {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .3 * rnd.NextDouble(), location.Longitude)), seed: false);
+			//TestBase.CreateNewObject<LocalGroup>(context, new LocalGroupSchema($"South {city}", SchemaGenerator.SampleDescription, new GeoLocation(location.Latitude - .3 * rnd.NextDouble(), location.Longitude)), seed: false);
 
 			var offset = TimeSpan.FromDays(rnd.Next(365));
 			DateTime rootDate() => DateTime.Today + offset + TimeSpan.FromHours(rnd.Next(20));
