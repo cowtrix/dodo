@@ -155,8 +155,8 @@ namespace SharedTest
 					rebellion.VideoEmbedURL = SchemaGenerator.RandomVideoURL;
 
 					// Add some working groups, sites
-					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
-					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
+					//CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
+					//CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, rebellion));
 
 					CreateNewObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
 					CreateNewObject<Site>(context, SchemaGenerator.GetRandomSite(context, rebellion));
@@ -164,7 +164,7 @@ namespace SharedTest
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, rebellion));
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, rebellion));
 				}
-				else if (obj is WorkingGroup wg)
+				/*else if (obj is WorkingGroup wg)
 				{
 					if (wg.Parent.Type == nameof(Rebellion))
 					{
@@ -173,11 +173,11 @@ namespace SharedTest
 					}
 					CreateNewObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
 					CreateNewObject<Role>(context, SchemaGenerator.GetRandomRole(context, wg));
-				}
+				}*/
 				else if (obj is LocalGroup lg)
 				{
-					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, lg));
-					CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, lg));
+					//CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, lg));
+					//CreateNewObject<WorkingGroup>(context, SchemaGenerator.GetRandomWorkinGroup(context, lg));
 
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));

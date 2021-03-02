@@ -225,7 +225,6 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 				SendEmailVerification(Context);
 				return new OkRequestResult($"A new email verification link has been sent to {Context.User.PersonalData.Email}");
 			}
-
 		}
 
 		if (verifyToken == null)

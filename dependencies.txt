@@ -35,8 +35,6 @@ Project 'Dodo.IntegrationTests' has the following package references
    > Newtonsoft.Json                    12.0.3      12.0.3  
    > System.Runtime                     4.3.1       4.3.1   
 
-Project 'DodoCmd' has the following package references
-   [netcoreapp3.1]: No packages were found for this framework.
 Project 'Dodo.UnitTests' has the following package references
    [netcoreapp3.1]: 
    Top-level Package             Requested   Resolved
