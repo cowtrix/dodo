@@ -8,9 +8,10 @@ import { ErrorBoundary } from "./routes/error/"
 import { UserMenu } from './user-menu'
 import { AppLoadingScreen } from './app-loading-screen'
 import { CookieConsenter } from 'app/components'
+import { Footer } from './footer';
 
 
-export const Dodo = ({ startup, privacyPolicy }) => {
+export const Dodo = ({ startup, privacyPolicy, rebelAgreement }) => {
 	startup()
 	return (
 		<ErrorBoundary>
@@ -19,6 +20,7 @@ export const Dodo = ({ startup, privacyPolicy }) => {
 				<Header />
 				<UserMenu />
 				<Routes />
+				<Footer {...{privacyPolicy, rebelAgreement}} />
 			</Router>
 			<CookieConsenter privacyPolicyHref={privacyPolicy}/>
 		</ErrorBoundary>

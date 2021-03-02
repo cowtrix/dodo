@@ -2,12 +2,28 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 
 import { Title } from "app/components/footer"
-import { Link } from "react-router-dom"
 import styles from "./links.module.scss"
-import links from "./library"
 
-export const Links = () => {
+export const Links = ({ privacyPolicy, rebelAgreement }) => {
 	const { t } = useTranslation("ui")
+	const links = [
+		{
+			href: '/rsc/about',
+			translationKey: 'footer_menu_link_text_about'
+		},
+		{
+			href: `/rsc/faq`,
+			translationKey: 'footer_menu_link_text_faq'
+		},
+		{
+			href: `/${privacyPolicy}`,
+			translationKey: 'footer_menu_link_text_privacy_policy'
+		},
+		{
+			href: `/${rebelAgreement}`,
+			translationKey: 'footer_menu_link_text_rebel_agreement'
+		}
+	];
 
 	return (
 		<div className={styles.linksBox}>
@@ -15,7 +31,9 @@ export const Links = () => {
 			<ul className={styles.links}>
 				{links.map(link => (
 					<li key={link.translationKey}>
-						<Link to={link.route}>{t(link.translationKey)}</Link>
+						<a href={link.href} target="_blank" rel="noopener noreferrer">
+							{t(link.translationKey)}
+						</a>
 					</li>
 				))}
 			</ul>

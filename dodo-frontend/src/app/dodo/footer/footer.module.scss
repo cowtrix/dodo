@@ -1,20 +1,41 @@
 @import "~app/styles/styles";
 
 .footer {
-	padding: 0 spacingXS(4);
 	display: flex;
 	flex-direction: column;
 	max-width: $application-max-width;
-	margin-bottom: spacingXS(20);
+	color: $color-light-grey;
+	max-width: $application-max-width;
+	padding: 0 spacingXS(4);
+
+	> * {
+		margin-top: spacing(6);
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
 
 	@media (min-width: $responsive-breakpoint) {
 		display: flex;
-		padding: 0 spacingXS(13);
+		padding: 0 spacingXS(7);
 		flex-direction: row;
+
+		> * {
+			margin-top: 0;
+		}
 	}
+
 }
 
 .footerContainer {
 	display: flex;
 	justify-content: center;
+	margin-top: auto;
+	padding: spacing(4) 0;
+	background: #000;
+
+	@media (min-width: $responsive-breakpoint) {
+		padding: spacing(6) 0;
+	}
 }
