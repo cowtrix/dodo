@@ -489,6 +489,12 @@ namespace Resources
 					decryptable.SetValue(valueToSet, permissionLevel, requester, passphrase);
 					valueToSet = decryptable;
 				}
+				if (value != null && value.Equals(valueToSet))
+				{
+					// No change in the value, just keep going
+					continue;
+				}
+				// Verify that the change is ok
 				var verifyAttributes = targetMember.GetCustomAttributes().OfType<IVerifiableMember>();
 				foreach (var verifyAttr in verifyAttributes)
 				{
@@ -497,14 +503,16 @@ namespace Resources
 						throw new MemberVerificationException(error);
 					}
 				}
+				// Actually set the value
 				targetMember.SetValue(targetObject, valueToSet);
+				// Trigger any events for that change
 				var onPatch = targetMember.GetCustomAttribute<PatchCallbackAttribute>();
 				if (onPatch != null)
 				{
 					try
 					{
 						var method = targetMember.DeclaringType.GetMethod(onPatch.MethodName);
-						method.Invoke(targetObject, new[] { requester, passphrase, value, valueToSet });
+						method.Invoke(targetObject, new[] { requester, passphrase, targetMember, value, valueToSet });
 					}
 					catch (Exception e)
 					{

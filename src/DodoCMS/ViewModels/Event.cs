@@ -31,7 +31,7 @@ namespace Dodo.ViewModels
 		public string PublicDescription { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		public System.Boolean IsPublished { get; set; }
+		public bool IsPublished { get; set; }
 		[DisplayName("MemberCount")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get; set; }
@@ -51,10 +51,10 @@ namespace Dodo.ViewModels
 			public Dodo.LocationResources.EAccessType Food { get; set; }
 			[DisplayName("Kitchen")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-			public System.Boolean Kitchen { get; set; }
+			public bool Kitchen { get; set; }
 			[DisplayName("Disability Friendly")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-			public System.Boolean DisabilityFriendly { get; set; }
+			public bool DisabilityFriendly { get; set; }
 			[DisplayName("Outdoor Camping")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public Dodo.LocationResources.EAccessType OutdoorCamping { get; set; }
@@ -66,22 +66,22 @@ namespace Dodo.ViewModels
 			public Dodo.LocationResources.EAccessType Accomodation { get; set; }
 			[DisplayName("Inductions")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-			public System.Boolean Inductions { get; set; }
+			public bool Inductions { get; set; }
 			[DisplayName("Talks And Training")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-			public System.Boolean TalksAndTraining { get; set; }
+			public bool TalksAndTraining { get; set; }
 			[DisplayName("Welfare")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-			public System.Boolean Welfare { get; set; }
+			public bool Welfare { get; set; }
 			[DisplayName("Affinity Group Formation")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-			public System.Boolean AffinityGroupFormation { get; set; }
+			public bool AffinityGroupFormation { get; set; }
 			[DisplayName("Volunteers Needed")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-			public System.Boolean VolunteersNeeded { get; set; }
+			public bool VolunteersNeeded { get; set; }
 			[DisplayName("Family Friendly")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-			public System.Boolean FamilyFriendly { get; set; }
+			public bool FamilyFriendly { get; set; }
 			[DisplayName("Internet")]
 			[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 			public Dodo.LocationResources.EAccessType Internet { get; set; }

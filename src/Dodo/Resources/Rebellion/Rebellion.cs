@@ -26,7 +26,7 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("Start Date")]
-		[PatchCallback(nameof(OnStartDateChange))]
+		[PatchCallback(nameof(OnValueChanged))]
 		public DateTime StartDate
 		{
 			get
@@ -47,11 +47,12 @@ namespace Dodo.Rebellions
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("End Date")]
-		[PatchCallback(nameof(OnEndDateChange))]
+		[PatchCallback(nameof(OnValueChanged))]
 		public DateTime EndDate { get { return __endDate; } set { __endDate = value.ToUniversalTime(); } }
 		private DateTime __endDate;
 
 		[View(EPermissionLevel.PUBLIC)]
+		[PatchCallback(nameof(OnValueChanged))]
 		public GeoLocation Location { get; set; } = new GeoLocation();
 
 		[View(EPermissionLevel.PUBLIC)]
@@ -156,11 +157,5 @@ namespace Dodo.Rebellions
 			}
 			base.OnDestroy();
 		}
-
-		public void OnStartDateChange(object requester, Passphrase passphrase, DateTime oldValue, DateTime newValue)
-			=> UserEmailManager.RegisterUpdate(this, $"Start date was changed: {newValue.ToLongDateString()}");
-
-		public void OnEndDateChange(object requester, Passphrase passphrase, DateTime oldValue, DateTime newValue)
-			=> UserEmailManager.RegisterUpdate(this, $"End date was changed: {newValue.ToLongDateString()}");
 	}
 }

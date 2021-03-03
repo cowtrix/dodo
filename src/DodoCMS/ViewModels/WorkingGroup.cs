@@ -28,7 +28,7 @@ namespace Dodo.ViewModels
 		public string PublicDescription { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		public System.Boolean IsPublished { get; set; }
+		public bool IsPublished { get; set; }
 		[DisplayName("MemberCount")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get; set; }

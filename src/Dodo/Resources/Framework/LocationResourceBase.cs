@@ -4,6 +4,7 @@ using Resources;
 using Resources.Location;
 using Dodo.Users.Tokens;
 using System.Threading.Tasks;
+using Dodo.Email;
 
 namespace Dodo.LocationResources
 {
@@ -27,6 +28,7 @@ namespace Dodo.LocationResources
 	{
 		[View(EPermissionLevel.PUBLIC)]
 		[Name("Arrest Risk")]
+		[PatchCallback(nameof(OnValueChanged))]
 		public EArrestRisk ArrestRisk { get; set; }
 		[View(EPermissionLevel.PUBLIC, priority: 512)]
 		public SiteFacilities Facilities { get; set; }		
@@ -34,6 +36,7 @@ namespace Dodo.LocationResources
 		[Name("Video Embed URL")]
 		public string VideoEmbedURL { get; set; }
 		[View(EPermissionLevel.PUBLIC)]
+		[PatchCallback(nameof(OnValueChanged))]
 		public GeoLocation Location { get; set; } = new GeoLocation();
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, priority: -2, customDrawer: "parentRef")]
 		public ResourceReference<IRESTResource> Parent { get; set; }
@@ -61,5 +64,8 @@ namespace Dodo.LocationResources
 		{
 			return Parent.GetValue<ITokenResource>().GetPrivateKey(context);
 		}
+
+		public void OnLocationChange(object requester, Passphrase passphrase, GeoLocation oldValue, GeoLocation newValue)
+			=> UserEmailManager.RegisterUpdate(this, $"Location was changed: {newValue.Address}");
 	}
 }

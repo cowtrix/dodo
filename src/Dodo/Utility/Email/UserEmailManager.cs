@@ -59,6 +59,10 @@ namespace Dodo.Email
 					updates = m_pendingUpdates;
 					m_pendingUpdates = new Dictionary<Guid, List<Update>>();
 				}
+				if(!updates.Any())
+				{
+					continue;
+				}
 				var userList = UserManager.Get(u => true);
 				foreach(var update in updates)
 				{

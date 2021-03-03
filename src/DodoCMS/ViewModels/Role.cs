@@ -35,7 +35,7 @@ namespace Dodo.ViewModels
 		public string ApplicantQuestion { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
-		public System.Boolean IsPublished { get; set; }
+		public bool IsPublished { get; set; }
 		[DisplayName("Applications")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public System.Collections.Generic.Dictionary<string,Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>> Applications { get; set; }

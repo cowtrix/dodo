@@ -22,7 +22,7 @@ namespace Dodo.LocationResources
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("Start Date")]
-		[PatchCallback(nameof(OnStartDateChange))]
+		[PatchCallback(nameof(OnValueChanged))]
 		public DateTime StartDate 
 		{ 
 			get 
@@ -44,7 +44,7 @@ namespace Dodo.LocationResources
 		[View(EPermissionLevel.PUBLIC)]
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("End Date")]
-		[PatchCallback(nameof(OnEndDateChange))]
+		[PatchCallback(nameof(OnValueChanged))]
 		public DateTime EndDate { get { return __endDate; } set { __endDate = value.ToUniversalTime(); } }
 		[BsonElement]
 		private DateTime __endDate;
@@ -58,11 +58,5 @@ namespace Dodo.LocationResources
 			}
 			return base.VerifyExplicit(out error);
 		}
-
-		public void OnStartDateChange(object requester, Passphrase passphrase, DateTime oldValue, DateTime newValue)
-			=> UserEmailManager.RegisterUpdate(this, $"Start date was changed: {newValue.ToLongDateString()}");
-
-		public void OnEndDateChange(object requester, Passphrase passphrase, DateTime oldValue, DateTime newValue)
-			=> UserEmailManager.RegisterUpdate(this, $"End date was changed: {newValue.ToLongDateString()}");
 	}
 }

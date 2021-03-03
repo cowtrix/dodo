@@ -34,6 +34,10 @@ namespace Common.Extensions
 			{
 				return "uint";
 			}
+			if (t == typeof(bool))
+			{
+				return "bool";
+			}
 
 			var typeName = fullyQualify ? $"{t.Namespace}.{t.Name}" : t.Name;
 			if (!t.IsGenericType)

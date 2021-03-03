@@ -11,6 +11,8 @@ using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel;
 using System.Security;
 using Microsoft.AspNetCore.Mvc.Formatters.Internal;
+using Dodo.Email;
+using System.Reflection;
 
 namespace Dodo
 {
@@ -23,14 +25,16 @@ namespace Dodo
 	{
 		public const string IS_MEMBER_AUX_TOKEN = "isMember";
 
-		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint:IDescribedResource.MARKDOWN_INPUT_HINT)]
+		[View(EPermissionLevel.PUBLIC, customDrawer: "markdown", inputHint: IDescribedResource.MARKDOWN_INPUT_HINT)]
 		[Name("Public Description")]
 		[Resources.MaxStringLength]
 		[ViewDrawer("html")]
+		[PatchCallback(nameof(OnValueChanged))]
 		public string PublicDescription { get; set; }
 
 		[Name("Published")]
-		[View(EPermissionLevel.ADMIN, customDrawer:"published", priority: -1, inputHint: IPublicResource.PublishInputHint)]
+		[PatchCallback(nameof(OnPublished))]
+		[View(EPermissionLevel.ADMIN, customDrawer: "published", priority: -1, inputHint: IPublicResource.PublishInputHint)]
 		public bool IsPublished { get; set; }
 
 		[BsonElement]
@@ -44,7 +48,7 @@ namespace Dodo
 		}
 
 		#region Group
-		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, customDrawer:"null")]
+		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, customDrawer: "null")]
 		public int MemberCount { get { return Members.Count; } }
 
 		public bool IsMember(User user)
@@ -57,7 +61,7 @@ namespace Dodo
 			Members.Unsubscribe(this, accessContext);
 			using var rscLock = new ResourceLock(accessContext.User);
 			var user = rscLock.Value as User;
-			if(!user.TokenCollection.Remove<UserJoinedGroupToken>(accessContext, EPermissionLevel.OWNER, 
+			if (!user.TokenCollection.Remove<UserJoinedGroupToken>(accessContext, EPermissionLevel.OWNER,
 				t => t.Resource.Guid == Guid, user))
 			{
 				Logger.Error($"Failed to remove UserJoinedGroupToken from user {user} for {this}");
@@ -93,5 +97,19 @@ namespace Dodo
 			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(context.User));
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
+
+		public void OnValueChanged(object requester, Passphrase passphrase, MemberInfo method, object oldValue, object newValue)
+			=> UserEmailManager.RegisterUpdate(this, $"{method.Name} date was changed: {newValue}");
+
+		public void OnPublished(object requester, Passphrase passphrase, MemberInfo method, object oldValue, object newValue)
+		{
+			if(!(this is IOwnedResource owned))
+			{
+				return;
+			}
+			UserEmailManager.RegisterUpdate(owned.Parent.GetValue<IPublicResource>(), 
+				$"A new {GetType().GetName()} was created: {Name}");
+		}
+
 	}
 }
