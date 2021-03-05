@@ -150,7 +150,7 @@ namespace Common.Extensions
 			var rgx = "^[a-z0-9_]*$";
 			if(!Regex.IsMatch(slug, rgx))
 			{
-				error = "String can only contain alphanumeric characters and _";
+				error = "This must be lowercase and can only contain alphanumeric characters and _";
 				return false;
 			}
 			if (slug == "create")
