@@ -6,7 +6,7 @@ import styles from './sign-up-button.module.scss'
 
 const SIGN_UP_NOW = 'Sign up now'
 const SUBSCRIBE = 'Subscribe'
-const T0_RECEIVE_UPDATES = 'To receive updates and news'
+const T0_RECEIVE_UPDATES = 'To receive updates via email'
 const UNSUBSCRIBE = 'Unsubscribe'
 
 export const SignUpButton = (
