@@ -67,7 +67,7 @@ export const DeleteUser = () => {
 	return (
 		<>
 			<ExpandPanel
-				header={<h2>Danger Zone</h2>}
+				header={<h2>Delete Your Account</h2>}
 				headerClassName={styles.dangerZoneTitle}
 			>
 				<div className={styles.dangerZoneInner}>
