@@ -16,7 +16,7 @@ export const Dialog = ({
 	close,
 	fullScreen
 }) => (
-	<MuDialog open={active} className={styles.dialogWrapper} fullWidth={fullScreen} fullScreen={fullScreen} PaperProps={{square: true}}>
+	<MuDialog open={active} className={styles.dialogWrapper} fullWidth={true} fullScreen={fullScreen} PaperProps={{square: true}}>
 		<div className={styles.dialog}>
 			<Header onClose={close} title={title} />
 			<Content content={content} />
@@ -26,7 +26,7 @@ export const Dialog = ({
 )
 
 Dialog.defaultProps = {
-	fullScreen: true
+	fullScreen: false,
 }
 
 Dialog.propTypes = {
