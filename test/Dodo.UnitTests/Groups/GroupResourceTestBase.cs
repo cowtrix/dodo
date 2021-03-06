@@ -52,7 +52,7 @@ namespace Groups
 		{
 			GetRandomUser(out var pass, out var context);
 			var rsc = CreateObject<T>(context);
-			var notifications = rsc.GetNotifications(context, EPermissionLevel.OWNER);
+			var notifications = rsc.GetNotifications(context, EPermissionLevel.ADMIN);
 			Assert.IsTrue(notifications.Any());
 		}
 	}

@@ -82,7 +82,7 @@ namespace Dodo.Users.Tokens
 			return m_notification;
 		}
 
-		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.ADMIN;
 
 		[JsonIgnore]
 		public IResourceReference Reference => Resource;

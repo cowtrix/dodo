@@ -32,6 +32,6 @@ namespace Dodo.Users.Tokens
 			ResourceType = type.Name;
 		}
 
-		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.ADMIN;
 	}
 }

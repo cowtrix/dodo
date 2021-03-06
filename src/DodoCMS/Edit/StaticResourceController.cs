@@ -10,6 +10,8 @@ namespace Dodo.Sites
 		public const string RootURL = "rsc";
 		public const string PrivacyPolicyURL = "privacypolicy";
 		public const string RebelAgreementURL = "rebelagreement";
+		public const string AboutURL = "about";
+		public const string FAQURL = "faq";
 
 		[HttpGet(PrivacyPolicyURL)]
 		public IActionResult PrivacyPolicy()
@@ -19,6 +21,18 @@ namespace Dodo.Sites
 
 		[HttpGet(RebelAgreementURL)]
 		public IActionResult RebelAgreement()
+		{
+			return View();
+		}
+
+		[HttpGet(AboutURL)]
+		public IActionResult About()
+		{
+			return View();
+		}
+
+		[HttpGet(FAQURL)]
+		public IActionResult FAQ()
 		{
 			return View();
 		}

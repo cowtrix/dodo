@@ -9,11 +9,11 @@ namespace Dodo.Users
 {
 	public class EmailPreferences
 	{
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public bool WeeklyUpdate { get; set; }
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public bool DailyUpdate { get; set; }
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public bool NewNotifications { get; set; }
 	}
 
@@ -21,13 +21,13 @@ namespace Dodo.Users
 	{
 		[Email]
 		[PatchCallback(nameof(OnEmailChange))]
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public string Email;
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public bool EmailConfirmed { get; set; }
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public ResourceReference<LocalGroup> LocalGroup { get; set; }
-		[View(EPermissionLevel.OWNER)]
+		[View(EPermissionLevel.ADMIN)]
 		public string TimezoneID { get; set; }
 		[View(EPermissionLevel.USER)]
 		[VerifyObject]
@@ -50,7 +50,7 @@ namespace Dodo.Users
 			var user = (User)requester;
 			var context = new AccessContext(user, passphrase);
 			EmailConfirmed = false;
-			user.TokenCollection.RemoveAllOfType<VerifyEmailToken>(context, EPermissionLevel.OWNER, context.User);
+			user.TokenCollection.RemoveAllOfType<VerifyEmailToken>(context, EPermissionLevel.ADMIN, context.User);
 			var token = user.TokenCollection.AddOrUpdate(context.User, new VerifyEmailToken()) as VerifyEmailToken;
 			EmailUtility.SendEmail(
 				new EmailAddress

@@ -13,7 +13,7 @@ namespace Resources
 		public ResourceCreationRequest(AccessContext context,
 			ResourceSchemaBase schema,
 			ResourceCreationToken token = null)
-			: base (context, EHTTPRequestType.POST, EPermissionLevel.OWNER)
+			: base (context, EHTTPRequestType.POST, EPermissionLevel.ADMIN)
 		{
 			Schema = schema;
 			if(token != null)

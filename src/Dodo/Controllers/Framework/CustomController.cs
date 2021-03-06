@@ -32,7 +32,7 @@ namespace Resources
 			ViewData["header"] = !Request.Query.TryGetValue("header", out var headerVal) || headerVal.Single() == "true";
 			if (Context.User != null)
 			{
-				foreach (var token in Context.User.TokenCollection.GetAllTokens<IAutoExecuteToken>(Context, EPermissionLevel.OWNER, Context.User))
+				foreach (var token in Context.User.TokenCollection.GetAllTokens<IAutoExecuteToken>(Context, EPermissionLevel.ADMIN, Context.User))
 				{
 					token.Execute(Context);
 				}

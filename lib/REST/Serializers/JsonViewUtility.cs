@@ -315,7 +315,7 @@ namespace Resources
 
 		public static T PatchObject<T>(this T targetObject, Dictionary<string, object> values)
 		{
-			return PatchObject(targetObject, values, EPermissionLevel.OWNER, null, default);
+			return PatchObject(targetObject, values, EPermissionLevel.ADMIN, null, default);
 		}
 
 		public static T PatchObject<T>(this T targetObject, object value, EPermissionLevel permissionLevel,

@@ -37,7 +37,7 @@ namespace Dodo.Users
 			{
 				return Forbid();
 			}
-			return Ok(Context.User.GenerateJsonView(EPermissionLevel.OWNER, Context.User, Context.Passphrase));
+			return Ok(Context.User.GenerateJsonView(EPermissionLevel.ADMIN, Context.User, Context.Passphrase));
 		}
 
 		[HttpGet(MY_REBELLION)]
@@ -50,7 +50,7 @@ namespace Dodo.Users
 			var ret = new Dictionary<Guid, MyRebellionNode>();
 			// Here we get a big ol' unsorted list
 			foreach (var token in 
-				Context.User.TokenCollection.GetAllTokens<IMyRebellionToken>(Context, EPermissionLevel.OWNER, Context.User)
+				Context.User.TokenCollection.GetAllTokens<IMyRebellionToken>(Context, EPermissionLevel.ADMIN, Context.User)
 				.ToList())
 			{
 				if(!ret.TryGetValue(token.Reference.Guid, out var node))
@@ -86,7 +86,7 @@ namespace Dodo.Users
 				}
 			}
 			var tree = ret.Values.Where(n => n.Reference.Parent == default).ToList();
-			return Ok(tree.GenerateJsonViewEnumerable(EPermissionLevel.OWNER, Context.User, Context.Passphrase));
+			return Ok(tree.GenerateJsonViewEnumerable(EPermissionLevel.ADMIN, Context.User, Context.Passphrase));
 		}
 
 		[HttpGet(LOGOUT)]

@@ -24,7 +24,7 @@ namespace Dodo.Users.Tokens
 			Resource = rsc.CreateRef();
 		}
 
-		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.ADMIN;
 
 		public void OnRemove(AccessContext parent)
 		{

@@ -9,6 +9,6 @@ namespace Dodo.Users.Tokens
 		public override bool Encrypted => true;
 		public Queue<string> CommandHistory { get; set; } = new Queue<string>();
 
-		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.ADMIN;
 	}
 }

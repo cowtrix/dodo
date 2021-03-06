@@ -211,7 +211,7 @@ namespace SharedTest
 			{
 				using(var rscLock = new ResourceLock(user.Guid))
 				{
-					var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, user);
+					var verifyToken = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.ADMIN, user);
 					Assert.IsNotNull(verifyToken);
 					verifyToken.Redeem(context);
 					user.PersonalData.EmailConfirmed = true;

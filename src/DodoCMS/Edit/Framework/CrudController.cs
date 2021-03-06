@@ -39,9 +39,9 @@ namespace Dodo.Controllers.Edit
 				// redirect to login
 				return Forbid();
 			}
-			var tokens = Context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(Context, EPermissionLevel.OWNER, Context.User)
+			var tokens = Context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(Context, EPermissionLevel.ADMIN, Context.User)
 				.Where(t => t.ResourceType == typeof(T).Name && !t.IsRedeemed);
-			if (!tokens.Any() && Context.User.TokenCollection.GetSingleToken<SysadminToken>(Context, EPermissionLevel.OWNER, Context.User) == null)
+			if (!tokens.Any() && Context.User.TokenCollection.GetSingleToken<SysadminToken>(Context, EPermissionLevel.ADMIN, Context.User) == null)
 			{
 				return Unauthorized("You must request permission to create this resource.");
 			}

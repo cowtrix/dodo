@@ -9,8 +9,6 @@ namespace Resources
 		public static string MEMBER => nameof(EPermissionLevel.MEMBER).ToLowerInvariant();
 		public static EPermissionLevel Admin => EPermissionLevel.ADMIN;
 		public static string ADMIN => nameof(EPermissionLevel.ADMIN).ToLowerInvariant();
-		public static EPermissionLevel Owner => EPermissionLevel.OWNER;
-		public static string OWNER => nameof(EPermissionLevel.OWNER).ToLowerInvariant();
 	}
 
 	public enum EPermissionLevel
@@ -19,9 +17,6 @@ namespace Resources
 		USER = 1,	// A valid, signed in user
 		MEMBER = 2, // A user who is a member of the resource
 		ADMIN = 3,	// An administrator of the resource
-		OWNER = 4,	// An owner of the resource
-
-
 		SYSTEM = byte.MaxValue,	// Cannot patch
 	}
 }

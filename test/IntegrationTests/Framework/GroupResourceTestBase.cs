@@ -51,7 +51,7 @@ namespace RESTTests
 			var group = CreateObject<T>(context);
 			await Login(user.Slug, password);
 			var obj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{group.Guid}", EHTTPRequestType.GET);
-			Assert.AreEqual(PermissionLevel.OWNER,
+			Assert.AreEqual(PermissionLevel.ADMIN,
 				obj.Value<JObject>(Resource.METADATA).Value<string>(Resource.METADATA_PERMISSION));
 		}
 		#endregion

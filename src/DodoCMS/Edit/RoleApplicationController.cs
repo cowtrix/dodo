@@ -1,11 +1,8 @@
 using Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Dodo.Models;
 using Dodo.Users.Tokens;
 using System.Linq;
-using Dodo.Rebellions;
-using System.Collections.Generic;
 using System;
 using Dodo.ViewModels;
 using Resources.Security;
@@ -57,7 +54,7 @@ namespace Dodo.RoleApplications
 			{
 				return RedirectToAction(nameof(ViewApplication), applicationID);
 			}
-			ViewData["Permission"] = EPermissionLevel.OWNER;
+			ViewData["Permission"] = EPermissionLevel.ADMIN;
 			return base.View(new RoleApplicationModel(role, role.ApplicantQuestion));
 		}
 
@@ -101,7 +98,7 @@ namespace Dodo.RoleApplications
 				parentRsc = rscRef.GetValue();
 				pass = parentRsc.GetPrivateKey(Context);
 			}
-			else if (actionResult.PermissionLevel == EPermissionLevel.OWNER)
+			else if (actionResult.PermissionLevel == EPermissionLevel.ADMIN)
 			{
 				requester = Context.User.CreateRef<IAsymmCapableResource>();
 				pass = Context.Passphrase;
@@ -177,11 +174,11 @@ namespace Dodo.RoleApplications
 				{
 					roleAppData.Messages.Add(
 					new Message(resourceReq.AccessContext, content,
-						resourceReq.PermissionLevel == EPermissionLevel.OWNER, adminOnly, salt));
+						resourceReq.PermissionLevel == EPermissionLevel.ADMIN, adminOnly, salt));
 					roleApp.Data.SetValueByGroup(roleAppData, resourceReq.AccessContext, group);
 				}
 			}
-			else if (resourceReq.PermissionLevel == EPermissionLevel.OWNER)
+			else if (resourceReq.PermissionLevel == EPermissionLevel.ADMIN)
 			{
 				object requester = resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>();
 				Passphrase passphrase = resourceReq.AccessContext.Passphrase;
@@ -192,7 +189,7 @@ namespace Dodo.RoleApplications
 				}
 				if (!roleAppData.Messages.Any(m => m.Guid == salt)) // Prevent double post
 				{
-					roleAppData.Messages.Add(new Message(resourceReq.AccessContext, content, resourceReq.PermissionLevel == EPermissionLevel.OWNER, false, salt));
+					roleAppData.Messages.Add(new Message(resourceReq.AccessContext, content, resourceReq.PermissionLevel == EPermissionLevel.ADMIN, false, salt));
 					roleApp.Data.SetValue(roleAppData, resourceReq.AccessContext.User.CreateRef<IAsymmCapableResource>(), resourceReq.AccessContext.Passphrase);
 				}
 			}

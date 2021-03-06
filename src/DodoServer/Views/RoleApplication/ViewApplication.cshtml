@@ -21,7 +21,7 @@
 			@{
 				foreach (Dodo.RoleApplications.Message message in Model.Data.Messages)
 				{
-					if(permissionLevel == Resources.EPermissionLevel.OWNER && message.AdminOnly)
+					if(permissionLevel == Resources.EPermissionLevel.ADMIN && message.AdminOnly)
 					{
 						continue;
 					}

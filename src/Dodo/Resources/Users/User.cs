@@ -77,12 +77,12 @@ namespace Dodo.Users
 		{
 			/*var requesterUser = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : (User)requester;
 			var accessContext = new AccessContext(requesterUser, passphrase);
-			if (permissionLevel == EPermissionLevel.OWNER)
+			if (permissionLevel == EPermissionLevel.ADMIN)
 			{
-				view.Add(ADMIN_OF_KEY, TokenCollection.GetAllTokens<UserAddedAsAdminToken>(accessContext, EPermissionLevel.OWNER, this)
+				view.Add(ADMIN_OF_KEY, TokenCollection.GetAllTokens<UserAddedAsAdminToken>(accessContext, EPermissionLevel.ADMIN, this)
 					.Select(r => r.Resource.GenerateJsonView(permissionLevel, requester, passphrase)).ToList());
 
-				view.Add(MEMBER_OF_KEY, TokenCollection.GetAllTokens<UserJoinedGroupToken>(accessContext, EPermissionLevel.OWNER, this)
+				view.Add(MEMBER_OF_KEY, TokenCollection.GetAllTokens<UserJoinedGroupToken>(accessContext, EPermissionLevel.ADMIN, this)
 					.Select(r => r.Resource.GenerateJsonView(permissionLevel, requester, passphrase)).ToList());
 			}*/
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);

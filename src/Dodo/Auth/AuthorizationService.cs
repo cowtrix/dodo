@@ -81,7 +81,7 @@ namespace Dodo
 				return ResourceRequestError.NotFoundRequest();
 			}
 			var permission = GetPermission(context, target);
-			if (permission >= EPermissionLevel.OWNER)
+			if (permission >= EPermissionLevel.ADMIN)
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.DELETE, permission);
 			}
@@ -123,7 +123,7 @@ namespace Dodo
 		{
 			if (target != null && target.IsCreator(context))
 			{
-				return EPermissionLevel.OWNER;
+				return EPermissionLevel.ADMIN;
 			}			
 			if ((target is IGroupResource group) && group.IsMember(context.User))
 			{

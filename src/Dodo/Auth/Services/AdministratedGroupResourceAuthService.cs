@@ -25,7 +25,7 @@ namespace Dodo
 			}
 			if (target.IsCreator(context))
 			{
-				return EPermissionLevel.OWNER;
+				return EPermissionLevel.ADMIN;
 			}
 			if (target.IsAdmin(context.User, context, out _))
 			{
@@ -46,9 +46,9 @@ namespace Dodo
 			}
 
 			// User has a resource creation token with this type, so we consume it and return ok
-			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context, EPermissionLevel.OWNER, context.User)
+			var token = context.User.TokenCollection.GetAllTokens<ResourceCreationToken>(context, EPermissionLevel.ADMIN, context.User)
 				.FirstOrDefault(t => !t.IsRedeemed && t.ResourceType == typeof(T).Name);
-			if (token != null || context.User.TokenCollection.GetSingleToken<SysadminToken>(context, EPermissionLevel.OWNER, context.User) != null)
+			if (token != null || context.User.TokenCollection.GetSingleToken<SysadminToken>(context, EPermissionLevel.ADMIN, context.User) != null)
 			{
 				return new ResourceCreationRequest(context, schema, token);
 			}

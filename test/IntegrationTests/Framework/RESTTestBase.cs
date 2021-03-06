@@ -56,7 +56,7 @@ namespace RESTTests
 			var resource = CreateObject<T>(context, schema);
 			await Login(user.Slug, password);
 			var resourceObj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Guid.ToString()}", EHTTPRequestType.GET);
-			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
+			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.ADMIN);
 
 			Postman.Update(
 				new PostmanEntryAddress { Category = PostmanCategory, Request = $"Get a {PostmanTypeName}" },
@@ -72,7 +72,7 @@ namespace RESTTests
 			var resource = CreateObject<T>(context, schema);
 			await Login(user.Slug, password);
 			var resourceObj = await RequestJSON($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}/{resource.Slug}", EHTTPRequestType.GET);
-			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.OWNER);
+			Assert.IsTrue(resourceObj[Resource.METADATA][Resource.METADATA_PERMISSION].Value<string>() == PermissionLevel.ADMIN);
 		}
 
 		[TestMethod]

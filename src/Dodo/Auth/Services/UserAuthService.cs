@@ -14,7 +14,7 @@ namespace Dodo.Users
 		{
 			if(context.User != null && context.User.Guid == target.Guid)
 			{
-				return EPermissionLevel.OWNER;
+				return EPermissionLevel.ADMIN;
 			}
 			return EPermissionLevel.PUBLIC;
 		}
@@ -22,7 +22,7 @@ namespace Dodo.Users
 		public override IRequestResult IsAuthorised(AccessContext context, User target, EHTTPRequestType requestType, string action)
 		{
 			var permission = GetPermission(context, target);
-			if(permission != EPermissionLevel.OWNER)
+			if(permission != EPermissionLevel.ADMIN)
 			{
 				if (context.User == null)
 				{
@@ -30,7 +30,7 @@ namespace Dodo.Users
 				}
 				return ResourceRequestError.UnauthorizedRequest();
 			}
-			return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.OWNER);
+			return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN);
 		}
 
 		protected override IRequestResult CanCreate(AccessContext context, UserSchema target)

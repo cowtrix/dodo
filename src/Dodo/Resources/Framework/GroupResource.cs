@@ -61,7 +61,7 @@ namespace Dodo
 			Members.Unsubscribe(this, accessContext);
 			using var rscLock = new ResourceLock(accessContext.User);
 			var user = rscLock.Value as User;
-			if (!user.TokenCollection.Remove<UserJoinedGroupToken>(accessContext, EPermissionLevel.OWNER,
+			if (!user.TokenCollection.Remove<UserJoinedGroupToken>(accessContext, EPermissionLevel.ADMIN,
 				t => t.Resource.Guid == Guid, user))
 			{
 				Logger.Error($"Failed to remove UserJoinedGroupToken from user {user} for {this}");

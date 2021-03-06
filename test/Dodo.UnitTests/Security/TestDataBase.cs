@@ -25,7 +25,7 @@ namespace Security
 			public string StringProperty { get; set; }
 			[View(EPermissionLevel.USER, EPermissionLevel.USER)]
 			public int IntValue = 12345;
-			[View(EPermissionLevel.OWNER)]
+			[View(EPermissionLevel.ADMIN)]
 			public GeoLocation Location = new GeoLocation(43, 62);
 			public ResourceReference<User> UserReference = 
 				new ResourceReference<User>(Guid.NewGuid(), "asdadw", typeof(User), "asdadw", null, default, default, false);

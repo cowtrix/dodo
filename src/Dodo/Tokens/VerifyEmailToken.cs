@@ -35,13 +35,13 @@ namespace Dodo.Users.Tokens
 			}
 			if(m_notification == null)
 			{
-				m_notification = new Notification(Guid, "Your Account", "You should check your email and verify your email address with us.", null, ENotificationType.Alert, EPermissionLevel.OWNER);
+				m_notification = new Notification(Guid, "Your Account", "You should check your email and verify your email address with us.", null, ENotificationType.Alert, EPermissionLevel.ADMIN);
 			}
 			base.OnAdd(parent);
 		}
 
 		public Notification GetNotification(AccessContext context) => m_notification;
 
-		public override EPermissionLevel GetVisibility() => EPermissionLevel.OWNER;
+		public override EPermissionLevel GetVisibility() => EPermissionLevel.ADMIN;
 	}
 }

@@ -89,7 +89,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		// issue authentication cookie with subject ID and username
 		await HttpContext.SignInAsync(AuthConstants.AUTHSCHEME, principal, props);
 		Logger.Debug($"{logstr} Request was successful, created new session token {token.Guid} (expires {token.ExpiryDate}) for {HttpContext.Connection.RemoteIpAddress}");
-		return new OkRequestResult(user.GenerateJsonView(EPermissionLevel.OWNER, user, new Passphrase(user.AuthData.PassPhrase.GetValue(login.Password))));
+		return new OkRequestResult(user.GenerateJsonView(EPermissionLevel.ADMIN, user, new Passphrase(user.AuthData.PassPhrase.GetValue(login.Password))));
 	}
 
 	public async Task<IRequestResult> Logout()
@@ -101,13 +101,13 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		await HttpContext.SignOutAsync(AuthConstants.AUTHSCHEME);
 		using var rscLock = new ResourceLock(Context.User);
 		var user = rscLock.Value as User;
-		var session = user.TokenCollection.GetAllTokens<SessionToken>(Context, EPermissionLevel.OWNER, user)
+		var session = user.TokenCollection.GetAllTokens<SessionToken>(Context, EPermissionLevel.ADMIN, user)
 				.SingleOrDefault(t => t.UserKey == Context.UserToken);
 		if (session == null)
 		{
 			return ResourceRequestError.BadRequest();
 		}
-		if (!user.TokenCollection.Remove<SessionToken>(Context, EPermissionLevel.OWNER, session, user))
+		if (!user.TokenCollection.Remove<SessionToken>(Context, EPermissionLevel.ADMIN, session, user))
 		{
 			Logger.Error($"Failed to log user {user} out - could not remove session token");
 		}
@@ -132,7 +132,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			using (var rscLock = new ResourceLock(targetUser))
 			{
 				targetUser = rscLock.Value as User;
-				targetUser.TokenCollection.RemoveAllOfType<ResetPasswordToken>(Context, EPermissionLevel.OWNER, targetUser);
+				targetUser.TokenCollection.RemoveAllOfType<ResetPasswordToken>(Context, EPermissionLevel.ADMIN, targetUser);
 				var resetToken = new ResetPasswordToken(targetUser);
 				targetUser.TokenCollection.AddOrUpdate(targetUser, resetToken);
 				UserManager.Update(targetUser, rscLock);
@@ -166,7 +166,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return ResourceRequestError.BadRequest();
 		}
 		var user = UserManager.GetSingle(u =>
-			u.TokenCollection.GetSingleToken<ResetPasswordToken>(Context, EPermissionLevel.OWNER, null)?.Key == token);
+			u.TokenCollection.GetSingleToken<ResetPasswordToken>(Context, EPermissionLevel.ADMIN, null)?.Key == token);
 		if (user == null)
 		{
 			return ResourceRequestError.BadRequest();
@@ -177,9 +177,9 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			// This will wipe the private key and passphrase, so the user needs to start fresh
 			user.AuthData = new AuthorizationData(password);
 			// Get rid of the password reset token immediately, as opposed to just waiting for it to get cleaned up
-			user.TokenCollection.RemoveAllOfType<ResetPasswordToken>(Context, EPermissionLevel.OWNER, user);
+			user.TokenCollection.RemoveAllOfType<ResetPasswordToken>(Context, EPermissionLevel.ADMIN, user);
 			// User won't be able to decrypt any decrypted tokens
-			user.TokenCollection.Remove<IToken>(Context, EPermissionLevel.OWNER, t => t.Encrypted, user);
+			user.TokenCollection.Remove<IToken>(Context, EPermissionLevel.ADMIN, t => t.Encrypted, user);
 			UserManager.Update(user, rscLock);
 		}
 		await Logout();
@@ -216,7 +216,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return new OkRequestResult("You've already verified your email address");
 		}
-		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context, EPermissionLevel.OWNER, Context.User);
+		var verifyToken = Context.User.TokenCollection.GetSingleToken<VerifyEmailToken>(Context, EPermissionLevel.ADMIN, Context.User);
 		if (string.IsNullOrEmpty(token))
 		{
 			if (verifyToken.ConfirmationEmailRequestCount < VerifyEmailToken.MAX_REQUEST_COUNT)
@@ -292,7 +292,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			return ResourceRequestError.BadRequest();
 		}
 		// Check if this is a temporary user (e.g. a new admin activating an email invite to administrate a resource)
-		var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>(Context, EPermissionLevel.OWNER, Context.User);
+		var tempToken = user.TokenCollection.GetSingleToken<TemporaryUserToken>(Context, EPermissionLevel.ADMIN, Context.User);
 		if (tempToken == null || !PasswordHasher.VerifyHashedPassword(tempToken.TokenChallenge, token))
 		{
 			Logger.Warning($"Registering user tried to redeem invalid token {token}");
@@ -330,7 +330,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		using var rscLock = new ResourceLock(context.User);
 		var user = rscLock.Value as User;
-		var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.OWNER, context.User);
+		var token = user.TokenCollection.GetSingleToken<VerifyEmailToken>(context, EPermissionLevel.ADMIN, context.User);
 		if (token == null)
 		{
 			token = user.TokenCollection.AddOrUpdate(context.User, new VerifyEmailToken()) as VerifyEmailToken;

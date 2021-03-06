@@ -44,7 +44,7 @@ namespace UnitTests
 				Assert.IsTrue(ogJson == deserializedJson,
 					$"Unmatched:\n{ogJson}\n{deserializedJson}");
 			}
-			var adminToken = userInDB.TokenCollection.GetAllTokens<UserAddedAsAdminToken>(context, EPermissionLevel.OWNER, user).Single();
+			var adminToken = userInDB.TokenCollection.GetAllTokens<UserAddedAsAdminToken>(context, EPermissionLevel.ADMIN, user).Single();
 			Assert.IsTrue(adminToken.Reference.Parent != default);
 		}
 
