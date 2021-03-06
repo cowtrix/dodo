@@ -4,7 +4,7 @@ import { Icon, Button } from 'app/components'
 import styles from './search-by-location.module.scss'
 
 
-const SEARCH_BY = "Search in my location"
+const SEARCH_BY = "Find nearest my location"
 
 const getSearchByCurrentLocation = (getSearchResults, searchParams, setCenterMap) => {
 	navigator.geolocation.getCurrentPosition(position => {
