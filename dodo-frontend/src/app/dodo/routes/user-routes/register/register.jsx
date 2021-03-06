@@ -67,6 +67,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 						error={usernameShort || !!validationErrors["Username"]}
 						maxLength={63}
 						message={getValidationMessage("Username")}
+						placeholder="Must be all lowercase, alphanumeric and _"
 					/>
 					{emailInvalid ? <Error error="Email is invalid" /> : null}
 					<Input
@@ -78,6 +79,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 						error={emailInvalid || !!validationErrors["Email"]}
 						maxLength={253}
 						message={getValidationMessage("Email")}
+						placeholder="An email will be sent here to verify this address"
 					/>
 					{passwordShort ? (
 						<Error error="Password should be longer" />
