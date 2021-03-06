@@ -9,10 +9,10 @@ import { SETTINGS_ROUTE } from '../../../routes/user-routes'
 export const Options = ({ logout }) =>
 	<ul className={styles.options}>
 		<li>
-			<Link to={MY_REBELLION_ROUTE}>My Rebellion</Link>
+			<Link to={MY_REBELLION_ROUTE}>My Subscriptions</Link>
 		</li>
 		<li>
-			<Link to={SETTINGS_ROUTE}>Settings</Link>
+			<Link to={SETTINGS_ROUTE}>Profile Settings</Link>
 		</li>
 		<li>
 			<Link onClick={() => logout()} to="/">Logout</Link>

@@ -9,7 +9,7 @@ import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 import styles from './my-rebellion.module.scss';
 
-const MY_REBELLION = "My rebellion"
+const MY_REBELLION = "My Rebellion Subscriptions"
 
 function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', closed, onToggleList) {
 	return (
