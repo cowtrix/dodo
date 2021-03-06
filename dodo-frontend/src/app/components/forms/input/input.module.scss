@@ -29,6 +29,11 @@
 		width: 100%;
 	}
 
+	::placeholder {
+		color:grey;
+		font-size:.8rem;
+	}
+
 	.fieldWrapper {
 		@media (min-width: $responsive-breakpoint) {
 			flex-basis: 0;
