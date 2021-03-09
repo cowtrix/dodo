@@ -34,7 +34,7 @@ $(function () {
 			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
 		</li>
 	}
-	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
 			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
@@ -423,7 +423,7 @@ else
 	var canDelete = authManager.IsAuthorised(context, Model.Slug, Resources.EHTTPRequestType.DELETE).IsSuccess;
 }
 
-@{ if (thisAdmin.Permissions.CanAddAdmin)
+@{ if (thisAdmin.Permissions.CanEditAdministrators)
 	{
 		<div class="card">
 			<h5 class="card-header">Add a New Administrator</h5>
@@ -445,8 +445,6 @@ else
 	<div class="card-body">
 		<div id="accordion">
 			@{
-				var canadd = thisAdmin.Permissions.CanAddAdmin;
-				var canremove = thisAdmin.Permissions.CanRemoveAdmin;
 				var counter = 0;
 				foreach (var admin in adminData.Administrators)
 				{
@@ -454,7 +452,7 @@ else
 					var isMe = admin.User.Guid == context.User.Guid;
 					var userVal = admin.User.GetValue();
 					var isTemp = !userVal.PersonalData.EmailConfirmed;
-					var canedit = !isMe && thisAdmin.Permissions.CanChangePermissions;
+					var canedit = !isMe && thisAdmin.Permissions.CanEditAdministrators;
 
 					<div class="card">
 						<div class="card-header" id="heading@(counter)">
@@ -474,10 +472,10 @@ else
 									</button>
 								</div>
 								<div class="col" style="text-align:right;">
-									@{ if (!isMe && canremove)
+									@{ if (!isMe && canedit)
 										{
 											<a class="btn btn-outline-danger" href="@Model.Slug/removeadmin?adminID=@admin.User.Guid">
-												<p class="fas fa-trash"></p>
+												<p>Remove</p><i class="fas fa-trash"></i>
 											</a>
 										}
 									}
@@ -489,7 +487,7 @@ else
 							<div class="card-body">
 								<form id="admin@(admin.User.Slug)" method="post" action="@Model.Slug/updateadmin?id=@admin.User.Guid" enctype="application/x-www-form-urlencoded">
 									<div class="card-body">
-										@{ if (thisAdmin.Permissions.CanChangePermissions && isMe)
+										@{ if (thisAdmin.Permissions.CanEditAdministrators && isMe)
 											{
 												<div class="alert alert-info" role="alert">
 													You can't edit your own permissions.
@@ -499,44 +497,9 @@ else
 										<div class="row">
 											<div class="col">
 												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanAddAdmin_@(admin.User.Guid.ToString())" name="CanAddAdmin" @(admin.Permissions.CanAddAdmin ? "checked" : "")>
-													<label class="form-check-label" for="@getID("CanAddAdmin")" style="">Can Add New Admins</label>
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditAdministrators_@(admin.User.Guid.ToString())" name="CanEditAdministrators" @(admin.Permissions.CanEditAdministrators ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanEditAdministrators")" style="">Can Add New Admins</label>
 												</div>
-												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanRemoveAdmin_@(admin.User.Guid.ToString())" name="CanRemoveAdmin" @(admin.Permissions.CanRemoveAdmin ? "checked" : "")>
-													<label class="form-check-label" for="@getID("CanRemoveAdmin")">Can Remove Admins</label>
-												</div>
-												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanChangePermissions_@(admin.User.Guid.ToString())" name="CanChangePermissions" @(admin.Permissions.CanChangePermissions ? "checked" : "")>
-													<label class="form-check-label" for="@getID("CanChangePermissions")">Can Change Admin Permissions</label>
-												</div>
-												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditInfo_@(admin.User.Guid.ToString())" name="CanEditInfo" @(admin.Permissions.CanEditInfo ? "checked" : "")>
-													<label class="form-check-label" for="@getID("CanEditInfo")">Can Edit Details</label>
-												</div>
-											</div>
-											<div class="col">
-												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanCreateChildObjects_@(admin.User.Guid.ToString())" name="CanCreateChildObjects" @(admin.Permissions.CanCreateChildObjects ? "checked" : "")>
-													<label class="form-check-label" for="@getID("CanCreateChildObjects")">Can Create Child Objects</label>
-												</div>
-												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDeleteChildObjects_@(admin.User.Guid.ToString())" name="CanDeleteChildObjects" @(admin.Permissions.CanDeleteChildObjects ? "checked" : "")>
-													<label class="form-check-label" for="@getID("CanDeleteChildObjects")">Can Delete Child Objects</label>
-												</div>
-												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageAnnouncements_@(admin.User.Guid.ToString())" name="CanManageAnnouncements" @(admin.Permissions.CanManageAnnouncements ? "checked" : "")>
-													<label class="form-check-label" for="@getID("CanManageAnnouncements")">Can Manage Announcements</label>
-												</div>
-												@{
-													if (Model.__Type == typeof(Dodo.WorkingGroups.WorkingGroup))
-													{
-														<div class="form-check">
-															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanManageRoles_@(admin.User.Guid.ToString())" name="CanManageAnnouncements" @(admin.Permissions.CanManageRoles ? "checked" : "")>
-															<label class="form-check-label" for="@getID("CanManageRoles")">Can Manage Roles</label>
-														</div>
-													}
-												}
 											</div>
 										</div>
 									</div>
@@ -557,25 +520,21 @@ else
 		</div>
 	</div>
 </div>
-@{ if (canDelete)
-	{
-		<div class="card">
-			<h5 class="card-header">Delete This Object</h5>
-			<div class="card-body">
-				<div class="alert alert-warning" role="alert">
-					<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
-				</div>
-				<div class="card-body">
-					<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
-				</div>
-			</div>
+<div class="card">
+	<h5 class="card-header">Delete This Object</h5>
+	<div class="card-body">
+		<div class="alert alert-warning" role="alert">
+			<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
 		</div>
-	}
-}
+		<div class="card-body">
+			<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/Rebellion/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+		</div>
+	</div>
+</div>
 
 			</div>
 		} }
-	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
 		{
 			<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
 				{ROLES}

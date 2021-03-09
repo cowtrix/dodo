@@ -35,8 +35,7 @@ namespace Dodo
 				{
 					return ResourceRequestError.BadRequest();
 				}
-				if (!parent.IsAdmin(context.User, context, out var permissionSet)
-					|| !permissionSet.CanCreateChildObjects)
+				if (!parent.IsAdmin(context.User, context, out var permissionSet))
 				{
 					return ResourceRequestError.UnauthorizedRequest();
 				}
@@ -64,7 +63,7 @@ namespace Dodo
 			{
 				return ResourceRequestError.UnauthorizedRequest();
 			}
-			if (action == INotificationResource.ACTION_NOTIFICATION && permissionSet.CanManageAnnouncements)
+			if (action == INotificationResource.ACTION_NOTIFICATION)
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);
 			}

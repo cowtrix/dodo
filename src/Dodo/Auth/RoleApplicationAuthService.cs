@@ -32,7 +32,7 @@ namespace Dodo.RoleApplications
 				return EPermissionLevel.ADMIN;
 			}
 			var parentGroup = ResourceUtility.GetResourceByGuid<IAdministratedResource>(target.Parent.Parent);
-			if(parentGroup.IsAdmin(context.User, context, out var permissions) && permissions.CanManageRoles)
+			if(parentGroup.IsAdmin(context.User, context, out _))
 			{
 				return EPermissionLevel.ADMIN;
 			}

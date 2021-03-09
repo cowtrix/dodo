@@ -28,7 +28,7 @@
 			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
 		</li>
 	}
-	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
 			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
@@ -65,7 +65,7 @@
 				{ADMIN}
 			</div>
 		} }
-	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type) && permissions != null && permissions.CanManageRoles)
+	@{ if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
 		{
 			<div class="tab-pane fade" id="role" role="tabpanel" aria-labelledby="role-tab">
 				{ROLES}

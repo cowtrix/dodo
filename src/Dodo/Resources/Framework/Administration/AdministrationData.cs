@@ -41,14 +41,7 @@ namespace Dodo
 				Permissions = new AdministratorPermissionSet
 				{
 					// The first admin gets it all
-					CanChangePermissions = true,
-					CanAddAdmin = true,
-					CanRemoveAdmin = true,
-					CanEditInfo = true,
-					CanCreateChildObjects = true,
-					CanDeleteChildObjects = true,
-					CanManageAnnouncements = true,
-					CanManageRoles = true,
+					CanEditAdministrators = true,
 				}
 			});
 			GroupPrivateKey = privateKey.Value;
@@ -71,7 +64,7 @@ namespace Dodo
 			var alteredAdminEntry = Administrators.SingleOrDefault(ad => ad.User.Guid == newAdmin.Guid);
 			if (alteredAdminEntry == null)
 			{
-				if (!adminMakingChange.Permissions.CanAddAdmin)
+				if (!adminMakingChange.Permissions.CanEditAdministrators)
 				{
 					SecurityWatcher.RegisterEvent(context.User, $"{Resource} : Admin {context.User} tried to add {newAdmin} as an admin, and they don't have permission to do so.");
 					return false;
@@ -81,7 +74,7 @@ namespace Dodo
 			}
 			if (permissions != null)
 			{
-				if (!adminMakingChange.Permissions.CanChangePermissions)
+				if (!adminMakingChange.Permissions.CanEditAdministrators)
 				{
 					SecurityWatcher.RegisterEvent(context.User, $"{Resource} : Admin {context.User} tried to change permissions for {newAdmin}, and they don't have permission to do so.");
 					return false;

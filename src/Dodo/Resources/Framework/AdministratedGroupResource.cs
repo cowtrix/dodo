@@ -78,7 +78,7 @@ namespace Dodo
 
 		public bool RemoveAdmin(AccessContext context, User targetUser)
 		{
-			if (!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanRemoveAdmin)
+			if (!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanEditAdministrators)
 			{
 				// Context isn't admin, or doesn't have correct permissions
 				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to remove {targetUser} as a new administrator for {this}, but they weren't an administrator.");
@@ -105,7 +105,7 @@ namespace Dodo
 			{
 				throw new ArgumentNullException(nameof(newAdmin));
 			}
-			if (!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanAddAdmin)
+			if (!IsAdmin(context.User, context, out var administratorPermission) || !administratorPermission.CanEditAdministrators)
 			{
 				// Context isn't admin, or doesn't have correct permissions
 				SecurityWatcher.RegisterEvent(context.User, $"User {context.User} tried to add {newAdmin} as a new administrator for {this}, but they weren't an administrator.");
@@ -188,7 +188,7 @@ namespace Dodo
 			{
 				return false;
 			}
-			if (!IsAdmin(context.User, context, out var requesterPermissions) || !requesterPermissions.CanChangePermissions)
+			if (!IsAdmin(context.User, context, out var requesterPermissions) || !requesterPermissions.CanEditAdministrators)
 			{
 				return false;
 			}

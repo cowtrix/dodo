@@ -21,11 +21,11 @@ namespace Dodo
 				return ResourceRequestError.ForbidRequest();
 			}
 			// Everything below requires admin
-			if (!target.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out var permissionSet) || !permissionSet.CanManageRoles)
+			if (!target.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out var permissionSet))
 			{
 				return ResourceRequestError.UnauthorizedRequest("You either aren't an administrator, or you don't have the CanManageRoles permission");
 			}
-			if (action == INotificationResource.ACTION_NOTIFICATION && permissionSet.CanManageAnnouncements)
+			if (action == INotificationResource.ACTION_NOTIFICATION && permissionSet != null)
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);
 			}

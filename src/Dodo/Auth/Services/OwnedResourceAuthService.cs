@@ -19,7 +19,7 @@ namespace Dodo
 			{
 				return ResourceRequestError.BadRequest();
 			}
-			if (!parent.IsAdmin(context.User, context, out var p) || !p.CanCreateChildObjects)
+			if (!parent.IsAdmin(context.User, context, out var p))
 			{
 				return ResourceRequestError.UnauthorizedRequest();
 			}

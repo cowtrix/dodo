@@ -1,7 +1,7 @@
 @{
 	var applications = ViewData["applications"] as Dictionary<string, Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>>;
 
-	if (permissions != null && permissions.CanManageRoles)
+	if (permissions != null)
 	{
 		if (applications.Any())
 		{
