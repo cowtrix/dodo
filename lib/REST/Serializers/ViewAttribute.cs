@@ -28,10 +28,6 @@ namespace Resources
 			string customDrawer = null,
 			string inputHint = null)
 		{
-			if(viewPermission == EPermissionLevel.ADMIN)
-			{
-				editPermission = EPermissionLevel.ADMIN;
-			}
 			ViewPermission = viewPermission;
 			EditPermission = editPermission;
 			Priority = priority;

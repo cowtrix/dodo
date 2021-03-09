@@ -23,7 +23,7 @@ namespace Dodo.LocationResources
 		Paid,
 	}
 
-	public abstract class LocationResourceBase : GroupResource,
+	public abstract class LocationResourceBase : AdministratedGroupResource,
 		ILocationalResource, IOwnedResource, IVideoResource, IPublicResource
 	{
 		[View(EPermissionLevel.PUBLIC)]

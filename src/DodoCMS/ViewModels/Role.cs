@@ -20,7 +20,7 @@ namespace Dodo.ViewModels
 		[Resources.SlugAttribute()]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public uint Revision { get; set; }
 		[DisplayName("Parent")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
@@ -37,7 +37,7 @@ namespace Dodo.ViewModels
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
 		public bool IsPublished { get; set; }
 		[DisplayName("Applications")]
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public System.Collections.Generic.Dictionary<string,Resources.ResourceReference<Dodo.RoleApplications.RoleApplication>> Applications { get; set; }
 	}
 }

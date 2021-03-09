@@ -20,11 +20,8 @@ namespace Dodo.ViewModels
 		[Resources.SlugAttribute()]
 		public string Slug { get; set; }
 		[DisplayName("Revision")]
-		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		public uint Revision { get; set; }
-		[DisplayName("PublicKey")]
-		[View(EPermissionLevel.MEMBER, EPermissionLevel.SYSTEM)]
-		public Resources.Security.Passphrase PublicKey { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		[Resources.MaxStringLengthAttribute(2048)]
@@ -35,6 +32,18 @@ namespace Dodo.ViewModels
 		[DisplayName("MemberCount")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM)]
 		public int MemberCount { get; set; }
+		public class AdministrationDataViewModel
+		{
+			[DisplayName("Administrators")]
+			[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+			public System.Collections.Generic.List<Dodo.AdministratorEntry> Administrators { get; set; }
+		}
+		[DisplayName("AdministratorData")]
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		public AdministrationDataViewModel AdministratorData { get; set; }
+		[DisplayName("PublicKey")]
+		[View(EPermissionLevel.USER, EPermissionLevel.ADMIN)]
+		public Resources.Security.Passphrase PublicKey { get; set; }
 		[DisplayName("Arrest Risk")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
 		public Dodo.LocationResources.EArrestRisk ArrestRisk { get; set; }

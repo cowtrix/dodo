@@ -99,7 +99,7 @@ namespace Dodo
 		}
 
 		public void OnValueChanged(object requester, Passphrase passphrase, MemberInfo method, object oldValue, object newValue)
-			=> UserEmailManager.RegisterUpdate(this, $"{method.Name} date was changed: {newValue}");
+			=> UserEmailManager.RegisterUpdate(this, $"{method.GetName()} was changed: {newValue}");
 
 		public void OnPublished(object requester, Passphrase passphrase, MemberInfo method, object oldValue, object newValue)
 		{

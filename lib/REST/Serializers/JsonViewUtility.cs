@@ -326,6 +326,10 @@ namespace Resources
 
 		public static Dictionary<string, object> ViewToPatch(object obj, EPermissionLevel permissionLevel)
 		{
+			if(obj == null)
+			{
+				return null;
+			}
 			if (obj is Dictionary<string, object> dict)
 			{
 				return dict;

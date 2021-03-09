@@ -58,5 +58,7 @@ namespace Dodo.LocationResources
 			}
 			return base.VerifyExplicit(out error);
 		}
+
+		public override bool CanContain(Type type) => false;
 	}
 }

@@ -27,5 +27,7 @@ namespace Dodo.LocationResources
 		public Site(AccessContext context, LocationResourceSchema schema) : base(context, schema)
 		{
 		}
+
+		public override bool CanContain(Type type) => false;
 	}
 }
