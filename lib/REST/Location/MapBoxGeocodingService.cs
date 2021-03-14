@@ -38,7 +38,7 @@ namespace Resources.Location
 				Logger.Warning($"No MapBox API Key is set.");
 				return null;
 			}
-			Logger.Debug($"Executing MapBox API query for {location}");
+			//Logger.Debug($"Executing MapBox API query for {location}");
 			var response = await m_httpClient.GetAsync(
 				"/geocoding/v5/mapbox.places/" +    // TODO: change to permanent?
 				$"{location.Longitude},{location.Latitude}.json" +

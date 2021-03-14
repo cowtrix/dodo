@@ -99,7 +99,7 @@ namespace Dodo
 		}
 
 		public void OnValueChanged(object requester, Passphrase passphrase, MemberInfo method, object oldValue, object newValue)
-			=> UserEmailManager.RegisterUpdate(this, $"{method.GetName()} was changed: {newValue}");
+			=> UserEmailManager.RegisterUpdate(this, $"{method.GetName()} was updated:", newValue?.ToString());
 
 		public void OnPublished(object requester, Passphrase passphrase, MemberInfo method, object oldValue, object newValue)
 		{
@@ -108,7 +108,7 @@ namespace Dodo
 				return;
 			}
 			UserEmailManager.RegisterUpdate(owned.Parent.GetValue<IPublicResource>(), 
-				$"A new {GetType().GetName()} was created: {Name}");
+				$"New {GetType().GetName()}", Name);
 		}
 
 	}

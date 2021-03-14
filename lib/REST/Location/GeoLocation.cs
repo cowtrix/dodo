@@ -24,7 +24,7 @@ namespace Resources.Location
 			{
 				if(m_data == null)
 				{
-					m_data = LocationManager.GetLocationData(this);
+					m_data = LocationManager.GetLocationData(this, true);
 				}
 				return m_data?.ToString();
 			}
@@ -80,7 +80,7 @@ namespace Resources.Location
 
 		public override string ToString()
 		{
-			return $"Lat:{Latitude} Long:{Longitude} {Address}";
+			return Address ?? $"Latitude:{Latitude} Longitude:{Longitude}";
 		}
 
 		public bool VerifyExplicit(out string error)

@@ -37,8 +37,8 @@ namespace Dodo
 
 		public virtual void AddChild<T>(AccessContext context, T rsc) where T : class, IOwnedResource
 		{
-			TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"",
-				$"{Dodo.DodoApp.NetConfig.FullURI}/{rsc.GetType().Name.ToLowerInvariant()}/{rsc.Slug}", ENotificationType.Alert, EPermissionLevel.ADMIN, false));
+			/*TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"A new {rsc.GetType().GetName()} was created: \"{rsc.Name}\"",
+				$"{Dodo.DodoApp.NetConfig.FullURI}/{rsc.GetType().Name.ToLowerInvariant()}/{rsc.Slug}", ENotificationType.Alert, EPermissionLevel.ADMIN, false));*/
 		}
 
 		public virtual bool RemoveChild<T>(AccessContext context, T rsc) where T : class, IOwnedResource

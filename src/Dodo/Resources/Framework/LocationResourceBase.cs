@@ -66,6 +66,6 @@ namespace Dodo.LocationResources
 		}
 
 		public void OnLocationChange(object requester, Passphrase passphrase, GeoLocation oldValue, GeoLocation newValue)
-			=> UserEmailManager.RegisterUpdate(this, $"Location was changed: {newValue.Address}");
+			=> UserEmailManager.RegisterUpdate(this, "Location was updated:", newValue.Address);
 	}
 }

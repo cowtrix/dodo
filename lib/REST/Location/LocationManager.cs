@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Concurrent;
+using System.Threading;
 
 namespace Resources.Location
 {
@@ -27,7 +28,7 @@ namespace Resources.Location
 			m_locationCache.Clear();
 		}
 
-		public static LocationData GetLocationData(GeoLocation location)
+		public static LocationData GetLocationData(GeoLocation location, bool block = false)
 		{
 			if(!m_service.Enabled)
 			{
@@ -37,20 +38,42 @@ namespace Resources.Location
 			{
 				return data;
 			}
-			if(m_pendingRequests.ContainsKey(location))
-			{
-				return null;
-			}
-			m_pendingRequests.TryAdd(location, true);
-			m_locationCache[location] = null;
-			Task lookup = new Task(async () =>
+
+			async Task<LocationData> lookup()
 			{
 				var locData = await m_service.GetLocationData(location);
 				m_locationCache[location] = locData;
 				m_pendingRequests.TryRemove(location, out _);
 				Logger.Debug($"Set location cache for {location}: {locData}");
-			});
-			lookup.Start();
+				return locData;
+			};
+			bool hasReq = m_pendingRequests.ContainsKey(location);
+			if (hasReq)
+			{
+				if (!block)
+				{
+					return null;
+				}
+				while(m_pendingRequests.ContainsKey(location))
+				{
+					Thread.Sleep(500);
+				}
+				return m_locationCache[location];
+			}
+			else
+			{
+				m_pendingRequests.TryAdd(location, true);
+				m_locationCache[location] = null;
+				if (!block)
+				{
+					new Task(async () => await lookup())
+						.Start();
+				}
+				else
+				{
+					return lookup().ConfigureAwait(false).GetAwaiter().GetResult();
+				}
+			}
 			return null;
 		}
 

@@ -1,4 +1,5 @@
 using Common;
+using Common.Extensions;
 using Dodo.Users;
 using Resources;
 using System;
@@ -25,8 +26,8 @@ namespace Dodo.Email
 			var sb = new StringBuilder();
 			sb.AppendLine($"<tr style=\"{trStyle}\">\n" +
 				"<td>\n" +
-				$"<small>{update.Timestamp.ToLongTimeString()}</small>\n" +
-				$"<p>{update.Text}</p>\n" +
+				(string.IsNullOrEmpty(update.Header) ? "" : $"<h4>{update.Header}</h4>") +
+				$"<p>{StringExtensions.TextToHtml(update.Text)}</p>" +
 				"</td>\n" +
 				"</tr>");
 			return sb.ToString();
@@ -36,6 +37,7 @@ namespace Dodo.Email
 		{
 			public DateTime Timestamp;
 			public string Text;
+			internal string Header;
 		}
 
 		static UserEmailManager()
@@ -67,6 +69,7 @@ namespace Dodo.Email
 				foreach(var update in updates)
 				{
 					var updateList = update.Value
+						.OrderBy(u => u.Timestamp)
 						.Select(UpdateToString);
 					var updateText = string.Join('\n', updateList);
 					var rsc = ResourceUtility.GetResourceByGuid(update.Key, force: true) as IGroupResource;
@@ -90,15 +93,16 @@ namespace Dodo.Email
 			}
 		}
 
-		public static void RegisterUpdate(IPublicResource rsc, string updateText)
+		public static void RegisterUpdate(IPublicResource rsc, string header, string updateText)
 		{
-			if(!rsc.IsPublished)
+			if(!rsc.IsPublished) // Ignore as all drafting
 			{
 				return;
 			}
 			var update = new Update
 			{
 				Text = updateText,
+				Header = header,
 				Timestamp = DateTime.UtcNow,
 			};
 			Logger.Debug($"Registered update for {rsc} @ {DateTime.UtcNow}: {updateText}");

@@ -180,7 +180,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 			ResourceManager.Update(target, resourceLock);
 			if(target is IPublicResource pub)
 			{
-				UserEmailManager.RegisterUpdate(pub, notification.Message);
+				UserEmailManager.RegisterUpdate(pub, "New Announcement", notification.Message);
 			}
 		}
 		req.Result = target;

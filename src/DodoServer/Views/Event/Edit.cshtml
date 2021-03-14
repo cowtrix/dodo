@@ -25,7 +25,7 @@ $(function () {
 	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
-			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Notifications</a>
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Announcements</a>
 		</li>
 	}
 	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
@@ -447,10 +447,10 @@ else
 </div>
 
 <div class="card">
-	<h5 class="card-header">Current Notifications</h5>
+	<h5 class="card-header">Current Announcements</h5>
 	<div class="card-body">
 		<ul class="list-group">
-			@{foreach (var notification in notifications)
+			@{foreach (Dodo.Notification notification in notifications)
 				{
 					<li class="list-group-item">
 						<div class="card-header notification-header">
@@ -566,7 +566,7 @@ else
 									@{ if (!isMe && canedit)
 										{
 											<a class="btn btn-outline-danger" href="@Model.Slug/removeadmin?adminID=@admin.User.Guid">
-												<p>Remove</p><i class="fas fa-trash"></i>
+												<span>Remove</span> <i class="fas fa-trash"></i>
 											</a>
 										}
 									}

@@ -2,6 +2,8 @@ using Newtonsoft.Json;
 using Dodo.Users.Tokens;
 using Resources;
 using Dodo.Users;
+using Dodo.Email;
+using Common.Extensions;
 
 namespace Dodo
 {
@@ -23,6 +25,15 @@ namespace Dodo
 
 		public void OnRemove(AccessContext parent)
 		{
+		}
+
+		public override void OnAdd(ITokenResource parent)
+		{
+			base.OnAdd(parent);
+			if(parent is IPublicResource pub && m_notification.PermissionLevel < EPermissionLevel.ADMIN)
+			{
+				UserEmailManager.RegisterUpdate(pub, "New Announcement:", m_notification.RawMessage);
+			}
 		}
 
 		public SimpleNotificationToken() { }
