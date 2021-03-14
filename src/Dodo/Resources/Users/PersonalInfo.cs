@@ -4,6 +4,7 @@ using Dodo.Email;
 using Resources;
 using Resources.Security;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Dodo.Users
 {
@@ -41,7 +42,7 @@ namespace Dodo.Users
 		/// <param name="passphrase"></param>
 		/// <param name="oldValue"></param>
 		/// <param name="newValue"></param>
-		public void OnEmailChange(object requester, Passphrase passphrase, string oldValue, string newValue)
+		public void OnEmailChange(object requester, Passphrase passphrase, MemberInfo member, string oldValue, string newValue)
 		{
 			if(oldValue == newValue)
 			{
@@ -62,7 +63,7 @@ namespace Dodo.Users
 				"Callback",
 				new Dictionary<string, string>
 				{
-					{ "MESSAGE", $"You just changed your {Dodo.DodoApp.PRODUCT_NAME}. To verify your email address, please click the button below." },
+					{ "MESSAGE", $"You just changed your email associated with your {Dodo.DodoApp.PRODUCT_NAME} profile. To verify your email address, please click the button below." },
 					{ "CALLBACK_MESSAGE", "Verify Email Address" },
 					{ "CALLBACK_URL", $"{Dodo.DodoApp.NetConfig.FullURI}/{UserService.RootURL}/{UserService.VERIFY_EMAIL}?token={token.Token}" }
 				});
