@@ -8,11 +8,13 @@ using System.Linq;
 using Dodo.Rebellions;
 using System.Collections.Generic;
 using System;
+using Common.Extensions;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
 namespace Dodo.Users
 {
+
 	[SecurityHeaders]
 	[ApiController]
 	[Route(RootURL)]
@@ -21,7 +23,7 @@ namespace Dodo.Users
 		const string MY_REBELLION = "my-rebellion";
 		protected UserService UserService => new UserService(Context, HttpContext, new UserAuthService());
 
-		protected override AuthorizationService<User, UserSchema> AuthService => 
+		protected override AuthorizationService<User, UserSchema> AuthService =>
 			new UserAuthService() as AuthorizationService<User, UserSchema>;
 
 		[HttpPost(LOGIN)]
@@ -33,7 +35,7 @@ namespace Dodo.Users
 		[HttpGet]
 		public async Task<IActionResult> GetCurrentUser()
 		{
-			if(Context.User == null)
+			if (Context.User == null)
 			{
 				return Forbid();
 			}
@@ -49,31 +51,31 @@ namespace Dodo.Users
 			}
 			var ret = new Dictionary<Guid, MyRebellionNode>();
 			// Here we get a big ol' unsorted list
-			foreach (var token in 
+			foreach (var token in
 				Context.User.TokenCollection.GetAllTokens<IMyRebellionToken>(Context, EPermissionLevel.ADMIN, Context.User)
 				.ToList())
 			{
-				if(!ret.TryGetValue(token.Reference.Guid, out var node))
+				if (!ret.TryGetValue(token.Reference.Guid, out var node))
 				{
 					node = new MyRebellionNode(token.Reference);
 					ret[token.Reference.Guid] = node;
 				}
-				if(token is UserAddedAsAdminToken)
+				if (token is UserAddedAsAdminToken)
 				{
 					node.Administrator = true;
 				}
 				else if (token is UserJoinedGroupToken)
 				{
 					node.Member = true;
-				}				
+				}
 			}
 			var retList = ret.Values.ToList();
 			while (retList.Any(t => !t.Checked))
 			{
 				// Ok, now it's time to actually build the tree out
-				foreach(var node in retList)	// we leave the root nodes alone
+				foreach (var node in retList)   // we leave the root nodes alone
 				{
-					if(node.Reference.Parent != default)
+					if (node.Reference.Parent != default)
 					{
 						if (!ret.TryGetValue(node.Reference.Parent, out var parentNode))
 						{
@@ -98,17 +100,19 @@ namespace Dodo.Users
 		[HttpGet(RESET_PASSWORD)]
 		public async Task<IActionResult> RequestPasswordReset(string email)
 		{
+			// TODO why are + signs parsed as whitespace?
+			email = email.Replace(" ", "+");
 			return (await UserService.RequestPasswordReset(email)).ActionResult;
 		}
 
 		[HttpPost(REDEEM_PASSWORD_TOKEN)]
-		public async Task<IActionResult> ResetPassword(string token, [FromBody]string password)
+		public async Task<IActionResult> ResetPassword(string token, [FromBody] string password)
 		{
 			return (await UserService.ResetPassword(token, password)).ActionResult;
 		}
 
 		[HttpPost(CHANGE_PASSWORD)]
-		public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordModel model)
+		public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordModel model)
 		{
 			return (await UserService.ChangePassword(model)).ActionResult;
 		}
@@ -121,19 +125,21 @@ namespace Dodo.Users
 
 		[HttpPost]
 		[Route(REGISTER)]
-		public async Task<IActionResult> Register([FromBody] UserSchema schema, [FromQuery]string token = null)
+		public async Task<IActionResult> Register([FromBody] UserSchema schema, [FromQuery] string token = null)
 		{
 			return (await UserService.Register(schema, token)).ActionResult;
 		}
 
 		[HttpGet(Dodo.Users.Tokens.INotificationResource.ACTION_NOTIFICATION)]
-		public virtual async Task<IActionResult> GetNotifications([FromQuery]int page = 1)
+		public virtual async Task<IActionResult> GetNotifications([FromQuery] int page = 1)
 		{
-			if(Context.User == null)
+			if (Context.User == null)
 			{
 				return Forbid();
 			}
 			return (await PublicService.GetNotifications(Context.User.Guid.ToString(), page)).ActionResult;
 		}
+
+		
 	}
 }
