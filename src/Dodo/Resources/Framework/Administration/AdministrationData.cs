@@ -42,6 +42,7 @@ namespace Dodo
 				{
 					// The first admin gets it all
 					CanEditAdministrators = true,
+					CanDelete = true,
 				}
 			});
 			GroupPrivateKey = privateKey.Value;
@@ -50,11 +51,6 @@ namespace Dodo
 
 		internal bool AddOrUpdateAdministrator(AccessContext context, User newAdmin, AdministratorPermissionSet permissions = null)
 		{
-			if (context.User == newAdmin)
-			{
-				SecurityWatcher.RegisterEvent(context.User, $"{Resource}: Admin {context.User}, tried to change their own permissions, which is never allowed.");
-				return false;
-			}
 			var adminMakingChange = Administrators.SingleOrDefault(ad => ad.User.Guid == context.User.Guid);
 			if (adminMakingChange == null)
 			{
@@ -62,6 +58,7 @@ namespace Dodo
 				return false;
 			}
 			var alteredAdminEntry = Administrators.SingleOrDefault(ad => ad.User.Guid == newAdmin.Guid);
+			alteredAdminEntry.User = newAdmin.CreateRef();
 			if (alteredAdminEntry == null)
 			{
 				if (!adminMakingChange.Permissions.CanEditAdministrators)

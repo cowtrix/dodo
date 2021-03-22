@@ -87,8 +87,8 @@ namespace Dodo
 			var adminData = AdministratorData.GetValue(context.User.CreateRef(), context.Passphrase);
 			adminData.Administrators = adminData.Administrators.Where(ad => ad.User.Guid != targetUser.Guid).ToList();
 			AdministratorData.SetValue(adminData, context.User.CreateRef(), context.Passphrase);
-			TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
-				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
+			/*TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null, $"Administrator @{context.User.Slug} removed @{targetUser.Slug} as an administrator",
+				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));*/
 			return true;
 		}
 
@@ -124,9 +124,9 @@ namespace Dodo
 				return false;
 			}
 			AdministratorData.SetValue(adminData, newAdminRef, newPass);
-			TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
+			/*TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
-				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
+				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));*/
 			using (var userLock = new ResourceLock(newAdmin))
 			{
 				newAdmin = userLock.Value as User;

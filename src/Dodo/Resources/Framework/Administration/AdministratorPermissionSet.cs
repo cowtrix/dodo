@@ -12,28 +12,23 @@ namespace Dodo
 		public AdministratorPermissionSet() { }
 
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
-		[Name("Edit Administrators")]
+		[Name("Can Edit Administrators")]
 		public bool CanEditAdministrators { get; set; }
+
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		[Name("Can Delete")]
+		public bool CanDelete { get; set; }
 
 		public override bool Equals(object obj)
 		{
 			return obj is AdministratorPermissionSet set &&
-				   CanEditAdministrators == set.CanEditAdministrators;
+				   CanEditAdministrators == set.CanEditAdministrators &&
+				   CanDelete == set.CanDelete;
 		}
 
 		public override int GetHashCode()
 		{
-			return HashCode.Combine(CanEditAdministrators);
-		}
-
-		public static bool operator ==(AdministratorPermissionSet left, AdministratorPermissionSet right)
-		{
-			return EqualityComparer<AdministratorPermissionSet>.Default.Equals(left, right);
-		}
-
-		public static bool operator !=(AdministratorPermissionSet left, AdministratorPermissionSet right)
-		{
-			return !(left == right);
+			return HashCode.Combine(CanEditAdministrators, CanDelete);
 		}
 	}
 }

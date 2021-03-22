@@ -3,13 +3,5 @@
   "MongoDBServerURL": "",
   "ResourceLockTimeout": 10000,
   "CmdOutput": "cmdIn.data",
-  "CmdInput": "cmdOut.data",
-  "Dodo_EmailConfiguration": {
-    "FromEmail": null,
-    "FromName": null,
-    "SMTPAddress": null,
-    "SMTPPort": 0,
-    "SMTPUsername": null,
-    "SMTPPassword": null
-  }
+  "CmdInput": "cmdOut.data"
 }

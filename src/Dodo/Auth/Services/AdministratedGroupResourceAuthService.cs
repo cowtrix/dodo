@@ -98,5 +98,18 @@ namespace Dodo
 			}
 			return ResourceRequestError.UnauthorizedRequest();
 		}
+
+		protected override IRequestResult CanDelete(AccessContext context, T target)
+		{
+			if(context.User == null)
+			{
+				return ResourceRequestError.ForbidRequest();
+			}
+			if(!target.IsAdmin(context.User, context, out var permissions) || !permissions.CanDelete)
+			{
+				return ResourceRequestError.UnauthorizedRequest("You do not have permission to delete this");
+			}
+			return new ResourceActionRequest(context, target, EHTTPRequestType.DELETE, EPermissionLevel.ADMIN);
+		}
 	}
 }

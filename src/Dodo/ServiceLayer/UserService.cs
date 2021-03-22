@@ -384,7 +384,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			ResourceUtility.GetManager<User>().Update(newUser, rscLock);
 		}
 
-		var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{RootURL}/{REGISTER}?token={token}";
+		var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{REGISTER}?token={token}";
 		EmailUtility.SendEmail(
 				new EmailAddress
 				{
@@ -396,7 +396,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 				new Dictionary<string, string>
 				{
 					{ "MESSAGE", $"You've been invited to create an account on {Dodo.DodoApp.PRODUCT_NAME}. To create your account, please follow the link below." },
-					{ "CALLBACK_MESSAGE", "Verify Your Email Address" },
+					{ "CALLBACK_MESSAGE", "Register Your Account" },
 					{ "CALLBACK_URL", url }
 				});
 		return newUser;

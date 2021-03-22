@@ -76,14 +76,20 @@
 												</div>
 											}
 										}
-										<div class="row">
-											<div class="col">
-												<div class="form-check">
-													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditAdministrators_@(admin.User.Guid.ToString())" name="CanEditAdministrators" @(admin.Permissions.CanEditAdministrators ? "checked" : "")>
-													<label class="form-check-label" for="@getID("CanEditAdministrators")" style="">Can Add New Admins</label>
-												</div>
+									<div class="row">
+										<div class="col">
+											<div class="form-check">
+												<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditAdministrators_@(admin.User.Guid.ToString())" name="CanEditAdministrators" @(admin.Permissions.CanEditAdministrators ? "checked" : "")>
+												<label class="form-check-label" for="@getID("CanEditAdministrators")" style="">Can Edit Administrators</label>
 											</div>
 										</div>
+										<div class="col">
+											<div class="form-check">
+												<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDelete_@(admin.User.Guid.ToString())" name="CanDelete" @(admin.Permissions.CanDelete ? "checked" : "")>
+												<label class="form-check-label" for="@getID("CanDelete")" style="">Can Delete</label>
+											</div>
+										</div>
+									</div>
 									</div>
 									@{ if (canedit)
 										{
@@ -102,14 +108,17 @@
 		</div>
 	</div>
 </div>
-<div class="card">
-	<h5 class="card-header">Delete This Object</h5>
-	<div class="card-body">
-		<div class="alert alert-warning" role="alert">
-			<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
-		</div>
+@if (canDelete)
+{
+	<div class="card">
+		<h5 class="card-header">Delete This Object</h5>
 		<div class="card-body">
-			<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+			<div class="alert alert-warning" role="alert">
+				<b>WARNING:</b> deleting an object is irreversible. Do not delete unless you are absolutely sure.
+			</div>
+			<div class="card-body">
+				<a href="@Dodo.DodoApp.NetConfig.FullURI/edit/{TYPE}/@Model.Slug/delete" class="btn btn-danger btn-lg btn-block">Delete</a>
+			</div>
 		</div>
 	</div>
-</div>
+}
