@@ -1,3 +1,4 @@
+using Common;
 using Resources;
 using Resources.Location;
 using System;
@@ -7,6 +8,7 @@ namespace Dodo.LocationResources
 	public abstract class LocationResourceSchema : OwnedResourceSchemaBase
 	{
 		[View]
+		[Name("Banner Video Embed URL")]
 		public string VideoEmbedURL;
 		[View]
 		public SiteFacilities Facilities;

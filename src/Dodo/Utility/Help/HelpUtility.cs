@@ -15,6 +15,10 @@ namespace Dodo
 			},
 		#region RESOURCES
 			{
+				"IResourceReference_Parent",
+				"The parent is the group that owns and controls this object. You cannot alter the parent of an object."
+			},
+			{
 				nameof(Resources.IResourceReference.Parent),
 				"The parent is the group that owns and controls this object. You cannot alter the parent of an object."
 			},

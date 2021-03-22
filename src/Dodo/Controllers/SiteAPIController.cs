@@ -14,7 +14,7 @@ namespace Dodo.Sites
 		public const string RootURL = "site";
 
 		protected override AuthorizationService<Site, SiteSchema> AuthService =>
-			new GroupResourceAuthService<Site, SiteSchema>();
+			new AdministratedGroupResourceAuthService<Site, SiteSchema>();
 
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] SiteSchema schema)

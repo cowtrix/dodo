@@ -11,7 +11,7 @@ namespace Dodo.Sites
 		public const string RootURL = "event";
 
 		protected override AuthorizationService<Event, EventSchema> AuthService => 
-			new GroupResourceAuthService<Event, EventSchema>();
+			new AdministratedGroupResourceAuthService<Event, EventSchema>();
 
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] EventSchema schema)

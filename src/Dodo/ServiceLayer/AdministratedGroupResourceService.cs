@@ -42,6 +42,8 @@ namespace Dodo
 			}
 			else if (ValidationExtensions.EmailIsValid(newAdminIdentifier))
 			{
+				// TODO: figure out WHY this is necessary
+				newAdminIdentifier = newAdminIdentifier.Replace(" ", "+");
 				targetUser = userManager.GetSingle(x => x.PersonalData.Email == newAdminIdentifier) ??
 					UserService.CreateTemporaryUser(newAdminIdentifier);
 			}

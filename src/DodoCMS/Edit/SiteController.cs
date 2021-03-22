@@ -4,9 +4,9 @@ using Dodo.Sites;
 
 namespace Dodo.Controllers.Edit
 {
-	public class SiteController : CrudController<Site, SiteSchema, SiteViewModel>
+	public class SiteController : AdministratedGroupResourceCrudController<Site, SiteSchema, SiteViewModel>
 	{
 		protected override AuthorizationService<Site, SiteSchema> AuthService =>
-			new GroupResourceAuthService<Site, SiteSchema>();
+			new AdministratedGroupResourceAuthService<Site, SiteSchema>();
 	}
 }

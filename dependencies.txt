@@ -62,7 +62,7 @@ Project 'DodoServer' has the following package references
    > Microsoft.AspNet.WebApi.Client                        5.2.7       5.2.7   
    > Microsoft.AspNetCore.HttpOverrides                    2.2.0       2.2.0   
    > Microsoft.AspNetCore.SpaServices.Extensions           3.1.8       3.1.8   
-   > Microsoft.VisualStudio.Web.CodeGeneration.Design      3.1.5       3.1.5   
+   > Microsoft.VisualStudio.Web.CodeGeneration.Design      3.1.4       3.1.4   
    > Microsoft.Web.LibraryManager.Build                    2.1.76      2.1.76  
 
 Project 'DodoAOT' has the following package references
