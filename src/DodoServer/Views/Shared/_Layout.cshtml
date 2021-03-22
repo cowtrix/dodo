@@ -39,6 +39,12 @@
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<div class="navbar-nav">
 						<div class="btn-group" role="group" aria-label="Links">
+							@if (context.User != null)
+							{
+								<span class="navbar-text dodo-navbar-text">
+									Logged in as @@@context.User.Slug
+								</span>
+							}
 							<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.PrivacyPolicyURL">Privacy Policy</a>
 							@if (context.User != null)
 							{
@@ -53,12 +59,6 @@
 								<a class="btn btn-outline-light my-2 my-sm-0" href="@Dodo.DodoApp.NetConfig.FullURI/login">Login</a>
 							}
 						</div>
-						@if (context.User != null)
-						{
-							<span class="navbar-text dodo-navbar-text">
-								Logged in as @@@context.User.Slug
-							</span>
-						}
 					</div>
 				</div>
 			</nav>

@@ -49,6 +49,18 @@ $(function () {
 	<div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
 		<div class="card">
 			<div class="card-body">
+				@{ 
+					if(typeof(Dodo.ITimeBoundResource).IsAssignableFrom(Model.__Type))
+					{
+						var tb = Model as dynamic;
+						if (tb.EndDate > DateTime.UtcNow)
+						{
+							<div class="alert alert-warning published-message" role="alert">
+								This event has now ended, so it won't show up in results.
+							</div>
+						}
+					}
+				}
 				<form id="edit" asp-action="Edit">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 										<label class="control-label">Parent</label>
