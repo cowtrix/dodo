@@ -25,19 +25,11 @@ namespace Dodo.DodoResources
 			m_generatedData = true;
 			m_startDate = string.IsNullOrEmpty(StartDate) ? DateTime.UtcNow : DateTime.Parse(StartDate);
 			m_endDate = string.IsNullOrEmpty(EndDate) ? DateTime.MaxValue : DateTime.Parse(EndDate);
-			if (string.IsNullOrEmpty(StartDate) && string.IsNullOrEmpty(EndDate))
-			{
-				m_empty = true;
-			}
 		}
 
 		public bool Filter(IRESTResource rsc)
 		{
 			Initialise();
-			if (m_empty)
-			{
-				return true;
-			}
 			if (rsc is ITimeBoundResource timeboundResource)
 			{
 				return timeboundResource.StartDate <= m_endDate && timeboundResource.EndDate >= m_startDate;

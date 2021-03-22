@@ -22,7 +22,17 @@ namespace DodoAOT
 		protected static string Template(string templateName)
 		{
 			var fullPath = Path.GetFullPath($"./Templates/{templateName}.template.cshtml");
-			return File.ReadAllText(fullPath);
+
+			var sb = new StringBuilder();
+			foreach (var s in BuildScripts())
+			{
+				sb.AppendLine("<script>");
+				sb.AppendLine(s);
+				sb.AppendLine("</script>");
+			}
+			var template = File.ReadAllText(fullPath); ;
+			template = template.Replace("{SCRIPTS}", sb.ToString());
+			return template;
 		}
 
 		private delegate IEnumerable<string> CustomDrawerCallback(string prefix, MemberInfo member, int indentLevel);
@@ -188,8 +198,8 @@ namespace DodoAOT
 			yield return Indent(indentLevel + 1) + $"@{{ var reftype{salt} = @Model.{prefix}{memberName}Type.ToLowerInvariant(); }}";
 			yield return Indent(indentLevel + 1) + "<div class=\"row\">";
 			yield return Indent(indentLevel + 1) + $"<div class=\"col\"><strong>{nameStr}</strong></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light @(reftype{salt})-reference\" role=\"button\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i>View</a></div>";
-			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light @(reftype{salt})-reference\" role=\"button\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i>Edit</a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light @(reftype{salt})-reference\" role=\"button\" target=\"_blank\" href=\"../../{urlStr}\"><i class=\"fa fa-eye\"></i>View</a></div>";
+			yield return Indent(indentLevel + 1) + $"<div class=\"col-auto\"><a class=\"btn btn-light @(reftype{salt})-reference\" role=\"button\" target=\"_blank\" href=\"../../edit/{urlStr}\"><i class=\"fa fa-edit\"></i>Edit</a></div>";
 			yield return Indent(indentLevel + 1) + "</div>";
 		}
 

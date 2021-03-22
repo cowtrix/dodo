@@ -53,7 +53,7 @@ $(function () {
 					if(typeof(Dodo.ITimeBoundResource).IsAssignableFrom(Model.__Type))
 					{
 						var tb = Model as dynamic;
-						if (tb.EndDate > DateTime.UtcNow)
+						if (DateTime.UtcNow > tb.EndDate)
 						{
 							<div class="alert alert-warning published-message" role="alert">
 								This event has now ended, so it won't show up in results.
@@ -284,8 +284,8 @@ else
 								@{ var reftype21007413 = @Model.Sites[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Sites[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype21007413)-reference" role="button" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i>View</a></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype21007413)-reference" role="button" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype21007413)-reference" role="button" target="_blank" href="../../@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype21007413)-reference" role="button" target="_blank" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
 
 						</li>
@@ -295,7 +295,7 @@ else
 				{
 					// Create button!
 					string parent = $"?parent={@Model.Slug}";
-					<a class="btn btn-light btn-block site-reference form-field" role="button" href="~/edit/site/create@(parent)">Create New</a>
+					<a class="btn btn-light btn-block site-reference form-field" role="button" target="_blank" href="~/edit/site/create@(parent)">Create New</a>
 				}
 			}
 		</ul>
@@ -322,8 +322,8 @@ else
 								@{ var reftype61986480 = @Model.Events[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Events[i].Name</strong></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype61986480)-reference" role="button" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i>View</a></div>
-								<div class="col-auto"><a class="btn btn-light @(reftype61986480)-reference" role="button" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype61986480)-reference" role="button" target="_blank" href="../../@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-eye"></i>View</a></div>
+								<div class="col-auto"><a class="btn btn-light @(reftype61986480)-reference" role="button" target="_blank" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
 
 						</li>
@@ -333,7 +333,7 @@ else
 				{
 					// Create button!
 					string parent = $"?parent={@Model.Slug}";
-					<a class="btn btn-light btn-block event-reference form-field" role="button" href="~/edit/event/create@(parent)">Create New</a>
+					<a class="btn btn-light btn-block event-reference form-field" role="button" target="_blank" href="~/edit/event/create@(parent)">Create New</a>
 				}
 			}
 		</ul>

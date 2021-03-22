@@ -16,13 +16,7 @@ namespace DodoAOT
 		{
 			var template = Template("Edit");
 			var sb = new StringBuilder();
-			foreach(var s in BuildScripts())
-			{
-				sb.AppendLine("<script>");
-				sb.AppendLine(s);
-				sb.AppendLine("</script>");
-			}
-			template = template.Replace("{SCRIPTS}", sb.ToString());
+			
 			sb.Clear();
 			foreach (var line in BuildDataFields(resourceType, 4, ""))
 			{

@@ -53,7 +53,7 @@ $(function () {
 					if(typeof(Dodo.ITimeBoundResource).IsAssignableFrom(Model.__Type))
 					{
 						var tb = Model as dynamic;
-						if (tb.EndDate > DateTime.UtcNow)
+						if (DateTime.UtcNow > tb.EndDate)
 						{
 							<div class="alert alert-warning published-message" role="alert">
 								This event has now ended, so it won't show up in results.
@@ -69,8 +69,8 @@ $(function () {
 					@{ var reftype46964992 = @Model.Parent.Type.ToLowerInvariant(); }
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
-					<div class="col-auto"><a class="btn btn-light @(reftype46964992)-reference" role="button" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
-					<div class="col-auto"><a class="btn btn-light @(reftype46964992)-reference" role="button" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype46964992)-reference" role="button" target="_blank" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype46964992)-reference" role="button" target="_blank" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
 					</div>
 @{
 	if (!Model.IsPublished)

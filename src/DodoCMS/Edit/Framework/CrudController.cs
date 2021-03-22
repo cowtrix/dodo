@@ -156,13 +156,15 @@ namespace Dodo.Controllers.Edit
 				if (!ModelState.IsValid)
 				{
 					var errors = ModelState.Values.Where(v => v.Errors.Any()).ToList();
-					ModelState.AddModelError("Save Error", "Error updating the resource");
+					ModelState.AddModelError("", "Error updating the resource");
 					return await Edit(id);
 				}
 				var result = await CrudService.Update(id, modified);
 				if (!result.IsSuccess)
 				{
-					return result.ActionResult;
+					var error = result as ResourceRequestError;
+					ModelState.AddModelError("", error.Message);
+					return await Edit(id);
 				}
 				return RedirectToAction(nameof(Edit));
 			}

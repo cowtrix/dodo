@@ -113,6 +113,7 @@ namespace Dodo.Rebellions
 					throw new Exception($"Adding duplicated child object {e.Guid} to {Guid}");
 				}
 				Events.Add(e.CreateRef());
+				Events = Events.OrderBy(t => t.GetValue().StartDate).ToList();
 			}
 			else
 			{
@@ -156,6 +157,16 @@ namespace Dodo.Rebellions
 				erm.Delete(e.GetValue());
 			}
 			base.OnDestroy();
+		}
+
+		public override bool VerifyExplicit(out string error)
+		{
+			if (EndDate < StartDate)
+			{
+				error = "End date cannot be earlier than start date";
+				return false;
+			}
+			return base.VerifyExplicit(out error);
 		}
 	}
 }
