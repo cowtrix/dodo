@@ -36,6 +36,7 @@ function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', close
 								{...subscription.reference}
 								resourceTypes={resourceTypes}
 								administrator={subscription.administrator}
+								member={subscription.member}
 							/>
 						</li>
 						{subscription.children.length > 0 && (

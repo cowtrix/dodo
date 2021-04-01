@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Icon } from 'app/components/index'
 import styles from './resource.module.scss'
 
-export const Resource = ({ name, slug, metadata, resourceTypes = [], administrator }) => {
+export const Resource = ({ name, slug, metadata, resourceTypes = [], administrator, member }) => {
 	const resourceType = resourceTypes.find(thisType => thisType.value === metadata.type)
 	const backgroundColor = resourceType && '#' + resourceType.displayColor
 
@@ -15,7 +15,7 @@ export const Resource = ({ name, slug, metadata, resourceTypes = [], administrat
 				className={`${styles.resource} ${styles[metadata.type]}`}
 				style={{ backgroundColor: backgroundColor}}
 				title={`View ${name}`}>
-				<h3>{name}</h3>
+				<h3>{name}{member ? '  🔔' : ''}</h3>
 				<div className={styles.icons}>
 					<Icon icon='chevron-right' size='1x' className={styles.icon} />
 				</div>
