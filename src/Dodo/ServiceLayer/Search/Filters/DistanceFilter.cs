@@ -51,7 +51,7 @@ namespace Dodo.DodoResources
 
 		public bool Filter(IRESTResource rsc)
 		{
-			Initialise();
+			/*Initialise();
 			if (m_empty)
 			{
 				return true;
@@ -59,7 +59,7 @@ namespace Dodo.DodoResources
 			if (rsc is ILocationalResource locationalResource)
 			{
 				return locationalResource.Location.ToCoordinate().GetDistanceTo(m_coordinate) < Distance * 1000;
-			}
+			}*/
 			return true;
 		}
 

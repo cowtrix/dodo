@@ -12,6 +12,8 @@ namespace Resources
 {
 	public abstract class CustomController : Controller
 	{
+		public const string RESPONSE_VIEWDATA = "server_response";
+
 		protected AccessContext Context { 
 			get 
 			{

@@ -30,6 +30,7 @@ namespace Resources
 				return new OkObjectResult(view);
 			}
 		}
-			
+
+		public abstract string Message { get; }
 	}
 }

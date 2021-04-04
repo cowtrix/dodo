@@ -93,7 +93,7 @@ namespace SharedTest
 		{
 			if (context.User == null)
 			{
-				GetRandomUser(out var password, out context, true); ;
+				GetRandomUser(out var password, out context, true);
 			}
 			if (schema == null)
 			{

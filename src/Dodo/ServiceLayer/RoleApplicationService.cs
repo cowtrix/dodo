@@ -34,7 +34,7 @@ namespace Dodo.RoleApplications
 			var factory = new RoleApplicationFactory();
 			var appRsc = factory.CreateTypedObject(actionReq);
 			// Send them to the application
-			return new ActionRequestResult(new RedirectResult($"{DodoApp.NetConfig.FullURI}/{nameof(RoleApplication).ToLowerInvariant()}/{appRsc.Guid}?header=false", false));
+			return new RedirectRequestResult($"{DodoApp.NetConfig.FullURI}/{nameof(RoleApplication).ToLowerInvariant()}/{appRsc.Guid}?header=false", false);
 		}
 	}
 }

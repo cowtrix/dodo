@@ -146,7 +146,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 		var notifications = notificationProvider.GetNotifications(actionReq.AccessContext, actionReq.PermissionLevel);
 		var notificationChunk = new
 		{
-			notifications = notifications.Skip((page - 1) * chunk).Take(chunk),
+			notifications = notifications.Skip((page - 1) * chunk).Take(chunk).ToList(),
 			totalCount = notifications.Count(),
 			chunkSize = chunk,
 		};

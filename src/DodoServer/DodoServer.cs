@@ -19,6 +19,8 @@ namespace DodoServer
 	{
 		public static string ReactPath => ConfigManager.GetValue("ReactPath", Path.GetFullPath(@"..\..\dodo-frontend\build"));
 
+		public static bool Initialized { get; internal set; }
+
 		public static void Main(string[] args)
 		{
 #if DEBUG
@@ -53,17 +55,7 @@ namespace DodoServer
 			CreateHostBuilder(args).Build().Run();
 		}
 
-		private static IEnumerable<string> GetUrls()
-		{
-			var config = Dodo.DodoApp.NetConfig;
-			foreach (var d in config.Domains)
-			{
-				yield return $"https://{d}:{config.SSLPort}";
-				yield return $"http://{d}:{config.HTTPPort}";
-			}
-		}
-
-		public static IHostBuilder CreateHostBuilder(string[] args) =>
+		public static IHostBuilder CreateHostBuilder(params string[] args) =>
 			Host.CreateDefaultBuilder(args)
 				.ConfigureWebHostDefaults(webBuilder =>
 				{

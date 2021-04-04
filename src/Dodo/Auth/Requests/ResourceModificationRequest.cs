@@ -14,5 +14,7 @@ namespace Resources
 			Result = rsc;
 			ActionName = actionName;
 		}
+
+		public override string Message => $"Executed action \"{ActionName}\" against {Result}";
 	}
 }

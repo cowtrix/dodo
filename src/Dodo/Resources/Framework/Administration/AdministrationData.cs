@@ -58,7 +58,6 @@ namespace Dodo
 				return false;
 			}
 			var alteredAdminEntry = Administrators.SingleOrDefault(ad => ad.User.Guid == newAdmin.Guid);
-			alteredAdminEntry.User = newAdmin.CreateRef();
 			if (alteredAdminEntry == null)
 			{
 				if (!adminMakingChange.Permissions.CanEditAdministrators)
@@ -69,6 +68,7 @@ namespace Dodo
 				alteredAdminEntry = new AdministratorEntry(newAdmin);
 				Administrators.Add(alteredAdminEntry);
 			}
+			alteredAdminEntry.User = newAdmin.CreateRef();
 			if (permissions != null)
 			{
 				if (!adminMakingChange.Permissions.CanEditAdministrators)

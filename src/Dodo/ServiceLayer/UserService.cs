@@ -114,7 +114,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		}
 		UserManager.Update(user, rscLock);
 		Logger.Debug($"Logged out user {user.Slug}");
-		return new ActionRequestResult(new RedirectResult(Dodo.DodoApp.NetConfig.FullURI));
+		return new RedirectRequestResult(Dodo.DodoApp.NetConfig.FullURI);
 	}
 
 	public async Task<IRequestResult> RequestPasswordReset(string email)
@@ -184,7 +184,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 			UserManager.Update(user, rscLock);
 		}
 		await Logout();
-		return new ActionRequestResult(new RedirectResult("~/"));
+		return new RedirectRequestResult("~/");
 	}
 
 	public async Task<IRequestResult> ChangePassword(ChangePasswordModel model)

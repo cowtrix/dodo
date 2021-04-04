@@ -22,6 +22,8 @@ namespace Resources
 			}
 		}
 
+		public override string Message => $"Successfully created new resource [{Schema.Name}]";
+
 		public bool CanVerify() => true;
 
 		public ResourceSchemaBase GetSchema() => Schema;
