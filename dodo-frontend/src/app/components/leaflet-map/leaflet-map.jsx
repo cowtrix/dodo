@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import "leaflet/dist/leaflet.css"
-import { Map, Marker } from "react-leaflet"
+import { MapContainer, Marker } from "react-leaflet"
 
 import { TitleLayers } from "./title-layers"
 import { Markers, pin } from "./markers"
@@ -59,7 +59,7 @@ export const LeafletMap = (
 	}
 
 	return (
-		<Map
+		<MapContainer
 			className={`${styles.map} ${className}`}
 			center={mapCenter}
 			zoom={zoom}
@@ -73,7 +73,7 @@ export const LeafletMap = (
 			{!sites.length && center.length ?
 				<Marker position={center} icon={pin(resourceType)}/> :
 				null}
-		</Map>
+		</MapContainer>
 	)
 }
 
