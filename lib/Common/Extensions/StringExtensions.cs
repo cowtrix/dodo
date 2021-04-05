@@ -40,7 +40,7 @@ namespace Common.Extensions
 				.Replace("\n", "</br>")
 				.Replace("\t", "&emsp;");
 		}
-		public static string StripMDLinks(string str)
+		public static string StripMDLinks(string str, bool stripNewlines)
 		{
 			if (string.IsNullOrEmpty(str))
 			{
@@ -65,9 +65,13 @@ namespace Common.Extensions
 				match = Regex.Match(str, fullLinkOnlyRegex);
 			}
 			// Finally replace linebreaks with <br/>
-			return str
+			if(stripNewlines)
+			{
+				str = str
 				.Replace(Environment.NewLine, "")
 				.Replace("\n", "");
+			}
+			return str;
 		}
 		public static string AppendIfNotNull(this string str, string toAppend)
 		{

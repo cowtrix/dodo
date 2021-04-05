@@ -110,7 +110,9 @@ namespace Resources
 				Parent = default;
 			}
 			PublicDescription = resource is IDescribedResource desc
-				? StringExtensions.StripMDLinks(desc.PublicDescription?.Substring(0, Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH)))
+				? StringExtensions.StripMDLinks(
+					desc.PublicDescription?.Substring(0, 
+					Math.Min(desc.PublicDescription.Length, IDescribedResource.SHORT_DESC_LENGTH)), true)
 				: default;
 		}
 

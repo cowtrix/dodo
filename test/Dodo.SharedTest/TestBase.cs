@@ -37,6 +37,11 @@ namespace SharedTest
 
 		public TestBase()
 		{
+			SetupTemporaryMongoDatabase();
+		}
+
+		protected static void SetupTemporaryMongoDatabase()
+		{
 			if (m_runner != null)
 			{
 				return;
@@ -91,6 +96,7 @@ namespace SharedTest
 
 		public static T CreateNewObject<T>(AccessContext context = default, ResourceSchemaBase schema = null, bool seed = true, bool publish = true) where T : IRESTResource
 		{
+			SetupTemporaryMongoDatabase();
 			if (context.User == null)
 			{
 				GetRandomUser(out var password, out context, true);

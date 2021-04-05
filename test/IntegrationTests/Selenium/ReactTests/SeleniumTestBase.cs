@@ -6,6 +6,7 @@ using SharedTest;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System.Linq;
 
 namespace Dodo.SeleniumTests
 {
@@ -13,6 +14,8 @@ namespace Dodo.SeleniumTests
 	{
 		protected const string URL = "https://localhost:5001";
 		protected IWebDriver Driver;
+
+		protected Cookie LoginCookie => Driver.Manage().Cookies.AllCookies.SingleOrDefault(c => c.Name == ".AspNetCore.Cookies");
 
 		public SeleniumTestBase()
 		{
