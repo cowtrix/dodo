@@ -125,7 +125,7 @@ export const Settings = () => {
 											receive from us.
 										</div>
 									</div>
-									<TickBox
+									{/* <TickBox
 										name="Daily Update"
 										id="dailyUpdate"
 										checked={DUToggle ?? false}
@@ -136,7 +136,7 @@ export const Settings = () => {
 										id="weeklyUpdate"
 										checked={WUToggle ?? false}
 										setValue={handleSet(setWUToggle)}
-									/>
+									/> */}
 									<TickBox
 										name="Notifications"
 										id="newNotifications"

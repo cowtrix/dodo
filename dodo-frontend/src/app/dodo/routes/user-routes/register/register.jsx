@@ -115,7 +115,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 						}
 						maxLength={63}
 					/>
-					<TickBox
+					{/* <TickBox
 						id="dailyUpdate"
 						checked={dailyUpdate}
 						setValue={val => setDailyUpdate(val)}
@@ -136,7 +136,7 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 								Please send me weekly updates via email
 							</>
 						}
-					/>
+					/> */}
 					<TickBox
 						id="newNotifications"
 						checked={newNotifications}
