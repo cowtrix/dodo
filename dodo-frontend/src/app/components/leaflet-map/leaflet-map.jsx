@@ -67,6 +67,7 @@ export const LeafletMap = (
 			onZoomanim={() => setUserInitiated(true)}
 			onMousedown={() => setUserInitiated(true)}
 			onMoveend={setNewSearchParams}
+			worldCopyJump
 		>
 			<TitleLayers/>
 			<Markers markers={sites} userInitiated={userInitiated}/>
