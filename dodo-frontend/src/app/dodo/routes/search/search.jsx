@@ -48,8 +48,10 @@ export const Search = (
 								setCenterMap={setCenterMap}
 							/>
 						</div>
-						{searchResults.length > 0 ? (<List resources={searchResults} resourceTypes=
-						{resourceTypes} isMasterList />) : (<h3>No Events To Show</h3>)}
+						{searchResults.length > 0 
+							? (<List resources={searchResults} resourceTypes={resourceTypes} isMasterList />) 
+							: (<h3>No Events To Show</h3>)
+						}
 					</>
 				}
 			/>
