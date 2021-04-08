@@ -11,7 +11,7 @@ export const UserMenu = ({ menuOpen, closeMenu }) =>
 				onClick={() => closeMenu()}
 				className={styles.userMenu}
 			/>
-		<Menu menuOpen={menuOpen}/>
+		<Menu menuOpen={menuOpen}  closeMenu={closeMenu}/>
 	</>
 
 UserMenu.propTypes = {
