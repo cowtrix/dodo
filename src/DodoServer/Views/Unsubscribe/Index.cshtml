@@ -1,0 +1,12 @@
+@model Dodo.Email.UnsubscribeModel
+
+<div class="card w-50 ml-auto mr-auto mt-3">
+	<div class="card-body">
+		<h1>Unsubscribe From All Emails</h1>
+		<div>
+			<p>To unsubscribe <code>@Model.Email</code> from all emails, press the button below:</p>
+			<a class="btn btn-danger btn-block" href="confirm?hash=@Model.Hash">Yes, unsubscribe me from all emails.</a>
+			<small>If you ever change your mind and want us to unblock your email, you'll need to contact us at @Dodo.DodoApp.DevEmail</small>
+		</div>
+	</div>
+</div>

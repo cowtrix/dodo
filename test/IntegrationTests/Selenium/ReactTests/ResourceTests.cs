@@ -1,4 +1,5 @@
 using Common.Extensions;
+using Dodo.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
 using System;
@@ -6,9 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace Dodo.SeleniumTests
 {
-	
-
-	
 	public abstract class ResourceTests<T> : SeleniumTestBase where T: IPublicResource
 	{
 		[TestMethod]
@@ -68,6 +66,26 @@ namespace Dodo.SeleniumTests
 				// Check address display is correct
 				Assert.AreEqual(loc.Location.Address, rsc.Address.Text);
 			}
+
+		}
+
+		[TestMethod]
+		public void CanSubscribe()
+		{
+			SkipIfNot<T, IGroupResource>();
+
+			var user = GetRandomUser(out var pass, out var cntxt);
+			var login = new LoginModel { Username = user.Slug, Password = pass, RememberMe = true };
+			Login(login);
+
+			var obj = CreateObject<T>();
+			Driver.Url = $"{URL}/{typeof(T).Name.ToLowerInvariant()}/{obj.Slug}";
+
+			var rsc = new ResourcePageHandler(Driver);
+			Assert.IsNotNull(rsc.SubscribeButton);
+			Driver.ScrollToElement(rsc.SubscribeButton);
+			Driver.Scroll(0, 300);
+			rsc.SubscribeButton.Click();
 		}
 	}
 

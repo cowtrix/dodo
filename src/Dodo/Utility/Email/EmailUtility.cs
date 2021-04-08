@@ -28,8 +28,6 @@ namespace Dodo.Email
 			this.Email = email;
 			this.Name = name;
 		}
-
-		public string GetToken() => SHA256Utility.SHA256(DodoApp.ServerSalt + Email).Replace("-", "");
 	}
 
 	public static class EmailUtility
@@ -73,7 +71,7 @@ namespace Dodo.Email
 			{ "PRODUCT_NAME", DodoApp.PRODUCT_NAME },
 			{ "PRIVACY_POLICY", DodoApp.PrivacyPolicyURL },
 			{ "PRODUCT_URL", DodoApp.NetConfig.FullURI },
-			{ "UNSUBSCRIBE", $"{DodoApp.NetConfig.FullURI}/unsubscribe?token={target.GetToken()}" },
+			{ "UNSUBSCRIBE", $"{DodoApp.NetConfig.FullURI}/unsubscribe?email={Uri.EscapeUriString(target.Email)}&hash={Uri.EscapeUriString(GetEmailHash(target.Email))}" },
 			{ "BANNER", m_banners.Random() },
 			{ "SUBJECT", subject }
 		};
@@ -94,6 +92,27 @@ namespace Dodo.Email
 			return txt;
 		}
 
+		public static bool EmailIsUnsubscribed(string email)
+		{
+			var hash = GetEmailHash(email);
+			return HashIsUnsubscribed(hash);
+		}
+
+		public static bool HashIsUnsubscribed(string hash)
+		{
+			return m_unsubscribed.ContainsKey(hash);
+		}
+
+		public static void UnsubscribeHash(string hash)
+		{
+			m_unsubscribed[hash] = true;
+		}
+
+		public static string GetEmailHash(string email)
+		{
+			return SHA256Utility.SHA256(email + DodoApp.ServerSalt);
+		}
+
 		public static void SendEmail(EmailAddress target, string subject, string template, Dictionary<string, string> data)
 		{
 			if(string.IsNullOrEmpty(m_emailConfig.SMTPAddress))
@@ -101,9 +120,10 @@ namespace Dodo.Email
 				return;
 			}
 			var from = new EmailAddress(m_emailConfig.FromEmail, m_emailConfig.FromName);
-			if (m_unsubscribed.ContainsKey(target.Email))
+			if (EmailIsUnsubscribed(target.Email))
 			{
 				Logger.Debug($"Email to {target.Email} was suppressed because user unsubscribed");
+				return;
 			}
 			var t = new Task(() =>
 			{

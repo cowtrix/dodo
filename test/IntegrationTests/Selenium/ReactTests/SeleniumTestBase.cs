@@ -17,6 +17,21 @@ namespace Dodo.SeleniumTests
 
 		protected Cookie LoginCookie => Driver.Manage().Cookies.AllCookies.SingleOrDefault(c => c.Name == ".AspNetCore.Cookies");
 
+		protected void Login(Models.LoginModel model)
+		{
+			Driver.Navigate().GoToUrl($"{URL}/login");
+			var loginPage = new LoginPageHandler(Driver);
+			loginPage.DoLogin(model.Username, model.Password, true);
+		}
+
+		protected void SkipIfNot<TBase, TParent>()
+		{
+			if (!typeof(TParent).IsAssignableFrom(typeof(TBase)))
+			{
+				Assert.Inconclusive();
+			}
+		}
+
 		public SeleniumTestBase()
 		{
 			new Task( () => DodoServer.DodoServer.CreateHostBuilder($"--urls {URL}")			
@@ -30,11 +45,13 @@ namespace Dodo.SeleniumTests
 		[TestInitialize]
 		public void OpenBrowser()
 		{
+			foreach (var p in System.Diagnostics.Process.GetProcessesByName("geckodriver"))
+				p.Kill();
+
 			Driver = new FirefoxDriver(
 				new FirefoxOptions
 				{
-					AcceptInsecureCertificates = true,
-					
+					AcceptInsecureCertificates = true,					
 				});
 		}
 

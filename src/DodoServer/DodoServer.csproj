@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="salt" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\DodoCMS\DodoCMS.csproj" />
 		<ProjectReference Include="..\Dodo\Dodo.csproj" />
 	</ItemGroup>

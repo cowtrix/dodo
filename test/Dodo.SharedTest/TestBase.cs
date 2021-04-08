@@ -40,12 +40,25 @@ namespace SharedTest
 			SetupTemporaryMongoDatabase();
 		}
 
+		protected static void TryKillProcess(System.Diagnostics.Process p)
+		{
+			try
+			{
+				p?.Kill();
+			}
+			catch (System.ComponentModel.Win32Exception) { }
+		}
+
 		protected static void SetupTemporaryMongoDatabase()
 		{
 			if (m_runner != null)
 			{
 				return;
 			}
+
+			foreach (var p in System.Diagnostics.Process.GetProcessesByName("mongod"))
+				TryKillProcess(p);
+
 			m_runner = MongoDbRunner.Start();
 			ConfigManager.SetValue(ResourceUtility.CONFIGKEY_MONGODBSERVERURL, m_runner.ConnectionString);
 			ResourceUtility.ClearAllManagers();

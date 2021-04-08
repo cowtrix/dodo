@@ -20,7 +20,7 @@ namespace Common.Security
 			}
 			byte[] data = Encoding.ASCII.GetBytes(plaintext);
 			var rawBytes = new MD5CryptoServiceProvider().ComputeHash(data);
-			return BitConverter.ToString(rawBytes);
+			return BitConverter.ToString(rawBytes).Replace("-", "");
 		}
 	}
 }
