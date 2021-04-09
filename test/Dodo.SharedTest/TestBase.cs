@@ -35,7 +35,7 @@ namespace SharedTest
 			m_context = testContext;
 		}
 
-		static TestBase()
+		public TestBase()
 		{
 			SetupTemporaryMongoDatabase();
 		}
@@ -49,7 +49,7 @@ namespace SharedTest
 			catch (System.ComponentModel.Win32Exception) { }
 		}
 
-		protected static void SetupTemporaryMongoDatabase()
+		public static void SetupTemporaryMongoDatabase()
 		{
 			if (m_runner != null)
 			{
