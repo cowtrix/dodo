@@ -43,6 +43,8 @@ namespace Resources
 	/// <typeparam name="T">The class to be managed</typeparam>
 	public abstract class ResourceManager<T> : IResourceManager<T> where T : class, IRESTResource
 	{
+		private static Dictionary<string, IMongoDatabase> m_databases = new Dictionary<string, IMongoDatabase>();
+
 		/// <summary>
 		/// How long a request will wait to get access to a resource before giving up, in miliseconds.
 		/// See: WaitForUnlocked
@@ -52,12 +54,22 @@ namespace Resources
 		public long Count => MongoDatabase.CountDocuments(x => true);
 		private static object m_addlock = new object();
 
+		static IMongoDatabase GetDatabase(string n)
+		{
+			n = n.Replace(".", "_");
+			if (!m_databases.TryGetValue(n, out var db))
+			{
+				db = ResourceUtility.MongoDB.GetDatabase(n);
+				m_databases[n] = db;
+			}
+			return db;
+		}
+
 		public ResourceManager()
 		{
-			// Connect to the database
-			var database = ResourceUtility.MongoDB.GetDatabase(MongoDBDatabaseName.Replace(".", "_"));
+			var db = GetDatabase(MongoDBDatabaseName);
 			// Get the collection (which is the name of this type by default)
-			MongoDatabase = database.GetCollection<T>(MongoDBCollectionName);
+			MongoDatabase = db.GetCollection<T>(MongoDBCollectionName);
 
 			foreach (var type in ReflectionExtensions.GetConcreteClasses<T>())
 			{
@@ -70,7 +82,15 @@ namespace Resources
 				.Ascending(rsc => rsc.Guid)
 				.Ascending(rsc => rsc.Slug);
 			var indexModel = new CreateIndexModel<T>(indexKeys, indexOptions);
-			MongoDatabase.Indexes.CreateOne(indexModel);
+			try
+			{
+				MongoDatabase.Indexes.CreateOne(indexModel);
+			}
+			catch (Exception e)
+			{
+				Logger.Error($"Unable to intialize collection indexes for {MongoDBCollectionName}");
+				throw e;
+			}
 		}
 
 		// Check to see if map is registered before registering class map
@@ -93,11 +113,11 @@ namespace Resources
 			Logger.Debug($"{typeof(T).Name} ADD: {newObject.Name} ({newObject.Guid})");
 			lock (m_addlock)
 			{
-				if (ResourceUtility.GetResourceByGuid(newObject.Guid, force:true) != null)
+				if (ResourceUtility.GetResourceByGuid(newObject.Guid, force: true) != null)
 				{
 					throw new Exception("Conflicting GUID");
 				}
-				if (Get(r => r.Slug == newObject.Slug, force:true).Any())
+				if (Get(r => r.Slug == newObject.Slug, force: true).Any())
 				{
 					throw new Exception("Conflicting slug");
 				}
@@ -173,7 +193,7 @@ namespace Resources
 		public virtual IEnumerable<T> Get(Func<T, bool> selector = null, Guid? handle = null, bool force = false)
 		{
 			Logger.Debug($"{typeof(T).Name} GET: {selector.Method.Name} ({handle})");
-			if(selector == null)
+			if (selector == null)
 			{
 				// performance case for getting everything
 				return WaitForAllUnlocked(MongoDatabase.AsQueryable(), handle, force).Cast<T>();
@@ -233,7 +253,7 @@ namespace Resources
 
 		IEnumerable<IRESTResource> WaitForAllUnlocked(IEnumerable<IRESTResource> enumerable, Guid? handle = null, bool force = false)
 		{
-			if(!force)
+			if (!force)
 			{
 				foreach (var rsc in enumerable)
 				{
@@ -245,7 +265,7 @@ namespace Resources
 
 		IRESTResource WaitForUnlocked(IRESTResource resource, Guid? handle, bool force)
 		{
-			if(force)
+			if (force)
 			{
 				return resource;
 			}
