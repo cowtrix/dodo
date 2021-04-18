@@ -1,7 +1,9 @@
 using Common.Extensions;
 using Dodo;
+using Dodo.Email;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
+using Dodo.SharedTest;
 using Dodo.Users;
 using Dodo.Users.Tokens;
 using Dodo.WorkingGroups;
@@ -73,6 +75,17 @@ namespace UnitTests
 			var user1 = GetRandomUser(out var password, out _);
 			user1.AuthData.ChangePassword(new Passphrase(password), new Passphrase(newPassword));
 			Assert.IsTrue(user1.AuthData.ChallengePassword(newPassword, out _));
+		}
+
+		[TestMethod]
+		public void CanUnsubscribeEmail()
+		{
+			var email = SchemaGenerator.RandomEmail;
+			Assert.IsFalse(EmailUtility.EmailIsUnsubscribed(email));
+			EmailUtility.UnsubscribeHash(EmailUtility.GetEmailHash(email));
+			Assert.IsTrue(EmailUtility.EmailIsUnsubscribed(email));
+			EmailUtility.ClearEmailUnsubscription(email);
+			Assert.IsFalse(EmailUtility.EmailIsUnsubscribed(email));
 		}
 	}
 

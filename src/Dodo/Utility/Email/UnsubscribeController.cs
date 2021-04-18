@@ -22,21 +22,23 @@ namespace Dodo.Email
 		public const string UNSUBSCRIBE = "unsubscribe";
 
 		[HttpGet]
-		public async Task<IActionResult> Index([FromQuery]string email, [FromQuery] string hash)
+		public async Task<IActionResult> Index([FromQuery]string email, [FromQuery] string token)
 		{
 			if (string.IsNullOrEmpty(email))
 			{
 				return Redirect("~/");
 			}
 			var calcHash = EmailUtility.GetEmailHash(email);
-			if (hash != calcHash)
+			if (token != calcHash)
 			{
 				return BadRequest("Bad signature");
 			}
-			return View(new UnsubscribeModel { Email = email, Hash = hash });
+			return View(new UnsubscribeModel { Email = email, Hash = token });
 		}
 
-		[HttpPost]
+		[HttpGet]
+		[Route(nameof(Confirm))]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Confirm([FromQuery] string hash)
 		{
 			EmailUtility.UnsubscribeHash(hash);

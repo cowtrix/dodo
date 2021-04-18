@@ -59,10 +59,10 @@ namespace Dodo.SharedTest
 				return loc;
 			}
 		}
-		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays((m_random.NextDouble() * 365) - (365/2));
+		public static DateTime RandomDate => DateTime.Now + TimeSpan.FromDays((m_random.NextDouble() * 365) - (365 / 2));
 		public static string RandomVideoURL => new string[] { "https://www.youtube.com/embed/d4QDM_Isi24", "", "" }.Random();
-		private static EAccessType RandomAccessType => new[] { EAccessType.Free, EAccessType.None, EAccessType.Paid }.Random();
-		private static bool RandomBool => new Random().NextDouble() > .5;
+		public static EAccessType RandomAccessType => new[] { EAccessType.Free, EAccessType.None, EAccessType.Paid }.Random();
+		public static bool RandomBool => new Random().NextDouble() > .5;
 		public static SiteFacilities RandomFacilities =>
 			new SiteFacilities
 			{
@@ -85,7 +85,7 @@ namespace Dodo.SharedTest
 			};
 		public static string SampleRoleInstructions => "This is some sample instructions. Here you might ask if a volunteer has First Aid training, or to outline their previous XR experience, or to tell you about shift availabilites. You should have made this clear in the Applicant Question for the Role.";
 
-		private static string RandomName<T>() => m_nameGenerators[typeof(T)].Invoke();
+		public static string RandomName<T>() => m_nameGenerators[typeof(T)].Invoke();
 
 		private static Dictionary<Type, Func<AccessContext, ResourceSchemaBase>> m_mappings =
 			new Dictionary<Type, Func<AccessContext, ResourceSchemaBase>>()
@@ -149,13 +149,15 @@ namespace Dodo.SharedTest
 			return new SiteSchema(RandomName<Site>(), rb.Guid.ToString(), RandomLocation, SampleDescription, RandomFacilities, RandomVideoURL);
 		}
 
+		public static string RandomEmail => $"{StringExtensions.RandomString(16)}@example.com";
+
 		public static UserSchema GetRandomUser(AccessContext context = default)
 		{
 			var nm = RandomName<User>();
 			return new UserSchema(
 				ValidationExtensions.StripStringForSlug(nm),
 				ValidationExtensions.GenerateStrongPassword(),
-				$"{StringExtensions.RandomString(16)}@example.com"
+				RandomEmail
 			);
 		}
 

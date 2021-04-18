@@ -8,6 +8,7 @@ using Common;
 using System.Linq;
 using System.Text;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Collections.Generic;
 
 namespace Dodo
 {
@@ -127,6 +128,15 @@ namespace Dodo
 			/*TokenCollection.AddOrUpdate(this, new EncryptedNotificationToken(context.User, null,
 				$"Administrator @{context.User.Slug} added new Administrator @{newAdmin.Slug}",
 				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));*/
+			Email.EmailUtility.SendEmail(new Email.EmailAddress { Name = newAdmin.Name, Email = newAdmin.PersonalData.Email },
+				$"You have been added as an administrator on {Dodo.DodoApp.PRODUCT_NAME}",
+				"Callback",
+				new Dictionary<string, string>
+				{
+					{ "MESSAGE", $"You just been added as an administrator of the {GetType().GetName()} \"{Name}\" on {Dodo.DodoApp.PRODUCT_NAME}." },
+					{ "CALLBACK_MESSAGE", "Visit Administration Panel" },
+					{ "CALLBACK_URL", $"{Dodo.DodoApp.NetConfig.FullURI}/edit/{GetType().Name.ToLowerInvariant()}/{Slug}" }
+				});
 			using (var userLock = new ResourceLock(newAdmin))
 			{
 				newAdmin = userLock.Value as User;

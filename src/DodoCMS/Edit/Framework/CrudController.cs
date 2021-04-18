@@ -137,6 +137,7 @@ namespace Dodo.Controllers.Edit
 				ViewData["applications"] = role.Applications.ToDictionary(kvp => kvp.Key,
 					kvp => kvp.Value);
 			}
+			ViewData[RESPONSE_VIEWDATA] = result.Message;
 			var model = ViewModel(rsc);
 			return View(model);
 		}

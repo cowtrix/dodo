@@ -266,6 +266,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		{
 			return ResourceRequestError.UnauthorizedRequest("A user already exists with that email address");
 		}
+		EmailUtility.ClearEmailUnsubscription(schema.Email); // Clear any unsubscription on this email
 		var factory = ResourceUtility.GetFactory<User>();
 		user = factory.CreateTypedObject(new ResourceCreationRequest(default, schema));
 		var passphrase = new Passphrase(user.AuthData.PassPhrase.GetValue(schema.Password));

@@ -69,9 +69,9 @@ namespace Dodo.Email
 		static Dictionary<string, string> GetStandardTemplateData(EmailAddress target, string subject) => new Dictionary<string, string>()
 		{
 			{ "PRODUCT_NAME", DodoApp.PRODUCT_NAME },
-			{ "PRIVACY_POLICY", DodoApp.PrivacyPolicyURL },
+			{ "PRIVACY_POLICY", $"{DodoApp.NetConfig.FullURI}/{DodoApp.PrivacyPolicyURL}" },
 			{ "PRODUCT_URL", DodoApp.NetConfig.FullURI },
-			{ "UNSUBSCRIBE", $"{DodoApp.NetConfig.FullURI}/unsubscribe?email={Uri.EscapeUriString(target.Email)}&hash={Uri.EscapeUriString(GetEmailHash(target.Email))}" },
+			{ "UNSUBSCRIBE", $"{DodoApp.NetConfig.FullURI}/unsubscribe?email={Uri.EscapeUriString(target.Email)}&token={Uri.EscapeUriString(GetEmailHash(target.Email))}" },
 			{ "BANNER", m_banners.Random() },
 			{ "SUBJECT", subject }
 		};
@@ -106,6 +106,11 @@ namespace Dodo.Email
 		public static void UnsubscribeHash(string hash)
 		{
 			m_unsubscribed[hash] = true;
+		}
+
+		public static void ClearEmailUnsubscription(string email)
+		{
+			m_unsubscribed.Remove(GetEmailHash(email));
 		}
 
 		public static string GetEmailHash(string email)
