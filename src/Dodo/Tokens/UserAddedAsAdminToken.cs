@@ -38,9 +38,14 @@ namespace Dodo.Users.Tokens
 
 				EmailUtility.SendEmail(
 					new EmailAddress { Email = newAdmin.PersonalData.Email, Name = newAdmin.Name },
-					$"[{Dodo.DodoApp.PRODUCT_NAME}] {subj}",
-					"Notification",
-					new Dictionary<string, string> { { "MESSAGE", txt } });
+					subj,
+					"Callback",
+					new Dictionary<string, string>
+					{
+						{ "MESSAGE", txt },
+						{ "CALLBACK_MESSAGE", "Register Your Account" },
+						{ "CALLBACK_URL", url }
+					});
 			}
 		}
 
