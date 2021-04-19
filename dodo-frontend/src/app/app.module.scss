@@ -4,7 +4,7 @@
   font-family: "fucxed_capsregular";
   src: url("./styles/fonts/fucxedcaps-v2-webfont.woff2") format("woff2"),
   url("./styles/fonts/fucxedcaps-v2-webfont.woff") format("woff");
-  font-weight: normal;
+  font-weight: bold;
   font-style: normal;
 }
 
@@ -20,6 +20,8 @@
 body {
   font-family: "Ubuntu";
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
