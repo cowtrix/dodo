@@ -34,7 +34,7 @@ export const ResourceContent =
 				{resource.arrestRisk && (
 					<ArrestRisk level={resource.arrestRisk.toLowerCase()} />
 				)}
-				<ParentLink parent={resource.parent} />
+				<ParentLink parent={resource.parent} resourceColor={resourceColor} />
 				<Video videoEmbedURL={resource.videoEmbedURL} />
 				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h2>EDIT  <Icon icon="edit" size="1x" /></h2></a> : null}
 				<div className={styles.descriptionContainer}>
