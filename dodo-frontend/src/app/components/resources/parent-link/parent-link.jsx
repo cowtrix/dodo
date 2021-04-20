@@ -9,9 +9,13 @@ const PART_OF = "Part of:"
 const parentLink = (parent) =>
 	'/' + parent.metadata.type + '/' + parent.slug
 
-export const ParentLink = ({ parent }) =>
+export const ParentLink = ({ parent, resourceColor }) =>
 	parent ?
-		<Link className={styles.parentLink} variant="link" to={parentLink(parent)}>
+		<Link
+			className={styles.parentLink}
+			variant="link"
+			to={parentLink(parent)}
+			style={{ backgroundColor: resourceColor }}>
 			<h3 className={styles.intro}>
 				{PART_OF}
 			</h3>
@@ -23,4 +27,5 @@ export const ParentLink = ({ parent }) =>
 
 ParentLink.propTypes = {
 	parent: PropTypes.object,
+	resourceColor: PropTypes.string,
 }

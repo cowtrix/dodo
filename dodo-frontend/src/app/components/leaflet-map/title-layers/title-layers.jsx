@@ -15,5 +15,5 @@ const TILE_LAYERS = [
 
 export const TitleLayers = () =>
 		TILE_LAYERS.map(tileLayer =>
-				<TileLayer key={tileLayer.url} {...tileLayer} noWrap="true" minZoom="3.5" position="topright" />
+				<TileLayer key={tileLayer.url} {...tileLayer} minZoom="3.5" position="topright" />
 		)

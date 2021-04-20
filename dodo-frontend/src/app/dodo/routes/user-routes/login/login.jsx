@@ -30,10 +30,15 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 	const [password, setPassword] = useState("");
 	const [rememberMe, setRememberMe] = useState(true);
 
+	const handleLogin = (event) => {
+		event.preventDefault();
+		login(username, password, rememberMe);
+	}
+
 	return (
 		<Container
 			content={
-				<>
+				<form noValidate onSubmit={handleLogin}>
 					<Input
 						name="Username"
 						id="username"
@@ -67,11 +72,8 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 						<Link to="/reset-password">Click here</Link>
 					</p>
 					<Error error={error} />
-					<Submit
-						value={t("sign_in_button_text")}
-						submit={login(username, password, rememberMe)}
-					/>
-				</>
+					<Submit value={t("sign_in_button_text")} />
+				</form>
 			}
 			loading={isLoggingIn}
 		/>
