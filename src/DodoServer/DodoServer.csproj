@@ -107,7 +107,7 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug'">
 	  <Exec Command="dotnet list &quot;$(SolutionPath)&quot; package &gt; $(SolutionDir)dependencies.txt" />
 	</Target>
 
