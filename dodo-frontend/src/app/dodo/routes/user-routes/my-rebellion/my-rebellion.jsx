@@ -54,6 +54,10 @@ function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', close
 export const MyRebellion = ({ error, getMyRebellion, isFetching, myRebellion = [], resourceTypes }) => {
 	useEffect(() => { getMyRebellion() }, [getMyRebellion]);
 
+	useEffect(() => {
+		document.title = "Resistance.Earth | My Rebellion"
+	}, []);
+
 	const [closed, setClosed] = useState([]);
 
 	// Ensure user is logged in
