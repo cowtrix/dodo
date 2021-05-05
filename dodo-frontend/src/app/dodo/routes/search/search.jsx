@@ -1,8 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Container } from "app/components/resources"
 import { SiteMap, Loader, List } from "app/components"
 import { Filter } from "./filter"
+import { APP_TITLE } from "../../../constants"
 
 import styles from './search.module.scss'
 import { SearchByLocation } from './search-by-location'
@@ -24,6 +25,10 @@ export const Search = (
 	useState(() => {
 		getSearchResults({}, setCenterMap)
 	}, [])
+
+	useEffect(() => {
+		document.title = APP_TITLE
+	}, []);
 
 	return (
 		<>
