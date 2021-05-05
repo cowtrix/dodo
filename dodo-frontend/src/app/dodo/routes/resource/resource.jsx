@@ -5,6 +5,7 @@ import { SiteMap, Loader } from "app/components"
 import { ResourceContent } from './resource-content'
 import { getResourceTypeData, shouldHideMap } from './services'
 import { NotFound } from '../error';
+import { APP_TITLE } from "../../../constants"
 
 export const Resource =
 	(
@@ -39,6 +40,10 @@ export const Resource =
 		useEffect(() => {
 			getNotifications(resourceType, slug)
 		}, [ getNotifications, slug, resourceType])
+
+		useEffect(() => {
+			document.title = APP_TITLE + " | Event"
+		});
 
 		const resourceTypeData = getResourceTypeData(resourceTypes, resourceType);
 		const resourceColor = '#' + (resourceTypeData.displayColor || '22A73D');
