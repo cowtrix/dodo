@@ -57,8 +57,16 @@ namespace Common.Config
 			}
 			if (!m_data.TryGetValue(key, out var obj))
 			{
-				result = default(T);
-				return false;
+				var env = Environment.GetEnvironmentVariable(key);
+				if (!string.IsNullOrEmpty(env))
+				{
+					obj = env;
+				}
+				else
+				{
+					result = default(T);
+					return false;
+				}
 			}
 			if (typeof(Enum).IsAssignableFrom(typeof(T)))
 			{

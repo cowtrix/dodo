@@ -146,7 +146,7 @@ namespace Common
 				}
 				else
 				{
-					Console.WriteLine(msg.ToString());
+					Console.Out.WriteLine(msg.ToString());
 				}
 				OnLog?.Invoke(msg);
 			}

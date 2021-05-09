@@ -88,7 +88,7 @@ namespace Resources
 			}
 			catch (Exception e)
 			{
-				Logger.Error($"Unable to intialize collection indexes for {MongoDBCollectionName}");
+				Logger.Error($"Unable to intialize collection indexes for {MongoDBCollectionName}: {ConfigManager.GetValue(ResourceUtility.CONFIGKEY_MONGODBSERVERURL, "NULL")}");
 				throw e;
 			}
 		}
