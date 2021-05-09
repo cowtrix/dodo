@@ -7,11 +7,13 @@ services:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: test_password
+      MONGO_INITDB_ROOT_PASSWORD: vLS6piEC
   dodo:
     image: dodo
     environment:
-      MongoDBServerURL: mongodb://root:test_password@localhost:27017/?authSource=admin
+      MongoDBServerURL: mongodb://root:vLS6piEC@dodo_mongo_1:27017/?authSource=admin
+      ASPNETCORE_Kestrel__Certificates__Default__Password: YsS8k8oe
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/dodo.pfx
     volumes:
       - type: bind
         source: ./DodoServer_config.json

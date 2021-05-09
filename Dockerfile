@@ -21,6 +21,4 @@ COPY --from=build /app/build .
 EXPOSE 5000
 EXPOSE 5001
 
-ENV ASPNETCORE_URLS https://*:5001 http://*:5000
-
 ENTRYPOINT ["dotnet", "DodoServer.dll"]
