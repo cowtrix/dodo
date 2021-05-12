@@ -141,7 +141,7 @@ namespace Dodo.Rebellions
 
 		public override void OnDestroy()
 		{
-			var wgrm = ResourceUtility.GetManager<WorkingGroup>();
+			/*var wgrm = ResourceUtility.GetManager<WorkingGroup>();
 			foreach(var wg in WorkingGroups)
 			{
 				wgrm.Delete(wg.GetValue());
@@ -156,7 +156,7 @@ namespace Dodo.Rebellions
 			{
 				erm.Delete(e.GetValue());
 			}
-			base.OnDestroy();
+			base.OnDestroy();*/
 		}
 
 		public override bool VerifyExplicit(out string error)

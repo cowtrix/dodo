@@ -62,7 +62,12 @@ namespace Dodo.LocationResources
 
 		public override Passphrase GetPrivateKey(AccessContext context)
 		{
-			return Parent.GetValue<ITokenResource>().GetPrivateKey(context);
+			var parent = Parent.GetValue<ITokenResource>();
+			if(parent == null)
+			{
+				return default;
+			}
+			return parent.GetPrivateKey(context);
 		}
 
 		public void OnLocationChange(object requester, Passphrase passphrase, GeoLocation oldValue, GeoLocation newValue)

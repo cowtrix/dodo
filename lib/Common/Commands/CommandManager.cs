@@ -172,6 +172,7 @@ namespace Common.Commands
 					{
 						Logger.Warning($"Did you mean \"{bestMatch.Key.FriendlyName}\"?");
 					}
+					return result;
 					cmd = m_fallbackCommand;
 				}
 				var cmdArgs = new CommandArguments(args, parameters);

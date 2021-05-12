@@ -20,6 +20,8 @@ namespace Resources
 		private static ConfigVariable<string> m_databasePath = new ConfigVariable<string>(CONFIGKEY_MONGODBSERVERURL, "");
 		public static ConcurrentDictionary<Type, IResourceManager> ResourceManagers = new ConcurrentDictionary<Type, IResourceManager>();
 		public static ConcurrentDictionary<Type, IResourceFactory> Factories = new ConcurrentDictionary<Type, IResourceFactory>();
+		public static IMongoCollection<Resource> Trash { get; private set; }
+
 		public static MongoClient MongoDB { get; private set; }
 
 		static ResourceUtility()
@@ -62,6 +64,15 @@ namespace Resources
 				var typeArg = newFactory.GetType().BaseType.GetGenericArguments().First();
 				Register(typeArg, newFactory);
 			}
+
+			var db = MongoDB.GetDatabase("Trash");
+			Trash = db.GetCollection<Resource>("DeletedResources");
+			/*var indexOptions = new CreateIndexOptions();
+			var indexKeys = Builders<IRESTResource>.IndexKeys
+				.Ascending(rsc => rsc.Guid)
+				.Ascending(rsc => rsc.Slug);
+			var indexModel = new CreateIndexModel<IRESTResource>(indexKeys, indexOptions);
+			Trash.Indexes.CreateOne(indexModel);*/
 		}
 
 		public static void Register(Type type, IResourceManager resourceManager)
