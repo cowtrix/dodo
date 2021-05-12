@@ -53,10 +53,10 @@
 			</h3>
 			@foreach (Common.Commands.CommandManager.CommandData cmd in Common.Commands.CommandManager.AllCommands)
 			{
-				<div class="col-auto">
+				<code>
 					<h4>@cmd.Attribute.FriendlyName</h4>
 					<p>@Html.Raw(Common.Extensions.StringExtensions.TextToHtml(cmd.Attribute.Description))</p>
-				</div>
+				</code>
 			}
 		</div>
 	</div>

@@ -135,10 +135,5 @@ namespace Dodo.Sites
 				return await ViewAdmin();
 			}
 		}
-
-		private string ExecuteCommand(string command)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }

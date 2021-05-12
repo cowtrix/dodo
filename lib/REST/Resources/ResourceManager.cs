@@ -20,6 +20,7 @@ namespace Resources
 		void Clear();
 		void Add(IRESTResource newObject);
 		void Update(IRESTResource objToUpdate, ResourceLock locker);
+		void Delete(IRESTResource objToDelete);
 		IRESTResource GetSingle(Func<IRESTResource, bool> selector, Guid? handle = null, bool force = false);
 		IRESTResource GetFirst(Func<IRESTResource, bool> selector, Guid? handle = null, bool force = false);
 		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector, Guid? handle = null, bool force = false);
@@ -51,6 +52,7 @@ namespace Resources
 		/// </summary>
 		private ConfigVariable<int> m_resourceLockTimeoutMs = new ConfigVariable<int>("ResourceLockTimeout", 10 * 1000);
 		public IMongoCollection<T> MongoDatabase { get; private set; }
+		private IMongoCollection<T> m_trash { get; set; }
 		public long Count => MongoDatabase.CountDocuments(x => true);
 		private static object m_addlock = new object();
 
@@ -70,6 +72,7 @@ namespace Resources
 			var db = GetDatabase(MongoDBDatabaseName);
 			// Get the collection (which is the name of this type by default)
 			MongoDatabase = db.GetCollection<T>(MongoDBCollectionName);
+			m_trash = db.GetCollection<T>($"{MongoDBCollectionName}_trash");
 
 			foreach (var type in ReflectionExtensions.GetConcreteClasses<T>())
 			{
@@ -85,6 +88,7 @@ namespace Resources
 			try
 			{
 				MongoDatabase.Indexes.CreateOne(indexModel);
+				m_trash.Indexes.CreateOne(indexModel);
 			}
 			catch (Exception e)
 			{
@@ -134,6 +138,7 @@ namespace Resources
 			Logger.Debug($"{typeof(T).Name} DELETE: {objToDelete.Name} ({objToDelete.Guid})");
 			objToDelete.OnDestroy();
 			MongoDatabase.DeleteOne(x => x.Guid == objToDelete.Guid);
+			m_trash.InsertOne(objToDelete);
 		}
 
 		/// <summary>
@@ -229,6 +234,11 @@ namespace Resources
 		void IResourceManager.Add(IRESTResource newObject)
 		{
 			Add((T)newObject);
+		}
+
+		void IResourceManager.Delete(IRESTResource newObject)
+		{
+			Delete((T)newObject);
 		}
 
 		void IResourceManager.Update(IRESTResource newObject, ResourceLock locker)
