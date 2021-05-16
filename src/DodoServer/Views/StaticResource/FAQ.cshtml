@@ -1,34 +1,52 @@
+@model IEnumerable<Dodo.Static.FAQCategory>
+
 @{
 	ViewData["Title"] = "FAQ";
+
+	
 }
 
-<h1>Frequently Asked Questions</h1>
+<div class="row">
+	<div class="col faq-contents-pillar pt-5">
+		@foreach (var catList in Model)
+		{
+			<h5>@catList.CategoryName</h5>
+			<p>
+				@foreach (var listItem in catList.Entries)
+				{
+					<a href="#@(listItem.Slug)">@listItem.Question</a><br />
+				}
+			</p>
+		}
+	</div>
+	<div class="col">
+		<h1>Frequently Asked Questions</h1>
+		@{
+			foreach (var dir in Model)
+			{
+				var cat = dir.CategoryName;
+				<div class="card">
+					<h2 class="card-header">@cat</h2>
+					<div class="card-body">
+						<div class="accordion w-100" id="faq_@dir.Slug">
+							@{
+								foreach (var entry in dir.Entries)
+								{
+									var name = entry.Question;
+									var slug = entry.Slug;
+									<button class="btn btn-link collapsed w-100 text-left" id="@slug" type="button" data-toggle="collapse" data-target="#content_@slug" aria-expanded="false" aria-controls="content_@slug">
+										<h5>@name?</h5>
+									</button>
+									<div id="content_@slug" class="collapse" aria-labelledby="@slug" data-parent="#content_@slug">
+										@Html.Raw(entry.Content)
+									</div>
+								}
+							}
+						</div>
+					</div>
 
-@{
-	foreach (string dir in System.IO.Directory.GetDirectories(System.IO.Path.Combine("Content", "FAQ")))
-	{
-		var cat = System.IO.Path.GetFileNameWithoutExtension(dir);
-		<div class="card">
-			<h2 class="card-header">@cat</h2>
-			<div class="card-body">
-				<div class="accordion w-100" id="faq_@cat">
-					@{
-						foreach (string mdFilePath in System.IO.Directory.GetFiles(dir, "*.md"))
-						{
-							var name = System.IO.Path.GetFileNameWithoutExtension(mdFilePath);
-							var slug = Common.Extensions.ValidationExtensions.StripStringForSlug($"{cat}_{name}");
-							var content = Markdig.Markdown.ToHtml(System.IO.File.ReadAllText(mdFilePath));
-							<button class="btn btn-link collapsed w-100 text-left" id="heading_@slug" type="button" data-toggle="collapse" data-target="#@slug" aria-expanded="false" aria-controls="@slug">
-								<h5>@name?</h5>
-							</button>
-							<div id="@slug" class="collapse" aria-labelledby="heading_@slug" data-parent="#@slug">
-								@Html.Raw(content)
-							</div>
-						}
-					}
 				</div>
-			</div>
-
-		</div>
-	}
-}
+			}
+		}
+	</div>
+</div>

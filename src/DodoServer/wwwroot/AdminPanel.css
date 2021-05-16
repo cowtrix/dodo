@@ -13,8 +13,10 @@
 
 #consolecontainer {
 	width: 600px;
+}
 
-	@media (max-width: 768px) {
+@media (max-width: 768px) {
+	#consolecontainer {
 		width: 100%;
 	}
 }

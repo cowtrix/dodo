@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -9,6 +10,15 @@ namespace Common.Extensions
 	public static class StringExtensions
 	{
 		const string fullLinkOnlyRegex = @"\[([^\[]+)\]\((.*?)\)";
+
+		public static string ReplaceAll(this string str, IDictionary<string, string> dir)
+		{
+			foreach(var kvp in dir)
+			{
+				str = str.Replace(kvp.Key, kvp.Value);
+			}
+			return str;
+		}
 
 		public static string TextToHtml(string str)
 		{

@@ -28,7 +28,7 @@
 }
 
 .chat-container {
-	margin: auto !important;	
+	margin: auto !important;
 	position: fixed;
 	top: 0;
 	bottom: 0;
@@ -47,9 +47,9 @@
 
 .chat-notes {
 	position: fixed;
-	width:280px;
+	width: 280px;
 	right: 10px;
-	top:10px;
+	top: 10px;
 	bottom: 10px;
 }
 
@@ -61,7 +61,7 @@
 .dodo-navbar-text {
 	padding-left: 1em;
 	padding-right: 1em;
-	margin-left:auto;
+	margin-left: auto;
 }
 
 .chat-send {
@@ -81,7 +81,7 @@
 .chat-iframe {
 	width: 100%;
 	min-height: 500px;
-	border:none;
+	border: none;
 }
 
 .resource-reference {
@@ -91,7 +91,7 @@
 }
 
 .chat-application-area {
-	margin:10px;
+	margin: 10px;
 	max-width: 700px;
 }
 
@@ -160,10 +160,9 @@
 	padding: 1px;
 }
 
-.form-field
-{
-	position:relative;
-	margin-top:10px;
+.form-field {
+	position: relative;
+	margin-top: 10px;
 }
 
 .help-button {
@@ -179,9 +178,8 @@
 	color: lightgray;
 }
 
-.published-message
-{
-	margin:10px;
+.published-message {
+	margin: 10px;
 }
 
 .tooltip {
@@ -190,5 +188,21 @@
 
 .tooltip-inner {
 	min-width: 300px;
-	text-align:left;
+	text-align: left;
+}
+
+img {
+	width: 100%;
+}
+
+.faq-contents-pillar {
+	width: 100%;
+	max-width: 300px;
+}
+
+@media (max-width: 768px) {
+	.faq-contents-pillar {
+		max-width: unset;
+		min-width: 100%;
+	}
 }
