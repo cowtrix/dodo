@@ -26,27 +26,34 @@ namespace Dodo.Users.Tokens
 		public UserAddedAsAdminToken(ResourceReference<IAdministratedResource> resource, User newAdmin)
 		{
 			Resource = resource;
-			if (m_notification == null)
+			if (newAdmin.TokenCollection.HasToken<TemporaryUserToken>())
 			{
-				var subj = $"You have been added as an Administrator to {Resource.Name}";
-				var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{resource.Type}/{resource.Slug}";
-				m_notification = new Notification(Guid, resource.Name, subj, url, ENotificationType.Alert, GetVisibility());
+				// We shouldn't send this email if this is a temporary user. A more specific email will be sent in the UserService.CreateTemporaryUser() function.
+				return;
+			}
+			if (m_notification != null)
+			{
+				// If the notification already exists, we've already sent the email below.
+				return;
+			}
+			var subj = $"You have been added as an Administrator to {Resource.Name}";
+			var url = $"{Dodo.DodoApp.NetConfig.FullURI}/{resource.Type}/{resource.Slug}";
+			m_notification = new Notification(Guid, resource.Name, subj, url, ENotificationType.Alert, GetVisibility());
 
-				var txt = $"You're receiving this email because you are registered with an account at {Dodo.DodoApp.NetConfig.FullURI}\n\n" +
-					$"You have been added as an administrator of the {resource.Type} \"{Resource.Name}\". You can view this [here.]({url}) " +
-					$"You can view the Adminstrator Panel [here.]({Dodo.DodoApp.NetConfig.FullURI}/edit/{resource.Type}/{resource.Slug})";
+			var txt = $"You're receiving this email because you are registered with an account at {Dodo.DodoApp.NetConfig.FullURI}\n\n" +
+				$"You have been added as an administrator of the {resource.Type} \"{Resource.Name}\". You can view this [here.]({url}) " +
+				$"You can view the Adminstrator Panel [here.]({Dodo.DodoApp.NetConfig.FullURI}/edit/{resource.Type}/{resource.Slug})";
 
-				EmailUtility.SendEmail(
-					new EmailAddress { Email = newAdmin.PersonalData.Email, Name = newAdmin.Name },
-					subj,
-					"Callback",
-					new Dictionary<string, string>
-					{
+			EmailUtility.SendEmail(
+				new EmailAddress { Email = newAdmin.PersonalData.Email, Name = newAdmin.Name },
+				subj,
+				"Callback",
+				new Dictionary<string, string>
+				{
 						{ "MESSAGE", txt },
 						{ "CALLBACK_MESSAGE", "Register Your Account" },
 						{ "CALLBACK_URL", url }
-					});
-			}
+				});
 		}
 
 		public UserAddedAsAdminToken(IAdministratedResource resource, User newAdmin) : this(resource.CreateRef(), newAdmin) { }

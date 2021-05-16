@@ -21,9 +21,9 @@ namespace Resources
 		void Add(IRESTResource newObject);
 		void Update(IRESTResource objToUpdate, ResourceLock locker);
 		void Delete(IRESTResource objToDelete);
-		IRESTResource GetSingle(Func<IRESTResource, bool> selector, Guid? handle = null, bool force = false);
-		IRESTResource GetFirst(Func<IRESTResource, bool> selector, Guid? handle = null, bool force = false);
-		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector, Guid? handle = null, bool force = false);
+		IRESTResource GetSingle(Func<IRESTResource, bool> selector, Guid? handle = null, bool ensureLatest = false);
+		IRESTResource GetFirst(Func<IRESTResource, bool> selector, Guid? handle = null, bool ensureLatest = false);
+		IEnumerable<IRESTResource> Get(Func<IRESTResource, bool> selector, Guid? handle = null, bool ensureLatest = false);
 	}
 
 	public interface ISearchableResourceManager { }
@@ -33,9 +33,9 @@ namespace Resources
 		void Add(T newObject);
 		void Delete(T objToDelete);
 		void Update(T objToUpdate, ResourceLock locker);
-		T GetSingle(Func<T, bool> selector, Guid? handle = null, bool force = false);
-		T GetFirst(Func<T, bool> selector, Guid? handle = null, bool force = false);
-		IEnumerable<T> Get(Func<T, bool> selector = null, Guid? handle = null, bool force = false);
+		T GetSingle(Func<T, bool> selector, Guid? handle = null, bool ensureLatest = false);
+		T GetFirst(Func<T, bool> selector, Guid? handle = null, bool ensureLatest = false);
+		IEnumerable<T> Get(Func<T, bool> selector = null, Guid? handle = null, bool ensureLatest = false);
 	}
 
 	/// <summary>
@@ -61,7 +61,7 @@ namespace Resources
 			n = n.Replace(".", "_");
 			if (!m_databases.TryGetValue(n, out var db))
 			{
-				db = ResourceUtility.MongoDB.GetDatabase(n);
+				db = ResourceUtility.MongoDB?.GetDatabase(n);
 				m_databases[n] = db;
 			}
 			return db;
@@ -70,6 +70,11 @@ namespace Resources
 		public ResourceManager()
 		{
 			var db = GetDatabase(MongoDBDatabaseName);
+			if(db == null)
+			{
+				Logger.Error($"Failed to initialize {GetType()} as MongoDB connection was null");
+				return;
+			}
 			// Get the collection (which is the name of this type by default)
 			MongoDatabase = db.GetCollection<T>(MongoDBCollectionName);
 			
@@ -117,11 +122,11 @@ namespace Resources
 			Logger.Debug($"{typeof(T).Name} ADD: {newObject.Name} ({newObject.Guid})");
 			lock (m_addlock)
 			{
-				if (ResourceUtility.GetResourceByGuid(newObject.Guid, force: true) != null)
+				if (ResourceUtility.GetResourceByGuid(newObject.Guid, ensureLatest: true) != null)
 				{
 					throw new Exception("Conflicting GUID");
 				}
-				if (Get(r => r.Slug == newObject.Slug, force: true).Any())
+				if (Get(r => r.Slug == newObject.Slug, ensureLatest: true).Any())
 				{
 					throw new Exception("Conflicting slug");
 				}
@@ -173,10 +178,10 @@ namespace Resources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>A resource of type T that satisfies the selector</returns>
-		public virtual T GetSingle(Func<T, bool> selector, Guid? handle = null, bool force = false)
+		public virtual T GetSingle(Func<T, bool> selector, Guid? handle = null, bool ensureLatest = false)
 		{
 			Logger.Debug($"{typeof(T).Name} GETSINGLE: {selector.Method.Name} ({handle})");
-			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle, force) as T;
+			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle, ensureLatest) as T;
 		}
 
 		/// <summary>
@@ -184,10 +189,10 @@ namespace Resources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>A resource of type T that satisfies the selector</returns>
-		public virtual T GetFirst(Func<T, bool> selector, Guid? handle = null, bool force = false)
+		public virtual T GetFirst(Func<T, bool> selector, Guid? handle = null, bool ensureLatest = false)
 		{
 			Logger.Debug($"{typeof(T).Name} GETFIRST: {selector.Method.Name} ({handle})");
-			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle, force) as T;
+			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle, ensureLatest) as T;
 		}
 
 		/// <summary>
@@ -195,15 +200,15 @@ namespace Resources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
-		public virtual IEnumerable<T> Get(Func<T, bool> selector = null, Guid? handle = null, bool force = false)
+		public virtual IEnumerable<T> Get(Func<T, bool> selector = null, Guid? handle = null, bool ensureLatest = false)
 		{
 			Logger.Debug($"{typeof(T).Name} GET: {selector.Method.Name} ({handle})");
 			if (selector == null)
 			{
 				// performance case for getting everything
-				return WaitForAllUnlocked(MongoDatabase.AsQueryable(), handle, force).Cast<T>();
+				return WaitForAllUnlocked(MongoDatabase.AsQueryable(), handle, ensureLatest).Cast<T>();
 			}
-			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle, force).Cast<T>();
+			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle, ensureLatest).Cast<T>();
 		}
 
 		/// <summary>
@@ -246,28 +251,28 @@ namespace Resources
 			Update((T)newObject, locker);
 		}
 
-		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector, Guid? handle, bool force = false)
+		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector, Guid? handle, bool ensureLatest = false)
 		{
-			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle, force);
+			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle, ensureLatest);
 		}
 
-		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector, Guid? handle, bool force = false)
+		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector, Guid? handle, bool ensureLatest = false)
 		{
-			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle, force);
+			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle, ensureLatest);
 		}
 
-		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector, Guid? handle, bool force = false)
+		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector, Guid? handle, bool ensureLatest = false)
 		{
-			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle, force);
+			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle, ensureLatest);
 		}
 
-		IEnumerable<IRESTResource> WaitForAllUnlocked(IEnumerable<IRESTResource> enumerable, Guid? handle = null, bool force = false)
+		IEnumerable<IRESTResource> WaitForAllUnlocked(IEnumerable<IRESTResource> enumerable, Guid? handle = null, bool ensureLatest = false)
 		{
-			if (!force)
+			if (ensureLatest)
 			{
 				foreach (var rsc in enumerable)
 				{
-					WaitForUnlocked(rsc, handle, force);
+					WaitForUnlocked(rsc, handle, ensureLatest);
 				}
 			}
 			return enumerable;

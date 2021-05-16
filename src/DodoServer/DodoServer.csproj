@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<LangVersion>8.0</LangVersion>
@@ -24,63 +23,18 @@
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.76" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap-grid.css" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap-grid.css.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap-grid.min.css" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap-grid.min.css.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap-reboot.css" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap-reboot.css.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap-reboot.min.css" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap-reboot.min.css.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap.css" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap.css.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap.min.css" />
-		<None Include="wwwroot\lib\twitter-bootstrap\css\bootstrap.min.css.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.bundle.js" />
-		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.bundle.js.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.bundle.min.js" />
-		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.bundle.min.js.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.js" />
-		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.js.map" />
-		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.min.js" />
-		<None Include="wwwroot\lib\twitter-bootstrap\js\bootstrap.min.js.map" />
-	</ItemGroup>
-
-	<ItemGroup  Condition="'$(Configuration)' == 'Debug'">
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
 		<Content Update="DodoServer_config.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
-		<Content Update="wwwroot\CustomCRUDCss.css">
+		<Content Include="Content\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Update="wwwroot\img\email\banner1.JPG">
+		<Content Update="wwwroot\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Update="wwwroot\img\email\banner2.jpg">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Update="wwwroot\img\email\banner3.jpg">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Update="wwwroot\img\email\banner4.jpg">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="wwwroot\img\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="EmailTemplates\Update.template.html">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="EmailTemplates\Callback.template.html">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
 	</ItemGroup>
 
 	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
@@ -109,7 +63,11 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug'">
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="xcopy /E /Y &quot;$(SolutionDir)dodo-frontend\build&quot; &quot;$(TargetDir)wwwroot&quot;" />
+	</Target>
+
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)' == 'Debug'">
 	  <Exec Command="dotnet list &quot;$(SolutionPath)&quot; package &gt; $(SolutionDir)dependencies.txt" />
 	</Target>
 

@@ -54,7 +54,7 @@ namespace Dodo.DodoResources
 				{
 					throw new Exception(error);
 				}
-				ResourceUtility.Register(newResource);
+				ResourceUtility.AddToManager(newResource);
 				Logger.Debug($"Created new resource {newResource.GetType().Name}: {newResource.Guid}");
 				if (newResource is IOwnedResource owned && owned.Parent.HasValue())
 				{

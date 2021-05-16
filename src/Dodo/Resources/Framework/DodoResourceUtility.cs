@@ -16,7 +16,7 @@ namespace Dodo.DodoResources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
-		private static IEnumerable<IRESTResource> Search(Func<IRESTResource, bool> selector, Guid? handle = null, bool force = true)
+		private static IEnumerable<IRESTResource> Search(Func<IRESTResource, bool> selector, Guid? handle = null, bool ensureLatest = true)
 		{
 			foreach (var rc in ResourceUtility.ResourceManagers
 				.Where(rm => typeof(IPublicResource).IsAssignableFrom(rm.Key))
@@ -26,7 +26,7 @@ namespace Dodo.DodoResources
 				{
 					continue;
 				}
-				foreach (var rsc in rc.Value.Get(selector, handle, force))
+				foreach (var rsc in rc.Value.Get(selector, handle, ensureLatest))
 				{
 					yield return rsc;
 				}

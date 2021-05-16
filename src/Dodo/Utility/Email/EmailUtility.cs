@@ -82,7 +82,7 @@ namespace Dodo.Email
 			{
 				return txt;
 			}
-			var fPath = Path.GetFullPath($@"EmailTemplates\{templateName}.template.html");
+			var fPath = Path.GetFullPath($@"Content\EmailTemplates\{templateName}.template.html");
 			if (!File.Exists(fPath))
 			{
 				throw new FileNotFoundException(fPath);
