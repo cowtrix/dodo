@@ -6,6 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Content\FAQ\Getting Started\How can I register a new account.md" />
 	  <None Remove="salt" />
 	</ItemGroup>
 
@@ -15,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Markdig" Version="0.24.0" />
 		<PackageReference Include="McMaster.AspNetCore.LetsEncrypt" Version="0.4.0" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
 		<PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />

@@ -43,7 +43,7 @@ namespace Resources
 		{
 			get
 			{
-				if (__mongoDBClient == null && m_hasTriedToConnect)
+				if (__mongoDBClient == null && !m_hasTriedToConnect)
 				{
 					m_hasTriedToConnect = true;
 					var mongoDbURL = m_databasePath.Value;

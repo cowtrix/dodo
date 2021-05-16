@@ -72,7 +72,7 @@ namespace Dodo.Email
 						.OrderBy(u => u.Timestamp)
 						.Select(UpdateToString);
 					var updateText = string.Join('\n', updateList);
-					var rsc = ResourceUtility.GetResourceByGuid(update.Key, force: true) as IGroupResource;
+					var rsc = ResourceUtility.GetResourceByGuid(update.Key, ensureLatest: true) as IGroupResource;
 					if(rsc == null)
 					{
 						continue;
