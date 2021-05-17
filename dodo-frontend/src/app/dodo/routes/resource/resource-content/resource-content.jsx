@@ -39,14 +39,22 @@ export const ResourceContent =
 				{shouldShowAdmin ? <a href={'../edit' + location.pathname} className={styles.adminbutton}><h2>EDIT  <Icon icon="edit" size="1x" /></h2></a> : null}
 				<div className={styles.descriptionContainer}>
 					<Description description={resource.publicDescription} />
-					{(shouldDisplayNotifications || resource.facilities) && (
-						<div className={styles.panelsContainer}>
-							{shouldDisplayNotifications &&
-								<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
-							}
-							{resource.facilities && <Facilities facilities={resource.facilities} />}
-						</div>
-					)}
+					<div className={styles.panelsContainer}>
+						<SignUpButton
+							disable={resource.metadata.permission === ADMIN_PERMISSIONS}
+							resourceColor={resourceColor}
+							isLoggedIn={isLoggedIn}
+							isSubscribed={isMember}
+							onClick={
+								!isLoggedIn
+									? () => push(addReturnPathToRoute(REGISTER_ROUTE, location.pathname + '/join'))
+									: !isMember ? subscribe : unSubscribe}
+						/>
+						{shouldDisplayNotifications &&
+							<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
+						}
+						{resource.facilities && <Facilities facilities={resource.facilities} />}						
+					</div>
 				</div>
 				{resourceType === 'role' ?
 					<Role
@@ -58,16 +66,7 @@ export const ResourceContent =
 					/>
 					: null
 				}
-				<SignUpButton
-					disable={resource.metadata.permission === ADMIN_PERMISSIONS}
-					resourceColor={resourceColor}
-					isLoggedIn={isLoggedIn}
-					isSubscribed={isMember}
-					onClick={
-						!isLoggedIn
-							? () => push(addReturnPathToRoute(REGISTER_ROUTE, location.pathname + '/join'))
-							: !isMember ? subscribe : unSubscribe}
-				/>
+				
 				<ExpandableList resources={resource.events} title={COME_TO_EVENT} resourceTypes={resourceTypes} />
 				<ExpandableList resources={resource.sites} title={JOIN_US_SITES} resourceTypes={resourceTypes} />
 				<ExpandableList resources={resource.workingGroups} title={VOLUNTEER_NOW} resourceTypes={resourceTypes} />
