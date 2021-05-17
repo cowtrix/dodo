@@ -1,0 +1,5 @@
+If you're a software developer and you would like to improve this project, we'd love to hear from you. {PRODUCT} is an open-source, volunteer-driven project distributed under a copyleft license. Anyone can jump in and contribute, and there's always work to be done.
+
+You can find the Github repository for this site [here.](https://github.com/cowtrix/dodo) If there are open issues, or if you've got an idea of a contribution that you think would be useful, feel free to fork this repository and submit a Pull Request. All PRs will be reviewed before merging into the deployment branch, and we reserve the right to reject any PRs we don't think are up to scratch.
+
+{PRODUCT} is built with [React.js](https://reactjs.org/) and [ASP.Net Core](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-5.0), which may be useful to know in order to contribute. However, don't be discouraged if you don't know either of these technologies. There is always plenty of work to be done at every level of technical expertise.

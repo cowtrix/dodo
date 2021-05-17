@@ -2,8 +2,6 @@
 
 @{
 	ViewData["Title"] = "FAQ";
-
-	
 }
 
 <div class="row">
@@ -19,7 +17,7 @@
 			</p>
 		}
 	</div>
-	<div class="col">
+	<div class="col faq-container">
 		<h1>Frequently Asked Questions</h1>
 		@{
 			foreach (var dir in Model)
@@ -35,7 +33,7 @@
 									var name = entry.Question;
 									var slug = entry.Slug;
 									<button class="btn btn-link collapsed w-100 text-left" id="@slug" type="button" data-toggle="collapse" data-target="#content_@slug" aria-expanded="false" aria-controls="content_@slug">
-										<h5>@name?</h5>
+										<h5>@name</h5>
 									</button>
 									<div id="content_@slug" class="collapse" aria-labelledby="@slug" data-parent="#content_@slug">
 										@Html.Raw(entry.Content)

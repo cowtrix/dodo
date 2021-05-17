@@ -1,9 +1,9 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
 	faBullseye,
-  faChevronDown,
+	faChevronDown,
 	faChevronRight,
-  faChevronUp,
+	faChevronUp,
 	faSlidersH,
 	faCrosshairs,
 	faEdit,
@@ -23,7 +23,8 @@ import {
 	faBabyCarriage,
 	faWifi,
 	faPlug,
-	faParking
+	faParking,
+	faBell,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faFacebook, faTwitter, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
@@ -58,5 +59,6 @@ export const initiateFontAwesomeLibrary = () => {
 		faWifi,
 		faPlug,
 		faParking,
+		faBell,
 	)
 }

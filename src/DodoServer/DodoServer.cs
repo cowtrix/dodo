@@ -34,7 +34,7 @@ namespace DodoServer
 			{
 				// Generate sysadmin account if no account is registered and print
 				var schema = new UserSchema($"admin_{KeyGenerator.GetUniqueKey(6).ToLowerInvariant()}",
-					ValidationExtensions.GenerateStrongPassword(), DodoApp.DevEmail);
+					ValidationExtensions.GenerateStrongPassword(), DodoApp.SupportEmail);
 				var user = ResourceUtility.GetFactory<User>()
 					.CreateTypedObject(new ResourceCreationRequest(default, schema));
 

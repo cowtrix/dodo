@@ -4,15 +4,23 @@ using Resources;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Dodo.Static
 {
 	public class FAQCategory
 	{
+		private static string RemoveOrderString(string str)
+		{
+			return Regex.Replace(str, @"^\d+\s*-\s*", "");
+		}
+
 		private static Dictionary<string, string> VariableTemplates = new Dictionary<string, string>
 		{
-			{ "{URL}", Dodo.DodoApp.NetConfig.FullURI }
+			{ "{URL}", Dodo.DodoApp.NetConfig.FullURI },
+			{ "{PRODUCT}", Dodo.DodoApp.PRODUCT_NAME },
+			{"{SUPPORT_EMAIL}", Dodo.DodoApp.SupportEmail },
 		};
 
 		public class Entry
@@ -20,7 +28,7 @@ namespace Dodo.Static
 			public Entry(string category, string path)
 			{
 				EntryPath = path;
-				Question = $"{Path.GetFileNameWithoutExtension(EntryPath)}?";
+				Question = $"{RemoveOrderString(Path.GetFileNameWithoutExtension(EntryPath))}?";
 				Content = Markdig.Markdown.ToHtml(File.ReadAllText(EntryPath).ReplaceAll(VariableTemplates));
 				Slug = ValidationExtensions.StripStringForSlug($"{category}_{Question}");
 			}
@@ -33,7 +41,7 @@ namespace Dodo.Static
 		public FAQCategory(string catPath)
 		{
 			CategoryPath = catPath;
-			CategoryName = Path.GetFileNameWithoutExtension(CategoryPath);
+			CategoryName = RemoveOrderString(Path.GetFileNameWithoutExtension(CategoryPath));
 			Slug = ValidationExtensions.StripStringForSlug(CategoryName); ;
 			Entries = new List<Entry>(Directory.GetFiles(CategoryPath, "*.md").Select(f => new Entry(CategoryName, f)));
 		}

@@ -116,6 +116,14 @@ export const Settings = () => {
 							isSubContainer
 							content={
 								<>
+									<UpdateEmail
+										email={emailEdit}
+										setEmail={handleSet(setEmailEdit)}
+										isConfirmed={emailConfirmed}
+										resendVerificationEmail={
+											resendVerificationEmail
+										}
+									/>
 									<div>
 										<h3 className={styles.h3Title}>
 											Email Preferences
@@ -142,15 +150,7 @@ export const Settings = () => {
 										id="newNotifications"
 										checked={NNToggle ?? false}
 										setValue={handleSet(setNNToggle)}
-									/>
-									<UpdateEmail
-										email={emailEdit}
-										setEmail={handleSet(setEmailEdit)}
-										isConfirmed={emailConfirmed}
-										resendVerificationEmail={
-											resendVerificationEmail
-										}
-									/>
+									/>									
 									<Error
 										error={
 											updateError &&

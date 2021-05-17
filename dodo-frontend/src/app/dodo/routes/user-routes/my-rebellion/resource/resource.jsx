@@ -13,9 +13,13 @@ export const Resource = ({ name, slug, metadata, resourceTypes = [], administrat
 			<Link
 				to={metadata.type + '/' + slug}
 				className={`${styles.resource} ${styles[metadata.type]}`}
-				style={{ backgroundColor: backgroundColor}}
+				style={{ backgroundColor: backgroundColor }}
 				title={`View ${name}`}>
-				<h3>{name}{member ? '  🔔' : ''}</h3>
+				<h3>{name}</h3>
+				{
+					member &&
+					<Icon icon='bell' size='1x' className={styles.bell} />
+				}
 				<div className={styles.icons}>
 					<Icon icon='chevron-right' size='1x' className={styles.icon} />
 				</div>
