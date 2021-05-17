@@ -7,6 +7,11 @@ using System.Text.Json.Serialization;
 
 namespace Dodo
 {
+	/// <summary>
+	/// This is the basic authentication packet that we pass around the program in order to authenticate a user.
+	/// It contains a reference to the target user, and their unlocked passphrase which has been released from
+	/// their user account by the request and encrypted in the session cookie.
+	/// </summary>
 	public readonly struct AccessContext
 	{
 		public readonly User User;

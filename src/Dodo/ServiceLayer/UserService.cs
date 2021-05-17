@@ -66,8 +66,7 @@ public class UserService : ResourceServiceBase<User, UserSchema>
 		// Generate an encryption key that we will include in the cookie and throw away on our end
 		var key = new Passphrase(KeyGenerator.GetUniqueKey(SessionToken.KEYSIZE));
 
-		// Create the session token
-
+		// Create the session token and add it to the user's current tokens
 		var sessionTimeout = login.RememberMe ? SessionToken.ShortSessionExpiryTime : SessionToken.LongSessionExpiryTime;
 		var token = new SessionToken(user, passphrase, key, HttpContext.Connection.RemoteIpAddress, DateTime.UtcNow + sessionTimeout);
 		using (var rscLock = new ResourceLock(user))

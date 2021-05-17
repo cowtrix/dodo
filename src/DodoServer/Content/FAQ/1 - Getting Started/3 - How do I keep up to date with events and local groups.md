@@ -8,4 +8,4 @@ The bell symbol (🔔) next to each name tells you if you are subscribed or not.
 
 ![A screenshot of the user settings page.](../../img/faq/settings_email.png)
 
-Make sure the box to the right "Notifcations" is ticked. If you needed to enable or click this box, then click the "Update My Details" button.
+Make sure the box to the right "Notifications" is ticked. If you needed to enable or click this box, then click the "Update My Details" button.

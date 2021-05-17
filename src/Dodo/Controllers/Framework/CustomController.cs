@@ -14,6 +14,9 @@ namespace Resources
 	{
 		public const string RESPONSE_VIEWDATA = "server_response";
 
+		/// <summary>
+		/// The AccessContext related to this request.
+		/// </summary>
 		protected AccessContext Context { 
 			get 
 			{
@@ -26,6 +29,11 @@ namespace Resources
 		}
 		private AccessContext? __context = null;
 
+		/// <summary>
+		/// This will execute before any request is processed.
+		/// The ViewData is only relevant to Razor views.
+		/// </summary>
+		/// <param name="actionContext">The context of the executing action.</param>
 		public override void OnActionExecuting(ActionExecutingContext actionContext)
 		{
 			ViewData["Timezone"] = Context.User != null && !string.IsNullOrEmpty(Context.User.PersonalData.TimezoneID) 

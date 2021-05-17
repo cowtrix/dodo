@@ -12,13 +12,6 @@ namespace Dodo
 {
 	public static class AuthExtensions
 	{
-		private static readonly IResourceManager<User> m_userManager;
-
-		static AuthExtensions()
-		{
-			m_userManager = ResourceUtility.GetManager<User>();
-		}
-
 		public static AccessContext GetContext(this ClaimsPrincipal claims)
 		{
 			// Make sure we have the info needed
