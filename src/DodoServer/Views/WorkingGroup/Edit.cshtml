@@ -66,11 +66,11 @@ $(function () {
 										<label class="control-label">Parent</label>
 					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Parent"))"><i class="fas fa-question-circle"></i></button>
 					<input class="sr-only" asp-for="Parent.Type"/>
-					@{ var reftype43231651 = @Model.Parent.Type.ToLowerInvariant(); }
+					@{ var reftype12674872 = @Model.Parent.Type.ToLowerInvariant(); }
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
-					<div class="col-auto"><a class="btn btn-light @(reftype43231651)-reference" role="button" target="_blank" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
-					<div class="col-auto"><a class="btn btn-light @(reftype43231651)-reference" role="button" target="_blank" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype12674872)-reference" role="button" target="_blank" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype12674872)-reference" role="button" target="_blank" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
 					</div>
 @{
 	if (!Model.IsPublished)
@@ -115,22 +115,25 @@ else
 					<input asp-for="AdministratorData" class="sr-only"></input>
 					<input asp-for="PublicKey" class="sr-only"></input>
 <div class="form-field card">
+	<script>
+		$(document).ready(function () {
+			$('.data-table').DataTable();
+		});
+	</script>
+
 	<div class="card-header"><h5 class="card-title">Roles</h5></div>
 	<div class="card-body">
-		<ul class="list-group">
-			@{
-				if (!Model.Roles.Any())
-				{
-					<div class="alert alert-info" role="alert">
-						There are no entries in this list. To create a new entry, click "Create"
-					</div>
-				}
-				else
-				{
-					for (var i = 0; i < Model.Roles.Count; ++i)
+		<table class="list-group data-table">
+			<thead>
+				<th></th>
+			</thead>
+			<tbody>
+				@{
+					@for (var i = 0; i < Model.Roles.Count; ++i)
 					{
-						<li class="list-group-item">
-															<input class="sr-only" asp-for="Roles[i].Type"/>
+						<tr>
+							<td>
+																<input class="sr-only" asp-for="Roles[i].Type"/>
 								@{ var reftype54848996 = @Model.Roles[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Roles[i].Name</strong></div>
@@ -138,37 +141,43 @@ else
 								<div class="col-auto"><a class="btn btn-light @(reftype54848996)-reference" role="button" target="_blank" href="../../edit/@Model.Roles[i].Type/@Model.Roles[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
 
-						</li>
+							</td>
+						</tr>
 					}
 				}
-				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.Roles.Role>)))
-				{
-					// Create button!
-					string parent = $"?parent={@Model.Slug}";
-					<a class="btn btn-light btn-block role-reference form-field" role="button" target="_blank" href="~/edit/role/create@(parent)">Create New</a>
-				}
+			</tbody>
+		</table>
+		@{
+			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.Roles.Role>)))
+						{
+				// Create button!
+				string parent = $"?parent={@Model.Slug}";
+				<a class="btn btn-light btn-block role-reference form-field" role="button" target="_blank" href="~/edit/role/create@(parent)">Create New</a>
 			}
-		</ul>
+		}
 	</div>
 </div>
 
 <div class="form-field card">
+	<script>
+		$(document).ready(function () {
+			$('.data-table').DataTable();
+		});
+	</script>
+
 	<div class="card-header"><h5 class="card-title">Working Groups</h5></div>
 	<div class="card-body">
-		<ul class="list-group">
-			@{
-				if (!Model.WorkingGroups.Any())
-				{
-					<div class="alert alert-info" role="alert">
-						There are no entries in this list. To create a new entry, click "Create"
-					</div>
-				}
-				else
-				{
-					for (var i = 0; i < Model.WorkingGroups.Count; ++i)
+		<table class="list-group data-table">
+			<thead>
+				<th></th>
+			</thead>
+			<tbody>
+				@{
+					@for (var i = 0; i < Model.WorkingGroups.Count; ++i)
 					{
-						<li class="list-group-item">
-															<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
+						<tr>
+							<td>
+																<input class="sr-only" asp-for="WorkingGroups[i].Type"/>
 								@{ var reftype23878916 = @Model.WorkingGroups[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.WorkingGroups[i].Name</strong></div>
@@ -176,17 +185,20 @@ else
 								<div class="col-auto"><a class="btn btn-light @(reftype23878916)-reference" role="button" target="_blank" href="../../edit/@Model.WorkingGroups[i].Type/@Model.WorkingGroups[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
 
-						</li>
+							</td>
+						</tr>
 					}
 				}
-				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>)))
-				{
-					// Create button!
-					string parent = $"?parent={@Model.Slug}";
-					<a class="btn btn-light btn-block workinggroup-reference form-field" role="button" target="_blank" href="~/edit/workinggroup/create@(parent)">Create New</a>
-				}
+			</tbody>
+		</table>
+		@{
+			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>)))
+						{
+				// Create button!
+				string parent = $"?parent={@Model.Slug}";
+				<a class="btn btn-light btn-block workinggroup-reference form-field" role="button" target="_blank" href="~/edit/workinggroup/create@(parent)">Create New</a>
 			}
-		</ul>
+		}
 	</div>
 </div>
 

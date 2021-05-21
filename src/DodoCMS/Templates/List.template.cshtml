@@ -1,30 +1,36 @@
 <div class="form-field card">
+	<script>
+		$(document).ready(function () {
+			$('.data-table').DataTable();
+		});
+	</script>
+
 	<div class="card-header"><h5 class="card-title">{NAME}</h5></div>
 	<div class="card-body">
-		<ul class="list-group">
-			@{
-				if (!Model.{MEMBER}.Any())
-				{
-					<div class="alert alert-info" role="alert">
-						There are no entries in this list. To create a new entry, click "Create"
-					</div>
-				}
-				else
-				{
-					for (var i = 0; i < Model.{MEMBER}.Count; ++i)
+		<table class="list-group data-table">
+			<thead>
+				<th></th>
+			</thead>
+			<tbody>
+				@{
+					@for (var i = 0; i < Model.{MEMBER}.Count; ++i)
 					{
-						<li class="list-group-item">
-							{FIELD}
-						</li>
+						<tr>
+							<td>
+								{FIELD}
+							</td>
+						</tr>
 					}
 				}
-				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof({TYPE})))
-				{
-					// Create button!
-					string parent = $"?parent={@Model.Slug}";
-					<a class="btn btn-light btn-block {REFTYPE}-reference form-field" role="button" target="_blank" href="~/edit/{REFTYPE}/create@(parent)">Create New</a>
-				}
+			</tbody>
+		</table>
+		@{
+			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof({TYPE})))
+						{
+				// Create button!
+				string parent = $"?parent={@Model.Slug}";
+				<a class="btn btn-light btn-block {REFTYPE}-reference form-field" role="button" target="_blank" href="~/edit/{REFTYPE}/create@(parent)">Create New</a>
 			}
-		</ul>
+		}
 	</div>
 </div>

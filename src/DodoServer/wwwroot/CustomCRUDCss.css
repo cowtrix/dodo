@@ -211,3 +211,53 @@ img {
 	height: 90vh;
 	overflow-y: auto;
 }
+
+.dataTables_filter {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
+@media (min-width: 1024px) {
+	.dataTables_info {
+		position: absolute;
+		bottom: 64px;
+		right: 32px;
+	}
+}
+
+.dataTables_paginate {
+	text-align: center;
+}
+
+.paginate_button {
+	margin-left: .2em;
+	margin-right: .2em;
+	padding: 5px 10px 5px 10px;
+	display: inline-block;
+	background-color: #BBBBBB;
+	border-radius: 5px;
+}
+
+	.paginate_button:not(:disabled):not(.disabled) {
+		cursor: pointer;
+	}
+
+	.paginate_button.disabled {
+		opacity: .5;
+	}
+
+	.paginate_button.current {
+		background: #DDDDDD;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+
+.dataTables_filter > label > input {
+	margin-left: .5em;
+}
+
+tr, td {
+	display: block;
+	width: 100%;
+}

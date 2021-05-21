@@ -6,4 +6,4 @@ For example, we might search for events with the API by calling an endpoint like
 curl --location --request GET '{URL}/api/search?latlong=62+54&distance=100'
 ```
 
-You can find the full API documentation [here.](https://documenter.getpostman.com/view/8888079/SW15xbbc?version=latest)
+You can find the full API documentation [here.](https://documenter.getpostman.com/view/8888079/SW15xbbc?version=latest) Please let us know if you use it for something cool!

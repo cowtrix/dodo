@@ -24,7 +24,7 @@ namespace Dodo.ViewModels
 		public uint Revision { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		[Resources.MaxStringLengthAttribute(2048)]
+		[Resources.MaxStringLengthAttribute((int)2048)]
 		public string PublicDescription { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]
@@ -46,9 +46,11 @@ namespace Dodo.ViewModels
 		public Resources.Security.Passphrase PublicKey { get; set; }
 		[DisplayName("Start Date")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[System.ComponentModel.DataAnnotations.DataTypeAttribute((System.ComponentModel.DataAnnotations.DataType)2)]
 		public System.DateTime StartDate { get; set; }
 		[DisplayName("End Date")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
+		[System.ComponentModel.DataAnnotations.DataTypeAttribute((System.ComponentModel.DataAnnotations.DataType)2)]
 		public System.DateTime EndDate { get; set; }
 		[DisplayName("Location")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]

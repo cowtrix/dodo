@@ -14,6 +14,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using Resources.Location;
 using Dodo.Users.Tokens;
 using Dodo.Email;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dodo.Rebellions
 {
@@ -27,6 +28,7 @@ namespace Dodo.Rebellions
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("Start Date")]
 		[PatchCallback(nameof(OnValueChanged))]
+		[DataType(DataType.Date)]
 		public DateTime StartDate
 		{
 			get
@@ -48,6 +50,7 @@ namespace Dodo.Rebellions
 		[BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
 		[Name("End Date")]
 		[PatchCallback(nameof(OnValueChanged))]
+		[DataType(DataType.Date)]
 		public DateTime EndDate { get { return __endDate; } set { __endDate = value.ToUniversalTime(); } }
 		private DateTime __endDate;
 

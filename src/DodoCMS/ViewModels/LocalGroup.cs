@@ -24,7 +24,7 @@ namespace Dodo.ViewModels
 		public uint Revision { get; set; }
 		[DisplayName("Public Description")]
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.ADMIN)]
-		[Resources.MaxStringLengthAttribute(2048)]
+		[Resources.MaxStringLengthAttribute((int)2048)]
 		public string PublicDescription { get; set; }
 		[DisplayName("Published")]
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.ADMIN)]

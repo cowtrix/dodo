@@ -18,6 +18,7 @@ Project 'Dodo' has the following package references
    [netstandard2.1]: 
    Top-level Package                                      Requested   Resolved
    > MailKit                                              2.10.0      2.10.0  
+   > Markdig                                              0.24.0      0.24.0  
    > Microsoft.AspNetCore.Cryptography.KeyDerivation      3.1.8       3.1.8   
    > Microsoft.AspNetCore.Mvc                             2.2.0       2.2.0   
    > System.Text.Json                                     4.7.2       4.7.2   
@@ -65,7 +66,7 @@ Project 'DodoServer' has the following package references
    > Microsoft.AspNetCore.HttpOverrides                    2.2.0       2.2.0   
    > Microsoft.AspNetCore.SpaServices.Extensions           3.1.8       3.1.8   
    > Microsoft.VisualStudio.Web.CodeGeneration.Design      3.1.4       3.1.4   
-   > Microsoft.Web.LibraryManager.Build                    2.1.76      2.1.76  
+   > Microsoft.Web.LibraryManager.Build                    2.1.113     2.1.113 
 
 Project 'DodoAOT' has the following package references
    [netcoreapp3.1]: No packages were found for this framework.

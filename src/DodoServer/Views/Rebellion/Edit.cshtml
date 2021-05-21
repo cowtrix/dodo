@@ -265,22 +265,25 @@ else
 					<span asp-validation-for="VideoEmbedURL" class="text-danger"></span>
 				</div>
 <div class="form-field card">
+	<script>
+		$(document).ready(function () {
+			$('.data-table').DataTable();
+		});
+	</script>
+
 	<div class="card-header"><h5 class="card-title">Sites</h5></div>
 	<div class="card-body">
-		<ul class="list-group">
-			@{
-				if (!Model.Sites.Any())
-				{
-					<div class="alert alert-info" role="alert">
-						There are no entries in this list. To create a new entry, click "Create"
-					</div>
-				}
-				else
-				{
-					for (var i = 0; i < Model.Sites.Count; ++i)
+		<table class="list-group data-table">
+			<thead>
+				<th></th>
+			</thead>
+			<tbody>
+				@{
+					@for (var i = 0; i < Model.Sites.Count; ++i)
 					{
-						<li class="list-group-item">
-															<input class="sr-only" asp-for="Sites[i].Type"/>
+						<tr>
+							<td>
+																<input class="sr-only" asp-for="Sites[i].Type"/>
 								@{ var reftype21007413 = @Model.Sites[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Sites[i].Name</strong></div>
@@ -288,37 +291,43 @@ else
 								<div class="col-auto"><a class="btn btn-light @(reftype21007413)-reference" role="button" target="_blank" href="../../edit/@Model.Sites[i].Type/@Model.Sites[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
 
-						</li>
+							</td>
+						</tr>
 					}
 				}
-				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Site>)))
-				{
-					// Create button!
-					string parent = $"?parent={@Model.Slug}";
-					<a class="btn btn-light btn-block site-reference form-field" role="button" target="_blank" href="~/edit/site/create@(parent)">Create New</a>
-				}
+			</tbody>
+		</table>
+		@{
+			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Site>)))
+						{
+				// Create button!
+				string parent = $"?parent={@Model.Slug}";
+				<a class="btn btn-light btn-block site-reference form-field" role="button" target="_blank" href="~/edit/site/create@(parent)">Create New</a>
 			}
-		</ul>
+		}
 	</div>
 </div>
 
 <div class="form-field card">
+	<script>
+		$(document).ready(function () {
+			$('.data-table').DataTable();
+		});
+	</script>
+
 	<div class="card-header"><h5 class="card-title">Events</h5></div>
 	<div class="card-body">
-		<ul class="list-group">
-			@{
-				if (!Model.Events.Any())
-				{
-					<div class="alert alert-info" role="alert">
-						There are no entries in this list. To create a new entry, click "Create"
-					</div>
-				}
-				else
-				{
-					for (var i = 0; i < Model.Events.Count; ++i)
+		<table class="list-group data-table">
+			<thead>
+				<th></th>
+			</thead>
+			<tbody>
+				@{
+					@for (var i = 0; i < Model.Events.Count; ++i)
 					{
-						<li class="list-group-item">
-															<input class="sr-only" asp-for="Events[i].Type"/>
+						<tr>
+							<td>
+																<input class="sr-only" asp-for="Events[i].Type"/>
 								@{ var reftype61986480 = @Model.Events[i].Type.ToLowerInvariant(); }
 								<div class="row">
 								<div class="col"><strong>@Model.Events[i].Name</strong></div>
@@ -326,17 +335,20 @@ else
 								<div class="col-auto"><a class="btn btn-light @(reftype61986480)-reference" role="button" target="_blank" href="../../edit/@Model.Events[i].Type/@Model.Events[i].Slug"><i class="fa fa-edit"></i>Edit</a></div>
 								</div>
 
-						</li>
+							</td>
+						</tr>
 					}
 				}
-				if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Event>)))
-				{
-					// Create button!
-					string parent = $"?parent={@Model.Slug}";
-					<a class="btn btn-light btn-block event-reference form-field" role="button" target="_blank" href="~/edit/event/create@(parent)">Create New</a>
-				}
+			</tbody>
+		</table>
+		@{
+			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Event>)))
+						{
+				// Create button!
+				string parent = $"?parent={@Model.Slug}";
+				<a class="btn btn-light btn-block event-reference form-field" role="button" target="_blank" href="~/edit/event/create@(parent)">Create New</a>
 			}
-		</ul>
+		}
 	</div>
 </div>
 
