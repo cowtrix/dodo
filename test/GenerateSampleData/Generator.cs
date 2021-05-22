@@ -23,8 +23,8 @@ namespace GenerateSampleData
 	/// <summary>
 	/// This class will go and generate a bunch of sample information. It will take a good few minutes to generate.
 	/// The easiest way to get more/less data is just to add/remove cities below.
-	/// Be aware that running this utility will REQUIRE providing a valid MapBox public API key `MapBoxGeocodingService_ApiKey` in your configuration
-	/// in order to look up the city lat/longs
+	/// Be aware that running this utility will REQUIRE providing a valid MapBox public API key `MapBoxGeocodingService_ApiKey` 
+	/// in your configuration in order to look up the city lat/longs
 	/// </summary>
 	public static class Generator
 	{

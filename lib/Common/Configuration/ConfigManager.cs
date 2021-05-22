@@ -16,7 +16,7 @@ namespace Common.Config
 	public static class ConfigManager
 	{
 		// TODO: this is the wrong path if hosting in IIS (maybe use IWebHostEnvironment to get it)
-		public static string ConfigPath => Path.GetFullPath($"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
+		public static string ConfigPath = Path.GetFullPath($"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
 		static Dictionary<string, object> m_data = new Dictionary<string, object>();
 
 		static ConfigManager()
@@ -87,21 +87,5 @@ namespace Common.Config
 		{
 			return TryGetValue<T>(configVariable.ConfigKey, out result);
 		}
-
-#if DEBUG
-		const string m_sampleConfigPath = @"config.sample.json";
-		static Dictionary<string, object> m_sampleData = new Dictionary<string, object>();
-		internal static void Register<T>(ConfigVariable<T> configVariable)
-		{
-			try
-			{
-				m_sampleData[configVariable.ConfigKey] = configVariable.DefaultValue;
-				File.WriteAllText(m_sampleConfigPath, JsonConvert.SerializeObject(m_sampleData, Formatting.Indented));
-			}
-			catch
-			{
-			}
-		}
-#endif
 	}
 }

@@ -36,18 +36,12 @@ namespace Common.Config
 			DefaultValue = defaultValue;
 			ConfigKey = key;
 			m_required = false;
-#if DEBUG
-			ConfigManager.Register(this);
-#endif
 		}
 		public ConfigVariable(string key)
 		{
 			DefaultValue = default;
 			m_required = true;
 			ConfigKey = key;
-#if DEBUG
-			ConfigManager.Register(this);
-#endif
 		}
 
 		public override bool Equals(object obj)

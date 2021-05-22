@@ -26,6 +26,22 @@ namespace DodoServer
 #if DEBUG
 			Logger.Warning($"Running in Debug mode");
 #endif
+
+			for (int i = 0; i < args.Length - 1; i++)
+			{
+				var arg = args[i];
+				if (arg != "--config")
+				{
+					continue;
+				}
+				var configPath = Path.GetFullPath(args[i + 1]);
+				if(!File.Exists(configPath))
+				{
+					throw new FileNotFoundException($"Missing configuration file: {configPath}");
+				}
+				ConfigManager.ConfigPath = configPath;
+			}
+
 			SessionTokenStore.Initialise();
 			Logger.Info($"Launching with arguments: {string.Join(" ", args)}");
 

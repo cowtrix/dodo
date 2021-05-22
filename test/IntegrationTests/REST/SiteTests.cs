@@ -23,13 +23,13 @@ namespace RESTTests
 			var result = new JObject();
 			//result["facilities"] = new {  }
 			result["publicDescription"] = "test 124";
-			result["videoEmbedURL"] = SchemaGenerator.RandomVideoURL;
+			result["videoEmbedURL"] = "https://www.youtube.com/embed/d4QDM_Isi24";
 			return result;
 		}
 
 		protected override void VerifyPatchedObject(Site rsc, JObject patchObj)
 		{
-			Assert.AreEqual(rsc.VideoEmbedURL, SchemaGenerator.RandomVideoURL);
+			Assert.AreEqual(rsc.VideoEmbedURL, "https://www.youtube.com/embed/d4QDM_Isi24");
 			Assert.AreEqual(rsc.PublicDescription, "test 124");
 		}
 	}
