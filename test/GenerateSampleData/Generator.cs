@@ -32,7 +32,7 @@ namespace GenerateSampleData
 
 		static string[] m_cities = new[]
 		{
-			"London", "Paris", "Rome", "Denver", "New York", "Los Angeles", "San Francisco", "Vancouver", "Amsterdam", "Sydney"
+			 "Paris", "Rome", "Denver", "New York", "Los Angeles", "San Francisco", "Vancouver", "Amsterdam", "Sydney", "London",
 		};
 
 		static async Task Main(string[] args)
@@ -83,7 +83,7 @@ namespace GenerateSampleData
 			var currentRebellion = TestBase.CreateNewObject<Rebellion>(context,
 				new RebellionSchema($"{city} Rebellion", SchemaGenerator.SampleDescription, location, rootDate() - TimeSpan.FromDays(2), rootDate() + TimeSpan.FromDays(2)), seed: false);
 			
-			for(var i = 0; i < 8; ++ i)
+			//for(var i = 0; i < 8; ++ i)
 			{
 				var siteOccupation = TestBase.CreateNewObject<Site>(context, new SiteSchema("Central Occupation", currentRebellion.Guid.ToString().ToString(), location, SchemaGenerator.SampleDescription, SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL), seed: false);
 				var actionOccupation = TestBase.CreateNewObject<Event>(context, new EventSchema("Protest For Nature", currentRebellion.Guid.ToString().ToString(), new GeoLocation(location.ToCoordinate().Latitude + 0.05 * rnd.NextDouble(), location.ToCoordinate().Longitude + 0.05), SchemaGenerator.SampleDescription, SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rootDate() + TimeSpan.FromDays(1), rootDate() + TimeSpan.FromDays(2) + TimeSpan.FromHours(4)));

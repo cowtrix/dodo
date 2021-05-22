@@ -1,3 +1,4 @@
+using Dodo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using RESTTests;
@@ -15,7 +16,7 @@ namespace RESTTests
 		[TestMethod]
 		public async Task CanGetAPIEndpoint()
 		{
-			var request = await RequestJSON(Dodo.DodoApp.API_ROOT, Resources.EHTTPRequestType.GET);
+			var request = await RequestJSON(Dodo.DodoApp.API_ROOT, EHTTPRequestType.GET);
 			// Simple enough to just check that it has some resource types defined
 			var rscTypes = request.Value<JArray>("resourceTypes").Values<JToken>().ToList();
 			Assert.IsTrue(rscTypes.Any());

@@ -13,6 +13,7 @@ using Common;
 using Dodo.WorkingGroups;
 using DodoTest.Framework.Postman;
 using Resources.Location;
+using Dodo;
 
 namespace RESTTests
 {

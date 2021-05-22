@@ -2,7 +2,7 @@
 	var adminData = Model.{MEMBER};
 	Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
 	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<{FULL_TYPE}, {SCHEMA_TYPE}>);
-	var canDelete = authManager.IsAuthorised(context, Model.Slug, Resources.EHTTPRequestType.DELETE).IsSuccess;
+	var canDelete = authManager.IsAuthorised(context, Model.Slug, Dodo.EHTTPRequestType.DELETE).IsSuccess;
 }
 
 @{ if (thisAdmin.Permissions.CanEditAdministrators)

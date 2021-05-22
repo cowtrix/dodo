@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using Resources;
 using System;
 using System.Threading.Tasks;
+using Dodo;
 
 namespace RESTTests
 {

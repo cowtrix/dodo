@@ -18,9 +18,9 @@ namespace DodoAOT
 	/// I basically just wanted to make something that programatically generated the viewmodels
 	/// and view razor pages, because I'm lazy and really it's all just derived from the base 
 	/// data model. 
-	/// It's basically just a super simple templating thing that swaps out some magic strings
-	/// in the template files (see `Templates` folder) for their reflected values.
-	/// We can probably rip this out once the CMS stuff stabilises a bit.
+	/// It's just a super simple templating thing that swaps out some magic strings
+	/// in the template files (see `DodoCMS\Templates` folder) for their reflected values.
+	/// We can probably rip this out once the CMS stuff stabilises a bit if maintainence becomes an issue.
 	/// </summary>
 	class Program
 	{
@@ -52,10 +52,7 @@ namespace DodoAOT
 					typeof(RoleApplication)
 				})
 			{
-				using (var fs = new StreamWriter(Path.Combine(viewModelPath, $"{rmType.Name}.cs")))
-				{
-					fs.Write(ViewModelGenerator.Generate(rmType));
-				}
+				OutputReadonlyFile(ViewModelGenerator.Generate(rmType), Path.Combine(viewModelPath, $"{rmType.Name}.cs"));
 			}
 
 			// Create Views
@@ -92,6 +89,11 @@ namespace DodoAOT
 			}
 		}
 
+		/// <summary>
+		/// Output a readonly text file to the given path
+		/// </summary>
+		/// <param name="fileContents">The contents of the file</param>
+		/// <param name="path">The path to write to</param>
 		static void OutputReadonlyFile(string fileContents, string path)
 		{
 			FileInfo fileInfo = new FileInfo(path);

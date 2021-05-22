@@ -16,6 +16,7 @@ using Dodo.Users;
 using System.Net;
 using Dodo.Models;
 using DodoServer;
+using Dodo;
 
 namespace RESTTests
 {

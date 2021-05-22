@@ -1,4 +1,4 @@
-﻿namespace Resources
+namespace Dodo
 {
 	public enum EHTTPRequestType
 	{

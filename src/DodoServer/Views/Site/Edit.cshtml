@@ -511,7 +511,7 @@ else
 	var adminData = Model.AdministratorData;
 	Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
 	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<Dodo.LocationResources.Site, Dodo.LocationResources.SiteSchema>);
-	var canDelete = authManager.IsAuthorised(context, Model.Slug, Resources.EHTTPRequestType.DELETE).IsSuccess;
+	var canDelete = authManager.IsAuthorised(context, Model.Slug, Dodo.EHTTPRequestType.DELETE).IsSuccess;
 }
 
 @{ if (thisAdmin.Permissions.CanEditAdministrators)

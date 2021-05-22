@@ -3,6 +3,10 @@ using System.Linq;
 
 namespace Dodo
 {
+	/// <summary>
+	/// This is the network configuration for the server. 
+	/// We would normally read this in via the .json configuration file (see: ConfigurationManager)
+	/// </summary>
 	public struct NetworkConfig
 	{
 		[JsonIgnore]
