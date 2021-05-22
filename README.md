@@ -1,86 +1,76 @@
-Dodo is a tool for organising Rebellions. A Rebellion is a peaceful, occupational protest.
-Its purpose is to allow Rebels to map out the organisational structure of their protest
-team, support internal communications, recruit volunteers into open roles, and broadcast
-information about the status of the Rebellion.
-
-**Read the [Specification Document](https://docs.google.com/document/d/1yjUkmxTiSCRLJ7weWW5JxJRUwE2LFJmo2SnO-Fwxggk/)** for more information on project goals.
+Dodo is a website for organising events, made for Extinction Rebellion by a volunteer team.
 
 # [REST API Documentation](https://documenter.getpostman.com/view/8888079/SW15xbbc?version=latest)
 
-# Getting Started
+# Deployment
 
-## Building From Source
+## Deploying via Docker
 
-Dodo is built on .NET Core 3.0. To build from source, you must install the SDK from [here](https://dotnet.microsoft.com/download/dotnet-core/3.0).
+Dodo contains a docker build script (`~/Dockerfile`), and a docker compose yaml configuration (`~/docker-compose.yml`), which should be everything you need in order to build and run a Dodo server via Docker.
 
-From the root directory, run `dotnet build`. The project will be output in the `/bin/` directory.
+```
+docker build . -t dodo:latest
+docker pull mongo:latest
+docker compose up
+```
 
-## System Requirements
+This will do a few things:
 
-Dodo is compatible with Linux and Windows. It requires the .NET Core 3.0 runtime, which you can install for your operating system from [here](https://dotnet.microsoft.com/download/dotnet-core/3.0).
+1. Build the docker image, which will contain a release version of the server
+2. Download the MongoDB image from [here](https://hub.docker.com/_/mongo/)
+3. Launch both containers and set the server up to connect to the database
+
+By default, the `docker-compose` deployment will attempt to bind the configuration file at the root of the .git repository (`~/DodoServer_config.json`) and this is the easiest way to set the configuration of your server. Just edit the file at the root of the git repository where the docker file was built, and it should just work.
+
+## Deploying directly
+
+If you don't wish to use docker, you can deploy Dodo directly on a machine.
+
+### Requirements
+
+- [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet/3.1)
+- [npm](https://www.npmjs.com/get-npm)
+
+To run the project from source:
+
+```
+dotnet run -c Release --project .\src\DodoServer\DodoServer.csproj
+```
+
+Or, to build the project to a standalone executable:
+
+```
+dotnet publish --force src\DodoServer\DodoServer.csproj -o ..\build -c Release
+```
 
 ## Configuring Your Server
 
-Configuration variables are read from a file called `config.json`, which should be formatted as a JSON dictionary. You can find a sample config file within the project called `config.sample.json` which also serves as a list of all variables that you can set. This file needs to be in the root directory of the application. At various points in this setup, you'll need to open up this file and set a variable to the given value.
+Configuration variables are read from a JSON configuration at the root of the project directory called `DodoServer_config.json`. You can also set these variables by setting an environment variable of the same name.
 
-At minimum, your configuration file should look like this:
+Your configuration file might look something like this:
 
 ```
-	"LogLevel":2,
-	"Dodo_DevEmail":"<support email>",
+{
+	"LogLevel":3,
+	"MongoDBServerURL": "mongodb://username:password@dodo_mongo_1:27017/?authSource=admin"
+	"Dodo_SupportEmail": "support@dodo.ovh",
 	"NetworkConfig": {
-		"SSLPort": 443,
-		"HTTPPort" : 80,
-		"Domains": [ "<Your domain>" ],
+		"SSLPort": 5001,
+		"HTTPPort" : 5000,
+		"Domains": [ "dodo.ovh" ],
 		"LetsEncryptAutoSetup": true,
 	},
-	"SendGrid_APIKey" : "<SendGrid private API key>",
-	"MapBoxGeocodingService_ApiKey": "<public MapBox geocoding API key>",
-	"ReactPath": "<path to the react frontend>"
+	"MapBoxGeocodingService_ApiKey": "<api key>",
+	"Dodo_EmailConfiguration": {
+		"FromEmail": "noreply@dodo.ovh",
+		"FromName": "Dodo",
+		"SMTPAddress": "smtp.myemailserver.net",
+		"SMTPPort": 587,
+		"SMTPUsername": "<username>",
+		"SMTPPassword": "<password>"
+	}
+}
 ```
-
-### 1 - Install or set up MongoDB
-
-Dodo requires a MongoDB server to store its data. We strongly recommend that you host the server on hardware that you directly control, and not through a cloud service such as Azure. You can download a free, local MongoDB server [here](https://www.mongodb.com/community).
-
-If you are locally hosting the MongoDB server, move to the next step. If not, you will need to define the configuration variable `MongoDBServerURL` to the URL of your database. If you need to authenticate to the server, you should be able to do this within the connection string (e.g. "mongodb://user1:password1@localhost/test").
-
-### 2 - Set up a SendGrid account
-
-Dodo uses [SendGrid](https://sendgrid.com/) to manage and send emails. To link your server to a SendGrid account, you will need to get an API key from the SendGrid website, and set the `SendGrid_APIKey` configuration value to this key. Without this, users will not receive emails from your server. Additionally, you may wish to customize the `Email_FromEmail` and `Email_FromName` fields, which will change how emails are displayed when received by users.
-
-To enable incoming emails, you need to set up an Inbound Parse to your domain name, and 
-
-### 3 - Set up your SSL Certificate
-
-Dodo uses Let's Encrypt to generate free SSL certificates. If you don't want Dodo to do this, set the `LetsEncryptAutoSetup` variable to false.
-
-### 3 - Launch the server
-
-You're ready to go! Just run the executable DodoServer.exe
-
-## Docker
-
-```
-docker-compose up
-```
-
-This will spin up 2 containers:
-
--   dodo_dodo_1: dotnet webapp listening at https://localhost:5001/
--   dodo_mongo_1: Mongo DB listening at `mongodb://root:example@localhost:27017`
-
-### Loading Sample Data
-
--   Convert some windows separators stuff, run script, convert back
-
-```
-docker exec -it dodo_dodo_1 sed -i s/resources\\\\SampleMarkdown/resources\\/SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
-docker exec -it dodo_dodo_1 dotnet run --project /app/test/GenerateSampleData/GenerateSampleData.csproj
-docker exec -it dodo_dodo_1 sed -i s/resources\\/SampleMarkdown/resources\\\\SampleMarkdown/g /app/test/Dodo.SharedTest/SchemaGenerator.cs
-```
-
--   See results https://localhost:5001/api/rebellions/
 
 # Security
 
