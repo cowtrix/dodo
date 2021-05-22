@@ -82,13 +82,11 @@ namespace RESTTests.Search
 		public async Task CanSearchByParent()
 		{
 			GetRandomUser(out _, out var context);
-			var rebellion1 = CreateObject<Rebellion>(context);
+			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test Rebellion", "A test.", SchemaGenerator.RandomLocation, DateTime.Today, DateTime.Today + TimeSpan.FromDays(4)));
 			var positives = new List<IOwnedResource>()
 			{
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Slug)),
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Slug)),
-				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid.ToString(), new GeoLocation(rebellion1.Location).Offset(-.05, .1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
-				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid.ToString(), new GeoLocation(rebellion1.Location).Offset(-.05, .1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid.ToString(), new GeoLocation(rebellion1.Location).Offset(-.05, .1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
+				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid.ToString(), new GeoLocation(rebellion1.Location).Offset(-.05, .1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
@@ -97,7 +95,6 @@ namespace RESTTests.Search
 				CreateObject<Site>(),
 				CreateObject<Event>(),
 				CreateObject<LocalGroup>(),
-				CreateObject<WorkingGroup>(),
 			};
 			var request = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
@@ -122,21 +119,17 @@ namespace RESTTests.Search
 		{
 			string magic = "asjdnajdwbakjfbskdfb.......sdfkjsfse";
 			GetRandomUser(out _, out var context);
-			var rebellion1 = CreateObject<Rebellion>(context);
+			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test Rebellion", "A test.", SchemaGenerator.RandomLocation, DateTime.Today, DateTime.Today + TimeSpan.FromDays(4)));
 			var positives = new List<IRESTResource>()
 			{
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema($"{magic} Working Group 1", "", rebellion1.Slug)),
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema($"{magic} Working Group 2", "", rebellion1.Guid.ToString())),
-				CreateObject<Event>(context, new EventSchema($"Test Event {magic}", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
-				CreateObject<Event>(context, new EventSchema($"Test {magic} Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema($"Test Event {magic}", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
+				CreateObject<Event>(context, new EventSchema($"Test {magic} Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
 				CreateObject<Rebellion>(),
 				CreateObject<Site>(),
 				CreateObject<Event>(),
-				CreateObject<LocalGroup>(),
-				CreateObject<WorkingGroup>(),
 			};
 			var request = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
@@ -160,13 +153,11 @@ namespace RESTTests.Search
 		public async Task CanSearchByType()
 		{
 			GetRandomUser(out _, out var context);
-			var rebellion1 = CreateObject<Rebellion>(context);
+			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test Rebellion", "A test.", SchemaGenerator.RandomLocation, DateTime.Today, DateTime.Today + TimeSpan.FromDays(4)));
 			var positives = new List<IOwnedResource>()
 			{
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 1", "", rebellion1.Slug)),
-				CreateObject<WorkingGroup>(context, new WorkingGroupSchema("Test Working Group 2", "", rebellion1.Guid.ToString())),
-				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
-				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
+				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid.ToString(), SchemaGenerator.RandomLocation, "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
 			};
 			var negatives = new List<IRESTResource>()
 			{
@@ -174,8 +165,6 @@ namespace RESTTests.Search
 				CreateObject<Rebellion>(),
 				CreateObject<LocalGroup>(),
 				CreateObject<LocalGroup>(),
-				CreateObject<Role>(),
-				CreateObject<Role>(),
 			};
 			var request = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{SearchAPIController.RootURL}", EHTTPRequestType.GET, null,
 				new[]
@@ -199,12 +188,12 @@ namespace RESTTests.Search
 		public async Task CanSearchByLocation()
 		{
 			var admin = GetRandomUser(out var password, out var context);
-			var rebellion1 = CreateObject<Rebellion>(context);
+			var rebellion1 = CreateObject<Rebellion>(context, new RebellionSchema("Test Rebellion", "A test.", SchemaGenerator.RandomLocation, DateTime.Today, DateTime.Today + TimeSpan.FromDays(4)));
 			var positives = new ILocationalResource[] {
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("My Local Group 1", "", new GeoLocation(rebellion1.Location).Offset(-.1, -.1))),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("My Local Group 2", "", new GeoLocation(rebellion1.Location).Offset(.1, -.1))),
-				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid.ToString(), new GeoLocation(rebellion1.Location).Offset(-.05, .1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
-				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid.ToString(), new GeoLocation(rebellion1.Location).Offset(-.05, .1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.StartDate), false),
+				CreateObject<Event>(context, new EventSchema("Test Event Site", rebellion1.Guid.ToString(), new GeoLocation(rebellion1.Location).Offset(-.05, .1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
+				CreateObject<Event>(context, new EventSchema("Test March Site", rebellion1.Guid.ToString(), new GeoLocation(rebellion1.Location).Offset(-.05, .1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, rebellion1.StartDate, rebellion1.EndDate), false),
 				};
 			var negatives = new ILocationalResource[] {
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("My Local Group 1", "", new GeoLocation(rebellion1.Location).Offset(-45, -45))),

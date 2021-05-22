@@ -32,7 +32,8 @@ namespace Dodo
 				var permissionLevel = Context.User == null ? EPermissionLevel.PUBLIC : EPermissionLevel.USER;
 				var resources = DodoResourceUtility.Search(index, Math.Min(chunkSize, ChunkSize), locationFilter, dateFilter, stringFilter, parentFilter, typeFilter)
 					.Select(rsc => rsc.GenerateJsonView(permissionLevel, Context.User, Context.Passphrase));
-				return Ok(resources.ToList());
+				var results = resources.ToList();
+				return Ok(results);
 			}
 			catch (Exception e)
 			{

@@ -14,7 +14,7 @@ export const Header = ({ resource, setCenterMap, resourceColor, hideMap }) =>
 			<Dates startDate={resource.startDate} endDate={resource.endDate} />
 			{(resource.location && resource.location.address) ?
 				<div className={styles.address}>
-					<h3>{resource.location.address}</h3>
+					<h3 id="resource-address">{resource.location.address}</h3>
 				</div>
 				: null
 			}

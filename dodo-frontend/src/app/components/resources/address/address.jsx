@@ -5,7 +5,7 @@ import styles from './address.module.scss'
 
 
 export const Address = ({ address }) =>
-	<div className={styles.address} dangerouslySetInnerHTML={{ __html: address.replace(new RegExp(',', 'g'), '<br />') } }></div>
+	<div id="address" className={styles.address} dangerouslySetInnerHTML={{ __html: address.replace(new RegExp(',', 'g'), '<br />') } }></div>
 
 Address.propTypes = {
 	address: PropTypes.string,

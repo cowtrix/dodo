@@ -130,6 +130,11 @@ namespace Dodo.Email
 				Logger.Debug($"Email to {target.Email} was suppressed because user unsubscribed");
 				return;
 			}
+			if(target.Email.EndsWith("@example.com"))
+			{
+				Logger.Debug($"Email to {target.Email} was suppressed because user had fake/test email.");
+				return;
+			}
 			var t = new Task(() =>
 			{
 				try

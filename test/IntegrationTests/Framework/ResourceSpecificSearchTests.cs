@@ -22,10 +22,10 @@ namespace RESTTests.Search
 	{
 	}
 
-	[TestClass]
+	/*[TestClass]
 	public class WorkingGroupResourceSpecificSearchTests : ResourceSpecificSearchTests<WorkingGroup>
 	{
-	}
+	}*/
 
 	[TestClass]
 	public class EventSiteResourceSpecificSearchTests : ResourceSpecificSearchTests<Event>
@@ -70,8 +70,9 @@ namespace RESTTests.Search
 				{
 					(nameof(DistanceFilter.LatLong), $"{resource.Location.Latitude}+{resource.Location.Longitude}"),
 					(nameof(DistanceFilter.Distance), "20.6"),
+					(nameof(DateFilter.StartDate), DateTime.MinValue.ToString())
 				});
-			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
+			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase())).ToList();
 			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
 		}
 
@@ -117,6 +118,7 @@ namespace RESTTests.Search
 				parameters: new[]
 				{
 					(nameof(ParentFilter.Parent), resource.Parent.Guid.ToString() ),
+					(nameof(DateFilter.StartDate), DateTime.MinValue.ToString())
 				});
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
@@ -136,6 +138,7 @@ namespace RESTTests.Search
 				parameters: new[]
 				{
 					(nameof(StringFilter.Search), resource.Name ),
+					(nameof(DateFilter.StartDate), DateTime.MinValue.ToString())
 				});
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsTrue(guids.Contains(resource.Guid.ToString()));
@@ -150,7 +153,11 @@ namespace RESTTests.Search
 			{
 				sites.Add(CreateObject<T>(context, GetSchema(context)));
 			}
-			var list = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET);
+			var list = await RequestJSON<JArray>($"{Dodo.DodoApp.API_ROOT}{ResourceRoot}", EHTTPRequestType.GET,
+				parameters: new[]
+				{
+					(nameof(DateFilter.StartDate), DateTime.MinValue.ToString())
+				});
 			var guids = list.Values<JObject>().Select(o => o.Value<string>(nameof(IRESTResource.Guid).ToCamelCase()));
 			Assert.IsFalse(sites.Any(x => !guids.Contains(x.Guid.ToString())));
 			Postman.Update(

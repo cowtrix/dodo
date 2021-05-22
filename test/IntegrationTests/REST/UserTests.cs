@@ -179,8 +179,10 @@ namespace RESTTests
 				request);
 
 			request = await Request($"{UserService.RootURL}/{UserService.REDEEM_PASSWORD_TOKEN}", EHTTPRequestType.POST,
-				newPassword, new[] { (UserService.PARAM_TOKEN, token.Key) });
+				newPassword, new[] { (UserService.PARAM_TOKEN, token.Key) },
+				r => r.StatusCode == System.Net.HttpStatusCode.Redirect );	// Should be redirect to homepage
 
+			// User should be logged out now and will need to log back in with new password, check this works
 			await Login(user.Slug, newPassword);
 			Postman.Update(
 				new PostmanEntryAddress { Category = UserCat, Request = "Redeem a Password Reset Token" },

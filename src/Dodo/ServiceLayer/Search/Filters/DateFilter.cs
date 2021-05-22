@@ -25,6 +25,7 @@ namespace Dodo.DodoResources
 			m_generatedData = true;
 			m_startDate = string.IsNullOrEmpty(StartDate) ? DateTime.UtcNow : DateTime.Parse(StartDate);
 			m_endDate = string.IsNullOrEmpty(EndDate) ? DateTime.MaxValue : DateTime.Parse(EndDate);
+			m_empty = string.IsNullOrEmpty(StartDate) && string.IsNullOrEmpty(EndDate);
 		}
 
 		public bool Filter(IRESTResource rsc)
@@ -34,7 +35,7 @@ namespace Dodo.DodoResources
 			{
 				return timeboundResource.StartDate <= m_endDate && timeboundResource.EndDate >= m_startDate;
 			}
-			return false;
+			return true;
 		}
 
 		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)

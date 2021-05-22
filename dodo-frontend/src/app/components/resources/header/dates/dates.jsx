@@ -12,7 +12,7 @@ export const Dates = ({ startDate, endDate}) => {
 
 	return (
 		startDate ?
-			<h3>
+			<h3 id="resource-date">
 			{singleDayEvent(startDate, endDate, dateOptions) ?
 				dateFormatted(startDate, dateAndTimeOptions) + ' - ' + timeFormatted(endDate, timeOptions)  :
 				`${dateFormatted(startDate, dateOptions) + ' - ' + dateFormatted(endDate, dateOptions)}`}
