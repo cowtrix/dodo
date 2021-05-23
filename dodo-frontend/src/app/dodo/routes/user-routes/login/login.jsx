@@ -43,7 +43,7 @@ export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 						name="Username"
 						id="username"
 						type="text"
-						value={username}
+						value={username.toLocaleLowerCase().replace(/[^a-z0-9_]*/g, "")}
 						setValue={setUsername}
 						maxLength={63}
 					/>
