@@ -6,8 +6,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Content\FAQ\1 - Getting Started\1 - How can I register a new account - Copy.md" />
 	  <None Remove="Content\FAQ\1 - Getting Started\2 - How do I find events near me.md" />
 	  <None Remove="Content\FAQ\1 - Getting Started\3 - How do I keep up to date with events and local groups.md" />
+	  <None Remove="Content\FAQ\2 - For Administrators\1 - I'm a coordinator of a Local Group, how do I sign up and advertise our events.md" />
+	  <None Remove="Content\FAQ\2 - For Administrators\3 - How do I publish a Local Group, Event or Rebellion.md" />
 	  <None Remove="Content\FAQ\3 - For Developers\1 - I'm a developer and I'd like to help out, what can I do.md" />
 	  <None Remove="Content\FAQ\3 - For Developers\2 - Is there an API.md" />
 	  <None Remove="salt" />
@@ -39,9 +42,6 @@
 		<Content Update="wwwroot\**">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Content\FAQ\2 - For Administrators\" />
 	</ItemGroup>
 
 	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

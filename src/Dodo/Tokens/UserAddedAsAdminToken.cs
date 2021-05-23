@@ -1,3 +1,4 @@
+using Common;
 using Common.Extensions;
 using Common.Security;
 using Dodo.Email;
@@ -41,8 +42,8 @@ namespace Dodo.Users.Tokens
 			m_notification = new Notification(Guid, resource.Name, subj, url, ENotificationType.Alert, GetVisibility());
 
 			var txt = $"You're receiving this email because you are registered with an account at {Dodo.DodoApp.NetConfig.FullURI}\n\n" +
-				$"You have been added as an administrator of the {resource.Type} \"{Resource.Name}\". You can view this [here.]({url}) " +
-				$"You can view the Adminstrator Panel [here.]({Dodo.DodoApp.NetConfig.FullURI}/edit/{resource.Type}/{resource.Slug})";
+				$"You have been added as an administrator of the {resource.GetRefType().GetName()} \"{Resource.Name}\". You can view this [here.]({url}) " +
+				$"You can view the Adminstrator Panel [here.]({Dodo.DodoApp.NetConfig.FullURI}/edit/{resource.Type.ToLowerInvariant()}/{resource.Slug})";
 
 			EmailUtility.SendEmail(
 				new EmailAddress { Email = newAdmin.PersonalData.Email, Name = newAdmin.Name },
@@ -52,7 +53,7 @@ namespace Dodo.Users.Tokens
 				{
 						{ "MESSAGE", txt },
 						{ "CALLBACK_MESSAGE", "Register Your Account" },
-						{ "CALLBACK_URL", url }
+						{ "CALLBACK_URL", StringExtensions.TextToHtml(url) }
 				});
 		}
 

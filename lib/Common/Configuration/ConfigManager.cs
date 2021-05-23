@@ -19,11 +19,6 @@ namespace Common.Config
 		public static string ConfigPath = Path.GetFullPath($"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
 		static Dictionary<string, object> m_data = new Dictionary<string, object>();
 
-		static ConfigManager()
-		{
-			LoadFromFile();
-		}
-
 		public static void LoadFromFile()
 		{
 			if (!File.Exists(ConfigPath))

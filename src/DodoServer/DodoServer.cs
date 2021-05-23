@@ -12,6 +12,7 @@ using Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DodoServer
 {
@@ -23,10 +24,10 @@ namespace DodoServer
 
 		public static void Main(string[] args)
 		{
-#if DEBUG
-			Logger.Warning($"Running in Debug mode");
-#endif
-
+			if(args.Any())
+			{
+				Logger.Info($"Launching with arguments: {string.Join(" ", args)}");
+			}
 			for (int i = 0; i < args.Length - 1; i++)
 			{
 				var arg = args[i];
@@ -35,15 +36,17 @@ namespace DodoServer
 					continue;
 				}
 				var configPath = Path.GetFullPath(args[i + 1]);
-				if(!File.Exists(configPath))
+				if (!File.Exists(configPath))
 				{
 					throw new FileNotFoundException($"Missing configuration file: {configPath}");
 				}
 				ConfigManager.ConfigPath = configPath;
 			}
-
+			ConfigManager.LoadFromFile();
+#if DEBUG
+			Logger.Warning($"Running in Debug mode");
+#endif
 			SessionTokenStore.Initialise();
-			Logger.Info($"Launching with arguments: {string.Join(" ", args)}");
 
 			var usrManager = ResourceUtility.GetManager<User>();
 			if(usrManager.Count == 0)

@@ -66,11 +66,11 @@ $(function () {
 										<label class="control-label">Parent</label>
 					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"Parent"))"><i class="fas fa-question-circle"></i></button>
 					<input class="sr-only" asp-for="Parent.Type"/>
-					@{ var reftype39974954 = @Model.Parent.Type.ToLowerInvariant(); }
+					@{ var reftype44307222 = @Model.Parent.Type.ToLowerInvariant(); }
 					<div class="row">
 					<div class="col"><strong>@Model.Parent.Name</strong></div>
-					<div class="col-auto"><a class="btn btn-light @(reftype39974954)-reference" role="button" target="_blank" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
-					<div class="col-auto"><a class="btn btn-light @(reftype39974954)-reference" role="button" target="_blank" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype44307222)-reference" role="button" target="_blank" href="../../@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-eye"></i>View</a></div>
+					<div class="col-auto"><a class="btn btn-light @(reftype44307222)-reference" role="button" target="_blank" href="../../edit/@Model.Parent.Type/@Model.Parent.Slug"><i class="fa fa-edit"></i>Edit</a></div>
 					</div>
 @{
 	if (!Model.IsPublished)
@@ -280,7 +280,13 @@ else
 							<p> @Html.Raw(notification.Message) </p>
 						</div>
 					</li>
-				}}
+					}
+					if (!notifications.Any()) {
+						<div class="alert alert-warning" role="alert">
+							No announcements yet.
+						</div>
+					}
+				}
 		</ul>
 	</div>
 </div>

@@ -430,7 +430,13 @@ else
 							<p> @Html.Raw(notification.Message) </p>
 						</div>
 					</li>
-				}}
+					}
+					if (!notifications.Any()) {
+						<div class="alert alert-warning" role="alert">
+							No announcements yet.
+						</div>
+					}
+				}
 		</ul>
 	</div>
 </div>

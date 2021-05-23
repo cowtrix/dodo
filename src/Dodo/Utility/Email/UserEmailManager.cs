@@ -81,7 +81,8 @@ namespace Dodo.Email
 					foreach (var user in userList
 						.Where(u => u.PersonalData.EmailPreferences.NewNotifications && rsc.IsMember(u)))
 					{
-						EmailUtility.SendEmail(new EmailAddress(user.PersonalData.Email, user.Slug),
+						EmailUtility.SendEmail(
+							new EmailAddress(user.PersonalData.Email, user.Slug),
 							$"[{DodoApp.PRODUCT_NAME}] Update from {rsc.Name}",
 							"Update", new Dictionary<string, string> 
 							{ 

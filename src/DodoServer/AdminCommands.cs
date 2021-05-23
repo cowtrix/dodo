@@ -1,6 +1,7 @@
 using Common;
 using Common.Commands;
 using Common.Extensions;
+using Dodo.Email;
 using Dodo.LocalGroups;
 using Dodo.Rebellions;
 using Dodo.Users;
@@ -8,6 +9,7 @@ using Dodo.Users.Tokens;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -15,7 +17,7 @@ namespace Resources
 {
 	public static class AdminCommands
 	{
-		[Command(@"^approve", "approve <type> <user>", "Approve a user to create a given resource.\n" + 
+		[Command(@"^approve", "approve <type> <user>", "Approve a user to create a given resource.\n" +
 			"\t<type>: The type of resource to approve. Can be:\n" +
 			"\t\t - " + nameof(Rebellion) + "\n" +
 			"\t\t - " + nameof(LocalGroup) + "\n" +
@@ -31,25 +33,40 @@ namespace Resources
 			}
 			var typeName = m.Groups[1].Value;
 			var rm = ResourceUtility.ResourceManagers.SingleOrDefault(rm => rm.Key.Name.ToLowerInvariant() == typeName.ToLowerInvariant());
-			if(rm.Value == null)
+			if (rm.Value == null)
 			{
 				throw new Exception($"Bad syntax: Resource type not found with name '{typeName}'. Valid types are 'rebellion' & 'localgroup'");
 			}
-			if(!typeof(IPublicResource).IsAssignableFrom(rm.Key))
+			if (!typeof(IPublicResource).IsAssignableFrom(rm.Key))
 			{
 				throw new Exception($"Resource type not valid '{typeName}'");
 			}
 			var id = m.Groups[2].Value;
-			var user = ResourceUtility.GetManager<User>().GetSingle(u => u.Guid.ToString() == id || u.Slug == id || u.PersonalData.Email == id);
-			if(user == null)
+			var userManager = ResourceUtility.GetManager<User>();
+			var user = userManager.GetSingle(u => u.Guid.ToString() == id || u.Slug == id || u.PersonalData.Email == id);
+			if (user == null)
 			{
 				throw new Exception($"User not found with id '{id}'");
 			}
 
-			using var rsc = new ResourceLock(user);
-			user = rsc.Value as User;
-			var token = new Dodo.Users.Tokens.ResourceCreationToken(rm.Key);
-			user.TokenCollection.AddOrUpdate(user, token);
+			using (var rscLock = new ResourceLock(user))
+			{
+				user = rscLock.Value as User;
+				var token = new Dodo.Users.Tokens.ResourceCreationToken(rm.Key);
+				user.TokenCollection.AddOrUpdate(user, token);
+				userManager.Update(user, rscLock);
+			}
+
+
+			var friendlyTypeName = rm.Key.GetName();
+			EmailUtility.SendEmail(new EmailAddress(user.PersonalData.Email, user.Name),
+				$"[{Dodo.DodoApp.PRODUCT_NAME}] You've been approved to create a new {friendlyTypeName}",
+				"Callback", new Dictionary<string, string>
+				{
+						{ "MESSAGE", $"You've been approved to create a new {friendlyTypeName}. To do so, follow the link below and follow the steps." },
+						{ "CALLBACK_MESSAGE", $"Create A New {friendlyTypeName}" },
+						{ "CALLBACK_URL", $"{Dodo.DodoApp.NetConfig.FullURI}/edit/{typeName.ToLowerInvariant()}/create" }
+				});
 
 			return $"User {user.Slug} was successfully approved to create a new {rm.Key}";
 		}
@@ -75,7 +92,7 @@ namespace Resources
 				Formatting.Indented);
 		}
 
-		[Command(@"^delete", "delete <id>", 
+		[Command(@"^delete", "delete <id>",
 			"Delete a resource.\n\t<id>: A resource ID, either the slug or GUID. Use with caution!")]
 		public static string DeleteResource(CommandArguments cmd)
 		{
@@ -97,16 +114,16 @@ namespace Resources
 			return $"Resource {rsc} was successfully deleted.";
 		}
 
-		[Command(@"^reversedelete", "reversedeleteresource <id>", 
+		[Command(@"^reversedelete", "reversedelete <id>",
 			"Reverse the deletion of a resource.\n\t<id>: A resource ID, either the slug or GUID.")]
 		public static string ReverseDeleteResource(CommandArguments cmd)
 		{
-			const string REVERSE_DELETEUSER_REGEX = "^reversedeleteresource\\s+(.+)";
+			const string REVERSE_DELETEUSER_REGEX = "^reversedelete\\s+(.+)";
 			var s = cmd.Raw;
 			var m = Regex.Match(s, REVERSE_DELETEUSER_REGEX);
 			if (!m.Success)
 			{
-				throw new Exception($"Bad syntax: Expecting `reversedeleteresource <id>`");
+				throw new Exception($"Bad syntax: Expecting `reversedelete <id>`");
 			}
 			var id = m.Groups[1].Value;
 			Guid.TryParse(id, out var guid);
@@ -123,7 +140,7 @@ namespace Resources
 			return $"Resource {rsc} was successfully reverted from deletion.";
 		}
 
-		[Command(@"^hide", "hide <id> <reason>", 
+		[Command(@"^hide", "hide <id> <reason>",
 			"Hide a resource from public view.\n\t<id>: A resource ID, either the slug or GUID.\n\t<reason>The reason for hiding, e.g. 'broke the rules doing x'.")]
 		public static string HideResource(CommandArguments cmd)
 		{
@@ -146,7 +163,7 @@ namespace Resources
 			return $"Resource {rsc} was successfully hidden.";
 		}
 
-		[Command(@"^unhide", "unhide <id>", 
+		[Command(@"^unhide", "unhide <id>",
 			"Unhide a resource, which will make it publicly viewable again.\n\t<id>: A resource ID, either the slug or GUID.")]
 		public static string UnhideResource(CommandArguments cmd)
 		{
