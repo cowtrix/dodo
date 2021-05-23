@@ -71,6 +71,10 @@ namespace Dodo
 			{
 				return ResourceRequestError.NotFoundRequest();
 			}
+			if(target is IPublicResource pub && pub.IsHidden())
+			{
+				return ResourceRequestError.NotFoundRequest();
+			}
 			return new ResourceActionRequest(context, target, EHTTPRequestType.GET, GetPermission(context, target), action);
 		}
 

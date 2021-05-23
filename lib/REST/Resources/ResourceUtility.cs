@@ -20,6 +20,7 @@ namespace Resources
 		/// The key by which we get the MongoDB connection string.
 		/// </summary>
 		public const string CONFIGKEY_MONGODBSERVERURL = "MongoDBServerURL";
+		public const string MONGODB_DATABASE_NAME = "Resources";
 		/// <summary>
 		/// The connection string for the MongoDB instance. Can be defined by an environment variable or through the config .json file
 		/// </summary>
@@ -36,6 +37,7 @@ namespace Resources
 		/// Stores all deleted public resources, so that we can revert accidental deletions.
 		/// </summary>
 		public static IMongoCollection<Resource> Trash { get; private set; }
+		public static PersistentStore<Guid, string> Hidden { get; private set; }
 		/// <summary>
 		/// The connection to the MongoDB database.
 		/// </summary>
@@ -101,6 +103,7 @@ namespace Resources
 				// Try to initialize the connection to the trash folder for deleted resources
 				var db = MongoDB.GetDatabase("Trash");
 				Trash = db.GetCollection<Resource>("DeletedResources");
+				Hidden = new PersistentStore<Guid, string>(MONGODB_DATABASE_NAME, nameof(Hidden));
 			}
 			catch (Exception e)
 			{

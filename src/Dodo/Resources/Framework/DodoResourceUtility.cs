@@ -51,7 +51,7 @@ namespace Dodo.DodoResources
 		{
 			return src.Invoke(rsc => filters.All(f => f.Filter(rsc)), null, true)
 				.OfType<IPublicResource>()
-				.Where(rsc => rsc.IsPublished)
+				.Where(rsc => rsc.IsPublished && !rsc.IsHidden())
 				.Transpose(x =>
 				{
 					Array.ForEach(filters, f => f.Mutate(x));

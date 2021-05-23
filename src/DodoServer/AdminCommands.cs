@@ -15,8 +15,7 @@ namespace Resources
 {
 	public static class AdminCommands
 	{
-		const string APPROVE_CMD_REGEX = @"^approve";
-		[Command(APPROVE_CMD_REGEX, "approve <type> <user>", "Approve a user to create a given resource.\n" + 
+		[Command(@"^approve", "approve <type> <user>", "Approve a user to create a given resource.\n" + 
 			"\t<type>: The type of resource to approve. Can be:\n" +
 			"\t\t - " + nameof(Rebellion) + "\n" +
 			"\t\t - " + nameof(LocalGroup) + "\n" +
@@ -55,8 +54,7 @@ namespace Resources
 			return $"User {user.Slug} was successfully approved to create a new {rm.Key}";
 		}
 
-		const string SEARCHUSER_CMD_REGEX = @"^searchuser";
-		[Command(SEARCHUSER_CMD_REGEX, "searchuser <user>", "Get information about a user or email address.")]
+		[Command(@"^searchuser", "searchuser <user>", "Get information about a user or email address.")]
 		public static string SearchForUser(CommandArguments cmd)
 		{
 			const string SEARCHUSER_REGEX = "^searchuser\\s+(.+)";
@@ -77,9 +75,9 @@ namespace Resources
 				Formatting.Indented);
 		}
 
-		const string DELETERESOURCE_CMD_REGEX = @"^deleteresource";
-		[Command(DELETERESOURCE_CMD_REGEX, "deleteresource <id>", "Delete a resource.\n\t<id>: A resource ID, either the slug or GUID.")]
-		public static string DeleteObject(CommandArguments cmd)
+		[Command(@"^delete", "delete <id>", 
+			"Delete a resource.\n\t<id>: A resource ID, either the slug or GUID. Use with caution!")]
+		public static string DeleteResource(CommandArguments cmd)
 		{
 			const string DELETEUSER_REGEX = "^deleteresource\\s+(.+)";
 			var s = cmd.Raw;
@@ -99,9 +97,9 @@ namespace Resources
 			return $"Resource {rsc} was successfully deleted.";
 		}
 
-		const string REVERSE_DELETE_RESOURCE = @"^reversedeleteresource";
-		[Command(REVERSE_DELETE_RESOURCE, "reversedeleteresource <id>", "Reverse the deletion of a resource.\n\t<id>: A resource ID, either the slug or GUID.")]
-		public static string ReverseDeleteObject(CommandArguments cmd)
+		[Command(@"^reversedelete", "reversedeleteresource <id>", 
+			"Reverse the deletion of a resource.\n\t<id>: A resource ID, either the slug or GUID.")]
+		public static string ReverseDeleteResource(CommandArguments cmd)
 		{
 			const string REVERSE_DELETEUSER_REGEX = "^reversedeleteresource\\s+(.+)";
 			var s = cmd.Raw;
@@ -123,6 +121,51 @@ namespace Resources
 			ResourceUtility.GetManager(rsc.GetType()).Add(rsc);
 			ResourceUtility.Trash.DeleteOne(r => rsc.Guid == r.Guid);
 			return $"Resource {rsc} was successfully reverted from deletion.";
+		}
+
+		[Command(@"^hide", "hide <id> <reason>", 
+			"Hide a resource from public view.\n\t<id>: A resource ID, either the slug or GUID.\n\t<reason>The reason for hiding, e.g. 'broke the rules doing x'.")]
+		public static string HideResource(CommandArguments cmd)
+		{
+			const string HIDERESOURCE_REGEX = "^hide\\s+(.+?)\\s+(.+)";
+			var s = cmd.Raw;
+			var m = Regex.Match(s, HIDERESOURCE_REGEX);
+			if (!m.Success)
+			{
+				throw new Exception($"Bad syntax: Expecting `hide <id> <reason>`");
+			}
+			var id = m.Groups[1].Value;
+			var reason = m.Groups[2].Value;
+			var rsc = ResourceUtility.GetResource(u => u.Guid.ToString() == id || u.Slug == id)
+				.FirstOrDefault();
+			if (rsc == null || !(rsc is IPublicResource pub))
+			{
+				throw new Exception($"Public resource not found with id '{id}'");
+			}
+			pub.Hide(reason);
+			return $"Resource {rsc} was successfully hidden.";
+		}
+
+		[Command(@"^unhide", "unhide <id>", 
+			"Unhide a resource, which will make it publicly viewable again.\n\t<id>: A resource ID, either the slug or GUID.")]
+		public static string UnhideResource(CommandArguments cmd)
+		{
+			const string UNHIDERESOURCE_REGEX = "^unhide\\s+(.+)";
+			var s = cmd.Raw;
+			var m = Regex.Match(s, UNHIDERESOURCE_REGEX);
+			if (!m.Success)
+			{
+				throw new Exception($"Bad syntax: Expecting `unhide <id>`");
+			}
+			var id = m.Groups[1].Value;
+			var rsc = ResourceUtility.GetResource(u => u.Guid.ToString() == id || u.Slug == id)
+				.FirstOrDefault();
+			if (rsc == null || !(rsc is IPublicResource pub))
+			{
+				throw new Exception($"Public resource not found with id '{id}'");
+			}
+			pub.UnHide();
+			return $"Resource {rsc} was successfully unhidden.";
 		}
 	}
 
