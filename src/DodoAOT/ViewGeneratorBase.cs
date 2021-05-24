@@ -43,7 +43,17 @@ namespace DodoAOT
 			{ typeof(IResourceReference), RefView },
 			{ typeof(IList), ListView },
 			{ typeof(Dodo.LocationResources.SiteFacilities), Facilities },
+			{ typeof(DateTime), DateTimeView },
 		};
+
+		private static IEnumerable<string> DateTimeView(string prefix, MemberInfo member, int indentLevel)
+		{
+			yield return Template("DateTime")
+				.Replace("{MEMBER}", $"{prefix}{member.Name}")
+				.Replace("{TYPE}", member.GetMemberType().GetRealTypeName(true))
+				.Replace("{NAME}", member.Name)
+				.Replace("{FRIENDLY_NAME}", member.GetName());
+		}
 
 		private static Dictionary<string, CustomDrawerCallback> m_customExcplicitCallback = new Dictionary<string, CustomDrawerCallback>()
 		{

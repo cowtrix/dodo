@@ -6,6 +6,6 @@ namespace Common
 {
 	public static class Constants
 	{
-		public const string DateTimeFormat = @"yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz";
+		public const string DateTimeFormat = @"dd/mm/YYYY HH:MM";
 	}
 }

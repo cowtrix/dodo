@@ -29,6 +29,9 @@
 	<script src="~/lib/chartjs/Chart.min.js"></script>
 
 	<script src="~/lib/datatables/jquery.dataTables.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="~/lib/datetimepicker/jquery.datetimepicker.min.css" />
+	<script src="~/lib/datetimepicker/jquery.datetimepicker.full.min.js"></script>
 </head>
 <body>
 	@{ if (drawNavbar)
@@ -66,8 +69,8 @@
 			</nav>
 			<div class="container-md">
 				@if (ViewData[Resources.CustomController.RESPONSE_VIEWDATA] is Resources.IRequestResult result
-				   && result != null
-				   && !string.IsNullOrEmpty(result.Message))
+				 && result != null
+				 && !string.IsNullOrEmpty(result.Message))
 				{
 					<div class="@(result.IsSuccess ? "alert-info" : "alert-danger")">
 						@result.Message
@@ -81,5 +84,6 @@
 			@RenderBody()
 		}
 	}
+
 </body>
 </html>

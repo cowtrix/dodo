@@ -7,18 +7,24 @@ using System.ComponentModel;
 
 namespace Dodo.LocationResources
 {
-	public class EventSchema : LocationResourceSchema
+	public interface ITimeBasedResourceSchema
+	{
+		public DateTime StartDate { get; set; }
+		public DateTime EndDate { get; set; }
+	}
+
+	public class EventSchema : LocationResourceSchema, ITimeBasedResourceSchema
 	{
 		[View]
 		[DataType(DataType.DateTime)]
 		[Name("Start Date")]
-		//[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime StartDate { get; set; }
 
 		[View]
 		[DataType(DataType.DateTime)]
 		[Name("End Date")]
-		//[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
+		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime EndDate { get; set; }
 
 		public EventSchema()

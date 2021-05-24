@@ -13,7 +13,13 @@
 <script>
 $(function () {
 	$('[data-toggle="tooltip"]').tooltip()
+	$('.datepicker').datetimepicker({
+		formatDate: 'dd/mm/YYYY H:i',
+		minDate: '-1970/01/01',
+		maxDate: '+1975/01/01'
+	});
 })
+
 
 </script>
 
@@ -105,18 +111,38 @@ else
 					<input asp-for="MemberCount" class="sr-only"></input>
 					<input asp-for="AdministratorData" class="sr-only"></input>
 					<input asp-for="PublicKey" class="sr-only"></input>
-				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"StartDate"))"><i class="fas fa-question-circle"></i></button>
-					<label class="control-label">Start Date</label>
-					<input  asp-for="StartDate" class="form-control"></input>
-					<span asp-validation-for="StartDate" class="text-danger"></span>
-				</div>
-				<div class="form-field form-group">
-					<button type ="button" class="help-button" data-toggle="tooltip" data-html="true" title="@(Dodo.HelpUtility.GetHelpHTML($"EndDate"))"><i class="fas fa-question-circle"></i></button>
-					<label class="control-label">End Date</label>
-					<input  asp-for="EndDate" class="form-control"></input>
-					<span asp-validation-for="EndDate" class="text-danger"></span>
-				</div>
+<div class="form-field form-group">
+	<button type="button" class="help-button" data-toggle="tooltip" data-html="true"
+			title="@(Dodo.HelpUtility.GetHelpHTML($"StartDate"))">
+		<i class="fas fa-question-circle"></i>
+	</button>
+	<label class="control-label">Start Date</label>
+	<div id="datetimepicker" class="input-append date">
+		<input id="StartDate" name="StartDate" class="form-control datepicker" type="text" value="@(Model.StartDate.ToString("yyyy/MM/dd hh:mm"))"></input>
+		<span class="add-on">
+			<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+			</i>
+		</span>
+	</div>
+	<span asp-validation-for="StartDate" class="text-danger"></span>
+</div>
+
+<div class="form-field form-group">
+	<button type="button" class="help-button" data-toggle="tooltip" data-html="true"
+			title="@(Dodo.HelpUtility.GetHelpHTML($"EndDate"))">
+		<i class="fas fa-question-circle"></i>
+	</button>
+	<label class="control-label">End Date</label>
+	<div id="datetimepicker" class="input-append date">
+		<input id="EndDate" name="EndDate" class="form-control datepicker" type="text" value="@(Model.EndDate.ToString("yyyy/MM/dd hh:mm"))"></input>
+		<span class="add-on">
+			<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+			</i>
+		</span>
+	</div>
+	<span asp-validation-for="StartDate" class="text-danger"></span>
+</div>
+
 <script>
 	mapboxgl.accessToken = "@Common.Config.ConfigManager.GetValue("MapBoxGeocodingService_ApiKey", "")"
 	var coordinates = document.getElementById('coordinates');

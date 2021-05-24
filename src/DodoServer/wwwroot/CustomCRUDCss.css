@@ -257,7 +257,12 @@ img {
 	margin-left: .5em;
 }
 
-tr, td {
+.data-table tr {
+	display: block;
+	width: 100%;
+}
+
+.data-table td {
 	display: block;
 	width: 100%;
 }

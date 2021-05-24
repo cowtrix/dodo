@@ -69,8 +69,12 @@ namespace Dodo.Controllers.Edit
 				{
 					locSchema.Location = parentLoc.Location;
 				}
+				if(schema is ITimeBasedResourceSchema timeSchema)
+				{
+					timeSchema.StartDate = DateTime.UtcNow;
+					timeSchema.EndDate = DateTime.UtcNow;
+				}
 			}
-			
 			schema.OnView(Context.User, Context.Passphrase);
 			return View(schema);
 		}

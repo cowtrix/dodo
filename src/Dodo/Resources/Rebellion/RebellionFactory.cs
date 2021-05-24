@@ -1,5 +1,6 @@
 using Common;
 using Dodo.DodoResources;
+using Dodo.LocationResources;
 using Resources;
 using Resources.Location;
 using Resources.Serializers;
@@ -10,19 +11,19 @@ namespace Dodo.Rebellions
 {
 	public class RebellionSerializer : ResourceReferenceSerializer<Rebellion> { }
 
-	public class RebellionSchema : DescribedResourceSchemaBase
+	public class RebellionSchema : DescribedResourceSchemaBase, ITimeBasedResourceSchema
 	{
 		[View]
 		public GeoLocation Location { get; set; } = new GeoLocation();
 
 		[View]
 		[DataType(DataType.DateTime)]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
+		//[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime StartDate { get; set; }
 
 		[View]
 		[DataType(DataType.DateTime)]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
+		//[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime EndDate { get; set; }
 
 		public RebellionSchema()

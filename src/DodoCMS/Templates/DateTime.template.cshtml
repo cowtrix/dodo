@@ -1,0 +1,15 @@
+<div class="form-field form-group">
+	<button type="button" class="help-button" data-toggle="tooltip" data-html="true"
+			title="@(Dodo.HelpUtility.GetHelpHTML($"{NAME}"))">
+		<i class="fas fa-question-circle"></i>
+	</button>
+	<label class="control-label">{FRIENDLY_NAME}</label>
+	<div id="datetimepicker" class="input-append date">
+		<input id="{NAME}" name="{NAME}" class="form-control datepicker" type="text" value="@(Model.{MEMBER}.ToString("yyyy/MM/dd hh:mm"))"></input>
+		<span class="add-on">
+			<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+			</i>
+		</span>
+	</div>
+	<span asp-validation-for="StartDate" class="text-danger"></span>
+</div>
