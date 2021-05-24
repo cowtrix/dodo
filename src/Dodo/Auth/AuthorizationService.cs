@@ -129,7 +129,7 @@ namespace Dodo
 			{
 				return EPermissionLevel.ADMIN;
 			}			
-			if ((target is IGroupResource group) && group.IsMember(context.User))
+			if ((target is IGroupResource group) && group.IsMember(context.User.Guid))
 			{
 				return EPermissionLevel.MEMBER;
 			}
@@ -141,7 +141,8 @@ namespace Dodo
 			{
 				return EPermissionLevel.ADMIN;
 			}
-			if (target is IOwnedResource owned && owned.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out _))
+			if (target is IOwnedResource owned && 
+				owned.Parent.GetValue<IAdministratedResource>(true).IsAdmin(context.User, context, out _))
 			{
 				return EPermissionLevel.ADMIN;
 			}

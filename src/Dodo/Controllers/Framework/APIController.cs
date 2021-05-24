@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Extensions;
 using Common;
-using Dodo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Dodo.Users;
 using Dodo.Rebellions;
 using Dodo.LocalGroups;
 using Dodo.WorkingGroups;
 using Dodo.LocationResources;
 using Dodo.Roles;
-using Common.Config;
 using Resources;
 
 namespace Dodo

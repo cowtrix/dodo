@@ -17,6 +17,7 @@ using System;
 using Dodo.LocalGroups;
 using Dodo.Analytics;
 using Dodo.RoleApplications;
+using Resources.Location;
 
 namespace SharedTest
 {
@@ -60,7 +61,12 @@ namespace SharedTest
 				TryKillProcess(p);
 
 			m_runner = MongoDbRunner.Start();
+			ConfigManager.LoadFromFile();
 			ConfigManager.SetValue(ResourceUtility.CONFIGKEY_MONGODBSERVERURL, m_runner.ConnectionString);
+			if(!LocationManager.Enabled)
+			{
+				throw new Exception("Tests require a working geolocation service");
+			}
 			ResourceUtility.ClearAllManagers();
 			Dodo.Security.SessionTokenStore.Initialise();
 			Logger.OnLog += OnLog;
@@ -201,7 +207,7 @@ namespace SharedTest
 					CreateNewObject<Event>(context, SchemaGenerator.GetRandomEvent(context, lg));
 				}
 			}
-			return ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid);
+			return ResourceUtility.GetManager<T>().GetSingle(r => r.Guid == obj.Guid, ensureLatest:true);
 		}
 
 		long LongRandom(long min, long max)

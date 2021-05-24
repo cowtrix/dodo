@@ -2,8 +2,6 @@ using Common;
 using System;
 using Resources;
 using MongoDB.Bson.Serialization.Attributes;
-using Resources.Security;
-using Dodo.Email;
 
 namespace Dodo.LocationResources
 {

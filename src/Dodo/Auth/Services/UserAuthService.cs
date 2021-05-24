@@ -1,6 +1,4 @@
 using Resources;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
 namespace Dodo.Users
 {

@@ -83,7 +83,7 @@ namespace Dodo.WorkingGroups
 
 		public override void OnDestroy()
 		{
-			var wgrm = ResourceUtility.GetManager<WorkingGroup>();
+			/*var wgrm = ResourceUtility.GetManager<WorkingGroup>();
 			foreach (var wg in WorkingGroups)
 			{
 				wgrm.Delete(wg.GetValue());
@@ -92,7 +92,7 @@ namespace Dodo.WorkingGroups
 			foreach (var s in Roles)
 			{
 				rrm.Delete(s.GetValue());
-			}
+			}*/
 			base.OnDestroy();
 		}
 	}

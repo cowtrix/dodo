@@ -40,7 +40,7 @@ namespace SearchTests
 				CreateObject<Event>(context, new EventSchema("Test Site 2", rebellion.Guid.ToString(), new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1), "", SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL, baseDate, baseDate)),
 				CreateObject<LocalGroup>(context, new LocalGroupSchema("Test LG 1", "", new GeoLocation(TrueLocation.Longitude - .1, TrueLocation.Latitude +.1)))
 			};
-			var guids = DodoResourceUtility.Search(0, 100, new DistanceFilter() { LatLong = $"{TrueLocation.Latitude} {TrueLocation.Longitude}", Distance = 100 })
+			var guids = DodoResourceUtility.Search(0, 100, false, new DistanceFilter() { LatLong = $"{TrueLocation.Latitude} {TrueLocation.Longitude}", Distance = 100 })
 				.Select(r => r.Guid);
 			foreach (var pos in positives)
 			{
@@ -90,7 +90,7 @@ namespace SearchTests
 				CreateObject<Event>(),
 				CreateObject<LocalGroup>()
 			};
-			var guids = DodoResourceUtility.Search(0, 100, new DateFilter() { StartDate = startDate.ToString(), EndDate = endDate.ToString() })
+			var guids = DodoResourceUtility.Search(0, 100, false, new DateFilter() { StartDate = startDate.ToString(), EndDate = endDate.ToString() })
 				.Select(r => r.Guid).ToList();
 			var allResources = ResourceUtility.ResourceManagers.SelectMany(rm => rm.Value.Get(r => true)).ToList();
 			foreach (var pos in positives)
@@ -126,7 +126,7 @@ namespace SearchTests
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};
-			var guids = DodoResourceUtility.Search(0, 100, new ParentFilter() { Parent = rebellion1.Guid.ToString() })
+			var guids = DodoResourceUtility.Search(0, 100, false, new ParentFilter() { Parent = rebellion1.Guid.ToString() })
 				.Select(r => r.Guid);
 			foreach (var pos in positives)
 			{
@@ -160,7 +160,7 @@ namespace SearchTests
 				CreateObject<LocalGroup>(),
 				CreateObject<WorkingGroup>(),
 			};
-			var guids = DodoResourceUtility.Search(0, 100, new StringFilter() { Search = "asfafsd" })
+			var guids = DodoResourceUtility.Search(0, 100, false, new StringFilter() { Search = "asfafsd" })
 				.Select(r => r.Guid);
 			foreach (var pos in positives)
 			{

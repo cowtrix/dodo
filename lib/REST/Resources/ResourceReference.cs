@@ -75,14 +75,14 @@ namespace Resources
 		[BsonElement]
 		public string PublicDescription { get; set; }
 
-		public T GetValue()
+		public T GetValue(bool ensureLatest, Guid? handle = null)
 		{
-			return ResourceUtility.GetResourceByGuid<T>(Guid);
+			return ResourceUtility.GetResourceByGuid<T>(Guid, handle, ensureLatest);
 		}
 
-		public T2 GetValue<T2>() where T2 : class, T
+		public T2 GetValue<T2>(bool ensureLatest, Guid? handle = null) where T2 : class, T
 		{
-			return GetValue() as T2;
+			return GetValue(ensureLatest, handle) as T2;
 		}
 
 		public Type GetRefType() => string.IsNullOrEmpty(FullyQualifiedName) ? null : System.Type.GetType(FullyQualifiedName);

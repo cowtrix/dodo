@@ -1,7 +1,6 @@
 using Common.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
-using Resources;
 using Resources.Security;
 
 namespace Dodo.Users.Tokens

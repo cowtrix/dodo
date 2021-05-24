@@ -1,12 +1,9 @@
 using Common.Config;
 using Common.Extensions;
 using Common.Security;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Resources;
 using Resources.Security;
 using System;
-using System.Security.Cryptography;
 
 namespace Dodo.Users
 {

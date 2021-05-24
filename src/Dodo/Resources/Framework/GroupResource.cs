@@ -4,13 +4,9 @@ using Resources.Security;
 using Dodo.Users;
 using Resources;
 using Resources.Serializers;
-using Common.Security;
 using Dodo.Users.Tokens;
 using Common;
 using MongoDB.Bson.Serialization.Attributes;
-using System.ComponentModel;
-using System.Security;
-using Microsoft.AspNetCore.Mvc.Formatters.Internal;
 using Dodo.Email;
 using System.Reflection;
 
@@ -51,7 +47,7 @@ namespace Dodo
 		[View(EPermissionLevel.PUBLIC, EPermissionLevel.SYSTEM, customDrawer: "null")]
 		public int MemberCount { get { return Members.Count; } }
 
-		public bool IsMember(User user)
+		public bool IsMember(Guid user)
 		{
 			return Members.IsSubscribed(this, user);
 		}
@@ -84,7 +80,8 @@ namespace Dodo
 		{
 			if (this is IOwnedResource owned)
 			{
-				return owned.Parent.GetValue<ITokenResource>().GetPrivateKey(context);
+				return owned.Parent.GetValue<ITokenResource>(true)
+					.GetPrivateKey(context);
 			}
 			return default;
 		}
@@ -92,9 +89,8 @@ namespace Dodo
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel,
 			object requester, Passphrase passphrase)
 		{
-			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
-			var context = new AccessContext(user, passphrase);
-			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(context.User));
+			var userRef = (ResourceReference<User>)requester;
+			view.Add(IS_MEMBER_AUX_TOKEN, IsMember(userRef.Guid));
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);
 		}
 
@@ -107,7 +103,7 @@ namespace Dodo
 			{
 				return;
 			}
-			UserEmailManager.RegisterUpdate(owned.Parent.GetValue<IPublicResource>(), 
+			UserEmailManager.RegisterUpdate(owned.Parent.GetValue<IPublicResource>(true), 
 				$"New {GetType().GetName()}", Name);
 		}
 

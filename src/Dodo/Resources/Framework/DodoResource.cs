@@ -1,10 +1,7 @@
 using Resources.Security;
 using Resources;
 using System;
-using Dodo.Users;
 using Common;
-using System.Reflection;
-using Dodo.Email;
 
 namespace Dodo
 {

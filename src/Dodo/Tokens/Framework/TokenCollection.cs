@@ -1,12 +1,10 @@
 using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
 using Resources;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
 using Common.Extensions;
-using Common.Security;
 using Resources.Serializers;
 using Common;
 

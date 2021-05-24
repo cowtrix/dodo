@@ -32,7 +32,7 @@ namespace Dodo.Users.Tokens
 			{
 				throw new ArgumentNullException();
 			}
-			Owner = new HashedResourceReference(owner, token.Guid.ToString());
+			Owner = new HashedResourceReference(owner.Guid, token.Guid.ToString());
 			Guid = token.Guid;
 			PermissionLevel = token.GetVisibility();
 			m_typeName = token.GetType().FullName;

@@ -1,5 +1,3 @@
-using Dodo;
-using Dodo.LocationResources;
 using Resources;
 
 namespace Dodo

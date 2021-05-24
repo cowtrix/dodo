@@ -2,21 +2,16 @@ using Common.Extensions;
 using Resources;
 using System.Linq;
 using System;
-using Dodo;
 using GeoCoordinatePortable;
 using System.Collections.Generic;
-using Dodo.Rebellions;
-using Dodo.LocalGroups;
-using Dodo.LocationResources;
 using Common.Config;
-using Common;
 using System.Reflection;
 
 namespace Dodo.DodoResources
 {
 	public class DistanceFilter : ISearchFilter
 	{
-		private int TransitionDistance => ConfigManager.GetValue($"{nameof(DistanceFilter)}_{nameof(TransitionDistance)}", 100);
+		private int TransitionDistance => ConfigManager.GetValue($"{nameof(DistanceFilter)}_{nameof(TransitionDistance)}", 300);
 
 		public string LatLong { get; set; }
 		public double? Distance { get; set; }
@@ -49,7 +44,7 @@ namespace Dodo.DodoResources
 						.Transpose(x => new GeoCoordinate(x.ElementAt(0), x.ElementAt(1)));
 		}
 
-		public bool Filter(IRESTResource rsc)
+		public bool Filter(IPublicResource rsc)
 		{
 			Initialise();
 			if (m_empty)
@@ -63,33 +58,34 @@ namespace Dodo.DodoResources
 			return true;
 		}
 
-		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
+		public IEnumerable<IPublicResource> Mutate(IEnumerable<IPublicResource> rsc)
 		{
 			Initialise();
-			if (!rsc.Any() || m_empty)
+			if ( m_empty)
 			{
 				return rsc;
 			}
 			if (Distance < TransitionDistance)
 			{
-				return rsc.OrderBy(GetDist);
+				return rsc.OrderBy(r => GetDist(r, m_coordinate));
 			}
 			else
 			{
 				return rsc.OrderBy(rsc => rsc.GetType().GetCustomAttribute<SearchPriority>()?.Priority)
-					.ThenBy(GetDist);
+					.ThenBy(r => GetDist(r, m_coordinate));
 			}
 		}
 
-		private double? GetDist(IRESTResource rsc)
+		private static double? GetDist(IPublicResource rsc, GeoCoordinate coord)
 		{
 			if(rsc is ILocationalResource loc)
 			{
-				return loc.Location.ToCoordinate().GetDistanceTo(m_coordinate);
+				return loc.Location.ToCoordinate().GetDistanceTo(coord);
 			}
 			if(rsc is IOwnedResource owned)
 			{
-				return owned.Parent.GetValue<ILocationalResource>()?.Location.ToCoordinate().GetDistanceTo(m_coordinate);
+				return owned.Parent.GetValue<ILocationalResource>(true)?
+					.Location.ToCoordinate().GetDistanceTo(coord);
 			}
 			return null;
 		}

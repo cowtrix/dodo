@@ -6,7 +6,6 @@ using Common;
 using System;
 using Dodo.RoleApplications;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Dodo.Roles
 {
@@ -57,7 +56,7 @@ namespace Dodo.Roles
 
 		public override void AppendMetadata(Dictionary<string, object> view, EPermissionLevel permissionLevel, object requester, Passphrase passphrase)
 		{
-			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue() : requester as User;
+			var user = requester is ResourceReference<User> ? ((ResourceReference<User>)requester).GetValue(false) : requester as User;
 			var context = new AccessContext(user, passphrase);
 			view.Add(METADATA_APPLIED, HasApplied(context, out _, out var application) ? application.Guid : default);
 			base.AppendMetadata(view, permissionLevel, requester, passphrase);

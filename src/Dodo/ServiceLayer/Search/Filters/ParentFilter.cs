@@ -1,5 +1,4 @@
 using Resources;
-using System;
 using System.Collections.Generic;
 
 namespace Dodo.DodoResources
@@ -8,7 +7,7 @@ namespace Dodo.DodoResources
 	{
 		public string Parent { get; set; }
 
-		public bool Filter(IRESTResource rsc)
+		public bool Filter(IPublicResource rsc)
 		{
 			if(string.IsNullOrEmpty(Parent))
 			{
@@ -25,7 +24,7 @@ namespace Dodo.DodoResources
 		{
 		}
 
-		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
+		public IEnumerable<IPublicResource> Mutate(IEnumerable<IPublicResource> rsc)
 		{
 			return rsc;
 		}

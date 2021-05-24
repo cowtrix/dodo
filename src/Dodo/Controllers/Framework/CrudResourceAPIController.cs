@@ -5,8 +5,6 @@ using Dodo;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Text.Json;
-using Dodo.Users.Tokens;
-using Common.Config;
 using Dodo.Models;
 
 namespace Resources

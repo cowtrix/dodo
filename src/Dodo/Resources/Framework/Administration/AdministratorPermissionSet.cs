@@ -2,7 +2,6 @@ using Common;
 using Microsoft.AspNetCore.Mvc;
 using Resources;
 using System;
-using System.Collections.Generic;
 
 namespace Dodo
 {

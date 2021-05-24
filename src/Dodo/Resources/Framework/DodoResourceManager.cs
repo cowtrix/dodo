@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Resources;
 
 namespace Dodo.DodoResources

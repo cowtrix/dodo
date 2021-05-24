@@ -18,6 +18,21 @@ namespace Common.Config
 		// TODO: this is the wrong path if hosting in IIS (maybe use IWebHostEnvironment to get it)
 		public static string ConfigPath = Path.GetFullPath($"{System.AppDomain.CurrentDomain.FriendlyName}_config.json");
 		static Dictionary<string, object> m_data = new Dictionary<string, object>();
+		static Dictionary<string, string> m_environmentVariableCache = new Dictionary<string, string>();
+
+		static bool TryGetEnvironmentVariable(string key, out string val)
+		{
+			if(!m_environmentVariableCache.TryGetValue(key, out val))
+			{
+				val = Environment.GetEnvironmentVariable(key);
+				m_environmentVariableCache[key] = val;
+			}
+			if (!string.IsNullOrEmpty(val))
+			{
+				return true;
+			}
+			return false;
+		}
 
 		public static void LoadFromFile()
 		{
@@ -52,10 +67,9 @@ namespace Common.Config
 			}
 			if (!m_data.TryGetValue(key, out var obj))
 			{
-				var env = Environment.GetEnvironmentVariable(key);
-				if (!string.IsNullOrEmpty(env))
+				if(TryGetEnvironmentVariable(key, out var envVar))
 				{
-					obj = env;
+					obj = envVar;
 				}
 				else
 				{

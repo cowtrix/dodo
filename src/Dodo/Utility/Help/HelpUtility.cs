@@ -1,7 +1,5 @@
 using Resources.Location;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Dodo
 {

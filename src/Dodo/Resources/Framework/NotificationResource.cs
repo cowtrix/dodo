@@ -1,11 +1,7 @@
 using Resources.Security;
 using Resources;
-using Newtonsoft.Json;
-using Common.Extensions;
-using Common;
 using System;
 using System.Collections.Generic;
-using Resources.Location;
 using Dodo.Users.Tokens;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -43,7 +39,7 @@ namespace Dodo
 			{
 				if (this is IOwnedResource owned)
 				{
-					return owned.Parent.GetValue<ITokenResource>().PublicKey;
+					return owned.Parent.GetValue<ITokenResource>(false).PublicKey;
 				}
 				return default;
 			}

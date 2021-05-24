@@ -1,6 +1,5 @@
 using Common.Extensions;
 using Dodo.Users;
-using Microsoft.AspNetCore.Http;
 using Resources;
 using System;
 using System.Collections.Generic;
@@ -16,11 +15,10 @@ namespace Dodo.DodoResources
 		/// </summary>
 		/// <param name="selector">A lambda function to search with.</param>
 		/// <returns>An enumerable of resources that satisfy the selector</returns>
-		private static IEnumerable<IRESTResource> Search(Func<IRESTResource, bool> selector, Guid? handle = null, bool ensureLatest = true)
+		private static IEnumerable<IRESTResource> Search(Func<IRESTResource, bool> selector, Guid? handle = null, bool ensureLatest = false)
 		{
 			foreach (var rc in ResourceUtility.ResourceManagers
-				.Where(rm => typeof(IPublicResource).IsAssignableFrom(rm.Key))
-				.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
+				.Where(rm => typeof(IPublicResource).IsAssignableFrom(rm.Key)))
 			{
 				if (rc.Key == typeof(User))
 				{
@@ -33,29 +31,34 @@ namespace Dodo.DodoResources
 			}
 		}
 
-		public static IEnumerable<IRESTResource> Search(int index, int chunkSize, params ISearchFilter[] filters)
+		public static IEnumerable<IRESTResource> Search(int index, int chunkSize, bool ensureLatest, params ISearchFilter[] filters)
 		{
-			return SearchInternal<IRESTResource>(Search, index, chunkSize, filters);
+			return SearchInternal<IRESTResource>(Search, index, chunkSize, ensureLatest, filters);
 		}
 
-		public static IEnumerable<T> Search<T>(int index, int chunkSize, params ISearchFilter[] filters)
+		public static IEnumerable<T> Search<T>(int index, int chunkSize, bool ensureLatest, params ISearchFilter[] filters)
 		{
-			return SearchInternal<T>(ResourceUtility.GetManager(typeof(T)).Get, index, chunkSize, filters);
+			return SearchInternal<T>(ResourceUtility.GetManager(typeof(T)).Get, index, chunkSize, ensureLatest, filters);
 		}
 
 		private static IEnumerable<T> SearchInternal<T>(
-			Func<Func<IRESTResource, bool>, Guid?, bool, IEnumerable<IRESTResource>> src, 
-			int index, 
-			int chunkSize, 
+			Func<Func<IRESTResource, bool>, Guid?, bool, IEnumerable<IRESTResource>> src,
+			int index,
+			int chunkSize,
+			bool ensureLatest,
 			ISearchFilter[] filters)
 		{
-			return src.Invoke(rsc => filters.All(f => f.Filter(rsc)), null, true)
+			return src
+				.Invoke(rsc => filters.All(f => f.Filter((IPublicResource)rsc)), null, ensureLatest)
 				.OfType<IPublicResource>()
 				.Where(rsc => rsc.IsPublished && !rsc.IsHidden())
-				.Transpose(x =>
+				.Transpose(rscList =>
 				{
-					Array.ForEach(filters, f => f.Mutate(x));
-					return x;
+					foreach(var filter in filters)
+					{
+						rscList = filter.Mutate(rscList);
+					}
+					return rscList;
 				})
 				.Skip(index)
 				.Take(chunkSize)

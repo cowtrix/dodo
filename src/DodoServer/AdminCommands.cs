@@ -141,7 +141,7 @@ namespace Resources
 		}
 
 		[Command(@"^hide", "hide <id> <reason>",
-			"Hide a resource from public view.\n\t<id>: A resource ID, either the slug or GUID.\n\t<reason>The reason for hiding, e.g. 'broke the rules doing x'.")]
+			"Hide a resource from public view.\n\t<id>: A resource ID, either the slug or GUID.\n\t<reason> The reason for hiding, e.g. 'broke the rules'")]
 		public static string HideResource(CommandArguments cmd)
 		{
 			const string HIDERESOURCE_REGEX = "^hide\\s+(.+?)\\s+(.+)";

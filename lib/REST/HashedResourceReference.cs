@@ -13,7 +13,7 @@ namespace Resources
 		[JsonProperty]
 		public string Key { get; set; }
 
-		public HashedResourceReference(IRESTResource rsc, string salt)
+		public HashedResourceReference(Guid rsc, string salt)
 		{
 			if (string.IsNullOrEmpty(salt))
 			{
@@ -29,11 +29,11 @@ namespace Resources
 			{
 				return false;
 			}
-			return GetKey(rsc, salt) == Key;
+			return GetKey(rsc.Guid, salt) == Key;
 		}
 
-		private static string GetKey(IRESTResource rsc, string salt)
-			=> SecurityExtensions.GenerateID(rsc, salt);
+		private static string GetKey(Guid rsc, string salt)
+			=> SecurityExtensions.GenerateID(rsc, rsc.ToString(), salt);
 
 		public override bool Equals(object obj)
 		{

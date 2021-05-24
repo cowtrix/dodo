@@ -8,7 +8,6 @@ using Dodo.Users.Tokens;
 using Dodo.Email;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Resources;
 using Resources.Security;
 using System;

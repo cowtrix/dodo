@@ -1,7 +1,5 @@
 using Resources;
 using System;
-using Common.Extensions;
-using Common;
 using Resources.Serializers;
 using Dodo.DodoResources;
 using Resources.Location;

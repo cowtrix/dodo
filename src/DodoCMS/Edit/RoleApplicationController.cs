@@ -95,7 +95,7 @@ namespace Dodo.RoleApplications
 			{
 				var rscRef = new ResourceReference<IAsymmCapableResource>(rsc.Parent.Parent);   // the working group
 				requester = rscRef;
-				parentRsc = rscRef.GetValue();
+				parentRsc = rscRef.GetValue(true);
 				pass = parentRsc.GetPrivateKey(Context);
 			}
 			else if (actionResult.PermissionLevel == EPermissionLevel.ADMIN)
@@ -163,7 +163,7 @@ namespace Dodo.RoleApplications
 			if (resourceReq.PermissionLevel == EPermissionLevel.ADMIN)
 			{
 				var groupRef = new ResourceReference<IAsymmCapableResource>(roleApp.Parent.Parent);
-				var group = groupRef.GetValue();
+				var group = groupRef.GetValue(true);
 				var requester = groupRef;
 				var roleAppData = roleApp.Data.GetValueByGroup(resourceReq.AccessContext, group);
 				if (roleAppData == null)

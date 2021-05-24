@@ -1,6 +1,5 @@
 using Resources;
 using System;
-using Dodo;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +11,7 @@ namespace Dodo.DodoResources
 
 		Dictionary<Guid, int> m_hitCount = new Dictionary<Guid, int>();
 
-		public bool Filter(IRESTResource rsc)
+		public bool Filter(IPublicResource rsc)
 		{
 			if (string.IsNullOrEmpty(Search))
 			{
@@ -29,7 +28,7 @@ namespace Dodo.DodoResources
 			return false;
 		}
 
-		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
+		public IEnumerable<IPublicResource> Mutate(IEnumerable<IPublicResource> rsc)
 		{
 			if (string.IsNullOrEmpty(Search) || !rsc.Any())
 			{

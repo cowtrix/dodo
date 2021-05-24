@@ -1,12 +1,9 @@
-using Common;
 using System;
 using Microsoft.AspNetCore.Mvc;
 using Dodo;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Dodo.Users;
 using System.Linq;
 using Dodo.Users.Tokens;
-using System.Collections.ObjectModel;
 
 namespace Resources
 {

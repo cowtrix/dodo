@@ -1,5 +1,4 @@
 using Dodo;
-using Dodo.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Resources

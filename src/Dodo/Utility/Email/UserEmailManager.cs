@@ -79,7 +79,7 @@ namespace Dodo.Email
 					}
 					Logger.Debug($"Sending out update for {rsc} @ {DateTime.UtcNow}: {updateText}");
 					foreach (var user in userList
-						.Where(u => u.PersonalData.EmailPreferences.NewNotifications && rsc.IsMember(u)))
+						.Where(u => u.PersonalData.EmailPreferences.NewNotifications && rsc.IsMember(u.Guid)))
 					{
 						EmailUtility.SendEmail(
 							new EmailAddress(user.PersonalData.Email, user.Slug),

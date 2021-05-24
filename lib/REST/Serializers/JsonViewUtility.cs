@@ -80,7 +80,7 @@ namespace Resources
 				{
 					throw new Exception($"Bad type: {r.GetType()}");
 				}
-				if(r is ResourceReference<IPublicResource> pub && !pub.GetValue().IsPublished)
+				if(r is ResourceReference<IPublicResource> pub && !pub.GetValue(false).IsPublished)
 				{
 					continue;
 				}

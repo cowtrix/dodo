@@ -1,5 +1,5 @@
-using Dodo.Users;
 using Resources;
+using System;
 
 namespace Dodo
 {
@@ -8,7 +8,7 @@ namespace Dodo
 		public const string JOIN_GROUP = "join";
 		public const string LEAVE_GROUP = "leave";
 
-		bool IsMember(User user);
+		bool IsMember(Guid user);
 		int MemberCount { get; }
 		void Join(AccessContext context);
 		void Leave(AccessContext context);

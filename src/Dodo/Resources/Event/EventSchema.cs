@@ -1,7 +1,5 @@
 using Common;
 using System;
-using Newtonsoft.Json;
-using Common.Extensions;
 using System.ComponentModel.DataAnnotations;
 using Resources.Location;
 using Resources;

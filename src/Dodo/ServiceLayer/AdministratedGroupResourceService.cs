@@ -1,11 +1,8 @@
-using System.Collections.Generic;
 using Common.Extensions;
 using Dodo.Users;
 using Resources;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System;
-using Dodo;
 
 namespace Dodo
 {

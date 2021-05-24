@@ -196,26 +196,6 @@ namespace Resources
 			return GetResourceByGuid<IRESTResource>(guid, handle, ensureLatest);
 		}
 
-		[Obsolete]
-		public static IEnumerable<T> Search<T>(string query) where T : class, IRESTResource
-		{
-			if (Guid.TryParse(query, out var guid))
-			{
-				return new[] { GetResourceByGuid<T>(guid) };
-			}
-			var result = new List<T>();
-			foreach (var rm in ResourceManagers.Where(rm => typeof(IPublicResource).IsAssignableFrom(rm.Key))
-				.OrderBy(rm => rm.Key.GetCustomAttribute<SearchPriority>()?.Priority))
-			{
-				if (!typeof(T).IsAssignableFrom(rm.Key))
-				{
-					continue;
-				}
-				result.AddRange(rm.Value.Get(x => JsonConvert.SerializeObject(x).Contains(query)).Cast<T>());
-			}
-			return result;
-		}
-
 		/// <summary>
 		/// Get a resource of type T by its slug (url identifier)
 		/// </summary>

@@ -1,5 +1,4 @@
-﻿using Resources;
-using System;
+using Resources;
 using System.Collections.Generic;
 
 namespace Dodo.DodoResources
@@ -9,7 +8,7 @@ namespace Dodo.DodoResources
 		public string Types { get; set; }
 		private HashSet<string> m_typeArray;
 
-		public bool Filter(IRESTResource rsc)
+		public bool Filter(IPublicResource rsc)
 		{
 			if (string.IsNullOrEmpty(Types))
 			{
@@ -32,7 +31,7 @@ namespace Dodo.DodoResources
 		{
 		}
 
-		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
+		public IEnumerable<IPublicResource> Mutate(IEnumerable<IPublicResource> rsc)
 		{
 			return rsc;
 		}

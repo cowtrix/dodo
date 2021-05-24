@@ -1,10 +1,7 @@
 using Common;
 using Dodo.Security;
-using Dodo.Users;
 using Dodo.Users.Tokens;
 using Resources;
-using Resources.Security;
-using System;
 using System.Linq;
 using System.Security.Claims;
 

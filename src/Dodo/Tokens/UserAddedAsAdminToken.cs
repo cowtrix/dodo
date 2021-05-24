@@ -73,7 +73,7 @@ namespace Dodo.Users.Tokens
 			}
 			var privateKey = context.User.AuthData.PrivateKey.GetValue(context.Passphrase);
 			var tempPass = new Passphrase(AsymmetricSecurity.Decrypt<string>(Token, privateKey));
-			using (var rscLocker = new ResourceLock(Resource.GetValue()))
+			using (var rscLocker = new ResourceLock(Resource.GetValue(false)))
 			{
 				var resource = rscLocker.Value as IAdministratedResource;
 				// Change the admin access from temp us

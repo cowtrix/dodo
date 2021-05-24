@@ -1,7 +1,6 @@
 using Dodo.Users;
 using Resources;
 using Resources.Security;
-using System;
 
 namespace Dodo
 {

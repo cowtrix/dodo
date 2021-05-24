@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security;
 using Dodo.Users;
-using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;

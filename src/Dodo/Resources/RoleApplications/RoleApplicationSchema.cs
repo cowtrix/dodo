@@ -14,7 +14,7 @@ namespace Dodo.RoleApplications
 		public RoleApplicationSchema(string name, Role role, string application) : base(name)
 		{
 			Role = role;
-			ParentGroup = role.Parent.GetValue() as IAsymmCapableResource;
+			ParentGroup = role.Parent.GetValue(true) as IAsymmCapableResource;
 			Application = application;
 		}
 

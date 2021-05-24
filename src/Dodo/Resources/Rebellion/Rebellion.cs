@@ -1,19 +1,12 @@
 using Common;
-using Common.Extensions;
-using Resources.Security;
 using Dodo.LocationResources;
-using Dodo.Users;
 using Dodo.WorkingGroups;
 using Resources;
-using Resources.Serializers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using MongoDB.Bson.Serialization.Attributes;
 using Resources.Location;
-using Dodo.Users.Tokens;
-using Dodo.Email;
 using System.ComponentModel.DataAnnotations;
 
 namespace Dodo.Rebellions
@@ -116,7 +109,7 @@ namespace Dodo.Rebellions
 					throw new Exception($"Adding duplicated child object {e.Guid} to {Guid}");
 				}
 				Events.Add(e.CreateRef());
-				Events = Events.OrderBy(t => t.GetValue().StartDate).ToList();
+				Events = Events.OrderBy(t => t.GetValue(false).StartDate).ToList();
 			}
 			else
 			{

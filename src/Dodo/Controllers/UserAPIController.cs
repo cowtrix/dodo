@@ -5,10 +5,8 @@ using Dodo.Models;
 using static UserService;
 using Dodo.Users.Tokens;
 using System.Linq;
-using Dodo.Rebellions;
 using System.Collections.Generic;
 using System;
-using Common.Extensions;
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 

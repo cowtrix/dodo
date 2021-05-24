@@ -3,7 +3,6 @@ using Dodo.Users.Tokens;
 using Resources;
 using Dodo.Users;
 using Dodo.Email;
-using Common.Extensions;
 
 namespace Dodo
 {
@@ -40,7 +39,7 @@ namespace Dodo
 
 		public SimpleNotificationToken(User creator, string source, string message, string link, ENotificationType type, EPermissionLevel permissionLevel, bool canDelete) : base()
 		{
-			Creator = new HashedResourceReference(creator, message);
+			Creator = new HashedResourceReference(creator.Guid, message);
 			PermissionLevel = permissionLevel;
 			m_notification = new Notification(Guid, source, message, link, type, permissionLevel, canDelete);
 		}

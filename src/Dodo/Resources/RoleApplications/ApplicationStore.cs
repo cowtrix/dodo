@@ -1,15 +1,9 @@
 using Common.Security;
-using Dodo.Users;
 using Dodo.Users.Tokens;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using Resources;
 using Resources.Security;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Security.Authentication;
-using System.Text;
 
 namespace Dodo.RoleApplications
 {

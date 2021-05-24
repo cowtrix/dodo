@@ -1,11 +1,5 @@
-using Common;
-using Common.Extensions;
-using Common.Security;
-using Dodo.Users;
 using Microsoft.AspNetCore.Mvc;
 using Resources;
-using Resources.Security;
-using System;
 using System.Threading.Tasks;
 
 namespace Dodo.Email

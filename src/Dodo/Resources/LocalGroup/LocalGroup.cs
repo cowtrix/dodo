@@ -1,17 +1,10 @@
 using Common;
-using Dodo.Users;
 using Resources;
 using System;
-using Dodo.Roles;
-using Common.Extensions;
-using Resources.Security;
-using Resources.Serializers;
 using Resources.Location;
 using Dodo.LocationResources;
-using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 using System.Linq;
-using Dodo.Users.Tokens;
 using Dodo.WorkingGroups;
 
 namespace Dodo.LocalGroups

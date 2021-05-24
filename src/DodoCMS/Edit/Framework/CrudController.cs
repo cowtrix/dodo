@@ -128,12 +128,12 @@ namespace Dodo.Controllers.Edit
 			}
 			else if (rsc is IOwnedResource owned)
 			{
-				owned.Parent.GetValue<IAdministratedResource>().IsAdmin(Context.User, Context, out var permissions);
+				owned.Parent.GetValue<IAdministratedResource>(true).IsAdmin(Context.User, Context, out var permissions);
 				ViewData["permissions"] = permissions;
 			}
 			if (rsc is Roles.Role role)
 			{
-				var asymm = role.Parent.GetValue<IAsymmCapableResource>();
+				var asymm = role.Parent.GetValue<IAsymmCapableResource>(true);
 				ViewData["applications"] = role.Applications.ToDictionary(kvp => kvp.Key,
 					kvp => kvp.Value);
 			}

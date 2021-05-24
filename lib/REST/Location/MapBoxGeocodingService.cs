@@ -17,7 +17,7 @@ namespace Resources.Location
 	public class MapBoxGeocodingService : IGeocodingService
 	{
 		static Uri m_baseUrl = new Uri("https://api.mapbox.com");
-		static string ApiKey => ConfigManager.GetValue($"{nameof(MapBoxGeocodingService)}_{nameof(ApiKey)}", "");
+		static string ApiKey = ConfigManager.GetValue($"{nameof(MapBoxGeocodingService)}_{nameof(ApiKey)}", "");
 		public bool Enabled => !string.IsNullOrEmpty(ApiKey);
 		static HttpClient m_httpClient;
 

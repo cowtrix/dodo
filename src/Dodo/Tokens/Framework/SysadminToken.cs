@@ -1,5 +1,4 @@
 using Resources;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Dodo.Users.Tokens

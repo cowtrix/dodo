@@ -1,5 +1,4 @@
 using MongoDB.Bson.Serialization.Attributes;
-using Resources;
 using Resources.Security;
 
 namespace Dodo.Users.Tokens

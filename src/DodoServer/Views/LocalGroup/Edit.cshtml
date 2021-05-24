@@ -418,7 +418,7 @@ else
 				{
 					string getID(string name) { return $"{name}"; };
 					var isMe = admin.User.Guid == context.User.Guid;
-					var userVal = admin.User.GetValue();
+					var userVal = admin.User.GetValue(true);
 					var isTemp = !userVal.PersonalData.EmailConfirmed;
 					var canedit = !isMe && thisAdmin.Permissions.CanEditAdministrators;
 

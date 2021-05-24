@@ -1,14 +1,9 @@
 using Dodo;
 using Dodo.SharedTest;
-using Dodo.Users;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Resources;
-using Resources.Security;
 using SharedTest;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Groups
 {
@@ -29,22 +24,22 @@ namespace Groups
 			{
 				newGroup = rscLock.Value as T;
 				newGroup.Join(joinerContext);
-				Assert.IsTrue(newGroup.IsMember(joinerContext.User));
+				Assert.IsTrue(newGroup.IsMember(joinerContext.User.Guid));
 				ResourceManager.Update(newGroup, rscLock);
 			}
 			var updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsTrue(updatedGroup.IsMember(joinerContext.User));
+			Assert.IsTrue(updatedGroup.IsMember(joinerContext.User.Guid));
 
 			// Leave
 			using (var rscLock = new ResourceLock(newGroup))
 			{
 				newGroup = rscLock.Value as T;
 				newGroup.Leave(joinerContext);
-				Assert.IsFalse(newGroup.IsMember(joinerContext.User));
+				Assert.IsFalse(newGroup.IsMember(joinerContext.User.Guid));
 				ResourceManager.Update(newGroup, rscLock);
 			}
 			updatedGroup = ResourceManager.GetSingle(g => g.Guid == newGroup.Guid);
-			Assert.IsFalse(updatedGroup.IsMember(joinerContext.User));
+			Assert.IsFalse(updatedGroup.IsMember(joinerContext.User.Guid));
 		}
 
 		[TestMethod]

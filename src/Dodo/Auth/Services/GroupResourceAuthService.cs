@@ -59,7 +59,7 @@ namespace Dodo
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.MEMBER);
 			}
 			// Everything below requires admin
-			if (!(target is IOwnedResource owned) || !owned.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out var permissionSet))
+			if (!(target is IOwnedResource owned) || !owned.Parent.GetValue<IAdministratedResource>(false).IsAdmin(context.User, context, out var permissionSet))
 			{
 				return ResourceRequestError.UnauthorizedRequest();
 			}

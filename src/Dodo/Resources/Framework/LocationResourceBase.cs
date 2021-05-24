@@ -62,7 +62,7 @@ namespace Dodo.LocationResources
 
 		public override Passphrase GetPrivateKey(AccessContext context)
 		{
-			var parent = Parent.GetValue<ITokenResource>();
+			var parent = Parent.GetValue<ITokenResource>(true);
 			if(parent == null)
 			{
 				return default;

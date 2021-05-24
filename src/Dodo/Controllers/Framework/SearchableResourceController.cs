@@ -1,7 +1,6 @@
 using Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using Dodo;
 using System.Threading.Tasks;
 using Dodo.DodoResources;
 using System;
@@ -26,7 +25,8 @@ namespace Dodo
 			try
 			{
 				var permissionLevel = Context.User == null ? EPermissionLevel.PUBLIC : EPermissionLevel.USER;
-				var resources = DodoResourceUtility.Search<T>(index, Math.Min(chunkSize, SearchAPIController.ChunkSize), locationFilter, dateFilter, stringFilter, parentFilter)
+				var resources = DodoResourceUtility.Search<T>(index, Math.Min(chunkSize, SearchAPIController.ChunkSize), false,
+					locationFilter, dateFilter, stringFilter, parentFilter)
 					.Select(rsc => rsc.GenerateJsonView(permissionLevel, Context.User, Context.Passphrase));
 				return Ok(resources.ToList());
 			}

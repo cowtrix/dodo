@@ -1,11 +1,6 @@
 using Resources;
-using Microsoft.AspNetCore.Mvc;
-using Dodo;
-using Dodo.Users;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Dodo.Users.Tokens;
-using MongoDB.Bson.Serialization.Serializers;
 
 namespace Dodo
 {
@@ -31,7 +26,7 @@ namespace Dodo
 			{
 				return EPermissionLevel.ADMIN;
 			}
-			if (target is IGroupResource group && group.IsMember(context.User))
+			if (target is IGroupResource group && group.IsMember(context.User.Guid))
 			{
 				return EPermissionLevel.MEMBER;
 			}

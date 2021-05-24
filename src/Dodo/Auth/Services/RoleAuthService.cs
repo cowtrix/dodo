@@ -21,7 +21,7 @@ namespace Dodo
 				return ResourceRequestError.ForbidRequest();
 			}
 			// Everything below requires admin
-			if (!target.Parent.GetValue<IAdministratedResource>().IsAdmin(context.User, context, out var permissionSet))
+			if (!target.Parent.GetValue<IAdministratedResource>(true).IsAdmin(context.User, context, out var permissionSet))
 			{
 				return ResourceRequestError.UnauthorizedRequest("You either aren't an administrator, or you don't have the CanManageRoles permission");
 			}

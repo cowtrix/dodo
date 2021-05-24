@@ -8,7 +8,6 @@ using Common;
 using System.Linq;
 using System.Text;
 using MongoDB.Bson.Serialization.Attributes;
-using System.Collections.Generic;
 
 namespace Dodo
 {
@@ -44,8 +43,8 @@ namespace Dodo
 
 		public virtual bool RemoveChild<T>(AccessContext context, T rsc) where T : class, IOwnedResource
 		{
-			TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.",
-				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));
+			/*TokenCollection.AddOrUpdate(this, new SimpleNotificationToken(null, null, $"The {rsc.GetType().GetName()} \"{rsc.Name}\" was deleted.",
+				null, ENotificationType.Alert, EPermissionLevel.ADMIN, false));*/
 			return true;
 		}
 		#endregion

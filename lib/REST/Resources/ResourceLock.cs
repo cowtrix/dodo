@@ -66,7 +66,7 @@ namespace Resources
 				Thread.Sleep(10);
 			}
 			Guid = resource.Guid;
-			Value = ResourceUtility.GetResourceByGuid(Guid, Handle);
+			Value = ResourceUtility.GetResourceByGuid(Guid, Handle, true);
 #if DEBUG
 			m_stackTrace = new System.Diagnostics.StackTrace();
 #endif

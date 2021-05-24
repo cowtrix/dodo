@@ -1,16 +1,11 @@
 using Common;
-using Microsoft.AspNetCore.Razor.Language.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Options;
 using Resources;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Security.Permissions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Dodo.Analytics

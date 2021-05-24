@@ -1,6 +1,5 @@
 using Resources;
 using System;
-using Dodo;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,7 +27,7 @@ namespace Dodo.DodoResources
 			m_empty = string.IsNullOrEmpty(StartDate) && string.IsNullOrEmpty(EndDate);
 		}
 
-		public bool Filter(IRESTResource rsc)
+		public bool Filter(IPublicResource rsc)
 		{
 			Initialise();
 			if (rsc is ITimeBoundResource timeboundResource)
@@ -38,7 +37,7 @@ namespace Dodo.DodoResources
 			return true;
 		}
 
-		public IEnumerable<IRESTResource> Mutate(IEnumerable<IRESTResource> rsc)
+		public IEnumerable<IPublicResource> Mutate(IEnumerable<IPublicResource> rsc)
 		{
 			Initialise();
 			if (m_empty || !rsc.Any())

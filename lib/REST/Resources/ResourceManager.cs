@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 
 namespace Resources
@@ -55,6 +56,10 @@ namespace Resources
 		
 		public long Count => MongoDatabase.CountDocuments(x => true);
 		private static object m_addlock = new object();
+		private Dictionary<Guid, T> m_resourceCache;
+
+		private static ConfigVariable<bool> m_cacheEnabled = new ConfigVariable<bool>("CacheEnabled", false);
+		private readonly bool ShouldCache = m_cacheEnabled.Value && typeof(T).GetCustomAttribute<DontCacheAttribute>() == null;
 
 		static IMongoDatabase GetDatabase(string n)
 		{
@@ -78,7 +83,6 @@ namespace Resources
 			// Get the collection (which is the name of this type by default)
 			MongoDatabase = db.GetCollection<T>(MongoDBCollectionName);
 			
-
 			foreach (var type in ReflectionExtensions.GetConcreteClasses<T>())
 			{
 				RegisterMapIfNeeded(type);
@@ -99,6 +103,12 @@ namespace Resources
 			{
 				Logger.Error($"Unable to intialize collection indexes for {MongoDBCollectionName}: {ConfigManager.GetValue(ResourceUtility.CONFIGKEY_MONGODBSERVERURL, "NULL")}");
 				throw e;
+			}
+
+			if (ShouldCache)
+			{
+				m_resourceCache = Get(x => true, ensureLatest: true)
+					.ToDictionary(r => r.Guid, r => r);
 			}
 		}
 
@@ -131,6 +141,10 @@ namespace Resources
 					throw new Exception("Conflicting slug");
 				}
 				MongoDatabase.InsertOne(newObject);
+				if (ShouldCache)
+				{
+					m_resourceCache[newObject.Guid] = newObject;
+				}
 			}
 		}
 
@@ -143,6 +157,10 @@ namespace Resources
 			Logger.Debug($"{typeof(T).Name} DELETE: {objToDelete.Name} ({objToDelete.Guid})");
 			objToDelete.OnDestroy();
 			MongoDatabase.DeleteOne(x => x.Guid == objToDelete.Guid);
+			if (ShouldCache)
+			{
+				m_resourceCache.Remove(objToDelete.Guid);
+			}
 			ResourceUtility.Trash.InsertOne(objToDelete as Resource);
 		}
 
@@ -170,6 +188,10 @@ namespace Resources
 			}
 			Logger.Debug($"{typeof(T).Name} UPDATE: {objToUpdate.Name} ({objToUpdate.Guid}::{objToUpdate.Revision})");
 			MongoDatabase.ReplaceOne(x => x.Guid == objToUpdate.Guid, objToUpdate);
+			if (ShouldCache)
+			{
+				m_resourceCache[objToUpdate.Guid] = objToUpdate;
+			}
 		}
 
 		/// <summary>
@@ -181,6 +203,14 @@ namespace Resources
 		public virtual T GetSingle(Func<T, bool> selector, Guid? handle = null, bool ensureLatest = false)
 		{
 			Logger.Debug($"{typeof(T).Name} GETSINGLE: {selector.Method.Name} ({handle})");
+			if(!ensureLatest && ShouldCache)
+			{
+				var cache = m_resourceCache.Values.SingleOrDefault(selector);
+				if(cache != null)
+				{
+					return cache;
+				}
+			}
 			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle, ensureLatest) as T;
 		}
 
@@ -192,6 +222,14 @@ namespace Resources
 		public virtual T GetFirst(Func<T, bool> selector, Guid? handle = null, bool ensureLatest = false)
 		{
 			Logger.Debug($"{typeof(T).Name} GETFIRST: {selector.Method.Name} ({handle})");
+			if (!ensureLatest && ShouldCache)
+			{
+				var cache = m_resourceCache.Values.FirstOrDefault(selector);
+				if (cache != null)
+				{
+					return cache;
+				}
+			}
 			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle, ensureLatest) as T;
 		}
 
@@ -203,6 +241,10 @@ namespace Resources
 		public virtual IEnumerable<T> Get(Func<T, bool> selector = null, Guid? handle = null, bool ensureLatest = false)
 		{
 			Logger.Debug($"{typeof(T).Name} GET: {selector.Method.Name} ({handle})");
+			if (!ensureLatest && ShouldCache)
+			{
+				return m_resourceCache.Values.Where(selector);
+			}
 			if (selector == null)
 			{
 				// performance case for getting everything
@@ -253,16 +295,36 @@ namespace Resources
 
 		IRESTResource IResourceManager.GetSingle(Func<IRESTResource, bool> selector, Guid? handle, bool ensureLatest = false)
 		{
+			if (!ensureLatest && ShouldCache)
+			{
+				var cache = m_resourceCache.Values.SingleOrDefault(selector);
+				if (cache != null)
+				{
+					return cache;
+				}
+			}
 			return WaitForUnlocked(MongoDatabase.AsQueryable().SingleOrDefault(selector), handle, ensureLatest);
 		}
 
 		IRESTResource IResourceManager.GetFirst(Func<IRESTResource, bool> selector, Guid? handle, bool ensureLatest = false)
 		{
+			if (!ensureLatest && ShouldCache)
+			{
+				var cache = m_resourceCache.Values.FirstOrDefault(selector);
+				if (cache != null)
+				{
+					return cache;
+				}
+			}
 			return WaitForUnlocked(MongoDatabase.AsQueryable().FirstOrDefault(selector), handle, ensureLatest);
 		}
 
 		IEnumerable<IRESTResource> IResourceManager.Get(Func<IRESTResource, bool> selector, Guid? handle, bool ensureLatest = false)
 		{
+			if (!ensureLatest && ShouldCache)
+			{
+				return m_resourceCache.Values.Where(selector);
+			}
 			return WaitForAllUnlocked(MongoDatabase.AsQueryable().Where(selector), handle, ensureLatest);
 		}
 
@@ -283,6 +345,10 @@ namespace Resources
 			if (force)
 			{
 				return resource;
+			}
+			if (resource != null && ShouldCache)
+			{
+				m_resourceCache[resource.Guid] = (T)resource;
 			}
 			var sw = new Stopwatch();
 			sw.Start();

@@ -51,7 +51,7 @@ namespace DodoTest.Framework.Postman
 		public void Update(PostmanEntryAddress entry, HttpResponseMessage req, int exampleIndex = 0, string exampleName = null)
 		{
 #if POSTMAN
-			if (string.IsNullOrEmpty(m_postmanAPIKey.Value))
+			if (string.IsNullOrEmpty(m_postmanAPIKey.Value) || m_collection == null)
 				return;
 
 			entry = new PostmanEntryAddress { Category = entry.Category.Replace(" ", ""), Request = entry.Request.Replace(" ", "") };
