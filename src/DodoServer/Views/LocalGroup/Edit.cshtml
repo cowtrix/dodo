@@ -283,7 +283,7 @@ else
 			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.LocationResources.Event>)))
 						{
 				// Create button!
-				string parent = $"?parent={@Model.Slug}";
+				string parent = $"?parent={@Model.Guid}";
 				<a class="btn btn-light btn-block event-reference form-field" role="button" target="_blank" href="~/edit/event/create@(parent)">Create New</a>
 			}
 		}

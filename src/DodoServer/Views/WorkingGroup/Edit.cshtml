@@ -151,7 +151,7 @@ else
 			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.Roles.Role>)))
 						{
 				// Create button!
-				string parent = $"?parent={@Model.Slug}";
+				string parent = $"?parent={@Model.Guid}";
 				<a class="btn btn-light btn-block role-reference form-field" role="button" target="_blank" href="~/edit/role/create@(parent)">Create New</a>
 			}
 		}
@@ -195,7 +195,7 @@ else
 			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof(Resources.ResourceReference<Dodo.WorkingGroups.WorkingGroup>)))
 						{
 				// Create button!
-				string parent = $"?parent={@Model.Slug}";
+				string parent = $"?parent={@Model.Guid}";
 				<a class="btn btn-light btn-block workinggroup-reference form-field" role="button" target="_blank" href="~/edit/workinggroup/create@(parent)">Create New</a>
 			}
 		}

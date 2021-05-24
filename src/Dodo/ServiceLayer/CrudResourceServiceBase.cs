@@ -27,7 +27,7 @@ public class CrudResourceServiceBase<T, TSchema> : ResourceServiceBase<T, TSchem
 
 	public virtual async Task<IRequestResult> Create(TSchema schema)
 	{
-		using var _ = new FunctionTimer(TimeSpan.FromSeconds(2));
+		//using var _ = new FunctionTimer(TimeSpan.FromSeconds(2));
 		var request = VerifyRequest(schema);
 		if (!request.IsSuccess)
 		{

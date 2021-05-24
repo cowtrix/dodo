@@ -49,6 +49,11 @@ namespace Dodo.LocationResources
 
 		public override bool VerifyExplicit(out string error)
 		{
+			if(StartDate < DateTime.UtcNow)
+			{
+				error = "Start date cannot be in the past.";
+				return false;
+			}
 			if (EndDate < StartDate)
 			{
 				error = "End date cannot be earlier than start date";

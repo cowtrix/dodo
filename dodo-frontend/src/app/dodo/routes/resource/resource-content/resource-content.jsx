@@ -40,7 +40,7 @@ export const ResourceContent =
 				<div className={styles.descriptionContainer}>
 					<Description description={resource.publicDescription} />
 					<div className={styles.panelsContainer}>
-						<SignUpButton
+						{!shouldShowAdmin ? <SignUpButton
 							disable={resource.metadata.permission === ADMIN_PERMISSIONS}
 							resourceColor={resourceColor}
 							isLoggedIn={isLoggedIn}
@@ -50,6 +50,8 @@ export const ResourceContent =
 									? () => push(addReturnPathToRoute(REGISTER_ROUTE, location.pathname + '/join'))
 									: !isMember ? subscribe : unSubscribe}
 						/>
+							: null
+						}
 						{shouldDisplayNotifications &&
 							<Updates notifications={notifications} loadMore={getNotifications} isLoadingMore={isLoadingNotifications} />
 						}

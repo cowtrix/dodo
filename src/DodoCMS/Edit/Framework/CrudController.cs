@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dodo;
+using Dodo.LocationResources;
 using Dodo.Models;
 using Dodo.Users;
 using Dodo.Users.Tokens;
@@ -48,22 +49,28 @@ namespace Dodo.Controllers.Edit
 			var schema = new TSchema();
 			if (schema is OwnedResourceSchemaBase owned)
 			{
-				IRESTResource rsc;
-				if (Guid.TryParse(parent, out var guid))
+				IRESTResource parentRsc;
+				if (Guid.TryParse(parent, out var parentGuid))
 				{
-					rsc = ResourceUtility.GetResourceByGuid(guid);
+					parentRsc = ResourceUtility.GetResourceByGuid(parentGuid);
 				}
 				else
 				{
-					rsc = ResourceUtility.GetResourceBySlug(parent);
+					parentRsc = ResourceUtility.GetResourceBySlug(parent);
 				}
-				if (rsc == null)
+				if (parentRsc == null)
 				{
 					return BadRequest($"No parent resource found with ID {parent}");
 				}
-				owned.ParentID = rsc.Guid.ToString();
-				ViewData["Parent"] = rsc.Guid;
+				owned.ParentID = parentRsc.Guid.ToString();
+				ViewData["Parent"] = parentRsc.Guid;
+				if(parentRsc is ILocationalResource parentLoc && 
+					schema is LocationResourceSchema locSchema)
+				{
+					locSchema.Location = parentLoc.Location;
+				}
 			}
+			
 			schema.OnView(Context.User, Context.Passphrase);
 			return View(schema);
 		}

@@ -28,7 +28,7 @@
 			if (typeof(Resources.IResourceReference).IsAssignableFrom(typeof({TYPE})))
 						{
 				// Create button!
-				string parent = $"?parent={@Model.Slug}";
+				string parent = $"?parent={@Model.Guid}";
 				<a class="btn btn-light btn-block {REFTYPE}-reference form-field" role="button" target="_blank" href="~/edit/{REFTYPE}/create@(parent)">Create New</a>
 			}
 		}

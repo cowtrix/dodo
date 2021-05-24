@@ -11,14 +11,14 @@ namespace Dodo.LocationResources
 	{
 		[View]
 		[DataType(DataType.DateTime)]
-		[DisplayName("Start Date")]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
+		[Name("Start Date")]
+		//[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime StartDate { get; set; }
 
 		[View]
 		[DataType(DataType.DateTime)]
-		[DisplayName("End Date")]
-		[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
+		[Name("End Date")]
+		//[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = Constants.DateTimeFormat)]
 		public DateTime EndDate { get; set; }
 
 		public EventSchema()
