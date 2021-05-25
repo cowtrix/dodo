@@ -5,7 +5,7 @@ import eventPin from 'static/xr-pin-shadowed-pink.png'
 
 export const ADMIN_PERMISSIONS = 'owner'
 
-export const APP_TITLE = 'Resistance.Earth'
+export const APP_TITLE = 'resistance.earth'
 
 export const markers = {
 	localGroup: localGroupPin,
