@@ -3,6 +3,8 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<LangVersion>8.0</LangVersion>
 		<SpaRoot>..\..\dodo-frontend\</SpaRoot>
+		<SolutionPath>..\..\</SolutionPath>
+		<SolutionDir>..\..\</SolutionDir>
 	</PropertyGroup>
 
 	<ItemGroup>

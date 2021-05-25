@@ -29,7 +29,7 @@ namespace Dodo.LocationResources
 		[View(EPermissionLevel.PUBLIC)]
 		[Name("Arrest Risk")]
 		[PatchCallback(nameof(OnValueChanged))]
-		public EArrestRisk ArrestRisk { get; set; }
+		public EArrestRisk ArrestRisk { get; set; } = EArrestRisk.None;
 		[View(EPermissionLevel.PUBLIC, priority: 512)]
 		public SiteFacilities Facilities { get; set; }		
 		[View(EPermissionLevel.PUBLIC)]
