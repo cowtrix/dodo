@@ -42,7 +42,7 @@ export const Resource =
 		}, [ getNotifications, slug, resourceType])
 
 		useEffect(() => {
-			document.title = `${APP_TITLE} | ${titleCase(resourceType)} | ${resource?.name || "Loading, please wait..."}`;
+			document.title = `${resource?.name} | ${APP_TITLE || "Loading, please wait..."}`;
 		}, [resource]);
 
 		const resourceTypeData = getResourceTypeData(resourceTypes, resourceType);
