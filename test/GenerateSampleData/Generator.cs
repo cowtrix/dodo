@@ -17,6 +17,8 @@ using Dodo.Users.Tokens;
 using System.Collections.Generic;
 using Dodo.Analytics;
 using System.Linq;
+using Common.Config;
+using System.IO;
 
 namespace GenerateSampleData
 {
@@ -37,7 +39,22 @@ namespace GenerateSampleData
 
 		static async Task Main(string[] args)
 		{
-			bool purgeOnly = args.FirstOrDefault() == "--purgeonly";
+			for (int i = 0; i < args.Length - 1; i++)
+			{
+				var arg = args[i];
+				if (arg == "--config")
+				{
+					continue;
+				}
+				var configPath = Path.GetFullPath(args[i + 1]);
+				if (!File.Exists(configPath))
+				{
+					throw new FileNotFoundException($"Missing configuration file: {configPath}");
+				}
+				ConfigManager.ConfigPath = configPath;
+			}
+			ConfigManager.LoadFromFile();
+			bool purgeOnly = args.Any(a => a == "--purgeonly");
 			Logger.CurrentLogLevel = ELogLevel.Debug;
 			await Generate(purgeOnly);
 		}
