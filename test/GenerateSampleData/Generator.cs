@@ -39,10 +39,14 @@ namespace GenerateSampleData
 
 		static async Task Main(string[] args)
 		{
+			if (args.Any())
+			{
+				Logger.Info($"Launching with arguments: {string.Join(" ", args)}");
+			}
 			for (int i = 0; i < args.Length - 1; i++)
 			{
 				var arg = args[i];
-				if (arg == "--config")
+				if (arg != "--config")
 				{
 					continue;
 				}
@@ -67,6 +71,11 @@ namespace GenerateSampleData
 			if(purgeOnly)
 			{
 				return;
+			}
+
+			if(!LocationManager.Enabled)
+			{
+				throw new Exception("Location Manager must have a valid geolocation service set up.");
 			}
 
 			var sysAdmin = GenerateUser(new UserSchema("test", UNIVERSAL_PASS, "admin1@web.com"), out var admin1context);
