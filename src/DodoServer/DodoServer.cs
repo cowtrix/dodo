@@ -28,7 +28,7 @@ namespace DodoServer
 			{
 				Logger.Info($"Launching with arguments: {string.Join(" ", args)}");
 			}
-			for (int i = 0; i < args.Length - 1; i++)
+			for (int i = 0; i < args?.Length - 1; i++)
 			{
 				var arg = args[i];
 				if (arg != "--config")
@@ -47,7 +47,10 @@ namespace DodoServer
 			Logger.Warning($"Running in Debug mode");
 #endif
 			SessionTokenStore.Initialise();
-
+			if(ResourceUtility.MongoDB == null)
+			{
+				throw new Exception("Failed to initialized MongoDB");
+			}
 			var usrManager = ResourceUtility.GetManager<User>();
 			if(usrManager.Count == 0)
 			{

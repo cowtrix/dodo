@@ -3,8 +3,6 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<LangVersion>8.0</LangVersion>
 		<SpaRoot>..\..\dodo-frontend\</SpaRoot>
-		<SolutionPath>.\XR_Dodo.sln</SolutionPath>
-		<SolutionDir>..</SolutionDir>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -65,8 +63,8 @@
 		</ItemGroup>
 	</Target>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="xcopy /E /Y &quot;$(SolutionDir)dodo-frontend\build&quot; &quot;$(TargetDir)wwwroot&quot;" />
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug'">
+		<Exec Command="xcopy /i /s /y &quot;$(ProjectDir)../../dodo-frontend/build&quot; &quot;$(TargetDir)wwwroot&quot;" />
 	</Target>
 
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)' == 'Debug'">

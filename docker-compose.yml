@@ -17,7 +17,7 @@ services:
     volumes:
       - type: bind
         source: ./DodoServer_config.json
-        target: /home/DodoServer_config.json
+        target: /DodoServer_config.json
     ports:
       - "5000:5001"
     depends_on:
