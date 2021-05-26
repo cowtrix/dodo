@@ -50,7 +50,7 @@ export const Search = (
 						</div>
 						{searchResults.length > 0 
 							? (<List resources={searchResults} resourceTypes={resourceTypes} isMasterList />) 
-							: (<h3>No Events To Show</h3>)
+							: (<h3 className={styles.noevents} >No Events To Show</h3>)
 						}
 					</>
 				}
