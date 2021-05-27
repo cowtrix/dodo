@@ -20,7 +20,7 @@ This will do a few things:
 2. Download the MongoDB image from [here](https://hub.docker.com/_/mongo/)
 3. Launch both containers and set the server up to connect to the database
 
-By default, the `docker-compose` deployment will attempt to bind the configuration file at the root of the .git repository (`~/DodoServer_config.json`) and this is the easiest way to set the configuration of your server. Just edit the file at the root of the git repository where the docker file was built, and it should just work.
+By default, the `docker-compose` deployment will attempt to bind the configuration file at the root of the .git repository (`~/DodoServer_config.json`) and this is the easiest way to set the configuration of your server. Just create and edit the file at the root of the git repository where the docker file was built, and it should just work. **Please be aware that if you do not have a DodoServer_config.json file at the root of your project, the docker compose will not work as it will try to bind a nonexistant file.**
 
 ## Deploying directly
 
@@ -45,9 +45,15 @@ dotnet publish --force src\DodoServer\DodoServer.csproj -o ..\build -c Release
 
 ## Configuring Your Server
 
-Configuration variables are read from a JSON configuration at the root of the project directory called `DodoServer_config.json`. You can also set these variables by setting an environment variable of the same name.
+You can set configuration values for your server in a few ways:
 
-Your configuration file might look something like this:
+### JSON File
+
+Configuration variables can be read from a JSON file. This is the recommended way of setting configuration values. By default, Dodo will try to load a file called `DodoServer_config.json` at the root of the solution directory. If you'd like to override the path to this configuration file, run the server with the `--config` argument like so:
+
+`DodoServer.exe --config C:\myconfig.json`
+
+Your configuration JSON file might look something like this:
 
 ```
 {
@@ -71,6 +77,10 @@ Your configuration file might look something like this:
 	}
 }
 ```
+
+### Environment Variables
+
+You can set environment variables with the same name as a configuration key above, and it will set the configuration value. For instance, I might set the environment variable `Dodo_SupportEmail` to `test@example.com`. Please be aware that values in the JSON file have a higher priority than environment variable and will override them.
 
 # Security
 
