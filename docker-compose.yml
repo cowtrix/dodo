@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
   mongo:
     image: mongo
@@ -11,13 +11,13 @@ services:
   dodo:
     image: dodo
     environment:
-      MongoDBServerURL: mongodb://root:vLS6piEC@dodo_mongo_1:27017/?authSource=admin
-      ASPNETCORE_Kestrel__Certificates__Default__Password: YsS8k8oe
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/dodo.pfx
+      MongoDBServerURL: "mongodb://root:vLS6piEC@dodo_mongo_1:27017/?authSource=admin"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "YsS8k8oe"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/dodo.pfx"
     volumes:
-      - type: bind
-        source: ./DodoServer_config.json
-        target: /DodoServer_config.json
+      - type: "bind"
+        source: "./DodoServer_config.json"
+        target: "/DodoServer_config.json"
     ports:
       - "5000:5001"
     depends_on:
