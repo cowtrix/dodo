@@ -6,16 +6,21 @@ import styles from './user-button.module.scss'
 
 const USER_BUTTON_ALT = "Button for user menu"
 
-export const UserButton = ({ notifications, setMenuOpen, menuOpen }) =>
-	<img
-		src={userButton}
-		alt={USER_BUTTON_ALT}
+export const UserButton = ({ setMenuOpen, menuOpen }) => (
+	<button
+		type="button"
 		className={styles.userButton}
-		onClick={() => setMenuOpen(!menuOpen)}
-	/>
+		onClick={() => setMenuOpen(!menuOpen)}>
+		<h4 className={styles.buttonTitle}>PROFILE</h4>
+		<img
+			src={userButton}
+			alt={USER_BUTTON_ALT}
+			className={styles.buttonIcon}
+		/>
+	</button>
+);
 
 UserButton.propTypes = {
-	notifications: PropTypes.array,
 	setMenuOpen: PropTypes.func,
 	menuOpen: PropTypes.bool,
 }
