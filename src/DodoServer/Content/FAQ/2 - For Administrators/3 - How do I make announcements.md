@@ -1,0 +1,1 @@
+Making an announcement is a good way to let people know what is going on. It is similar to posting an update on a timeline. When you post an announcement, an email will be sent out to everyone who is subscribed. In the Administration Panel,

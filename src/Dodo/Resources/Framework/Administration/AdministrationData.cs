@@ -41,6 +41,9 @@ namespace Dodo
 					// The first admin gets it all
 					CanEditAdministrators = true,
 					CanDelete = true,
+					CanMakeNewSites = true,
+					CanMakeNewEvents = true,
+					CanMakeAnnouncements = true,
 				}
 			});
 			GroupPrivateKey = privateKey.Value;

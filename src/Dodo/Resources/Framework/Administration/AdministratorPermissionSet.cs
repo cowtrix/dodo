@@ -11,6 +11,18 @@ namespace Dodo
 		public AdministratorPermissionSet() { }
 
 		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		[Name("Can Make Announcements")]
+		public bool CanMakeAnnouncements { get; set; }
+
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		[Name("Can Make New Events")]
+		public bool CanMakeNewEvents { get; set; }
+
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
+		[Name("Can Make New Sites")]
+		public bool CanMakeNewSites { get; set; }
+
+		[View(EPermissionLevel.ADMIN, EPermissionLevel.SYSTEM)]
 		[Name("Can Edit Administrators")]
 		public bool CanEditAdministrators { get; set; }
 

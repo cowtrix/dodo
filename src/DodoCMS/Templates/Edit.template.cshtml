@@ -8,34 +8,35 @@
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
 	Dodo.AdministratorPermissionSet permissions = ViewData["permissions"] as Dodo.AdministratorPermissionSet;
+	string tab = Context.Request.Query.TryGetValue("tab", out var tabVals) ? tabVals.First() : "info";
 }
 
 {SCRIPTS}
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
 	<li class="nav-item">
-		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="@(tab == "info" ? "true" : "false")">Edit Details</a>
 	</li>
 	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
-			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Announcements</a>
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="@(tab == "notifications" ? "true" : "false")">Announcements</a>
 		</li>
 	}
 	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
-			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="@(tab == "admin" ? "true" : "false")">Administration</a>
 		</li>
 	}
 	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
-			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
+			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="@(tab == "role" ? "true" : "false")">Applications</a>
 		</li>
 	}
 	<li class="nav-item">
-		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="role" aria-selected="false">Analytics</a>
+		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="analytics" aria-selected="@(tab == "analytics" ? "true" : "false")">Analytics</a>
 	</li>
 	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/{TYPE}/@Model.Slug" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a></li>
 </ul>

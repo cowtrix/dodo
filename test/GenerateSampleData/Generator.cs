@@ -109,7 +109,7 @@ namespace GenerateSampleData
 			var currentRebellion = TestBase.CreateNewObject<Rebellion>(context,
 				new RebellionSchema($"{city} Rebellion", SchemaGenerator.SampleDescription, location, rootDate() - TimeSpan.FromDays(2), rootDate() + TimeSpan.FromDays(2)), seed: false);
 			
-			for(var i = 0; i < 8; ++ i)
+			//for(var i = 0; i < 8; ++ i)
 			{
 				double jitter() => rnd.Next(-1000, 1000) / 2000.0;
 				var siteOccupation = TestBase.CreateNewObject<Site>(context, new SiteSchema("Central Occupation", currentRebellion.Guid.ToString().ToString(), location, SchemaGenerator.SampleDescription, SchemaGenerator.RandomFacilities, SchemaGenerator.RandomVideoURL), seed: false);

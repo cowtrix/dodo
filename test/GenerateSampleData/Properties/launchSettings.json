@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GenerateSampleData": {
+      "commandName": "Project",
+      "commandLineArgs": "--config .\\..\\..\\..\\..\\..\\DodoServer_config.json"
+    }
+  }
+}

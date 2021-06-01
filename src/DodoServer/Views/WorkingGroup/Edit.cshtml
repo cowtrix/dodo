@@ -8,6 +8,7 @@
 	System.TimeZoneInfo Timezone = (System.TimeZoneInfo)ViewData["Timezone"];
 	var notifications = (ViewData["notifications"] as IEnumerable<Dodo.Notification>);
 	Dodo.AdministratorPermissionSet permissions = ViewData["permissions"] as Dodo.AdministratorPermissionSet;
+	string tab = Context.Request.Query.TryGetValue("tab", out var tabVals) ? tabVals.First() : "info";
 }
 
 <script>
@@ -25,28 +26,28 @@ $(function () {
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
 	<li class="nav-item">
-		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">Edit Details</a>
+		<a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="@(tab == "info" ? "true" : "false")">Edit Details</a>
 	</li>
 	@if (typeof(Dodo.Users.Tokens.INotificationResource).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
-			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="false">Announcements</a>
+			<a class="nav-link" id="notifications-tab" data-toggle="tab" href="#notifications" role="tab" aria-controls="notifications" aria-selected="@(tab == "notifications" ? "true" : "false")">Announcements</a>
 		</li>
 	}
 	@if (typeof(Dodo.IAdministratedResource).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
-			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="false">Administration</a>
+			<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="admin" aria-selected="@(tab == "admin" ? "true" : "false")">Administration</a>
 		</li>
 	}
 	@if (typeof(Dodo.Roles.Role).IsAssignableFrom(Model.__Type))
 	{
 		<li class="nav-item">
-			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="false">Applications</a>
+			<a class="nav-link" id="role-tab" data-toggle="tab" href="#role" role="tab" aria-controls="role" aria-selected="@(tab == "role" ? "true" : "false")">Applications</a>
 		</li>
 	}
 	<li class="nav-item">
-		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="role" aria-selected="false">Analytics</a>
+		<a class="nav-link" id="analytics-tab" data-toggle="tab" href="#analytics" role="tab" aria-controls="analytics" aria-selected="@(tab == "analytics" ? "true" : "false")">Analytics</a>
 	</li>
 	<li><a class="nav-link active" href="@Dodo.DodoApp.NetConfig.FullURI/WorkingGroup/@Model.Slug" target="_blank"><span>View <i class="fa fa-link" aria-hidden="true"></i></span></a></li>
 </ul>
@@ -302,6 +303,7 @@ else
 		{
 			<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
 				@{
+	Type fullType = typeof(Dodo.WorkingGroups.WorkingGroup);
 	var adminData = Model.AdministratorData;
 	Dodo.AdministratorEntry thisAdmin = adminData.Administrators.Single(ad => ad.User.Guid == context.User.Guid);
 	var authManager = (ViewData["auth"] as Dodo.AuthorizationService<Dodo.WorkingGroups.WorkingGroup, Dodo.WorkingGroups.WorkingGroupSchema>);
@@ -331,7 +333,7 @@ else
 		<div id="accordion">
 			@{
 				var counter = 0;
-				foreach (var admin in adminData.Administrators)
+				foreach (Dodo.AdministratorEntry admin in adminData.Administrators)
 				{
 					string getID(string name) { return $"{name}"; };
 					var isMe = admin.User.Guid == context.User.Guid;
@@ -379,20 +381,58 @@ else
 												</div>
 											}
 										}
-									<div class="row">
-										<div class="col">
-											<div class="form-check">
-												<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditAdministrators_@(admin.User.Guid.ToString())" name="CanEditAdministrators" @(admin.Permissions.CanEditAdministrators ? "checked" : "")>
-												<label class="form-check-label" for="@getID("CanEditAdministrators")" style="">Can Edit Administrators</label>
+										<div class="row">
+											<div class="col">
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanEditAdministrators_@(admin.User.Guid.ToString())" name="CanEditAdministrators" @(admin.Permissions.CanEditAdministrators ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanEditAdministrators")" style="">Can Edit Administrators</label>
+												</div>
+											</div>
+											<div class="col">
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDelete_@(admin.User.Guid.ToString())" name="CanDelete" @(admin.Permissions.CanDelete ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanDelete")" style="">Can Delete</label>
+												</div>
 											</div>
 										</div>
-										<div class="col">
-											<div class="form-check">
-												<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanDelete_@(admin.User.Guid.ToString())" name="CanDelete" @(admin.Permissions.CanDelete ? "checked" : "")>
-												<label class="form-check-label" for="@getID("CanDelete")" style="">Can Delete</label>
+										@{
+											if (typeof(Dodo.Rebellions.Rebellion).IsAssignableFrom(fullType))
+											{
+												<div class="row">
+													<div class="col">
+														<div class="form-check">
+															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanMakeNewEvents_@(admin.User.Guid.ToString())" name="CanMakeNewEvents" @(admin.Permissions.CanMakeNewEvents ? "checked" : "")>
+															<label class="form-check-label" for="@getID("CanMakeNewEvents")" style="">Can Make New Events</label>
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-check">
+															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanMakeNewSites_@(admin.User.Guid.ToString())" name="CanMakeNewSites" @(admin.Permissions.CanMakeNewSites ? "checked" : "")>
+															<label class="form-check-label" for="@getID("CanMakeNewSites")" style="">Can Make New Sites</label>
+														</div>
+													</div>
+												</div>
+											}
+											else if (typeof(Dodo.LocalGroups.LocalGroup).IsAssignableFrom(fullType))
+											{
+												<div class="row">
+													<div class="col">
+														<div class="form-check">
+															<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanMakeNewEvents_@(admin.User.Guid.ToString())" name="CanMakeNewEvents" @(admin.Permissions.CanMakeNewEvents ? "checked" : "")>
+															<label class="form-check-label" for="@getID("CanMakeNewEvents")" style="">Can Make New Events</label>
+														</div>
+													</div>
+												</div>
+											}
+										}
+										<div class="row">
+											<div class="col">
+												<div class="form-check">
+													<input value="true" @(!canedit || isMe ? "disabled" : "") type="checkbox" class="form-check-input" id="CanMakeAnnouncements_@(admin.User.Guid.ToString())" name="CanMakeAnnouncements" @(admin.Permissions.CanMakeAnnouncements ? "checked" : "")>
+													<label class="form-check-label" for="@getID("CanMakeAnnouncements")" style="">Can Make Announcements</label>
+												</div>
 											</div>
 										</div>
-									</div>
 									</div>
 									@{ if (canedit)
 										{
@@ -448,7 +488,7 @@ else
 				{
 					// Draw member count
 					<div class="form-group row">
-						<label class="col-md col-form-label">Members</label>
+						<label class="col-md col-form-label">Subscribers</label>
 						<div class="col-sm-10">
 							<input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@((Model as dynamic).MemberCount)">
 						</div>

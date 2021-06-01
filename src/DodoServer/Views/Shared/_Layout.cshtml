@@ -69,11 +69,17 @@
 			</nav>
 			<div class="container-md">
 				@if (ViewData[Resources.CustomController.RESPONSE_VIEWDATA] is Resources.IRequestResult result
-				 && result != null
-				 && !string.IsNullOrEmpty(result.Message))
+				   && result != null
+				   && !string.IsNullOrEmpty(result.Message))
 				{
-					<div class="@(result.IsSuccess ? "alert-info" : "alert-danger")">
+					<div class="mt-2 alert @(result.IsSuccess ? "alert-info" : "alert-danger")">
 						@result.Message
+					</div>
+				}
+				@if ((ViewData["message"] is string str)
+				{
+					<div class="mt-2 alert alert-info">
+						@str;
 					</div>
 				}
 				@RenderBody()

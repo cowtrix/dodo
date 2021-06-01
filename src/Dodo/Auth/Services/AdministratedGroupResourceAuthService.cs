@@ -60,7 +60,11 @@ namespace Dodo
 				{
 					return ResourceRequestError.UnauthorizedRequest();
 				}
-				return new ResourceCreationRequest(context, schema);
+				if((typeof(T) == typeof(LocationResources.Event) && permissionSet.CanMakeNewEvents) ||
+					(typeof(T) == typeof(LocationResources.Site) && permissionSet.CanMakeNewSites))
+				{
+					return new ResourceCreationRequest(context, schema);
+				}
 			}
 			return ResourceRequestError.UnauthorizedRequest();
 		}
@@ -84,10 +88,15 @@ namespace Dodo
 			{
 				return ResourceRequestError.UnauthorizedRequest();
 			}
+			// For admin actions, check user has CanEditAdministrators permission
 			if ((action == AdministratedGroupResourceService<T, TSchema>.ADD_ADMIN && permissionSet.CanEditAdministrators) ||
 				(action == AdministratedGroupResourceService<T, TSchema>.UPDATE_ADMIN && permissionSet.CanEditAdministrators) ||
-				(action == AdministratedGroupResourceService<T, TSchema>.REMOVE_ADMIN && permissionSet.CanEditAdministrators) ||
-				(action == INotificationResource.ACTION_NOTIFICATION))
+				(action == AdministratedGroupResourceService<T, TSchema>.REMOVE_ADMIN && permissionSet.CanEditAdministrators))
+			{
+				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);
+			}
+			// For announcement action, check user has CanEditAdministrators permission
+			if ((action == INotificationResource.ACTION_NOTIFICATION && permissionSet.CanMakeAnnouncements))
 			{
 				return new ResourceActionRequest(context, target, EHTTPRequestType.POST, EPermissionLevel.ADMIN, action);
 			}

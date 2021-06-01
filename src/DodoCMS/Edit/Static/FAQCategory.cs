@@ -1,27 +1,27 @@
 using Common.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Resources;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Dodo.Static
 {
-	public class FAQCategory
+	public abstract class StaticMarkdownContent
 	{
-		private static string RemoveOrderString(string str)
-		{
-			return Regex.Replace(str, @"^\d+\s*-\s*", "");
-		}
-
-		private static Dictionary<string, string> VariableTemplates = new Dictionary<string, string>
+		protected static Dictionary<string, string> VariableTemplates = new Dictionary<string, string>
 		{
 			{ "{URL}", Dodo.DodoApp.NetConfig.FullURI },
 			{ "{PRODUCT}", Dodo.DodoApp.PRODUCT_NAME },
 			{"{SUPPORT_EMAIL}", Dodo.DodoApp.SupportEmail },
 		};
+	}
+
+	public class FAQCategory : StaticMarkdownContent
+	{
+		protected static string RemoveOrderString(string str)
+		{
+			return Regex.Replace(str, @"^\d+\s*-\s*", "");
+		}
 
 		public class Entry
 		{
@@ -51,42 +51,5 @@ namespace Dodo.Static
 		public string Slug { get; }
 		public IReadOnlyList<Entry> Entries { get; }
 
-	}
-
-	[Route(RootURL)]
-	public class StaticResourceController : CustomController
-	{
-		public const string RootURL = "rsc";
-		public const string PrivacyPolicyURL = "privacypolicy";
-		public const string RebelAgreementURL = "rebelagreement";
-		public const string AboutURL = "about";
-		public const string FAQURL = "faq";
-
-		[HttpGet(PrivacyPolicyURL)]
-		public IActionResult PrivacyPolicy()
-		{
-			return View();
-		}
-
-		[HttpGet(RebelAgreementURL)]
-		public IActionResult RebelAgreement()
-		{
-			return View();
-		}
-
-		[HttpGet(AboutURL)]
-		public IActionResult About()
-		{
-			return View();
-		}
-
-		[HttpGet(FAQURL)]
-		public IActionResult FAQ()
-		{
-			var categories =
-				Directory.GetDirectories(System.IO.Path.Combine("Content", "FAQ"))
-				.Select(catPath => new FAQCategory(catPath));
-			return View(categories);
-		}
 	}
 }

@@ -6,6 +6,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Content\FAQ\2 - For Administrators\2 - How do I access the Administration Panel for my Local Group, Event or Rebellion - Copy.md" />
+	  <None Remove="Content\FAQ\2 - For Administrators\3 - How do I make announcements.md" />
+	  <None Remove="Content\FAQ\2 - For Administrators\5 - How do I view and manage administrators.md" />
 	  <None Remove="salt" />
 	</ItemGroup>
 

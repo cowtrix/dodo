@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Resources;
+using System;
+using System.Text;
 using System.Threading.Tasks;
+using Common.Extensions;
 
 namespace Dodo.Controllers.Edit
 {
@@ -21,8 +24,8 @@ namespace Dodo.Controllers.Edit
 			{
 				return result.ActionResult;
 			}
-			var req = result as ResourceActionRequest;
-			return Redirect($"~/edit/{typeof(T).Name}/{guid}");
+			var message = $"Successfully updated administrator.";
+			return Redirect($"~/edit/{typeof(T).Name}/{guid}?message={Uri.EscapeDataString(message.EncodeBase64())}&tab=admin");
 		}
 
 		[HttpPost("{id}/" + AdministratedGroupResourceService<T, TSchema>.ADD_ADMIN)]
@@ -33,7 +36,8 @@ namespace Dodo.Controllers.Edit
 			{
 				return result.ActionResult;
 			}
-			return Redirect($"~/edit/{typeof(T).Name}/{id}");
+			var message = $"Successfully added administrator.";
+			return Redirect($"~/edit/{typeof(T).Name}/{id}?message={Uri.EscapeDataString(message.EncodeBase64())}&tab=admin");
 		}
 
 		[HttpGet("{id}/" + AdministratedGroupResourceService<T, TSchema>.REMOVE_ADMIN)]
@@ -44,7 +48,8 @@ namespace Dodo.Controllers.Edit
 			{
 				return result.ActionResult;
 			}
-			return Redirect($"~/edit/{typeof(T).Name}/{id}");
+			var message = $"Successfully removed administrator.";
+			return Redirect($"~/edit/{typeof(T).Name}/{id}?message={Uri.EscapeDataString(message.EncodeBase64())}&tab=admin");
 		}
 	}
 }

@@ -1,9 +1,9 @@
+@model Dodo.Static.AboutPage
+
 @{
-	ViewData["Title"] = "About";
+	ViewData["Title"] = Model.Title;
 }
 
-<h1>About @Dodo.DodoApp.PRODUCT_NAME</h1>
+<h1>@Model.Title</h1>
 
-<p>
-	TODO!
-</p>
+@Html.Raw(Markdig.Markdown.ToHtml(Model.Text))

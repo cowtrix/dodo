@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Resources;
+using Common.Extensions;
 
 namespace Dodo.Controllers.Edit
 {
@@ -64,12 +65,12 @@ namespace Dodo.Controllers.Edit
 				}
 				owned.ParentID = parentRsc.Guid.ToString();
 				ViewData["Parent"] = parentRsc.Guid;
-				if(parentRsc is ILocationalResource parentLoc && 
+				if (parentRsc is ILocationalResource parentLoc &&
 					schema is LocationResourceSchema locSchema)
 				{
 					locSchema.Location = parentLoc.Location;
 				}
-				if(schema is ITimeBasedResourceSchema timeSchema)
+				if (schema is ITimeBasedResourceSchema timeSchema)
 				{
 					timeSchema.StartDate = DateTime.UtcNow;
 					timeSchema.EndDate = DateTime.UtcNow;
@@ -148,6 +149,10 @@ namespace Dodo.Controllers.Edit
 				ViewData["applications"] = role.Applications.ToDictionary(kvp => kvp.Key,
 					kvp => kvp.Value);
 			}
+			if(Request.Query.TryGetValue("message", out var messageVals))
+			{
+				ViewData["message"] = Uri.UnescapeDataString(Common.Extensions.StringExtensions.Base64Decode(messageVals.First()));
+			}
 			ViewData[RESPONSE_VIEWDATA] = result.Message;
 			var model = ViewModel(rsc);
 			return View(model);
@@ -189,7 +194,7 @@ namespace Dodo.Controllers.Edit
 
 		[HttpGet]
 		[Route("{id}/delete")]
-		public virtual async Task<IActionResult> Delete([FromRoute]string id)
+		public virtual async Task<IActionResult> Delete([FromRoute] string id)
 		{
 			if (Context.User == null)
 			{
@@ -229,25 +234,37 @@ namespace Dodo.Controllers.Edit
 		}
 
 		[HttpPost("notifications/{id}/new")]
-		public virtual async Task<IActionResult> PostNotification([FromRoute]string id, [FromForm]NotificationModel notification)
+		public virtual async Task<IActionResult> PostNotification([FromRoute] string id, [FromForm] NotificationModel notification)
 		{
 			var result = await CrudService.AddNotification(id, notification);
 			if (!result.IsSuccess)
 			{
 				return result.ActionResult;
 			}
-			return RedirectToAction(nameof(Edit), new { id = id });
+			return RedirectToAction(nameof(Edit),
+				new
+				{
+					id = id,
+					message = Uri.EscapeDataString("Successfully posted new announcement.".EncodeBase64()),
+					tab = "notifications"
+				});
 		}
 
 		[HttpGet("notifications/{id}/delete")]
-		public virtual async Task<IActionResult> DeleteNotification([FromRoute]string id, [FromQuery]Guid notification)
+		public virtual async Task<IActionResult> DeleteNotification([FromRoute] string id, [FromQuery] Guid notification)
 		{
 			var result = await CrudService.DeleteNotification(id, notification);
-			if(!result.IsSuccess)
+			if (!result.IsSuccess)
 			{
 				return result.ActionResult;
 			}
-			return RedirectToAction(nameof(Edit), new { id = id });
+			return RedirectToAction(nameof(Edit),
+				new
+				{
+					id = id,
+					message = Uri.EscapeDataString("Successfully deleted announcement.".EncodeBase64()),
+					tab = "notifications"
+				});
 		}
 
 		public override void OnActionExecuting(ActionExecutingContext actionContext)
