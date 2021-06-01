@@ -11,7 +11,7 @@ export const UserButton = ({ setMenuOpen, menuOpen }) => (
 		type="button"
 		className={styles.userButton}
 		onClick={() => setMenuOpen(!menuOpen)}>
-		<h4 className={styles.buttonTitle}>PROFILE</h4>
+		<h3 className={styles.buttonTitle}>PROFILE</h3>
 		<img
 			src={userButton}
 			alt={USER_BUTTON_ALT}
