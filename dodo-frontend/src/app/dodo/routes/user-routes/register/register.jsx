@@ -1,13 +1,13 @@
-
 import styles from "./register.module.scss";
 import { useURLParams } from "app/hooks/useURLParams";
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container, Submit, Input, Error, TickBox } from 'app/components/forms/index'
 import { emailIsValid, getReturnPath, passwordContainsNoSymbol, strNotEmptyAndLengthBelow } from 'app/domain/services/services';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom'
 import { Loader } from '../../../../components/loader'
+import { APP_TITLE } from '../../../../constants'
 
 export const Register = ({ register, isLoggedIn, registeringUser, error, privacyPolicy, rebelAgreement }) => {
 	const history = useHistory()
@@ -43,6 +43,10 @@ export const Register = ({ register, isLoggedIn, registeringUser, error, privacy
 			? validationErrors[fieldName][0]
 			: validationErrors[fieldName];
 	};
+
+	useEffect(() => {
+		document.title = APP_TITLE + " | Register"
+	}, []);
 
 	return (
 		<Container

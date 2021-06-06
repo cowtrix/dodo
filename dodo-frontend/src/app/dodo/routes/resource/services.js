@@ -7,3 +7,7 @@ export const getResourceTypeData = (resourceTypes, resourceTypeId) => {
 export const shouldHideMap = (resourceType) => {
     return resourcesWithoutMaps.find(resource => resource.toLowerCase() === resourceType.toLowerCase())
 }
+
+export const titleCase = (text) => {
+    return text.toLowerCase().replace(/\b(\w)/g, s => s.toUpperCase());
+}

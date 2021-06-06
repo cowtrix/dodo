@@ -3,8 +3,9 @@ import PropTypes from "prop-types"
 import { Container } from "app/components/resources"
 import { SiteMap, Loader } from "app/components"
 import { ResourceContent } from './resource-content'
-import { getResourceTypeData, shouldHideMap } from './services'
+import { getResourceTypeData, shouldHideMap, titleCase } from './services'
 import { NotFound } from '../error';
+import { APP_TITLE } from "../../../constants"
 
 export const Resource =
 	(
@@ -39,6 +40,10 @@ export const Resource =
 		useEffect(() => {
 			getNotifications(resourceType, slug)
 		}, [ getNotifications, slug, resourceType])
+
+		useEffect(() => {
+			document.title = `${resource?.name} | ${APP_TITLE || "Loading, please wait..."}`;
+		}, [resource]);
 
 		const resourceTypeData = getResourceTypeData(resourceTypes, resourceType);
 		const resourceColor = '#' + (resourceTypeData.displayColor || '22A73D');

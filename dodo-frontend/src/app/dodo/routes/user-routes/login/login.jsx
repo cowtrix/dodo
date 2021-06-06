@@ -1,8 +1,9 @@
 import { Container, Error, Input, Submit, TickBox } from "app/components/forms";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useLocation } from "react-router-dom";
+import { APP_TITLE } from '../../../../constants'
 
 import {
 	getReturnPath,
@@ -13,6 +14,10 @@ import {
 export const Login = ({ login, isLoggedIn, error, isLoggingIn }) => {
 	const history = useHistory();
 	const location = useLocation();
+
+	useEffect(() => {
+		document.title = APP_TITLE + " | Login"
+	}, []);
 
 	if (isLoggedIn) {
 		const returnPath = getReturnPath(location) || "/";

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Container } from 'app/components/forms/index'
 import { Resource } from './resource'
 import useRequireLogin from 'app/hooks/useRequireLogin';
+import { APP_TITLE } from '../../../../constants'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
@@ -53,6 +54,10 @@ function getSubscriptionTree(subscriptions, resourceTypes, level = 'root', close
 
 export const MyRebellion = ({ error, getMyRebellion, isFetching, myRebellion = [], resourceTypes }) => {
 	useEffect(() => { getMyRebellion() }, [getMyRebellion]);
+
+	useEffect(() => {
+		document.title = APP_TITLE + " | My Rebellion"
+	}, []);
 
 	const [closed, setClosed] = useState([]);
 

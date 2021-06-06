@@ -17,10 +17,10 @@ import {
 import { useAction } from "app/hooks/useAction";
 import { useBeforeUnload } from "app/hooks/useBeforeUnload";
 import PropTypes from "prop-types";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Prompt, useHistory, useLocation } from "react-router-dom";
-
+import { APP_TITLE } from "../../../../constants"
 import { LOGIN_ROUTE } from "../login/route";
 import { UpdateEmail } from "./update-email";
 import { ChangePw } from "./change-pw/change-pw";
@@ -97,6 +97,10 @@ export const Settings = () => {
 		setUnsavedChanges(true);
 		setter(...args);
 	};
+
+	useEffect(() => {
+		document.title = APP_TITLE + " | Settings"
+	}, []);
 
 	return (
 		<>
