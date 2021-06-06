@@ -82,6 +82,7 @@ namespace DodoServer
 			Host.CreateDefaultBuilder(args)
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
+					webBuilder.UseContentRoot(Environment.CurrentDirectory);
 					webBuilder.UseStartup<DodoStartup>();
 					webBuilder.UseUrls($"https://*:{DodoApp.NetConfig.SSLPort}", $"http://*:{DodoApp.NetConfig.HTTPPort}");
 					// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2

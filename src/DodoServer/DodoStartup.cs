@@ -26,6 +26,7 @@ namespace DodoServer
 			Environment = environment;
 			Configuration = configuration;
 			DodoApp.WebRoot = Environment.WebRootPath;
+			DodoApp.ContentRoot = Environment.ContentRootPath;
 		}
 
 		public void ConfigureServices(IServiceCollection services)

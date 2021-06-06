@@ -18,7 +18,7 @@ namespace Dodo.Static
 		public const string FAQURL = "faq";
 
 		private IEnumerable<FAQCategory> FAQs =
-			Directory.GetDirectories(System.IO.Path.Combine("Content", "FAQ"))
+			Directory.GetDirectories(System.IO.Path.Combine(Dodo.DodoApp.ContentRoot,"Content", "FAQ"))
 			.Select(catPath => new FAQCategory(catPath))
 			.ToList();
 
