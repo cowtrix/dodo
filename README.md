@@ -58,7 +58,6 @@ Your configuration JSON file might look something like this:
 ```
 {
 	"LogLevel":3,
-	"MongoDBServerURL": "mongodb://username:password@dodo_mongo_1:27017/?authSource=admin"
 	"Dodo_SupportEmail": "support@dodo.ovh",
 	"NetworkConfig": {
 		"SSLPort": 5001,
