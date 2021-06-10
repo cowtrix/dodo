@@ -84,7 +84,7 @@ You can set environment variables with the same name as a configuration key abov
 
 # Security
 
-Dodo is designed to be highly secure. The developers acknowledge that protest is a politically sensitive activity in many countries, and that individuals should be assured that their information is protected. The philosophy behind the security decisions of Dodo is to encrypt all relational information. This means that even in a threat scenario where the server data is compromised, an attacker will not be able to create any connection between individual users and activity, except where that information is explicitly published by the user. **This security infrastructure results in some caveats that any systems adminstrator should be aware of:**
+The developers acknowledge that protest is a politically sensitive activity in many countries, and that individuals should be assured that their information is protected. The philosophy behind the security decisions of Dodo is to encrypt all relational information. This means that even in a threat scenario where the server data is compromised, an attacker will not be able to create any connection between individual users and activity, except where that information is explicitly published by the user. **This security infrastructure results in some caveats that any systems adminstrator should be aware of:**
 
 -   Systems administrators do not have access to a lot of the information stored on the Dodo server. Wherever possible, only the user concerned will have access to information. This includes but is not limited to:
     -   Whether or not a user is an administrator of a given resource.
