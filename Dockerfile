@@ -15,10 +15,9 @@ RUN dotnet publish "src/DodoServer/DodoServer.csproj" -c Release --output /app/b
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim
 
-COPY --from=build /app/dodo-frontend/build/ ./build/wwwroot/
+COPY --from=build /app/dodo-frontend/build/ ./wwwroot/
 COPY --from=build /app/build .
 
-EXPOSE 5000
-EXPOSE 5001
+EXPOSE 22957
 
 ENTRYPOINT ["dotnet", "DodoServer.dll"]

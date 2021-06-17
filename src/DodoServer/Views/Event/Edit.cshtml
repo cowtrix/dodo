@@ -589,7 +589,6 @@ else
 					var userVal = admin.User.GetValue(true);
 					var isTemp = !userVal.PersonalData.EmailConfirmed;
 					var canedit = !isMe && thisAdmin.Permissions.CanEditAdministrators;
-
 					<div class="card">
 						<div class="card-header" id="heading@(counter)">
 							<div class="row">
@@ -608,7 +607,7 @@ else
 									</button>
 								</div>
 								<div class="col" style="text-align:right;">
-									@{ if (!isMe && canedit)
+									@{ if (canedit)
 										{
 											<a class="btn btn-outline-danger" href="@Model.Slug/removeadmin?adminID=@admin.User.Guid">
 												<span>Remove</span> <i class="fas fa-trash"></i>

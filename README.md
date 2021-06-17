@@ -22,6 +22,18 @@ This will do a few things:
 
 By default, the `docker-compose` deployment will attempt to bind the configuration file at the root of the .git repository (`~/DodoServer_config.json`) and this is the easiest way to set the configuration of your server. Just create and edit the file at the root of the git repository where the docker file was built, and it should just work. **Please be aware that if you do not have a DodoServer_config.json file at the root of your project, the docker compose will not work as it will try to bind a nonexistant file.**
 
+### IMPORTANT: YOUR SYSADMIN ACCOUNT ***
+
+The first output the server will create is the default sysadmin login details. Please take note of these details and use them to adminstrate the server. By default, the email for this account will be the value of `Dodo_SupportEmail` in your configuration. The first thing you should do upon logging in is setting your email if you need to, and then changing your password. The output will look something like this:
+
+```
+THIS IS IMPORTANT. A system admin account has been generated.
+Username: admin_jtwqkw
+Email: support@dodo.ovh
+Password: Wer1d?!A
+THE FIRST THING YOU SHOULD DO IS CHANGE THIS PASSWORD.
+```
+
 ## Deploying directly
 
 If you don't wish to use docker, you can deploy Dodo directly on a machine.

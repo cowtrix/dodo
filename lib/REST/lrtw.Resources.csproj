@@ -8,12 +8,21 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>lrtw.AspNetCore.MongDBResources</PackageId>
+    <Authors>cowtrix</Authors>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageTags>API ASP.NET Core MongoDB</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Http\**" />
     <EmbeddedResource Remove="Http\**" />
     <None Remove="Http\**" />
+    <None Include="..\..\license.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Common\lrtw.Common.csproj" />
   </ItemGroup>
 
 </Project>

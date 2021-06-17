@@ -66,18 +66,16 @@ namespace DodoServer
 				config.AccessDeniedPath = config.LoginPath;
 				config.ExpireTimeSpan = TimeSpan.FromDays(1);
 				config.SlidingExpiration = true;
-				config.Cookie.SameSite = SameSiteMode.None;
-				config.Cookie.HttpOnly = true;
 			});
-			Logger.Error("REENABLE SAMESITE COOKIES BEFORE DEPLOYMENT");
-			services.AddAuthorization(config =>
+			services.AddAuthorization();
+			if (DodoServer.UseHttps)
 			{
-			});
-			services.AddHttpsRedirection(options =>
-			{
-				options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-				options.HttpsPort = global::Dodo.DodoApp.NetConfig.SSLPort;
-			});
+				services.AddHttpsRedirection(options =>
+				{
+					options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+					options.HttpsPort = global::Dodo.DodoApp.NetConfig.SSLPort;
+				});
+			}
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -86,12 +84,14 @@ namespace DodoServer
 			{
 				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 			});
-
 			app.UseStaticFiles();
 			app.UseRouting();
-			app.UseHttpsRedirection();
+			if (DodoServer.UseHttps)
+			{
+				app.UseHttpsRedirection();				
+			}
 			app.UseRewriter(GetRewriteOptions());
-
+#if DEBUG
 			// CORS must be called after UseRouting and before UseEndpoints to function correctly
 			// The `Access-Control-Allow-Origin` header will not be added to normal GET responses
 			// An `Origin` header must be on the request (for a different domain) for CORS to run
@@ -106,6 +106,7 @@ namespace DodoServer
 				.SetIsOriginAllowed(origin => true)
 				.SetIsOriginAllowedToAllowWildcardSubdomains();
 			});
+#endif
 
 			app.UseSpaStaticFiles();
 			app.UseAuthentication();

@@ -1,9 +1,9 @@
-Project 'Common' has the following package references
+Project 'lrtw.Common' has the following package references
    [netstandard2.1]: 
    Top-level Package      Requested   Resolved
    > Newtonsoft.Json      12.0.3      12.0.3  
 
-Project 'Dodo.Resources' has the following package references
+Project 'lrtw.Resources' has the following package references
    [netstandard2.1]: 
    Top-level Package                                      Requested   Resolved
    > GeoCoordinate.NetCore                                1.0.0.1     1.0.0.1 

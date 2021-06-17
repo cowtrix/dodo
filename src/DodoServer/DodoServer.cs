@@ -19,12 +19,13 @@ namespace DodoServer
 	public static class DodoServer
 	{
 		public static string ReactPath => ConfigManager.GetValue("ReactPath", Path.GetFullPath(@"..\..\dodo-frontend\build"));
+		public static bool UseHttps => ConfigManager.GetValue("UseHttps", false);
 
 		public static bool Initialized { get; internal set; }
 
 		public static void Main(string[] args)
 		{
-			if(args.Any())
+			if (args.Any())
 			{
 				Logger.Info($"Launching with arguments: {string.Join(" ", args)}");
 			}
@@ -47,12 +48,12 @@ namespace DodoServer
 			Logger.Warning($"Running in Debug mode");
 #endif
 			SessionTokenStore.Initialise();
-			if(ResourceUtility.MongoDB == null)
+			if (ResourceUtility.MongoDB == null)
 			{
 				throw new Exception("Failed to initialized MongoDB");
 			}
 			var usrManager = ResourceUtility.GetManager<User>();
-			if(usrManager.Count == 0)
+			if (usrManager.Count == 0)
 			{
 				// Generate sysadmin account if no account is registered and print
 				var schema = new UserSchema($"admin_{KeyGenerator.GetUniqueKey(6).ToLowerInvariant()}",
@@ -84,13 +85,19 @@ namespace DodoServer
 				{
 					webBuilder.UseContentRoot(Environment.CurrentDirectory);
 					webBuilder.UseStartup<DodoStartup>();
-					webBuilder.UseUrls($"https://*:{DodoApp.NetConfig.SSLPort}", $"http://*:{DodoApp.NetConfig.HTTPPort}");
-					// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2
-					webBuilder.UseKestrel(options =>
-						options.ConfigureEndpointDefaults(defaults =>
-							defaults.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1
-						)
-					);
+					if (UseHttps)
+					{
+						webBuilder.UseUrls($"https://*:{DodoApp.NetConfig.SSLPort}", $"http://*:{DodoApp.NetConfig.HTTPPort}");
+						// Workaround for HTTP2 bug in .NET Core 3.1 and Windows 8.1 / Server 2012 R2
+						webBuilder.UseKestrel(options =>
+							options.ConfigureEndpointDefaults(defaults =>
+								defaults.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1
+							)
+						);
+					}
+					else
+						webBuilder.UseUrls($"http://*:{DodoApp.NetConfig.HTTPPort}");
+					
 				});
 	}
 }

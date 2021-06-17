@@ -9,9 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0D1FD671-44F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D4CB2E64-9C5A-4D5B-921A-52F4905F87D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "lib\Common\Common.csproj", "{12B6D7ED-DCDD-491C-964C-EA34C077FAA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lrtw.Common", "lib\Common\lrtw.Common.csproj", "{12B6D7ED-DCDD-491C-964C-EA34C077FAA5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dodo.Resources", "lib\REST\Dodo.Resources.csproj", "{C078D41E-895E-4F3A-B231-842DB388270E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lrtw.Resources", "lib\REST\lrtw.Resources.csproj", "{C078D41E-895E-4F3A-B231-842DB388270E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dodo", "src\Dodo\Dodo.csproj", "{696776BD-5F7E-4F1B-BD1F-B91130C0A6B4}"
 EndProject
@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		dependencies.txt = dependencies.txt
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
+		license.txt = license.txt
 		README.md = README.md
 	EndProjectSection
 EndProject

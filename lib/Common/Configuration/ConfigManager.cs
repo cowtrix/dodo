@@ -45,6 +45,15 @@ namespace Common.Config
 			Logger.Debug($"Loaded configuration data from {ConfigPath}");
 		}
 
+		public static T GetValue<T>(string key)
+		{
+			if (!TryGetValue<T>(key, out var result))
+			{
+				throw new Exception($"Unable to find required configuration key {key}. Please set this value in your configuration.");
+			}
+			return result;
+		}
+
 		public static T GetValue<T>(string key, T defaultValue)
 		{
 			if(!TryGetValue<T>(key, out var result))

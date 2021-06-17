@@ -40,7 +40,7 @@ namespace Dodo.Users
 
 		public AuthorizationData(string password)
 		{
-			var passphrase = KeyGenerator.GetUniqueKey(128);
+			var passphrase = KeyGenerator.GetUniqueKey(256);
 			AsymmetricSecurity.GeneratePublicPrivateKeyPair(out var pv, out var pk);
 			PrivateKey = new SymmEncryptedStore<string>(pv, new Passphrase(passphrase));
 			PublicKey = pk;

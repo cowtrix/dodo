@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lib\REST\Dodo.Resources.csproj" />
+    <ProjectReference Include="..\..\lib\REST\lrtw.Resources.csproj" />
   </ItemGroup>
 
 </Project>

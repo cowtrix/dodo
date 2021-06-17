@@ -12,13 +12,14 @@ services:
     image: dodo
     environment:
       MongoDBServerURL: "mongodb://root:vLS6piEC@dodo_mongo_1:27017/?authSource=admin"
-      ASPNETCORE_Kestrel__Certificates__Default__Password: "YsS8k8oe"
-      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/dodo.pfx"
+      REACT_APP_ROOT_URL: "http://localhost:22957/"
+      ASPNETCORE_URLS: "http://localhost:22957"
+      ReactPath: "/wwwroot/"
     volumes:
       - type: "bind"
         source: "./DodoServer_config.json"
         target: "/DodoServer_config.json"
     ports:
-      - "5000:5001"
+      - "22957:22957"
     depends_on:
       - mongo
